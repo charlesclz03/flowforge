@@ -1,0 +1,66 @@
+// Prisma schema for FlowForge MVP
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Beat model - Stores instrumental beat metadata
+model Beat {
+  id              String   @id @default(uuid())
+  title           String
+  bpm             Int
+  storageUrl      String   @map("storage_url")
+  isPremium       Boolean  @default(false) @map("is_premium")
+  genre           String?
+  duration        Int?     // Duration in seconds
+  artistName      String?  @map("artist_name")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sessions        FreestyleSession[]
+
+  @@map("beats")
+}
+
+// Word model - Word library for prompts
+model Word {
+  id              String   @id @default(uuid())
+  wordText        String   @unique @map("word_text")
+  syllableCount   Int      @map("syllable_count")
+  difficultyLevel Int      @map("difficulty_level") // 1 = Easy, 2 = Medium, 3 = Hard
+  category        String?  // Optional: noun, verb, adjective, etc.
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([difficultyLevel])
+  @@index([syllableCount])
+  @@map("words")
+}
+
+// FreestyleSession model - Saved practice sessions
+model FreestyleSession {
+  id              String   @id @default(uuid())
+  userId          String?  @map("user_id") // Nullable for MVP (no auth)
+  beatId          String   @map("beat_id")
+  title           String
+  storageUrl      String?  @map("storage_url") // Client-side for MVP
+  durationSeconds Int      @map("duration_seconds")
+  frequency       Int      @default(8) // 4, 8, or 16 bars
+  difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  beat            Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([beatId])
+  @@index([createdAt])
+  @@map("freestyle_sessions")
+}
+

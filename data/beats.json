@@ -1,0 +1,33 @@
+[
+  {
+    "id": "beat-001",
+    "title": "Lo-Fi Chill",
+    "bpm": 85,
+    "storageUrl": "/beats/lofi-chill.mp3",
+    "isPremium": false,
+    "genre": "Lo-Fi",
+    "duration": 180,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-002",
+    "title": "Boom Bap Classic",
+    "bpm": 90,
+    "storageUrl": "/beats/boom-bap-classic.mp3",
+    "isPremium": false,
+    "genre": "Boom Bap",
+    "duration": 150,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-003",
+    "title": "Trap Energy",
+    "bpm": 140,
+    "storageUrl": "/beats/trap-energy.mp3",
+    "isPremium": false,
+    "genre": "Trap",
+    "duration": 165,
+    "artistName": "FlowForge Beats"
+  }
+]
+
