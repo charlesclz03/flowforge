@@ -1,0 +1,46 @@
+# FlowForge Environment Variables for Vercel
+# Copy these to Vercel Dashboard → Project Settings → Environment Variables
+
+# ============================================
+# REQUIRED VARIABLES
+# ============================================
+
+# Site URL (update with your actual Vercel URL after first deployment)
+NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
+
+# Database - Supabase PostgreSQL
+# Transaction pooler (runtime) - Port 6543
+DATABASE_URL=postgresql://postgres.xwfyycspigomivevvnqw:Aannuubbiiss036973%2A@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10
+
+# Direct connection (migrations) - Port 5432
+DIRECT_URL=postgresql://postgres:Aannuubbiiss036973%2A@db.xwfyycspigomivevvnqw.supabase.co:5432/postgres
+
+
+# ============================================
+# OPTIONAL VARIABLES (Add when ready)
+# ============================================
+
+# Google Analytics (V2)
+# NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# Google AdSense (V2)
+# NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-XXXXXXXXXXXXXXXX
+
+# NextAuth (V2 - Authentication)
+# NEXTAUTH_URL=https://your-app.vercel.app
+# NEXTAUTH_SECRET=your-secret-here
+# GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+# GOOGLE_CLIENT_SECRET=your-client-secret
+
+# Stripe (V2 - Payments)
+# STRIPE_SECRET_KEY=sk_live_...
+# NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+
+# ============================================
+# ENVIRONMENT SCOPE
+# ============================================
+# When adding variables in Vercel, select:
+# ✓ Production
+# ✓ Preview
+# ✓ Development
+

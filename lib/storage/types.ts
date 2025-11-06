@@ -24,4 +24,3 @@ export interface StorageQuota {
   available: number
   percentUsed: number
 }
-

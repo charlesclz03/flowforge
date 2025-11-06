@@ -111,7 +111,7 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
 
 /**
  * Comment for future implementation:
- * 
+ *
  * To implement Stripe subscriptions:
  * 1. Create products and prices in Stripe Dashboard
  * 2. Install @stripe/stripe-js
@@ -120,8 +120,7 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
  * 5. Handle webhook for subscription events
  * 6. Store subscription status in database
  * 7. Implement subscription management portal
- * 
+ *
  * API Route: /api/stripe/checkout
  * Webhook Route: /api/stripe/webhook
  */
-

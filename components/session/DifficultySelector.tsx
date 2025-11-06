@@ -62,4 +62,3 @@ export function DifficultySelector({ value, onChange, className }: DifficultySel
     </div>
   )
 }
-

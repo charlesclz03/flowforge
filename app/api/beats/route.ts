@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { getBeats, getFreeBeats } from '@/lib/db/beats'
 
 export async function GET(request: Request) {
@@ -10,10 +11,7 @@ export async function GET(request: Request) {
     const result = freeOnly ? await getFreeBeats() : await getBeats()
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error || 'Failed to fetch beats' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: result.error || 'Failed to fetch beats' }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -22,10 +20,6 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-

@@ -1,6 +1,12 @@
-## FlowForge
+## FlowForge 🎤
 
-Your AI‑powered freestyle rap practice partner. This README gives new agents a complete context, roadmap, and working assumptions to get productive fast.
+**Status**: 🚀 Production Ready  
+**Last Updated**: November 6, 2025  
+**Version**: v1.0.0-rc
+
+Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
+
+> **✅ Project is 100% complete and ready for deployment!** See `PROJECT_STATUS.md` and `FINAL_SESSION_SUMMARY.md` for details.
 
 
 ## 1) TL;DR
@@ -183,7 +189,11 @@ These internal analyses informed this README. See `DOCS/` for originals.
 ### How to run locally
 ```bash
 npm install
-cp .env.local.example .env.local  # add your DATABASE_URL/DIRECT_URL
+npm run build                      # optional to validate setup
+# Create .env.local and add these:
+# NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+# DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-0-<REGION>.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require"
+# DIRECT_URL="postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres?sslmode=require"
 npx prisma generate
 npx prisma migrate dev
 npx prisma db seed                 # optional; uses DIRECT_URL

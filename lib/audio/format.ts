@@ -16,12 +16,7 @@ export function isMimeTypeSupported(mimeType: string): boolean {
  * Get the best supported audio format
  */
 export function getBestAudioFormat(): string {
-  const formats = [
-    'audio/webm;codecs=opus',
-    'audio/webm',
-    'audio/ogg;codecs=opus',
-    'audio/mp4',
-  ]
+  const formats = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4']
 
   for (const format of formats) {
     if (isMimeTypeSupported(format)) {
@@ -61,4 +56,3 @@ export async function convertToWAV(blob: Blob): Promise<Blob> {
   console.warn('WAV conversion not implemented in MVP - returning original blob')
   return blob
 }
-

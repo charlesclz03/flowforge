@@ -26,7 +26,10 @@ export function BeatSelector({ beats, selectedBeat, onSelect, className }: BeatS
     <div className={cn('space-y-4', className)}>
       {/* Search */}
       <div className="relative">
-        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+        <Search
+          size={18}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
+        />
         <input
           type="text"
           placeholder="Search beats..."
@@ -56,4 +59,3 @@ export function BeatSelector({ beats, selectedBeat, onSelect, className }: BeatS
     </div>
   )
 }
-

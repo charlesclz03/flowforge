@@ -74,4 +74,3 @@ export function SessionPlayer({ session, onClose, className }: SessionPlayerProp
     </div>
   )
 }
-

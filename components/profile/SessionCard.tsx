@@ -59,4 +59,3 @@ export function SessionCard({ session, onPlay, onDelete, className }: SessionCar
     </div>
   )
 }
-

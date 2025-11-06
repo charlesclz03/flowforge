@@ -5,10 +5,21 @@ import { SessionFilters, DatabaseResult, FreestyleSessionWithBeat } from '@/type
 /**
  * Create a new freestyle session (stub for MVP - mainly client-side)
  */
+const inMemorySessions: FreestyleSession[] = []
+
 export async function createSession(
   data: Omit<FreestyleSession, 'id' | 'createdAt'>
 ): Promise<DatabaseResult<FreestyleSession>> {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const created: FreestyleSession = {
+        id: 'local-' + Date.now().toString(36),
+        createdAt: new Date(),
+        ...data,
+      }
+      inMemorySessions.unshift(created)
+      return { success: true, data: created }
+    }
     const session = await prisma.freestyleSession.create({
       data,
     })
@@ -33,6 +44,25 @@ export async function getSessions(
   filters?: SessionFilters
 ): Promise<DatabaseResult<FreestyleSessionWithBeat[]>> {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const mapped: FreestyleSessionWithBeat[] = inMemorySessions.map((s) => ({
+        ...s,
+        beat: {
+          id: s.beatId,
+          title: 'Local Beat',
+          bpm: 90,
+          storageUrl: '/beats/placeholder.mp3',
+          isPremium: false,
+          genre: null,
+          duration: null,
+          artistName: 'FlowForge Beats',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          sessions: [],
+        },
+      }))
+      return { success: true, data: mapped }
+    }
     const where: Prisma.FreestyleSessionWhereInput = {}
 
     if (filters?.userId) {
@@ -84,6 +114,26 @@ export async function getSessionById(
   id: string
 ): Promise<DatabaseResult<FreestyleSessionWithBeat>> {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const s = inMemorySessions.find((x) => x.id === id)
+      if (!s) return { success: false, error: 'Session not found' }
+      const withBeat: FreestyleSessionWithBeat = {
+        ...s,
+        beat: {
+          id: s.beatId,
+          title: 'Local Beat',
+          bpm: 90,
+          storageUrl: '/beats/placeholder.mp3',
+          isPremium: false,
+          genre: null,
+          duration: null,
+          artistName: 'FlowForge Beats',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      }
+      return { success: true, data: withBeat }
+    }
     const session = await prisma.freestyleSession.findUnique({
       where: { id },
       include: {
@@ -116,6 +166,11 @@ export async function getSessionById(
  */
 export async function deleteSession(id: string): Promise<DatabaseResult<void>> {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const idx = inMemorySessions.findIndex((s) => s.id === id)
+      if (idx >= 0) inMemorySessions.splice(idx, 1)
+      return { success: true }
+    }
     await prisma.freestyleSession.delete({
       where: { id },
     })
@@ -144,6 +199,20 @@ export async function getSessionStats(userId?: string): Promise<
   }>
 > {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const totalSessions = inMemorySessions.length
+      const totalDuration = inMemorySessions.reduce((sum, s) => sum + s.durationSeconds, 0)
+      const averageDuration = totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0
+      return {
+        success: true,
+        data: {
+          totalSessions,
+          totalDuration,
+          averageDuration,
+          favoriteGenre: null,
+        },
+      }
+    }
     const where: Prisma.FreestyleSessionWhereInput = userId ? { userId } : {}
 
     const [sessions, genreStats] = await Promise.all([
@@ -198,4 +267,3 @@ export async function getSessionStats(userId?: string): Promise<
     }
   }
 }
-

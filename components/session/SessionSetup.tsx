@@ -36,11 +36,7 @@ export function SessionSetup({
       {/* Beat Selection */}
       <div className="space-y-3">
         <h2 className="text-lg font-medium">Select a Beat</h2>
-        <BeatSelector
-          beats={beats}
-          selectedBeat={selectedBeat}
-          onSelect={onSelectBeat}
-        />
+        <BeatSelector beats={beats} selectedBeat={selectedBeat} onSelect={onSelectBeat} />
       </div>
 
       {/* Settings */}
@@ -68,4 +64,3 @@ export function SessionSetup({
     </div>
   )
 }
-

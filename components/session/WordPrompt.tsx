@@ -46,9 +46,7 @@ export function WordPrompt({ word, show, className }: WordPromptProps) {
       <div
         className={cn(
           'transition-all duration-300',
-          isVisible
-            ? 'opacity-100 scale-100 translate-y-0'
-            : 'opacity-0 scale-95 translate-y-4'
+          isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'
         )}
       >
         <h2
@@ -65,4 +63,3 @@ export function WordPrompt({ word, show, className }: WordPromptProps) {
     </div>
   )
 }
-

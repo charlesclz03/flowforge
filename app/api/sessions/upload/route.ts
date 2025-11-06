@@ -10,10 +10,7 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!body.beatId || !body.title || !body.durationSeconds) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     // For MVP, return a stub response
@@ -25,10 +22,6 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-

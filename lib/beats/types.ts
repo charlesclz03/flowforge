@@ -23,4 +23,3 @@ export interface BeatPlaybackState {
   duration: number
   volume: number
 }
-

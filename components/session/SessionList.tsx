@@ -30,14 +30,8 @@ export function SessionList({
   return (
     <div className={cn('space-y-3', className)}>
       {sessions.map((session) => (
-        <SessionCard
-          key={session.id}
-          session={session}
-          onPlay={onPlay}
-          onDelete={onDelete}
-        />
+        <SessionCard key={session.id} session={session} onPlay={onPlay} onDelete={onDelete} />
       ))}
     </div>
   )
 }
-

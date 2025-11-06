@@ -38,4 +38,3 @@ export async function normalizeAudio(blob: Blob): Promise<Blob> {
   console.warn('Audio normalization not implemented in MVP')
   return blob
 }
-

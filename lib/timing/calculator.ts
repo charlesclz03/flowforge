@@ -76,4 +76,3 @@ export function calculateExpectedPrompts(
   const interval = calculatePromptInterval(bpm, frequencyInBars)
   return Math.floor(durationSeconds / interval)
 }
-

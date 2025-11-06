@@ -97,9 +97,7 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
         </div>
 
         <div className="mt-2 pt-2 border-t border-text-tertiary/10">
-          <p className="text-text-tertiary text-xs px-3">
-            Social sharing coming in V2
-          </p>
+          <p className="text-text-tertiary text-xs px-3">Social sharing coming in V2</p>
         </div>
       </div>
     </>
@@ -108,24 +106,23 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
 
 /**
  * Comment for future implementation:
- * 
+ *
  * To implement social sharing:
  * 1. Twitter: Use Twitter Web Intent API
  *    - URL: https://twitter.com/intent/tweet?text={text}&url={url}
- * 
+ *
  * 2. Facebook: Use Facebook Share Dialog
  *    - URL: https://www.facebook.com/sharer/sharer.php?u={url}
- * 
+ *
  * 3. Instagram: Generate audiogram video from audio + image
  *    - Use Canvas API or server-side video generation
  *    - Provide download for manual upload
- * 
+ *
  * 4. Native Share API: Use Web Share API when available
  *    - if (navigator.share) { await navigator.share({ title, text, url }) }
- * 
+ *
  * 5. Generate shareable links:
  *    - Upload audio to GCS
  *    - Create public share URL
  *    - Add Open Graph meta tags for previews
  */
-

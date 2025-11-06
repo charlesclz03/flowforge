@@ -8,9 +8,10 @@ export function searchSessions(query: string): StoredSession[] {
   const sessions = getAllSessions()
   const lowerQuery = query.toLowerCase()
 
-  return sessions.filter((session) =>
-    session.title.toLowerCase().includes(lowerQuery) ||
-    session.beatTitle.toLowerCase().includes(lowerQuery)
+  return sessions.filter(
+    (session) =>
+      session.title.toLowerCase().includes(lowerQuery) ||
+      session.beatTitle.toLowerCase().includes(lowerQuery)
   )
 }
 
@@ -113,7 +114,7 @@ export function importSessions(jsonString: string): {
   try {
     const imported = JSON.parse(jsonString) as StoredSession[]
     const errors: string[] = []
-    let count = 0
+    let _count = 0
 
     if (!Array.isArray(imported)) {
       throw new Error('Invalid format: expected array of sessions')
@@ -124,7 +125,7 @@ export function importSessions(jsonString: string): {
       if (!session.id || !session.title || !session.audioData) {
         errors.push(`Session ${index + 1}: missing required fields`)
       } else {
-        count++
+        _count++
       }
     })
 
@@ -157,4 +158,3 @@ export function importSessions(jsonString: string): {
     }
   }
 }
-

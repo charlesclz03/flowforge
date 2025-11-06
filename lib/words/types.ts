@@ -16,4 +16,3 @@ export interface WordPromptSchedule {
   word: string
   triggerTime: number // seconds into the beat
 }
-

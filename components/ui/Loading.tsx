@@ -39,4 +39,3 @@ export function Loading({ size = 'md', text, className }: LoadingProps) {
     </div>
   )
 }
-

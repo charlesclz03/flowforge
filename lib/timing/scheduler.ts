@@ -76,4 +76,3 @@ export class WordPromptScheduler {
     return calculatePromptInterval(this.bpm, this.frequencyInBars)
   }
 }
-

@@ -8,21 +8,31 @@ export const COLORS = {
     DEFAULT: '#000000',
     card: '#1C1C1E',
     elevated: '#2C2C2E',
+    glow: '#0A0A0C',
   },
   text: {
     primary: '#FFFFFF',
     secondary: '#8E8E93',
     tertiary: '#48484A',
+    muted: '#3A3A3C',
   },
   accent: {
     orange: '#FF9500',
     blue: '#0A84FF',
     green: '#30D158',
     red: '#FF3B30',
+    violet: '#7D7AFF',
+    aqua: '#32D3FF',
+    teal: '#64D2FF',
   },
   timer: {
     ring: '#FF9500',
     background: '#2C2C2E',
+  },
+  stroke: {
+    subtle: '#2F2F30',
+    strong: '#3F3F41',
+    glow: '#1B1B1D',
   },
 } as const
 
@@ -42,6 +52,11 @@ export const TYPOGRAPHY = {
     medium: 500,
     semibold: 600,
     bold: 700,
+  },
+  letterSpacing: {
+    tight: '-0.02em',
+    normal: '0em',
+    wide: '0.08em',
   },
 } as const
 
@@ -85,6 +100,28 @@ export const ANIMATION = {
     out: 'cubic-bezier(0, 0, 0.2, 1)',
     inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
   },
+  keyframes: {
+    orbital: 'orbital-glow 16s linear infinite',
+    pulse: 'pulse-record 1.5s ease-in-out infinite',
+  },
+} as const
+
+export const GRADIENTS = {
+  pulse: 'linear-gradient(135deg, #0A84FF 0%, #7D7AFF 45%, #FF9500 100%)',
+  aurora: 'linear-gradient(120deg, rgba(10,132,255,0.6) 0%, rgba(125,122,255,0.4) 50%, rgba(48,209,88,0.3) 100%)',
+  midnight: 'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
+} as const
+
+export const SHADOWS = {
+  neon: '0 0 30px rgba(10, 132, 255, 0.25)',
+  glow: '0 10px 40px rgba(255, 149, 0, 0.2)',
+  soft: '0 20px 60px rgba(0, 0, 0, 0.45)',
+} as const
+
+export const BLURS = {
+  heavy: '24px',
+  medium: '18px',
+  light: '12px',
 } as const
 
 // Recording constants
@@ -134,4 +171,3 @@ export const UI_CONFIG = {
   BEAT_CARD_HEIGHT: 80,
   MAX_SESSION_TITLE_LENGTH: 50,
 } as const
-

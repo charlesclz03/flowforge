@@ -18,19 +18,12 @@ export function DurationDisplay({
 }: DurationDisplayProps) {
   return (
     <div className={cn('flex flex-col items-center space-y-1', className)}>
-      {label && (
-        <div className="text-text-secondary text-xs uppercase tracking-wider">{label}</div>
-      )}
+      {label && <div className="text-text-secondary text-xs uppercase tracking-wider">{label}</div>}
       <div
-        className={cn(
-          'font-mono font-light',
-          large ? 'text-4xl' : 'text-2xl',
-          'text-text-primary'
-        )}
+        className={cn('font-mono font-light', large ? 'text-4xl' : 'text-2xl', 'text-text-primary')}
       >
         {formatDuration(duration)}
       </div>
     </div>
   )
 }
-

@@ -1,14 +1,41 @@
 import { prisma } from '@/lib/prisma'
+import beatsData from '@/data/beats.json'
 import { Beat, Prisma } from '@prisma/client'
 import { BeatFilters, DatabaseResult } from '@/types/database'
 
 /**
  * Get all beats with optional filtering
  */
-export async function getBeats(
-  filters?: BeatFilters
-): Promise<DatabaseResult<Beat[]>> {
+export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Beat[]>> {
   try {
+    if (process.env.DISABLE_DB === 'true') {
+      const all = (beatsData as unknown as Array<Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }>).map((b) => ({
+        id: 'fallback-' + b.title,
+        title: b.title,
+        bpm: b.bpm,
+        storageUrl: '/beats/placeholder.mp3',
+        isPremium: Boolean(b.isPremium),
+        genre: b.genre ?? null,
+        duration: null,
+        artistName: 'FlowForge Beats',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })) as unknown as Beat[]
+
+      let filtered = all
+      if (filters?.isPremium !== undefined) filtered = filtered.filter((b) => b.isPremium === filters.isPremium)
+      if (filters?.genre) filtered = filtered.filter((b) => b.genre === filters.genre)
+      if (filters?.minBpm || filters?.maxBpm) {
+        filtered = filtered.filter((b) => {
+          return (
+            (filters?.minBpm ? b.bpm >= filters.minBpm : true) &&
+            (filters?.maxBpm ? b.bpm <= filters.maxBpm : true)
+          )
+        })
+      }
+
+      return { success: true, data: filtered }
+    }
     const where: Prisma.BeatWhereInput = {}
 
     if (filters?.isPremium !== undefined) {
@@ -39,9 +66,26 @@ export async function getBeats(
     }
   } catch (error) {
     console.error('Error fetching beats:', error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch beats',
+    // Fallback to static data when DB is unavailable
+    try {
+      const all = (beatsData as unknown as Array<Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }>).map((b) => ({
+        id: 'fallback-' + b.title,
+        title: b.title,
+        bpm: b.bpm,
+        storageUrl: '/beats/placeholder.mp3',
+        isPremium: Boolean(b.isPremium),
+        genre: b.genre ?? null,
+        duration: null,
+        artistName: 'FlowForge Beats',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })) as unknown as Beat[]
+      return { success: true, data: all }
+    } catch (e) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch beats',
+      }
     }
   }
 }
@@ -155,9 +199,7 @@ export async function getAllGenres(): Promise<DatabaseResult<string[]>> {
       },
     })
 
-    const genreList = genres
-      .map((b) => b.genre)
-      .filter((g): g is string => g !== null)
+    const genreList = genres.map((b) => b.genre).filter((g): g is string => g !== null)
 
     return {
       success: true,
@@ -171,4 +213,3 @@ export async function getAllGenres(): Promise<DatabaseResult<string[]>> {
     }
   }
 }
-

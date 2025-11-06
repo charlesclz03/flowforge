@@ -235,4 +235,3 @@ export class AudioRecorder {
     this.onMaxDurationCallback = null
   }
 }
-

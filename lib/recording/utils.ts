@@ -67,17 +67,14 @@ export function formatRecordingFilename(title?: string, timestamp?: Date): strin
   const dateStr = date.toISOString().split('T')[0]
   const timeStr = date.toTimeString().split(' ')[0].replace(/:/g, '-')
   const prefix = title ? `${title.replace(/[^a-z0-9]/gi, '-')}_` : 'recording_'
-  
+
   return `${prefix}${dateStr}_${timeStr}.webm`
 }
 
 /**
  * Estimate file size based on duration and bitrate
  */
-export function estimateFileSize(
-  durationSeconds: number,
-  bitrate: number = 128000
-): number {
+export function estimateFileSize(durationSeconds: number, bitrate: number = 128000): number {
   // bitrate is in bits per second, convert to bytes
   return (durationSeconds * bitrate) / 8
 }
@@ -90,4 +87,3 @@ export function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
-

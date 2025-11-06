@@ -31,14 +31,21 @@ export function BeatCard({ beat, isSelected, onSelect, className }: BeatCardProp
           <div
             className={cn(
               'flex items-center justify-center w-10 h-10 rounded-lg',
-              isSelected ? 'bg-accent-orange text-black' : 'bg-background-elevated text-text-secondary'
+              isSelected
+                ? 'bg-accent-orange text-black'
+                : 'bg-background-elevated text-text-secondary'
             )}
           >
             <Music size={20} />
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className={cn('font-medium truncate', isSelected ? 'text-text-primary' : 'text-text-primary')}>
+            <h3
+              className={cn(
+                'font-medium truncate',
+                isSelected ? 'text-text-primary' : 'text-text-primary'
+              )}
+            >
               {beat.title}
             </h3>
             <p className="text-text-secondary text-sm">
@@ -57,4 +64,3 @@ export function BeatCard({ beat, isSelected, onSelect, className }: BeatCardProp
     </button>
   )
 }
-

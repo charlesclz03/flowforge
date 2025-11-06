@@ -30,7 +30,12 @@ export function RecordingIndicator({
               <Mic size={16} className="text-accent-red" />
             </div>
           )}
-          <span className={cn('text-sm font-mono', isRecording ? 'text-accent-red' : 'text-text-secondary')}>
+          <span
+            className={cn(
+              'text-sm font-mono',
+              isRecording ? 'text-accent-red' : 'text-text-secondary'
+            )}
+          >
             {formatDuration(duration)}
           </span>
         </div>
@@ -56,4 +61,3 @@ export function RecordingIndicator({
     </div>
   )
 }
-

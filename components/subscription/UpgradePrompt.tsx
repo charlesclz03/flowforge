@@ -71,10 +71,7 @@ export function UpgradePrompt({ feature, onUpgrade, onDismiss, className }: Upgr
         )}
       </div>
 
-      <p className="text-text-tertiary text-xs text-center">
-        Stripe checkout coming in V2
-      </p>
+      <p className="text-text-tertiary text-xs text-center">Stripe checkout coming in V2</p>
     </div>
   )
 }
-

@@ -43,12 +43,7 @@ export function TimerRing({
   }
 
   return (
-    <svg
-      width={size}
-      height={size}
-      className={className}
-      style={{ transform: 'rotate(-90deg)' }}
-    >
+    <svg width={size} height={size} className={className} style={{ transform: 'rotate(-90deg)' }}>
       {/* Background ring */}
       <circle
         cx={size / 2}
@@ -75,4 +70,3 @@ export function TimerRing({
     </svg>
   )
 }
-

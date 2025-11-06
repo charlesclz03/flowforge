@@ -30,10 +30,7 @@ export function FrequencySelector({ value, onChange, className }: FrequencySelec
           </button>
         ))}
       </div>
-      <p className="text-xs text-text-tertiary">
-        New word appears every {value} bars
-      </p>
+      <p className="text-xs text-text-tertiary">New word appears every {value} bars</p>
     </div>
   )
 }
-
