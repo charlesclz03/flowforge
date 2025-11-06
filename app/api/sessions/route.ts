@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
  * Get sessions endpoint (stub for MVP)
  * In V2, this will fetch from database
  */
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // For MVP, return empty array
     // In V2, this will fetch from database

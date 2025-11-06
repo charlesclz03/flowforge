@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   getAllSessions,
-  getSession,
   saveSession,
   updateSession,
   deleteSession,

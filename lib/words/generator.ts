@@ -1,4 +1,4 @@
-import { WordData, WordPromptConfig } from './types'
+import { WordData } from './types'
 import { filterByDifficulty, getRandomWords } from './utils'
 
 /**

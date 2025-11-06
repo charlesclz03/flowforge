@@ -175,6 +175,32 @@ These internal analyses informed this README. See `DOCS/` for originals.
 - Seed with 15 template beats (bpm metadata); simple word list with difficulty tags
 - Ship to Vercel preview; collect initial feedback on the prompt timing and UX
 
+## 20) Current Build & Verification (Updated)
+- **Database**: Supabase connected; migrations applied; seed loaded (15 beats, 45 words)
+- **Build**: `npm run build` completes successfully (only Prettier-style warnings)
+- **APIs**: `/api/beats`, `/api/words/random`, `/api/sessions`, `/api/sessions/upload` online
+
+### How to run locally
+```bash
+npm install
+cp .env.local.example .env.local  # add your DATABASE_URL/DIRECT_URL
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed                 # optional; uses DIRECT_URL
+npm run dev
+```
+
+### Useful scripts
+- `npm run build` – compile for production
+- `npm run lint` – lint with ESLint/Prettier rules
+- `npm test` – run Vitest
+
+### New session checklist
+- Pull latest `main`
+- Verify env in `.env.local` (DATABASE_URL pooled 6543, DIRECT_URL direct 5432)
+- `npm install && npx prisma generate`
+- `npm run dev` and visit `http://localhost:3000`
+
 
 ## 18) Glossary
 - **On‑beat prompts**: Words displayed precisely at musical bar boundaries (e.g., every 8 bars)

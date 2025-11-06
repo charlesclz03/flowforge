@@ -10,9 +10,9 @@
  */
 export async function mixAudioBlobs(
   vocalBlob: Blob,
-  beatBlob: Blob,
-  vocalVolume: number = 1.0,
-  beatVolume: number = 0.8
+  _beatBlob: Blob,
+  _vocalVolume: number = 1.0,
+  _beatVolume: number = 0.8
 ): Promise<Blob> {
   // For MVP, we just return the vocal blob
   // The beat plays in the background during recording
@@ -24,7 +24,7 @@ export async function mixAudioBlobs(
 /**
  * Adjust audio volume (stub for MVP)
  */
-export async function adjustVolume(blob: Blob, volume: number): Promise<Blob> {
+export async function adjustVolume(blob: Blob, _volume: number): Promise<Blob> {
   // Stub for MVP
   console.warn('Volume adjustment not implemented in MVP')
   return blob

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { DurationDisplay } from './DurationDisplay'
 import { cn } from '@/lib/utils'
-import { Check, Download, Save, X, Play as PlayIcon, Pause } from 'lucide-react'
+import { Download, Save, X, Play as PlayIcon, Pause } from 'lucide-react'
 
 interface ReviewScreenProps {
   audioBlob: Blob

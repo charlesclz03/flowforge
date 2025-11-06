@@ -28,6 +28,22 @@ FlowForge uses Supabase for PostgreSQL database hosting.
 4. Copy the "Connection string" (select "URI" format)
 5. Replace the placeholders in `.env.local`
 
+#### Connection strings (Supabase best practice)
+
+- Use a **pooled** connection for runtime (PgBouncer/6543):
+```
+DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-0-<REGION>.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require"
+```
+
+- Use a **direct** connection for migrations/seeding (5432):
+```
+DIRECT_URL="postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres?sslmode=require"
+```
+
+Notes:
+- URL-encode special characters in the password (e.g. `*` becomes `%2A`).
+- Prisma reads `.env` by default during CLI. Keep both variables in `.env.local` and `.env` if needed.
+
 #### Create `.env.local`:
 
 ```bash
@@ -51,7 +67,13 @@ npx prisma generate
 npx prisma migrate dev
 
 # Seed the database
-npx prisma db seed
+# (If PgBouncer interferes, force Prisma to use DIRECT_URL)
+DIRECT_URL from .env.local will be used if you run:
+
+```bash
+export $(grep -E '^(DIRECT_URL)=' .env | xargs)
+DATABASE_URL="$DIRECT_URL" npx prisma db seed
+```
 ```
 
 ### 4. Run Development Server

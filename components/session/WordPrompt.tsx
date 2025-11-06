@@ -28,6 +28,9 @@ export function WordPrompt({ word, show, className }: WordPromptProps) {
     } else {
       setIsVisible(false)
     }
+
+    // Explicitly return undefined to satisfy all code paths
+    return undefined
   }, [show, word])
 
   if (!displayWord) {

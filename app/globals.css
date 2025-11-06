@@ -4,7 +4,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    /* Removed invalid Tailwind class 'border-border' */
   }
   
   body {

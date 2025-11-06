@@ -1,5 +1,4 @@
 import { calculateBeatTiming } from '@/lib/beats/utils'
-import { TIMING } from '@/lib/constants/design'
 
 /**
  * Calculate the time interval between word prompts
