@@ -1,131 +1,113 @@
 # FlowForge - Current Status Summary
 
-**Date**: November 6, 2025  
-**Version**: 0.1.0-alpha  
-**Overall Completion**: 40%
+**Date**: November 17, 2025  
+**Version**: 0.2.0-alpha  
+**Overall Completion**: ~80% (core MVP loop shipped; premium/social pending)
 
 ---
 
 ## 🎯 Executive Summary
 
-**What we thought**: "The app is ready for production deployment"  
-**What's actually true**: "The infrastructure is ready, but the MVP user interface is not built"
+**What we thought (Nov 6)**: "The app is ready for production deployment"  
+**What's actually true now (Nov 17)**: **The core MVP loop is fully implemented, wired to Supabase, and deployed to Vercel; the product is in private alpha while we add premium and social features.**
 
 ### Reality Check:
 - ✅ **Backend infrastructure**: 100% complete
-- ❌ **MVP user journey**: 0% complete
-- ⚠️ **Overall project**: 40% complete
+- ✅ **MVP user journey (core loop)**: 100% complete  
+  _Sign in with Google → select beat & difficulty/frequency → practice with on‑beat prompts → record → review in recordings library._
+- ⚠️ **Premium & social roadmap**: 0% complete (Stripe, Pro gating, public sharing still planned)
+- ✅ **Deployment**: Vercel production at `https://flowforge-pi.vercel.app`
+- ✅ **Overall project**: ~80% complete
 
 ---
 
-## ✅ What's Complete (Infrastructure - 40%)
+## ✅ What's Complete (Infrastructure + Core MVP Loop)
 
 ### 1. Backend & Database (100%)
-- Supabase PostgreSQL connected
-- Prisma ORM configured
-- 3 database tables (beats, words, sessions)
-- 15 beats seeded
-- 45 words seeded
-- All migrations applied
+- Supabase PostgreSQL connected (shared dev/prod instance)
+- Prisma ORM configured with pooled connections in production
+- Database schema covering Users, Beats, Words, Sessions, Recordings
+- Beats and words seeded for all supported difficulties
+- All migrations applied and deployed
 
 ### 2. API Endpoints (100%)
-- `GET /api/beats` - Returns all beats
-- `GET /api/beats?free=true` - Returns free beats
-- `GET /api/words/random` - Returns random words
-- `GET /api/sessions` - Returns sessions
-- `POST /api/sessions` - Creates sessions
+- `GET /api/beats` – Returns curated beats (bpm, genre, premium flag)
+- `GET /api/words/random` – Returns randomized words by difficulty/frequency
+- `GET /api/recordings` / `POST /api/recordings` / `DELETE /api/recordings/[id]` – Recording CRUD
+- Auth/session routes via NextAuth (`/api/auth/*`)
 
-### 3. Marketing Page (100%)
-- Landing page deployed to Vercel
-- Hero section with branding
-- Feature showcase
-- Responsive design
-- "Join waitlist" CTA
+### 3. Marketing & Onboarding Shell (100%)
+- Landing page, How‑it‑works, and Difficulty/Beat selection pages all share the new `OnboardingLayout`
+- Hero section + positioning copy aligned with Figma
+- Responsive design on desktop and mobile
 
-### 4. Visual Assets (100%)
-- All favicons (7 sizes)
-- OG image (1200x630)
-- PWA manifest
-- Brand colors defined
-- Modern design system
+### 4. Visual Assets & Design System (100%)
+- Favicons, OG image, manifest wired
+- Purple‑based design system implemented across atoms/molecules/organisms
+- Practice, recordings, and profile views match the latest FlowForge Figma design
 
-### 5. Documentation (100%)
-- 20+ documentation files
-- Setup guides
-- API documentation
-- Deployment guides
-- Feature implementation guides
-- **MVP_BUILD_PLAN.md** (detailed requirements)
+### 5. Authentication & Routing (100%)
+- NextAuth with Google OAuth configured for localhost + Vercel domain
+- Database adapter wired to Supabase
+- Protected routes for `/practice`, `/recordings`, `/profile`
+
+### 6. Practice & Audio System (100%)
+- Beat playback with bpm‑aware timing
+- On‑beat word prompts with difficulty and bar‑frequency controls
+- Timer ring, play/pause, and recording indicators wired together
+
+### 7. Recording Management (100%)
+- Microphone recording with 2‑minute free‑tier limit
+- Upload to Supabase Storage (`recordings` bucket, per‑user paths)
+- Recordings library page with playback, download, delete, and basic stats
+
+### 8. Documentation (100%)
+- Full DOCS tree reorganized (project, phases, setup, deployment, troubleshooting)
+- Deployment, Supabase, and auth setup docs all updated to reflect the live Vercel deployment
 
 ---
 
-## ❌ What's NOT Built (MVP - 60%)
+## 🚧 What's Next (Beyond Core MVP)
 
-### The Actual Practice Application
+The actual practice application now exists and is live; remaining work is **premium, social, and hardening**.
 
-According to the business plan, users should be able to:
+### 1. Premium & Monetization (Phase 5 – 0%)
+- Stripe subscription integration
+- Premium beat gating and entitlements
+- Unlimited recording duration for Pro
+- Advanced word filters and custom lists
 
-1. ❌ Sign in with Google
-2. ❌ Select a beat from the library
-3. ❌ Choose frequency (4/8/16 bars)
-4. ❌ Choose difficulty (Easy/Medium/Hard)
-5. ❌ Press PLAY to start practice
-6. ❌ See on-beat word prompts
-7. ❌ Record their freestyle (2-minute limit)
-8. ❌ Review their recording
-9. ❌ Save to their profile
-10. ❌ See their session history
+### 2. Social & Sharing (Phase 6 – 0%)
+- Public recording links / social cards
+- Feed, likes, and basic profile stats for public pages
+- Export options (e.g., MP3, audiograms)
 
-### Missing Components:
-
-#### 1. Authentication (0%)
-- NextAuth.js not configured
-- No Google OAuth
-- No user management
-- No protected routes
-
-#### 2. Practice Page (0%)
-- No `/practice` route
-- No beat selector UI
-- No configuration controls
-- No play/stop button
-- No timer ring (functional)
-- No word prompt display
-- No recording indicator
-
-#### 3. Audio System (0%)
-- No beat playback engine
-- No microphone recording
-- No BPM synchronization
-- No on-beat timing
-- No audio mixing
-
-#### 4. Review System (0%)
-- No `/review/[sessionId]` route
-- No playback controls
-- No session list view
-- No save/share functionality
+### 3. Hardening & Scale
+- Automated tests around audio/recording flows
+- Performance and accessibility passes
+- Monitoring, logging, and backup strategy
 
 ---
 
 ## 📊 Completion Breakdown
 
 ```
-Component                Status      Completion
-────────────────────────────────────────────────
-Backend & Database       ✅ Done     100%
-API Endpoints           ✅ Done     100%
-Visual Assets           ✅ Done     100%
-Marketing Page          ✅ Done     100%
-Documentation           ✅ Done     100%
-────────────────────────────────────────────────
-Authentication          ❌ Not Built  0%
-Practice Page UI        ❌ Not Built  0%
-Audio System            ❌ Not Built  0%
-Recording               ❌ Not Built  0%
-Review Page             ❌ Not Built  0%
-────────────────────────────────────────────────
-OVERALL                 ⚠️ In Progress  40%
+Component                Status              Completion
+───────────────────────────────────────────────────────
+Backend & Database       ✅ Done             100%
+API Endpoints           ✅ Done             100%
+Visual Assets & Design  ✅ Done             100%
+Landing/Onboarding      ✅ Done             100%
+Auth & Routing          ✅ Done             100%
+Practice Page UI        ✅ Done             100%
+Audio System            ✅ Done             100%
+Recording & Library     ✅ Done             100%
+───────────────────────────────────────────────────────
+Premium Features        🚧 Not Started        0%
+Social / Sharing        🚧 Not Started        0%
+Testing & Hardening     🚧 In Progress       20%
+───────────────────────────────────────────────────────
+OVERALL                 ⚠️ In Progress       ~80%
 ```
 
 ---
@@ -135,19 +117,17 @@ OVERALL                 ⚠️ In Progress  40%
 ### Live URL: https://flowforge-pi.vercel.app
 
 **What you'll see**:
-- Marketing/landing page
-- Hero section with branding
-- Feature descriptions
-- "Join waitlist" button
+- Full landing + onboarding flow (home → how it works → session setup)
+- Google sign‑in and avatar in the header
+- Practice page with beat selection, difficulty/frequency controls, timer, prompts, and recording indicator
+- Recordings library with your saved takes (play/download/delete)
 
-**What you WON'T see**:
-- Practice application
-- Beat player
-- Recording interface
-- User authentication
-- Any functional MVP features
+**What you WON'T see (yet)**:
+- Premium beats and paywalled features
+- Public sharing feeds or social features
+- Account management beyond basic profile view
 
-**Backend APIs**: All working and accessible
+**Backend APIs**: All working and accessible in production
 
 ---
 
@@ -202,20 +182,18 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 
 ## 🎯 Next Steps
 
-### Immediate Actions:
+### Immediate Actions (Now)
 
-1. ✅ **Acknowledge the gap**: Infrastructure ≠ Product
-2. ✅ **Review requirements**: Read `MVP_BUILD_PLAN.md`
-3. ⏳ **Start building**: Begin with Phase 1 (Authentication)
-4. ⏳ **Build incrementally**: Complete each phase
-5. ⏳ **Test thoroughly**: Verify each feature
-6. ⏳ **Launch MVP**: When user journey is complete
+1. ✅ Stabilize production deployment (auth, DB, storage) – **done**  
+2. ✅ Confirm full loop works on real devices (Chrome/Safari, desktop + mobile) – **in progress**  
+3. ⏳ Run a small private alpha with trusted users to gather feedback  
+4. ⏳ Prioritize and implement premium + sharing according to actual usage
 
-### Timeline:
+### Timeline (Forward Looking)
 
-- **Full-time (40 hrs/week)**: 1.5-2 weeks
-- **Part-time (20 hrs/week)**: 3-4 weeks
-- **Side project (10 hrs/week)**: 6-8 weeks
+- **Premium + hardening**: ~10–15 focused hours  
+- **Initial social/sharing surface**: ~10–15 focused hours  
+- **Broader beta**: after first 5–10 alpha users have run real sessions
 
 ---
 
@@ -273,19 +251,17 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 
 ### You can:
 - ✅ Run the dev server locally
-- ✅ View the marketing page
-- ✅ Test the API endpoints
-- ✅ View the database in Prisma Studio
-- ✅ Deploy to Vercel (infrastructure)
-- ✅ Read comprehensive documentation
+- ✅ Sign in with Google (localhost + Vercel)
+- ✅ Select beats, configure difficulty/frequency, and practice with on‑beat prompts
+- ✅ Record 2‑minute sessions and save them to Supabase Storage
+- ✅ View, play back, download, and delete recordings in your library
+- ✅ Deploy new versions to Vercel via GitHub
+- ✅ Rely on up‑to‑date documentation for setup and deployment
 
-### You cannot:
-- ❌ Practice with beats
-- ❌ Record freestyles
-- ❌ Review sessions
-- ❌ Sign in with Google
-- ❌ Use the product as intended
-- ❌ Deliver value to users
+### You cannot (yet):
+- ❌ Subscribe to a Pro plan or unlock premium beats
+- ❌ Share recordings publicly via built‑in feeds
+- ❌ View rich analytics or streak/skill scoring
 
 ---
 
@@ -297,39 +273,31 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 - [x] Marketing page deployed
 - [x] Documentation complete
 
-### MVP Success (❌ Not Achieved):
-- [ ] User can sign in
-- [ ] User can practice with beats
-- [ ] User can record freestyles
-- [ ] User can review recordings
-- [ ] Complete user journey works
+### MVP Success (✅ Achieved for Core Loop):
+- [x] User can sign in
+- [x] User can practice with beats
+- [x] User can record freestyles (2‑minute free tier)
+- [x] User can review recordings
+- [x] Complete core journey works end‑to‑end
 
-### Product Launch Success (❌ Not Ready):
-- [ ] MVP is built
-- [ ] User testing completed
-- [ ] Bugs fixed
-- [ ] Performance optimized
-- [ ] Ready for real users
+### Product Launch Success (⚠️ Not Ready for Public Launch):
+- [ ] Premium tier implemented and tested
+- [ ] Social/sharing surface live
+- [ ] Broader user testing completed
+- [ ] Performance/observability in place
 
 ---
 
-## 🚨 Critical Message
+## 🚨 Critical Message (Updated)
 
-**Do not confuse infrastructure readiness with product readiness.**
+### Infrastructure + Core MVP ✅
+- Backend, database, APIs, and storage all work in production
+- Core practice loop is implemented, deployed, and usable by real users
 
-### Infrastructure Ready ✅
-- Backend works
-- Database works
-- APIs work
-- Deployment works
+### Premium & Growth Surface ❌
+- Monetization, social, and growth loops are still ahead
 
-### Product NOT Ready ❌
-- No user interface
-- No user journey
-- No core features
-- No value delivery
-
-**Next Action**: Build the MVP (see `MVP_BUILD_PLAN.md`)
+**Next Action**: Use the live MVP to gather real session data and feedback, then implement premium and sharing features guided by actual usage.
 
 ---
 
@@ -343,52 +311,41 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 - ✅ Professional setup
 
 ### Gaps:
-- ❌ No user-facing application
-- ❌ No MVP features implemented
-- ❌ No way for users to use the product
-- ❌ 60% of the work remaining
+- ❌ Premium and monetization surface
+- ❌ Social/sharing and growth loops
 
 ### Reality:
-- **What you have**: A great starting point
-- **What you need**: The actual application
-- **Time required**: 50-80 hours of focused work
-- **Outcome**: Clear path to MVP
+- **What you have**: A working, deployed core MVP
+- **What you need**: Premium, sharing, and analytics to support growth and revenue
 
 ---
 
 ## 🎯 Final Thoughts
 
 ### The Good News:
-1. Infrastructure is production-ready
-2. Requirements are well-documented
-3. Path forward is clear
-4. No technical blockers
-5. Estimated time is reasonable
+1. Core MVP loop is built, deployed, and feels great in the browser  
+2. Infrastructure and documentation are strong and aligned  
+3. The product is finally testable end‑to‑end with real users  
 
 ### The Reality:
-1. MVP is not built
-2. Users can't use the product
-3. Significant work remains
-4. 2-3 weeks of development needed
-5. But it's totally achievable!
+1. Monetization and social layers are still ahead  
+2. We need feedback and telemetry before over‑investing in V2/V3  
 
 ### The Path Forward:
-1. Accept where we are
-2. Review the build plan
-3. Start with Phase 1
-4. Build incrementally
-5. Test thoroughly
-6. Launch when ready
+1. Run a focused private alpha and gather qualitative + quantitative feedback  
+2. Prioritize premium, sharing, and analytics based on usage  
+3. Harden performance and reliability  
+4. Plan a broader beta once the premium surface is in place  
 
 ---
 
-**Status**: Infrastructure ready, MVP build required  
-**Next Action**: Review `MVP_BUILD_PLAN.md` and start Phase 1  
-**Timeline**: 2-3 weeks to functional MVP  
-**Confidence**: High (clear requirements, solid foundation)
+**Status**: Core MVP built and deployed to Vercel (private alpha)  
+**Next Action**: Run private alpha tests and implement premium/sharing features  
+**Timeline**: ~2–4 weeks to a monetizable beta  
+**Confidence**: High (clear path, working product, solid infra)
 
 ---
 
-**Last Updated**: November 6, 2025  
-**Document Version**: 1.0
+**Last Updated**: November 17, 2025  
+**Document Version**: 2.0
 

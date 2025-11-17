@@ -1,6 +1,6 @@
 # FlowForge - Project Status
 
-**Last Updated:** November 11, 2025  
+**Last Updated:** November 17, 2025  
 **Current Phase:** Phase 4 Complete ✅ + Design Redesign Complete ✅  
 **Overall Progress:** 80%
 
@@ -364,16 +364,16 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 
 - **Development:** Local (localhost:3000)
 - **Staging:** Not deployed
-- **Production:** Not deployed
+- **Production:** Vercel – https://flowforge-pi.vercel.app (private alpha)
 
 ### Deployment Checklist
 
-- [ ] Set up Vercel project
-- [ ] Configure environment variables
-- [ ] Set up Supabase production database
-- [ ] Configure Google OAuth production credentials
-- [ ] Set up domain and SSL
-- [ ] Configure CDN for audio files
+- [x] Set up Vercel project
+- [x] Configure environment variables
+- [x] Set up Supabase production database
+- [x] Configure Google OAuth production credentials
+- [x] Set up domain and SSL (Vercel-managed)
+- [ ] Configure CDN for audio files (beyond Vercel defaults)
 - [ ] Set up monitoring and logging
 - [ ] Configure backup strategy
 
@@ -407,10 +407,10 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 
 ### Resources
 
-- **Repository:** Local
-- **Database:** Supabase PostgreSQL
-- **Auth Provider:** Google OAuth
-- **Hosting:** TBD (Vercel recommended)
+- **Repository:** GitHub (`charlesclz03/flowforge`)
+- **Database:** Supabase PostgreSQL (shared dev/prod instance)
+- **Auth Provider:** Google OAuth (NextAuth)
+- **Hosting:** Vercel – https://flowforge-pi.vercel.app
 
 ---
 
@@ -454,5 +454,5 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 
 ---
 
-**Last Updated:** November 11, 2025  
-**Next Review:** After user testing of fixes
+**Last Updated:** November 17, 2025  
+**Next Review:** After first round of remote user testing

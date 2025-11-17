@@ -1,8 +1,9 @@
 ## FlowForge 🎤
 
-**Status**: 🔄 MVP In Progress - 80% Complete  
-**Last Updated**: November 11, 2025  
-**Version**: v0.2.0-alpha
+**Status**: 🔄 MVP In Progress - 80% Complete (core loop live in private alpha)  
+**Last Updated**: November 17, 2025  
+**Version**: v0.2.0-alpha  
+**Live URL**: https://flowforge-pi.vercel.app (Vercel, private alpha)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
