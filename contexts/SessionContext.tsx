@@ -3,14 +3,14 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
 import { Beat } from '@/types/database'
 
-interface SessionState {
+export interface PracticeSessionState {
   selectedBeat: Beat | null
   frequency: number
   difficulty: number
   isActive: boolean
 }
 
-interface SessionContextValue extends SessionState {
+interface PracticeSessionContextValue extends PracticeSessionState {
   setBeat: (beat: Beat | null) => void
   setFrequency: (freq: number) => void
   setDifficulty: (diff: number) => void
@@ -19,10 +19,10 @@ interface SessionContextValue extends SessionState {
   resetSession: () => void
 }
 
-const SessionContext = createContext<SessionContextValue | undefined>(undefined)
+const PracticeSessionContext = createContext<PracticeSessionContextValue | undefined>(undefined)
 
-export function SessionProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<SessionState>({
+export function PracticeSessionProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<PracticeSessionState>({
     selectedBeat: null,
     frequency: 8,
     difficulty: 2,
@@ -59,7 +59,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <SessionContext.Provider
+    <PracticeSessionContext.Provider
       value={{
         ...state,
         setBeat,
@@ -71,14 +71,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-    </SessionContext.Provider>
+    </PracticeSessionContext.Provider>
   )
 }
 
-export function useSession() {
-  const context = useContext(SessionContext)
-  if (context === undefined) {
-    throw new Error('useSession must be used within a SessionProvider')
+export function usePracticeSession() {
+  const context = useContext(PracticeSessionContext)
+  if (!context) {
+    throw new Error('usePracticeSession must be used within a PracticeSessionProvider')
   }
   return context
 }

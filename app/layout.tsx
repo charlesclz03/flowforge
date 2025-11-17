@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { SessionProvider } from '@/components/auth/SessionProvider'
+import { PracticeSessionProvider } from '@/contexts/SessionContext'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -99,32 +101,36 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-background text-text-primary antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent-orange text-black px-4 py-2 rounded"
-        >
-          Skip to main content
-        </a>
-        {children}
-        {process.env.NEXT_PUBLIC_GA_ID ? (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-            />
-            <link rel="preconnect" href="https://www.googletagmanager.com" />
-            <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
+        <SessionProvider>
+          <PracticeSessionProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent-orange text-black px-4 py-2 rounded"
+            >
+              Skip to main content
+            </a>
+            {children}
+            {process.env.NEXT_PUBLIC_GA_ID ? (
+              <>
+                <script
+                  async
+                  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                />
+                <link rel="preconnect" href="https://www.googletagmanager.com" />
+                <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+                <script
+                  dangerouslySetInnerHTML={{
+                    __html: `
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
                   gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
                 `,
-              }}
-            />
-          </>
-        ) : null}
+                  }}
+                />
+              </>
+            ) : null}
+          </PracticeSessionProvider>
+        </SessionProvider>
       </body>
     </html>
   )

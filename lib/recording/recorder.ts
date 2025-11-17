@@ -23,6 +23,7 @@ export class AudioRecorder {
   private startTime: number = 0
   private pausedTime: number = 0
   private maxDuration: number | null = null
+  private maxDurationTimeout: ReturnType<typeof setTimeout> | null = null
 
   private onDataAvailableCallback: ((blob: Blob) => void) | null = null
   private onStopCallback: ((blob: Blob) => void) | null = null
@@ -71,7 +72,7 @@ export class AudioRecorder {
     })
 
     this.mediaRecorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
+      if (event.data && event.data.size > 0) {
         this.audioChunks.push(event.data)
 
         if (this.onDataAvailableCallback) {
@@ -81,10 +82,25 @@ export class AudioRecorder {
     }
 
     this.mediaRecorder.onstop = () => {
+      console.log(
+        'MediaRecorder stopped, audioChunks:',
+        this.audioChunks.length,
+        'total size:',
+        this.audioChunks.reduce((sum, chunk) => sum + chunk.size, 0)
+      )
+
+      // Ensure we have at least one chunk
+      if (this.audioChunks.length === 0) {
+        console.warn('No audio chunks collected, creating empty blob')
+      }
+
       const blob = new Blob(this.audioChunks, { type: mimeType })
+      console.log('Blob created:', { size: blob.size, type: blob.type })
 
       if (this.onStopCallback) {
         this.onStopCallback(blob)
+      } else {
+        console.warn('No onStop callback registered')
       }
     }
 
@@ -100,7 +116,10 @@ export class AudioRecorder {
 
     // Auto-stop if max duration is set
     if (this.maxDuration) {
-      setTimeout(() => {
+      if (this.maxDurationTimeout) {
+        clearTimeout(this.maxDurationTimeout)
+      }
+      this.maxDurationTimeout = setTimeout(() => {
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
           this.stop()
 
@@ -116,11 +135,36 @@ export class AudioRecorder {
    * Stop recording
    */
   stop(): Blob | null {
-    if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') {
+    if (!this.mediaRecorder) {
+      console.warn('MediaRecorder not initialized, cannot stop')
       return null
     }
 
+    if (this.mediaRecorder.state === 'inactive') {
+      console.warn('MediaRecorder already inactive, cannot stop')
+      return null
+    }
+
+    console.log('Stopping MediaRecorder, current state:', this.mediaRecorder.state)
+    console.log('Audio chunks collected so far:', this.audioChunks.length)
+
+    // Stop the MediaRecorder - this will trigger onstop event
     this.mediaRecorder.stop()
+
+    // Stop all tracks in the stream
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => {
+        track.stop()
+        console.log('Stopped track:', track.kind)
+      })
+      this.stream = null
+    }
+
+    if (this.maxDurationTimeout) {
+      clearTimeout(this.maxDurationTimeout)
+      this.maxDurationTimeout = null
+    }
+
     return null // Blob will be available in onStop callback
   }
 

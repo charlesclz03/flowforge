@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DurationDisplay } from './DurationDisplay'
+import { DurationDisplay } from '@/components/molecules/practice/DurationDisplay'
 import { cn } from '@/lib/utils'
 import { Download, Save, X, Play as PlayIcon, Pause } from 'lucide-react'
 

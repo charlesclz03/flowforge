@@ -17,17 +17,18 @@ export const COLORS = {
     muted: '#3A3A3C',
   },
   accent: {
-    orange: '#FF9500',
+    purple: '#7D7AFF', // Primary accent color (replaces orange)
+    orange: '#FF9500', // Now only for premium badges
     blue: '#0A84FF',
     green: '#30D158',
     red: '#FF3B30',
-    violet: '#7D7AFF',
+    violet: '#7D7AFF', // Same as purple
     aqua: '#32D3FF',
     teal: '#64D2FF',
   },
   timer: {
-    ring: '#FF9500',
-    background: '#2C2C2E',
+    ring: '#7D7AFF', // Purple instead of orange
+    background: '#3A3A3C',
   },
   stroke: {
     subtle: '#2F2F30',
@@ -107,15 +108,19 @@ export const ANIMATION = {
 } as const
 
 export const GRADIENTS = {
-  pulse: 'linear-gradient(135deg, #0A84FF 0%, #7D7AFF 45%, #FF9500 100%)',
-  aurora: 'linear-gradient(120deg, rgba(10,132,255,0.6) 0%, rgba(125,122,255,0.4) 50%, rgba(48,209,88,0.3) 100%)',
-  midnight: 'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
+  pulse: 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)', // Purple gradient
+  aurora:
+    'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)',
+  midnight:
+    'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
+  purple: 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 100%)', // Simple purple gradient
 } as const
 
 export const SHADOWS = {
-  neon: '0 0 30px rgba(10, 132, 255, 0.25)',
-  glow: '0 10px 40px rgba(255, 149, 0, 0.2)',
+  neon: '0 0 30px rgba(125, 122, 255, 0.4)', // Purple glow
+  glow: '0 10px 40px rgba(125, 122, 255, 0.3)', // Purple glow for buttons
   soft: '0 20px 60px rgba(0, 0, 0, 0.45)',
+  purple: '0 0 20px rgba(125, 122, 255, 0.5)', // Strong purple glow
 } as const
 
 export const BLURS = {
@@ -146,6 +151,11 @@ export const SESSION_CONFIG = {
     2: 'Medium',
     3: 'Hard',
   } as const,
+  DEFAULT_DURATION_SECONDS: 120, // 2 minutes for free tier
+  DEFAULT_FREQUENCY: 8, // 8 bars
+  DEFAULT_DIFFICULTY: 2, // Medium
+  TIMER_UPDATE_INTERVAL_MS: 100, // Update timer every 100ms
+  WORD_ROTATION_CHECK_INTERVAL_MS: 100, // Check word rotation every 100ms
 } as const
 
 // Timing constants
@@ -166,8 +176,11 @@ export const STORAGE_KEYS = {
 // UI Constants
 export const UI_CONFIG = {
   TIMER_RING_SIZE: 200,
-  TIMER_RING_STROKE_WIDTH: 8,
+  TIMER_RING_STROKE_WIDTH: 10,
   WORD_DISPLAY_DURATION_MS: 500, // How long to show word "pop" animation
   BEAT_CARD_HEIGHT: 80,
   MAX_SESSION_TITLE_LENGTH: 50,
+  PLAY_BUTTON_SIZE_RATIO: 0.55, // Play button is 55% of timer ring size
+  PLAY_ICON_SIZE_RATIO: 0.2, // Play icon is 20% of timer ring size
+  STOP_ICON_SIZE_RATIO: 0.15, // Stop icon is 15% of timer ring size
 } as const

@@ -40,7 +40,9 @@ export class AudioPlayer {
     return new Promise((resolve, reject) => {
       if (!this.audio) return reject(new Error('Audio not initialized'))
 
-      this.audio.src = url
+      // Encode the URL to handle spaces and special characters while keeping protocol separators intact
+      const encodedUrl = encodeURI(url)
+      this.audio.src = encodedUrl
       this.audio.load()
 
       this.audio.onloadeddata = () => resolve()

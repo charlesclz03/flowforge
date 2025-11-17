@@ -94,7 +94,11 @@ export async function getRandomWords(
       data: selected,
     }
   } catch (error) {
-    console.error('Error fetching random words:', error)
+    if (error instanceof Error && error.message.includes('Timed out fetching a new connection')) {
+      console.warn('DB connection pool exhausted when fetching words, using fallback list instead.')
+    } else {
+      console.error('Error fetching random words:', error)
+    }
     // Fallback when DB is unavailable
     const fallback = [
       {

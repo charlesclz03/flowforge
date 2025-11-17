@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createSession, getSessions } from '@/lib/db/sessions'
+import { getServerSessionWithUserId } from '@/lib/auth/server'
 export const dynamic = 'force-dynamic'
 
 /**
@@ -8,7 +9,12 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET() {
   try {
-    const result = await getSessions()
+    const session = await getServerSessionWithUserId()
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const result = await getSessions({ userId: session.user.id })
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || 'Failed to fetch sessions' },
@@ -24,6 +30,11 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSessionWithUserId()
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await request.json()
     const {
       beatId,
@@ -31,7 +42,6 @@ export async function POST(request: Request) {
       durationSeconds,
       frequency = 8,
       difficulty = 2,
-      userId = null,
       storageUrl = null,
     } = body || {}
     if (!beatId || !title || !durationSeconds) {
@@ -43,7 +53,7 @@ export async function POST(request: Request) {
       durationSeconds,
       frequency,
       difficulty,
-      userId,
+      userId: session.user.id,
       storageUrl,
     })
     if (!result.success) {

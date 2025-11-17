@@ -29,29 +29,8 @@ curl -s "http://localhost:3000/api/words/random?count=3&difficulty=1"
 echo ""
 echo ""
 
-echo "5. Testing GET /api/sessions (fetch all sessions)..."
-echo "------------------------------------------"
-curl -s http://localhost:3000/api/sessions
-echo ""
-echo ""
-
-echo "6. Testing POST /api/sessions (create new session)..."
-echo "------------------------------------------"
-curl -s -X POST http://localhost:3000/api/sessions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "beatId": "beat-123",
-    "title": "My First Session",
-    "durationSeconds": 120,
-    "frequency": 8,
-    "difficulty": 2
-  }'
-echo ""
-echo ""
-
-echo "7. Testing GET /api/sessions again (should show created session)..."
-echo "------------------------------------------"
-curl -s http://localhost:3000/api/sessions
+echo "5. Skipping /api/recordings (requires authenticated FormData request)"
+echo "   → Use the browser or an authenticated client to test uploads."
 echo ""
 echo ""
 

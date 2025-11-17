@@ -9,7 +9,11 @@ import { BeatFilters, DatabaseResult } from '@/types/database'
 export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Beat[]>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
-      const all = (beatsData as unknown as Array<Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }>).map((b) => ({
+      const all = (
+        beatsData as unknown as Array<
+          Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }
+        >
+      ).map((b) => ({
         id: 'fallback-' + b.title,
         title: b.title,
         bpm: b.bpm,
@@ -23,7 +27,8 @@ export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Be
       })) as unknown as Beat[]
 
       let filtered = all
-      if (filters?.isPremium !== undefined) filtered = filtered.filter((b) => b.isPremium === filters.isPremium)
+      if (filters?.isPremium !== undefined)
+        filtered = filtered.filter((b) => b.isPremium === filters.isPremium)
       if (filters?.genre) filtered = filtered.filter((b) => b.genre === filters.genre)
       if (filters?.minBpm || filters?.maxBpm) {
         filtered = filtered.filter((b) => {
@@ -68,7 +73,11 @@ export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Be
     console.error('Error fetching beats:', error)
     // Fallback to static data when DB is unavailable
     try {
-      const all = (beatsData as unknown as Array<Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }>).map((b) => ({
+      const all = (
+        beatsData as unknown as Array<
+          Partial<Beat> & { bpm: number; title: string; isPremium?: boolean; genre?: string }
+        >
+      ).map((b) => ({
         id: 'fallback-' + b.title,
         title: b.title,
         bpm: b.bpm,

@@ -40,14 +40,18 @@ export function useBeatPlayer() {
     if (!playerRef.current) return
 
     setIsLoading(true)
+    // Clear any previous error before attempting a new load
     setError(null)
 
     try {
       await playerRef.current.load(beat.storageUrl)
       currentBeatRef.current = beat
-      
+
       const state = playerRef.current.getState()
       setDuration(state.duration)
+
+      // If we successfully loaded, ensure any stale error message is cleared
+      setError(null)
       setIsLoading(false)
     } catch (err) {
       console.error('Error loading beat:', err)

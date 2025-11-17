@@ -23,17 +23,18 @@ const config: Config = {
           muted: '#3A3A3C',
         },
         accent: {
-          orange: '#FF9500',
+          purple: '#7D7AFF', // Primary accent color
+          orange: '#FF9500', // Premium badges only
           blue: '#0A84FF',
           green: '#30D158',
           red: '#FF3B30',
-          violet: '#7D7AFF',
+          violet: '#7D7AFF', // Same as purple
           aqua: '#32D3FF',
           teal: '#64D2FF',
         },
         timer: {
-          ring: '#FF9500',
-          background: '#2C2C2E',
+          ring: '#7D7AFF', // Purple instead of orange
+          background: '#3A3A3C',
         },
         stroke: {
           subtle: '#2F2F30',
@@ -67,17 +68,20 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        'gradient-pulse': 'linear-gradient(135deg, #0A84FF 0%, #7D7AFF 45%, #FF9500 100%)',
-        'gradient-aurora': 'linear-gradient(120deg, rgba(10,132,255,0.6) 0%, rgba(125,122,255,0.4) 50%, rgba(48,209,88,0.3) 100%)',
+        'gradient-pulse': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)',
+        'gradient-aurora': 'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)',
         'gradient-midnight': 'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
+        'gradient-purple': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 100%)',
       },
       boxShadow: {
-        neon: '0 0 30px rgba(10, 132, 255, 0.25)',
-        glow: '0 10px 40px rgba(255, 149, 0, 0.2)',
+        neon: '0 0 30px rgba(125, 122, 255, 0.4)',
+        glow: '0 10px 40px rgba(125, 122, 255, 0.3)',
         soft: '0 20px 60px rgba(0, 0, 0, 0.45)',
+        purple: '0 0 20px rgba(125, 122, 255, 0.5)',
       },
       dropShadow: {
-        neon: '0 0 10px rgba(10, 132, 255, 0.6)',
+        neon: '0 0 10px rgba(125, 122, 255, 0.6)',
+        purple: '0 0 10px rgba(125, 122, 255, 0.6)',
       },
       backdropBlur: {
         heavy: '24px',
