@@ -6,7 +6,11 @@ const globalForPrisma = globalThis as unknown as {
 
 // In development, prefer DIRECT_URL (non-pooled) to avoid exhausting the pooled connection
 // limit (often 1) on providers like Supabase, which can trigger Prisma P2024 timeouts.
-const datasourceUrl = process.env.DIRECT_URL || process.env.DATABASE_URL
+// In production (Vercel), always use the pooled DATABASE_URL for better connectivity.
+const datasourceUrl =
+  process.env.NODE_ENV === 'development'
+    ? process.env.DIRECT_URL || process.env.DATABASE_URL
+    : process.env.DATABASE_URL
 
 export const prisma =
   globalForPrisma.prisma ??
