@@ -112,12 +112,28 @@ export function PracticeControls({
             {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
           </div>
           <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
+            {/* Difficulty pill (left of mic) */}
+            <div
+              className={cn(
+                'inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium',
+                difficultyMeta.classes
+              )}
+            >
+              <span>{difficultyMeta.label}</span>
+            </div>
+
+            {/* Recording indicator (center) */}
             <RecordingIndicator
               isRecording={(isRecording || isPlaying) && !micPermissionError}
               duration={recordingDuration}
               maxDuration={sessionDuration}
               showDuration={false}
             />
+
+            {/* Frequency pill (right of mic) */}
+            <span className="rounded-full bg-accent-purple/20 px-3 py-1 text-[0.7rem] font-medium text-accent-purple whitespace-nowrap">
+              {frequencyMeta.label}
+            </span>
           </div>
         </div>
 
@@ -128,33 +144,9 @@ export function PracticeControls({
           </div>
         )}
 
-        {/* Word Prompt with difficulty / frequency context */}
-        <div className="flex w-full items-center justify-between gap-4">
-          {/* Difficulty display (left) */}
-          <div className="max-w-[180px] flex-1 space-y-1 text-left">
-            <div
-              className={cn(
-                'inline-flex items-center rounded-full px-3 py-1 text-xs font-medium',
-                difficultyMeta.classes
-              )}
-            >
-              <span>{difficultyMeta.label}</span>
-            </div>
-          </div>
-
-          {/* Word prompt (center) */}
-          <div className="flex flex-[2] items-center justify-center">
-            <WordPrompt word={currentWord || null} show={isPlaying && !!currentWord} />
-          </div>
-
-          {/* Frequency display (right) */}
-          <div className="max-w-[180px] flex-1 space-y-1 text-right">
-            <div className="inline-flex items-center justify-end">
-              <span className="rounded-full bg-accent-purple/20 px-3 py-1 text-xs font-medium text-accent-purple whitespace-nowrap">
-                {frequencyMeta.label}
-              </span>
-            </div>
-          </div>
+        {/* Word Prompt */}
+        <div className="flex w-full items-center justify-center">
+          <WordPrompt word={currentWord || null} show={isPlaying && !!currentWord} />
         </div>
 
         {/* Play Button with Timer Ring - Responsive size */}
