@@ -50,10 +50,6 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
             <h2 className="text-balance text-3xl font-light text-white sm:text-4xl">
               Cue your beat, spark your next bar, capture the take.
             </h2>
-            <p className="max-w-xl text-base text-text-secondary">
-              Intelligent prompts sync to your tempo, recording tools glow with status feedback, and
-              every session wraps in a clean timeline designed for late-night flow states.
-            </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-center">
               {isAuthenticated ? (
                 <Link

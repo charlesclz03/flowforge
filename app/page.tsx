@@ -87,8 +87,8 @@ function HomePageContent() {
               The freestyle command center for artists in motion.
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-text-secondary">
-              Designed with the midnight precision of the iOS Clock and the luminous polish of
-              Revolut—your beats, prompts, and recordings unified in a single glowing cockpit.
+              Intelligent prompts sync to your tempo, recording tools glow with status feedback,
+              and every session wraps in a clean timeline designed for late-night flow states.
             </p>
           </header>
 

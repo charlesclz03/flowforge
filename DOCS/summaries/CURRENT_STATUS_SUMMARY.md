@@ -1,7 +1,7 @@
 # FlowForge - Current Status Summary
 
-**Date**: November 17, 2025  
-**Version**: 0.2.0-alpha  
+**Date**: November 18, 2025  
+**Version**: 0.2.1-alpha  
 **Overall Completion**: ~80% (core MVP loop shipped; premium/social pending)
 
 ---
@@ -16,7 +16,8 @@
 - ✅ **Backend infrastructure**: 100% complete
 - ✅ **MVP user journey (core loop)**: 100% complete  
   _Sign in with Google → select beat & difficulty/frequency → practice with on‑beat prompts → record → review in recordings library._
-- ⚠️ **Premium & social roadmap**: 0% complete (Stripe, Pro gating, public sharing still planned)
+- 🚧 **Premium groundwork**: Beat library expanded from 8 → 18 tracks and the last 8 are now flagged as premium with crown badges in the UI (no gating/billing yet)
+- ⚠️ **Monetization & social roadmap**: Stripe, Pro entitlements, and public sharing still unimplemented
 - ✅ **Deployment**: Vercel production at `https://flowforge-pi.vercel.app`
 - ✅ **Overall project**: ~80% complete
 
@@ -80,10 +81,10 @@
 
 The actual practice application now exists and is live; remaining work is **premium, social, and hardening**.
 
-### 1. Premium & Monetization (Phase 5 – 0%)
+### 1. Premium & Monetization (Phase 5 – Started)
 
 - Stripe subscription integration
-- Premium beat gating and entitlements
+- Premium beat gating and entitlements (UI badges + premium flags in place; paywall logic still TBD)
 - Unlimited recording duration for Pro
 - Advanced word filters and custom lists
 
@@ -115,7 +116,7 @@ Practice Page UI        ✅ Done             100%
 Audio System            ✅ Done             100%
 Recording & Library     ✅ Done             100%
 ───────────────────────────────────────────────────────
-Premium Features        🚧 Not Started        0%
+Premium Features        🚧 In Progress       10%
 Social / Sharing        🚧 Not Started        0%
 Testing & Hardening     🚧 In Progress       20%
 ───────────────────────────────────────────────────────
@@ -278,7 +279,7 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 
 ### You cannot (yet):
 
-- ❌ Subscribe to a Pro plan or unlock premium beats
+- ❌ Subscribe to a Pro plan or actually unlock premium‑only beats (they are visually flagged but not gated)
 - ❌ Share recordings publicly via built‑in feeds
 - ❌ View rich analytics or streak/skill scoring
 
@@ -376,5 +377,5 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 
 ---
 
-**Last Updated**: November 17, 2025  
-**Document Version**: 2.0
+**Last Updated**: November 18, 2025  
+**Document Version**: 2.1

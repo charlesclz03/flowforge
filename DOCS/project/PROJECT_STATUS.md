@@ -1,21 +1,21 @@
 # FlowForge - Project Status
 
-**Last Updated:** November 17, 2025  
-**Current Phase:** Phase 4 Complete ✅ + Design Redesign Complete ✅  
-**Overall Progress:** 80%
+**Last Updated:** November 18, 2025  
+**Current Phase:** Phase 5 Started (Premium groundwork) 🚧 + Design Redesign Complete ✅  
+**Overall Progress:** 82%
 
 ---
 
 ## 📊 Phase Overview
 
-| Phase                          | Status      | Progress | Completion Date |
-| ------------------------------ | ----------- | -------- | --------------- |
-| Phase 1: Infrastructure & Auth | ✅ Complete | 100%     | Nov 10, 2025    |
-| Phase 2: Core UI & Navigation  | ✅ Complete | 100%     | Nov 10, 2025    |
-| Phase 3: Audio System          | ✅ Complete | 100%     | Nov 11, 2025    |
-| Phase 4: Recording Management  | ✅ Complete | 100%     | Nov 11, 2025    |
-| Phase 5: Premium Features      | 🔄 Next     | 0%       | TBD             |
-| Phase 6: Social Features       | ⏳ Planned  | 0%       | TBD             |
+| Phase                          | Status         | Progress | Completion Date |
+| ------------------------------ | -------------- | -------- | --------------- |
+| Phase 1: Infrastructure & Auth | ✅ Complete    | 100%     | Nov 10, 2025    |
+| Phase 2: Core UI & Navigation  | ✅ Complete    | 100%     | Nov 10, 2025    |
+| Phase 3: Audio System          | ✅ Complete    | 100%     | Nov 11, 2025    |
+| Phase 4: Recording Management  | ✅ Complete    | 100%     | Nov 11, 2025    |
+| Phase 5: Premium Features      | 🚧 In Progress | 10%      | Nov 18, 2025    |
+| Phase 6: Social Features       | ⏳ Planned     | 0%       | TBD             |
 
 ---
 
@@ -180,12 +180,20 @@
 
 ---
 
-## ⏳ Phase 5: Premium Features (0%)
+## ⏳ Phase 5: Premium Features (~10%)
 
-### Planned Features
+### Completed / In Progress
+
+- [x] Expanded beat library to 18 curated tracks
+- [x] Marked the last 8 beats as **Premium** in the database (`isPremium=true`)
+- [x] Implemented crown‑icon Premium badge styling in the difficulty/beat selection UI
+- [ ] Feature gating (only Pro can access premium beats)
+- [ ] Payment integration (Stripe) and subscription management
+
+### Planned Features (Remaining)
 
 - [ ] Payment integration (Stripe)
-- [ ] Premium beat access
+- [ ] Premium beat access and entitlements
 - [ ] Unlimited recording duration
 - [ ] Advanced word filters
 - [ ] Custom word lists
@@ -236,7 +244,7 @@
 ### Database Content
 
 - **Words:** 57 (across 3 difficulty levels)
-- **Beats:** 8 (MP3 files)
+- **Beats:** 18 (MP3 files; 10 standard, 8 premium‑flagged)
 - **Users:** Dynamic (OAuth)
 - **Sessions:** 0 (Phase 4)
 - **Recordings:** 0 (Phase 4)
@@ -299,6 +307,7 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 **All known issues resolved!** ✅
 
 **Note**: Users must be authenticated to:
+
 - Access `/recordings` page
 - Save recordings to Supabase Storage
 - View their recording library
@@ -454,5 +463,5 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 
 ---
 
-**Last Updated:** November 17, 2025  
+**Last Updated:** November 18, 2025  
 **Next Review:** After first round of remote user testing

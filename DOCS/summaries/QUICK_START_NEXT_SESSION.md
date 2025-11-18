@@ -1,8 +1,8 @@
 # 🚀 Quick Start - Next Session
 
-**Last Updated:** November 11, 2025  
-**Current Status:** Phase 4 Complete (80% Overall)  
-**Next Phase:** Phase 5 - Premium Features
+**Last Updated:** November 18, 2025  
+**Current Status:** Phase 4 Complete, Phase 5 Started (~82% Overall)  
+**Next Phase:** Phase 5 - Premium Features (Stripe + gating)
 
 ---
 
@@ -161,7 +161,7 @@ NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-...
 
 - ✅ 10 recordings max
 - ✅ 2-minute sessions
-- ✅ Basic beats (8 available)
+- ✅ Basic beats (currently 18 total beats, with 8 premium‑flagged in the UI)
 - ✅ Standard word prompts
 - ❌ Ads displayed
 - ❌ Limited features
