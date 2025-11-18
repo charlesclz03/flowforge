@@ -13,6 +13,7 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
+import { Crown } from 'lucide-react'
 
 type Frequency = 4 | 8 | 16
 
@@ -29,7 +30,7 @@ export default function DifficultySelectionPage() {
   useEffect(() => {
     async function fetchBeats() {
       try {
-        const response = await fetch('/api/beats?free=true')
+        const response = await fetch('/api/beats')
         const data = await response.json()
         setBeats(data.beats || [])
       } catch (err) {
@@ -100,8 +101,9 @@ export default function DifficultySelectionPage() {
               >
                 {/* Premium badge */}
                 {beat.isPremium && (
-                  <div className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-accent-orange to-accent-orange/80 px-3 py-1 text-xs font-medium text-black">
-                    Premium
+                  <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-accent-orange to-accent-orange/80 px-3 py-1 text-xs font-semibold text-white shadow-neon">
+                    <Crown className="h-3 w-3" />
+                    <span>Premium</span>
                   </div>
                 )}
 
@@ -109,11 +111,7 @@ export default function DifficultySelectionPage() {
                 <div
                   className={`
                     mb-4 flex h-12 w-12 items-center justify-center rounded-xl
-                    ${
-                      selectedBeat?.id === beat.id
-                        ? 'bg-accent-purple/20'
-                        : 'bg-white/10'
-                    }
+                    ${selectedBeat?.id === beat.id ? 'bg-accent-purple/20' : 'bg-white/10'}
                   `}
                 >
                   <span

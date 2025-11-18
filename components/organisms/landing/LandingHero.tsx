@@ -54,7 +54,7 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
               Intelligent prompts sync to your tempo, recording tools glow with status feedback, and
               every session wraps in a clean timeline designed for late-night flow states.
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-center">
               {isAuthenticated ? (
                 <Link
                   href="/howitworks"

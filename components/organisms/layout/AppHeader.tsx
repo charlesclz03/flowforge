@@ -59,14 +59,18 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
             )}
           </div>
 
-          {/* Centered FlowForge title */}
-          <div className="flex items-center justify-center gap-2">
+          {/* Centered FlowForge title - always navigates to landing page */}
+          <Link
+            href="/"
+            className="flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full px-3 py-1"
+            aria-label="Go to FlowForge home"
+          >
             <Music className="h-5 w-5 text-accent-purple" />
             <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
               <span className="text-text-primary">Flow</span>
               <span className="text-accent-purple">Forge</span>
             </h1>
-          </div>
+          </Link>
         </div>
       </Container>
     </header>

@@ -1,33 +1,164 @@
 [
   {
-    "id": "beat-001",
-    "title": "Lo-Fi Chill",
-    "bpm": 85,
-    "storageUrl": "/beats/lofi-chill.mp3",
+    "id": "beat-2-naughty",
+    "title": "2 Naughty",
+    "bpm": 99,
+    "storageUrl": "/beats/2 Naughty.mp3",
     "isPremium": false,
-    "genre": "Lo-Fi",
-    "duration": 180,
+    "duration": 264,
     "artistName": "FlowForge Beats"
   },
   {
-    "id": "beat-002",
-    "title": "Boom Bap Classic",
+    "id": "beat-bam-beater",
+    "title": "Bam Beater",
+    "bpm": 95,
+    "storageUrl": "/beats/Bam Beater.mp3",
+    "isPremium": false,
+    "duration": 240,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-bass-beats-battle",
+    "title": "Bass Beats Battle",
+    "bpm": 89,
+    "storageUrl": "/beats/Bass Beats Battle.mp3",
+    "isPremium": false,
+    "duration": 240,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-battle",
+    "title": "Battle",
     "bpm": 90,
-    "storageUrl": "/beats/boom-bap-classic.mp3",
+    "storageUrl": "/beats/Battle .mp3",
     "isPremium": false,
-    "genre": "Boom Bap",
-    "duration": 150,
+    "duration": 300,
     "artistName": "FlowForge Beats"
   },
   {
-    "id": "beat-003",
-    "title": "Trap Energy",
-    "bpm": 140,
-    "storageUrl": "/beats/trap-energy.mp3",
+    "id": "beat-battle-baby",
+    "title": "Battle Baby",
+    "bpm": 89,
+    "storageUrl": "/beats/Battle Baby.mp3",
     "isPremium": false,
-    "genre": "Trap",
-    "duration": 165,
+    "duration": 40,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-battle-cracker",
+    "title": "Battle Cracker",
+    "bpm": 96,
+    "storageUrl": "/beats/Battle Cracker.mp3",
+    "isPremium": false,
+    "duration": 204,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-battle-made",
+    "title": "Battle Made",
+    "bpm": 89,
+    "storageUrl": "/beats/Battle Made.mp3",
+    "isPremium": false,
+    "duration": 45,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-battle-yo",
+    "title": "Battle Yo",
+    "bpm": 90,
+    "storageUrl": "/beats/Battle Yo.mp3",
+    "isPremium": false,
+    "duration": 120,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-be-battle-be",
+    "title": "Be Battle Be",
+    "bpm": 145,
+    "storageUrl": "/beats/Be Battle Be.mp3",
+    "isPremium": true,
+    "duration": 219,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-beat-down",
+    "title": "Beat Down",
+    "bpm": 92,
+    "storageUrl": "/beats/Beat Down.mp3",
+    "isPremium": true,
+    "duration": 240,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-big-battle-drops",
+    "title": "Big Battle Drops",
+    "bpm": 96,
+    "storageUrl": "/beats/Big Battle Drops.mp3",
+    "isPremium": true,
+    "duration": 240,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-breaks",
+    "title": "Breaks",
+    "bpm": 88,
+    "storageUrl": "/beats/Breaks.mp3",
+    "isPremium": true,
+    "duration": 240,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-frb-4",
+    "title": "FRB 4",
+    "bpm": 90,
+    "storageUrl": "/beats/FRB 4.mp3",
+    "isPremium": true,
+    "duration": 215,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-frb-5",
+    "title": "FRB 5",
+    "bpm": 90,
+    "storageUrl": "/beats/FRB 5.mp3",
+    "isPremium": true,
+    "duration": 81,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-freestyle-boom",
+    "title": "FreeStyle Boom",
+    "bpm": 92,
+    "storageUrl": "/beats/FreeStyle Boom.mp3",
+    "isPremium": true,
+    "duration": 101,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-freestyle-battle-beats-01",
+    "title": "Freestyle Battle Beats 01",
+    "bpm": 93,
+    "storageUrl": "/beats/Freestyle Battle Beats 01.mp3",
+    "isPremium": true,
+    "duration": 176,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-rap-freestyle-underground",
+    "title": "Rap Freestyle Underground",
+    "bpm": 89,
+    "storageUrl": "/beats/Rap Freestyle Underground .mp3",
+    "isPremium": false,
+    "duration": 218,
+    "artistName": "FlowForge Beats"
+  },
+  {
+    "id": "beat-shotgun-boom",
+    "title": "Shotgun Boom",
+    "bpm": 95,
+    "storageUrl": "/beats/Shotgun Boom.mp3",
+    "isPremium": false,
+    "duration": 84,
     "artistName": "FlowForge Beats"
   }
 ]
-
