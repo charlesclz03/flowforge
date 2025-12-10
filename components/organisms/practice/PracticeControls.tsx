@@ -6,6 +6,7 @@ import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { RecordingIndicator } from '@/components/molecules/practice/RecordingIndicator'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
+import { getIntervalProgress } from '@/lib/beats/utils'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -92,6 +93,10 @@ export function PracticeControls({
   const difficultyMeta = getDifficultyMeta()
   const frequencyMeta = getFrequencyMeta()
 
+  // Calculate timer ring progress (Countdown to next word)
+  // We want the ring to fill up as we approach the next word change
+  const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
+
   return (
     <Card padding="lg">
       <div className="flex flex-col items-center gap-6 sm:gap-8">
@@ -153,13 +158,12 @@ export function PracticeControls({
         <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] flex items-center justify-center">
           <PlayButton
             isPlaying={isPlaying}
-            progress={currentTime / sessionDuration}
+            progress={intervalProgress}
             onToggle={onToggle}
             disabled={!selectedBeat || isLoading}
             size={playButtonSize}
           />
         </div>
-
       </div>
     </Card>
   )

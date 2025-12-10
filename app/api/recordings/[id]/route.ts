@@ -1,132 +1,114 @@
-import { NextResponse } from 'next/server'
-import { getServerSessionWithUserId } from '@/lib/auth/server'
-import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
-import { deleteSession, getSessionById } from '@/lib/db/sessions'
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
-const SIGNED_URL_TTL_SECONDS = 60 * 60
 
-/**
- * DELETE /api/recordings/[id]
- * Delete a recording and its session
- */
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // Check authentication
-    const session = await getServerSessionWithUserId()
-    if (!session?.user?.id) {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const recordingId = params.id
+    const { id } = params
 
-    // Get session to verify ownership and get storage path
-    const sessionResult = await getSessionById(recordingId)
-    if (!sessionResult.success || !sessionResult.data) {
+    if (!id) {
+      return NextResponse.json({ error: 'Recording ID is required' }, { status: 400 })
+    }
+
+    const recording = await prisma.freestyleSession.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        beat: true,
+      },
+    })
+
+    if (!recording) {
       return NextResponse.json({ error: 'Recording not found' }, { status: 404 })
     }
 
-    const recordingSession = sessionResult.data
+    // specific check: Does this recording belong to the user?
+    // We get the user ID from the database using email to be safe, or assume session.user.id is correct if populated
+    // To be strictly safe, let's verify ownership.
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    })
 
-    // Verify ownership
-    if (recordingSession.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!user || recording.userId !== user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    // Determine file path stored in DB (may already be a path or a URL from legacy data)
-    let filePath: string | null = null
-    if (recordingSession.storageUrl) {
-      if (recordingSession.storageUrl.startsWith('http')) {
-        const url = new URL(recordingSession.storageUrl)
-        const pathMatch = url.pathname.match(/\/recordings\/(.+)$/)
-        if (pathMatch) {
-          filePath = pathMatch[1]
-        }
-      } else {
-        filePath = recordingSession.storageUrl
-      }
-    }
-
-    // Delete from database first
-    const deleteResult = await deleteSession(recordingId)
-    if (!deleteResult.success) {
-      return NextResponse.json(
-        { error: deleteResult.error || 'Failed to delete session' },
-        { status: 500 }
-      )
-    }
-
-    // Delete from storage if path exists
-    if (filePath) {
-      const supabase = createServerClient()
-      const { error: storageError } = await supabase.storage
-        .from(RECORDINGS_BUCKET)
-        .remove([filePath])
-
-      if (storageError) {
-        console.error('Storage delete error (non-critical):', storageError)
-        // Don't fail the request if storage delete fails (file might not exist)
-      }
-    }
-
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ recording })
   } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Error fetching recording:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
 
-/**
- * GET /api/recordings/[id]
- * Get a single recording by ID
- */
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // Check authentication
-    const session = await getServerSessionWithUserId()
-    if (!session?.user?.id) {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const recordingId = params.id
+    const { id } = params
 
-    // Get session
-    const sessionResult = await getSessionById(recordingId)
-    if (!sessionResult.success || !sessionResult.data) {
+    // 1. Verify ownership and get storage URL
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    })
+
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+
+    const recording = await prisma.freestyleSession.findUnique({
+      where: { id },
+    })
+
+    if (!recording) {
       return NextResponse.json({ error: 'Recording not found' }, { status: 404 })
     }
 
-    const recordingSession = sessionResult.data
-
-    // Verify ownership
-    if (recordingSession.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (recording.userId !== user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const supabase = createServerClient()
-    let signedUrl = recordingSession.storageUrl
+    // 2. Delete from Supabase Storage
+    if (recording.storageUrl) {
+      // Extract file path from URL
+      // storageUrl format: https://[project].supabase.co/storage/v1/object/public/recordings/[userId]/[filename]
+      // We need: [userId]/[filename]
 
-    if (recordingSession.storageUrl && !recordingSession.storageUrl.startsWith('http')) {
-      const { data: signedUrlData } = await supabase.storage
-        .from(RECORDINGS_BUCKET)
-        .createSignedUrl(recordingSession.storageUrl, SIGNED_URL_TTL_SECONDS)
-      signedUrl = signedUrlData?.signedUrl ?? recordingSession.storageUrl
+      const parts = recording.storageUrl.split('/recordings/')
+      if (parts.length === 2) {
+        const filePath = parts[1]
+        const { error: storageError } = await supabase.storage.from('recordings').remove([filePath])
+
+        if (storageError) {
+          console.error('Error deleting file from Supabase:', storageError)
+          // Continue to delete from DB even if storage fails, to keep DB clean?
+          // Usually yes, or warn. Let's log it but proceed.
+        }
+      }
     }
 
-    return NextResponse.json({
-      recording: {
-        ...recordingSession,
-        storageUrl: signedUrl,
-      },
+    // 3. Delete from Database
+    await prisma.freestyleSession.delete({
+      where: { id },
     })
+
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Error deleting recording:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

@@ -37,8 +37,10 @@ export class AudioRecorder {
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: 2,
           sampleRate: RECORDING_CONFIG.SAMPLE_RATE,
         },
       })

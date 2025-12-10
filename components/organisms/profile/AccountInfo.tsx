@@ -15,9 +15,9 @@ interface AccountInfoProps {
 
 export function AccountInfo({ user }: AccountInfoProps) {
   return (
-    <Card title="Account Information">
+    <Card title="Profile Information">
       <div className="space-y-6">
-        {/* User Avatar and Name */}
+        {/* User Avatar and basic profile */}
         <div className="flex items-center gap-4">
           {user.image ? (
             <div className="relative h-20 w-20">
@@ -45,7 +45,7 @@ export function AccountInfo({ user }: AccountInfoProps) {
           </div>
         </div>
 
-        {/* Account Details */}
+        {/* Account details */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-xl border border-stroke-subtle/20 bg-background-elevated/50 p-4">
             <p className="text-sm text-text-tertiary">Email</p>

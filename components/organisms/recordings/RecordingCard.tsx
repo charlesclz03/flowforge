@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
+import Link from 'next/link'
 import { Download, Trash2, Play, Pause, Music } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
@@ -142,7 +143,9 @@ export const RecordingCard = memo(function RecordingCard({
               <Music size={20} className="text-accent-orange" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-white truncate">{recording.title}</h3>
+              <h3 className="font-medium text-white truncate hover:text-accent-purple transition-colors">
+                <Link href={`/review/${recording.id}`}>{recording.title}</Link>
+              </h3>
               <p className="text-sm text-text-secondary">
                 {recording.beat.title} • {recording.beat.bpm} BPM
               </p>
