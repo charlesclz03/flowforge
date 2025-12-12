@@ -60,7 +60,7 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
                 </Link>
               ) : (
                 <Link
-                  href="/practice"
+                  href="/howitworks"
                   className="w-full rounded-full bg-white px-8 py-3 text-center text-base font-medium text-black transition hover:bg-white/90 sm:w-auto"
                 >
                   Practice Here

@@ -1,83 +1,95 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { isAdmin } from '@/lib/constants/auth'
 import { createClient } from '@supabase/supabase-js'
 
-export async function POST(req: NextRequest) {
+// Initialize Supabase Admin Client for Storage Upload (Bypass RLS)
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export async function POST(req: Request) {
   try {
+    // 1. Check Auth using NextAuth
     const session = await getServerSession(authOptions)
-
-    // 1. Auth Check
-    if (!session || !session.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!session || !isAdmin(session.user?.email)) {
+      return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    // 2. Admin Check
-    const adminEmail = process.env.ADMIN_EMAIL
-    if (session.user.email !== adminEmail) {
-      return NextResponse.json({ error: 'Forbidden: Admin access only' }, { status: 403 })
-    }
-
-    // 3. Parse Form Data
+    // 2. Parse Form Data
     const formData = await req.formData()
-    const file = formData.get('file') as File
+    const audioFile = formData.get('audio') as File
+    const coverFile = formData.get('cover') as File
     const title = formData.get('title') as string
-    const artistName = formData.get('artistName') as string
+    const producer = formData.get('producer') as string
     const bpm = parseInt(formData.get('bpm') as string)
     const genre = formData.get('genre') as string
     const difficulty = formData.get('difficulty') as string
-    const isPremium = formData.get('isPremium') === 'true'
+    const mood = formData.get('mood') as string
 
-    if (!file || !title || !artistName || !bpm) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    if (!audioFile) {
+      return new NextResponse('Audio file required', { status: 400 })
     }
 
-    // 4. Upload to Supabase Storage
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role for admin bypass
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    // 3. Upload Audio to Supabase Storage (beats bucket)
+    const audioPath = `${Date.now()}-${audioFile.name}`.replace(/\s/g, '_')
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${title.toLowerCase().replace(/\s+/g, '-')}.${fileExt}`
-
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    const { error: uploadError } = await supabase.storage.from('beats').upload(fileName, buffer, {
-      contentType: file.type,
-      upsert: false,
-    })
-
-    if (uploadError) {
-      console.error('Supabase Upload Error:', uploadError)
-      return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
+    // Validating file type briefly
+    if (!audioFile.type.startsWith('audio/')) {
+      return new NextResponse('Invalid file type. Please upload audio.', { status: 400 })
     }
 
-    // 5. Get Public URL
+    // Buffer conversion for Node environment upload if needed,
+    // but supabase-js works with File/Blob usually.
+    // However, in Next.js App Router route handlers, 'File' from formData is standard.
+    // supabase-js v2 supports passing the File object directly.
+
+    const { data: audioData, error: audioError } = await supabaseAdmin.storage
+      .from('beats')
+      .upload(audioPath, audioFile, {
+        contentType: audioFile.type,
+        upsert: false,
+      })
+
+    if (audioError) throw new Error(`Storage Error: ${audioError.message}`)
+
+    // 4. Upload Cover (Optional)
+    const coverUrl = null
+    // Ignoring cover upload logic for MVP simplicity/robustness unless needed,
+    // but schema has no 'cover_image' field?
+    // Wait, checking schema...
+    // Model Beat: id, title, bpm, storageUrl, isPremium, genre, duration, artistName, difficulty ...
+    // There is NO 'coverImage' field in the Prisma schema!
+    // I will skip cover upload to avoid DB errors.
+
+    // Get Public URL
     const {
-      data: { publicUrl },
-    } = supabase.storage.from('beats').getPublicUrl(fileName)
+      data: { publicUrl: audioUrl },
+    } = supabaseAdmin.storage.from('beats').getPublicUrl(audioPath)
 
-    // 6. Save to DB
+    // 5. Insert into Database via Prisma
     const beat = await prisma.beat.create({
       data: {
         title,
-        artistName,
+        artistName: producer, // Mapping producer -> artistName
         bpm,
         genre,
-        difficulty,
-        isPremium,
-        storageUrl: publicUrl,
-        duration: 0, // Should be calculated, but acceptable to be 0 for now as we don't have metadata parser here easily
+        difficulty, // "Easy", "Medium", "Hard"
+        storageUrl: audioUrl,
+        isPremium: true, // Auto-mark admin uploads as premium for now
+        // mood is not in schema directly?
+        // Schema has: title, bpm, storageUrl, isPremium, genre, duration, artistName, difficulty.
+        // It does NOT have 'mood'.
+        // I will omit mood.
       },
     })
 
     return NextResponse.json({ success: true, beat })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  } catch (err: any) {
+    console.error('Upload Error:', err)
+    return new NextResponse(err.message || 'Internal Server Error', { status: 500 })
   }
 }

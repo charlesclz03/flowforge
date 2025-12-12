@@ -9,6 +9,7 @@ import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
 import { useWakeLock } from '@/hooks/useWakeLock'
+import { GlassyDropdown } from '@/components/molecules/display/GlassyDropdown'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -25,7 +26,12 @@ interface PracticeControlsProps {
   difficulty: number
   frequency: number
   isGolden?: boolean
+  isPro?: boolean
+  countdownValue?: number | 'GO' | null
   onSkipWord?: () => void
+  onDifficultyChange?: (value: number) => void
+  onFrequencyChange?: (value: number) => void
+  onRecordingClick?: () => void
 }
 
 export function PracticeControls({
@@ -43,7 +49,12 @@ export function PracticeControls({
   difficulty,
   frequency,
   isGolden = false,
-  onSkipWord: _onSkipWord,
+  isPro = false,
+  countdownValue = null,
+  onSkipWord, // Use the prop directly
+  onDifficultyChange,
+  onFrequencyChange,
+  onRecordingClick,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -58,44 +69,6 @@ export function PracticeControls({
     error?.toLowerCase().includes('notallowederror') ||
     error?.toLowerCase().includes('permission denied') ||
     error?.toLowerCase().includes('failed to access microphone')
-
-  const getDifficultyMeta = () => {
-    if (difficulty <= 1) {
-      return {
-        label: 'Easy',
-        classes: 'bg-accent-green/20 text-accent-green',
-      }
-    }
-    if (difficulty === 2) {
-      return {
-        label: 'Medium',
-        classes: 'bg-accent-purple/20 text-accent-purple',
-      }
-    }
-    return {
-      label: 'Hard',
-      classes: 'bg-accent-red/20 text-accent-red',
-    }
-  }
-
-  const getFrequencyMeta = () => {
-    if (frequency === 4) {
-      return {
-        label: '4 bars',
-      }
-    }
-    if (frequency === 8) {
-      return {
-        label: '8 bars',
-      }
-    }
-    return {
-      label: '16 bars',
-    }
-  }
-
-  const difficultyMeta = getDifficultyMeta()
-  const frequencyMeta = getFrequencyMeta()
 
   // Calculate timer ring progress (Countdown to next word)
   // We want the ring to fill up as we approach the next word change
@@ -126,15 +99,30 @@ export function PracticeControls({
             />
           )}
 
-          {/* The Interactive Play Button / Ring */}
-          <div className="relative z-10">
-            <PlayButton
-              isPlaying={isPlaying}
-              progress={intervalProgress}
-              onToggle={onToggle}
-              disabled={!selectedBeat || isLoading}
-              size={Math.max(playButtonSize, 220)} // Enforce larger size for orb look
-            />
+          {/* Central Display: Countdown OR Play Button/Word */}
+          <div className="relative z-10 flex justify-center items-center">
+            {countdownValue ? (
+              <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] rounded-full flex items-center justify-center bg-black/40 backdrop-blur-md border border-accent-red/30 animate-in zoom-in duration-300">
+                <span
+                  className={cn(
+                    'text-8xl font-black italic tracking-tighter',
+                    countdownValue === 'GO' ? 'text-white' : 'text-accent-red animate-pulse'
+                  )}
+                >
+                  {countdownValue}
+                </span>
+              </div>
+            ) : (
+              <PlayButton
+                isPlaying={isPlaying}
+                onToggle={onToggle}
+                currentWord={currentWord}
+                progress={intervalProgress}
+                size={playButtonSize}
+                isGolden={isGolden}
+                onSkipWord={onSkipWord} // Corrected from _onSkipWord which was likely a typo in previous context
+              />
+            )}
           </div>
 
           {/* Central Text Overlay (Only shows when not playing/hovering? Or always?
@@ -165,33 +153,49 @@ export function PracticeControls({
         </div>
 
         {/* Controls / Metadata */}
-        <div className="flex items-center justify-center gap-4 text-sm">
-          <div
-            className={cn(
-              'px-3 py-1 rounded-full border border-white/10 bg-white/5 text-text-secondary font-medium',
-              difficultyMeta.classes
-            )}
-          >
-            {difficultyMeta.label}
-          </div>
+        <div className="flex items-center justify-center gap-4 text-sm z-20 relative">
+          <GlassyDropdown
+            label="Diff"
+            value={difficulty}
+            options={[
+              { label: 'Easy', value: 1 },
+              { label: 'Medium', value: 2 },
+              { label: 'Hard', value: 3 },
+            ]}
+            onChange={onDifficultyChange!}
+          />
 
-          <div className="text-4xl font-light tabular-nums text-white">
+          <div className="text-4xl font-light tabular-nums text-white min-w-[120px]">
             {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
           </div>
 
-          <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-text-secondary font-medium">
-            {frequencyMeta.label}
-          </div>
+          <GlassyDropdown
+            label="Freq"
+            value={frequency}
+            options={[
+              { label: '2 Bars', value: 2 },
+              { label: '4 Bars', value: 4 },
+              { label: '8 Bars', value: 8 },
+            ]}
+            onChange={onFrequencyChange!}
+          />
         </div>
 
         {/* Recording Status */}
         <div className="flex justify-center">
-          <RecordingIndicator
-            isRecording={(isRecording || isPlaying) && !micPermissionError}
-            duration={recordingDuration}
-            maxDuration={sessionDuration}
-            showDuration={false}
-          />
+          <button 
+             onClick={onRecordingClick}
+             className="focus:outline-none hover:opacity-80 transition-opacity rounded-full"
+             title={isPro ? "Recording Active" : "Unlock Recording"}
+          >
+             <RecordingIndicator
+               isRecording={(isRecording || isPlaying) && !micPermissionError}
+               duration={recordingDuration}
+               maxDuration={sessionDuration}
+               isPro={isPro}
+               showDuration={false}
+             />
+          </button>
         </div>
       </div>
     </div>

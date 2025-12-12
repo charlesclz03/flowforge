@@ -6,11 +6,61 @@ import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
 import { LeaderboardRow } from '@/components/molecules/social/LeaderboardRow'
 import { Trophy } from 'lucide-react'
+import Link from 'next/link'
 
 // Cache for 60 seconds
 export const revalidate = 60
 
-async function getLeaderboard() {
+type Period = 'all_time' | 'weekly'
+
+async function getLeaderboard(period: Period = 'all_time') {
+  if (period === 'weekly') {
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+
+    // Aggregate scores from sessions in the last 7 days
+    const weeklyScores = await prisma.freestyleSession.groupBy({
+      by: ['userId'],
+      where: {
+        createdAt: { gte: sevenDaysAgo },
+        score: { gt: 0 }, // Only count scored sessions
+      },
+      _sum: {
+        score: true,
+      },
+      orderBy: {
+        _sum: {
+          score: 'desc',
+        },
+      },
+      take: 50,
+    })
+
+    // Fetch user details for these scores
+    const userIds = weeklyScores.map((s) => s.userId)
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        image: true,
+      },
+    })
+
+    // Map scores back to users
+    return weeklyScores.map((scoreEntry) => {
+      const user = users.find((u) => u.id === scoreEntry.userId)
+      return {
+        id: scoreEntry.userId,
+        username: user?.username,
+        name: user?.name,
+        image: user?.image,
+        flowPoints: scoreEntry._sum.score || 0,
+      }
+    })
+  }
+
+  // All Time: Use the pre-calculated flowPoints field on User
   return prisma.user.findMany({
     take: 50,
     orderBy: {
@@ -26,10 +76,16 @@ async function getLeaderboard() {
   })
 }
 
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage({
+  searchParams,
+}: {
+  searchParams: { period?: string }
+}) {
   const session = await getServerSession(authOptions)
   const currentUserId = session?.user?.id
-  const users = await getLeaderboard()
+
+  const period = (searchParams?.period === 'weekly' ? 'weekly' : 'all_time') as Period
+  const users = await getLeaderboard(period)
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -38,14 +94,28 @@ export default async function LeaderboardPage() {
         <PageHeader title="Leaderboard" description="Top flows this week." />
 
         <div className="mt-8 space-y-4 max-w-2xl mx-auto">
-          {/* Header / Tabs placeholder */}
+          {/* Header / Tabs */}
           <div className="flex gap-4 mb-6 border-b border-white/10 pb-2">
-            <button className="px-4 py-2 text-white font-medium border-b-2 border-accent-purple">
+            <Link
+              href="/leaderboard?period=all_time"
+              className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+                period === 'all_time'
+                  ? 'text-white border-accent-purple'
+                  : 'text-text-tertiary border-transparent hover:text-white'
+              }`}
+            >
               All Time
-            </button>
-            <button className="px-4 py-2 text-text-tertiary hover:text-white transition-colors">
+            </Link>
+            <Link
+              href="/leaderboard?period=weekly"
+              className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+                period === 'weekly'
+                  ? 'text-white border-accent-purple'
+                  : 'text-text-tertiary border-transparent hover:text-white'
+              }`}
+            >
               Weekly
-            </button>
+            </Link>
           </div>
 
           <div className="space-y-3">

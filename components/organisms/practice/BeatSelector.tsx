@@ -11,6 +11,7 @@ interface BeatSelectorProps {
   selectedBeat: Beat | null
   isPro?: boolean
   onSelect: (beat: Beat) => void
+  onLockedBeatClick?: () => void
   className?: string
 }
 
@@ -19,6 +20,7 @@ export function BeatSelector({
   selectedBeat,
   isPro = false,
   onSelect,
+  onLockedBeatClick,
   className,
 }: BeatSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -119,6 +121,11 @@ export function BeatSelector({
                   <button
                     key={beat.id}
                     onClick={() => {
+                      if (beat.isPremium && !isPro) {
+                        onLockedBeatClick?.()
+                        setIsOpen(false)
+                        return
+                      }
                       onSelect(beat)
                       setIsOpen(false)
                     }}
@@ -126,7 +133,8 @@ export function BeatSelector({
                       'w-full flex items-center gap-3 p-2 rounded-lg transition-all text-left group',
                       isSelected
                         ? 'bg-accent-purple/20 border border-accent-purple/30'
-                        : 'hover:bg-white/5 border border-transparent'
+                        : 'hover:bg-white/5 border border-transparent',
+                      beat.isPremium && !isPro && 'opacity-70'
                     )}
                   >
                     <div
