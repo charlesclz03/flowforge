@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ success: true, beat })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('API Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

@@ -97,6 +97,7 @@ export async function GET(req: NextRequest) {
       storageDeleted: storageDeletedCount,
       dbDeleted: dbResult.count,
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Cleanup Error:', error)
     return NextResponse.json({ error: 'Cleanup failed: ' + error.message }, { status: 500 })

@@ -7,9 +7,10 @@ interface WordPromptProps {
   word: string | null
   show: boolean
   className?: string
+  isGolden?: boolean
 }
 
-export function WordPrompt({ word, show, className }: WordPromptProps) {
+export function WordPrompt({ word, show, className, isGolden }: WordPromptProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [displayWord, setDisplayWord] = useState<string | null>(null)
 
@@ -49,7 +50,9 @@ export function WordPrompt({ word, show, className }: WordPromptProps) {
         <h2
           className={cn(
             'text-3xl sm:text-4xl font-light tracking-tight text-center',
-            'text-gradient',
+            isGolden
+              ? 'text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]'
+              : 'text-gradient',
             'drop-shadow-lg'
           )}
         >
