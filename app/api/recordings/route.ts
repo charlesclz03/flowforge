@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
     if (!sessionResult.success) {
       // Rollback storage if DB fails
-      const { supabase } = await createServerClient()
+      const supabase = createServerClient()
       await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
       return NextResponse.json(
         { error: sessionResult.error || 'Failed to save session' },
