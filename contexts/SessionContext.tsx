@@ -8,12 +8,16 @@ export interface PracticeSessionState {
   frequency: number
   difficulty: number
   isActive: boolean
+  isTTSEnabled: boolean
+  ttsVolume: number // 0.0 to 1.0
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
   setBeat: (beat: Beat | null) => void
   setFrequency: (freq: number) => void
   setDifficulty: (diff: number) => void
+  setTTSEnabled: (enabled: boolean) => void
+  setTTSVolume: (volume: number) => void
   startSession: () => void
   stopSession: () => void
   resetSession: () => void
@@ -27,6 +31,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     frequency: 8,
     difficulty: 2,
     isActive: false,
+    isTTSEnabled: false,
+    ttsVolume: 0.5,
   })
 
   const setBeat = useCallback((beat: Beat | null) => {
@@ -41,6 +47,14 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, difficulty: diff }))
   }, [])
 
+  const setTTSEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, isTTSEnabled: enabled }))
+  }, [])
+
+  const setTTSVolume = useCallback((volume: number) => {
+    setState((prev) => ({ ...prev, ttsVolume: volume }))
+  }, [])
+
   const startSession = useCallback(() => {
     setState((prev) => ({ ...prev, isActive: true }))
   }, [])
@@ -50,12 +64,13 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const resetSession = useCallback(() => {
-    setState({
+    setState((prev) => ({
+      ...prev,
       selectedBeat: null,
       frequency: 8,
       difficulty: 2,
       isActive: false,
-    })
+    }))
   }, [])
 
   return (
@@ -65,6 +80,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setBeat,
         setFrequency,
         setDifficulty,
+        setTTSEnabled,
+        setTTSVolume,
         startSession,
         stopSession,
         resetSession,
@@ -82,4 +99,3 @@ export function usePracticeSession() {
   }
   return context
 }
-

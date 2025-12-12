@@ -7,9 +7,10 @@ interface WordPromptProps {
   word: string | null
   show: boolean
   className?: string
+  isGolden?: boolean
 }
 
-export function WordPrompt({ word, show, className }: WordPromptProps) {
+export function WordPrompt({ word, show, className, isGolden }: WordPromptProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [displayWord, setDisplayWord] = useState<string | null>(null)
 

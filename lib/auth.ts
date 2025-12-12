@@ -19,6 +19,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id
+        // @ts-expect-error - user object from adapter has additional fields
+        session.user.subscriptionStatus = user.subscriptionStatus
       }
       return session
     },

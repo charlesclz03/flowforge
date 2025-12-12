@@ -44,6 +44,14 @@ export function StatsSection({ recordings, isLoading }: StatsSectionProps) {
           />
         </div>
       )}
+
+      {/* Empty State Requirements: "Your legacy starts today..." */}
+      {!isLoading && recordings.length === 0 && (
+        <div className="mt-6 p-8 text-center bg-white/5 border border-dashed border-white/10 rounded-xl">
+          <h3 className="text-xl font-light text-white mb-2">Your legacy starts today.</h3>
+          <p className="text-text-secondary">Record your first track.</p>
+        </div>
+      )}
     </Card>
   )
 }

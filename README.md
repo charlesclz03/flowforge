@@ -1,13 +1,13 @@
 ## FlowForge 🎤
 
-**Status**: 🔄 MVP In Progress - 80% Complete (core loop live in private alpha)  
-**Last Updated**: November 17, 2025  
-**Version**: v0.2.0-alpha  
-**Live URL**: https://flowforge-pi.vercel.app (Vercel, private alpha)
+**Status**: 🚀 MVP Complete - 100% (Core loop live & polished)  
+**Last Updated**: December 10, 2025  
+**Version**: v1.0.0-mvp  
+**Live URL**: https://flowforge-pi.vercel.app (Vercel Production)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
-> **✅ PROGRESS UPDATE**: Infrastructure, authentication, navigation, practice UI, audio system, recording management, and **purple-based design redesign** are complete! See `PROJECT_STATUS.md` for detailed progress and `REDESIGN_COMPLETE.md` for design changes.
+> **✅ PROGRESS UPDATE**: **MVP IS COMPLETE**. All core phases (Auth, Practice, Audio, Recording, Session Mgmt, Review) are finished. Recent updates include a new **Beat Dropdown**, **Mobile Audio Fix** (no ducking), and **Pro-ready UI**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for full details.
 
 ## 1) TL;DR
 
@@ -15,7 +15,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 - **Why**: Solve writer’s block, timing, and practice consistency with a game‑like loop; long‑term evolve into a "Guitar Hero for freestyle" scoring system.
 - **Who**: Primary user is the aspiring artist (16–24); secondary is the hobbyist rapper (25–35).
 - **How**: MVP in Next.js (App Router, TypeScript) on Vercel; V2 adds a Python/FastAPI microservice on GCP for AI features.
-- **Business**: Freemium; Pro at $4.99/mo ($49.99/yr). Ads on free tier. Focus on habit/retention and conversion via unique AI features.
+- **Business**: Freemium; Pro at €4.99/mo (€49.99/yr). Ads on free tier. Focus on habit/retention and conversion via unique AI features.
 - **Dev Tooling Recommendation**: Trae IDE + Gemini 2.5 Pro for structured agentic building (free, high-velocity). Strong runner‑up: VS Code + Copilot.
 
 ## 2) Problem → Solution
@@ -68,7 +68,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 
 - **Freemium**
   - Free: 10–15 starter beats, basic prompts, 2‑min recording, banner ads
-  - Pro ($4.99/mo or $49.99/yr): Ad‑free, full beat library, unlimited recording, V2 AI features, uploads
+  - Pro (€4.99/mo or €49.99/yr): Ad‑free, full beat library, unlimited recording, V2 AI features, uploads
 - **Revenue Streams**: Subscriptions (primary), Ads (secondary)
 - **Pricing Risks**: AI feature API usage (V2+) introduces variable COGS; consider usage limits or a higher "Studio" tier for power users
 
@@ -125,14 +125,19 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 
 ## 12) Roadmap (Operating View)
 
-- **MVP (Now)**
-  - Ship web app with beats, on‑beat prompts, recording, save/share, ads
-  - Validate the on‑beat prompt system and practice loop
-- **V2 (Fast Follow – Pro Tier)**
-  - Subscriptions; remove ads; TTS voice prompts; unlimited recording; user beat uploads; expanded library
-  - Begin native app work post‑revenue
-- **V3 (Vision)**
-  - VTT transcription, LLM contextual prompts, AI scoring, leaderboards
+- **Phase 1-4: MVP (Complete)**
+  - Shipped web app with beats, on‑beat prompts, recording, save/share.
+  - Validated the on‑beat prompt system and practice loop.
+- **Phase 5: Premium (Complete)**
+  - Stripe Integration (€4.99/mo) and Webhooks.
+  - Audio Watermark and Feature Gating.
+- **Phase 6: Social & Gamification (Complete)**
+  - Public Profiles ("Rapper Card") and Feed.
+  - The "Duel" (Challenge friends) with Voting.
+  - Badges, Scoring, and Word Vault.
+- **Phase 7: Future Vision (Roadmap V2)**
+  - Native Mobile App.
+  - AI Transcription & Scoring.
 
 ## 13) New Agent Onboarding
 
@@ -159,7 +164,7 @@ Follow this checklist to get productive quickly:
 
 - MVP beat library is free/self‑produced; later expand via partnerships/licensing
 - Serverless first; cost‑efficient infra until Pro tier usage grows
-- Pricing: $4.99/mo baseline with potential higher tier for heavy AI usage
+- Pricing: €4.99/mo baseline with potential higher tier for heavy AI usage
 - Web‑first launch; native apps once revenue validates demand
 
 ## 15) Financial Snapshot (Conservative Outlook)
@@ -184,26 +189,22 @@ These internal analyses informed this README. See `DOCS/` for originals.
 - Seed with 15 template beats (bpm metadata); simple word list with difficulty tags
 - Ship to Vercel preview; collect initial feedback on the prompt timing and UX
 
-## 20) Current Build Status (⚠️ Updated - Critical)
+## 20) Current Build Status (✅ V1.0 COMPLETE)
 
-### ✅ What's Complete (Core MVP Loop)
+### ✅ What's Complete (Production Ready)
 
-- Fully themed landing, practice, recordings, and profile routes
-- NextAuth Google sign-in with protected routes/middleware
-- Beat player + synchronized word prompts + timer UI
-- Microphone recording, Supabase Storage upload, and session persistence
-- Recordings library with download/delete, profile stats, and alerts
-- Comprehensive documentation, assets, and deployment guides
+- **Core Engine**: Beat Dropdown, synchronized Word Prompts, visual Timer Ring, and Frequency/Difficulty controls.
+- **Audio System**: High-fidelity recording with mobile optimizations, real-time audio watermark for free users.
+- **Social Ecosystem**: Public Profiles, Feed, Follow/Like/Comment systems, and "Duel Mode" with community voting.
+- **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks.
+- **Gamification**: Badges, Flow Density Score, Word Vault (Tracking unique words), and Panic Button.
+- **Infrastructure**: NextAuth (Google), Prisma/Postgres, Supabase Storage, Sentry Logging, Auto-cleanup Cron.
 
-### 🚧 What's Next (Premium & Hardening)
+### 🚀 Ready for Launch
 
-- Stripe subscription/entitlements + premium beat gating
-- Expanded beat/word libraries and upload workflows
-- Sharing/export surface (social cards, audiograms, public feeds)
-- Test coverage (hooks, APIs, UI) and performance/accessibility sweeps
-- Native analytics & observability, plus recovery tooling
+All planned features for V1.0, including "Gap Closure" items (Word Vault, Voting), are implemented and verified. The application is ready for deployment.
 
-**See `MVP_BUILD_PLAN.md` for detailed requirements and implementation plan.**
+**See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the single source of truth.**
 
 ### How to run locally
 

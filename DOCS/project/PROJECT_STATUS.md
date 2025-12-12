@@ -1,23 +1,25 @@
 # FlowForge - Project Status
 
-**Last Updated:** November 18, 2025  
-**Current Phase**: Phase 5 (Audit & Refinement) - **COMPLETE**
-**Next Phase**: Phase 6 (Pre-Launch & Polish)
-**Build Status**: ✅ Passing (Dec 10, 2025) Complete ✅  
-**Overall Progress:** 82%
+**Last Updated:** December 11, 2025  
+**Current Phase**:- **Phase 8: Pre-Launch Testing** - 🧪 **IN PROGRESS**
+
+- **Status**: Code Complete (Phases 1-7). Testing Underway.
+  **Overall Progress:** 100% (Code) / Testing (In Progress)
 
 ---
 
 ## 📊 Phase Overview
 
-| Phase                          | Status         | Progress | Completion Date |
-| ------------------------------ | -------------- | -------- | --------------- |
-| Phase 1: Infrastructure & Auth | ✅ Complete    | 100%     | Nov 10, 2025    |
-| Phase 2: Core UI & Navigation  | ✅ Complete    | 100%     | Nov 10, 2025    |
-| Phase 3: Audio System          | ✅ Complete    | 100%     | Nov 11, 2025    |
-| Phase 4: Recording Management  | ✅ Complete    | 100%     | Nov 11, 2025    |
-| Phase 5: Premium Features      | 🚧 In Progress | 10%      | Nov 18, 2025    |
-| Phase 6: Social Features       | ⏳ Planned     | 0%       | TBD             |
+| Phase                          | Status         | Progress | Completion Date                         |
+| ------------------------------ | -------------- | -------- | --------------------------------------- |
+| Phase 1: Infrastructure & Auth | ✅ Complete    | 100%     | Nov 10, 2025                            |
+| Phase 2: Core UI & Navigation  | ✅ Complete    | 100%     | Nov 10, 2025                            |
+| Phase 3: Audio System          | ✅ Complete    | 100%     | Nov 11, 2025                            |
+| Phase 4: Recording Management  | ✅ Complete    | 100%     | Nov 11, 2025                            |
+| Phase 5: Premium Features      | ✅ Complete    | 100%     | Dec 11, 2025                            |
+| Phase 6: Social Features       | ✅ Complete    | 100%     | Dec 11, 2025                            |
+| Phase 7: Gap Closure/Ops       | ✅ Complete    | 100%     | Dec 11, 2025                            |
+| Phase 8: Testing & Launch      | 🧪 In Progress | 10%      | [Plan](DOCS/testing/TESTING_PLAN_V1.md) |
 
 ---
 
@@ -85,6 +87,7 @@
 - [x] Difficulty selector (Easy/Medium/Hard)
 - [x] Database seeding with words and beats
 - [x] API endpoints for words and beats
+- [x] **Text-to-Speech (TTS):** Spoken word prompts with voice/volume control
 
 ### Key Components
 
@@ -125,6 +128,7 @@
 - [x] Auto-save after practice session
 - [x] Protected routes with middleware
 - [x] API endpoints (GET, POST, DELETE)
+- [x] **Auto-Delete Policy:** Cron job deletes old free-tier files from DB & Storage
 
 ### Key Files
 
@@ -385,7 +389,7 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 - [x] Configure Google OAuth production credentials
 - [x] Set up domain and SSL (Vercel-managed)
 - [ ] Configure CDN for audio files (beyond Vercel defaults)
-- [ ] Set up monitoring and logging
+- [x] Set up monitoring and logging (Sentry Integrated)
 - [ ] Configure backup strategy
 
 ---
@@ -465,5 +469,5 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 
 ---
 
-**Last Updated:** November 18, 2025  
+**Last Updated:** December 11, 2025  
 **Next Review:** After first round of remote user testing

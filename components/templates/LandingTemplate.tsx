@@ -6,11 +6,18 @@ import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout
 interface LandingTemplateProps {
   hero: ReactNode
   howItWorks: ReactNode
+  testimonials: ReactNode
   pricing: ReactNode
   faq: ReactNode
 }
 
-export function LandingTemplate({ hero, howItWorks, pricing, faq }: LandingTemplateProps) {
+export function LandingTemplate({
+  hero,
+  howItWorks,
+  testimonials,
+  pricing,
+  faq,
+}: LandingTemplateProps) {
   return (
     <OnboardingLayout>
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-16 pb-16 pt-16 md:pb-24 md:pt-20">
@@ -21,6 +28,9 @@ export function LandingTemplate({ hero, howItWorks, pricing, faq }: LandingTempl
         <section id="how-it-works" className="scroll-mt-20">
           {howItWorks}
         </section>
+
+        {/* Testimonials Section */}
+        <section id="testimonials">{testimonials}</section>
 
         {/* Pricing Section */}
         <section id="pricing" className="scroll-mt-20">

@@ -1,6 +1,7 @@
 # Stripe Integration Setup Guide
 
 ## Overview
+
 Implement Stripe for FlowForge Pro subscription ($4.99/month or $49.99/year).
 
 ## 1. Stripe Account Setup
@@ -26,19 +27,21 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...  # From webhook setup
 
 # Product/Price IDs (create in Stripe Dashboard)
-STRIPE_PRICE_ID_MONTHLY=price_...
-STRIPE_PRICE_ID_YEARLY=price_...
+STRIPE_PRICE_ID_MONTHLY=price_1Sci1s6H8HsUye00qPtgrxgg
+STRIPE_PRICE_ID_YEARLY=price_1Sci5F6H8HsUye00a27boBkW
 ```
 
 ## 4. Create Products in Stripe Dashboard
 
 ### Monthly Plan
+
 - Name: FlowForge Pro (Monthly)
 - Price: $4.99 USD
 - Billing period: Monthly
 - Copy Price ID → `STRIPE_PRICE_ID_MONTHLY`
 
 ### Yearly Plan
+
 - Name: FlowForge Pro (Yearly)
 - Price: $49.99 USD
 - Billing period: Yearly
@@ -47,6 +50,7 @@ STRIPE_PRICE_ID_YEARLY=price_...
 ## 5. Implementation Files
 
 ### `lib/stripe.ts`
+
 ```typescript
 import Stripe from 'stripe'
 
@@ -70,6 +74,7 @@ export const PLANS = {
 ```
 
 ### `app/api/stripe/checkout/route.ts`
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -79,13 +84,13 @@ import { stripe, PLANS } from '@/lib/stripe'
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { plan } = await request.json()
-    
+
     if (!plan || !PLANS[plan as keyof typeof PLANS]) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
@@ -114,15 +119,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
     console.error('Stripe checkout error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
   }
 }
 ```
 
 ### `app/api/stripe/webhook/route.ts`
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
@@ -137,11 +140,7 @@ export async function POST(request: Request) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
+    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
   } catch (error) {
     console.error('Webhook signature verification failed:', error)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
@@ -151,7 +150,7 @@ export async function POST(request: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
-        
+
         // Update user subscription status
         await prisma.user.update({
           where: { id: session.metadata!.userId },
@@ -166,7 +165,7 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
-        
+
         await prisma.user.update({
           where: { customerId: subscription.customer as string },
           data: {
@@ -178,7 +177,7 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
-        
+
         await prisma.user.update({
           where: { customerId: subscription.customer as string },
           data: {
@@ -191,7 +190,7 @@ export async function POST(request: Request) {
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
-        
+
         await prisma.user.update({
           where: { customerId: invoice.customer as string },
           data: {
@@ -205,15 +204,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error('Webhook handler error:', error)
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 }
 ```
 
 ### `app/api/stripe/portal/route.ts`
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -224,7 +221,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST() {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -235,10 +232,7 @@ export async function POST() {
     })
 
     if (!user?.customerId) {
-      return NextResponse.json(
-        { error: 'No subscription found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
     }
 
     const portalSession = await stripe.billingPortal.sessions.create({
@@ -249,10 +243,7 @@ export async function POST() {
     return NextResponse.json({ url: portalSession.url })
   } catch (error) {
     console.error('Portal session error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create portal session' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to create portal session' }, { status: 500 })
   }
 }
 ```
@@ -268,13 +259,13 @@ model User {
   name               String?
   image              String?
   emailVerified      DateTime? @map("email_verified")
-  
+
   // Stripe fields
   customerId         String?   @unique @map("customer_id")
   subscriptionId     String?   @unique @map("subscription_id")
   subscriptionStatus String?   @default("free") @map("subscription_status")
   // Values: "free", "active", "past_due", "canceled", "trialing"
-  
+
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
 
@@ -287,6 +278,7 @@ model User {
 ```
 
 Run migration:
+
 ```bash
 npx prisma migrate dev --name add_subscription_fields
 npx prisma generate
@@ -295,6 +287,7 @@ npx prisma generate
 ## 7. Client Components
 
 ### Upgrade Button (`components/subscription/UpgradeButton.tsx`)
+
 ```typescript
 'use client'
 
@@ -315,7 +308,7 @@ export function UpgradeButton({ plan = 'monthly' }: { plan?: 'monthly' | 'yearly
       })
 
       const { url } = await response.json()
-      
+
       if (url) {
         router.push(url)
       }
@@ -340,6 +333,7 @@ export function UpgradeButton({ plan = 'monthly' }: { plan?: 'monthly' | 'yearly
 ```
 
 ### Manage Subscription Button
+
 ```typescript
 'use client'
 
@@ -356,7 +350,7 @@ export function ManageSubscriptionButton() {
       })
 
       const { url } = await response.json()
-      
+
       if (url) {
         window.location.href = url
       }
@@ -383,6 +377,7 @@ export function ManageSubscriptionButton() {
 ## 8. Feature Gating Utility
 
 ### `lib/subscription.ts`
+
 ```typescript
 import { prisma } from '@/lib/prisma'
 
@@ -397,7 +392,7 @@ export async function checkSubscription(userId: string): Promise<boolean> {
 
 export async function requirePro(userId: string) {
   const isPro = await checkSubscription(userId)
-  
+
   if (!isPro) {
     throw new Error('Pro subscription required')
   }
@@ -405,12 +400,13 @@ export async function requirePro(userId: string) {
 ```
 
 ### Usage in API Routes
+
 ```typescript
 import { requirePro } from '@/lib/subscription'
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions)
-  
+
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -419,10 +415,7 @@ export async function POST(request: Request) {
   try {
     await requirePro(session.user.id)
   } catch {
-    return NextResponse.json(
-      { error: 'Pro subscription required' },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: 'Pro subscription required' }, { status: 403 })
   }
 
   // Pro-only feature logic...
@@ -444,12 +437,15 @@ export async function POST(request: Request) {
 ## 10. Testing
 
 ### Test Mode
+
 Use Stripe test cards:
+
 - Success: `4242 4242 4242 4242`
 - Decline: `4000 0000 0000 0002`
 - 3D Secure: `4000 0025 0000 3155`
 
 ### Test Webhooks Locally
+
 ```bash
 # Install Stripe CLI
 brew install stripe/stripe-cli/stripe
@@ -525,4 +521,3 @@ export default function PricingPage() {
 - Log all subscription changes
 - Handle failed payments gracefully
 - Provide clear cancellation flow
-

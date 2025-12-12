@@ -11,6 +11,8 @@ const SIGNED_URL_TTL_SECONDS = 60 * 60
  * POST /api/recordings
  * Upload a recording and create a session
  */
+import { prisma } from '@/lib/prisma'
+
 export async function POST(request: Request) {
   try {
     // Check authentication
@@ -27,6 +29,9 @@ export async function POST(request: Request) {
     const durationSeconds = parseInt(formData.get('durationSeconds') as string)
     const frequency = parseInt(formData.get('frequency') as string) || 8
     const difficulty = parseInt(formData.get('difficulty') as string) || 2
+    const score = parseInt(formData.get('score') as string) || 0
+    const vibe = (formData.get('vibe') as string) || null
+    const parentId = (formData.get('parentId') as string) || null
 
     // Validate required fields
     if (!audioFile || !beatId || !title || !durationSeconds) {
@@ -72,7 +77,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create session in database
+    // Create session record
     const sessionResult = await createSession({
       userId: session.user.id,
       beatId,
@@ -81,15 +86,71 @@ export async function POST(request: Request) {
       durationSeconds,
       frequency,
       difficulty,
+      score,
+      vibe: vibe || null,
+      parentId: parentId || undefined,
     })
 
     if (!sessionResult.success) {
-      // If database save fails, try to delete the uploaded file
+      // Rollback storage if DB fails
+      const { supabase } = await createServerClient()
       await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
       return NextResponse.json(
         { error: sessionResult.error || 'Failed to save session' },
         { status: 500 }
       )
+    }
+
+    // Check Badges (Async / Fire & Forget to not block response? Or await?)
+    // Await is safer to return Badge info if we want to show a toast.
+    try {
+      const { checkBadges } = await import('@/lib/gamification')
+      const earnedBadges = await checkBadges({
+        userId: session.user.id,
+        durationSeconds,
+        difficulty,
+        frequency,
+        beatId,
+      })
+
+      if (earnedBadges.length > 0) {
+        console.log(
+          `User ${session.user.id} earned badges:`,
+          earnedBadges
+        )(
+          // Ideally we return this in the response
+          // We can attach it to the session response if the frontend handles it
+          sessionResult.data as any
+        ).newBadges = earnedBadges
+      }
+    } catch (e) {
+      console.error('Badge check failed', e)
+    }
+
+    // Word Vault: Ingest used words
+    const wordsUsedRaw = formData.get('wordsUsed') as string
+    if (wordsUsedRaw) {
+      try {
+        const words = JSON.parse(wordsUsedRaw) as string[]
+        if (Array.isArray(words) && words.length > 0) {
+          // Deduplicate and sanitize
+          const uniqueWords = [...new Set(words.map((w) => w.toLowerCase().trim()))].filter(
+            (w) => w.length > 0
+          )
+
+          if (uniqueWords.length > 0) {
+            await prisma.collectedWord.createMany({
+              data: uniqueWords.map((word) => ({
+                userId: session.user.id,
+                wordText: word,
+              })),
+              skipDuplicates: true,
+            })
+          }
+        }
+      } catch (e) {
+        console.error('Word Vault ingestion failed', e)
+      }
     }
 
     return NextResponse.json({

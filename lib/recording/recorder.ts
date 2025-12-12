@@ -1,9 +1,11 @@
 import { RECORDING_CONFIG } from '@/lib/constants/design'
+import { WatermarkGenerator } from '@/lib/audio/watermark'
 
 export interface RecorderConfig {
   mimeType?: string
   audioBitsPerSecond?: number
   maxDurationSeconds?: number
+  shouldWatermark?: boolean
 }
 
 export interface RecordingState {
@@ -24,6 +26,11 @@ export class AudioRecorder {
   private pausedTime: number = 0
   private maxDuration: number | null = null
   private maxDurationTimeout: ReturnType<typeof setTimeout> | null = null
+
+  private audioContext: AudioContext | null = null
+  private mediaStreamSource: MediaStreamAudioSourceNode | null = null
+  private mediaStreamDestination: MediaStreamAudioDestinationNode | null = null
+  private watermarkGenerator: WatermarkGenerator | null = null
 
   private onDataAvailableCallback: ((blob: Blob) => void) | null = null
   private onStopCallback: ((blob: Blob) => void) | null = null
@@ -61,14 +68,32 @@ export class AudioRecorder {
       throw new Error('No audio stream available')
     }
 
+    // Initialize Web Audio Context if needed
+    if (!this.audioContext || this.audioContext.state === 'closed') {
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
+    }
+
+    // Set up Audio Graph: Mic -> Destination
+    this.mediaStreamSource = this.audioContext.createMediaStreamSource(this.stream)
+    this.mediaStreamDestination = this.audioContext.createMediaStreamDestination()
+    this.mediaStreamSource.connect(this.mediaStreamDestination)
+
+    const finalStream = this.mediaStreamDestination.stream
+
     this.audioChunks = []
     this.startTime = Date.now()
     this.maxDuration = config?.maxDurationSeconds || null
 
+    // Play watermark if enabled
+    if (config?.shouldWatermark && this.watermarkGenerator) {
+      this.watermarkGenerator.play(this.mediaStreamDestination)
+    }
+
     // Determine mime type
     const mimeType = this.getSupportedMimeType(config?.mimeType)
 
-    this.mediaRecorder = new MediaRecorder(this.stream, {
+    this.mediaRecorder = new MediaRecorder(finalStream, {
       mimeType,
       audioBitsPerSecond: config?.audioBitsPerSecond || 128000,
     })
@@ -160,6 +185,11 @@ export class AudioRecorder {
         console.log('Stopped track:', track.kind)
       })
       this.stream = null
+    }
+
+    // Close Audio Context
+    if (this.audioContext && this.audioContext.state !== 'closed') {
+      this.audioContext.close()
     }
 
     if (this.maxDurationTimeout) {

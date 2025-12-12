@@ -121,7 +121,9 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
         </div>
       }
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
-      player={<SessionPlayer audioUrl={recording.storageUrl} />}
+      player={
+        <SessionPlayer audioUrl={recording.storageUrl} beatUrl={recording.beat?.storageUrl} />
+      }
       metadata={<SessionMetadata recording={recording} />}
       actions={
         <div className="flex gap-4">

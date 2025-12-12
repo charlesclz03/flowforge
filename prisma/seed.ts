@@ -3,58 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 // Word data with difficulty levels
-const words = [
-  // Easy words (1-2 syllables)
-  { wordText: 'flow', syllableCount: 1, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'beat', syllableCount: 1, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'rhyme', syllableCount: 1, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'time', syllableCount: 1, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'mind', syllableCount: 1, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'shine', syllableCount: 1, difficultyLevel: 1, category: 'verb' },
-  { wordText: 'climb', syllableCount: 1, difficultyLevel: 1, category: 'verb' },
-  { wordText: 'fire', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'power', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'money', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'city', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'hustle', syllableCount: 2, difficultyLevel: 1, category: 'verb' },
-  { wordText: 'struggle', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'battle', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
-  { wordText: 'winner', syllableCount: 2, difficultyLevel: 1, category: 'noun' },
+import { expandedWords } from './expanded-words'
 
-  // Medium words (2-3 syllables)
-  { wordText: 'elevate', syllableCount: 3, difficultyLevel: 2, category: 'verb' },
-  { wordText: 'dedicate', syllableCount: 3, difficultyLevel: 2, category: 'verb' },
-  { wordText: 'authentic', syllableCount: 3, difficultyLevel: 2, category: 'adjective' },
-  { wordText: 'energy', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'legacy', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'melody', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'symphony', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'strategy', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'connection', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'reflection', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'perfection', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'direction', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'precision', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'ambition', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-  { wordText: 'tradition', syllableCount: 3, difficultyLevel: 2, category: 'noun' },
-
-  // Hard words (3+ syllables)
-  { wordText: 'metamorphosis', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'revolutionary', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'philosophical', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'extraordinary', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'deteriorate', syllableCount: 5, difficultyLevel: 3, category: 'verb' },
-  { wordText: 'magnificence', syllableCount: 4, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'incomparable', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'intellectual', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'unbelievable', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'astronomical', syllableCount: 5, difficultyLevel: 3, category: 'adjective' },
-  { wordText: 'acceleration', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'manifestation', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'determination', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'refrigerator', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-  { wordText: 'communication', syllableCount: 5, difficultyLevel: 3, category: 'noun' },
-]
+// Word data with difficulty levels
+const words = expandedWords
 
 // Beat data with actual audio files from public/beats/
 // Duration values are approximate seconds, derived from file metadata

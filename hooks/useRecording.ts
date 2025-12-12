@@ -1,12 +1,11 @@
-'use client'
-
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { AudioRecorder } from '@/lib/recording/recorder'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
+import * as Sentry from '@sentry/nextjs'
 
 interface UseRecordingProps {
   maxDuration?: number | null
-  onComplete?: (blob: Blob) => void
+  onComplete?: (blob: Blob, duration: number) => void
   onMaxDurationReached?: () => void
 }
 
@@ -34,8 +33,11 @@ export function useRecording({
       setIsRecording(false)
       setIsPaused(false)
 
+      const finalDuration = recorderRef.current?.getDuration() || 0
+      setDuration(finalDuration)
+
       if (onComplete) {
-        onComplete(blob)
+        onComplete(blob, finalDuration)
       }
     })
 
@@ -43,6 +45,13 @@ export function useRecording({
       setError(err.message)
       setIsRecording(false)
       setIsPaused(false)
+
+      // Log to Sentry if not a user permission issue
+      if (err.name !== 'NotAllowedError' && err.name !== 'NotFoundError') {
+        Sentry.captureException(err, {
+          tags: { context: 'recording_error' },
+        })
+      }
     })
 
     recorderRef.current.onMaxDuration(() => {
@@ -60,6 +69,24 @@ export function useRecording({
       }
     }
   }, [onComplete, onMaxDurationReached])
+
+  // Route Guard: Warn before leaving if recording or unsaved data exists
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isRecording || (recordingBlob && !isInitializing)) {
+        e.preventDefault()
+        e.returnValue = '' // Chrome requires returnValue to be set
+      }
+    }
+
+    if (isRecording || recordingBlob) {
+      window.addEventListener('beforeunload', handleBeforeUnload)
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [isRecording, recordingBlob, isInitializing])
 
   // Update duration while recording
   useEffect(() => {
@@ -86,25 +113,39 @@ export function useRecording({
   /**
    * Start recording
    */
-  const start = useCallback(async () => {
-    if (!recorderRef.current) return
+  const start = useCallback(
+    async (shouldWatermark: boolean = false) => {
+      if (!recorderRef.current) return
 
-    setIsInitializing(true)
-    setError(null)
-    setRecordingBlob(null)
-    setDuration(0)
+      setIsInitializing(true)
+      setError(null)
+      setRecordingBlob(null)
+      setDuration(0)
 
-    try {
-      await recorderRef.current.start({
-        maxDurationSeconds: maxDuration || undefined,
-      })
-      setIsRecording(true)
-      setIsInitializing(false)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start recording')
-      setIsInitializing(false)
-    }
-  }, [maxDuration])
+      try {
+        await recorderRef.current.start({
+          maxDurationSeconds: maxDuration || undefined,
+          shouldWatermark,
+        })
+        setIsRecording(true)
+        setIsInitializing(false)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to start recording')
+        setIsInitializing(false)
+
+        if (
+          err instanceof Error &&
+          err.name !== 'NotAllowedError' &&
+          err.name !== 'NotFoundError'
+        ) {
+          Sentry.captureException(err, {
+            tags: { context: 'recording_start' },
+          })
+        }
+      }
+    },
+    [maxDuration]
+  )
 
   /**
    * Stop recording
@@ -147,16 +188,19 @@ export function useRecording({
   /**
    * Download the recording
    */
-  const download = useCallback((filename: string = 'recording.webm') => {
-    if (!recordingBlob) return
+  const download = useCallback(
+    (filename: string = 'recording.webm') => {
+      if (!recordingBlob) return
 
-    const url = URL.createObjectURL(recordingBlob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    a.click()
-    URL.revokeObjectURL(url)
-  }, [recordingBlob])
+      const url = URL.createObjectURL(recordingBlob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      a.click()
+      URL.revokeObjectURL(url)
+    },
+    [recordingBlob]
+  )
 
   return {
     // State
@@ -177,4 +221,3 @@ export function useRecording({
     download,
   }
 }
-

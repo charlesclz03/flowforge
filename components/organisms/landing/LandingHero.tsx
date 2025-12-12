@@ -59,12 +59,12 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
                   Practice Here
                 </Link>
               ) : (
-                <SignInButton
-                  callbackUrl="/howitworks"
-                  className="w-full rounded-full px-8 py-3 text-center text-base font-medium sm:w-auto"
+                <Link
+                  href="/practice"
+                  className="w-full rounded-full bg-white px-8 py-3 text-center text-base font-medium text-black transition hover:bg-white/90 sm:w-auto"
                 >
                   Practice Here
-                </SignInButton>
+                </Link>
               )}
             </div>
           </div>

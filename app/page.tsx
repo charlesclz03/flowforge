@@ -9,6 +9,7 @@ import {
   LandingHowItWorks,
   LandingPricing,
   LandingFAQ,
+  LandingTestimonials,
 } from '@/components/organisms/landing'
 
 const HERO_STATS = [
@@ -87,8 +88,8 @@ function HomePageContent() {
               The freestyle command center for artists in motion.
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-text-secondary">
-              Intelligent prompts sync to your tempo, recording tools glow with status feedback,
-              and every session wraps in a clean timeline designed for late-night flow states.
+              Intelligent prompts sync to your tempo, recording tools glow with status feedback, and
+              every session wraps in a clean timeline designed for late-night flow states.
             </p>
           </header>
 
@@ -101,6 +102,7 @@ function HomePageContent() {
         </>
       }
       howItWorks={<LandingHowItWorks />}
+      // testimonials={<LandingTestimonials />}
       pricing={<LandingPricing />}
       faq={<LandingFAQ items={FAQ_ITEMS} />}
     />

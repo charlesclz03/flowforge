@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from '@/components/auth/SessionProvider'
 import { PracticeSessionProvider } from '@/contexts/SessionContext'
 
@@ -100,7 +101,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-background text-text-primary antialiased">
+      <body className="bg-background text-text-primary antialiased min-h-[100dvh]">
         <SessionProvider>
           <PracticeSessionProvider>
             <a
@@ -129,6 +130,7 @@ export default function RootLayout({
                 />
               </>
             ) : null}
+            <Toaster position="bottom-center" />
           </PracticeSessionProvider>
         </SessionProvider>
       </body>

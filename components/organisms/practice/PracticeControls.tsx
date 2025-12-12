@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { Card } from '@/components/atoms/Card'
 import { PlayButton } from '@/components/molecules/practice/PlayButton'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -7,6 +9,7 @@ import { RecordingIndicator } from '@/components/molecules/practice/RecordingInd
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
+import { useWakeLock } from '@/hooks/useWakeLock'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -22,6 +25,8 @@ interface PracticeControlsProps {
   playButtonSize: number
   difficulty: number
   frequency: number
+  isGolden?: boolean
+  onSkipWord?: () => void
 }
 
 export function PracticeControls({
@@ -38,6 +43,8 @@ export function PracticeControls({
   playButtonSize,
   difficulty,
   frequency,
+  isGolden = false,
+  onSkipWord,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -97,74 +104,98 @@ export function PracticeControls({
   // We want the ring to fill up as we approach the next word change
   const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
 
+  // Wake Lock for Recording
+  const { requestLock, releaseLock } = useWakeLock()
+
+  useEffect(() => {
+    if (isRecording) {
+      requestLock()
+    } else {
+      releaseLock()
+    }
+  }, [isRecording, requestLock, releaseLock])
+
   return (
-    <Card padding="lg">
-      <div className="flex flex-col items-center gap-6 sm:gap-8">
-        {/* Session Info */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5/60 px-5 py-2.5 text-sm sm:text-base text-text-primary backdrop-blur-heavy shadow-soft">
-            <span className="font-medium truncate max-w-[100px] sm:max-w-none">
-              {selectedBeat.title}
-            </span>
-            <span className="text-accent-purple text-lg">•</span>
-            <span className="text-text-secondary truncate max-w-[90px] sm:max-w-none">
-              {selectedBeat.artistName || 'Producer'}
-            </span>
-            <span className="text-accent-purple text-lg">•</span>
-            <span className="text-text-secondary">{selectedBeat.bpm} BPM</span>
-          </div>
-          <div className="text-4xl sm:text-5xl font-light text-white">
-            {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
-          </div>
-          <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
-            {/* Difficulty pill (left of mic) */}
-            <div
-              className={cn(
-                'inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium',
-                difficultyMeta.classes
+  return (
+    <div className="flex flex-col items-center gap-8 w-full">
+      {/* Main Orb Player */}
+      <div className="relative flex items-center justify-center">
+        {/* Outer Glow/Ring Container */}
+        <div className="relative flex items-center justify-center rounded-full border border-stroke-glow/40 bg-background-card/60 p-8 shadow-neon backdrop-blur-medium transition-all duration-300">
+           {/* Animated Background Ring */}
+           {isPlaying && (
+              <div
+                className="absolute inset-4 animate-orbital-glow rounded-full border border-accent-purple/20"
+                aria-hidden
+              />
+           )}
+           
+           {/* The Interactive Play Button / Ring */}
+           <div className="relative z-10">
+              <PlayButton
+                isPlaying={isPlaying}
+                progress={intervalProgress}
+                onToggle={onToggle}
+                disabled={!selectedBeat || isLoading}
+                size={Math.max(playButtonSize, 220)} // Enforce larger size for orb look
+              />
+           </div>
+
+           {/* Central Text Overlay (Only shows when not playing/hovering? Or always?
+               The PlayButton component handles the central icon/text usually.
+               Let's make sure PlayButton looks right. 
+               Actually the Landing page has text overlay on top of the ring.
+               Let's modify this to match the LandingHero exactly.
+           */}
+           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              {!isPlaying && !isLoading && (
+                 <div className="mt-16 text-sm font-medium tracking-widest uppercase text-text-secondary animate-pulse">
+                    Press Play
+                 </div>
               )}
-            >
-              <span>{difficultyMeta.label}</span>
-            </div>
-
-            {/* Recording indicator (center) */}
-            <RecordingIndicator
-              isRecording={(isRecording || isPlaying) && !micPermissionError}
-              duration={recordingDuration}
-              maxDuration={sessionDuration}
-              showDuration={false}
-            />
-
-            {/* Frequency pill (right of mic) */}
-            <span className="rounded-full bg-accent-purple/20 px-3 py-1 text-[0.7rem] font-medium text-accent-purple whitespace-nowrap">
-              {frequencyMeta.label}
-            </span>
-          </div>
+           </div>
         </div>
+      </div>
 
-        {/* Error Message - only show when not currently playing or loading */}
-        {shouldShowError && (
-          <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
-            {error}
-          </div>
-        )}
-
-        {/* Word Prompt */}
-        <div className="flex w-full items-center justify-center">
-          <WordPrompt word={currentWord || null} show={isPlaying && !!currentWord} />
+      {/* Session Details / Word Prompt */}
+      <div className="w-full max-w-2xl space-y-6 text-center">
+        {/* Word Prompt area */}
+        <div className="min-h-[80px] flex items-center justify-center">
+           <WordPrompt
+             word={currentWord || null}
+             show={isPlaying && !!currentWord}
+             isGolden={isGolden}
+           />
         </div>
-
-        {/* Play Button with Timer Ring - Responsive size */}
-        <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] flex items-center justify-center">
-          <PlayButton
-            isPlaying={isPlaying}
-            progress={intervalProgress}
-            onToggle={onToggle}
-            disabled={!selectedBeat || isLoading}
-            size={playButtonSize}
+        
+        {/* Controls / Metadata */}
+        <div className="flex items-center justify-center gap-4 text-sm">
+           <div className={cn(
+             'px-3 py-1 rounded-full border border-white/10 bg-white/5 text-text-secondary font-medium',
+             difficultyMeta.classes
+           )}>
+             {difficultyMeta.label}
+           </div>
+           
+           <div className="text-4xl font-light tabular-nums text-white">
+             {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
+           </div>
+           
+           <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-text-secondary font-medium">
+             {frequencyMeta.label}
+           </div>
+        </div>
+        
+        {/* Recording Status */}
+        <div className="flex justify-center">
+          <RecordingIndicator
+            isRecording={(isRecording || isPlaying) && !micPermissionError}
+            duration={recordingDuration}
+            maxDuration={sessionDuration}
+            showDuration={false}
           />
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

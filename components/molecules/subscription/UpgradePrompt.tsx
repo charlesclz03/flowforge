@@ -59,7 +59,7 @@ export function UpgradePrompt({ feature, onUpgrade, onDismiss, className }: Upgr
           onClick={handleUpgrade}
           className="w-full py-3 rounded-xl bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90"
         >
-          Upgrade for $4.99/month
+          Upgrade for €4.99/month
         </button>
         {onDismiss && (
           <button

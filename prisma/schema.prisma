@@ -20,11 +20,13 @@ model Beat {
   genre           String?
   duration        Int?     // Duration in seconds
   artistName      String?  @map("artist_name")
+  difficulty      String   @default("Medium") // "Easy", "Medium", "Hard"
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
   sessions        FreestyleSession[]
+  favoritedBy     FavoriteBeat[]
 
   @@map("beats")
 }
@@ -50,8 +52,23 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  createdAt     DateTime  @default(now()) @map("created_at")
+  username      String?   @unique
+  flowPoints    Int       @default(0) @map("flow_points")
+  
+  // Stripe fields
+  customerId         String?   @unique @map("customer_id")
+  subscriptionId     String?   @unique @map("subscription_id")
+  subscriptionStatus String?   @default("free") @map("subscription_status")
+  // Values: "free", "active", "past_due", "canceled", "trialing"
+  
+  createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Social Links (JSON)
+  socials       Json?
+
+  // Gamification
+  badges        String[]  @default([])
 
   // Relations
   accounts      Account[]
@@ -59,6 +76,70 @@ model User {
   freestyleSessions FreestyleSession[]
 
   @@map("users")
+  
+  // Relations: Social
+  followedBy    Follow[] @relation("followedBy")
+  following     Follow[] @relation("following")
+  likes         Like[]
+  comments      Comment[]
+  favoriteBeats FavoriteBeat[]
+  
+  // Word Vault
+  collectedWords CollectedWord[]
+  
+  // Voting
+  votesCast      DuelVote[]
+}
+
+// Social: Follows
+model Follow {
+  followerId  String @map("follower_id")
+  followingId String @map("following_id")
+
+  follower    User   @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User   @relation("followedBy", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follows")
+}
+
+// Social: Likes
+model Like {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  sessionId String   @map("session_id")
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session   FreestyleSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, sessionId])
+  @@index([userId])
+  @@index([sessionId])
+  @@map("likes")
+}
+
+// Social: Comments
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  sessionId String   @map("session_id")
+  content   String   @db.Text
+  
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session   FreestyleSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([sessionId])
+  @@map("comments")
 }
 
 // Account model - NextAuth.js OAuth accounts
@@ -116,15 +197,78 @@ model FreestyleSession {
   durationSeconds Int      @map("duration_seconds")
   frequency       Int      @default(8) // 4, 8, or 16 bars
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
+  score           Int      @default(0)
+  vibe            String?  // "Hype", "Chill", "Locked In"
   createdAt       DateTime @default(now()) @map("created_at")
+
+  parentId        String?  @map("parent_id")
+  parent          FreestyleSession? @relation("Duels", fields: [parentId], references: [id])
+  duels           FreestyleSession[] @relation("Duels")
 
   // Relations
   beat            Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  likes           Like[]
+  comments        Comment[]
+  
+  // Voting Relations
+  duelVotesContext DuelVote[] @relation("DuelContext")
+  duelVotesWon     DuelVote[] @relation("DuelWinner")
+
   @@index([userId])
   @@index([beatId])
   @@index([createdAt])
+  @@index([parentId])
   @@map("freestyle_sessions")
 }
 
+// Social: Favorite Beats
+model FavoriteBeat {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  beatId    String   @map("beat_id")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  beat      Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, beatId])
+  @@index([userId])
+  @@index([beatId])
+  @@map("favorite_beats")
+}
+
+
+// Word Vault: Track unique words collected by user
+model CollectedWord {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  wordText  String   @map("word_text")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordText])
+  @@index([userId])
+  @@map("collected_words")
+}
+
+// Community Voting for Duels
+model DuelVote {
+  id          String   @id @default(uuid())
+  duelId      String   @map("duel_id")      // The parent/challenge session ID (The context)
+  voterId     String   @map("voter_id")
+  votedForId  String   @map("voted_for_id") // The specific session ID voted for
+
+  duel        FreestyleSession @relation("DuelContext", fields: [duelId], references: [id], onDelete: Cascade)
+  voter       User             @relation(fields: [voterId], references: [id], onDelete: Cascade)
+  winner      FreestyleSession @relation("DuelWinner", fields: [votedForId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([voterId, duelId])
+  @@index([duelId])
+  @@map("duel_votes")
+}
