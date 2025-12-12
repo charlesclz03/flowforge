@@ -22,13 +22,13 @@ export async function POST(req: Request) {
     // 2. Parse Form Data
     const formData = await req.formData()
     const audioFile = formData.get('audio') as File
-    const coverFile = formData.get('cover') as File
+    // const coverFile = formData.get('cover') as File // Unused
     const title = formData.get('title') as string
     const producer = formData.get('producer') as string
     const bpm = parseInt(formData.get('bpm') as string)
     const genre = formData.get('genre') as string
     const difficulty = formData.get('difficulty') as string
-    const mood = formData.get('mood') as string
+    // const mood = formData.get('mood') as string // Unused
 
     if (!audioFile) {
       return new NextResponse('Audio file required', { status: 400 })
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     // However, in Next.js App Router route handlers, 'File' from formData is standard.
     // supabase-js v2 supports passing the File object directly.
 
-    const { data: audioData, error: audioError } = await supabaseAdmin.storage
+    const { error: audioError } = await supabaseAdmin.storage
       .from('beats')
       .upload(audioPath, audioFile, {
         contentType: audioFile.type,
@@ -56,8 +56,8 @@ export async function POST(req: Request) {
 
     if (audioError) throw new Error(`Storage Error: ${audioError.message}`)
 
-    // 4. Upload Cover (Optional)
-    const coverUrl = null
+    // 4. Upload Cover (Optional) - Skipped per schema constraints
+    // const coverUrl = null
     // Ignoring cover upload logic for MVP simplicity/robustness unless needed,
     // but schema has no 'cover_image' field?
     // Wait, checking schema...

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { isAdmin } from '@/lib/constants/auth'
 import { Container } from '@/components/atoms/Container'
 import { Button } from '@/components/atoms/Button'
-import { Input } from '@/components/atoms/Input'
+
 import { toast } from 'react-hot-toast'
 import { Music, Upload, CheckCircle2 } from 'lucide-react'
 
@@ -42,7 +42,7 @@ export default function AdminUploadPage() {
         throw new Error(await res.text())
       }
 
-      toast.custom((t) => (
+      toast.custom(() => (
         <div className="bg-black/90 border border-accent-purple p-4 rounded-xl flex items-center gap-4">
           <CheckCircle2 className="text-accent-green" />
           <div>
