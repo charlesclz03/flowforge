@@ -103,6 +103,7 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
     // Initialize Web Audio Context for Studio FX
     const initAudioContext = () => {
       if (!contextRef.current) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext
         contextRef.current = new AudioContext()
       }

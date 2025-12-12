@@ -107,10 +107,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </div>
 
             {/* Socials */}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {(user.socials as any) && (
               <div className="flex gap-4 pt-4 justify-center md:justify-start">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(user.socials as any).instagram && (
                   <a
+                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
                     href={`https://instagram.com/${(user.socials as any).instagram}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -134,8 +137,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     </svg>
                   </a>
                 )}
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(user.socials as any).tiktok && (
                   <a
+                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
                     href={`https://tiktok.com/@${(user.socials as any).tiktok}`}
                     target="_blank"
                     rel="noopener noreferrer"
