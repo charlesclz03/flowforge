@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Container } from '@/components/layout/Container'
+import { Container } from '@/components/atoms/Container'
 import { SessionFeedCard } from '@/components/molecules/social/SessionFeedCard'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'

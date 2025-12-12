@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { Container } from '@/components/layout/Container'
+import { Container } from '@/components/atoms/Container'
 import { Avatar } from '@/components/atoms/Avatar'
 import { Button } from '@/components/atoms/Button'
 import { Card } from '@/components/atoms/Card'
