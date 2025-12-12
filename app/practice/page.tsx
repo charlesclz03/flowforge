@@ -330,6 +330,7 @@ export default function PracticePage() {
         handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedBeat,
     beatPlayer.isPlaying,
@@ -425,6 +426,7 @@ export default function PracticePage() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handlePlayPause, isRecording, beatPlayer.isPlaying])
 
   return (
@@ -471,8 +473,8 @@ export default function PracticePage() {
               isRecording={isRecording}
               recordingDuration={duration}
               error={
-                beatPlayer.error?.message ||
-                (typeof error === 'string' ? error : (error as any)?.message) ||
+                beatPlayer.error ||
+                (typeof error === 'string' ? error : (error as Error)?.message) ||
                 null
               }
               onToggle={handlePlayPause}
