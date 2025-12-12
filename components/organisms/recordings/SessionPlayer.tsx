@@ -152,6 +152,7 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
         beatRef.current.src = ''
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioUrl, beatUrl, nudge])
 
   // Studio FX Effect
@@ -269,6 +270,33 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
     }
   }
 
+  // Keyboard Shortcuts - MOVED UP before early returns
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+      if (e.code === 'Space') {
+        e.preventDefault()
+        togglePlay()
+      }
+      // 'R' key for future recording shortcut if needed, or restart?
+      // For now, let's map 'R' to Restart for quick retry
+      if (e.code === 'KeyR') {
+        e.preventDefault()
+        resetPlayback()
+      }
+    }
+
+    if (!audioUrl) return // Don't attach listeners if no audio? Or just check inside.
+    // Actually safer to attach but just check in handler.
+    // But clean view might also return early?
+    // Let's check lines 281-321 - it returns early for Clean View too!
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [togglePlay, audioUrl])
+
   if (!audioUrl) {
     return (
       <div className="p-8 text-center text-text-tertiary bg-background-card rounded-xl border border-white/5">
@@ -320,28 +348,6 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
       </div>
     )
   }
-
-  // Keyboard Shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if typing in input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
-
-      if (e.code === 'Space') {
-        e.preventDefault()
-        togglePlay()
-      }
-      // 'R' key for future recording shortcut if needed, or restart?
-      // For now, let's map 'R' to Restart for quick retry
-      if (e.code === 'KeyR') {
-        e.preventDefault()
-        resetPlayback()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [togglePlay])
 
   return (
     <div

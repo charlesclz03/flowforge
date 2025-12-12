@@ -56,7 +56,7 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
       handleDownload()
       alert('Video saved! Open TikTok and upload from your gallery.')
       // Optional: Try deep link
-      // window.location.href = 'tiktok://' 
+      // window.location.href = 'tiktok://'
     }
     onClose()
   }
@@ -115,7 +115,7 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
             <Facebook size={18} className="text-[#4267B2]" />
             <span className="text-text-primary">Share on Facebook</span>
           </button>
-          
+
           <button
             onClick={() => handleShare('tiktok')}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-background-elevated transition-colors text-left"
@@ -153,7 +153,6 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
           )}
         </div>
 
-        <div className="mt-2 pt-2 border-t border-text-tertiary/10">
         <div className="mt-2 pt-2 border-t border-text-tertiary/10">
           <p className="text-text-tertiary text-xs px-3">Sharing live!</p>
         </div>

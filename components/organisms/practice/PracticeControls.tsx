@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 
-import { Card } from '@/components/atoms/Card'
 import { PlayButton } from '@/components/molecules/practice/PlayButton'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { RecordingIndicator } from '@/components/molecules/practice/RecordingIndicator'
@@ -44,7 +43,7 @@ export function PracticeControls({
   difficulty,
   frequency,
   isGolden = false,
-  onSkipWord,
+  onSkipWord: _onSkipWord,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -59,8 +58,6 @@ export function PracticeControls({
     error?.toLowerCase().includes('notallowederror') ||
     error?.toLowerCase().includes('permission denied') ||
     error?.toLowerCase().includes('failed to access microphone')
-
-  const shouldShowError = Boolean(error && !micPermissionError) && !isPlaying && !isLoading
 
   const getDifficultyMeta = () => {
     if (difficulty <= 1) {
