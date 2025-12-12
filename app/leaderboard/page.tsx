@@ -19,6 +19,7 @@ async function getLeaderboard() {
     select: {
       id: true,
       username: true,
+      name: true,
       image: true,
       flowPoints: true,
     },
