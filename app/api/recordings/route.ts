@@ -114,14 +114,10 @@ export async function POST(request: Request) {
       })
 
       if (earnedBadges.length > 0) {
-        console.log(
-          `User ${session.user.id} earned badges:`,
-          earnedBadges
-        )(
-          // Ideally we return this in the response
-          // We can attach it to the session response if the frontend handles it
-          sessionResult.data as any
-        ).newBadges = earnedBadges
+        console.log(`User ${session.user.id} earned badges:`, earnedBadges)
+        // Ideally we return this in the response
+        // We can attach it to the session response if the frontend handles it
+        ;(sessionResult.data as any).newBadges = earnedBadges
       }
     } catch (e) {
       console.error('Badge check failed', e)

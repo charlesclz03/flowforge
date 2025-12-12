@@ -52,6 +52,12 @@ export function CommentsDrawer({
     }
   }, [sessionId])
 
+  useEffect(() => {
+    if (isOpen) {
+      loadComments()
+    }
+  }, [isOpen, sessionId, loadComments])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newComment.trim()) return
