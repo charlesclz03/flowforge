@@ -45,5 +45,3 @@ export function OnboardingLayout({
     </div>
   )
 }
-
-
