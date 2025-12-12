@@ -88,7 +88,7 @@ export async function POST(request: Request) {
       difficulty,
       score,
       vibe: vibe || null,
-      parentId: parentId || undefined,
+      parentId: parentId || null,
     })
 
     if (!sessionResult.success) {
