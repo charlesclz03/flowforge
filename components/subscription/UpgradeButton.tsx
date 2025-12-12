@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 
-export function UpgradeButton({ plan = 'monthly' }: { plan?: 'monthly' | 'yearly' }) {
+import { cn } from '@/lib/utils'
+
+interface UpgradeButtonProps {
+  plan?: 'monthly' | 'yearly'
+  className?: string
+}
+
+export function UpgradeButton({ plan = 'monthly', className }: UpgradeButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const handleUpgrade = async () => {
@@ -34,7 +41,11 @@ export function UpgradeButton({ plan = 'monthly' }: { plan?: 'monthly' | 'yearly
     <button
       onClick={handleUpgrade}
       disabled={loading}
-      className={`btn-primary px-8 py-3 w-full sm:w-auto ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={cn(
+        'btn-primary px-8 py-3 w-full sm:w-auto',
+        loading && 'opacity-50 cursor-not-allowed',
+        className
+      )}
     >
       {loading ? 'Processing...' : plan === 'yearly' ? 'Upgrade Yearly' : 'Upgrade Monthly'}
     </button>
