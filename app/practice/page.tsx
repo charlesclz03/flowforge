@@ -330,7 +330,23 @@ export default function PracticePage() {
         handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
       }
     }
-  }
+  }, [
+    selectedBeat,
+    beatPlayer.isPlaying,
+    isRecording,
+    beatPlayer.play,
+    beatPlayer.pause,
+    beatPlayer.stop,
+    wordList,
+    currentWord,
+    requestLock,
+    startRecording,
+    isPro,
+    resumeRecording,
+    handleError,
+    clearError,
+    stopRecording,
+  ])
 
   // Timer countdown and word cycling
   useEffect(() => {

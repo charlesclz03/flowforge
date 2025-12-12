@@ -40,12 +40,6 @@ export function CommentsDrawer({
   const [isSubmitting, startTransition] = useTransition()
   const { data: session } = useSession()
 
-  useEffect(() => {
-    if (isOpen) {
-      loadComments()
-    }
-  }, [isOpen, sessionId, loadComments])
-
   const loadComments = useCallback(async () => {
     setIsLoading(true)
     try {
