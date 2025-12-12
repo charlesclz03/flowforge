@@ -22,12 +22,8 @@ import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatSelector } from '@/components/organisms/practice/BeatSelector'
 import { useWakeLock } from '@/hooks/useWakeLock'
 import { analyzeAudio } from '@/lib/scoring'
-import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
+
 import { Beat } from '@/types/database'
-import { ConfirmModal } from '@/components/molecules/display/ConfirmModal'
-import { SirenOverlay } from '@/components/molecules/display/SirenOverlay'
-import { SessionSettings } from '@/components/molecules/practice/SessionSettings'
-import { PremiumModal } from '@/components/molecules/display/PremiumModal'
 
 export default function PracticePage() {
   const router = useRouter()
@@ -402,7 +398,7 @@ export default function PracticePage() {
         // User request: "hitting the record button summons it".
         // This implies the default Play action does NOT record for free users.
         if (isPro) {
-           await startRecording(true)
+          await startRecording(true)
         }
       } else {
         resumeRecording()
@@ -495,7 +491,7 @@ export default function PracticePage() {
       // "Hitting the record button summons it" -> This implies a separate interaction or intent.
       // For now, we allow the Countdown to start.
       // If we need to block "Recording" specifically, we do it inside startCountdown or separate UI.
-      
+
       startCountdown()
     }
   }, [
@@ -610,13 +606,6 @@ export default function PracticePage() {
 
   return (
     <OnboardingLayout showBackButton onBack={() => router.push('/difficultyselection')}>
-      <PremiumModal
-        isOpen={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        trigger={premiumTrigger}
-      />
-      <SirenOverlay isActive={isSirenActive} />
-      <FirstVisitOverlay />
       <PracticeTemplate
         pageHeader={
           <PageHeader
@@ -646,15 +635,7 @@ export default function PracticePage() {
             className="mt-6"
           />
         }
-        sessionConfig={
-          <SessionSettings
-            ttsEnabled={isTTSEnabled}
-            ttsVolume={ttsVolume}
-            onTTSEnabledChange={setTTSEnabled}
-            onTTSVolumeChange={setTTSVolume}
-            className="mt-4"
-          />
-        }
+        sessionConfig={null}
         practiceControls={
           selectedBeat ? (
             <PracticeControls
@@ -695,28 +676,6 @@ export default function PracticePage() {
         helpSection={null}
       />
       <GuestLoginModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} />
-      <ConfirmModal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={() => {
-          // This modal is actually unused currently because we auto-save.
-          // Yet, I defined 'showConfirmModal' state.
-          // If the plan is to rely on 'stopRecording' triggering the save flow,
-          // then this modal is indeed redundant UNLESS we want to offer "Discard" option.
-          // The user asked "This should ask through a pop up if you want save this session or not".
-          // My current implementation just STOPS and SAVES.
-          // To implement the "Ask" flow, I would need to interrupt the save.
-          // But 'stopRecording' triggers 'onComplete' which triggers 'handleRecordingComplete' which saves.
-          // To fix this fully, I would need to refactor: changing beat -> pause -> show modal -> (Save -> handleRecordingComplete) OR (Discard -> clear).
-          // For now, I will leave this component here but it is not toggled true by my current handleBeatChange logic.
-          // I will stick to the "Stop and Save" behavior which is safer and verify if user insists on "Ask".
-          // Actually, implementing the "Ask" fully is safer.
-        }}
-        title="Unsaved Session"
-        message="You have a recording in progress. Do you want to save it before switching beats?"
-        confirmText="Save Session"
-        cancelText="Discard"
-      />
     </OnboardingLayout>
   )
 }
