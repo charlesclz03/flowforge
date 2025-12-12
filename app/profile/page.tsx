@@ -119,7 +119,7 @@ export default function ProfilePage() {
       quickActions={
         <div className="space-y-8">
           <QuickActions />
-          <SocialsForm initialSocials={session.user.socials} />
+          <SocialsForm />
         </div>
       }
     />

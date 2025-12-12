@@ -8,10 +8,10 @@ import { updateSocials } from '@/app/actions/social'
 import { toast } from 'react-hot-toast'
 
 interface SocialsFormProps {
-  initialSocials: any
+  initialSocials?: Record<string, string>
 }
 
-export function SocialsForm({ initialSocials }: SocialsFormProps) {
+export function SocialsForm({ initialSocials = {} }: SocialsFormProps) {
   const [instagram, setInstagram] = useState(initialSocials?.instagram || '')
   const [tiktok, setTiktok] = useState(initialSocials?.tiktok || '') // Re-using globe for now or finding icon
   const [isSaving, setIsSaving] = useState(false)
