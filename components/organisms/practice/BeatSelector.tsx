@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { Search, ChevronDown, Music, Check } from 'lucide-react'
-import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
-import { toast } from 'react-hot-toast'
+import { getFavoriteBeatIds } from '@/app/actions/beats'
 
 interface BeatSelectorProps {
   beats: Beat[]
@@ -43,34 +42,6 @@ export function BeatSelector({
     getFavoriteBeatIds().then((ids) => {
       setFavoriteIds(new Set(ids))
     })
-  }, [])
-
-  const handleToggleFavorite = useCallback(async (e: React.MouseEvent, beatId: string) => {
-    e.stopPropagation() // Prevent selection when clicking favorite
-    // Optimistic update
-    setFavoriteIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(beatId)) {
-        next.delete(beatId)
-      } else {
-        next.add(beatId)
-      }
-      return next
-    })
-
-    const result = await toggleBeatFavorite(beatId)
-    if (result.error) {
-      toast.error('Failed to update favorite')
-      setFavoriteIds((prev) => {
-        const next = new Set(prev)
-        if (next.has(beatId)) {
-          next.delete(beatId)
-        } else {
-          next.add(beatId)
-        }
-        return next
-      })
-    }
   }, [])
 
   const filteredAndSortedBeats = useMemo(() => {

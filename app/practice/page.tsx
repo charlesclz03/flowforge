@@ -227,8 +227,6 @@ export default function PracticePage() {
   const {
     isRecording,
     duration,
-    recordingBlob,
-    hasRecording,
     start: startRecording,
     stop: stopRecording,
     resume: resumeRecording,
@@ -456,7 +454,11 @@ export default function PracticePage() {
               currentWord={currentWord}
               isRecording={isRecording}
               recordingDuration={duration}
-              error={beatPlayer.error?.message || error?.message || null}
+              error={
+                beatPlayer.error?.message ||
+                (typeof error === 'string' ? error : (error as any)?.message) ||
+                null
+              }
               onToggle={handlePlayPause}
               playButtonSize={playButtonSize}
               difficulty={difficulty}

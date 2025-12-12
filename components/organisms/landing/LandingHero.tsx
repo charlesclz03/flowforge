@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { SignInButton } from '@/components/molecules/auth/SignInButton'
+
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { StatCard } from '@/components/molecules/display/StatCard'
 

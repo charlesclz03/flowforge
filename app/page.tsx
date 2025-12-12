@@ -9,7 +9,6 @@ import {
   LandingHowItWorks,
   LandingPricing,
   LandingFAQ,
-  LandingTestimonials,
 } from '@/components/organisms/landing'
 
 const HERO_STATS = [

@@ -23,17 +23,6 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
     url: url || (typeof window !== 'undefined' ? window.location.href : ''),
   }
 
-  const handleNativeShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData)
-        onClose()
-      } catch (err) {
-        console.error('Error sharing:', err)
-      }
-    }
-  }
-
   const handleShare = (platform: 'twitter' | 'facebook' | 'tiktok') => {
     const encodedText = encodeURIComponent(shareData.text)
     const encodedUrl = encodeURIComponent(shareData.url)

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Check, RefreshCw, Volume2 } from 'lucide-react'
+import { Check, RefreshCw, Volume2 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Container } from '@/components/atoms/Container'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'

@@ -6,7 +6,7 @@ import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout
 interface LandingTemplateProps {
   hero: ReactNode
   howItWorks: ReactNode
-  testimonials: ReactNode
+  testimonials?: React.ReactNode
   pricing: ReactNode
   faq: ReactNode
 }
@@ -30,7 +30,7 @@ export function LandingTemplate({
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials">{testimonials}</section>
+        {testimonials && <section id="testimonials">{testimonials}</section>}
 
         {/* Pricing Section */}
         <section id="pricing" className="scroll-mt-20">
