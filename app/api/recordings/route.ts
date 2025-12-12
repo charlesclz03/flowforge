@@ -117,6 +117,7 @@ export async function POST(request: Request) {
         console.log(`User ${session.user.id} earned badges:`, earnedBadges)
         // Ideally we return this in the response
         // We can attach it to the session response if the frontend handles it
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(sessionResult.data as any).newBadges = earnedBadges
       }
     } catch (e) {

@@ -70,7 +70,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <PageContainer className="py-8 space-y-8">
       {/* Profile Header */}
-      <Card padding="xl" className="relative overflow-hidden">
+      <Card padding="lg" className="relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
           <Avatar
             src={user.image}

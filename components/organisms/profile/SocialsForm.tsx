@@ -29,7 +29,7 @@ export function SocialsForm({ initialSocials = {} }: SocialsFormProps) {
   }
 
   return (
-    <Card title="Social Links" description="Show off your handles on your profile.">
+    <Card title="Social Links" subtitle="Show off your handles on your profile.">
       <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-xs text-text-secondary uppercase font-bold tracking-wider">
