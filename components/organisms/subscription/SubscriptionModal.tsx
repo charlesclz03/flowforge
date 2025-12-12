@@ -5,14 +5,13 @@ import { X, Check } from 'lucide-react'
 interface SubscriptionModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubscribe?: (plan: 'monthly' | 'annual') => void
 }
 
 /**
  * Subscription modal placeholder component
  * TODO: Implement real Stripe checkout in production
  */
-export function SubscriptionModal({ isOpen, onClose, onSubscribe }: SubscriptionModalProps) {
+export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
   if (!isOpen) return null
 
   const handleSubscribe = async (plan: 'monthly' | 'annual') => {

@@ -45,12 +45,10 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('beats')
-      .upload(fileName, buffer, {
-        contentType: file.type,
-        upsert: false,
-      })
+    const { error: uploadError } = await supabase.storage.from('beats').upload(fileName, buffer, {
+      contentType: file.type,
+      upsert: false,
+    })
 
     if (uploadError) {
       console.error('Supabase Upload Error:', uploadError)

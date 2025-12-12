@@ -302,7 +302,7 @@ export default function PracticePage() {
   }, [selectedBeat, difficulty, frequency, sessionDuration, handleError])
 
   // Handle play/pause
-  const handlePlayPause = async () => {
+  const handlePlayPause = useCallback(async () => {
     if (!selectedBeat) return
 
     if (beatPlayer.isPlaying) {
