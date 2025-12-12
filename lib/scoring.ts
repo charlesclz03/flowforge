@@ -4,6 +4,7 @@
 export async function analyzeAudio(blob: Blob): Promise<{ score: number; vibe: string }> {
   try {
     const arrayBuffer = await blob.arrayBuffer()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
 
