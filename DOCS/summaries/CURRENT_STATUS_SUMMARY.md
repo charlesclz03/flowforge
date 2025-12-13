@@ -1,8 +1,8 @@
 # FlowForge - Current Status Summary
 
-**Date**: November 18, 2025  
-**Version**: 0.2.1-alpha  
-**Overall Completion**: ~80% (core MVP loop shipped; premium/social pending)
+**Date**: December 13, 2025  
+**Version**: 0.3.0-alpha  
+**Overall Completion**: ~85% (Core MVP deployed; Premium/Stripe integration in progress)
 
 ---
 
@@ -377,5 +377,5 @@ See **`MVP_BUILD_PLAN.md`** for complete details.
 
 ---
 
-**Last Updated**: November 18, 2025  
-**Document Version**: 2.1
+**Last Updated**: December 13, 2025  
+**Document Version**: 3.0
