@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUp, ArrowDown, X } from 'lucide-react'
+import { ArrowDown, X } from 'lucide-react'
 
 export function FirstVisitOverlay() {
   const [show, setShow] = useState(false)

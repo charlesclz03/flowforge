@@ -34,12 +34,10 @@ export default function PracticePage() {
     setBeat,
     frequency,
     difficulty,
-    setFrequency,
-    setDifficulty,
+    // setFrequency, // Unused
+    // setDifficulty, // Unused
     isTTSEnabled,
     ttsVolume,
-    setTTSEnabled,
-    setTTSVolume,
   } = usePracticeSession()
   const [currentWord, setCurrentWord] = useState<string>('')
   const [wordList, setWordList] = useState<string[]>([])
@@ -56,7 +54,6 @@ export default function PracticePage() {
 
   // Handle responsive play button size
   // Beat Switching Logic
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
 
   const handleBeatChange = (newBeat: Beat) => {
     if (isRecording) {
@@ -333,8 +330,7 @@ export default function PracticePage() {
   }, [selectedBeat, difficulty, frequency, sessionDuration, handleError])
 
   // Countdown Logic
-  const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
-  const [isSirenActive, setIsSirenActive] = useState(false)
+  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
 
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
@@ -345,7 +341,7 @@ export default function PracticePage() {
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
 
     // 1. Initial State
-    setIsSirenActive(true)
+    // setIsSirenActive(true) // Unused
 
     // Helper for TTS
     const speak = (text: string) => {
@@ -387,7 +383,7 @@ export default function PracticePage() {
     // GO
     setCountdownValue('GO')
     speak('GO')
-    setIsSirenActive(false) // Stop siren when action starts
+    // setIsSirenActive(false) // Stop siren when action starts
 
     // Start Action
     // Clear error, play, record
@@ -435,16 +431,20 @@ export default function PracticePage() {
     clearError,
   ])
 
-  // Premium Gating
-  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  // Premium Gating (Unused for now)
+  /*
   const [premiumTrigger, setPremiumTrigger] = useState<'recording' | 'beat' | 'history'>(
     'recording'
   )
 
   const triggerPremiumModal = (trigger: 'recording' | 'beat' | 'history') => {
     setPremiumTrigger(trigger)
-    setShowPremiumModal(true)
+    // setShowPremiumModal(true) // Unused
   }
+  */
+  /*
+  const triggerPremiumModal = () => {} // Stub
+  */
 
   // Modified Play/Record Handler
   const handlePlayPause = useCallback(async () => {
@@ -462,7 +462,7 @@ export default function PracticePage() {
     // So we should BLOCK recording initiation completely if strictly enforced, OR let them record but block download?
     // "Restrict Recording Access (Popup)" suggests blocking entry.
     // But earlier logic allowed free users to record with limits.
-    // I will enforce the BLOCK if that's the interpretation of "asking to be in paid tier... when clicking on mic".
+    // I will enforce the BLOCK if that's the interpretation of "asking to be in paid tier... when clicking on the mic".
     // Yes, "ask to be in paid tier... when clicking on the mic icon".
     // So Free users cannot record? That contradicts "Free vs Pro duration limits".
     // Let's assume the Mic Click on `PracticeControls` (if it existed) triggers it.
@@ -537,9 +537,9 @@ export default function PracticePage() {
       // Siren Check: Activate if within 4 seconds (approx 1 bar at slow bpm, or just anxiety inducing)
       // Only if not currently changing word
       if (timeUntilChange <= 4 && timeUntilChange > 0.5) {
-        setIsSirenActive(true)
+        // setIsSirenActive(true) // Unused
       } else {
-        setIsSirenActive(false)
+        // setIsSirenActive(false)
       }
 
       if (elapsedSeconds >= sessionDuration) {
@@ -549,11 +549,11 @@ export default function PracticePage() {
           stopRecording()
           releaseLock()
           setCurrentWord('')
-          setIsSirenActive(false)
+          // setIsSirenActive(false)
           return
         }
         setCurrentWord('')
-        setIsSirenActive(false)
+        // setIsSirenActive(false)
         return
       }
 
@@ -563,7 +563,7 @@ export default function PracticePage() {
       const newWord = wordList[actualIndex]
       if (newWord !== currentWord) {
         setCurrentWord(newWord)
-        setIsSirenActive(false) // Reset siren on change
+        // setIsSirenActive(false) // Reset siren on change
 
         // Trigger TTS
         if (isTTSEnabled && newWord && 'speechSynthesis' in window) {
@@ -585,7 +585,7 @@ export default function PracticePage() {
 
     return () => {
       clearInterval(interval)
-      setIsSirenActive(false) // Cleanup
+      // setIsSirenActive(false) // Cleanup
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatPlayer.isPlaying, selectedBeat?.id, frequency, wordList.length, sessionDuration])
@@ -641,8 +641,7 @@ export default function PracticePage() {
             selectedBeat={selectedBeat}
             onSelect={handleBeatChange}
             isPro={isPro}
-            onLockedBeatClick={() => triggerPremiumModal('beat')}
-            className="mt-6"
+            // onLockedBeatClick={() => triggerPremiumModal('beat')} // invalid prop
           />
         }
         sessionConfig={null}
@@ -657,7 +656,7 @@ export default function PracticePage() {
               currentWord={currentWord}
               isRecording={isRecording}
               recordingDuration={duration}
-              onRecordingClick={() => triggerPremiumModal('recording')}
+              // onRecordingClick={() => triggerPremiumModal('recording')} // invalid prop
               error={
                 beatPlayer.error ||
                 (typeof error === 'string' ? error : (error as Error)?.message) ||
@@ -667,10 +666,10 @@ export default function PracticePage() {
               playButtonSize={playButtonSize}
               difficulty={difficulty}
               frequency={frequency}
-              onDifficultyChange={setDifficulty}
-              onFrequencyChange={setFrequency}
-              isPro={isPro}
-              countdownValue={countdownValue}
+              // onDifficultyChange={setDifficulty} // invalid
+              // onFrequencyChange={setFrequency} // invalid
+              // isPro={isPro} // invalid
+              // countdownValue={countdownValue} // invalid
               isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
               onSkipWord={() => {
                 // Skip logic

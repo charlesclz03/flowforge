@@ -48,13 +48,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     const result = await createSession({
-      beatId,
-      title,
-      durationSeconds,
-      frequency,
-      difficulty,
+      beatId: beatId as string,
+      title: title as string,
+      durationSeconds: durationSeconds as number,
+      frequency: frequency as number,
+      difficulty: difficulty as number,
       userId: session.user.id,
-      storageUrl,
+      storageUrl: (storageUrl as string) || null,
+      score: 0,
+      vibe: null,
+      parentId: null,
     })
     if (!result.success) {
       return NextResponse.json(

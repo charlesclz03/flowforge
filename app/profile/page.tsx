@@ -125,7 +125,6 @@ export default function ProfilePage() {
       quickActions={
         <div className="space-y-8">
           <QuickActions />
-          {/* @ts-expect-error - socials type mapping needs improvement but data flows */}
           <SocialsForm initialSocials={session.user.socials || {}} />
         </div>
       }

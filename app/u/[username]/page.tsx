@@ -8,6 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tab
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { FollowButton } from '@/components/molecules/social/FollowButton'
+import { FreestyleSession, Beat } from '@prisma/client'
+
+interface SocialLinks {
+  instagram?: string
+  tiktok?: string
+}
+
+type ProfileSession = FreestyleSession & { beat: Beat }
 
 interface ProfilePageProps {
   params: {
@@ -90,7 +98,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <Container className="py-8 space-y-8">
       {/* Profile Header */}
-      <Card padding="xl" className="relative overflow-hidden">
+      <Card padding="lg" className="relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
           <Avatar
             src={user.image}
@@ -119,11 +127,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               </div>
             </div>
             {/* Socials */}
-            {(user.socials as any) && (
+            {(user.socials as unknown as SocialLinks) && (
               <div className="flex gap-4 pt-4 justify-center md:justify-start">
-                {(user.socials as any).instagram && (
+                {(user.socials as unknown as SocialLinks).instagram && (
                   <a
-                    href={`https://instagram.com/${(user.socials as any).instagram}`}
+                    href={`https://instagram.com/${(user.socials as unknown as SocialLinks).instagram}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-text-secondary hover:text-accent-pink transition-colors"
@@ -147,9 +155,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     </svg>
                   </a>
                 )}
-                {(user.socials as any).tiktok && (
+                {(user.socials as unknown as SocialLinks).tiktok && (
                   <a
-                    href={`https://tiktok.com/@${(user.socials as any).tiktok}`}
+                    href={`https://tiktok.com/@${(user.socials as unknown as SocialLinks).tiktok}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-text-secondary hover:text-accent-purple transition-colors"
@@ -199,7 +207,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {user.freestyleSessions.length === 0 ? (
             <div className="text-center py-12 text-text-tertiary">No flows recorded yet.</div>
           ) : (
-            user.freestyleSessions.map((session) => (
+            user.freestyleSessions.map((session: ProfileSession) => (
               <Card key={session.id} className="p-4 flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-white">{session.title}</h3>

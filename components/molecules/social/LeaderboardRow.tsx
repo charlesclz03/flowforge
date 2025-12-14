@@ -14,7 +14,7 @@ interface LeaderboardRowProps {
 
 export function LeaderboardRow({
   rank,
-  userId,
+  // userId, // Unused
   username,
   image,
   score,

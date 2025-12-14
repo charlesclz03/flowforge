@@ -41,5 +41,3 @@ export function OnboardingProgress({ className }: { className?: string }) {
     </div>
   )
 }
-
-

@@ -4,8 +4,8 @@ import { useState, useRef } from 'react'
 import { FreestyleSession, User, Beat } from '@prisma/client'
 import { Play, Pause, Vote } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
-import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
+// import { cn } from '@/lib/utils'
+// import { motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
 
 type ExtendedSession = FreestyleSession & { user: User; beat?: Beat }
@@ -44,9 +44,11 @@ export function DuelView({
     }
   }
 
+  /*
   const syncSeek = (time: number) => {
     // Sync seeking would be good polish, skip for MVP
   }
+  */
 
   const handleVote = async (votedForId: string) => {
     if (hasVoted) return
@@ -98,8 +100,8 @@ export function DuelView({
         {/* Parent Side */}
         <div className="space-y-4">
           <Card
-            padding="none"
-            className="overflow-hidden aspect-[9/16] md:aspect-video relative group"
+            padding="sm"
+            className="!p-0 overflow-hidden aspect-[9/16] md:aspect-video relative group"
           >
             <video
               ref={parentVideoRef}
@@ -130,8 +132,8 @@ export function DuelView({
         {/* Challenger Side */}
         <div className="space-y-4">
           <Card
-            padding="none"
-            className="overflow-hidden aspect-[9/16] md:aspect-video relative group border-2 border-accent-gold/20"
+            padding="sm"
+            className="!p-0 overflow-hidden aspect-[9/16] md:aspect-video relative group border-2 border-accent-gold/20"
           >
             <div className="absolute top-4 right-4 z-10 bg-accent-gold text-black text-xs font-bold px-2 py-1 rounded">
               CHALLENGER

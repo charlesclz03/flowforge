@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { X, Shield, FileText, Smartphone, Settings } from 'lucide-react'
 import Link from 'next/link'
-import { Card } from '@/components/atoms/Card'
+// import { Card } from '@/components/atoms/Card'
 import { cn } from '@/lib/utils'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { Volume2, Mic } from 'lucide-react'

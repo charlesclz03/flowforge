@@ -36,7 +36,7 @@ async function getLeaderboard(period: Period = 'all_time') {
     })
 
     // Fetch user details for these scores
-    const userIds = weeklyScores.map((s) => s.userId)
+    const userIds = weeklyScores.map((s: any) => s.userId)
     const users = await prisma.user.findMany({
       where: { id: { in: userIds } },
       select: {

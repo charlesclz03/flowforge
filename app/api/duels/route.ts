@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     // Verify parent session exists
     const parentSession = await prisma.freestyleSession.findUnique({
       where: { id: parentId },
-      include: { beat: true }
+      include: { beat: true },
     })
 
     if (!parentSession) {
@@ -29,8 +29,8 @@ export async function POST(request: Request) {
     // Return the session details to the challenger so they can record their response
     // The actual "Duel" is created when the challenger saves their recording with `parentId` set.
     // This endpoint effectively validates the challenge link/ID.
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       success: true,
       challenge: {
         id: parentSession.id,
@@ -38,15 +38,11 @@ export async function POST(request: Request) {
         beat: parentSession.beat,
         user: parentSession.userId, // Should probably expand user details if needed
         frequency: parentSession.frequency,
-        difficulty: parentSession.difficulty
-      }
+        difficulty: parentSession.difficulty,
+      },
     })
-
   } catch (error) {
     console.error('Duel creation error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

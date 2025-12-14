@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const pathsToDelete: string[] = []
     const idsToDelete: string[] = []
 
-    expiredSessions.forEach((session) => {
+    expiredSessions.forEach((session: { id: string; storageUrl: string | null }) => {
       idsToDelete.push(session.id)
 
       // Extract path from Public URL

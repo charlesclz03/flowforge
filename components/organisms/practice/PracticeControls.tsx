@@ -57,7 +57,7 @@ export function PracticeControls({
     error?.toLowerCase().includes('permission denied') ||
     error?.toLowerCase().includes('failed to access microphone')
 
-  const shouldShowError = Boolean(error && !micPermissionError) && !isPlaying && !isLoading
+  // const shouldShowError = Boolean(error && !micPermissionError) && !isPlaying && !isLoading
 
   const getDifficultyMeta = () => {
     if (difficulty <= 1) {
@@ -78,24 +78,8 @@ export function PracticeControls({
     }
   }
 
-  const getFrequencyMeta = () => {
-    if (frequency === 4) {
-      return {
-        label: '4 bars',
-      }
-    }
-    if (frequency === 8) {
-      return {
-        label: '8 bars',
-      }
-    }
-    return {
-      label: '16 bars',
-    }
-  }
-
   const difficultyMeta = getDifficultyMeta()
-  const frequencyMeta = getFrequencyMeta()
+  // const frequencyMeta = getFrequencyMeta()
 
   // Calculate timer ring progress (Countdown to next word)
   // We want the ring to fill up as we approach the next word change
@@ -159,7 +143,7 @@ export function PracticeControls({
             disabled={!selectedBeat || isLoading}
             size={playButtonSize}
           />
-          
+
           {/* Panic Button */}
           {isPlaying && onSkipWord && (
             <button

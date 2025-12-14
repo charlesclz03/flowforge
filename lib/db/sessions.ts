@@ -8,7 +8,7 @@ import { SessionFilters, DatabaseResult, FreestyleSessionWithBeat } from '@/type
 const inMemorySessions: FreestyleSession[] = []
 
 export async function createSession(
-  data: Omit<FreestyleSession, 'id' | 'createdAt'>
+  data: Omit<FreestyleSession, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<DatabaseResult<FreestyleSession>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
