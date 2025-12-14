@@ -3,7 +3,7 @@
 ## ✅ Completed Steps
 
 1. ✅ **Bucket Created**: `recordings` bucket exists in Supabase
-2. ✅ **Bucket Configuration**: 
+2. ✅ **Bucket Configuration**:
    - Public: ✅ Yes
    - File size limit: ✅ 50 MB
    - Allowed MIME types: ✅ audio/webm, audio/ogg, audio/mp4
@@ -18,20 +18,25 @@
 ## ⚠️ Action Required: Verify Service Role Key
 
 ### Issue
-The service role key you provided (`Ssuuppaabbaassee036973`) is only **23 characters long**. 
+
+The service role key you provided (`Ssuuppaabbaassee036973`) is only **23 characters long**.
 
 Supabase service role keys are typically **200+ character JWT tokens** (similar to your anon key).
 
 ### Current Service Role Key
+
 ```
 Ssuuppaabbaassee036973
 ```
+
 Length: 23 characters ❌ (Expected: ~200+ characters)
 
 ### Your Anon Key (for comparison)
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3Znl5Y3NwaWdvbWl2ZXZ2bnF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODM3OTMsImV4cCI6MjA3Nzk1OTc5M30.7oHPEypbJtt7UKY1T0V7uvfrmT1_4J2-rQmbfhm--xA
 ```
+
 Length: 200+ characters ✅ (This is the correct format)
 
 ---
@@ -68,12 +73,15 @@ Length: 200+ characters ✅ (This is the correct format)
 ### Step 3: Verify
 
 1. Check the key length:
+
    ```bash
    grep SUPABASE_SERVICE_ROLE_KEY .env.local | cut -d'=' -f2 | wc -c
    ```
+
    Should be **200+ characters**
 
 2. Restart your development server:
+
    ```bash
    npm run dev
    ```
@@ -89,9 +97,11 @@ Length: 200+ characters ✅ (This is the correct format)
 ## 🧪 Test the Setup
 
 ### Option 1: Test with Current Key (Quick Test)
+
 You can test with the current key first. If uploads fail, you'll know you need to update it.
 
 1. Restart dev server:
+
    ```bash
    npm run dev
    ```
@@ -103,11 +113,13 @@ You can test with the current key first. If uploads fail, you'll know you need t
    - Check for errors
 
 ### Option 2: Run Verification Script
+
 ```bash
 npm run verify:storage
 ```
 
 This will check:
+
 - ✅ Environment variables are set
 - ✅ Can connect to Supabase
 - ✅ Recordings bucket exists
@@ -118,6 +130,7 @@ This will check:
 ## 📋 Current Configuration
 
 ### Environment Variables (in .env.local)
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://xwfyycspigomivevvnqw.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (✅ Correct)
@@ -125,6 +138,7 @@ SUPABASE_SERVICE_ROLE_KEY=Ssuuppaabbaassee036973 (⚠️ Verify - too short)
 ```
 
 ### Bucket Configuration (from Supabase Dashboard)
+
 - **Name**: recordings ✅
 - **Public**: Yes ✅
 - **File size limit**: 50 MB ✅
@@ -204,4 +218,3 @@ SUPABASE_SERVICE_ROLE_KEY=Ssuuppaabbaassee036973 (⚠️ Verify - too short)
 ---
 
 **Ready to test?** Update the service role key first, then test the recording upload!
-

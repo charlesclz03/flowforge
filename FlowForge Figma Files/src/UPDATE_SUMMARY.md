@@ -87,6 +87,7 @@ App.tsx (parent)
 ```
 
 This allows:
+
 - Users configure settings on Beat Selector page
 - Settings persist when moving to Player page
 - Player page stays clean and focused on playback
@@ -116,13 +117,13 @@ This allows:
 ```
 1. How It Works Page
    ↓ Click "Start Practicing"
-   
+
 2. Beat Selector Page
    ↓ Adjust difficulty slider
    ↓ Adjust frequency slider
    ↓ Select a beat
    ↓ Click "Continue to Practice"
-   
+
 3. Player Page
    ↓ Click Play
    ↓ Practice with timer + word prompts
@@ -140,7 +141,7 @@ Your FlowForge app now has:
 ✅ **Clean Player page** (just timer + prompts)  
 ✅ **3-page flow** with smooth transitions  
 ✅ **Dark mode** optimized for OLED  
-✅ **Ready for Android** packaging  
+✅ **Ready for Android** packaging
 
 ---
 

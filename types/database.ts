@@ -88,4 +88,3 @@ export type SessionFilters = {
   startDate?: Date
   endDate?: Date
 }
-

@@ -43,7 +43,17 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"SF Pro Display"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: [
+          '"SF Pro Display"',
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica',
+          'Arial',
+          'sans-serif',
+        ],
         mono: ['SF Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
       },
       fontSize: {
@@ -69,8 +79,10 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-pulse': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)',
-        'gradient-aurora': 'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)',
-        'gradient-midnight': 'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
+        'gradient-aurora':
+          'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)',
+        'gradient-midnight':
+          'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%, rgba(10,10,12,0.95) 100%)',
         'gradient-purple': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 100%)',
       },
       boxShadow: {
@@ -94,4 +106,3 @@ const config: Config = {
 }
 
 export default config
-

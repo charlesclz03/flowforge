@@ -4,7 +4,6 @@
 **Status**: ✅ **COMPLETED / ARCHIVED** (See `PROJECT_STATUS.md` for current state)
 **Outcome**: All phases successfully implemented as of Dec 10, 2025.
 
-
 ---
 
 ## 🎯 Executive Summary
@@ -14,6 +13,7 @@
 **Gap**: The actual MVP user interface and user journey are **not built**.
 
 **Goal**: Build the complete practice application so users can:
+
 1. Sign in with Google
 2. Select a beat and configure practice settings
 3. Play beat with on-beat word prompts
@@ -25,6 +25,7 @@
 ## 📊 What's Already Built (Infrastructure)
 
 ### ✅ Backend & Database (100%)
+
 - Supabase PostgreSQL database
 - Prisma ORM configured
 - 15 beats seeded (with BPM, genre, URLs)
@@ -32,6 +33,7 @@
 - All database migrations applied
 
 ### ✅ API Endpoints (100%)
+
 - `GET /api/beats` - Returns all beats
 - `GET /api/beats?free=true` - Returns free beats only
 - `GET /api/words/random?difficulty=medium&count=10` - Returns random words
@@ -39,12 +41,14 @@
 - `POST /api/sessions` - Creates new session
 
 ### ✅ Visual Assets (100%)
+
 - Favicon (all sizes)
 - PWA icons
 - OG image for social sharing
 - Brand colors and design system
 
 ### ✅ Marketing Page (100%)
+
 - Landing page deployed at https://flowforge-pi.vercel.app
 - Hero section with animated timer (decorative)
 - Feature showcase
@@ -59,6 +63,7 @@
 **Goal**: Users can sign in with Google and have persistent sessions.
 
 #### 1.1 NextAuth.js Setup
+
 - [ ] Install NextAuth.js: `npm install next-auth`
 - [ ] Create `/app/api/auth/[...nextauth]/route.ts`
 - [ ] Configure Google OAuth provider
@@ -72,23 +77,27 @@
   ```
 
 #### 1.2 User Model & Database
+
 - [ ] Add `User` model to Prisma schema
 - [ ] Add `Account` and `Session` models (NextAuth tables)
 - [ ] Create migration: `npx prisma migrate dev --name add-auth`
 - [ ] Update `FreestyleSession` to include `userId` foreign key
 
 #### 1.3 Auth UI Components
+
 - [ ] Create `SignInButton` component
 - [ ] Create `SignOutButton` component
 - [ ] Create `UserAvatar` component (shows user photo/name)
 - [ ] Add auth status to header/nav
 
 #### 1.4 Protected Routes
+
 - [ ] Create middleware to protect `/practice` and `/review` routes
 - [ ] Redirect unauthenticated users to landing page
 - [ ] Show "Sign in to continue" message
 
 **Files to Create/Modify:**
+
 - `app/api/auth/[...nextauth]/route.ts` (new)
 - `prisma/schema.prisma` (update)
 - `components/auth/SignInButton.tsx` (new)
@@ -105,12 +114,14 @@
 **Goal**: Users can configure and start a practice session.
 
 #### 2.1 Practice Page Route
+
 - [ ] Create `/app/practice/page.tsx`
 - [ ] Set up page layout with responsive design
 - [ ] Add loading states
 - [ ] Add error boundaries
 
 #### 2.2 Beat Selector Component
+
 - [ ] Create `BeatSelector` component
 - [ ] Fetch beats from `/api/beats?free=true`
 - [ ] Display beat cards with:
@@ -124,6 +135,7 @@
 - [ ] Store selected beat in state
 
 #### 2.3 Configuration Controls
+
 - [ ] Create `FrequencySelector` component
   - Toggle buttons: 4 bars / 8 bars / 16 bars
   - Default: 8 bars
@@ -135,6 +147,7 @@
 - [ ] Visual feedback for selected options
 
 #### 2.4 Timer Ring Component (Functional)
+
 - [ ] Create `TimerRing` component (currently decorative)
 - [ ] Calculate total session time (default: 2 minutes for free tier)
 - [ ] Animate ring countdown synchronized with beat
@@ -143,6 +156,7 @@
 - [ ] Reset functionality
 
 #### 2.5 Play/Stop Button
+
 - [ ] Create large, prominent button
 - [ ] States: Ready / Playing / Paused / Stopped
 - [ ] Disabled state when no beat selected
@@ -150,6 +164,7 @@
 - [ ] Keyboard shortcut (spacebar)
 
 #### 2.6 Word Prompt Display
+
 - [ ] Create `WordPrompt` component
 - [ ] Large, centered text display
 - [ ] Fetch words from `/api/words/random?difficulty=X&count=Y`
@@ -162,6 +177,7 @@
 - [ ] Sync with beat timing
 
 #### 2.7 Recording Status Indicator
+
 - [ ] Create `RecordingIndicator` component
 - [ ] Show microphone status (requesting / granted / denied)
 - [ ] Show recording status (idle / recording / paused)
@@ -169,6 +185,7 @@
 - [ ] Audio level meter (optional but nice)
 
 **Files to Create:**
+
 - `app/practice/page.tsx` (new)
 - `components/practice/BeatSelector.tsx` (new)
 - `components/practice/FrequencySelector.tsx` (new)
@@ -183,13 +200,13 @@
 
 ```typescript
 // Calculate seconds per bar
-const secondsPerBar = (60 / bpm) * 4; // 4 beats per bar
+const secondsPerBar = (60 / bpm) * 4 // 4 beats per bar
 
 // Calculate seconds per prompt
-const secondsPerPrompt = secondsPerBar * frequency; // frequency = 4, 8, or 16
+const secondsPerPrompt = secondsPerBar * frequency // frequency = 4, 8, or 16
 
 // Calculate number of prompts needed
-const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
+const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt)
 
 // Example: 90 BPM, 8 bars, 120 seconds
 // secondsPerBar = (60 / 90) * 4 = 2.67 seconds
@@ -204,6 +221,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 **Goal**: Play beats, record vocals, sync word prompts to beat timing.
 
 #### 3.1 Beat Playback
+
 - [ ] Create `BeatPlayer` class using Web Audio API
 - [ ] Load audio file from beat `storageUrl`
 - [ ] Implement play/pause/stop controls
@@ -212,6 +230,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Handle audio loading errors
 
 #### 3.2 Microphone Recording
+
 - [ ] Create `MicrophoneRecorder` class
 - [ ] Request microphone permission
 - [ ] Use MediaRecorder API
@@ -220,10 +239,12 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Handle browser compatibility (Safari, Chrome, Firefox)
 
 #### 3.3 Audio Mixing (Optional for MVP)
+
 - [ ] Mix beat and vocal tracks (if needed)
 - [ ] Or save separately and play together on review
 
 #### 3.4 BPM Synchronization
+
 - [ ] Create `BeatTimer` class
 - [ ] Calculate bar intervals based on BPM
 - [ ] Emit events at bar boundaries
@@ -232,12 +253,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Handle tempo drift (use audio context time, not Date.now())
 
 #### 3.5 Session Recording
+
 - [ ] Start recording when user presses PLAY
 - [ ] Stop recording at 2-minute mark (free tier limit)
 - [ ] Convert recorded audio to Blob
 - [ ] Prepare for upload
 
 **Files to Create:**
+
 - `lib/audio/BeatPlayer.ts` (new)
 - `lib/audio/MicrophoneRecorder.ts` (new)
 - `lib/audio/BeatTimer.ts` (new)
@@ -247,12 +270,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - `hooks/useBeatTimer.ts` (new - React hook)
 
 **Key Technologies:**
+
 - Web Audio API for beat playback
 - MediaRecorder API for vocal recording
 - AudioContext for precise timing
 - MediaStream for microphone access
 
 **Browser Compatibility Notes:**
+
 - Safari requires user interaction before audio playback
 - Firefox and Chrome have different MediaRecorder formats
 - iOS Safari has restrictions on audio autoplay
@@ -264,6 +289,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 **Goal**: Save completed sessions to database and storage.
 
 #### 4.1 Session Metadata
+
 - [ ] Collect session data:
   - User ID
   - Beat ID
@@ -274,12 +300,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Create session object
 
 #### 4.2 Audio Upload
+
 - [ ] Convert recorded Blob to File
 - [ ] Upload to temporary storage (for MVP, can use base64 in DB)
 - [ ] Or implement Google Cloud Storage upload (see `DOCS/GCS_UPLOAD_PLAN.md`)
 - [ ] Get storage URL
 
 #### 4.3 Save to Database
+
 - [ ] Call `POST /api/sessions` with:
   ```json
   {
@@ -294,15 +322,18 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Show success message to user
 
 #### 4.4 Redirect to Review
+
 - [ ] After save, redirect to `/review/[sessionId]`
 - [ ] Pass session data via URL params or fetch from API
 
 **Files to Create/Modify:**
+
 - `lib/api/uploadSession.ts` (new)
 - `lib/storage/audioUpload.ts` (new)
 - `app/api/sessions/route.ts` (update to accept audio data)
 
 **Storage Options for MVP:**
+
 1. **Base64 in Database** (simplest, not scalable)
    - Encode audio as base64 string
    - Store in `recordingUrl` field
@@ -321,12 +352,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 **Goal**: Users can listen to their completed sessions.
 
 #### 5.1 Review Page Route
+
 - [ ] Create `/app/review/[sessionId]/page.tsx`
 - [ ] Fetch session data from `/api/sessions?id=[sessionId]`
 - [ ] Handle loading state
 - [ ] Handle session not found
 
 #### 5.2 Session Display
+
 - [ ] Show session metadata:
   - Date/time
   - Beat used
@@ -336,6 +369,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Show beat artwork (if available)
 
 #### 5.3 Audio Playback Controls
+
 - [ ] Create `AudioPlayer` component
 - [ ] Load session recording URL
 - [ ] Play/pause button
@@ -344,12 +378,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Time display (current / total)
 
 #### 5.4 Actions
+
 - [ ] "Practice Again" button → back to `/practice`
 - [ ] "Share" button (copy link, social share)
 - [ ] "Delete" button (with confirmation)
 - [ ] "Download" button (optional)
 
 #### 5.5 Session List View
+
 - [ ] Create `/app/sessions/page.tsx`
 - [ ] Fetch all user sessions from `/api/sessions`
 - [ ] Display as grid or list
@@ -357,6 +393,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Click to go to review page
 
 **Files to Create:**
+
 - `app/review/[sessionId]/page.tsx` (new)
 - `app/sessions/page.tsx` (new)
 - `components/review/AudioPlayer.tsx` (new)
@@ -370,6 +407,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 **Goal**: Connect all pages with intuitive navigation.
 
 #### 6.1 Update Header/Nav
+
 - [ ] Add navigation links:
   - Home (landing page)
   - Practice (if authenticated)
@@ -378,22 +416,26 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Add sign in/out buttons
 
 #### 6.2 Update Landing Page
+
 - [ ] Change "Join Waitlist" to "Start Practicing" (if authenticated)
 - [ ] Or "Sign In to Start" (if not authenticated)
 - [ ] Link to `/practice` page
 
 #### 6.3 Onboarding Flow (Optional)
+
 - [ ] First-time user tutorial
 - [ ] Explain beat selection
 - [ ] Explain word prompts
 - [ ] Explain recording
 
 #### 6.4 Empty States
+
 - [ ] No sessions yet → encourage first practice
 - [ ] No beats available → show error
 - [ ] Microphone denied → show instructions
 
 **Files to Modify:**
+
 - `app/page.tsx` (landing page)
 - `components/Header.tsx` or `components/Nav.tsx`
 - `components/EmptyState.tsx` (new)
@@ -405,6 +447,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 **Goal**: Ensure MVP works reliably across browsers and devices.
 
 #### 7.1 Cross-Browser Testing
+
 - [ ] Test on Chrome (desktop)
 - [ ] Test on Firefox (desktop)
 - [ ] Test on Safari (desktop)
@@ -412,12 +455,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Test on Chrome (Android)
 
 #### 7.2 Responsive Design
+
 - [ ] Test on mobile (320px - 480px)
 - [ ] Test on tablet (768px - 1024px)
 - [ ] Test on desktop (1280px+)
 - [ ] Ensure touch targets are large enough (44px minimum)
 
 #### 7.3 Error Handling
+
 - [ ] Test with no internet connection
 - [ ] Test with slow connection
 - [ ] Test with microphone denied
@@ -426,12 +471,14 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Show helpful error messages
 
 #### 7.4 Performance
+
 - [ ] Optimize audio loading (preload, lazy load)
 - [ ] Optimize image loading
 - [ ] Check bundle size
 - [ ] Test on slow devices
 
 #### 7.5 Accessibility
+
 - [ ] Keyboard navigation works
 - [ ] Screen reader support
 - [ ] ARIA labels on interactive elements
@@ -439,6 +486,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Color contrast meets WCAG AA
 
 #### 7.6 User Experience
+
 - [ ] Loading states feel responsive
 - [ ] Animations are smooth
 - [ ] Feedback is immediate
@@ -446,6 +494,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt);
 - [ ] Errors are helpful
 
 **Testing Checklist:**
+
 - [ ] Can sign in with Google
 - [ ] Can select a beat
 - [ ] Can choose frequency and difficulty
@@ -533,6 +582,7 @@ flowforge/
 ## 🎯 MVP Feature Checklist
 
 ### Core User Journey
+
 - [ ] User can sign in with Google
 - [ ] User lands on practice page after sign in
 - [ ] User can browse and select from 15 beats
@@ -551,6 +601,7 @@ flowforge/
 - [ ] User can sign out
 
 ### Technical Requirements
+
 - [ ] Works in Chrome, Firefox, Safari
 - [ ] Works on desktop and mobile
 - [ ] Handles microphone permission denied gracefully
@@ -561,6 +612,7 @@ flowforge/
 - [ ] No console errors in production
 
 ### Business Requirements
+
 - [ ] Free tier limited to 2-minute recordings
 - [ ] Free tier only accesses free beats
 - [ ] AdSense ads displayed (if env var set)
@@ -571,18 +623,19 @@ flowforge/
 
 ## ⏱️ Time Estimates by Phase
 
-| Phase | Description | Estimated Time |
-|-------|-------------|----------------|
-| 1 | Authentication (NextAuth.js) | 5-8 hours |
-| 2 | Practice Page UI | 20-30 hours |
-| 3 | Audio System | 10-15 hours |
-| 4 | Session Save & Upload | 5-8 hours |
-| 5 | Review/Playback Page | 5-8 hours |
-| 6 | Navigation & User Flow | 3-5 hours |
-| 7 | Testing & Polish | 5-10 hours |
-| **TOTAL** | **Full MVP Implementation** | **53-84 hours** |
+| Phase     | Description                  | Estimated Time  |
+| --------- | ---------------------------- | --------------- |
+| 1         | Authentication (NextAuth.js) | 5-8 hours       |
+| 2         | Practice Page UI             | 20-30 hours     |
+| 3         | Audio System                 | 10-15 hours     |
+| 4         | Session Save & Upload        | 5-8 hours       |
+| 5         | Review/Playback Page         | 5-8 hours       |
+| 6         | Navigation & User Flow       | 3-5 hours       |
+| 7         | Testing & Polish             | 5-10 hours      |
+| **TOTAL** | **Full MVP Implementation**  | **53-84 hours** |
 
 **Realistic Timeline:**
+
 - **Part-time (10 hrs/week)**: 5-8 weeks
 - **Full-time (40 hrs/week)**: 1.5-2 weeks
 - **Intensive (60 hrs/week)**: 1 week
@@ -592,11 +645,11 @@ flowforge/
 ## 🚀 Recommended Build Order
 
 ### Week 1: Core Functionality
+
 1. **Day 1-2**: Authentication (Phase 1)
    - Set up NextAuth.js
    - Add Google OAuth
    - Create sign-in flow
-   
 2. **Day 3-5**: Practice Page Structure (Phase 2, parts 1-3)
    - Create practice page route
    - Build beat selector
@@ -607,6 +660,7 @@ flowforge/
    - Implement microphone recording
 
 ### Week 2: Integration & Polish
+
 4. **Day 8-10**: Audio Synchronization (Phase 3, parts 3-4)
    - BPM timing system
    - Word prompt display
@@ -710,43 +764,45 @@ flowforge/
 ## 🔧 Technical Challenges & Solutions
 
 ### Challenge 1: Audio Timing Accuracy
+
 **Problem**: JavaScript timers (setTimeout, setInterval) are not precise enough for musical timing.
 
 **Solution**: Use Web Audio API's AudioContext.currentTime for precise timing.
 
 ```typescript
 class BeatTimer {
-  private audioContext: AudioContext;
-  private startTime: number;
-  private bpm: number;
+  private audioContext: AudioContext
+  private startTime: number
+  private bpm: number
 
   constructor(bpm: number) {
-    this.audioContext = new AudioContext();
-    this.bpm = bpm;
+    this.audioContext = new AudioContext()
+    this.bpm = bpm
   }
 
   start() {
-    this.startTime = this.audioContext.currentTime;
-    this.scheduleNextBeat();
+    this.startTime = this.audioContext.currentTime
+    this.scheduleNextBeat()
   }
 
   private scheduleNextBeat() {
-    const secondsPerBeat = 60 / this.bpm;
-    const nextBeatTime = this.startTime + secondsPerBeat;
-    
+    const secondsPerBeat = 60 / this.bpm
+    const nextBeatTime = this.startTime + secondsPerBeat
+
     // Schedule callback at exact time
-    const delay = (nextBeatTime - this.audioContext.currentTime) * 1000;
-    setTimeout(() => this.onBeat(), delay);
+    const delay = (nextBeatTime - this.audioContext.currentTime) * 1000
+    setTimeout(() => this.onBeat(), delay)
   }
 
   private onBeat() {
     // Trigger word prompt, update UI, etc.
-    this.scheduleNextBeat();
+    this.scheduleNextBeat()
   }
 }
 ```
 
 ### Challenge 2: Microphone Permission
+
 **Problem**: Users may deny microphone access or browser may block it.
 
 **Solution**: Request permission early, show clear instructions, handle errors gracefully.
@@ -754,65 +810,62 @@ class BeatTimer {
 ```typescript
 async function requestMicrophone() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    return stream;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    return stream
   } catch (error) {
     if (error.name === 'NotAllowedError') {
       // User denied permission
-      showError('Microphone access is required to record your freestyle.');
+      showError('Microphone access is required to record your freestyle.')
     } else if (error.name === 'NotFoundError') {
       // No microphone found
-      showError('No microphone detected. Please connect a microphone.');
+      showError('No microphone detected. Please connect a microphone.')
     } else {
       // Other error
-      showError('Could not access microphone. Please check your settings.');
+      showError('Could not access microphone. Please check your settings.')
     }
-    return null;
+    return null
   }
 }
 ```
 
 ### Challenge 3: Audio Format Compatibility
+
 **Problem**: Different browsers support different audio formats (WebM, MP4, WAV).
 
 **Solution**: Detect supported format and use it, or convert on server.
 
 ```typescript
 function getSupportedMimeType() {
-  const types = [
-    'audio/webm',
-    'audio/webm;codecs=opus',
-    'audio/ogg;codecs=opus',
-    'audio/mp4',
-  ];
-  
+  const types = ['audio/webm', 'audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4']
+
   for (const type of types) {
     if (MediaRecorder.isTypeSupported(type)) {
-      return type;
+      return type
     }
   }
-  
-  return ''; // No supported type
+
+  return '' // No supported type
 }
 ```
 
 ### Challenge 4: Mobile Safari Restrictions
+
 **Problem**: iOS Safari requires user interaction before playing audio.
 
 **Solution**: Only start audio playback after user taps PLAY button.
 
 ```typescript
 // Don't preload or autoplay on iOS
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 
 if (isIOS) {
   // Wait for user interaction
   playButton.addEventListener('click', () => {
-    audioElement.play();
-  });
+    audioElement.play()
+  })
 } else {
   // Can preload on other platforms
-  audioElement.preload = 'auto';
+  audioElement.preload = 'auto'
 }
 ```
 
@@ -821,18 +874,21 @@ if (isIOS) {
 ## 📚 Key Resources
 
 ### Documentation
+
 - **NextAuth.js**: https://next-auth.js.org/
 - **Web Audio API**: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
 - **MediaRecorder API**: https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
 - **Prisma**: https://www.prisma.io/docs/
 
 ### Internal Guides
+
 - `DOCS/AUTH_SETUP.md` - NextAuth.js setup guide
 - `DOCS/GCS_UPLOAD_PLAN.md` - Google Cloud Storage setup
 - `DOCS/SETUP.md` - Development environment setup
 - `TESTING.md` - API testing guide
 
 ### Example Code
+
 - Look at existing `app/api/` routes for API patterns
 - Look at `lib/db/` for database query patterns
 - Look at `components/` for component structure
@@ -882,6 +938,7 @@ After MVP launch, measure:
 - **Technical**: Error rate, page load time, audio quality
 
 **Target for MVP Success:**
+
 - 50%+ activation rate (sign-up → first session)
 - 30%+ 7-day retention
 - 2+ sessions per active user per week
@@ -905,6 +962,7 @@ After MVP launch, measure:
 **Remember**: The goal is a **functional MVP**, not a perfect product. Ship it, test it, improve it.
 
 **Focus on**:
+
 - ✅ Core user journey working
 - ✅ Audio quality acceptable
 - ✅ Timing accurate
@@ -912,6 +970,7 @@ After MVP launch, measure:
 - ✅ Error handling
 
 **Don't worry about** (for MVP):
+
 - ❌ Advanced features (TTS, AI scoring, etc.)
 - ❌ Perfect design polish
 - ❌ Extensive beat library (15 is enough)
@@ -928,4 +987,3 @@ After MVP launch, measure:
 
 **Last Updated**: November 6, 2025  
 **Document Version**: 1.0
-

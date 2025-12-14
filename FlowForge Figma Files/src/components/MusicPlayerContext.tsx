@@ -1,48 +1,48 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect } from 'react'
 
 interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  duration: number;
-  coverUrl: string;
-  audioUrl: string;
-  source: 'internal' | 'sdcard';
-  primaryColor?: string;
-  secondaryColor?: string;
+  id: string
+  title: string
+  artist: string
+  album: string
+  duration: number
+  coverUrl: string
+  audioUrl: string
+  source: 'internal' | 'sdcard'
+  primaryColor?: string
+  secondaryColor?: string
 }
 
 interface MusicPlayerState {
-  currentSong: Song | null;
-  playlist: Song[];
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  isLooping: boolean;
-  isShuffling: boolean;
-  darkMode: boolean;
-  dominantColor: string;
-  accentColor: string;
+  currentSong: Song | null
+  playlist: Song[]
+  isPlaying: boolean
+  currentTime: number
+  duration: number
+  volume: number
+  isLooping: boolean
+  isShuffling: boolean
+  darkMode: boolean
+  dominantColor: string
+  accentColor: string
 }
 
 interface MusicPlayerContextType extends MusicPlayerState {
-  play: () => void;
-  pause: () => void;
-  togglePlay: () => void;
-  nextSong: () => void;
-  previousSong: () => void;
-  selectSong: (song: Song) => void;
-  toggleLoop: () => void;
-  toggleShuffle: () => void;
-  toggleDarkMode: () => void;
-  setVolume: (volume: number) => void;
-  seekTo: (time: number) => void;
-  extractColors: (imageUrl: string) => void;
+  play: () => void
+  pause: () => void
+  togglePlay: () => void
+  nextSong: () => void
+  previousSong: () => void
+  selectSong: (song: Song) => void
+  toggleLoop: () => void
+  toggleShuffle: () => void
+  toggleDarkMode: () => void
+  setVolume: (volume: number) => void
+  seekTo: (time: number) => void
+  extractColors: (imageUrl: string) => void
 }
 
-const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
+const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
 
 // Mock song data with Material U colors
 const mockSongs: Song[] = [
@@ -52,11 +52,12 @@ const mockSongs: Song[] = [
     artist: 'Ocean Waves',
     album: 'Coastal Dreams',
     duration: 240,
-    coverUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
+    coverUrl:
+      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
     audioUrl: '',
     source: 'internal',
     primaryColor: '#6750A4',
-    secondaryColor: '#E8DEF8'
+    secondaryColor: '#E8DEF8',
   },
   {
     id: '2',
@@ -64,11 +65,12 @@ const mockSongs: Song[] = [
     artist: 'Blue Note Collective',
     album: 'City Lights',
     duration: 320,
-    coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
+    coverUrl:
+      'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
     audioUrl: '',
     source: 'sdcard',
     primaryColor: '#1976D2',
-    secondaryColor: '#BBDEFB'
+    secondaryColor: '#BBDEFB',
   },
   {
     id: '3',
@@ -76,11 +78,12 @@ const mockSongs: Song[] = [
     artist: 'Synth Masters',
     album: 'Digital Horizon',
     duration: 280,
-    coverUrl: 'https://images.unsplash.com/photo-1571974599782-87624638275d?w=400&h=400&fit=crop&crop=center',
+    coverUrl:
+      'https://images.unsplash.com/photo-1571974599782-87624638275d?w=400&h=400&fit=crop&crop=center',
     audioUrl: '',
     source: 'internal',
     primaryColor: '#FF6B35',
-    secondaryColor: '#FFE0D6'
+    secondaryColor: '#FFE0D6',
   },
   {
     id: '4',
@@ -88,11 +91,12 @@ const mockSongs: Song[] = [
     artist: 'Folk Harmony',
     album: 'Unplugged Sessions',
     duration: 195,
-    coverUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
+    coverUrl:
+      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
     audioUrl: '',
     source: 'sdcard',
     primaryColor: '#4CAF50',
-    secondaryColor: '#E8F5E8'
+    secondaryColor: '#E8F5E8',
   },
   {
     id: '5',
@@ -100,13 +104,14 @@ const mockSongs: Song[] = [
     artist: 'Street Symphony',
     album: 'City Pulse',
     duration: 210,
-    coverUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop&crop=center',
+    coverUrl:
+      'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop&crop=center',
     audioUrl: '',
     source: 'internal',
     primaryColor: '#E91E63',
-    secondaryColor: '#FCE4EC'
-  }
-];
+    secondaryColor: '#FCE4EC',
+  },
+]
 
 export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<MusicPlayerState>({
@@ -120,129 +125,129 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     isShuffling: false,
     darkMode: false,
     dominantColor: mockSongs[0].primaryColor || '#6750A4',
-    accentColor: mockSongs[0].secondaryColor || '#E8DEF8'
-  });
+    accentColor: mockSongs[0].secondaryColor || '#E8DEF8',
+  })
 
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (state.isPlaying && state.currentSong) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
-          currentTime: Math.min(prev.currentTime + 1, state.currentSong?.duration || 0)
-        }));
-        
+          currentTime: Math.min(prev.currentTime + 1, state.currentSong?.duration || 0),
+        }))
+
         if (state.currentTime >= (state.currentSong?.duration || 0)) {
           if (state.isLooping) {
-            setState(prev => ({ ...prev, currentTime: 0 }));
+            setState((prev) => ({ ...prev, currentTime: 0 }))
           } else {
-            nextSong();
+            nextSong()
           }
         }
       }
-    }, 1000);
+    }, 1000)
 
-    return () => clearInterval(interval);
-  }, [state.isPlaying, state.currentTime, state.currentSong?.duration, state.isLooping]);
+    return () => clearInterval(interval)
+  }, [state.isPlaying, state.currentTime, state.currentSong?.duration, state.isLooping])
 
   const extractColors = (imageUrl: string) => {
     // In a real app, this would use a color extraction library
     // For now, we'll use the predefined colors from the song data
-    const song = state.currentSong;
+    const song = state.currentSong
     if (song?.primaryColor && song?.secondaryColor) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         dominantColor: song.primaryColor!,
-        accentColor: song.secondaryColor!
-      }));
+        accentColor: song.secondaryColor!,
+      }))
     }
-  };
+  }
 
   const play = () => {
-    setState(prev => ({ ...prev, isPlaying: true }));
-  };
+    setState((prev) => ({ ...prev, isPlaying: true }))
+  }
 
   const pause = () => {
-    setState(prev => ({ ...prev, isPlaying: false }));
-  };
+    setState((prev) => ({ ...prev, isPlaying: false }))
+  }
 
   const togglePlay = () => {
-    setState(prev => ({ ...prev, isPlaying: !prev.isPlaying }));
-  };
+    setState((prev) => ({ ...prev, isPlaying: !prev.isPlaying }))
+  }
 
   const nextSong = () => {
-    let nextIndex;
+    let nextIndex
     if (state.isShuffling) {
-      nextIndex = Math.floor(Math.random() * state.playlist.length);
+      nextIndex = Math.floor(Math.random() * state.playlist.length)
     } else {
-      nextIndex = (currentSongIndex + 1) % state.playlist.length;
+      nextIndex = (currentSongIndex + 1) % state.playlist.length
     }
-    
-    setCurrentSongIndex(nextIndex);
-    const nextSong = state.playlist[nextIndex];
-    setState(prev => ({
+
+    setCurrentSongIndex(nextIndex)
+    const nextSong = state.playlist[nextIndex]
+    setState((prev) => ({
       ...prev,
       currentSong: nextSong,
       currentTime: 0,
       dominantColor: nextSong.primaryColor || '#6750A4',
-      accentColor: nextSong.secondaryColor || '#E8DEF8'
-    }));
-  };
+      accentColor: nextSong.secondaryColor || '#E8DEF8',
+    }))
+  }
 
   const previousSong = () => {
-    const prevIndex = currentSongIndex === 0 ? state.playlist.length - 1 : currentSongIndex - 1;
-    setCurrentSongIndex(prevIndex);
-    const prevSong = state.playlist[prevIndex];
-    setState(prev => ({
+    const prevIndex = currentSongIndex === 0 ? state.playlist.length - 1 : currentSongIndex - 1
+    setCurrentSongIndex(prevIndex)
+    const prevSong = state.playlist[prevIndex]
+    setState((prev) => ({
       ...prev,
       currentSong: prevSong,
       currentTime: 0,
       dominantColor: prevSong.primaryColor || '#6750A4',
-      accentColor: prevSong.secondaryColor || '#E8DEF8'
-    }));
-  };
+      accentColor: prevSong.secondaryColor || '#E8DEF8',
+    }))
+  }
 
   const selectSong = (song: Song) => {
-    const index = state.playlist.findIndex(s => s.id === song.id);
-    setCurrentSongIndex(index);
-    setState(prev => ({
+    const index = state.playlist.findIndex((s) => s.id === song.id)
+    setCurrentSongIndex(index)
+    setState((prev) => ({
       ...prev,
       currentSong: song,
       currentTime: 0,
       isPlaying: true,
       dominantColor: song.primaryColor || '#6750A4',
-      accentColor: song.secondaryColor || '#E8DEF8'
-    }));
-  };
+      accentColor: song.secondaryColor || '#E8DEF8',
+    }))
+  }
 
   const toggleLoop = () => {
-    setState(prev => ({ ...prev, isLooping: !prev.isLooping }));
-  };
+    setState((prev) => ({ ...prev, isLooping: !prev.isLooping }))
+  }
 
   const toggleShuffle = () => {
-    setState(prev => ({ ...prev, isShuffling: !prev.isShuffling }));
-  };
+    setState((prev) => ({ ...prev, isShuffling: !prev.isShuffling }))
+  }
 
   const toggleDarkMode = () => {
-    setState(prev => ({ ...prev, darkMode: !prev.darkMode }));
-  };
+    setState((prev) => ({ ...prev, darkMode: !prev.darkMode }))
+  }
 
   const setVolume = (volume: number) => {
-    setState(prev => ({ ...prev, volume }));
-  };
+    setState((prev) => ({ ...prev, volume }))
+  }
 
   const seekTo = (time: number) => {
-    setState(prev => ({ ...prev, currentTime: time }));
-  };
+    setState((prev) => ({ ...prev, currentTime: time }))
+  }
 
   useEffect(() => {
     if (state.darkMode) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('dark')
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('dark')
     }
-  }, [state.darkMode]);
+  }, [state.darkMode])
 
   const contextValue: MusicPlayerContextType = {
     ...state,
@@ -257,20 +262,16 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     toggleDarkMode,
     setVolume,
     seekTo,
-    extractColors
-  };
+    extractColors,
+  }
 
-  return (
-    <MusicPlayerContext.Provider value={contextValue}>
-      {children}
-    </MusicPlayerContext.Provider>
-  );
+  return <MusicPlayerContext.Provider value={contextValue}>{children}</MusicPlayerContext.Provider>
 }
 
 export function useMusicPlayer() {
-  const context = useContext(MusicPlayerContext);
+  const context = useContext(MusicPlayerContext)
   if (context === undefined) {
-    throw new Error('useMusicPlayer must be used within a MusicPlayerProvider');
+    throw new Error('useMusicPlayer must be used within a MusicPlayerProvider')
   }
-  return context;
+  return context
 }

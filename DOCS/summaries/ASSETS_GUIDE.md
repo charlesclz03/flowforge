@@ -163,5 +163,3 @@ Once assets are in place:
 - Hire a designer on Fiverr ($5-20 for basic logo set)
 - Use free stock icons from [flaticon.com](https://flaticon.com)
 - Ask in design communities for feedback
-
-

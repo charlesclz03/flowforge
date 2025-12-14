@@ -1,4 +1,4 @@
-(async () => {
+;(async () => {
   const { PrismaClient } = require('@prisma/client')
   const p = new PrismaClient()
   try {

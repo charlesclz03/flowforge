@@ -11,11 +11,13 @@
 ## Actions Taken
 
 ### 1. Initial Cleanup ✅
+
 - **Killed all Node.js processes** using `killall -9 node`
 - **Cleared Next.js cache** by removing `.next` directory
 - **Attempted to clear node_modules cache**
 
 ### 2. First Server Start Attempt ⚠️
+
 - Started development server
 - **Issue:** Server started on port 3002 due to port conflicts
 - **Issue:** Multiple server instances running simultaneously
@@ -23,12 +25,15 @@
 ### 3. Permission Issues Identified 🔴
 
 #### Critical Errors Found:
+
 1. **EPERM Errors** - Operation not permitted on `.env` and `.env.local` files
+
    ```
    Error: EPERM: operation not permitted, open '.env.local'
    ```
 
 2. **EMFILE Errors** - Too many open files (system file descriptor limit)
+
    ```
    Watchpack Error (watcher): Error: EMFILE: too many open files
    ```
@@ -46,21 +51,25 @@
 ## Solutions Attempted
 
 ### A. Environment File Fixes
+
 1. ✅ Removed extended attributes: `xattr -c .env .env.local`
 2. ✅ Changed file permissions: `chmod 644 .env .env.local`
 3. ✅ Temporarily moved .env files to bypass issues
 4. ✅ Created new .env.local with minimal configuration
 
 ### B. System Limits
+
 1. ⚠️ Attempted to increase file descriptor limit: `ulimit -n 10240`
    - Note: ulimit doesn't persist in background processes
 
 ### C. Port Management
+
 1. ✅ Killed processes on ports 3000-3007
 2. ✅ Verified port 3000 is free
 3. ✅ Server now running on correct port (3000)
 
 ### D. node_modules Issues
+
 1. 🔄 **Currently Running:** `rm -rf node_modules` (in progress)
    - Command started at 10:11 PM
    - Still executing due to large number of files (50,000+)
@@ -71,6 +80,7 @@
 ## Current Status
 
 ### Server State
+
 - **Port:** 3000 (correct)
 - **Process:** Running but with compilation errors
 - **Environment:** Running without .env files (using defaults)
@@ -78,7 +88,9 @@
 ### Outstanding Issues
 
 #### 1. node_modules Corruption 🔴
+
 **Problem:** Next.js cannot read its own files from node_modules
+
 ```
 Error: Failed to read source code from node_modules/next/dist/client/components/router-reducer/*.js
 Caused by: Operation not permitted (os error 1)
@@ -91,9 +103,11 @@ Caused by: Operation not permitted (os error 1)
 **Next Step:** Reinstall dependencies with `npm install`
 
 #### 2. Environment Variables ⚠️
+
 **Problem:** .env and .env.local files have persistent permission issues
 
 **Workaround Applied:** Created minimal .env.local with basic config:
+
 ```env
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXTAUTH_URL=http://localhost:3000
@@ -103,6 +117,7 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 **Missing:** Database credentials, Supabase keys, Google OAuth credentials
 
 #### 3. System File Limits ⚠️
+
 **Problem:** EMFILE errors indicating too many open files
 
 **Attempted Fix:** `ulimit -n 10240` (doesn't persist in background processes)
@@ -114,12 +129,14 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 ## User Actions Required
 
 ### Immediate (To Get Server Running)
+
 1. ✅ **Added Cursor and Terminal to Full Disk Access** in System Settings
 2. 🔄 **Wait for `rm -rf node_modules` to complete** (currently running)
 3. ⏳ **Run `npm install`** after deletion completes
 4. ⏳ **Restart server** with `npm run dev`
 
 ### Optional (For Full Functionality)
+
 1. **Restore proper .env.local** with:
    - Database credentials (DATABASE_URL, DIRECT_URL)
    - Supabase keys (NEXT_PUBLIC_SUPABASE_URL, etc.)
@@ -139,19 +156,23 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 ## Technical Details
 
 ### Files Modified
+
 - `.env.local` - Created new minimal version
 - `start-dev.sh` - Created startup script (not currently in use)
 
 ### Files Backed Up
+
 - `.env.backup` - Original .env file
 - `.env.local.backup` - Original .env.local file
 - `.env.local.disabled` - Temporary disabled version
 
 ### Processes Killed
+
 - Multiple Node.js instances on ports 3000-3007
 - Background npm/next processes
 
 ### Cache Cleared
+
 - `.next` directory (multiple times)
 - `node_modules/.cache` (attempted)
 
@@ -175,12 +196,14 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 ## Lessons Learned
 
 ### macOS Security Issues
+
 - Full Disk Access permission alone is not sufficient
 - Extended attributes on files can block access even with permissions
 - node_modules can become corrupted with permission issues
 - System file limits (ulimit) can cause EMFILE errors
 
 ### Best Practices for Future
+
 1. Always check for extended attributes: `ls -la@`
 2. Clear them when needed: `xattr -cr .`
 3. Verify port availability before starting server
@@ -188,6 +211,7 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 5. Consider moving project to path without spaces
 
 ### Recommended Workflow
+
 ```bash
 # Complete clean restart
 killall -9 node
@@ -220,5 +244,3 @@ npm run dev
 For questions about this session, refer to the troubleshooting documentation or check the terminal output for real-time status.
 
 **Last Updated:** November 14, 2025 - 10:13 PM
-
-

@@ -12,6 +12,7 @@ A beautiful, minimal freestyle rap practice application with iOS-inspired design
 ## ✨ Features
 
 ### 🎨 Beautiful Design
+
 - **Dark theme** with pure black background for OLED screens
 - **Purple gradient** accent colors throughout
 - **Glassmorphism** effects on cards and overlays
@@ -19,6 +20,7 @@ A beautiful, minimal freestyle rap practice application with iOS-inspired design
 - **iOS-inspired** circular timer with progress ring
 
 ### 🎵 Practice Tools
+
 - **50+ curated beats** with BPM and genre tags
 - **1,000+ word bank** organized by difficulty
 - **Customizable difficulty** slider (Easy → Medium → Hard)
@@ -27,6 +29,7 @@ A beautiful, minimal freestyle rap practice application with iOS-inspired design
 - **Real-time word prompts** synchronized to beat
 
 ### 📱 User Experience
+
 - **3-page onboarding flow** for focused experience
 - **Page progress indicators** at bottom
 - **Smooth page transitions** with fade animations
@@ -38,6 +41,7 @@ A beautiful, minimal freestyle rap practice application with iOS-inspired design
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 16+ installed
 - npm or yarn package manager
 
@@ -64,17 +68,20 @@ The app will open at `http://localhost:5173`
 ## 📖 How to Use
 
 ### 1️⃣ How It Works Page
+
 - Read about FlowForge features
 - See statistics (50+ beats, 1,000+ words)
 - Click **"Start Practicing"** to begin
 
 ### 2️⃣ Beat Selector Page
+
 - Browse grid of 8 beats
 - Click a beat to select (purple highlight)
 - See BPM, genre, and premium status
 - Click **"Continue to Practice"**
 
 ### 3️⃣ Player Page
+
 - **Configure your session**:
   - Adjust difficulty slider for word complexity
   - Adjust frequency slider for word timing
@@ -112,6 +119,7 @@ flowforge/
 ## 🎨 Design System
 
 ### Colors
+
 ```css
 Purple-500: #a855f7  /* Primary accent */
 Purple-600: #9333ea  /* Hover states */
@@ -121,12 +129,14 @@ Green-500: #22c55e   /* Easy difficulty */
 ```
 
 ### Typography
+
 - Logo: "Flow**Forge**" (Forge in purple)
 - Headings: Sans-serif, light weight
 - Body: 14-16px, normal weight
 - Timer: 48px, light weight
 
 ### Spacing
+
 - Cards: 24px border radius
 - Buttons: Full rounded (pill)
 - Padding: 16-32px consistent
@@ -137,6 +147,7 @@ Green-500: #22c55e   /* Easy difficulty */
 ## 🔧 Customization
 
 ### Add New Beats
+
 Edit `/components/BeatSelectorPage.tsx`:
 
 ```typescript
@@ -148,30 +159,32 @@ const BEATS: Beat[] = [
     bpm: 95,
     genre: 'Trap',
     audioUrl: '/path/to/audio.mp3',
-    isPremium: false
+    isPremium: false,
   },
   // ... more beats
-];
+]
 ```
 
 ### Add New Words
+
 Edit `/components/PlayerPage.tsx`:
 
 ```typescript
 const WORD_BANK = {
   easy: ['your', 'easy', 'words'],
   medium: ['medium', 'words'],
-  hard: ['difficult', 'words']
-};
+  hard: ['difficult', 'words'],
+}
 ```
 
 ### Change Theme Colors
+
 Edit `/styles/globals.css`:
 
 ```css
 :root {
   --primary: #a855f7; /* Change to your color */
-  --accent: #7D7AFF;  /* Change to your color */
+  --accent: #7d7aff; /* Change to your color */
 }
 ```
 
@@ -302,16 +315,19 @@ npm run lint         # Run linter
 ## 📸 Screenshots
 
 ### Page 1: How It Works
+
 - Feature cards with numbered steps
 - Detailed feature descriptions
 - Statistics footer
 
 ### Page 2: Beat Selector
+
 - Grid of beats with titles and BPM
 - Premium badges
 - Selection highlighting
 
 ### Page 3: Player
+
 - Circular timer with progress
 - Difficulty/frequency sliders
 - Large word prompts
@@ -322,24 +338,28 @@ npm run lint         # Run linter
 ## 🌟 Key Features Explained
 
 ### Circular Timer
+
 - 200px diameter SVG circle
 - Smooth stroke-dashoffset animation
 - Purple gradient progress ring
 - Real-time countdown display
 
 ### Word Prompts
+
 - 1,000+ words organized by difficulty
 - Fade-in animation on appearance
 - Purple gradient text effect
 - Uppercase styling with wide tracking
 
 ### Beat Synchronization
+
 - Calculates bar duration from BPM
 - Words appear on exact musical bars
 - Supports 4, 8, or 16 bar intervals
 - Bar counter displayed during session
 
 ### Sliders
+
 - Smooth 0-100 value range
 - Purple gradient fill
 - Live label updates

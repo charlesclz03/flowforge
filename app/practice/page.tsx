@@ -503,17 +503,7 @@ export default function PracticePage() {
 
       startCountdown()
     }
-  }, [
-    selectedBeat,
-    beatPlayer.isPlaying,
-    isRecording,
-    beatPlayer.play,
-    beatPlayer.pause,
-    beatPlayer.stop,
-    handleStop,
-    startCountdown,
-    isPro, // dependency
-  ])
+  }, [selectedBeat, isRecording, beatPlayer, handleStop, startCountdown])
 
   // Timer countdown and word cycling (Modified for Siren)
   useEffect(() => {

@@ -178,5 +178,3 @@ npm run dev
 Visit: http://localhost:3000
 
 All API endpoints are now connected to your live Supabase database! 🎉
-
-

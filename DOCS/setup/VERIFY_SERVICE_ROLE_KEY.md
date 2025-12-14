@@ -2,20 +2,24 @@
 
 ## 🔍 Issue Detected
 
-The service role key you provided (`Ssuuppaabbaassee036973`) looks suspiciously **short**. 
+The service role key you provided (`Ssuuppaabbaassee036973`) looks suspiciously **short**.
 
 Supabase service role keys are typically **long JWT tokens** (similar to your anon key), not short strings.
 
 ### Your Anon Key (for reference):
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3Znl5Y3NwaWdvbWl2ZXZ2bnF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzODM3OTMsImV4cCI6MjA3Nzk1OTc5M30.7oHPEypbJtt7UKY1T0V7uvfrmT1_4J2-rQmbfhm--xA
 ```
+
 (Notice it's a long JWT token with three parts separated by dots)
 
 ### Your Service Role Key:
+
 ```
 Ssuuppaabbaassee036973
 ```
+
 (This is very short and doesn't look like a JWT token)
 
 ---
@@ -66,6 +70,7 @@ Ssuuppaabbaassee036973
 After updating the service role key:
 
 1. **Restart your dev server:**
+
    ```bash
    npm run dev
    ```
@@ -88,6 +93,7 @@ After updating the service role key:
 Once you have the correct service role key, you can verify it by:
 
 1. **Running the verification script:**
+
    ```bash
    npm run verify:storage
    ```
@@ -119,4 +125,3 @@ Once you have the correct service role key, you can verify it by:
 ---
 
 **If you're unsure, you can test with the current key first. If uploads fail, you'll know you need to update it.**
-

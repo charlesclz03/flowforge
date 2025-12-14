@@ -35,4 +35,3 @@ declare namespace NodeJS {
     NEXT_PUBLIC_FREE_RECORDING_LIMIT_SECONDS: string
   }
 }
-

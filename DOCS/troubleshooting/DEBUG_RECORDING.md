@@ -1,15 +1,18 @@
 # Debugging Recording Save Issue
 
 ## Issue
+
 Recording is not being saved to Supabase when user stops recording.
 
 ## Changes Made
 
 ### 1. Fixed Play/Stop Button Behavior
+
 - **Before**: Clicking stop while recording would pause the recording (not stop it)
 - **After**: Clicking stop while recording now properly stops the recording and triggers save
 
 ### 2. Added Detailed Logging
+
 - Added console logs to track recording flow
 - Logs when recording starts, stops, and completes
 - Logs blob size and type
@@ -17,6 +20,7 @@ Recording is not being saved to Supabase when user stops recording.
 - Logs API call status
 
 ### 3. Improved Error Handling
+
 - Check if blob is empty before saving
 - Better error messages
 - Log all steps of the save process
@@ -31,6 +35,7 @@ Recording is not being saved to Supabase when user stops recording.
 4. Look for these log messages:
 
 **Expected Logs:**
+
 ```
 Recording complete: [size] bytes
 Recording blob type: audio/webm
@@ -46,28 +51,34 @@ Recording saved successfully: {...}
 ### Step 2: Check Common Issues
 
 #### Issue 1: "Recording blob is empty"
+
 **Cause**: Recording stopped too quickly or MediaRecorder didn't collect data
 **Solution**: Record for at least 2-3 seconds
 
 #### Issue 2: "Not saving recording: { hasSession: false, hasBeat: true }"
+
 **Cause**: User is not authenticated
 **Solution**: Sign in first
 
 #### Issue 3: "Not saving recording: { hasSession: true, hasBeat: false }"
+
 **Cause**: No beat selected
 **Solution**: Select a beat before recording
 
 #### Issue 4: "Failed to upload recording: [error]"
+
 **Cause**: Supabase Storage issue
 **Solution**: Check Supabase Storage configuration
 
 #### Issue 5: "Unauthorized" error
+
 **Cause**: Authentication issue
 **Solution**: Check if user is signed in, check NextAuth configuration
 
 ### Step 3: Check Server Logs
 
 Look at the terminal where `npm run dev` is running for:
+
 - API request logs
 - Supabase Storage errors
 - Database errors
@@ -106,27 +117,35 @@ Look at the terminal where `npm run dev` is running for:
 ## Common Problems & Solutions
 
 ### Problem: Recording doesn't start
+
 **Check:**
+
 - Mic permission granted?
 - Browser supports MediaRecorder?
 - Console shows any errors?
 
 ### Problem: Recording stops but doesn't save
+
 **Check:**
+
 - User authenticated? (check console log)
 - Beat selected? (check console log)
 - Blob size > 0? (check console log)
 - API call successful? (check Network tab)
 
 ### Problem: "Failed to upload recording"
+
 **Check:**
+
 - Supabase Storage bucket exists?
 - Bucket is public?
 - Service role key is set correctly?
 - File size within limits?
 
 ### Problem: "Unauthorized" error
+
 **Check:**
+
 - User is signed in?
 - Session is valid?
 - NextAuth is working?
@@ -153,6 +172,7 @@ Look at the terminal where `npm run dev` is running for:
 ## Expected Behavior
 
 ### When Recording Works:
+
 1. User clicks Play → Recording starts
 2. Recording Indicator shows red dot
 3. User clicks Stop → Recording stops
@@ -164,6 +184,7 @@ Look at the terminal where `npm run dev` is running for:
 9. Recording appears in `/recordings` page
 
 ### When Recording Fails:
+
 1. Check console for error messages
 2. Check Network tab for failed requests
 3. Check server logs for errors
@@ -173,5 +194,3 @@ Look at the terminal where `npm run dev` is running for:
 
 **Last Updated**: November 11, 2025  
 **Status**: Debugging guide created
-
-

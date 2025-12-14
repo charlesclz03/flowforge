@@ -7,9 +7,11 @@ FlowForge now follows **Atomic Design principles** for component organization. T
 ## The Atomic Design Hierarchy
 
 ### 1. **Atoms** (`components/atoms/`)
+
 The smallest, most basic building blocks of the UI. These are standalone components that can't be broken down further without losing their meaning.
 
 **Current Atoms:**
+
 - `Button.tsx` - Base button component with variants
 - `Card.tsx` - Container card with consistent styling
 - `Container.tsx` - Layout container for content width management
@@ -18,29 +20,35 @@ The smallest, most basic building blocks of the UI. These are standalone compone
 - `TimerRing.tsx` - Circular progress indicator
 
 **Usage:**
+
 ```tsx
 import { Button, Card, Spinner } from '@/components/atoms'
 ```
 
 ### 2. **Molecules** (`components/molecules/`)
+
 Simple groups of atoms functioning together as a unit. Molecules have a single responsibility and purpose.
 
 **Organization by domain:**
 
 #### Auth (`molecules/auth/`)
+
 - `SignInButton.tsx` - Google OAuth sign-in button
 - `SignOutButton.tsx` - Sign out button
 - `UserAvatar.tsx` - User profile avatar
 
 #### Display (`molecules/display/`)
+
 - `StatCard.tsx` - Statistics display card
 
 #### Feedback (`molecules/feedback/`)
+
 - `EmptyState.tsx` - Empty state placeholder
 - `ErrorAlert.tsx` - Error message display
 - `SuccessAlert.tsx` - Success message display
 
 #### Practice (`molecules/practice/`)
+
 - `BeatCard.tsx` - Beat selection card
 - `DifficultySelector.tsx` - Difficulty level selector
 - `DurationDisplay.tsx` - Session duration display
@@ -50,26 +58,32 @@ Simple groups of atoms functioning together as a unit. Molecules have a single r
 - `WordPrompt.tsx` - Word prompt display
 
 **Usage:**
+
 ```tsx
 import { StatCard, ErrorAlert, PlayButton } from '@/components/molecules'
 ```
 
 ### 3. **Organisms** (`components/organisms/`)
+
 Complex components composed of molecules and/or atoms. Organisms form distinct sections of an interface.
 
 #### Common (`organisms/common/`)
+
 - `PageHeader.tsx` - Reusable page header with optional back button
 
 #### Landing (`organisms/landing/`)
+
 - `LandingHero.tsx` - Hero section with stats and CTA
 - `LandingHowItWorks.tsx` - How it works section
 - `LandingPricing.tsx` - Pricing plans section
 - `LandingFAQ.tsx` - FAQ section
 
 #### Layout (`organisms/layout/`)
+
 - `AppHeader.tsx` - Application header with navigation
 
 #### Practice (`organisms/practice/`)
+
 - `BeatSelector.tsx` - Beat selection interface with search
 - `PracticeControls.tsx` - Main practice session controls
 - `PracticeHelpSection.tsx` - Help/instructions section
@@ -78,6 +92,7 @@ Complex components composed of molecules and/or atoms. Organisms form distinct s
 - `SessionList.tsx` - List of past sessions
 
 #### Profile (`organisms/profile/`)
+
 - `AccountInfo.tsx` - User account information
 - `SubscriptionSection.tsx` - Subscription management
 - `SecuritySection.tsx` - Security settings
@@ -85,30 +100,35 @@ Complex components composed of molecules and/or atoms. Organisms form distinct s
 - `QuickActions.tsx` - Quick action buttons
 
 #### Recordings (`organisms/recordings/`)
+
 - `RecordingCard.tsx` - Individual recording card with playback
 - `RecordingsList.tsx` - List of all recordings
 - `RecordingsStats.tsx` - Recording statistics
 
 **Usage:**
+
 ```tsx
 import { PageHeader } from '@/components/organisms/common'
 import { BeatSelector, PracticeControls } from '@/components/organisms/practice'
 ```
 
 ### 4. **Templates** (`components/templates/`)
+
 Page-level structures that arrange organisms into layouts. Templates define the page structure but don't contain business logic or data fetching.
 
 **Current Templates:**
+
 - `LandingTemplate.tsx` - Landing page layout
 - `PracticeTemplate.tsx` - Practice page layout
 - `ProfileTemplate.tsx` - Profile page layout
 - `RecordingsTemplate.tsx` - Recordings page layout
 
 **Usage:**
+
 ```tsx
 import { PracticeTemplate } from '@/components/templates'
 
-<PracticeTemplate
+;<PracticeTemplate
   header={<AppHeader />}
   pageHeader={<PageHeader title="Practice" />}
   beatSelector={<BeatSelector beats={beats} />}
@@ -118,13 +138,16 @@ import { PracticeTemplate } from '@/components/templates'
 ```
 
 ### 5. **Pages** (`app/`)
+
 Specific instances of templates with real data and business logic. Pages handle:
+
 - State management
 - Data fetching
 - Event handlers
 - Routing logic
 
 **Current Pages:**
+
 - `app/page.tsx` - Landing page
 - `app/practice/page.tsx` - Practice session page
 - `app/profile/page.tsx` - User profile page
@@ -133,21 +156,27 @@ Specific instances of templates with real data and business logic. Pages handle:
 ## Benefits of This Structure
 
 ### 1. **Reusability**
+
 Components at each level can be easily reused across different pages and contexts.
 
 ### 2. **Maintainability**
+
 Clear separation of concerns makes it easy to locate and update specific functionality.
 
 ### 3. **Testability**
+
 Each level can be tested independently with appropriate mock data.
 
 ### 4. **Scalability**
+
 New features can be added by creating new atoms/molecules/organisms without affecting existing code.
 
 ### 5. **Consistency**
+
 Shared components ensure consistent UI/UX across the application.
 
 ### 6. **Developer Experience**
+
 Clear hierarchy makes onboarding new developers easier and reduces cognitive load.
 
 ## Best Practices
@@ -155,21 +184,25 @@ Clear hierarchy makes onboarding new developers easier and reduces cognitive loa
 ### Component Placement
 
 **When to create an Atom:**
+
 - It's a basic UI element (button, input, icon)
 - It can't be broken down further
 - It's used across multiple molecules/organisms
 
 **When to create a Molecule:**
+
 - It combines 2-3 atoms with a single purpose
 - It's reusable across different organisms
 - It handles a specific UI pattern
 
 **When to create an Organism:**
+
 - It's a major section of the UI
 - It combines multiple molecules/atoms
 - It represents a complete feature or functionality
 
 **When to create a Template:**
+
 - You're defining a page layout structure
 - You need to arrange multiple organisms
 - The layout is reused across similar pages
@@ -214,6 +247,7 @@ export function MyComponent({ title, onAction, isActive = false }: MyComponentPr
 ### Styling
 
 FlowForge uses:
+
 - **Tailwind CSS** for utility-first styling
 - **CSS Modules** for component-specific styles (when needed)
 - **Design tokens** defined in `tailwind.config.ts`
@@ -225,6 +259,7 @@ FlowForge uses:
 The codebase has been refactored from a flat component structure to atomic design:
 
 **Old:**
+
 ```
 components/
   ├── beats/BeatSelector.tsx
@@ -234,6 +269,7 @@ components/
 ```
 
 **New:**
+
 ```
 components/
   ├── atoms/
@@ -354,4 +390,3 @@ components/
 
 **Last Updated:** November 2025  
 **Maintained by:** FlowForge Development Team
-

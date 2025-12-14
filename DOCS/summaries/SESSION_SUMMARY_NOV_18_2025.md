@@ -56,5 +56,3 @@
 ---
 
 **Bottom line**: The beat library is now realistic and aligned with your use case, premium beats are visually flagged with a proper badge, navigation/hero UX is polished, and documentation has been moved into a “Phase 5 started” state for upcoming monetization work.
-
-

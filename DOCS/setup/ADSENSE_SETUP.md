@@ -1,6 +1,7 @@
 # Google AdSense Integration Guide
 
 ## Overview
+
 Add non-intrusive banner ads for free-tier users in FlowForge.
 
 ## 1. AdSense Account Setup
@@ -23,6 +24,7 @@ NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-XXXXXXXXXXXXXXXX
 ## 3. Implementation
 
 ### `components/ads/AdBanner.tsx`
+
 ```typescript
 'use client'
 
@@ -80,6 +82,7 @@ export function AdBanner({
 ```
 
 ### `app/layout.tsx` - Add AdSense Script
+
 ```typescript
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
@@ -114,13 +117,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ### Recommended Placements
 
 #### 1. Bottom Banner (Main Practice Screen)
+
 ```typescript
 // app/practice/page.tsx
 <div className="practice-container">
   {/* Main content */}
   <PlayButton />
   <WordPrompt />
-  
+
   {/* Ad at bottom, non-intrusive */}
   <div className="mt-8">
     <AdBanner slot="1234567890" format="horizontal" />
@@ -129,6 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 #### 2. Sidebar (Desktop Only)
+
 ```typescript
 // components/layout/Sidebar.tsx
 <aside className="hidden lg:block w-64">
@@ -137,13 +142,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 #### 3. Between Sessions List
+
 ```typescript
 // components/session/SessionList.tsx
 <div className="space-y-4">
   {sessions.slice(0, 3).map(session => <SessionCard key={session.id} />)}
-  
+
   <AdBanner slot="1122334455" format="rectangle" className="my-6" />
-  
+
   {sessions.slice(3).map(session => <SessionCard key={session.id} />)}
 </div>
 ```
@@ -163,13 +169,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### Recommended Ad Units
 
-| Name | Size | Placement | Slot Variable |
-|------|------|-----------|---------------|
-| Bottom Banner | Responsive | Practice screen bottom | `NEXT_PUBLIC_AD_SLOT_BOTTOM` |
-| Sidebar | 300x600 | Desktop sidebar | `NEXT_PUBLIC_AD_SLOT_SIDEBAR` |
-| In-Feed | Responsive | Between sessions | `NEXT_PUBLIC_AD_SLOT_FEED` |
+| Name          | Size       | Placement              | Slot Variable                 |
+| ------------- | ---------- | ---------------------- | ----------------------------- |
+| Bottom Banner | Responsive | Practice screen bottom | `NEXT_PUBLIC_AD_SLOT_BOTTOM`  |
+| Sidebar       | 300x600    | Desktop sidebar        | `NEXT_PUBLIC_AD_SLOT_SIDEBAR` |
+| In-Feed       | Responsive | Between sessions       | `NEXT_PUBLIC_AD_SLOT_FEED`    |
 
 Update `.env.local`:
+
 ```bash
 NEXT_PUBLIC_AD_SLOT_BOTTOM=1234567890
 NEXT_PUBLIC_AD_SLOT_SIDEBAR=0987654321
@@ -179,6 +186,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ## 6. Styling
 
 ### `app/globals.css`
+
 ```css
 /* Ad container styling */
 .ad-container {
@@ -208,6 +216,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ## 7. Ad Policy Compliance
 
 ### Content Guidelines
+
 - ✅ Original music/beats content
 - ✅ User-generated content
 - ✅ Educational content (practice tool)
@@ -215,6 +224,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 - ❌ Explicit/offensive content
 
 ### Technical Requirements
+
 - ✅ Ads clearly labeled
 - ✅ Not placed too close to interactive elements
 - ✅ Not more than 3 ads per page
@@ -225,6 +235,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ## 8. Revenue Optimization
 
 ### Best Practices
+
 1. **Placement**: Above the fold when possible
 2. **Format**: Responsive ads perform best
 3. **Density**: 1-2 ads per page for free tier
@@ -232,6 +243,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 5. **Testing**: A/B test placements
 
 ### Expected Revenue
+
 - **RPM (Revenue Per Mille)**: $0.50 - $2.00
 - **10,000 free users**: ~$5-$20/month
 - **100,000 free users**: ~$50-$200/month
@@ -239,11 +251,14 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ## 9. Testing
 
 ### Development
+
 AdSense won't show ads on localhost. Test on:
+
 - Vercel preview deployment
 - Staging domain
 
 ### Verify Implementation
+
 1. Deploy to staging
 2. Open in incognito mode (not logged in as Pro)
 3. Check browser console for errors
@@ -253,6 +268,7 @@ AdSense won't show ads on localhost. Test on:
 ## 10. Monitoring
 
 ### AdSense Dashboard Metrics
+
 - **Impressions**: Ad views
 - **Clicks**: User clicks on ads
 - **CTR**: Click-through rate (aim for 0.5-2%)
@@ -260,6 +276,7 @@ AdSense won't show ads on localhost. Test on:
 - **Earnings**: Total revenue
 
 ### Set Up Alerts
+
 1. Go to AdSense → Settings → Notifications
 2. Enable alerts for:
    - Policy violations
@@ -283,6 +300,7 @@ if (isPro) {
 ## 12. Performance Optimization
 
 ### Lazy Load Ads
+
 ```typescript
 'use client'
 
@@ -311,7 +329,9 @@ export function LazyAdBanner(props: AdBannerProps) {
 ```
 
 ### Preconnect
+
 Already added to layout:
+
 ```html
 <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
 <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
@@ -320,6 +340,7 @@ Already added to layout:
 ## 13. Common Issues
 
 ### Ads Not Showing
+
 - Check AdSense account is approved
 - Verify client ID is correct
 - Check browser ad blockers
@@ -327,6 +348,7 @@ Already added to layout:
 - Check AdSense dashboard for policy issues
 
 ### Low Revenue
+
 - Increase traffic
 - Improve ad placement
 - Test different ad sizes
@@ -334,6 +356,7 @@ Already added to layout:
 - Check for invalid clicks
 
 ### Policy Violations
+
 - Review AdSense policies
 - Remove violating content
 - Appeal if necessary
@@ -369,4 +392,3 @@ export function UpgradePrompt() {
 - [ ] Performance optimized
 - [ ] Monitoring set up
 - [ ] Revenue tracking enabled
-

@@ -9,14 +9,18 @@
 ## 🎯 Root Causes
 
 ### Issue 1: Recordings Page Redirect
+
 **Problem**: User is **not authenticated**, so middleware redirects to home page.
 
-**Solution**: 
+**Solution**:
+
 1. **Sign in first** before accessing `/recordings`
 2. After signing in, you'll be redirected to `/recordings` automatically
 
 ### Issue 2 & 3: Recording Not Saving
+
 **Possible Causes**:
+
 1. User not authenticated when recording
 2. Recording stopped too quickly (< 1 second)
 3. MediaRecorder didn't collect data
@@ -40,6 +44,7 @@
 ### Step 2: Fix Recordings Page Access
 
 **If not authenticated:**
+
 1. Go to home page (`/`)
 2. Click "Sign In" button
 3. Sign in with Google
@@ -47,6 +52,7 @@
 5. If not, manually go to `/recordings`
 
 **If authenticated but still redirecting:**
+
 1. Clear browser cookies for `localhost:3000`
 2. Sign in again
 3. Try `/recordings` again
@@ -62,6 +68,7 @@
 7. **Check browser console** for these logs:
 
 **Expected Console Logs:**
+
 ```
 MediaRecorder stopped, audioChunks: [number], total size: [size]
 Blob created: { size: [size], type: "audio/webm" }
@@ -79,22 +86,27 @@ Recording saved successfully: {...}
 ### Step 4: Check What's Missing
 
 **If you see "Not saving recording: { hasSession: false, hasBeat: true }":**
+
 - ❌ **Problem**: User is not authenticated
 - ✅ **Solution**: Sign in first
 
 **If you see "Recording blob is empty":**
+
 - ❌ **Problem**: Recording stopped too quickly
 - ✅ **Solution**: Record for at least 3-5 seconds
 
 **If you see "Failed to save recording":**
+
 - ❌ **Problem**: API call failed
 - ✅ **Solution**: Check server logs, check Supabase Storage config
 
 **If you see "Unauthorized" error:**
+
 - ❌ **Problem**: Authentication issue
 - ✅ **Solution**: Sign in again, check NextAuth config
 
 **If you see no logs at all:**
+
 - ❌ **Problem**: Recording didn't complete
 - ✅ **Solution**: Check if recording actually started (red dot should appear)
 
@@ -133,12 +145,14 @@ Recording saved successfully: {...}
 ## 📋 Verification Checklist
 
 ### Authentication
+
 - [ ] User is signed in (avatar visible in header)
 - [ ] `/api/auth/session` returns user data
 - [ ] Can access `/recordings` without redirect
 - [ ] Can access `/profile` without redirect
 
 ### Recording
+
 - [ ] Recording starts (red dot appears)
 - [ ] Recording indicator shows duration
 - [ ] Recording stops when button clicked
@@ -148,6 +162,7 @@ Recording saved successfully: {...}
 - [ ] Success message appears on page
 
 ### Storage
+
 - [ ] File appears in Supabase Storage
 - [ ] File is in correct folder (`userId/recordingId.webm`)
 - [ ] File size > 0
@@ -156,19 +171,24 @@ Recording saved successfully: {...}
 ## 🐛 Common Problems
 
 ### Problem: "callbackUrl=%2Frecordings" in URL
+
 **Cause**: User is not authenticated
 **Solution**: Sign in first, then try `/recordings` again
 
 ### Problem: No success message
+
 **Cause**: Recording didn't save (check console logs)
-**Solution**: 
+**Solution**:
+
 - Make sure you're signed in
 - Record for at least 5 seconds
 - Check console for errors
 
 ### Problem: No files in Supabase
+
 **Cause**: Upload failed or user not authenticated
 **Solution**:
+
 - Check console for "Failed to upload recording" error
 - Check server logs for Supabase errors
 - Verify Supabase Storage is configured correctly
@@ -190,6 +210,7 @@ Recording saved successfully: {...}
 ## 📊 Expected Results
 
 ### When Everything Works:
+
 - ✅ Can access `/recordings` when signed in
 - ✅ Recording saves successfully
 - ✅ Success message appears
@@ -197,6 +218,7 @@ Recording saved successfully: {...}
 - ✅ Recording appears in `/recordings` page
 
 ### When Something's Wrong:
+
 - ❌ Check console for error messages
 - ❌ Check server logs for errors
 - ❌ Verify authentication status
@@ -213,5 +235,3 @@ Recording saved successfully: {...}
 
 **Last Updated**: November 11, 2025  
 **Status**: Diagnostic guide
-
-

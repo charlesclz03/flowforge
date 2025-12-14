@@ -5,6 +5,7 @@
 ## Quick Start
 
 ### 1. Start the dev server
+
 ```bash
 # In terminal 1
 DISABLE_DB=true NEXT_PUBLIC_SITE_URL=http://localhost:3000 npm run dev
@@ -13,6 +14,7 @@ DISABLE_DB=true NEXT_PUBLIC_SITE_URL=http://localhost:3000 npm run dev
 Wait for the message: `✓ Ready in X ms`
 
 ### 2. Run the test script
+
 ```bash
 # In terminal 2
 ./test-api.sh
@@ -23,6 +25,7 @@ Or run tests manually:
 ## Manual API Tests
 
 ### Test `/api/beats`
+
 ```bash
 # Get all beats
 curl http://localhost:3000/api/beats
@@ -32,6 +35,7 @@ curl "http://localhost:3000/api/beats?free=true"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "beats": [
@@ -50,6 +54,7 @@ curl "http://localhost:3000/api/beats?free=true"
 ```
 
 ### Test `/api/words/random`
+
 ```bash
 # Get 5 words with difficulty level 2
 curl "http://localhost:3000/api/words/random?count=5&difficulty=2"
@@ -62,6 +67,7 @@ curl "http://localhost:3000/api/words/random?count=10"
 ```
 
 **Expected Response:**
+
 ```json
 {
   "words": [
@@ -81,11 +87,13 @@ curl "http://localhost:3000/api/words/random?count=10"
 ### Test `/api/sessions`
 
 #### GET - Fetch all sessions
+
 ```bash
 curl http://localhost:3000/api/sessions
 ```
 
 **Expected Response (initially empty):**
+
 ```json
 {
   "sessions": []
@@ -93,6 +101,7 @@ curl http://localhost:3000/api/sessions
 ```
 
 #### POST - Create a new session
+
 ```bash
 curl -X POST http://localhost:3000/api/sessions \
   -H "Content-Type: application/json" \
@@ -106,6 +115,7 @@ curl -X POST http://localhost:3000/api/sessions \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "session": {
@@ -123,11 +133,13 @@ curl -X POST http://localhost:3000/api/sessions \
 ```
 
 #### GET - Fetch sessions again (should show created session)
+
 ```bash
 curl http://localhost:3000/api/sessions
 ```
 
 **Expected Response:**
+
 ```json
 {
   "sessions": [
@@ -155,6 +167,7 @@ curl http://localhost:3000/api/sessions
 ## Browser Testing
 
 Open these URLs in your browser while the dev server is running:
+
 - http://localhost:3000/api/beats
 - http://localhost:3000/api/words/random?count=5&difficulty=2
 - http://localhost:3000/api/sessions
@@ -168,14 +181,16 @@ Open these URLs in your browser while the dev server is running:
 ## Troubleshooting
 
 ### "Connection refused"
+
 - Make sure the dev server is running: `npm run dev`
 - Check that it's listening on port 3000
 
 ### "Failed to fetch beats/words"
+
 - Check the terminal running `npm run dev` for error messages
 - Verify `DISABLE_DB=true` is set if you don't have a database
 
 ### Empty responses
+
 - This is normal for `/api/sessions` on first run
 - Create a session with POST, then GET should return it
-

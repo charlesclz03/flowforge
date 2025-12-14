@@ -29,10 +29,7 @@ export function useSessionStorage() {
   }, [])
 
   const save = useCallback(
-    async (
-      session: Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>,
-      audioBlob: Blob
-    ) => {
+    async (session: Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>, audioBlob: Blob) => {
       try {
         const saved = await saveSession(session, audioBlob)
         setSessions((prev) => [saved, ...prev])
@@ -92,4 +89,3 @@ export function useSessionStorage() {
     reload: loadSessions,
   }
 }
-

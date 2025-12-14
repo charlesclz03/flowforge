@@ -11,6 +11,7 @@
    - ✅ **Allowed MIME types**: Optional, can leave empty or add `audio/webm,audio/ogg,audio/mp4`
 
 **If the bucket is not public:**
+
 1. Click on the bucket
 2. Go to **Settings**
 3. Toggle **Public bucket** to **ON**
@@ -24,21 +25,27 @@
 2. Copy the following values:
 
    **Project URL:**
+
    ```
    https://your-project-ref.supabase.co
    ```
+
    Copy this → `NEXT_PUBLIC_SUPABASE_URL`
 
    **anon public key:**
+
    ```
    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    ```
+
    Copy this → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
    **service_role key:**
+
    ```
    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    ```
+
    ⚠️ **IMPORTANT**: This is a secret key! Copy this → `SUPABASE_SERVICE_ROLE_KEY`
    - Never commit this to git
    - Only use server-side
@@ -76,6 +83,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ## 🧪 Step 5: Test the Setup
 
 1. **Restart your development server** (if it's running):
+
    ```bash
    # Stop the server (Ctrl+C)
    # Then restart:
@@ -105,6 +113,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ### Issue: "Failed to upload recording"
 
 **Solutions:**
+
 1. Check that `SUPABASE_SERVICE_ROLE_KEY` is set correctly
 2. Verify the bucket name is exactly `recordings` (case-sensitive)
 3. Check that the bucket is public
@@ -115,6 +124,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ### Issue: "Bucket not found"
 
 **Solutions:**
+
 1. Verify the bucket name is exactly `recordings`
 2. Check that `NEXT_PUBLIC_SUPABASE_URL` is correct
 3. Make sure the bucket exists in Supabase Dashboard
@@ -123,6 +133,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ### Issue: "Unauthorized" error
 
 **Solutions:**
+
 1. Check that you're signed in
 2. Verify NextAuth is working correctly
 3. Check that `NEXTAUTH_SECRET` is set
@@ -131,6 +142,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ### Issue: Files not appearing in Storage
 
 **Solutions:**
+
 1. Check browser console for errors
 2. Check server logs for errors
 3. Verify the API endpoint is being called (check Network tab)
@@ -187,4 +199,3 @@ Once everything is working:
 ---
 
 **Ready to test?** Follow Step 5 above and verify everything works!
-

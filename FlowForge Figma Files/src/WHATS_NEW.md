@@ -3,10 +3,12 @@
 ## 🎨 Visual Changes
 
 ### Color Palette
+
 **BEFORE:** Orange accent (#FF9500)  
 **AFTER:** Purple gradient (#a855f7 → #7D7AFF) ✨
 
 ### Layout Structure
+
 **BEFORE:** Single scrolling page  
 **AFTER:** 3-page onboarding flow with smooth transitions
 
@@ -15,6 +17,7 @@
 ## 📱 New Page Structure
 
 ### Page 1: How It Works
+
 - **Purpose**: Introduction and feature showcase
 - **Content**:
   - FlowForge logo with purple accent
@@ -24,6 +27,7 @@
   - Statistics footer (50+ beats, 1,000+ words, 2 min sessions)
 
 ### Page 2: Beat Selector (Setup Your Session)
+
 - **Purpose**: Configure settings and choose instrumental track
 - **Content**:
   - **Difficulty slider** at top (Easy → Medium → Hard)
@@ -35,6 +39,7 @@
   - "Continue to Practice" button
 
 ### Page 3: Player
+
 - **Purpose**: Main practice session (focused on playing only)
 - **Content**:
   - Beat info header (title • artist • BPM)
@@ -49,10 +54,12 @@
 ## 🎯 Simplified Features
 
 ### ❌ Removed
+
 1. **Beat search bar** - Simplified to direct grid selection
 2. **Button grids** - Replaced with smooth sliders
 
 ### ✅ Improved
+
 1. **Difficulty Selection**
    - Before: 3 buttons (Easy/Medium/Hard)
    - After: Smooth slider with live label
@@ -73,16 +80,19 @@
 ## 🎨 Design System Updates
 
 ### Typography
+
 - Logo: "Flow**Forge**" (Forge in purple)
 - Headings: Clean sans-serif
 - Numbers: Large, light weight for timer
 
 ### Spacing
+
 - Cards: 24px rounded corners
 - Buttons: Full rounded (pill shape)
 - Grid gaps: 16-24px consistent
 
 ### Animations
+
 - Page transitions: 500ms fade + slide
 - Button hovers: Scale 1.05
 - Timer ring: Smooth linear progress
@@ -90,6 +100,7 @@
 - Recording pulse: 1.5s infinite
 
 ### Colors in Action
+
 ```
 Purple-500: Primary buttons, progress ring, selection
 Purple-600: Hover states
@@ -104,6 +115,7 @@ White/10: Card backgrounds (glassmorphism)
 ## 🚀 Technical Improvements
 
 ### Component Architecture
+
 ```
 App.tsx
 ├── HowItWorksPage.tsx
@@ -112,6 +124,7 @@ App.tsx
 ```
 
 ### State Management
+
 - `currentPage`: 'howItWorks' | 'beatSelector' | 'player'
 - `selectedBeat`: Beat object with full track info
 - `difficulty`: 0-100 slider value
@@ -120,6 +133,7 @@ App.tsx
 - `timeRemaining`: Countdown from 120 seconds
 
 ### Key Features
+
 - Persistent dark mode (added 'dark' class to html)
 - Smooth slider with purple gradient fill
 - Circular SVG timer with stroke-dashoffset animation
@@ -130,16 +144,16 @@ App.tsx
 
 ## 📊 Comparison Table
 
-| Feature | Before | After |
-|---------|--------|-------|
-| **Accent Color** | Orange | Purple |
-| **Pages** | 1 | 3 |
-| **Beat Search** | ✅ | ❌ (simplified) |
-| **Difficulty** | 3 Buttons | Slider |
-| **Frequency** | 3 Buttons | Slider |
-| **Navigation** | Scroll | Page transitions |
-| **Progress** | None | Dots indicator |
-| **Transitions** | Basic | Smooth fade |
+| Feature          | Before    | After            |
+| ---------------- | --------- | ---------------- |
+| **Accent Color** | Orange    | Purple           |
+| **Pages**        | 1         | 3                |
+| **Beat Search**  | ✅        | ❌ (simplified)  |
+| **Difficulty**   | 3 Buttons | Slider           |
+| **Frequency**    | 3 Buttons | Slider           |
+| **Navigation**   | Scroll    | Page transitions |
+| **Progress**     | None      | Dots indicator   |
+| **Transitions**  | Basic     | Smooth fade      |
 
 ---
 
@@ -178,11 +192,13 @@ END (can click Back to return)
 ## 💡 Design Philosophy
 
 ### Inspiration
+
 - **iOS Clock App**: Clean timer with circular progress
 - **Revolut**: Smooth animations, glassmorphism
 - **Material You**: Dynamic colors, rounded corners
 
 ### Principles
+
 1. **Minimal**: Only essential information shown
 2. **Focused**: One task per page
 3. **Smooth**: All transitions animated
@@ -194,14 +210,17 @@ END (can click Back to return)
 ## 🎨 Before & After Summary
 
 ### Visual Identity
+
 - **Before**: Orange, busy layout, single page
 - **After**: Purple, clean flow, 3 focused pages
 
 ### User Journey
+
 - **Before**: Scroll through everything, configure inline
 - **After**: Step-by-step onboarding with dedicated pages
 
 ### Interaction
+
 - **Before**: Multiple button clicks for configuration
 - **After**: Smooth sliders with live feedback
 
@@ -219,7 +238,7 @@ END (can click Back to return)
 ✅ Recording indicator  
 ✅ Back navigation  
 ✅ Page progress dots  
-✅ Responsive design  
+✅ Responsive design
 
 ---
 

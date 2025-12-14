@@ -1,40 +1,49 @@
 # Troubleshooting: Recordings Page Redirect Issue
 
 ## Issue
+
 Going to `/recordings` redirects to home page instead of showing the recordings page.
 
 ## Possible Causes
 
 ### 1. User Not Authenticated
+
 The middleware protects `/recordings` and redirects unauthenticated users to the sign-in page (`/`).
 
 **Solution:**
+
 - Make sure you're signed in
 - Check if you see your profile/avatar in the header
 - Try signing out and signing back in
 
 ### 2. Session Not Loading
+
 The session might not be loading correctly, causing the middleware to think you're not authenticated.
 
 **Solution:**
+
 - Check browser console for errors
 - Check if NextAuth is working (try going to `/api/auth/session`)
 - Verify `NEXTAUTH_SECRET` is set in `.env.local`
 - Restart the development server
 
 ### 3. Database Session Issue
+
 Since we're using database sessions, there might be an issue with the database connection.
 
 **Solution:**
+
 - Check if the database is accessible
 - Verify `DATABASE_URL` is set correctly in `.env.local`
 - Check database connection in Supabase Dashboard
 - Verify Prisma client is generated: `npx prisma generate`
 
 ### 4. Middleware Configuration
+
 The middleware might not be configured correctly.
 
 **Current Configuration:**
+
 ```typescript
 export { default } from 'next-auth/middleware'
 
@@ -92,6 +101,7 @@ export const config = {
 ### Solution 3: Check Environment Variables
 
 1. Verify `.env.local` has:
+
    ```bash
    NEXTAUTH_SECRET=your_secret_here
    NEXTAUTH_URL=http://localhost:3000
@@ -106,6 +116,7 @@ export const config = {
 ### Solution 4: Check Database Connection
 
 1. Verify database is accessible:
+
    ```bash
    npx prisma db pull
    ```
@@ -114,12 +125,14 @@ export const config = {
    ```bash
    npx prisma studio
    ```
+
    - Look for `sessions` table
    - Check if there are any session records
 
 ### Solution 5: Test Middleware Directly
 
 1. Create a test API route: `app/api/test-auth/route.ts`
+
    ```typescript
    import { getServerSession } from 'next-auth'
    import { authOptions } from '@/lib/auth'
@@ -137,12 +150,14 @@ export const config = {
 ## Expected Behavior
 
 ### When Authenticated:
+
 1. User goes to `/recordings`
 2. Middleware checks session
 3. Session is valid
 4. User sees recordings page
 
 ### When Not Authenticated:
+
 1. User goes to `/recordings`
 2. Middleware checks session
 3. Session is invalid/missing
@@ -206,5 +221,3 @@ If none of the above solutions work:
 
 **Last Updated**: November 11, 2025  
 **Status**: Active troubleshooting guide
-
-

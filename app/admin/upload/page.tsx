@@ -70,8 +70,9 @@ export default function AdminUploadPage() {
         isPremium: false,
       })
       setFile(null)
-    } catch (error: any) {
-      toast.error(error.message, { id: toastId })
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Upload failed'
+      toast.error(message, { id: toastId })
     } finally {
       setIsLoading(false)
     }

@@ -1,117 +1,158 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Play, Square, Mic, Music } from 'lucide-react';
-import { Button } from './ui/button';
-import type { Beat } from '../App';
+import React, { useState, useEffect, useRef } from 'react'
+import { ArrowLeft, Play, Square, Mic, Music } from 'lucide-react'
+import { Button } from './ui/button'
+import type { Beat } from '../App'
 
 interface PlayerPageProps {
-  beat: Beat;
-  onBack: () => void;
-  difficulty: number;
-  frequency: number;
+  beat: Beat
+  onBack: () => void
+  difficulty: number
+  frequency: number
 }
 
 // Word bank organized by difficulty
 const WORD_BANK = {
-  easy: ['cat', 'dog', 'run', 'sun', 'fun', 'hat', 'map', 'car', 'star', 'moon', 'tree', 'free', 'king', 'sing', 'dream', 'team'],
-  medium: ['rhythm', 'battle', 'cipher', 'master', 'hustle', 'golden', 'thunder', 'stellar', 'cosmic', 'legend', 'passion', 'fortune'],
-  hard: ['phenomenon', 'extraordinary', 'revolutionary', 'magnificent', 'incredible', 'spectacular', 'phenomenal', 'extraordinary', 'unbelievable', 'exceptional']
-};
+  easy: [
+    'cat',
+    'dog',
+    'run',
+    'sun',
+    'fun',
+    'hat',
+    'map',
+    'car',
+    'star',
+    'moon',
+    'tree',
+    'free',
+    'king',
+    'sing',
+    'dream',
+    'team',
+  ],
+  medium: [
+    'rhythm',
+    'battle',
+    'cipher',
+    'master',
+    'hustle',
+    'golden',
+    'thunder',
+    'stellar',
+    'cosmic',
+    'legend',
+    'passion',
+    'fortune',
+  ],
+  hard: [
+    'phenomenon',
+    'extraordinary',
+    'revolutionary',
+    'magnificent',
+    'incredible',
+    'spectacular',
+    'phenomenal',
+    'extraordinary',
+    'unbelievable',
+    'exceptional',
+  ],
+}
 
 export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPageProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(120); // 2 minutes in seconds
-  const [progress, setProgress] = useState(0); // 0-100
-  const [currentWord, setCurrentWord] = useState('');
-  const [barCount, setBarCount] = useState(0);
-  const [sessionComplete, setSessionComplete] = useState(false);
-  
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const wordTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [timeRemaining, setTimeRemaining] = useState(120) // 2 minutes in seconds
+  const [progress, setProgress] = useState(0) // 0-100
+  const [currentWord, setCurrentWord] = useState('')
+  const [barCount, setBarCount] = useState(0)
+  const [sessionComplete, setSessionComplete] = useState(false)
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const wordTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Get difficulty label
   const getDifficultyLabel = () => {
-    if (difficulty < 33) return 'Easy';
-    if (difficulty < 67) return 'Medium';
-    return 'Hard';
-  };
+    if (difficulty < 33) return 'Easy'
+    if (difficulty < 67) return 'Medium'
+    return 'Hard'
+  }
 
   // Get frequency in bars
   const getFrequencyBars = () => {
-    if (frequency < 33) return 4;
-    if (frequency < 67) return 8;
-    return 16;
-  };
+    if (frequency < 33) return 4
+    if (frequency < 67) return 8
+    return 16
+  }
 
   // Get word based on difficulty
   const getRandomWord = () => {
-    const level = difficulty < 33 ? 'easy' : difficulty < 67 ? 'medium' : 'hard';
-    const words = WORD_BANK[level];
-    return words[Math.floor(Math.random() * words.length)];
-  };
+    const level = difficulty < 33 ? 'easy' : difficulty < 67 ? 'medium' : 'hard'
+    const words = WORD_BANK[level]
+    return words[Math.floor(Math.random() * words.length)]
+  }
 
   // Calculate bar duration (one bar = 4 beats = 240/BPM seconds)
-  const barDuration = (240 / beat.bpm) * 1000; // in milliseconds
-  const wordInterval = getFrequencyBars() * barDuration;
+  const barDuration = (240 / beat.bpm) * 1000 // in milliseconds
+  const wordInterval = getFrequencyBars() * barDuration
 
   useEffect(() => {
     if (isPlaying) {
       // Start timer countdown
       timerRef.current = setInterval(() => {
-        setTimeRemaining(prev => {
+        setTimeRemaining((prev) => {
           if (prev <= 0) {
-            handleStop();
-            return 0;
+            handleStop()
+            return 0
           }
-          const newTime = prev - 0.1;
-          setProgress(((120 - newTime) / 120) * 100);
-          return newTime;
-        });
-      }, 100);
+          const newTime = prev - 0.1
+          setProgress(((120 - newTime) / 120) * 100)
+          return newTime
+        })
+      }, 100)
 
       // Start word prompts
-      setCurrentWord(getRandomWord());
+      setCurrentWord(getRandomWord())
       wordTimerRef.current = setInterval(() => {
-        setBarCount(prev => prev + getFrequencyBars());
-        setCurrentWord(getRandomWord());
-      }, wordInterval);
+        setBarCount((prev) => prev + getFrequencyBars())
+        setCurrentWord(getRandomWord())
+      }, wordInterval)
 
       // Simulate microphone recording
-      setIsRecording(true);
+      setIsRecording(true)
     } else {
-      if (timerRef.current) clearInterval(timerRef.current);
-      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
-      setIsRecording(false);
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current)
+      setIsRecording(false)
     }
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
-    };
-  }, [isPlaying, frequency, beat.bpm]);
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current)
+    }
+  }, [isPlaying, frequency, beat.bpm])
 
   const handlePlay = () => {
-    setIsPlaying(true);
-    setTimeRemaining(120);
-    setProgress(0);
-    setBarCount(0);
-  };
+    setIsPlaying(true)
+    setTimeRemaining(120)
+    setProgress(0)
+    setBarCount(0)
+  }
 
   const handleStop = () => {
-    setIsPlaying(false);
-    setCurrentWord('');
-    setSessionComplete(true);
-  };
+    setIsPlaying(false)
+    setCurrentWord('')
+    setSessionComplete(true)
+  }
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
 
   // Calculate circle progress
-  const circumference = 2 * Math.PI * 90; // radius = 90
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  const circumference = 2 * Math.PI * 90 // radius = 90
+  const strokeDashoffset = circumference - (progress / 100) * circumference
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
@@ -127,14 +168,14 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
-          
+
           <div className="flex items-center space-x-2">
             <Music className="w-6 h-6 text-purple-500" />
             <span className="text-xl">
               Flow<span className="text-purple-500">Forge</span>
             </span>
           </div>
-          
+
           <div className="w-24" />
         </div>
 
@@ -183,9 +224,7 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-5xl mb-2">{formatTime(timeRemaining)}</div>
-                {isPlaying && (
-                  <div className="text-sm text-gray-400">Bar {barCount}</div>
-                )}
+                {isPlaying && <div className="text-sm text-gray-400">Bar {barCount}</div>}
               </div>
             </div>
 
@@ -196,9 +235,10 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
                 className={`
                   absolute bottom-0 w-20 h-20 rounded-full flex items-center justify-center
                   transition-all duration-300 hover:scale-110 active:scale-95
-                  ${isPlaying 
-                    ? 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/50' 
-                    : 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 shadow-lg shadow-purple-500/50'
+                  ${
+                    isPlaying
+                      ? 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/50'
+                      : 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 shadow-lg shadow-purple-500/50'
                   }
                 `}
               >
@@ -214,7 +254,7 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
           {/* Word Prompt */}
           {isPlaying && currentWord && (
             <div className="min-h-[120px] flex items-center justify-center">
-              <div 
+              <div
                 className="text-6xl bg-gradient-to-r from-purple-500 via-violet-500 to-purple-500 bg-clip-text text-transparent animate-fade-in uppercase tracking-wider"
                 key={currentWord}
               >
@@ -260,7 +300,8 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
         }
 
         @keyframes pulse {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 1;
           }
           50% {
@@ -277,5 +318,5 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
         }
       `}</style>
     </div>
-  );
+  )
 }

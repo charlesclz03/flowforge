@@ -13,7 +13,22 @@ export const revalidate = 60
 
 type Period = 'all_time' | 'weekly'
 
-async function getLeaderboard(period: Period = 'all_time') {
+interface LeaderboardUser {
+  id: string
+  username: string | null
+  name: string | null
+  image: string | null
+  flowPoints: number
+}
+
+interface WeeklyScore {
+  userId: string
+  _sum: {
+    score: number | null
+  }
+}
+
+async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardUser[]> {
   if (period === 'weekly') {
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
 
@@ -36,6 +51,7 @@ async function getLeaderboard(period: Period = 'all_time') {
     })
 
     // Fetch user details for these scores
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const userIds = weeklyScores.map((s: any) => s.userId)
     const users = await prisma.user.findMany({
       where: { id: { in: userIds } },
@@ -48,13 +64,15 @@ async function getLeaderboard(period: Period = 'all_time') {
     })
 
     // Map scores back to users
-    return weeklyScores.map((scoreEntry) => {
-      const user = users.find((u) => u.id === scoreEntry.userId)
+    return weeklyScores.map((entry: unknown) => {
+      const scoreEntry = entry as WeeklyScore
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const user = users.find((u: any) => u.id === scoreEntry.userId)
       return {
         id: scoreEntry.userId,
-        username: user?.username,
-        name: user?.name,
-        image: user?.image,
+        username: user?.username || null,
+        name: user?.name || null,
+        image: user?.image || null,
         flowPoints: scoreEntry._sum.score || 0,
       }
     })

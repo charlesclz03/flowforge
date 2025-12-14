@@ -9,6 +9,7 @@
 ## 🎨 Design Philosophy
 
 ### Current Design Approach
+
 - **Inspiration**: iOS Clock App aesthetics
 - **Style**: Dark theme with glassmorphic effects
 - **Architecture**: Atomic Design principles (atoms → molecules → organisms → templates → pages)
@@ -20,6 +21,7 @@
 ## 🎨 Color Palette
 
 ### Background Colors
+
 ```typescript
 background: {
   DEFAULT: '#000000',    // Pure black
@@ -30,6 +32,7 @@ background: {
 ```
 
 ### Text Colors
+
 ```typescript
 text: {
   primary: '#FFFFFF',    // White (main text)
@@ -40,6 +43,7 @@ text: {
 ```
 
 ### Accent Colors
+
 ```typescript
 accent: {
   purple: '#7D7AFF',     // PRIMARY ACCENT (play button, timer ring, selected states)
@@ -54,6 +58,7 @@ accent: {
 ```
 
 ### Timer Colors
+
 ```typescript
 timer: {
   ring: '#7D7AFF',       // Purple progress ring (updated from orange)
@@ -62,6 +67,7 @@ timer: {
 ```
 
 ### Stroke Colors
+
 ```typescript
 stroke: {
   subtle: '#2F2F30',     // Subtle borders
@@ -75,12 +81,24 @@ stroke: {
 ## 📝 Typography
 
 ### Font Families
+
 ```typescript
-sans: ['"SF Pro Display"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+sans: [
+  '"SF Pro Display"',
+  'Inter',
+  '-apple-system',
+  'BlinkMacSystemFont',
+  'Segoe UI',
+  'Roboto',
+  'Helvetica',
+  'Arial',
+  'sans-serif',
+]
 mono: ['SF Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace']
 ```
 
 ### Font Sizes
+
 ```typescript
 display: '4rem'          // Large display text (light weight, -0.02em tracking)
 display-sm: '3rem'       // Small display text (light weight, -0.015em tracking)
@@ -93,6 +111,7 @@ xs: '0.75rem'
 ```
 
 ### Font Weights
+
 ```typescript
 light: 300
 normal: 400
@@ -102,6 +121,7 @@ bold: 700
 ```
 
 ### Letter Spacing
+
 ```typescript
 tight: '-0.02em'
 normal: '0em'
@@ -113,6 +133,7 @@ wide: '0.08em'
 ## 🎭 Visual Effects
 
 ### Gradients
+
 ```typescript
 pulse: 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)' // Purple gradient
 aurora: 'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)' // Purple-based
@@ -121,6 +142,7 @@ midnight: 'linear-gradient(160deg, rgba(12,12,15,0.9) 0%, rgba(27,27,31,0.9) 50%
 ```
 
 ### Shadows
+
 ```typescript
 neon: '0 0 30px rgba(125, 122, 255, 0.4)' // Purple glow
 glow: '0 10px 40px rgba(125, 122, 255, 0.3)' // Purple glow for buttons
@@ -129,6 +151,7 @@ soft: '0 20px 60px rgba(0, 0, 0, 0.45)'
 ```
 
 ### Backdrop Blur
+
 ```typescript
 heavy: '24px'
 medium: '18px'
@@ -136,6 +159,7 @@ light: '12px'
 ```
 
 ### Glassmorphism
+
 - Background: `bg-background-card/60` or `bg-background-card/80`
 - Backdrop blur: `backdrop-blur-medium` or `backdrop-blur-light`
 - Border: `border-stroke-subtle/50` or `border-stroke-subtle/40`
@@ -146,6 +170,7 @@ light: '12px'
 ## 🎬 Animations
 
 ### Durations
+
 ```typescript
 fast: '150ms'
 normal: '300ms'
@@ -153,6 +178,7 @@ slow: '500ms'
 ```
 
 ### Easing
+
 ```typescript
 default: 'cubic-bezier(0.4, 0, 0.2, 1)'
 in: 'cubic-bezier(0.4, 0, 1, 1)'
@@ -161,6 +187,7 @@ inOut: 'cubic-bezier(0.4, 0, 0.2, 1)'
 ```
 
 ### Keyframes
+
 ```typescript
 orbital: 'orbital-glow 16s linear infinite'
 pulse: 'pulse-record 1.5s ease-in-out infinite'
@@ -168,9 +195,11 @@ pulse-slow: 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
 ```
 
 ### Pulse Animation (Recording)
+
 ```css
 @keyframes pulse-record {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -228,17 +257,20 @@ xl: 1280px
 ### Atomic Design Hierarchy
 
 #### Atoms (Building Blocks)
+
 - **Spinner**: Loading spinner with size variants (sm, md, lg)
 - **Button**: Full-featured button with variants (primary, secondary, ghost, danger, outline)
 - **Card**: Reusable card wrapper with title/subtitle support
 
 #### Molecules (Simple Combinations)
+
 - **EmptyState**: Loading and empty states with icon support
 - **ErrorAlert**: Dismissible error messages
 - **StatCard**: Statistics display card with compact/default variants
 - **RecordingCard**: Recording display with play/download/delete actions
 
 #### Organisms (Complex Components)
+
 - **Header**: Navigation header with auth
 - **BeatSelector**: Beat selection with horizontal scroll
 - **PlayButton**: Play/pause button with timer ring
@@ -248,12 +280,14 @@ xl: 1280px
 - **DifficultySelector**: Difficulty selection (Easy/Medium/Hard)
 
 #### Templates (Page Layouts)
+
 - Landing page layout
 - Practice page layout
 - Profile page layout
 - Recordings page layout
 
 #### Pages (Final UI)
+
 - `/` - Landing page
 - `/practice` - Practice session page
 - `/profile` - User profile page
@@ -264,6 +298,7 @@ xl: 1280px
 ## 🎯 UI Components Details
 
 ### Button Component
+
 ```typescript
 Variants: primary, secondary, ghost, danger, outline
 Sizes: sm, md, lg
@@ -271,6 +306,7 @@ Features: loading state, left/right icon support, disabled state
 ```
 
 ### Card Component
+
 ```typescript
 Variants: default, elevated, glass
 Padding: sm, md, lg
@@ -278,6 +314,7 @@ Features: title, subtitle, optional border, backdrop blur
 ```
 
 ### Timer Ring
+
 ```typescript
 Size: 200px
 Stroke Width: 10px
@@ -287,6 +324,7 @@ Rotation: -90° (starts at top)
 ```
 
 ### Play Button
+
 ```typescript
 Size Ratio: 55% of timer ring size
 Icon Size: 20% of timer ring (play), 15% (stop)
@@ -295,6 +333,7 @@ Colors: Purple accent (#7D7AFF) with white icon and purple glow
 ```
 
 ### Recording Indicator
+
 ```typescript
 States: Gray (inactive), Red (recording)
 Animation: Pulse animation (1.5s ease-in-out infinite)
@@ -302,6 +341,7 @@ Icon: Microphone icon
 ```
 
 ### Word Prompt
+
 ```typescript
 Display: Large gradient text
 Animation: Fade-in/scale animation
@@ -310,6 +350,7 @@ Style: Gradient text effect
 ```
 
 ### Beat Card
+
 ```typescript
 Height: 80px
 Display: BPM, duration, genre
@@ -318,6 +359,7 @@ Layout: Horizontal scrollable grid
 ```
 
 ### Recording Card
+
 ```typescript
 Layout: Glassmorphic background
 Info: Title, beat details, difficulty badge, timestamp
@@ -330,6 +372,7 @@ Colors: Green (Easy), Orange (Medium), Red (Hard)
 ## 🎨 Design Patterns
 
 ### Glassmorphism
+
 - Semi-transparent backgrounds
 - Backdrop blur effects
 - Subtle borders
@@ -337,15 +380,18 @@ Colors: Green (Easy), Orange (Medium), Red (Hard)
 - Used in: Cards, modals, overlays
 
 ### Gradient Text
+
 - Uses `bg-gradient-pulse` with `bg-clip-text`
 - Applied to: Headings, word prompts, accents
 
 ### Pulse Animation
+
 - Used for: Recording indicator, play button when active
 - Duration: 1.5s (recording), 3s (play button)
 - Effect: Scale and opacity changes
 
 ### Smooth Transitions
+
 - Default: 300ms for most UI elements
 - Fast: 150ms for hover states
 - Slow: 500ms for complex animations
@@ -355,15 +401,17 @@ Colors: Green (Easy), Orange (Medium), Red (Hard)
 ## 📊 Session Configuration
 
 ### Default Settings
+
 ```typescript
-DEFAULT_DURATION_SECONDS: 120      // 2 minutes
-DEFAULT_FREQUENCY: 8                // 8 bars
-DEFAULT_DIFFICULTY: 2               // Medium
-TIMER_UPDATE_INTERVAL_MS: 100       // Update every 100ms
+DEFAULT_DURATION_SECONDS: 120 // 2 minutes
+DEFAULT_FREQUENCY: 8 // 8 bars
+DEFAULT_DIFFICULTY: 2 // Medium
+TIMER_UPDATE_INTERVAL_MS: 100 // Update every 100ms
 WORD_ROTATION_CHECK_INTERVAL_MS: 100 // Check every 100ms
 ```
 
 ### Frequency Options
+
 ```typescript
 [4, 8, 16] bars
 4 bars: Quick rotation, more challenging
@@ -372,16 +420,18 @@ WORD_ROTATION_CHECK_INTERVAL_MS: 100 // Check every 100ms
 ```
 
 ### Difficulty Levels
+
 ```typescript
-EASY: 1      // 1-2 syllables (green)
-MEDIUM: 2    // 2-3 syllables (orange)
-HARD: 3      // 4-5+ syllables (red)
+EASY: 1 // 1-2 syllables (green)
+MEDIUM: 2 // 2-3 syllables (orange)
+HARD: 3 // 4-5+ syllables (red)
 ```
 
 ### Recording Configuration
+
 ```typescript
-FREE_TIER_LIMIT_SECONDS: 120       // 2 minutes
-PRO_TIER_LIMIT_SECONDS: null       // Unlimited
+FREE_TIER_LIMIT_SECONDS: 120 // 2 minutes
+PRO_TIER_LIMIT_SECONDS: null // Unlimited
 SAMPLE_RATE: 44100
 CHANNELS: 2
 MIME_TYPE: 'audio/wav'
@@ -407,6 +457,7 @@ STOP_ICON_SIZE_RATIO: 0.15
 ## 🎨 Color Coding
 
 ### Primary Accent
+
 - **Purple** (#7D7AFF): Primary accent color used for:
   - Play buttons
   - Timer rings
@@ -418,17 +469,20 @@ STOP_ICON_SIZE_RATIO: 0.15
   - Active states
 
 ### Premium Indicators
+
 - **Orange** (#FF9500): Reserved exclusively for:
   - Premium badges
   - Premium feature indicators
   - Upgrade prompts
 
 ### Difficulty Levels (Semantic Colors)
+
 - **Easy**: Green (#30D158) - 1-2 syllables
 - **Medium**: Orange (#FF9500) - 2-3 syllables (semantic, not accent)
 - **Hard**: Red (#FF3B30) - 4-5+ syllables
 
 ### States
+
 - **Active**: Purple accent (#7D7AFF)
 - **Inactive**: Gray (#8E8E93)
 - **Recording**: Red (#FF3B30)
@@ -440,12 +494,14 @@ STOP_ICON_SIZE_RATIO: 0.15
 ## 📱 Responsive Design
 
 ### Mobile First
+
 - Base styles for mobile (320px+)
 - Breakpoints at: 640px, 768px, 1024px, 1280px, 1536px
 - Touch-friendly targets (minimum 44x44px)
 - Safe area insets for mobile devices
 
 ### Layout Patterns
+
 - Single column on mobile
 - Two column on tablet
 - Multi-column on desktop
@@ -457,17 +513,20 @@ STOP_ICON_SIZE_RATIO: 0.15
 ## ♿ Accessibility
 
 ### Color Contrast
+
 - Text primary on background: WCAG AAA
 - Text secondary on background: WCAG AA
 - Accent colors: WCAG AA minimum
 
 ### Interactive Elements
+
 - Focus states: Orange ring with offset
 - Keyboard navigation: Full support
 - Screen readers: ARIA labels
 - Reduced motion: Respects `prefers-reduced-motion`
 
 ### Touch Targets
+
 - Minimum size: 44x44px
 - Adequate spacing between interactive elements
 - Clear visual feedback on interaction
@@ -477,11 +536,13 @@ STOP_ICON_SIZE_RATIO: 0.15
 ## 🔧 Implementation Files
 
 ### Design System Constants
+
 - `lib/constants/design.ts` - All design constants
 - `tailwind.config.ts` - Tailwind configuration
 - `app/globals.css` - Global styles and utilities
 
 ### Component Files
+
 - `components/atoms/` - Atomic components
 - `components/molecules/` - Molecular components
 - `components/organisms/` - Complex components (implied in session/, beats/, etc.)
@@ -505,6 +566,7 @@ STOP_ICON_SIZE_RATIO: 0.15
 ## 🎯 Current Design Status
 
 ### ✅ Implemented & Redesigned
+
 - ✅ **Purple-based design system** (Primary accent: #7D7AFF)
 - ✅ Dark theme with iOS-inspired aesthetics
 - ✅ Glassmorphic card designs
@@ -527,6 +589,7 @@ STOP_ICON_SIZE_RATIO: 0.15
 **Design Source**: `DOCS/FlowForge Design Assets/` (11 design screenshots)
 
 All design screenshots have been analyzed and implemented:
+
 - ✅ Feature cards with purple icon backgrounds
 - ✅ Purple play button with glow
 - ✅ Purple timer ring
@@ -539,6 +602,7 @@ All design screenshots have been analyzed and implemented:
 ## ✅ Redesign Complete
 
 ### Phase 1: Design Analysis ✅
+
 - [x] Review all screenshots
 - [x] Identify design changes
 - [x] Document new design patterns
@@ -546,6 +610,7 @@ All design screenshots have been analyzed and implemented:
 - [x] Create design tokens
 
 ### Phase 2: Component Updates ✅
+
 - [x] Update color palette (Orange → Purple)
 - [x] Update typography
 - [x] Update spacing system
@@ -554,12 +619,14 @@ All design screenshots have been analyzed and implemented:
 - [x] Update animations
 
 ### Phase 3: Component Redesign ✅
+
 - [x] Redesign atoms (Button, Card, Spinner - all use purple)
 - [x] Redesign molecules (EmptyState, ErrorAlert, StatCard, RecordingCard)
 - [x] Redesign organisms (Header, BeatSelector, PlayButton - all use purple)
 - [x] Update page layouts (Practice, Landing pages)
 
 ### Phase 4: Testing
+
 - [ ] Test on mobile devices
 - [ ] Test on tablet devices
 - [ ] Test on desktop
@@ -568,6 +635,7 @@ All design screenshots have been analyzed and implemented:
 - [ ] Verify purple colors match design
 
 ### Phase 5: Documentation ✅
+
 - [x] Update design system documentation (this file)
 - [x] Create redesign completion document (REDESIGN_COMPLETE.md)
 - [x] Update component references
@@ -583,4 +651,3 @@ All design screenshots have been analyzed and implemented:
 **Documentation**: See `REDESIGN_COMPLETE.md` for full details
 
 The FlowForge design system has been successfully updated to use **purple** (#7D7AFF) as the primary accent color throughout the application, with orange reserved exclusively for premium badges.
-

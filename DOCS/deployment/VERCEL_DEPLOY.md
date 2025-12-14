@@ -1,6 +1,7 @@
 # Vercel Deployment Guide
 
 ## Overview
+
 Deploy FlowForge to Vercel with proper environment variables and configuration.
 
 ## 1. Prerequisites
@@ -72,6 +73,7 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ### Environment Scopes
 
 For each variable, select appropriate scopes:
+
 - **Production**: Live site
 - **Preview**: PR deployments
 - **Development**: Local (usually use `.env.local` instead)
@@ -163,12 +165,14 @@ Value: cname.vercel-dns.com
 ### Stripe Webhook
 
 Update webhook endpoint in Stripe Dashboard:
+
 - Old: `http://localhost:3000/api/stripe/webhook`
 - New: `https://flowforge.app/api/stripe/webhook`
 
 ### Google OAuth
 
 Add redirect URIs in Google Cloud Console:
+
 - `https://flowforge.app/api/auth/callback/google`
 - `https://your-app.vercel.app/api/auth/callback/google`
 
@@ -191,6 +195,7 @@ Add redirect URIs in Google Cloud Console:
 ### Vercel Analytics
 
 Enable in Project Settings → Analytics:
+
 - Web Vitals
 - Real User Monitoring
 - Error tracking
@@ -218,6 +223,7 @@ Sentry.init({
 ## 10. CI/CD with GitHub Actions
 
 The `.github/workflows/ci.yml` already set up will:
+
 - Run on every push to `main`
 - Lint code
 - Type-check
@@ -225,6 +231,7 @@ The `.github/workflows/ci.yml` already set up will:
 - Build project
 
 Vercel automatically deploys:
+
 - **Production**: Pushes to `main` branch
 - **Preview**: Pull requests
 
@@ -290,6 +297,7 @@ git push origin main
 ### Multiple Environments
 
 Create separate projects for:
+
 - **Production**: `flowforge-prod`
 - **Staging**: `flowforge-staging`
 - **Development**: Local only
@@ -297,6 +305,7 @@ Create separate projects for:
 ### Secrets Management
 
 For sensitive keys:
+
 1. Use Vercel's encrypted environment variables
 2. Never commit secrets to git
 3. Rotate keys regularly
@@ -307,12 +316,14 @@ For sensitive keys:
 ### Vercel Pricing
 
 **Hobby (Free)**:
+
 - 100 GB bandwidth/month
 - Unlimited deployments
 - 100 GB-hours serverless execution
 - Good for MVP
 
 **Pro ($20/month)**:
+
 - 1 TB bandwidth
 - Unlimited serverless execution
 - Team collaboration
@@ -322,6 +333,7 @@ For sensitive keys:
 ### When to Upgrade
 
 Upgrade when you hit:
+
 - 100 GB bandwidth (≈10K active users)
 - Need team access
 - Want advanced analytics
@@ -332,12 +344,14 @@ Upgrade when you hit:
 ### Build Failures
 
 **Error**: `Prisma Client not generated`
+
 ```bash
 # Add to build command
 prisma generate && next build
 ```
 
 **Error**: `Module not found`
+
 ```bash
 # Clear cache and redeploy
 vercel --force
@@ -346,11 +360,13 @@ vercel --force
 ### Runtime Errors
 
 **Error**: `Database connection failed`
+
 - Check DATABASE_URL is correct
 - Verify IP whitelist (Supabase)
 - Check connection pooling settings
 
 **Error**: `Authentication failed`
+
 - Verify NEXTAUTH_SECRET is set
 - Check NEXTAUTH_URL matches domain
 - Verify OAuth redirect URIs
@@ -358,12 +374,14 @@ vercel --force
 ### Performance Issues
 
 **Slow API responses**:
+
 - Check database query performance
 - Add database indexes
 - Implement caching
 - Consider Edge Runtime
 
 **High bandwidth usage**:
+
 - Optimize images
 - Enable compression
 - Add CDN for static assets
@@ -383,6 +401,7 @@ vercel --force
 ## 17. Launch Checklist
 
 ### Pre-Launch
+
 - [ ] All environment variables set
 - [ ] Database migrated and seeded
 - [ ] Domain configured
@@ -393,6 +412,7 @@ vercel --force
 - [ ] Performance tested
 
 ### Launch Day
+
 - [ ] Final production deploy
 - [ ] Smoke test all features
 - [ ] Monitor error rates
@@ -401,6 +421,7 @@ vercel --force
 - [ ] Monitor performance metrics
 
 ### Post-Launch
+
 - [ ] Set up alerts for errors
 - [ ] Monitor user feedback
 - [ ] Track key metrics
@@ -437,4 +458,3 @@ vercel inspect <deployment-url>
 - [Next.js Deployment](https://nextjs.org/docs/deployment)
 - [Vercel Community](https://github.com/vercel/vercel/discussions)
 - [Status Page](https://www.vercel-status.com/)
-

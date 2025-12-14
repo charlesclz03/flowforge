@@ -3,11 +3,13 @@
 > **Status (Nov 2025):** `/api/sessions/upload` has been deprecated in favour of the unified `/api/recordings` endpoint, which now uploads blobs to Supabase Storage and persists session metadata in a single request. This document is retained for historical context and future GCS explorations.
 
 ## Overview
+
 This document outlines the implementation plan for audio file uploads to Google Cloud Storage (GCS) for FlowForge V2.
 
 ## Architecture
 
 ### Flow
+
 1. Client records audio (browser MediaRecorder API)
 2. Client requests upload URL from `/api/sessions/upload`
 3. Server generates pre-signed GCS URL
@@ -15,6 +17,7 @@ This document outlines the implementation plan for audio file uploads to Google 
 5. Client sends session metadata to `/api/sessions` with GCS URL
 
 ### Benefits
+
 - Direct client-to-GCS upload (no server bandwidth)
 - Secure (pre-signed URLs expire)
 - Scalable (no server bottleneck)
@@ -22,6 +25,7 @@ This document outlines the implementation plan for audio file uploads to Google 
 ## GCS Setup
 
 ### 1. Create GCS Bucket
+
 ```bash
 # Set project
 gcloud config set project flowforge-prod
@@ -34,13 +38,14 @@ gsutil lifecycle set lifecycle.json gs://flowforge-audio
 ```
 
 **lifecycle.json:**
+
 ```json
 {
   "lifecycle": {
     "rule": [
       {
-        "action": {"type": "Delete"},
-        "condition": {"age": 90}
+        "action": { "type": "Delete" },
+        "condition": { "age": 90 }
       }
     ]
   }
@@ -48,11 +53,13 @@ gsutil lifecycle set lifecycle.json gs://flowforge-audio
 ```
 
 ### 2. Configure CORS
+
 ```bash
 gsutil cors set cors.json gs://flowforge-audio
 ```
 
 **cors.json:**
+
 ```json
 [
   {
@@ -65,6 +72,7 @@ gsutil cors set cors.json gs://flowforge-audio
 ```
 
 ### 3. Create Service Account
+
 ```bash
 # Create service account
 gcloud iam service-accounts create flowforge-uploader \
@@ -81,7 +89,9 @@ gcloud iam service-accounts keys create flowforge-uploader-key.json \
 ```
 
 ### 4. Environment Variables
+
 Add to `.env.local`:
+
 ```bash
 # GCS Configuration
 GCS_BUCKET_NAME=flowforge-audio
@@ -92,11 +102,13 @@ GOOGLE_APPLICATION_CREDENTIALS=./flowforge-uploader-key.json
 ## Implementation
 
 ### 1. Install Dependencies
+
 ```bash
 npm install @google-cloud/storage
 ```
 
 ### 2. Create GCS Utility (`lib/storage/gcs.ts`)
+
 ```typescript
 import { Storage } from '@google-cloud/storage'
 
@@ -112,14 +124,14 @@ export async function generateSignedUploadUrl(
   contentType: string = 'audio/webm'
 ): Promise<string> {
   const file = bucket.file(`sessions/${Date.now()}-${filename}`)
-  
+
   const [url] = await file.getSignedUrl({
     version: 'v4',
     action: 'write',
     expires: Date.now() + 15 * 60 * 1000, // 15 minutes
     contentType,
   })
-  
+
   return url
 }
 
@@ -128,13 +140,13 @@ export async function getSignedDownloadUrl(
   expiresIn: number = 3600
 ): Promise<string> {
   const file = bucket.file(filepath)
-  
+
   const [url] = await file.getSignedUrl({
     version: 'v4',
     action: 'read',
     expires: Date.now() + expiresIn * 1000,
   })
-  
+
   return url
 }
 
@@ -144,6 +156,7 @@ export async function deleteFile(filepath: string): Promise<void> {
 ```
 
 ### 3. Update `/api/sessions/upload/route.ts`
+
 ```typescript
 import { NextResponse } from 'next/server'
 import { generateSignedUploadUrl } from '@/lib/storage/gcs'
@@ -154,15 +167,12 @@ export async function POST(request: Request) {
     const { beatId, title, durationSeconds, filename } = body
 
     if (!beatId || !title || !durationSeconds || !filename) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     // Generate pre-signed upload URL
     const uploadUrl = await generateSignedUploadUrl(filename, 'audio/webm')
-    
+
     // Extract the GCS path from the signed URL
     const gcsPath = `sessions/${Date.now()}-${filename}`
 
@@ -173,15 +183,13 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Upload URL generation error:', error)
-    return NextResponse.json(
-      { error: 'Failed to generate upload URL' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to generate upload URL' }, { status: 500 })
   }
 }
 ```
 
 ### 4. Client-Side Upload (`lib/storage/uploadSession.ts`)
+
 ```typescript
 export async function uploadSessionAudio(
   audioBlob: Blob,
@@ -243,6 +251,7 @@ export async function uploadSessionAudio(
 ```
 
 ### 5. Update Session Playback
+
 When playing back a session, generate a signed download URL:
 
 ```typescript
@@ -264,16 +273,19 @@ const downloadUrl = await getSignedDownloadUrl(session.storageUrl)
 ## Cost Estimation
 
 ### Storage
+
 - $0.020 per GB/month (Standard storage)
 - Average session: 2MB
 - 10,000 sessions = 20GB = $0.40/month
 
 ### Operations
+
 - Class A (write): $0.05 per 10,000 ops
 - Class B (read): $0.004 per 10,000 ops
 - 10,000 uploads + 50,000 plays = $0.07/month
 
 ### Network
+
 - Egress (downloads): $0.12 per GB
 - 50,000 plays × 2MB = 100GB = $12/month
 
@@ -282,10 +294,12 @@ const downloadUrl = await getSignedDownloadUrl(session.storageUrl)
 ## Rollout Plan
 
 ### Phase 1: MVP (Current)
+
 - Client-side localStorage only
 - No server storage
 
 ### Phase 2: GCS Integration
+
 1. Set up GCS bucket and service account
 2. Deploy updated API routes
 3. Test with staging environment
@@ -294,6 +308,7 @@ const downloadUrl = await getSignedDownloadUrl(session.storageUrl)
 6. Full rollout
 
 ### Phase 3: Optimization
+
 - Implement CDN caching
 - Add audio compression
 - Implement cleanup jobs for old files
@@ -301,6 +316,7 @@ const downloadUrl = await getSignedDownloadUrl(session.storageUrl)
 ## Monitoring
 
 Track these metrics:
+
 - Upload success rate
 - Average upload time
 - Storage costs
@@ -316,8 +332,8 @@ Track these metrics:
 ## Migration from localStorage
 
 For users with existing localStorage sessions:
+
 1. Detect localStorage sessions on login
 2. Offer "Upload to cloud" option
 3. Batch upload with progress indicator
 4. Clear localStorage after successful upload
-

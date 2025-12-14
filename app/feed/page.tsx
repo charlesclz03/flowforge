@@ -3,13 +3,9 @@ import { Card } from '@/components/atoms/Card'
 import Link from 'next/link'
 import { Play, TrendingUp, Users } from 'lucide-react'
 
-export const dynamic = 'force-dynamic'
-
-async function getTrendingDuels() {
-  // Find sessions that HAVE a parent (are responses)
-  // and order them by recent activity or votes?
-  // Schema doesn't have "votesCount" on session efficiently.
-  // For MVP, just get recent responses.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getTrendingDuels(): Promise<any[]> {
+  // ... existing code ...
   const duels = await prisma.freestyleSession.findMany({
     where: {
       parentId: { not: null }, // Only duels
@@ -31,7 +27,8 @@ async function getTrendingDuels() {
   return duels
 }
 
-async function getRecentCommunityBeats() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getRecentCommunityBeats(): Promise<any[]> {
   const beats = await prisma.beat.findMany({
     orderBy: { createdAt: 'desc' },
     take: 5,
@@ -59,43 +56,47 @@ export default async function FeedPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trendingDuels.map((duel: any) => (
-            <Link key={duel.id} href={`/duels/${duel.id}`} className="group">
-              <Card className="h-full overflow-hidden hover:border-accent-gold/50 transition-colors">
-                <div className="aspect-video bg-black/50 relative">
-                  {/* Thumbnail Simulation */}
-                  <div className="absolute inset-0 flex">
-                    <div className="w-1/2 bg-gray-900 border-r border-white/10 flex items-center justify-center">
-                      <span className="text-xs text-white/30">{duel.parent?.user.username}</span>
+          {trendingDuels.map(
+            (
+              duel: any // eslint-disable-line @typescript-eslint/no-explicit-any
+            ) => (
+              <Link key={duel.id} href={`/duels/${duel.id}`} className="group">
+                <Card className="h-full overflow-hidden hover:border-accent-gold/50 transition-colors">
+                  <div className="aspect-video bg-black/50 relative">
+                    {/* Thumbnail Simulation */}
+                    <div className="absolute inset-0 flex">
+                      <div className="w-1/2 bg-gray-900 border-r border-white/10 flex items-center justify-center">
+                        <span className="text-xs text-white/30">{duel.parent?.user.username}</span>
+                      </div>
+                      <div className="w-1/2 bg-gray-800 flex items-center justify-center">
+                        <span className="text-xs text-white/30">{duel.user.username}</span>
+                      </div>
                     </div>
-                    <div className="w-1/2 bg-gray-800 flex items-center justify-center">
-                      <span className="text-xs text-white/30">{duel.user.username}</span>
+
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[1px]">
+                      <div className="bg-accent-gold text-black rounded-full p-3">
+                        <Play size={24} fill="currentColor" />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[1px]">
-                    <div className="bg-accent-gold text-black rounded-full p-3">
-                      <Play size={24} fill="currentColor" />
+                  <div className="p-4 space-y-2">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-bold text-white truncate pr-2">
+                        {duel.parent?.user.username} vs {duel.user.username}
+                      </h3>
+                      <div className="px-2 py-0.5 bg-white/10 rounded text-xs text-text-secondary whitespace-nowrap">
+                        {duel._count.duelVotesWon} votes
+                      </div>
                     </div>
+                    <p className="text-sm text-text-tertiary truncate">
+                      on {duel.parent?.beat.title}
+                    </p>
                   </div>
-                </div>
-
-                <div className="p-4 space-y-2">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-white truncate pr-2">
-                      {duel.parent?.user.username} vs {duel.user.username}
-                    </h3>
-                    <div className="px-2 py-0.5 bg-white/10 rounded text-xs text-text-secondary whitespace-nowrap">
-                      {duel._count.duelVotesWon} votes
-                    </div>
-                  </div>
-                  <p className="text-sm text-text-tertiary truncate">
-                    on {duel.parent?.beat.title}
-                  </p>
-                </div>
-              </Card>
-            </Link>
-          ))}
+                </Card>
+              </Link>
+            )
+          )}
 
           {trendingDuels.length === 0 && (
             <div className="col-span-full py-12 text-center text-text-tertiary bg-surface-elevation-1 rounded-xl border border-white/5">
@@ -116,24 +117,28 @@ export default async function FeedPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {recentBeats.map((beat: any) => (
-            <Card key={beat.id} className="group cursor-pointer hover:bg-surface-elevation-2">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-surface-elevation-3 rounded flex items-center justify-center font-bold text-text-secondary group-hover:text-accent-cyan transition-colors">
-                  ♪
+          {recentBeats.map(
+            (
+              beat: any // eslint-disable-line @typescript-eslint/no-explicit-any
+            ) => (
+              <Card key={beat.id} className="group cursor-pointer hover:bg-surface-elevation-2">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-surface-elevation-3 rounded flex items-center justify-center font-bold text-text-secondary group-hover:text-accent-cyan transition-colors">
+                    ♪
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-white truncate">{beat.title}</h4>
+                    <p className="text-xs text-text-tertiary truncate">
+                      {beat.artistName || 'Unknown'}
+                    </p>
+                  </div>
+                  <div className="text-xs text-text-secondary bg-white/5 px-2 py-1 rounded">
+                    {beat.bpm} BPM
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-white truncate">{beat.title}</h4>
-                  <p className="text-xs text-text-tertiary truncate">
-                    {beat.artistName || 'Unknown'}
-                  </p>
-                </div>
-                <div className="text-xs text-text-secondary bg-white/5 px-2 py-1 rounded">
-                  {beat.bpm} BPM
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            )
+          )}
         </div>
       </section>
     </div>

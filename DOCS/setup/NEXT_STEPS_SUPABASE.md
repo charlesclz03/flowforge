@@ -33,7 +33,7 @@
 
    **c) service_role key:**
    - In the same "Project API keys" section
-   - Find the key labeled "service_role" 
+   - Find the key labeled "service_role"
    - ⚠️ **WARNING**: This is a secret key!
    - Copy the entire key (starts with `eyJ...`)
    - This is your `SUPABASE_SERVICE_ROLE_KEY`
@@ -57,11 +57,13 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ### 4. Verify Setup (Optional - 1 minute)
 
 Run the verification script:
+
 ```bash
 npm run verify:storage
 ```
 
 This will check:
+
 - ✅ Environment variables are set
 - ✅ Can connect to Supabase
 - ✅ Recordings bucket exists
@@ -70,6 +72,7 @@ This will check:
 ### 5. Test the Setup (5 minutes)
 
 1. **Restart your development server:**
+
    ```bash
    # Stop the server (Ctrl+C if running)
    npm run dev
@@ -114,17 +117,20 @@ You'll know it's working when:
 ## 🐛 Common Issues
 
 ### "Failed to upload recording"
+
 - Check that `SUPABASE_SERVICE_ROLE_KEY` is set correctly
 - Verify bucket name is exactly `recordings` (case-sensitive)
 - Make sure bucket is public
 - Check you're signed in
 
 ### "Bucket not found"
+
 - Verify bucket name is exactly `recordings`
 - Check `NEXT_PUBLIC_SUPABASE_URL` is correct
 - Make sure bucket exists in Supabase Dashboard
 
 ### "Unauthorized"
+
 - Make sure you're signed in
 - Check NextAuth is working
 - Verify `NEXTAUTH_SECRET` is set
@@ -154,6 +160,7 @@ After verifying everything works:
 ## 💡 Quick Reference
 
 **Environment Variables Needed:**
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
@@ -161,14 +168,15 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
 **Verification Command:**
+
 ```bash
 npm run verify:storage
 ```
 
 **Test Flow:**
+
 1. Record session → 2. View recording → 3. Play/Download/Delete
 
 ---
 
 **Ready to complete the setup?** Follow the steps above! 🚀
-

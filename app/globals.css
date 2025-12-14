@@ -6,10 +6,12 @@
   * {
     /* Removed invalid Tailwind class 'border-border' */
   }
-  
+
   body {
     @apply bg-background text-text-primary antialiased;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
 
   /* Smooth scrolling */
@@ -118,7 +120,8 @@
   }
 
   @keyframes pulse-record {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
@@ -156,4 +159,3 @@
     scroll-behavior: auto !important;
   }
 }
-

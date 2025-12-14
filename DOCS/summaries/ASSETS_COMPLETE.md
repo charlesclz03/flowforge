@@ -6,6 +6,7 @@
 ## Assets Installed
 
 ### Icons & Favicons
+
 All icons feature a modern circular flow design with concentric rings in purple, cyan, and orange:
 
 - ✅ `favicon.ico` - 3.3KB - Browser tab icon
@@ -16,13 +17,15 @@ All icons feature a modern circular flow design with concentric rings in purple,
 - ✅ `icon-512x512.png` - 676KB - High-res PWA icon
 
 ### Social Media
+
 - ✅ `og-image.png` - 568KB (1200x630) - Open Graph / Twitter Card image
 
 ## Design Details
 
 ### Icon Design
+
 - **Style**: Modern, minimalist circular flow visualization
-- **Colors**: 
+- **Colors**:
   - Purple outer ring (#A78BFA / #9333EA)
   - Cyan middle ring (#67E8F9 / #06B6D4)
   - Orange inner elements (#FB923C / #F97316)
@@ -30,7 +33,9 @@ All icons feature a modern circular flow design with concentric rings in purple,
 - **Theme**: Represents rhythm, flow, and continuous motion (perfect for freestyle rap app)
 
 ### PWA Manifest Updated
+
 Updated `manifest.json` to include:
+
 - All icon sizes (16x16, 32x32, 180x180, 192x192, 512x512)
 - Description: "AI-Powered Freestyle Rap Practice"
 - Purpose: "any maskable" for adaptive icons
@@ -52,6 +57,7 @@ ls -lh public/
 ## How Assets Are Used
 
 ### In HTML (`app/layout.tsx`)
+
 ```typescript
 icons: {
   icon: [
@@ -67,6 +73,7 @@ manifest: '/manifest.json',
 ```
 
 ### For Social Media
+
 ```typescript
 openGraph: {
   images: [
@@ -85,6 +92,7 @@ twitter: {
 ```
 
 ### For PWA (`manifest.json`)
+
 ```json
 {
   "icons": [
@@ -97,18 +105,22 @@ twitter: {
 ## Testing
 
 ### Local Testing
+
 1. Visit `http://localhost:3000`
 2. Check browser tab for favicon
 3. Open DevTools → Application → Manifest
 4. Verify all icons load correctly
 
 ### Social Media Preview Testing
+
 Use these tools to test social sharing:
+
 - [Meta Debugger](https://developers.facebook.com/tools/debug/) - Facebook/Instagram
 - [Twitter Card Validator](https://cards-dev.twitter.com/validator) - Twitter
 - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) - LinkedIn
 
 ### PWA Testing
+
 1. Chrome DevTools → Lighthouse
 2. Run PWA audit
 3. Check "Installable" criteria
@@ -117,6 +129,7 @@ Use these tools to test social sharing:
 ## Production Deployment Notes
 
 When deploying to production:
+
 1. ✅ All assets are already in `public/` folder
 2. ✅ Manifest is configured correctly
 3. ✅ Metadata references all assets
@@ -133,6 +146,7 @@ When deploying to production:
 ## Future Improvements
 
 Optional enhancements for later:
+
 - [ ] Animated favicon for active sessions
 - [ ] Dark/light mode variants
 - [ ] Brand guidelines document
@@ -153,12 +167,14 @@ Optional enhancements for later:
 ## Quick Reference
 
 **Primary Brand Colors** (from icons):
+
 - Purple: `#A78BFA` (light) / `#9333EA` (dark)
 - Cyan: `#67E8F9` (light) / `#06B6D4` (dark)
 - Orange: `#FB923C` (light) / `#F97316` (dark)
 - Background: `#000000`
 
 **Asset URLs** (for reference):
+
 - Favicon: `/favicon.ico`
 - OG Image: `/og-image.png`
 - PWA Icons: `/icon-192x192.png`, `/icon-512x512.png`

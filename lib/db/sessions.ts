@@ -240,7 +240,8 @@ export async function getSessionStats(userId?: string): Promise<
     ])
 
     const totalSessions = sessions.length
-    const totalDuration = sessions.reduce((sum, s) => sum + s.durationSeconds, 0)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const totalDuration = sessions.reduce((sum: number, s: any) => sum + s.durationSeconds, 0)
     const averageDuration = totalSessions > 0 ? totalDuration / totalSessions : 0
 
     let favoriteGenre: string | null = null

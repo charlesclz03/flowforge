@@ -15,18 +15,21 @@
 **Important**: You should also clear your browser cache:
 
 #### Chrome/Edge:
+
 1. Press `Ctrl+Shift+Delete` (Windows) or `Cmd+Shift+Delete` (Mac)
 2. Select "Cached images and files"
 3. Select "Cookies and other site data" (optional, but recommended)
 4. Click "Clear data"
 
 #### Firefox:
+
 1. Press `Ctrl+Shift+Delete` (Windows) or `Cmd+Shift+Delete` (Mac)
 2. Select "Cache"
 3. Select "Cookies" (optional, but recommended)
 4. Click "Clear Now"
 
 #### Safari:
+
 1. Press `Cmd+Option+E` to clear cache
 2. Or go to Safari > Preferences > Advanced > Show Develop menu
 3. Then Develop > Empty Caches
@@ -64,21 +67,26 @@
 ## 🐛 If Issues Persist
 
 ### Check Server Logs
+
 Look at the terminal where `npm run dev` is running for any errors.
 
 ### Check Browser Console
+
 1. Open browser console (F12)
 2. Look for any JavaScript errors
 3. Check Network tab for failed requests
 
 ### Verify Environment Variables
+
 ```bash
 # Check if environment variables are set
 grep -E "NEXTAUTH|DATABASE|SUPABASE" .env.local
 ```
 
 ### Restart Again
+
 If needed, you can restart again:
+
 ```bash
 # Kill server
 pkill -f "next dev"
@@ -104,11 +112,13 @@ npm run dev
 ## 🎯 Expected Behavior
 
 ### When Signed In:
+
 - ✅ Can access `/recordings`
 - ✅ Can access `/profile`
 - ✅ Can access `/practice`
 
 ### When Signed Out:
+
 - ✅ Cannot access `/recordings` (redirects to `/`)
 - ✅ Cannot access `/profile` (redirects to `/`)
 - ✅ Can access `/practice` (public route)
@@ -119,5 +129,3 @@ npm run dev
 **Status**: ✅ Cache cleared, server restarted  
 **Server**: Running on `http://localhost:3000`  
 **Next**: Clear browser cache and test
-
-

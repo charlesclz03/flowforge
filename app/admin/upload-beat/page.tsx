@@ -53,8 +53,12 @@ export default function AdminUploadPage() {
       ))
 
       e.currentTarget.reset()
-    } catch (err: any) {
-      toast.error('Upload failed: ' + err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error('Upload failed: ' + err.message)
+      } else {
+        toast.error('Upload failed: Unknown error')
+      }
     } finally {
       setLoading(false)
     }

@@ -91,7 +91,8 @@ NEXT_PUBLIC_AD_SLOT_SIDEBAR=0987654321
 NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 ```
 
-**Important**: 
+**Important**:
+
 - Select "Production", "Preview", and "Development" for all variables
 - Click "Add" for each variable
 
@@ -327,6 +328,7 @@ Monitor in Supabase Dashboard:
 - **Cost**: $0/month
 
 **When to upgrade to Pro ($20/mo)**:
+
 - Exceeding 100 GB bandwidth (~10K active users)
 - Need team collaboration
 - Want advanced analytics
@@ -340,6 +342,7 @@ Monitor in Supabase Dashboard:
 - **Cost**: $0/month
 
 **When to upgrade to Pro ($25/mo)**:
+
 - Exceeding 500 MB database storage
 - Need more than 5 GB bandwidth
 - Want daily backups
@@ -403,4 +406,3 @@ Share it with the world and start gathering user feedback!
 
 **Last Updated**: November 6, 2025  
 **Status**: Ready for Production Deployment ✅
-

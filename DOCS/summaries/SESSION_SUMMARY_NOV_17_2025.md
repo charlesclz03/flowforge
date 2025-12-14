@@ -8,9 +8,9 @@
 
 ## 🎯 High-Level Goals
 
-1. Make the **landing, onboarding, and practice** screens share a coherent, Figma-accurate visual system.  
-2. Simplify the **onboarding flow** and CTA copy so the path to practice is obvious and consistent.  
-3. Clean up the **practice experience** (word prompts, recording indicator, mic errors) so it feels stable and focused.  
+1. Make the **landing, onboarding, and practice** screens share a coherent, Figma-accurate visual system.
+2. Simplify the **onboarding flow** and CTA copy so the path to practice is obvious and consistent.
+3. Clean up the **practice experience** (word prompts, recording indicator, mic errors) so it feels stable and focused.
 4. Ensure **business details** (pricing, beats count) match the latest business plan.
 
 ---
@@ -144,7 +144,10 @@ Overall, `/difficultyselection` now feels like the middle step of a 3-page wizar
   - For authenticated users:
     - Changed to a compact capsule showing **only the profile avatar**:
       ```tsx
-      <Link href="/profile" className="inline-flex items-center rounded-full bg-background-card/70 p-1.5 hover:bg-background-card transition-colors">
+      <Link
+        href="/profile"
+        className="inline-flex items-center rounded-full bg-background-card/70 p-1.5 hover:bg-background-card transition-colors"
+      >
         <UserAvatar mode="avatarOnly" />
       </Link>
       ```
@@ -252,5 +255,4 @@ Recommended next focus for the **next session**:
 
 ---
 
-**Bottom line**: The MVP is now wrapped in a cohesive, Figma-accurate shell. The journey from landing → onboarding → practice feels intentional, the practice screen is calmer and clearer, and what users see now matches both the **design vision** and the **business plan**.  
-
+**Bottom line**: The MVP is now wrapped in a cohesive, Figma-accurate shell. The journey from landing → onboarding → practice feels intentional, the practice screen is calmer and clearer, and what users see now matches both the **design vision** and the **business plan**.

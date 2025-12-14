@@ -1,6 +1,6 @@
 import { Card } from '@/components/atoms/Card'
 // import { BadgeType } from '@/lib/gamification/badges'
-import { Crown, Moon, Star, Flame } from 'lucide-react'
+import { Crown, Moon, Star, Flame, LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface BadgesDisplayProps {
@@ -9,7 +9,7 @@ interface BadgesDisplayProps {
 
 const BADGE_CONFIG: Record<
   string,
-  { icon: any; label: string; description: string; color: string }
+  { icon: LucideIcon; label: string; description: string; color: string }
 > = {
   Founder: {
     icon: Crown,

@@ -43,6 +43,7 @@ GOOGLE_CLIENT_SECRET=your-client-secret
 ```
 
 For production (Vercel):
+
 ```bash
 NEXTAUTH_URL=https://flowforge.app
 NEXTAUTH_SECRET=<same-secret-as-local>
@@ -65,6 +66,7 @@ lib/
 ## 4. Implementation Files
 
 ### `lib/auth.ts`
+
 ```typescript
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
@@ -99,6 +101,7 @@ export const authOptions: NextAuthOptions = {
 ```
 
 ### `app/api/auth/[...nextauth]/route.ts`
+
 ```typescript
 import NextAuth from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -170,6 +173,7 @@ model VerificationToken {
 ```
 
 Update FreestyleSession to link to User:
+
 ```prisma
 model FreestyleSession {
   // ... existing fields
@@ -180,6 +184,7 @@ model FreestyleSession {
 ```
 
 ### `types/next-auth.d.ts`
+
 ```typescript
 import NextAuth from 'next-auth'
 
@@ -198,6 +203,7 @@ declare module 'next-auth' {
 ## 5. Client Components
 
 ### Sign In Button (`components/auth/SignInButton.tsx`)
+
 ```typescript
 'use client'
 
@@ -236,6 +242,7 @@ export function SignInButton() {
 ```
 
 ### Session Provider Wrapper (`components/auth/SessionProvider.tsx`)
+
 ```typescript
 'use client'
 
@@ -247,6 +254,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 ```
 
 ### Update `app/layout.tsx`
+
 ```typescript
 import { SessionProvider } from '@/components/auth/SessionProvider'
 
@@ -266,25 +274,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ## 6. Protected API Routes
 
 ### Middleware (`middleware.ts`)
+
 ```typescript
 export { default } from 'next-auth/middleware'
 
 export const config = {
-  matcher: [
-    '/api/sessions/:path*',
-    '/profile/:path*',
-  ],
+  matcher: ['/api/sessions/:path*', '/profile/:path*'],
 }
 ```
 
 ### Get Session in API Route
+
 ```typescript
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions)
-  
+
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -296,13 +303,14 @@ export async function GET(request: Request) {
 ```
 
 ### Get Session in Server Component
+
 ```typescript
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
-  
+
   if (!session) {
     redirect('/auth/signin')
   }
@@ -341,14 +349,17 @@ npx prisma generate
 ## 10. Common Issues
 
 ### "Invalid redirect_uri"
+
 - Check authorized redirect URIs in Google Console
 - Ensure `NEXTAUTH_URL` matches your domain exactly
 
 ### "Client authentication failed"
+
 - Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 - Check for extra spaces or newlines
 
 ### Session not persisting
+
 - Check database connection
 - Verify session table exists
 - Check cookie settings (secure in production)
@@ -360,4 +371,3 @@ npx prisma generate
 3. Show user's sessions only
 4. Implement subscription status checks
 5. Add email verification (optional)
-

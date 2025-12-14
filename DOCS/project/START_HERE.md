@@ -52,17 +52,20 @@ Visit: http://localhost:3000
 ## 📚 Essential Documentation
 
 ### 1. Status & Roadmap
-*   **[PROJECT_STATUS.md](DOCS/project/PROJECT_STATUS.md)**: The single source of truth for completion status.
-*   **[MVP_ROADMAP.md](DOCS/project/MVP_ROADMAP.md)**: High-level visual timeline.
+
+- **[PROJECT_STATUS.md](DOCS/project/PROJECT_STATUS.md)**: The single source of truth for completion status.
+- **[MVP_ROADMAP.md](DOCS/project/MVP_ROADMAP.md)**: High-level visual timeline.
 
 ### 2. Implementation Plans (Active)
-*   **[PHASE_5_PREMIUM_PLAN.md](DOCS/phases/PHASE_5_PREMIUM_PLAN.md)**: 👈 **WE ARE HERE**. Plan for Stripe & Guest Mode.
-*   **[PHASE_6_SOCIAL_PLAN.md](DOCS/phases/PHASE_6_SOCIAL_PLAN.md)**: Future social features.
+
+- **[PHASE_5_PREMIUM_PLAN.md](DOCS/phases/PHASE_5_PREMIUM_PLAN.md)**: 👈 **WE ARE HERE**. Plan for Stripe & Guest Mode.
+- **[PHASE_6_SOCIAL_PLAN.md](DOCS/phases/PHASE_6_SOCIAL_PLAN.md)**: Future social features.
 
 ### 3. Technical Reference
-*   **[FlowForge V1.0: The Bible](DOCS/FlowForge%20V1.0_%20The%20Bible.md)**: The core product vision and logic.
-*   **[APP_OVERVIEW_AND_FEATURES.md](DOCS/APP_OVERVIEW_AND_FEATURES.md)**: Detailed feature guide.
-*   **[STRIPE_SETUP.md](DOCS/setup/STRIPE_SETUP.md)**: Setup guide for the incoming payments system.
+
+- **[FlowForge V1.0: The Bible](DOCS/FlowForge%20V1.0_%20The%20Bible.md)**: The core product vision and logic.
+- **[APP_OVERVIEW_AND_FEATURES.md](DOCS/APP_OVERVIEW_AND_FEATURES.md)**: Detailed feature guide.
+- **[STRIPE_SETUP.md](DOCS/setup/STRIPE_SETUP.md)**: Setup guide for the incoming payments system.
 
 ---
 

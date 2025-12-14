@@ -9,18 +9,22 @@ When running FlowForge on macOS, you may encounter permission errors that preven
 ## Common Errors
 
 ### 1. EPERM - Operation Not Permitted
+
 ```
 Error: EPERM: operation not permitted, open '.env.local'
 Error: EPERM: operation not permitted, open 'node_modules/next/...'
 ```
 
 ### 2. EMFILE - Too Many Open Files
+
 ```
 Watchpack Error (watcher): Error: EMFILE: too many open files, watch
 ```
 
 ### 3. Extended Attributes
+
 Files showing `@` symbol when listing:
+
 ```bash
 -rw-r--r--@ 1 user staff 408 .env
 ```
@@ -30,6 +34,7 @@ Files showing `@` symbol when listing:
 ## Quick Fix (5 Minutes)
 
 ### Step 1: Grant Full Disk Access
+
 1. Open **System Settings** → **Privacy & Security**
 2. Click **Full Disk Access**
 3. Click the lock icon and authenticate
@@ -39,6 +44,7 @@ Files showing `@` symbol when listing:
 5. **Restart Terminal completely** (Cmd+Q and reopen)
 
 ### Step 2: Clean the Project
+
 ```bash
 cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
 
@@ -68,6 +74,7 @@ npm run dev
 ### Option A: Fix System File Limits
 
 Add to `/etc/sysctl.conf`:
+
 ```bash
 echo "kern.maxfiles=65536" | sudo tee -a /etc/sysctl.conf
 echo "kern.maxfilesperproc=65536" | sudo tee -a /etc/sysctl.conf
@@ -76,6 +83,7 @@ sudo sysctl -w kern.maxfilesperproc=65536
 ```
 
 Then in your shell session:
+
 ```bash
 ulimit -n 10240
 ```
@@ -97,21 +105,25 @@ npm run dev
 ## Verification Commands
 
 ### Check if node_modules exists:
+
 ```bash
 ls -la node_modules
 ```
 
 ### Check for extended attributes:
+
 ```bash
 ls -la@ .env .env.local
 ```
 
 ### Check running processes:
+
 ```bash
 lsof -i :3000
 ```
 
 ### Check for permission errors in logs:
+
 ```bash
 # While server is running, check for EPERM errors
 ps aux | grep "next dev"
@@ -122,16 +134,19 @@ ps aux | grep "next dev"
 ## Understanding the Errors
 
 ### Why EPERM Happens
+
 - macOS Gatekeeper/quarantine attributes on downloaded files
 - Insufficient permissions on project directory
 - Full Disk Access not granted to Terminal/IDE
 
 ### Why EMFILE Happens
+
 - macOS default file descriptor limit is too low (256)
 - Next.js watches many files during development
 - Need to increase system limits
 
 ### Why node_modules Gets Corrupted
+
 - Extended attributes from download/extraction
 - Permission changes during npm operations
 - Incomplete npm install/update operations
@@ -141,6 +156,7 @@ ps aux | grep "next dev"
 ## Prevention
 
 ### For New Projects
+
 ```bash
 # After cloning/creating project
 cd your-project
@@ -149,6 +165,7 @@ npm install
 ```
 
 ### For Existing Projects
+
 ```bash
 # Monthly maintenance
 rm -rf node_modules .next
@@ -156,7 +173,9 @@ npm install
 ```
 
 ### Environment Files
+
 Store sensitive .env files outside the project and symlink them:
+
 ```bash
 # Store in secure location
 mkdir -p ~/.flowforge-env
@@ -169,16 +188,19 @@ ln -s ~/.flowforge-env/.env.local .env.local
 ## Still Having Issues?
 
 ### Check Disk Space
+
 ```bash
 df -h
 ```
 
 ### Check File System
+
 ```bash
 diskutil verifyVolume /
 ```
 
 ### Nuclear Option (Last Resort)
+
 ```bash
 # Complete reset
 cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
@@ -205,10 +227,8 @@ npm run dev
 ✅ No EPERM errors in console  
 ✅ No EMFILE errors in logs  
 ✅ Page loads in browser  
-✅ No compilation errors  
+✅ No compilation errors
 
 ---
 
 **Last Updated:** November 14, 2025
-
-

@@ -61,4 +61,3 @@ global.MediaRecorder = class MediaRecorder {
 HTMLMediaElement.prototype.play = () => Promise.resolve()
 HTMLMediaElement.prototype.pause = () => {}
 HTMLMediaElement.prototype.load = () => {}
-

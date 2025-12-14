@@ -99,8 +99,9 @@ export async function GET(req: NextRequest) {
       storageDeleted: storageDeletedCount,
       dbDeleted: dbResult.count,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Cleanup Error:', error)
-    return NextResponse.json({ error: 'Cleanup failed: ' + error.message }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: 'Cleanup failed: ' + message }, { status: 500 })
   }
 }

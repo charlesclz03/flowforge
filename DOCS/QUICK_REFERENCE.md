@@ -218,5 +218,3 @@ npx prisma studio
 ---
 
 **Pro Tip**: Keep this file open while developing for quick command reference!
-
-

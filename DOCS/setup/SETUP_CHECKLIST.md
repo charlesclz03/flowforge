@@ -45,11 +45,13 @@
 ### Step 4: Verify Setup (Optional)
 
 Run the verification script:
+
 ```bash
 npm run verify:storage
 ```
 
 Or manually verify:
+
 - [ ] Environment variables are set
 - [ ] Bucket exists and is public
 - [ ] Can connect to Supabase
@@ -57,6 +59,7 @@ Or manually verify:
 ### Step 5: Test the Setup
 
 1. Restart development server:
+
    ```bash
    npm run dev
    ```
@@ -91,6 +94,7 @@ Or manually verify:
 ### Issue: "Failed to upload recording"
 
 **Check:**
+
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` is set correctly
 - [ ] Bucket name is exactly `recordings` (case-sensitive)
 - [ ] Bucket is public
@@ -101,6 +105,7 @@ Or manually verify:
 ### Issue: "Bucket not found"
 
 **Check:**
+
 - [ ] Bucket name is exactly `recordings`
 - [ ] `NEXT_PUBLIC_SUPABASE_URL` is correct
 - [ ] Bucket exists in Supabase Dashboard
@@ -109,6 +114,7 @@ Or manually verify:
 ### Issue: "Unauthorized" error
 
 **Check:**
+
 - [ ] User is signed in
 - [ ] NextAuth is working correctly
 - [ ] `NEXTAUTH_SECRET` is set
@@ -117,6 +123,7 @@ Or manually verify:
 ### Issue: Files not appearing
 
 **Check:**
+
 - [ ] Browser console for errors
 - [ ] Server logs for errors
 - [ ] Network tab for API calls
@@ -145,6 +152,7 @@ Once everything is working:
 If all checks pass, your Supabase Storage is configured correctly!
 
 **Next Steps:**
+
 1. Test all features
 2. Monitor storage usage
 3. Set up production environment variables
@@ -161,4 +169,3 @@ If all checks pass, your Supabase Storage is configured correctly!
 ---
 
 **Need help?** Check the troubleshooting section above or refer to the documentation.
-

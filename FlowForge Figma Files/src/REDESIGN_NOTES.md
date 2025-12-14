@@ -3,11 +3,13 @@
 ## 🎨 What Changed
 
 ### Color Scheme
+
 - **From**: Orange accent (#FF9500)
 - **To**: Purple/Violet gradient (#a855f7 to #7D7AFF)
 - Dark theme with pure black background (#000000)
 
 ### Architecture
+
 Redesigned from single-page to **3-page onboarding flow**:
 
 1. **How It Works Page** - Detailed introduction with features
@@ -15,10 +17,12 @@ Redesigned from single-page to **3-page onboarding flow**:
 3. **Player Page** - Main practice session with controls
 
 ### Removed Features
+
 ✅ **Beat search bar** - Simplified to direct beat grid
 ✅ **Captions under sliders** - Now shown inline
 
 ### Improved Features
+
 ✅ **Difficulty Selector** - Changed from 3 buttons to smooth slider (Easy → Medium → Hard)
 ✅ **Frequency Selector** - Changed from 3 buttons to smooth slider (4 → 8 → 16 bars)
 ✅ **Single-screen experience** - Each page fits in viewport, no scrolling needed
@@ -29,11 +33,13 @@ Redesigned from single-page to **3-page onboarding flow**:
 ## 📱 Component Structure
 
 ### Pages
+
 - `/components/HowItWorksPage.tsx` - Landing page with features
 - `/components/BeatSelectorPage.tsx` - Beat selection grid
 - `/components/PlayerPage.tsx` - Main practice session
 
 ### Key Features
+
 - **Timer Ring**: Circular progress indicator (200px diameter)
 - **Sliders**: Smooth 0-100 scale for difficulty & frequency
 - **Word Prompts**: Large animated text with purple gradient
@@ -72,25 +78,24 @@ Redesigned from single-page to **3-page onboarding flow**:
 ## 🎨 Design Tokens
 
 ### Colors
+
 ```css
---purple-500: #a855f7
---purple-600: #9333ea
---violet-500: #7D7AFF
---violet-600: #6366f1
---red-500: #ef4444 (recording indicator)
---green-500: #22c55e (easy difficulty)
+--purple-500: #a855f7 --purple-600: #9333ea --violet-500: #7d7aff --violet-600: #6366f1
+  --red-500: #ef4444 (recording indicator) --green-500: #22c55e (easy difficulty);
 ```
 
 ### Gradients
+
 ```css
 /* Primary CTA */
-background: linear-gradient(to right, #a855f7, #7D7AFF);
+background: linear-gradient(to right, #a855f7, #7d7aff);
 
 /* Background Ambient */
-background: radial-gradient(circle, rgba(168,85,247,0.1), transparent);
+background: radial-gradient(circle, rgba(168, 85, 247, 0.1), transparent);
 ```
 
 ### Border Radius
+
 - Cards: `rounded-3xl` (24px)
 - Buttons: `rounded-full` (pill shape)
 - Small elements: `rounded-2xl` (16px)
@@ -100,11 +105,13 @@ background: radial-gradient(circle, rgba(168,85,247,0.1), transparent);
 ## 🚀 Android Packaging Guide
 
 ### Current State
+
 This is a **web application** built with React and Tailwind CSS. It runs in the browser.
 
 ### Options to Convert to Android APK
 
 #### Option 1: Capacitor (Recommended)
+
 Capacitor wraps your web app in a native Android shell.
 
 ```bash
@@ -126,12 +133,14 @@ npx cap open android
 ```
 
 Then in Android Studio:
+
 1. Build → Generate Signed Bundle/APK
 2. Choose APK
 3. Create a keystore
 4. Build Release APK
 
 #### Option 2: Cordova
+
 Similar to Capacitor but older technology.
 
 ```bash
@@ -143,6 +152,7 @@ cordova build android --release
 ```
 
 #### Option 3: React Native (Most Complex)
+
 Would require rewriting the entire app in React Native. Not recommended for this project.
 
 ---
@@ -150,13 +160,16 @@ Would require rewriting the entire app in React Native. Not recommended for this
 ## ⚠️ Important Notes for Android
 
 ### Audio Playback
+
 - Current implementation uses Web Audio API
 - For Android, you'll need native audio handling via Capacitor plugins
 - Install: `npm install @capacitor/filesystem @capacitor/audio`
 
 ### Microphone Access
+
 - Web version uses `navigator.mediaDevices.getUserMedia()`
 - Android needs permission in `AndroidManifest.xml`:
+
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -164,6 +177,7 @@ Would require rewriting the entire app in React Native. Not recommended for this
 ```
 
 ### File Storage
+
 - Beat library needs to be bundled or stored locally
 - Use Capacitor's Filesystem API for storage access
 
@@ -195,6 +209,7 @@ Would require rewriting the entire app in React Native. Not recommended for this
 ## 🎯 Material U Design Notes
 
 The app follows Material You (Material U) principles:
+
 - **Dynamic colors**: Purple as primary accent
 - **Glassmorphism**: Cards with backdrop blur
 - **Smooth animations**: 300ms transitions
@@ -217,6 +232,7 @@ The app follows Material You (Material U) principles:
 ## 📱 Testing Locally
 
 To preview on your phone:
+
 1. Run: `npm run dev`
 2. Find your computer's local IP (e.g., 192.168.1.5)
 3. Open `http://192.168.1.5:5173` on your phone's browser
@@ -227,6 +243,7 @@ To preview on your phone:
 ## 🎉 Summary
 
 Your FlowForge app has been completely redesigned with:
+
 - ✨ Purple accent theme
 - ✨ 3-page onboarding flow
 - ✨ Smooth sliders for difficulty & frequency

@@ -3,6 +3,7 @@
 ## ✅ **COMPLETED FEATURES**
 
 ### **1. Recording Storage**
+
 - ✅ Supabase Storage integration
 - ✅ Server-side upload with authentication
 - ✅ User isolation (files in `userId/` folders)
@@ -10,6 +11,7 @@
 - ✅ Automatic cleanup on delete
 
 ### **2. Recording Library**
+
 - ✅ `/recordings` page with all user's recordings
 - ✅ RecordingCard component with play/download/delete
 - ✅ Statistics display (total, minutes, unique beats)
@@ -18,6 +20,7 @@
 - ✅ Error handling
 
 ### **3. Recording Management**
+
 - ✅ Upload recordings after practice session
 - ✅ Play recordings in browser
 - ✅ Download recordings as WebM files
@@ -25,12 +28,14 @@
 - ✅ Success/error notifications
 
 ### **4. API Endpoints**
+
 - ✅ `POST /api/recordings` - Upload recording
 - ✅ `GET /api/recordings` - List all recordings
 - ✅ `GET /api/recordings/[id]` - Get single recording
 - ✅ `DELETE /api/recordings/[id]` - Delete recording
 
 ### **5. Integration**
+
 - ✅ Practice page auto-saves recordings
 - ✅ Profile page shows recording statistics
 - ✅ Header includes Recordings link
@@ -89,6 +94,7 @@ env.example                    # Supabase env vars
 ## 🎯 **USER FLOWS**
 
 ### **Record & Save**
+
 1. User records practice session
 2. Session auto-stops at 2 minutes
 3. Recording automatically uploaded to Supabase Storage
@@ -96,17 +102,20 @@ env.example                    # Supabase env vars
 5. Success message appears
 
 ### **View Library**
+
 1. User clicks "Recordings" in header
 2. Sees all saved recordings
 3. Can play, download, or delete
 4. Sees statistics
 
 ### **Download**
+
 1. User clicks "Download"
 2. File downloads as `.webm`
 3. Can play in media player
 
 ### **Delete**
+
 1. User clicks "Delete"
 2. Confirms deletion
 3. Recording removed from list
@@ -144,4 +153,3 @@ env.example                    # Supabase env vars
 ---
 
 **Phase 4 is complete!** 🎉
-

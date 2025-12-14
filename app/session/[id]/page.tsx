@@ -42,6 +42,7 @@ export default async function SessionPage({ params }: { params: { id: string } }
   if (!sessionData) return notFound()
 
   // Helper to format session for card
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatForCard = (data: any) => ({
     ...data,
     isLikedByCurrentUser: currentUserId
