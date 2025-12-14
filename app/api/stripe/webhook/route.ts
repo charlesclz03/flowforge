@@ -22,14 +22,9 @@ export async function POST(request: Request) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
 
-        if (!session.metadata?.userId) {
-          console.error('Missing userId in session metadata')
-          break
-        }
-
         // Update user subscription status
         await prisma.user.update({
-          where: { id: session.metadata.userId },
+          where: { id: session.metadata!.userId },
           data: {
             subscriptionStatus: 'active',
             subscriptionId: session.subscription as string,
@@ -67,14 +62,12 @@ export async function POST(request: Request) {
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
 
-        if (invoice.customer) {
-          await prisma.user.update({
-            where: { customerId: invoice.customer as string },
-            data: {
-              subscriptionStatus: 'past_due',
-            },
-          })
-        }
+        await prisma.user.update({
+          where: { customerId: invoice.customer as string },
+          data: {
+            subscriptionStatus: 'past_due',
+          },
+        })
         break
       }
     }

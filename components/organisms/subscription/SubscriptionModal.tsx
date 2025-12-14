@@ -5,35 +5,20 @@ import { X, Check } from 'lucide-react'
 interface SubscriptionModalProps {
   isOpen: boolean
   onClose: () => void
+  onSubscribe?: (plan: 'monthly' | 'annual') => void
 }
 
 /**
  * Subscription modal placeholder component
  * TODO: Implement real Stripe checkout in production
  */
-export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
+export function SubscriptionModal({ isOpen, onClose, onSubscribe }: SubscriptionModalProps) {
   if (!isOpen) return null
 
-  const handleSubscribe = async (plan: 'monthly' | 'annual') => {
-    try {
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ plan }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session')
-      }
-
-      const { url } = await response.json()
-      window.location.href = url
-    } catch (error) {
-      console.error('Checkout error:', error)
-      alert('Checkout failed. Please check your configuration.')
-    }
+  const handleSubscribe = (plan: 'monthly' | 'annual') => {
+    // Placeholder - will integrate Stripe in V2
+    alert(`${plan} subscription checkout will be implemented in V2`)
+    if (onSubscribe) onSubscribe(plan)
   }
 
   return (
@@ -117,7 +102,7 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
         </div>
 
         <p className="text-text-tertiary text-xs text-center pt-2">
-          Secure payments powered by Stripe
+          Stripe integration coming in V2
         </p>
       </div>
     </div>

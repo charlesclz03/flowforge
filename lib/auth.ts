@@ -21,6 +21,10 @@ export const authOptions: NextAuthOptions = {
         session.user.id = user.id
         // @ts-expect-error - user object from adapter has additional fields
         session.user.subscriptionStatus = user.subscriptionStatus
+        // @ts-expect-error - user object from adapter has additional fields
+        session.user.badges = user.badges
+        // @ts-expect-error - user object from adapter has additional fields
+        session.user.socials = user.socials
       }
       return session
     },

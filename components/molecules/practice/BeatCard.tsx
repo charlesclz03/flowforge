@@ -3,15 +3,13 @@
 import { memo } from 'react'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
-import { Music, Check, Crown, Heart } from 'lucide-react'
+import { Music, Check, Crown } from 'lucide-react'
 
 interface BeatCardProps {
   beat: Beat
   isSelected: boolean
   isLocked?: boolean
-  isFavorite?: boolean
   onSelect: (beat: Beat) => void
-  onToggleFavorite?: (beatId: string) => void
   className?: string
 }
 
@@ -19,9 +17,7 @@ export const BeatCard = memo(function BeatCard({
   beat,
   isSelected,
   isLocked = false,
-  isFavorite = false,
   onSelect,
-  onToggleFavorite,
   className,
 }: BeatCardProps) {
   return (
@@ -68,26 +64,6 @@ export const BeatCard = memo(function BeatCard({
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="flex items-center space-x-2">
-        {/* Favorite Button (Stop propagation to prevent selection) */}
-        {onToggleFavorite && !isLocked && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onToggleFavorite(beat.id)
-            }}
-            className={cn(
-              'p-2 rounded-full transition-colors z-10',
-              isFavorite
-                ? 'text-red-500 hover:bg-red-500/10'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-white/5'
-            )}
-          >
-            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-          </button>
-        )}
 
         {beat.isPremium && (
           <div className="flex items-center space-x-1.5 px-2 py-1 rounded-full bg-accent-orange/20 text-accent-orange text-xs font-medium">

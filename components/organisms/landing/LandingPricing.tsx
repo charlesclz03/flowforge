@@ -40,8 +40,8 @@ export function LandingPricing() {
         </div>
 
         <div className="relative rounded-2xl border border-stroke-glow/60 bg-gradient-to-br from-accent-purple/10 via-accent-purple/5 to-accent-violet/10 p-8 backdrop-blur-light shadow-glow">
-          <div className="absolute -top-3 right-6 rounded-full bg-accent-purple px-3 py-1 text-xs font-semibold text-white">
-            Live
+          <div className="absolute -top-3 right-6 rounded-full bg-accent-purple px-3 py-1 text-xs font-semibold text-black">
+            Coming Soon
           </div>
           <h3 className="text-2xl font-medium text-white">Premium</h3>
           <p className="mt-2 text-4xl font-light text-white">
@@ -73,10 +73,10 @@ export function LandingPricing() {
             ))}
           </ul>
           <button
-            onClick={() => (window.location.href = '/profile')}
-            className="btn-primary mt-8 w-full rounded-full bg-gradient-pulse px-8 py-3 text-center text-sm font-semibold text-white shadow-neon transition hover:shadow-glow"
+            disabled
+            className="btn-primary mt-8 w-full rounded-full bg-gradient-pulse px-8 py-3 text-center text-sm font-semibold text-black shadow-neon transition hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Get Started
+            Coming Soon
           </button>
         </div>
       </div>

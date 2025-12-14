@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition, useCallback } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { X, Send } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Avatar } from '@/components/atoms/Avatar'
@@ -40,7 +40,13 @@ export function CommentsDrawer({
   const [isSubmitting, startTransition] = useTransition()
   const { data: session } = useSession()
 
-  const loadComments = useCallback(async () => {
+  useEffect(() => {
+    if (isOpen) {
+      loadComments()
+    }
+  }, [isOpen, sessionId])
+
+  const loadComments = async () => {
     setIsLoading(true)
     try {
       const data = await getComments(sessionId)
@@ -50,13 +56,7 @@ export function CommentsDrawer({
     } finally {
       setIsLoading(false)
     }
-  }, [sessionId])
-
-  useEffect(() => {
-    if (isOpen) {
-      loadComments()
-    }
-  }, [isOpen, sessionId, loadComments])
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

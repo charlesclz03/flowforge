@@ -12,6 +12,7 @@ import {
   StatsSection,
   QuickActions,
 } from '@/components/organisms/profile'
+import { BadgesDisplay } from '@/components/organisms/profile/BadgesDisplay'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
@@ -115,11 +116,17 @@ export default function ProfilePage() {
       accountInfo={<AccountInfo user={session.user} />}
       subscription={<SubscriptionSection />}
       security={<SecuritySection />}
-      stats={<StatsSection recordings={recordings} isLoading={isLoadingRecordings} />}
+      stats={
+        <div className="space-y-6">
+          <StatsSection recordings={recordings} isLoading={isLoadingRecordings} />
+          <BadgesDisplay badges={session.user.badges || []} />
+        </div>
+      }
       quickActions={
         <div className="space-y-8">
           <QuickActions />
-          <SocialsForm />
+          {/* @ts-expect-error - socials type mapping needs improvement but data flows */}
+          <SocialsForm initialSocials={session.user.socials || {}} />
         </div>
       }
     />

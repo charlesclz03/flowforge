@@ -158,3 +158,5 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
     </div>
   )
 }
+
+

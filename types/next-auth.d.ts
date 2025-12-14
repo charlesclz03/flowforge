@@ -5,6 +5,8 @@ declare module 'next-auth' {
     user: {
       id: string
       subscriptionStatus?: string | null
+      badges?: string[]
+      socials?: any
     } & DefaultSession['user']
   }
 }

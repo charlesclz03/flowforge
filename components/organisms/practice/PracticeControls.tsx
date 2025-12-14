@@ -151,7 +151,7 @@ export function PracticeControls({
         </div>
 
         {/* Play Button with Timer Ring - Responsive size */}
-        <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] flex items-center justify-center">
+        <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] flex items-center justify-center relative">
           <PlayButton
             isPlaying={isPlaying}
             progress={intervalProgress}
@@ -159,6 +159,25 @@ export function PracticeControls({
             disabled={!selectedBeat || isLoading}
             size={playButtonSize}
           />
+          
+          {/* Panic Button */}
+          {isPlaying && onSkipWord && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onSkipWord()
+              }}
+              className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 group"
+              title="Skip Word (-500 pts)"
+            >
+              <div className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                <span className="text-xl">⚠️</span>
+              </div>
+              <span className="text-[10px] text-red-500/70 font-medium uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                Panic
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </Card>

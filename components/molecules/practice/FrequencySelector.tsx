@@ -11,15 +11,15 @@ interface FrequencySelectorProps {
 }
 
 const frequencyLabels: Record<number, string> = {
-  2: 'Every 2 bars',
   4: 'Every 4 bars',
   8: 'Every 8 bars',
+  16: 'Every 16 bars',
 }
 
 const frequencyDescriptions: Record<number, string> = {
-  2: 'New word every 2 bars - rapid fire',
   4: 'New word every 4 bars - fast-paced',
   8: 'New word every 8 bars - balanced',
+  16: 'New word every 16 bars - relaxed',
 }
 
 export function FrequencySelector({
@@ -33,7 +33,7 @@ export function FrequencySelector({
     onChange(SESSION_CONFIG.FREQUENCY_OPTIONS[index])
   }
 
-  const currentIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(value as 2 | 4 | 8)
+  const currentIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(value as 4 | 8 | 16)
 
   return (
     <div className={cn('space-y-4', className)}>

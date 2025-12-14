@@ -6,7 +6,6 @@ import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Swords } from 'lucide-react'
-import { DuelVotingControls } from '@/components/molecules/social/DuelVotingControls'
 
 async function getSession(id: string) {
   return prisma.freestyleSession.findUnique({
@@ -43,7 +42,6 @@ export default async function SessionPage({ params }: { params: { id: string } }
   if (!sessionData) return notFound()
 
   // Helper to format session for card
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatForCard = (data: any) => ({
     ...data,
     isLikedByCurrentUser: currentUserId
@@ -55,25 +53,6 @@ export default async function SessionPage({ params }: { params: { id: string } }
   const original = sessionData.parent
   const challenger = sessionData
 
-  // Voting Logic
-  const votingState = {
-    defenderVotes: 0,
-    challengerVotes: 0,
-    userVotedForId: null as string | null,
-  }
-
-  if (isDuel && original) {
-    const votes = await prisma.duelVote.findMany({
-      where: { duelId: sessionData.id },
-    })
-    votingState.defenderVotes = votes.filter((v) => v.votedForId === original.id).length
-    votingState.challengerVotes = votes.filter((v) => v.votedForId === sessionData.id).length
-    if (currentUserId) {
-      const myVote = votes.find((v) => v.voterId === currentUserId)
-      if (myVote) votingState.userVotedForId = myVote.votedForId
-    }
-  }
-
   return (
     <Container className="py-8 max-w-4xl">
       <Link
@@ -84,7 +63,7 @@ export default async function SessionPage({ params }: { params: { id: string } }
         Back to Feed
       </Link>
 
-      {isDuel && original ? (
+      {isDuel ? (
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-8 justify-center">
             <Swords size={32} className="text-secondary-cyan" />
@@ -118,22 +97,6 @@ export default async function SessionPage({ params }: { params: { id: string } }
                 <SessionFeedCard session={formatForCard(challenger)} />
               </div>
             </div>
-          </div>
-
-          {/* Voting Controls - Pass Client Component */}
-          <div className="max-w-xl mx-auto mt-8 bg-background-card/50 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
-            <h3 className="text-center text-text-secondary mb-4 uppercase text-xs tracking-widest">
-              Cast Your Vote
-            </h3>
-            <DuelVotingControls
-              duelId={sessionData.id}
-              defenderId={original.id}
-              challengerId={challenger.id}
-              defenderVotes={votingState.defenderVotes}
-              challengerVotes={votingState.challengerVotes}
-              userVotedForId={votingState.userVotedForId}
-              isLoggedIn={!!currentUserId}
-            />
           </div>
         </div>
       ) : (

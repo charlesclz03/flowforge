@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { stripe, PLANS } from '@/lib/stripe'
-import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
   try {
@@ -12,8 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { plan } = body
+    const { plan } = await request.json()
 
     if (!plan || !PLANS[plan as keyof typeof PLANS]) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
@@ -21,35 +19,8 @@ export async function POST(request: Request) {
 
     const priceId = PLANS[plan as keyof typeof PLANS].priceId
 
-    // 1. Get or create customer
-    const dbUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
-    })
-
-    if (!dbUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
-    }
-
-    let customerId = dbUser.customerId
-
-    if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: session.user.email!,
-        name: session.user.name || undefined,
-        metadata: {
-          userId: session.user.id,
-        },
-      })
-      customerId = customer.id
-      await prisma.user.update({
-        where: { id: session.user.id },
-        data: { customerId },
-      })
-    }
-
-    // 2. Create Checkout Session
+    // Create Stripe Checkout Session
     const checkoutSession = await stripe.checkout.sessions.create({
-      customer: customerId,
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: [
@@ -58,16 +29,18 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
+      customer_email: session.user.email!,
+      client_reference_id: session.user.id,
       metadata: {
         userId: session.user.id,
       },
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile?canceled=true`,
     })
 
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
-    console.error('[STRIPE_CHECKOUT]', error)
-    return NextResponse.json({ error: 'Internal Error' }, { status: 500 })
+    console.error('Stripe checkout error:', error)
+    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
   }
 }

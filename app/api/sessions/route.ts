@@ -55,9 +55,6 @@ export async function POST(request: Request) {
       difficulty,
       userId: session.user.id,
       storageUrl,
-      score: 0,
-      vibe: null,
-      parentId: null,
     })
     if (!result.success) {
       return NextResponse.json(

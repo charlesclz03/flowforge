@@ -22,6 +22,7 @@ import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatSelector } from '@/components/organisms/practice/BeatSelector'
 import { useWakeLock } from '@/hooks/useWakeLock'
 import { analyzeAudio } from '@/lib/scoring'
+import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
 
 import { Beat } from '@/types/database'
 
@@ -43,6 +44,7 @@ export default function PracticePage() {
   const [currentWord, setCurrentWord] = useState<string>('')
   const [wordList, setWordList] = useState<string[]>([])
   const [wordIndex, setWordIndex] = useState(0) // Track index for Golden Prompt
+  const [panicCount, setPanicCount] = useState(0)
   const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
   const [playButtonSize, setPlayButtonSize] = useState(180)
@@ -166,7 +168,11 @@ export default function PracticePage() {
             )
 
             // Analyze Audio (Scoring)
-            const { score, vibe } = await analyzeAudio(blob)
+            const { score: rawScore, vibe } = await analyzeAudio(blob)
+
+            // Apply Panic Penalty
+            const penalty = panicCount * 500
+            const score = Math.max(0, rawScore - penalty)
 
             // Word Vault: Collect used words
             const usedWords = wordList.slice(0, wordIndex + 1)
@@ -245,6 +251,7 @@ export default function PracticePage() {
       challengeId,
       wordList,
       wordIndex,
+      panicCount,
     ]
   )
 
@@ -297,6 +304,7 @@ export default function PracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBeat?.id])
 
+  // No change needed here if start handles it.
   // Fetch words when beat and difficulty are selected
   useEffect(() => {
     if (!selectedBeat) return
@@ -388,6 +396,7 @@ export default function PracticePage() {
       if (wordList.length > 0 && !currentWord) {
         setCurrentWord(wordList[0])
       }
+      setPanicCount(0) // Reset panic count for new session
 
       await beatPlayer.play()
 
@@ -606,6 +615,7 @@ export default function PracticePage() {
 
   return (
     <OnboardingLayout showBackButton onBack={() => router.push('/difficultyselection')}>
+      <FirstVisitOverlay />
       <PracticeTemplate
         pageHeader={
           <PageHeader
@@ -666,9 +676,17 @@ export default function PracticePage() {
                 // Skip logic
                 setCurrentWord(wordList[(wordIndex + 1) % wordList.length])
                 setWordIndex((prev) => prev + 1)
-                // Visual feedback for penalty?
-                // Ideally we track score deduction in state
-                toast.error('Panic! -500 Points', { icon: '😱' })
+                setPanicCount((prev) => prev + 1)
+
+                // Visual feedback for penalty
+                toast.error('Panic! -500 Points', {
+                  icon: '😱',
+                  style: {
+                    background: '#1F1F1F',
+                    color: '#EF4444',
+                    border: '1px solid #EF4444',
+                  },
+                })
               }}
             />
           ) : null

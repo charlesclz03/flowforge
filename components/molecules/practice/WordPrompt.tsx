@@ -51,9 +51,9 @@ export function WordPrompt({ word, show, className, isGolden }: WordPromptProps)
           className={cn(
             'text-3xl sm:text-4xl font-light tracking-tight text-center',
             isGolden
-              ? 'text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]'
+              ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]'
               : 'text-gradient',
-            'drop-shadow-lg'
+            !isGolden && 'drop-shadow-lg'
           )}
         >
           {displayWord.toUpperCase()}

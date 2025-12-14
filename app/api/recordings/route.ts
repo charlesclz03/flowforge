@@ -101,24 +101,18 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check Badges (Async / Fire & Forget to not block response? Or await?)
-    // Await is safer to return Badge info if we want to show a toast.
+    // Check Badges
     try {
-      const { checkBadges } = await import('@/lib/gamification')
-      const earnedBadges = await checkBadges({
-        userId: session.user.id,
-        durationSeconds,
-        difficulty,
-        frequency,
-        beatId,
-      })
+      if (sessionResult.data?.id) {
+        const { checkBadgeConditions } = await import('@/lib/gamification/badges')
+        const earnedBadges = await checkBadgeConditions(session.user.id, sessionResult.data.id)
 
-      if (earnedBadges.length > 0) {
-        console.log(`User ${session.user.id} earned badges:`, earnedBadges)
-        // Ideally we return this in the response
-        // We can attach it to the session response if the frontend handles it
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(sessionResult.data as any).newBadges = earnedBadges
+        if (earnedBadges && earnedBadges.length > 0) {
+          console.log(`User ${session.user.id} earned badges:`, earnedBadges)
+          // Attach to response so frontend can show a toast/confetti
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(sessionResult.data as any).newBadges = earnedBadges
+        }
       }
     } catch (e) {
       console.error('Badge check failed', e)

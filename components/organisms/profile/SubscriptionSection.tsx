@@ -10,7 +10,7 @@ export function SubscriptionSection() {
   const { data: session } = useSession()
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly')
 
-  // Session type extension handled automatically now
+  // @ts-expect-error - session type extension
   const isPro =
     session?.user?.subscriptionStatus === 'active' ||
     session?.user?.subscriptionStatus === 'trialing'

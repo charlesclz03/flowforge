@@ -57,7 +57,7 @@ Action: Ready for Development
 
 - **Vocal Mixer:** Volume slider (0.5x \- 2.0x) in Review stage.
 - **Studio FX:** Toggle for ConvolverNode (Reverb) on vocals.
-- **Audio Watermark**: On **Playback/Export** (Free Tier), programmatically mix a "FlowForge" sonic brand (oscillator chime) into the audio stream.
+
 - **Manual Nudge**: A slider to shift vocal timing +/- 100ms in the Review stage (Safety net for latency).
 
 ### **2.3 Safety Nets**

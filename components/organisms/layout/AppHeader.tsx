@@ -7,9 +7,8 @@ import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Container } from '@/components/atoms/Container'
 import { SignInButton } from '@/components/molecules/auth/SignInButton'
-import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
-import { ProfileDropdown } from '@/components/organisms/layout/ProfileDropdown'
-import { isAdmin } from '@/lib/constants/auth'
+import { UserAvatar } from '@/components/molecules/auth/UserAvatar'
+import { SettingsDrawer } from '@/components/organisms/settings/SettingsDrawer'
 
 interface AppHeaderProps {
   showBackButton?: boolean
@@ -59,16 +58,6 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
               <Settings size={20} />
             </button>
 
-            {isAuthenticated && isAdmin(session?.user?.email) && (
-              <Link
-                href="/admin/upload-beat"
-                className="p-2 text-text-secondary hover:text-accent-red transition-colors rounded-full hover:bg-white/5"
-                aria-label="Admin Upload"
-              >
-                <Music size={20} className="text-accent-red" />
-              </Link>
-            )}
-
             <Link
               href="/leaderboard"
               className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
@@ -77,9 +66,16 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
               <Trophy size={20} />
             </Link>
 
-            {isAuthenticated && session?.user ? <ProfileDropdown /> : <SignInButton mode="icon" />}
-
-            <SettingsDropdown isOpen={showSettings} onClose={() => setShowSettings(false)} />
+            {isAuthenticated && session?.user ? (
+              <Link
+                href="/profile"
+                className="inline-flex items-center rounded-full bg-background-card/70 p-1.5 hover:bg-background-card transition-colors"
+              >
+                <UserAvatar mode="avatarOnly" />
+              </Link>
+            ) : (
+              <SignInButton mode="icon" />
+            )}
           </div>
 
           {/* Centered FlowForge title - always navigates to landing page */}
@@ -96,6 +92,8 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
           </Link>
         </div>
       </Container>
+
+      <SettingsDrawer isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </header>
   )
 }

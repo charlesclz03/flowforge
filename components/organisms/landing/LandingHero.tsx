@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-
+import { SignInButton } from '@/components/molecules/auth/SignInButton'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { StatCard } from '@/components/molecules/display/StatCard'
 
@@ -59,12 +59,12 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
                   Practice Here
                 </Link>
               ) : (
-                <Link
-                  href="/howitworks"
-                  className="w-full rounded-full bg-white px-8 py-3 text-center text-base font-medium text-black transition hover:bg-white/90 sm:w-auto"
+                <SignInButton
+                  callbackUrl="/howitworks"
+                  className="w-full rounded-full px-8 py-3 text-center text-base font-medium sm:w-auto"
                 >
                   Practice Here
-                </Link>
+                </SignInButton>
               )}
             </div>
           </div>

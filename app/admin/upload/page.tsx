@@ -70,7 +70,6 @@ export default function AdminUploadPage() {
         isPremium: false,
       })
       setFile(null)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message, { id: toastId })
     } finally {
