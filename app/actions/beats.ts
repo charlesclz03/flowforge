@@ -66,7 +66,7 @@ export async function getFavoriteBeatIds() {
       },
     })
 
-    return favorites.map((f) => f.beatId)
+    return favorites.map((f: { beatId: string }) => f.beatId)
   } catch (error) {
     console.error('Failed to fetch favorites:', error)
     return []
