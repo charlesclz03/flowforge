@@ -9,6 +9,11 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { FollowButton } from '@/components/molecules/social/FollowButton'
 import { FreestyleSession, Beat } from '@prisma/client'
+// ... imports
+import { MessageButton } from '@/components/molecules/social/MessageButton'
+import { ShareProfileButton } from '@/components/molecules/social/ShareProfileButton'
+
+// ... inside component JSX
 
 interface SocialLinks {
   instagram?: string
@@ -69,6 +74,35 @@ async function getUser(username: string) {
   })
 
   return user
+}
+
+export async function generateMetadata({ params }: ProfilePageProps) {
+  const user = await getUser(params.username)
+
+  if (!user) {
+    return {
+      title: 'User Not Found | FlowForge',
+    }
+  }
+
+  const title = `${user.name || 'Anonymous'}'s Profile | FlowForge`
+  const description = `Check out ${user.name || 'Anonymous'}'s ${user._count.freestyleSessions} flows on FlowForge. Join the cypher!`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: user.image ? [{ url: user.image }] : [],
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: user.image ? [user.image] : [],
+    },
+  }
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
@@ -193,6 +227,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 Edit Profile
               </Button>
             )}
+
+            {!isOwnProfile && currentUserId && (
+              <MessageButton targetUserId={user.id} currentUserId={currentUserId} />
+            )}
+            <ShareProfileButton username={user.name || 'User'} userId={user.id} />
           </div>
         </div>
       </Card>

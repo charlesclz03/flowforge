@@ -1,6 +1,7 @@
 import { memo, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { Spinner } from './Spinner'
+import { useHaptics } from '@/hooks/useHaptics'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
@@ -9,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  disableHaptics?: boolean
 }
 
 export const Button = memo(
@@ -23,10 +25,14 @@ export const Button = memo(
       children,
       className,
       disabled,
+      disableHaptics = false,
+      onClick,
       ...props
     },
     ref
   ) {
+    const { bump } = useHaptics()
+
     const variants = {
       primary: 'bg-gradient-pulse text-black shadow-neon hover:shadow-glow',
       secondary: 'bg-background-elevated text-text-primary hover:bg-opacity-80 hover:shadow-soft',
@@ -40,6 +46,13 @@ export const Button = memo(
       sm: 'px-4 py-2 text-sm',
       md: 'px-6 py-3 text-base',
       lg: 'px-8 py-4 text-lg',
+    }
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!disableHaptics && !disabled && !isLoading) {
+        bump()
+      }
+      onClick?.(e)
     }
 
     return (
@@ -56,6 +69,7 @@ export const Button = memo(
           className
         )}
         disabled={disabled || isLoading}
+        onClick={handleClick}
         {...props}
       >
         {isLoading ? (

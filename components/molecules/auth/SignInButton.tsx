@@ -8,7 +8,7 @@ interface SignInButtonProps {
   className?: string
   children?: React.ReactNode
   callbackUrl?: string
-  mode?: 'full' | 'icon'
+  mode?: 'full' | 'icon' | 'link'
 }
 
 function SignInButtonContent({
@@ -38,9 +38,11 @@ function SignInButtonContent({
   const baseClasses =
     mode === 'icon'
       ? 'inline-flex items-center justify-center rounded-full bg-white/10 p-1.5 hover:bg-white/20 transition-colors'
-      : 'inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 transition-colors'
+      : mode === 'link'
+        ? 'inline-flex items-center justify-center text-sm font-semibold text-white hover:text-accent-purple transition-colors bg-transparent shadow-none p-0'
+        : 'inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 transition-colors'
 
-  const showText = mode === 'full'
+  const showText = mode === 'full' || mode === 'link'
 
   return (
     <button onClick={handleSignIn} className={`${baseClasses} ${className}`}>

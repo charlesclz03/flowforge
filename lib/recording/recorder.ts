@@ -243,6 +243,13 @@ export class AudioRecorder {
   }
 
   /**
+   * Get the active media stream
+   */
+  getStream(): MediaStream | null {
+    return this.stream
+  }
+
+  /**
    * Get supported mime type
    */
   private getSupportedMimeType(preferred?: string): string {

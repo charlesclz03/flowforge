@@ -48,3 +48,7 @@ prisma/migrations/
 # Temporary files
 DOCS_TEXT/
 
+
+.vercel
+.env.debug 
+.env.prod 

@@ -16,14 +16,31 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 
 type Frequency = 4 | 8 | 16
 
+import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
+import { useSession } from 'next-auth/react'
+
 export default function DifficultySelectionPage() {
   const router = useRouter()
+  const { data: session } = useSession()
   const { error, handleError, clearError } = useErrorHandler()
-  const { selectedBeat, frequency, difficulty, setBeat, setFrequency, setDifficulty } =
-    usePracticeSession()
+  const {
+    selectedBeat,
+    frequency,
+    difficulty,
+    setBeat,
+    setFrequency,
+    setDifficulty,
+    mode,
+    setMode,
+  } = usePracticeSession()
+
+  const isPro =
+    session?.user?.subscriptionStatus === 'active' ||
+    session?.user?.subscriptionStatus === 'trialing'
 
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoadingBeats, setIsLoadingBeats] = useState(true)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
 
   // Fetch beats for selection
   useEffect(() => {
@@ -61,6 +78,30 @@ export default function DifficultySelectionPage() {
 
         {/* Configuration Sliders */}
         <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+          {/* Mode Toggle */}
+          <div className="flex bg-white/5 p-1 rounded-xl">
+            <button
+              onClick={() => setMode('solo')}
+              className={`flex-1 py-3 rounded-lg font-bold transition-all ${
+                mode === 'solo'
+                  ? 'bg-accent-purple text-white shadow-lg'
+                  : 'text-text-secondary hover:text-white'
+              }`}
+            >
+              Solo
+            </button>
+            <button
+              onClick={() => setMode('cypher')}
+              className={`flex-1 py-3 rounded-lg font-bold transition-all ${
+                mode === 'cypher'
+                  ? 'bg-accent-cyan text-black shadow-lg'
+                  : 'text-text-secondary hover:text-white'
+              }`}
+            >
+              Pass the Mic (2P)
+            </button>
+          </div>
+
           <DifficultySelector
             value={difficulty || SESSION_CONFIG.DEFAULT_DIFFICULTY}
             onChange={setDifficulty}
@@ -76,6 +117,8 @@ export default function DifficultySelectionPage() {
             selectedBeat={selectedBeat}
             onSelect={setBeat}
             disabled={isLoadingBeats}
+            onLockedSelect={() => setShowPremiumModal(true)}
+            isPro={isPro}
           />
         </div>
 
@@ -107,6 +150,12 @@ export default function DifficultySelectionPage() {
           </div>
         )}
       </div>
+
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        trigger="beat"
+      />
     </OnboardingLayout>
   )
 }

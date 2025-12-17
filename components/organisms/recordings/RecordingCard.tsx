@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import Link from 'next/link'
-import { Download, Trash2, Play, Pause, Music } from 'lucide-react'
+import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
+import { VideoGenerator } from '@/components/features/export/VideoGenerator'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
@@ -28,6 +29,7 @@ export const RecordingCard = memo(function RecordingCard({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [showVideoExport, setShowVideoExport] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
 
   // Memoize difficulty labels to avoid recreating on every render
@@ -196,8 +198,29 @@ export const RecordingCard = memo(function RecordingCard({
           >
             Delete
           </Button>
+
+          {/* Export Button */}
+          {recording.storageUrl && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowVideoExport(true)}
+              leftIcon={<Video size={16} />}
+            >
+              Export
+            </Button>
+          )}
         </div>
       </div>
+
+      {showVideoExport && recording.storageUrl && (
+        <VideoGenerator
+          audioUrl={recording.storageUrl}
+          title={recording.title}
+          artist={recording.userId || 'User'} // We might need name if available or fetch it
+          onClose={() => setShowVideoExport(false)}
+        />
+      )}
     </Card>
   )
 })

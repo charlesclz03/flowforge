@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     const genre = formData.get('genre') as string
     const difficulty = formData.get('difficulty') as string
     const isPremium = formData.get('isPremium') === 'true'
+    const duration = parseInt(formData.get('duration') as string) || 0
 
     if (!file || !title || !artistName || !bpm) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
         difficulty,
         isPremium,
         storageUrl: publicUrl,
-        duration: 0, // Should be calculated, but acceptable to be 0 for now as we don't have metadata parser here easily
+        duration: duration,
       },
     })
 

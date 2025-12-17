@@ -4,21 +4,29 @@ import { useState, useRef, useEffect } from 'react'
 import { Beat } from '@/types/database'
 import { Crown, Check, ChevronDown, Music } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/atoms/Skeleton'
 
 interface BeatDropdownProps {
   beats: Beat[]
   selectedBeat: Beat | null
   onSelect: (beat: Beat) => void
+  onLockedSelect?: () => void
   disabled?: boolean
+  isPro?: boolean
+  isLoading?: boolean
 }
 
 export function BeatDropdown({
   beats,
   selectedBeat,
   onSelect,
+  onLockedSelect,
   disabled = false,
+  isPro = false,
+  isLoading = false,
 }: BeatDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close when clicking outside
@@ -32,6 +40,15 @@ export function BeatDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        <div className="h-7 w-12 bg-white/10 rounded animate-pulse" /> {/* Label skeleton */}
+        <Skeleton className="h-[50px] w-full rounded-xl bg-white/5 border border-white/5" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-3" ref={dropdownRef}>
       <label className="text-lg font-medium text-white">Beat</label>
@@ -39,6 +56,7 @@ export function BeatDropdown({
       <div className="relative">
         {/* Trigger Button */}
         <button
+          id="tour-beat-select"
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
@@ -79,16 +97,29 @@ export function BeatDropdown({
             <div className="p-2 space-y-1">
               {beats.map((beat) => {
                 const isSelected = selectedBeat?.id === beat.id
+                const isLocked = beat.isPremium && !isPro
                 return (
                   <button
                     key={beat.id}
                     onClick={() => {
+                      if (isLocked) {
+                        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                          navigator.vibrate(50) // Heavier bump for "Locked"
+                        }
+                        onLockedSelect?.()
+                        setIsOpen(false)
+                        return
+                      }
+                      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                        navigator.vibrate(10)
+                      }
                       onSelect(beat)
                       setIsOpen(false)
                     }}
                     className={cn(
                       'w-full flex items-center justify-between rounded-lg p-3 transition-colors',
-                      isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5'
+                      isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5',
+                      isLocked && 'opacity-70 hover:bg-accent-purple/5'
                     )}
                   >
                     <div className="flex items-center gap-3">

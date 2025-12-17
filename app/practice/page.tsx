@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { PracticeTemplate } from '@/components/templates'
 import { PageHeader } from '@/components/organisms/common'
-import { PracticeControls } from '@/components/organisms/practice'
+import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
@@ -19,12 +19,16 @@ import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
-import { BeatSelector } from '@/components/organisms/practice/BeatSelector'
+import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
-import { analyzeAudio } from '@/lib/scoring'
+// import { analyzeAudio } from '@/lib/scoring' // Unused now
 import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
+import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
+import { SessionSummaryModal } from '@/components/molecules/practice/SessionSummaryModal'
+import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
 
 import { Beat } from '@/types/database'
+import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 
 export default function PracticePage() {
   const router = useRouter()
@@ -38,64 +42,52 @@ export default function PracticePage() {
     // setDifficulty, // Unused
     isTTSEnabled,
     ttsVolume,
+    isLoaded,
+    mode,
   } = usePracticeSession()
   const [currentWord, setCurrentWord] = useState<string>('')
   const [wordList, setWordList] = useState<string[]>([])
   const [wordIndex, setWordIndex] = useState(0) // Track index for Golden Prompt
-  const [panicCount, setPanicCount] = useState(0)
   const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
-  const [playButtonSize, setPlayButtonSize] = useState(180)
+
   const [showGuestModal, setShowGuestModal] = useState(false)
+
+  // Derived state
+  const usedWords = wordList.slice(0, wordIndex + 1)
+
+  // Premium Modal State
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [premiumTrigger, setPremiumTrigger] = useState<'recording' | 'beat' | 'history'>('beat')
+
+  // Session Summary / Vibe Check
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [sessionSummary, setSessionSummary] = useState<any>(null)
+
   const { error, handleError, clearError } = useErrorHandler()
   const forceUpdate = useForceUpdate()
   const { requestLock, releaseLock } = useWakeLock()
+  // ... inside PracticePage
   const [beats, setBeats] = useState<Beat[]>([])
+  const [isLoadingBeats, setIsLoadingBeats] = useState(true)
 
-  // Handle responsive play button size
-  // Beat Switching Logic
+  // ...
 
-  const handleBeatChange = (newBeat: Beat) => {
-    if (isRecording) {
-      beatPlayer.stop()
-      stopRecording()
-      setBeat(newBeat)
-      return
+  // Fetch Beats
+  const fetchBeats = async () => {
+    try {
+      const res = await fetch('/api/beats')
+      const data = await res.json()
+      if (data.beats) setBeats(data.beats)
+    } catch (err) {
+      console.error('Failed to load beats', err)
+    } finally {
+      setIsLoadingBeats(false)
     }
-    stopPlayback()
-    setBeat(newBeat)
   }
+  fetchBeats()
 
-  useEffect(() => {
-    const updateSize = () => {
-      setPlayButtonSize(window.innerWidth >= 640 ? 200 : 180)
-    }
-    updateSize()
-    window.addEventListener('resize', updateSize)
-
-    // Fetch Beats
-    const fetchBeats = async () => {
-      try {
-        const res = await fetch('/api/beats')
-        const data = await res.json()
-        if (data.beats) setBeats(data.beats)
-      } catch (err) {
-        console.error('Failed to load beats', err)
-      }
-    }
-    fetchBeats()
-
-    // Headphone Toast
-    const toastId = setTimeout(() => {
-      // toast('🎧 Headphones recommended for studio quality', { icon: '🎧' })
-      // Need to import toast first.
-    }, 1000)
-
-    return () => {
-      window.removeEventListener('resize', updateSize)
-      clearTimeout(toastId)
-    }
-  }, [])
+  // ...
 
   // Determine if user is pro
   const isPro =
@@ -112,6 +104,11 @@ export default function PracticePage() {
     setCurrentWord(wordList[0] || '')
     forceUpdate()
   }, [beatPlayer, wordList, forceUpdate, releaseLock])
+
+  const handleBeatChange = (beat: Beat) => {
+    setBeat(beat)
+    stopPlayback()
+  }
 
   // Challenge Logic
   const searchParams =
@@ -147,10 +144,27 @@ export default function PracticePage() {
     }
   }, [challengeId, setBeat])
 
+  // Guest Save Warning: Prevent accidental refresh/close during recording
+
   const handleRecordingComplete = useCallback(
     async (blob: Blob, recordedDuration: number) => {
-      if (blob.size === 0) {
-        console.warn('Recording blob is empty, not saving')
+      // Minimum size threshold (e.g., 1KB) to filter out "silence" or failed inits
+      if (blob.size < 1000) {
+        console.warn('Recording blob is empty or too small', blob.size)
+        toast.error('No audio detected. Please check your microphone.', {
+          icon: '🎤',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        })
+        return
+      }
+
+      // Duration threshold (prevent accidental clicks)
+      if (recordedDuration < 2) {
+        toast.error('Recording too short. Keep flowing!', { icon: 'too-short' })
         return
       }
 
@@ -164,15 +178,24 @@ export default function PracticePage() {
               measuredDuration > 0 ? measuredDuration : fallbackDuration
             )
 
-            // Analyze Audio (Scoring)
-            const { score: rawScore, vibe } = await analyzeAudio(blob)
-
-            // Apply Panic Penalty
-            const penalty = panicCount * 500
-            const score = Math.max(0, rawScore - penalty)
-
-            // Word Vault: Collect used words
-            const usedWords = wordList.slice(0, wordIndex + 1)
+            // Perform AI Vibe Check
+            let vibeResult = { vibe: 'Freestyle Flow', score: 0, description: 'Nice session!' }
+            try {
+              const vibeRes = await fetch('/api/ai/vibe-check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  words: usedWords,
+                  bpm: selectedBeat.bpm,
+                  title: selectedBeat.title,
+                }),
+              })
+              if (vibeRes.ok) {
+                vibeResult = await vibeRes.json()
+              }
+            } catch (err) {
+              console.warn('Vibe check failed', err)
+            }
 
             const formData = new FormData()
             formData.append('audio', blob, 'recording.webm')
@@ -181,8 +204,8 @@ export default function PracticePage() {
             formData.append('durationSeconds', actualDuration.toString())
             formData.append('frequency', frequency.toString())
             formData.append('difficulty', difficulty.toString())
-            formData.append('score', score.toString())
-            formData.append('vibe', vibe || '')
+            formData.append('score', vibeResult.score.toString()) // Use Vibe Score
+            formData.append('vibe', vibeResult.vibe)
             formData.append('wordsUsed', JSON.stringify(usedWords))
 
             if (challengeId) {
@@ -200,8 +223,32 @@ export default function PracticePage() {
               throw new Error(data.error || 'Failed to save recording')
             }
 
-            setSaveMessage('Recording saved successfully! View it in your recordings library.')
-            setTimeout(() => setSaveMessage(null), 5000)
+            // Show Session Summary Modal
+            setSessionSummary({
+              score: vibeResult.score,
+              vibe: vibeResult.vibe,
+              description: vibeResult.description,
+              wordCount: usedWords.length,
+              duration: actualDuration,
+            })
+
+            // setSaveMessage('Recording saved successfully! View it in your recordings library.')
+            // setTimeout(() => setSaveMessage(null), 5000)
+
+            // Check for new badges
+            if (data.session?.newBadges && Array.isArray(data.session.newBadges)) {
+              data.session.newBadges.forEach((badge: string) => {
+                toast.success(`Achievement Unlocked: ${badge}!`, {
+                  icon: '🏆',
+                  duration: 5000,
+                  style: {
+                    background: 'linear-gradient(to right, #6b21a8, #c026d3)',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                  },
+                })
+              })
+            }
           } catch (err) {
             handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
           }
@@ -239,17 +286,7 @@ export default function PracticePage() {
         }
       }
     },
-    [
-      selectedBeat,
-      session?.user,
-      frequency,
-      difficulty,
-      handleError,
-      challengeId,
-      wordList,
-      wordIndex,
-      panicCount,
-    ]
+    [selectedBeat, session?.user, frequency, difficulty, handleError, challengeId, usedWords]
   )
 
   const {
@@ -258,6 +295,7 @@ export default function PracticePage() {
     start: startRecording,
     stop: stopRecording,
     resume: resumeRecording,
+    stream, // New stream prop
   } = useRecording({
     maxDuration: isPro ? null : 120, // 2 minutes for free, unlimited for pro
     onComplete: (blob, duration) => handleRecordingComplete(blob, duration),
@@ -265,7 +303,8 @@ export default function PracticePage() {
       stopPlayback() // Stop the beat and UI
       // Note: Recorder stops automatically
       if (!isPro) {
-        setSaveMessage('Free limit reached (2m). Upgrade for unlimited recording!')
+        setPremiumTrigger('recording')
+        setShowPremiumModal(true)
       }
     },
   })
@@ -278,10 +317,14 @@ export default function PracticePage() {
 
   // Redirect to setup if there is no configured beat
   useEffect(() => {
-    if (!selectedBeat && !challengeId) {
+    // Check for first visit (Tutorial active)
+    const isFirstVisit =
+      typeof window !== 'undefined' && !localStorage.getItem('flowforge_first_visit_complete')
+
+    if (isLoaded && !selectedBeat && !challengeId && !isFirstVisit) {
       router.push('/difficultyselection')
     }
-  }, [selectedBeat, router, challengeId])
+  }, [isLoaded, selectedBeat, router, challengeId])
 
   // Load beat audio when selected
   useEffect(() => {
@@ -329,81 +372,149 @@ export default function PracticePage() {
     fetchWords()
   }, [selectedBeat, difficulty, frequency, sessionDuration, handleError])
 
+  // TTS Voice State
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
+
+  useEffect(() => {
+    const getBestVoice = () => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return null
+      const voices = window.speechSynthesis.getVoices()
+      return (
+        voices.find((v) => v.name === 'Google US English') ||
+        voices.find((v) => v.name === 'Samantha') ||
+        voices.find((v) => v.lang.startsWith('en-US')) ||
+        voices[0] ||
+        null
+      )
+    }
+
+    // Initialize voice
+    const setBestVoice = () => {
+      const v = getBestVoice()
+      if (v) setVoice(v)
+    }
+
+    setBestVoice()
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = setBestVoice
+    }
+
+    return () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = null
+      }
+    }
+  }, [])
+
+  // Robust Speak Helper
+  const speak = useCallback(
+    (text: string, force = false) => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) {
+        console.warn('TTS: SpeechSynthesis not available')
+        return
+      }
+
+      console.log(`TTS Speaking: "${text}"`, {
+        voice: voice?.name,
+        volume: ttsVolume,
+        enabled: isTTSEnabled,
+        force,
+      })
+
+      if (!isTTSEnabled && !force) {
+        console.log('TTS: Skipped (Disabled)')
+        return
+      }
+
+      window.speechSynthesis.cancel() // Always cancel previous
+      const u = new SpeechSynthesisUtterance(text)
+      u.rate = 1.2
+      u.volume = ttsVolume
+      if (voice) u.voice = voice
+
+      u.onerror = (e) => console.error('TTS Error:', e)
+      u.onstart = () => console.log('TTS Started')
+
+      window.speechSynthesis.speak(u)
+    },
+    [isTTSEnabled, ttsVolume, voice]
+  )
+
   // Countdown Logic
   const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
 
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
 
-    // Calculate duration per beat in ms
-    // 60 seconds / BPM = seconds per beat
-    // * 1000 for ms
+    // Calculate exact duration per beat in ms
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
 
-    // 1. Initial State
-    // setIsSirenActive(true) // Unused
+    // Sequence: 3 -> 2 -> 1 -> GO (Start Playback immediately on GO)
+    // We want the playback to start EXACTLY when the 4th beat hits (zero index).
+    // Current flow:
+    // Beat 1: Speak "3"
+    // Beat 2: Speak "2"
+    // Beat 3: Speak "1"
+    // Beat 4: Speak "Go" AND Start Playback
 
-    // Helper for TTS
-    const speak = (text: string) => {
-      if ('speechSynthesis' in window) {
-        // Cancel any pending speech first
-        window.speechSynthesis.cancel()
+    // Sequence: 3 -> 2 -> 1 -> GO -> PLAY
+    // User requested: "Start after the count 3 2 1 GO".
+    // This implies 4 full beats of count/prep before audio drops on the 5th beat (or late 4th).
+    // Previous: 3, 2, 1 (Wait) -> GO + Play. (Audio on Beat 4).
+    // New: 3, 2, 1, GO (Wait) -> Play. (Audio on Beat 5).
 
-        const u = new SpeechSynthesisUtterance(text)
-        // Adjust rate based on BPM?
-        // Normal speech is roughly 120-150wpm.
-        // If BPM is high (e.g. 140), we might need to speak faster.
-        // Base rate 1.2 is approx normal-fast.
-        // Let's keep it steady but ensure it doesn't lag.
-        u.rate = selectedBeat.bpm > 100 ? 1.4 : 1.2
-        u.volume = ttsVolume
+    // Audio Context for Beeps
+    const playBeep = (freq: number = 440, type: OscillatorType = 'sine') => {
+      if (typeof window === 'undefined') return
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioContext) return
 
-        const voices = window.speechSynthesis.getVoices()
-        const aggressiveVoice = voices.find(
-          (v) =>
-            v.name.includes('Google US English') ||
-            v.name.includes('Samantha') ||
-            v.name.includes('Fred')
-        )
-        if (aggressiveVoice) u.voice = aggressiveVoice
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
 
-        window.speechSynthesis.speak(u)
-      }
+      osc.type = type
+      osc.frequency.setValueAtTime(freq, ctx.currentTime)
+
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
     }
 
-    // Sequence: 4 -> 3 -> 2 -> 1 -> GO
-    const countSequence = [4, 3, 2, 1]
+    const countSequence = [3, 2, 1, 'GO']
 
-    for (const num of countSequence) {
-      setCountdownValue(num)
-      speak(num.toString())
+    for (const val of countSequence) {
+      setCountdownValue(val as number | 'GO')
+      // speak(val.toString(), true) // Replaced with Beep
+      if (val === 'GO') {
+        playBeep(880, 'square') // Higher pitch, distinct sound for GO
+      } else {
+        playBeep(440, 'sine') // Standard beep
+      }
       await new Promise((r) => setTimeout(r, msPerBeat))
     }
 
-    // GO
-    setCountdownValue('GO')
-    speak('GO')
-    // setIsSirenActive(false) // Stop siren when action starts
-
-    // Start Action
-    // Clear error, play, record
+    // THE DROP (After GO wait)
     clearError()
+    if (wordList.length > 0 && !currentWord) {
+      setCurrentWord(wordList[0])
+    }
+
     try {
-      if (wordList.length > 0 && !currentWord) {
-        setCurrentWord(wordList[0])
-      }
-      setPanicCount(0) // Reset panic count for new session
+      // FIRE AUDIO
+      beatPlayer.play()
 
-      await beatPlayer.play()
-
+      // Handle Recording
       if (!isRecording) {
         await requestLock()
-        // Gating: Only start recording automatically if Pro.
-        // Free users play without recording unless they "Unlock" it (which triggers modal).
-        // User request: "hitting the record button summons it".
-        // This implies the default Play action does NOT record for free users.
         if (isPro) {
-          await startRecording(true)
+          startRecording(true).catch(console.error)
         }
       } else {
         resumeRecording()
@@ -412,13 +523,12 @@ export default function PracticePage() {
       handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
     }
 
-    // Clear "GO" after 1s
+    // Clear countdown display shortly after drop
     setTimeout(() => {
       setCountdownValue(null)
     }, 1000)
   }, [
     selectedBeat,
-    ttsVolume,
     beatPlayer,
     wordList,
     currentWord,
@@ -555,20 +665,9 @@ export default function PracticePage() {
         setCurrentWord(newWord)
         // setIsSirenActive(false) // Reset siren on change
 
-        // Trigger TTS
-        if (isTTSEnabled && newWord && 'speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(newWord)
-          utterance.rate = 1.2 // Slightly faster for flow
-          utterance.volume = ttsVolume
-          // Try to use a better voice if available (Google US English or Safari default)
-          const voices = window.speechSynthesis.getVoices()
-          const preferredVoice = voices.find(
-            (v) => v.name.includes('Google US English') || v.name.includes('Samantha')
-          )
-          if (preferredVoice) utterance.voice = preferredVoice
-
-          window.speechSynthesis.cancel() // Stop previous word
-          window.speechSynthesis.speak(utterance)
+        // Trigger TTS using standardized voice
+        if (newWord) {
+          speak(newWord)
         }
       }
     }, 100)
@@ -609,80 +708,129 @@ export default function PracticePage() {
       <PracticeTemplate
         pageHeader={
           <PageHeader
-            title={challengeId ? 'Duel Mode' : 'Practice Session'}
+            title={
+              challengeId ? 'Duel Mode' : mode === 'cypher' ? 'Cypher Mode' : 'Practice Session'
+            }
             description={
               challengeId
                 ? 'Drop your best response!'
-                : 'Press play to start your 2-minute freestyle.'
+                : mode === 'cypher'
+                  ? 'Pass the mic every 4 bars!'
+                  : 'Press play to start your 2-minute freestyle.'
             }
           />
         }
         alerts={
           <>
+            {/* Cypher Turn Indicator */}
+            {mode === 'cypher' && beatPlayer.isPlaying && (
+              <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+                <div
+                  className={`
+                        px-8 py-4 rounded-full text-2xl font-black uppercase tracking-widest shadow-2xl border-4
+                        transition-all duration-300 scale-110
+                        ${
+                          Math.floor(
+                            (beatPlayer.currentTime || 0) /
+                              ((60 / (selectedBeat?.bpm || 90)) * 4 * 4)
+                          ) %
+                            2 ===
+                          0
+                            ? 'bg-accent-purple border-accent-pink text-white rotate-1'
+                            : 'bg-accent-cyan border-white text-black -rotate-1'
+                        }
+                    `}
+                >
+                  {Math.floor(
+                    (beatPlayer.currentTime || 0) / ((60 / (selectedBeat?.bpm || 90)) * 4 * 4)
+                  ) %
+                    2 ===
+                  0
+                    ? 'PLAYER 1'
+                    : 'PLAYER 2'}
+                </div>
+              </div>
+            )}
             {saveMessage && (
               <SuccessAlert message={saveMessage} onDismiss={() => setSaveMessage(null)} />
             )}
             {error && <ErrorAlert error={error} onDismiss={clearError} />}
+            <SessionSummaryModal
+              data={sessionSummary}
+              onClose={() => {
+                setSessionSummary(null)
+                // Reset session logic if needed
+              }}
+            />
           </>
         }
         beatSelector={
-          <BeatSelector
+          <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
             onSelect={handleBeatChange}
             isPro={isPro}
-            // onLockedBeatClick={() => triggerPremiumModal('beat')} // invalid prop
+            disabled={beatPlayer.isPlaying || isRecording}
+            isLoading={isLoadingBeats}
+            onLockedSelect={() => {
+              setPremiumTrigger('beat')
+              setShowPremiumModal(true)
+            }}
           />
         }
         sessionConfig={null}
         practiceControls={
           selectedBeat ? (
-            <PracticeControls
-              selectedBeat={selectedBeat}
-              isPlaying={beatPlayer.isPlaying}
-              isLoading={beatPlayer.isLoading}
-              currentTime={beatPlayer.currentTime || 0}
-              sessionDuration={sessionDuration}
-              currentWord={currentWord}
-              isRecording={isRecording}
-              recordingDuration={duration}
-              // onRecordingClick={() => triggerPremiumModal('recording')} // invalid prop
-              error={
-                beatPlayer.error ||
-                (typeof error === 'string' ? error : (error as Error)?.message) ||
-                null
-              }
-              onToggle={handlePlayPause}
-              playButtonSize={playButtonSize}
-              difficulty={difficulty}
-              frequency={frequency}
-              // onDifficultyChange={setDifficulty} // invalid
-              // onFrequencyChange={setFrequency} // invalid
-              // isPro={isPro} // invalid
-              // countdownValue={countdownValue} // invalid
-              isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
-              onSkipWord={() => {
-                // Skip logic
-                setCurrentWord(wordList[(wordIndex + 1) % wordList.length])
-                setWordIndex((prev) => prev + 1)
-                setPanicCount((prev) => prev + 1)
-
-                // Visual feedback for penalty
-                toast.error('Panic! -500 Points', {
-                  icon: '😱',
-                  style: {
-                    background: '#1F1F1F',
-                    color: '#EF4444',
-                    border: '1px solid #EF4444',
-                  },
-                })
-              }}
-            />
+            <div className="relative w-full flex justify-center items-center">
+              {/* Visualizer in background of controls */}
+              <div className="absolute inset-0 pointer-events-none opacity-30 z-0 scale-150">
+                <AudioVisualizer
+                  isPlaying={beatPlayer.isPlaying || isRecording}
+                  mode={isRecording ? 'stream' : 'simulation'}
+                  stream={stream}
+                  className="w-full h-full"
+                  color={isRecording ? '#F43F5E' : '#A855F7'}
+                />
+              </div>
+              <div className="relative z-10 w-full flex justify-center">
+                <ErrorBoundary name="Practice Recorder">
+                  <PracticeControls
+                    selectedBeat={selectedBeat}
+                    isPlaying={beatPlayer.isPlaying}
+                    isLoading={beatPlayer.isLoading}
+                    currentTime={beatPlayer.currentTime || 0}
+                    sessionDuration={sessionDuration}
+                    currentWord={currentWord}
+                    isRecording={isRecording}
+                    recordingDuration={duration}
+                    error={
+                      beatPlayer.error ||
+                      (typeof error === 'string' ? error : (error as Error)?.message) ||
+                      null
+                    }
+                    onToggle={handlePlayPause}
+                    difficulty={difficulty}
+                    frequency={frequency}
+                    isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
+                    onSkipWord={() => {
+                      setCurrentWord(wordList[(wordIndex + 1) % wordList.length])
+                      setWordIndex((prev) => prev + 1)
+                      toast.error('Panic! -500 Points', { icon: '😱' })
+                    }}
+                  />
+                </ErrorBoundary>
+              </div>
+            </div>
           ) : null
         }
         helpSection={null}
       />
       <GuestLoginModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} />
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        trigger={premiumTrigger}
+      />
     </OnboardingLayout>
   )
 }

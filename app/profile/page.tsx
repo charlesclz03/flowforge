@@ -20,12 +20,17 @@ import { GuestStorage } from '@/lib/guest-storage'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { SocialsForm } from '@/components/organisms/profile/SocialsForm'
 
+import { EditProfileDialog } from '@/components/organisms/profile/EditProfileDialog'
+
 export default function ProfilePage() {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const router = useRouter()
   const [recordings, setRecordings] = useState<Recording[]>([])
   const [isLoadingRecordings, setIsLoadingRecordings] = useState(true)
   const [restorationMessage, setRestorationMessage] = useState<string | null>(null)
+
+  // Edit Profile State
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -49,6 +54,7 @@ export default function ProfilePage() {
     }
 
     async function checkGuestSession() {
+      // ... (Guest session logic unchanged)
       if (!session?.user) return
 
       try {
@@ -99,35 +105,52 @@ export default function ProfilePage() {
     return null
   }
 
+  const handleEditSuccess = async () => {
+    await update() // Refresh session
+    router.refresh()
+  }
+
   return (
-    <ProfileTemplate
-      header={<AppHeader />}
-      pageHeader={
-        <div className="space-y-4">
-          <PageHeader title="Profile" description="Manage your account settings and preferences" />
-          {restorationMessage && (
-            <SuccessAlert
-              message={restorationMessage}
-              onDismiss={() => setRestorationMessage(null)}
+    <>
+      <ProfileTemplate
+        header={<AppHeader />}
+        pageHeader={
+          <div className="space-y-4">
+            <PageHeader
+              title="Profile"
+              description="Manage your account settings and preferences"
             />
-          )}
-        </div>
-      }
-      accountInfo={<AccountInfo user={session.user} />}
-      subscription={<SubscriptionSection />}
-      security={<SecuritySection />}
-      stats={
-        <div className="space-y-6">
-          <StatsSection recordings={recordings} isLoading={isLoadingRecordings} />
-          <BadgesDisplay badges={session.user.badges || []} />
-        </div>
-      }
-      quickActions={
-        <div className="space-y-8">
-          <QuickActions />
-          <SocialsForm initialSocials={session.user.socials || {}} />
-        </div>
-      }
-    />
+            {restorationMessage && (
+              <SuccessAlert
+                message={restorationMessage}
+                onDismiss={() => setRestorationMessage(null)}
+              />
+            )}
+          </div>
+        }
+        accountInfo={<AccountInfo user={session.user} onEdit={() => setIsEditProfileOpen(true)} />}
+        subscription={<SubscriptionSection />}
+        security={<SecuritySection />}
+        stats={
+          <div className="space-y-6">
+            <StatsSection recordings={recordings} isLoading={isLoadingRecordings} />
+            <BadgesDisplay badges={session.user.badges || []} />
+          </div>
+        }
+        quickActions={
+          <div className="space-y-8">
+            <QuickActions />
+            <SocialsForm initialSocials={session.user.socials || {}} />
+          </div>
+        }
+      />
+
+      <EditProfileDialog
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+        user={session.user}
+        onSuccess={handleEditSuccess}
+      />
+    </>
   )
 }

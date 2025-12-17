@@ -28,7 +28,11 @@ export function TimerRing({
 
   if (!mounted) {
     return (
-      <svg width={size} height={size} className={className}>
+      <svg
+        viewBox={`0 0 ${size} ${size}`}
+        className={className}
+        style={{ width: '100%', height: '100%' }}
+      >
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -44,7 +48,11 @@ export function TimerRing({
   }
 
   return (
-    <svg width={size} height={size} className={className} style={{ transform: 'rotate(-90deg)' }}>
+    <svg
+      viewBox={`0 0 ${size} ${size}`}
+      className={className}
+      style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}
+    >
       {/* Background ring - full circle */}
       <circle
         cx={size / 2}

@@ -1,9 +1,23 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['storage.googleapis.com', 'lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+    ],
   },
 }
 
@@ -11,11 +25,17 @@ const nextConfig = {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require('@sentry/nextjs')
 
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  runtimeCaching: require('./cache.js'),
+})
+
 if (process.env.NODE_ENV === 'development') {
-  module.exports = nextConfig
+  module.exports = withPWA(nextConfig)
 } else {
   module.exports = withSentryConfig(
-    nextConfig,
+    withPWA(nextConfig),
     {
       // For all available options, see:
       // https://github.com/getsentry/sentry-webpack-plugin#options

@@ -53,6 +53,7 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   username      String?   @unique
+  bio           String?   @db.Text
   flowPoints    Int       @default(0) @map("flow_points")
   
   // Stripe fields
@@ -89,6 +90,10 @@ model User {
   
   // Voting
   votesCast      DuelVote[]
+
+  // Messaging
+  conversations  ConversationParticipant[]
+  messagesSent   Message[]
 }
 
 // Social: Follows
@@ -271,4 +276,49 @@ model DuelVote {
   @@unique([voterId, duelId])
   @@index([duelId])
   @@map("duel_votes")
+}
+
+// Direct Messaging
+model Conversation {
+  id        String   @id @default(uuid())
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  userId         String   @map("user_id")
+  lastReadAt     DateTime @default(now()) @map("last_read_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  senderId       String   @map("sender_id")
+  content        String   @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+  
+  // Future: Audio messages?
+  // audioUrl       String?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
 }

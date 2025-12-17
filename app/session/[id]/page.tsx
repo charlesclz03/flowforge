@@ -6,6 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Swords } from 'lucide-react'
+import { DuelVotingControls } from '@/components/molecules/social/DuelVotingControls'
 
 async function getSession(id: string) {
   return prisma.freestyleSession.findUnique({
@@ -37,9 +38,33 @@ interface Like {
 export default async function SessionPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
   const currentUserId = session?.user?.id
+  // Fetch raw data
   const sessionData = await getSession(params.id)
 
   if (!sessionData) return notFound()
+
+  // Sign URLs (Logic duplicated from Feed for now, but essential)
+  const { createServerClient, RECORDINGS_BUCKET } = await import('@/lib/supabase/server')
+  const supabase = createServerClient()
+  const SIGNED_URL_TTL_SECONDS = 60 * 60
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const signSession = async (s: any) => {
+    if (!s || !s.storageUrl || s.storageUrl.startsWith('http')) return s
+    const { data } = await supabase.storage
+      .from(RECORDINGS_BUCKET)
+      .createSignedUrl(s.storageUrl, SIGNED_URL_TTL_SECONDS)
+    return { ...s, storageUrl: data?.signedUrl || s.storageUrl }
+  }
+
+  // Sign both main session and parent if exists
+  const signedSession = await signSession(sessionData)
+  if (signedSession.parent) {
+    signedSession.parent = await signSession(signedSession.parent)
+  }
+
+  // Use signed data onwards
+  const finalSession = signedSession
 
   // Helper to format session for card
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,9 +75,22 @@ export default async function SessionPage({ params }: { params: { id: string } }
       : false,
   })
 
-  const isDuel = !!sessionData.parent
-  const original = sessionData.parent
-  const challenger = sessionData
+  const isDuel = !!finalSession.parent
+  const original = finalSession.parent
+  const challenger = finalSession
+
+  // Check if user voted in this duel context
+  const userVote =
+    isDuel && currentUserId && original
+      ? await prisma.duelVote.findUnique({
+          where: {
+            voterId_duelId: {
+              voterId: currentUserId,
+              duelId: original.id,
+            },
+          },
+        })
+      : null
 
   return (
     <Container className="py-8 max-w-4xl">
@@ -64,7 +102,7 @@ export default async function SessionPage({ params }: { params: { id: string } }
         Back to Feed
       </Link>
 
-      {isDuel ? (
+      {isDuel && original ? (
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-8 justify-center">
             <Swords size={32} className="text-secondary-cyan" />
@@ -83,9 +121,7 @@ export default async function SessionPage({ params }: { params: { id: string } }
               <div className="text-center font-bold text-secondary-cyan uppercase tracking-widest text-sm">
                 Defender
               </div>
-              <SessionFeedCard
-                session={formatForCard({ ...original, likes: [] /* Simplify for now */ })}
-              />
+              <SessionFeedCard session={formatForCard({ ...original, likes: [] })} />
             </div>
 
             {/* Challenger */}
@@ -99,10 +135,29 @@ export default async function SessionPage({ params }: { params: { id: string } }
               </div>
             </div>
           </div>
+
+          <div className="mt-8 max-w-md mx-auto">
+            <DuelVotingControls
+              duelId={original.id}
+              initialVotedFor={userVote?.votedForId}
+              contestants={[
+                {
+                  id: original.id,
+                  username: original.user?.username || 'Defender',
+                  role: 'defender',
+                },
+                {
+                  id: challenger.id,
+                  username: challenger.user?.username || 'Challenger',
+                  role: 'challenger',
+                },
+              ]}
+            />
+          </div>
         </div>
       ) : (
         <div className="max-w-xl mx-auto">
-          <SessionFeedCard session={formatForCard(sessionData)} />
+          <SessionFeedCard session={formatForCard(finalSession)} />
         </div>
       )}
     </Container>

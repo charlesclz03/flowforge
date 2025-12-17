@@ -123,6 +123,12 @@ export async function getChallengeSession(sessionId: string) {
     where: { id: sessionId },
     include: {
       beat: true,
+      user: {
+        select: {
+          username: true,
+          image: true,
+        },
+      },
     },
   })
 
@@ -132,7 +138,7 @@ export async function getChallengeSession(sessionId: string) {
     beat: session.beat,
     frequency: session.frequency,
     difficulty: session.difficulty,
-    user: session.userId, // Maybe we want to know who we are challenging
+    user: session.user,
   }
 }
 

@@ -28,7 +28,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
       {/* Drawer */}
       <div
         className={cn(
-          'relative w-full max-w-md bg-background-elevated rounded-t-2xl sm:rounded-2xl border-t sm:border border-white/10 p-6 shadow-2xl transition-transform duration-300 transform',
+          'relative w-full max-w-md bg-background-elevated rounded-t-2xl sm:rounded-2xl border-t sm:border border-white/10 p-6 shadow-2xl transition-transform duration-300 transform max-h-[85vh] overflow-y-auto',
           isOpen ? 'translate-y-0' : 'translate-y-full'
         )}
       >

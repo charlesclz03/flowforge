@@ -7,6 +7,7 @@ interface CardProps {
   className?: string
   variant?: 'default' | 'elevated' | 'glass'
   padding?: 'sm' | 'md' | 'lg'
+  action?: React.ReactNode
 }
 
 export function Card({
@@ -16,6 +17,7 @@ export function Card({
   className,
   variant = 'default',
   padding = 'md',
+  action,
 }: CardProps) {
   const variants = {
     default: 'bg-background-card/40 backdrop-blur-light',
@@ -39,9 +41,12 @@ export function Card({
       )}
     >
       {(title || subtitle) && (
-        <div className="mb-6">
-          {title && <h2 className="text-xl font-medium text-white">{title}</h2>}
-          {subtitle && <p className="mt-2 text-text-secondary">{subtitle}</p>}
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            {title && <h2 className="text-xl font-medium text-white">{title}</h2>}
+            {subtitle && <p className="mt-2 text-text-secondary">{subtitle}</p>}
+          </div>
+          {action && <div>{action}</div>}
         </div>
       )}
       {children}

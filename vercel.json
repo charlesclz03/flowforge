@@ -1,4 +1,5 @@
 {
+  "name": "flowforge-freestyle",
   "buildCommand": "prisma generate && next build",
   "framework": "nextjs",
   "regions": ["iad1"],
@@ -33,6 +34,17 @@
           "value": "1; mode=block"
         }
       ]
+    }
+  ],
+
+  "crons": [
+    {
+      "path": "/api/cron/reconcile-subs",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/aggregate-leaderboard",
+      "schedule": "0 0 * * *"
     }
   ]
 }

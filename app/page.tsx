@@ -1,53 +1,13 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { LandingTemplate } from '@/components/templates'
-import {
-  LandingHero,
-  LandingHowItWorks,
-  LandingPricing,
-  LandingFAQ,
-} from '@/components/organisms/landing'
-
-const HERO_STATS = [
-  { label: 'Beats Curated', value: '10+', caption: 'Hand-mastered instrumentals' },
-  { label: 'Word Vault', value: '∞', caption: 'Adaptive prompt engine' },
-  { label: 'Practice Windows', value: '24/7', caption: 'Always-on companion' },
-]
-
-const SESSION_BADGES = [
-  { label: 'Session Tempo', value: '90 BPM', accentClass: 'bg-accent-blue' },
-  { label: 'Difficulty', value: 'Medium', accentClass: 'bg-accent-purple' },
-  { label: 'Frequency', value: '8 Bars', accentClass: 'bg-accent-purple' },
-]
-
-const FAQ_ITEMS = [
-  {
-    question: 'What is FlowForge?',
-    answer:
-      'FlowForge is an AI-powered freestyle rap practice platform that helps you improve your skills with on-beat word prompts, professional beats, and session recording.',
-  },
-  {
-    question: 'How does the word prompt system work?',
-    answer:
-      "Words appear on-beat, synced to your selected beat's BPM. You can choose how often words appear (every 4, 8, or 16 bars) and the difficulty level (easy, medium, or hard).",
-  },
-  {
-    question: 'Can I download my recordings?',
-    answer:
-      'Recording download will be available with the Premium plan (coming soon). Free users can review their sessions within the app.',
-  },
-  {
-    question: 'What browsers are supported?',
-    answer:
-      'FlowForge works best on modern browsers like Chrome, Firefox, Safari, and Edge. Microphone access is required for recording your freestyle sessions.',
-  },
-]
+import Link from 'next/link'
+import { Music } from 'lucide-react'
+import { SignInButton } from '@/components/molecules/auth/SignInButton'
 
 function HomePageContent() {
-  const [progress, setProgress] = useState(0.25)
   const { status, data: session } = useSession()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -61,50 +21,67 @@ function HomePageContent() {
         const decodedUrl = decodeURIComponent(callbackUrl)
         console.log('Redirecting to callback URL:', decodedUrl)
         router.push(decodedUrl)
+      } else {
+        // If logged in and no callback, go to practice (App Home)
+        router.push('/practice')
       }
     }
   }, [isAuthenticated, session, searchParams, router])
 
-  // Animate progress ring
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const next = prev + 0.01
-        return next >= 1 ? 0 : next
-      })
-    }, 120)
-
-    return () => clearInterval(interval)
-  }, [])
+  // If loading or authenticated (and redirecting), show minimal loader
+  if (status === 'loading' || isAuthenticated) {
+    return (
+      <main className="flex h-[100dvh] items-center justify-center bg-black">
+        <div className="animate-pulse">
+          <Music className="h-12 w-12 text-accent-purple" />
+        </div>
+      </main>
+    )
+  }
 
   return (
-    <LandingTemplate
-      hero={
-        <>
-          {/* Hero Header */}
-          <header className="text-center md:text-left">
-            <h1 className="max-w-3xl text-balance text-display font-light text-white">
-              The freestyle command center for artists in motion.
-            </h1>
-            <p className="mt-4 max-w-2xl text-lg text-text-secondary">
-              Intelligent prompts sync to your tempo, recording tools glow with status feedback, and
-              every session wraps in a clean timeline designed for late-night flow states.
-            </p>
-          </header>
+    <main className="relative flex h-[100dvh] w-full flex-col items-center justify-between overflow-hidden bg-black p-6 safe-top safe-bottom">
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/20 via-black to-accent-blue/10 opacity-60" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-accent-purple/30 rounded-full blur-[120px] animate-pulse-slow" />
+      </div>
 
-          <LandingHero
-            stats={HERO_STATS}
-            badges={SESSION_BADGES}
-            progress={progress}
-            isAuthenticated={isAuthenticated}
-          />
-        </>
-      }
-      howItWorks={<LandingHowItWorks />}
-      // testimonials={<LandingTestimonials />}
-      pricing={<LandingPricing />}
-      faq={<LandingFAQ items={FAQ_ITEMS} />}
-    />
+      {/* Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center flex-1 w-full max-w-md gap-8 text-center">
+        {/* Brand */}
+        <div className="space-y-6">
+          <div className="flex justify-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
+              <Music className="h-10 w-10 text-accent-purple drop-shadow-neon" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">FlowForge</h1>
+            <p className="text-lg font-medium text-text-secondary">Master your freestyle.</p>
+          </div>
+        </div>
+
+        {/* Feature Highlights (Mini Carousel or List) */}
+        {/* Keeping it simple for "Spotify Login" feel */}
+      </div>
+
+      {/* Actions (Bottom) */}
+      <div className="relative z-10 w-full max-w-md space-y-4 mb-8">
+        <Link
+          href="/practice" // Guest Mode Access
+          className="flex items-center justify-center w-full py-4 text-lg font-semibold text-black bg-white rounded-full hover:bg-white/90 transition-transform active:scale-95 shadow-glow"
+        >
+          Start Practicing
+        </Link>
+
+        <div className="flex items-center justify-center gap-4 text-sm text-text-secondary">
+          <span>Already have an account?</span>
+          <SignInButton mode="link" />
+        </div>
+      </div>
+    </main>
   )
 }
 

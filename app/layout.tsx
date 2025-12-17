@@ -3,6 +3,8 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from '@/components/auth/SessionProvider'
 import { PracticeSessionProvider } from '@/contexts/SessionContext'
+import { BottomNav } from '@/components/organisms/layout/BottomNav'
+import { AudioContextUnlock } from '@/components/utils/AudioContextUnlock'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -130,7 +132,9 @@ export default function RootLayout({
                 />
               </>
             ) : null}
+            <AudioContextUnlock />
             <Toaster position="bottom-center" />
+            <BottomNav />
           </PracticeSessionProvider>
         </SessionProvider>
       </body>

@@ -1,9 +1,10 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { PlayButton } from '@/components/molecules/practice/PlayButton'
+import { Play as PlayButtonIcon } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
-import { RecordingIndicator } from '@/components/molecules/practice/RecordingIndicator'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
@@ -15,15 +16,14 @@ interface PracticeControlsProps {
   currentTime: number
   sessionDuration: number
   currentWord: string
-  isRecording: boolean
-  recordingDuration: number
-  error?: string | null
   onToggle: () => void
-  playButtonSize: number
   difficulty: number
   frequency: number
   isGolden?: boolean
   onSkipWord?: () => void
+  isRecording?: boolean
+  recordingDuration?: number
+  error?: string | null
 }
 
 export function PracticeControls({
@@ -33,15 +33,14 @@ export function PracticeControls({
   currentTime,
   sessionDuration,
   currentWord,
-  isRecording,
-  recordingDuration,
-  error,
   onToggle,
-  playButtonSize,
   difficulty,
   frequency,
   isGolden = false,
   onSkipWord,
+  isRecording = false,
+  recordingDuration = 0,
+  error,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -51,13 +50,6 @@ export function PracticeControls({
     const secs = Math.floor(seconds % 60)
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
-
-  const micPermissionError =
-    error?.toLowerCase().includes('notallowederror') ||
-    error?.toLowerCase().includes('permission denied') ||
-    error?.toLowerCase().includes('failed to access microphone')
-
-  // const shouldShowError = Boolean(error && !micPermissionError) && !isPlaying && !isLoading
 
   const getDifficultyMeta = () => {
     if (difficulty <= 1) {
@@ -88,8 +80,8 @@ export function PracticeControls({
   return (
     <Card padding="lg">
       <div className="flex flex-col items-center gap-6 sm:gap-8">
-        {/* Session Info */}
-        <div className="text-center space-y-4">
+        {/* Session Info (Text Only) */}
+        <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5/60 px-5 py-2.5 text-sm sm:text-base text-text-primary backdrop-blur-heavy shadow-soft">
             <span className="font-medium truncate max-w-[100px] sm:max-w-none">
               {selectedBeat.title}
@@ -98,14 +90,8 @@ export function PracticeControls({
             <span className="text-text-secondary truncate max-w-[90px] sm:max-w-none">
               {selectedBeat.artistName || 'Producer'}
             </span>
-            <span className="text-accent-purple text-lg">•</span>
-            <span className="text-text-secondary">{selectedBeat.bpm} BPM</span>
-          </div>
-          <div className="text-4xl sm:text-5xl font-light text-white">
-            {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
           </div>
           <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
-            {/* Difficulty pill (left of mic) */}
             <div
               className={cn(
                 'inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium',
@@ -114,19 +100,12 @@ export function PracticeControls({
             >
               <span>{difficultyMeta.label}</span>
             </div>
-
-            {/* Recording indicator (center) */}
-            <RecordingIndicator
-              isRecording={(isRecording || isPlaying) && !micPermissionError}
-              duration={recordingDuration}
-              maxDuration={sessionDuration}
-              showDuration={false}
-            />
+            {selectedBeat.bpm} BPM
           </div>
         </div>
 
         {/* Word Prompt */}
-        <div className="flex w-full items-center justify-center">
+        <div id="tour-word-prompt" className="flex w-full items-center justify-center h-16">
           <WordPrompt
             word={currentWord || null}
             show={isPlaying && !!currentWord}
@@ -134,34 +113,121 @@ export function PracticeControls({
           />
         </div>
 
-        {/* Play Button with Timer Ring - Responsive size */}
-        <div className="w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] flex items-center justify-center relative">
-          <PlayButton
-            isPlaying={isPlaying}
-            progress={intervalProgress}
-            onToggle={onToggle}
-            disabled={!selectedBeat || isLoading}
-            size={playButtonSize}
-          />
+        {/* Panic Button */}
+        {onSkipWord && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onSkipWord}
+            className="px-6 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
+          >
+            <span>😱 Panic!</span>
+          </motion.button>
+        )}
 
-          {/* Panic Button */}
-          {isPlaying && onSkipWord && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onSkipWord()
-              }}
-              className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 group"
-              title="Skip Word (-500 pts)"
+        {error && (
+          <div className="text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+            {error}
+          </div>
+        )}
+
+        {/* Hero Player (Landing Page Style) */}
+        <div className="relative">
+          <motion.button
+            id="tour-record-btn"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            animate={
+              isPlaying
+                ? isRecording
+                  ? { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 1.5 } } // Heartbeat
+                  : { scale: 1 }
+                : { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 3 } } // Idle Breath
+            }
+            onClick={() => {
+              if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                navigator.vibrate(10)
+              }
+              onToggle()
+            }}
+            disabled={isLoading}
+            className={cn(
+              'relative flex items-center justify-center rounded-full transition-colors duration-300 group outline-none',
+              'w-[280px] h-[280px] sm:w-[320px] sm:h-[320px]', // Large size
+              'border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl',
+              isPlaying
+                ? 'border-accent-purple/30 shadow-purple-glow'
+                : 'hover:bg-white/5 hover:border-white/20'
+            )}
+          >
+            {/* Ambient Glows */}
+            <div
+              className={cn(
+                'absolute inset-0 rounded-full opacity-0 transition-opacity duration-700',
+                isPlaying && 'opacity-100'
+              )}
             >
-              <div className="w-10 h-10 rounded-full bg-red-500/20 border border-red-500/50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
-                <span className="text-xl">⚠️</span>
-              </div>
-              <span className="text-[10px] text-red-500/70 font-medium uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                Panic
-              </span>
-            </button>
-          )}
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent-purple/20 to-transparent blur-3xl" />
+              <div className="absolute inset-4 animate-spin-slow rounded-full border border-transparent border-t-accent-purple/30 border-r-accent-purple/10" />
+            </div>
+
+            {/* Timer Ring */}
+            <div className="absolute inset-0 p-8">
+              <TimerRing
+                progress={intervalProgress}
+                size={320}
+                className={cn(
+                  'w-full h-full text-white/10 transition-colors duration-500',
+                  isPlaying && 'text-accent-purple drop-shadow-neon'
+                )}
+                strokeWidth={4}
+              />
+            </div>
+
+            {/* Inner Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-1">
+              {isPlaying ? (
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    {isRecording && (
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                    )}
+                    <span
+                      className={cn(
+                        'text-[10px] font-bold uppercase tracking-[0.2em]',
+                        isRecording ? 'text-red-400' : 'text-accent-purple'
+                      )}
+                    >
+                      {isRecording ? 'Recording' : 'Playing'}
+                    </span>
+                  </div>
+
+                  <span className="text-5xl sm:text-6xl font-light text-white tabular-nums tracking-tighter">
+                    {/* Show elapsed recording time if recording, otherwise countdown */}
+                    {isRecording
+                      ? formatTime(recordingDuration)
+                      : formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
+                  </span>
+
+                  <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider mt-1">
+                    Tap to Stop
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="h-16 w-16 mb-2 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <PlayButtonIcon className="ml-1 w-6 h-6" />
+                  </div>
+                  <span className="text-sm font-medium text-text-secondary uppercase tracking-widest">
+                    Start Session
+                  </span>
+                </>
+              )}
+            </div>
+          </motion.button>
         </div>
       </div>
     </Card>

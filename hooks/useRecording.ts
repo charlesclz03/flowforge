@@ -211,6 +211,7 @@ export function useRecording({
     error,
     isInitializing,
     hasRecording: recordingBlob !== null,
+    stream: recorderRef.current?.getStream() || null,
 
     // Actions
     start,
