@@ -189,6 +189,14 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-text-tertiary uppercase tracking-wider">Legal</h3>
             <Link
+              href="/patch-notes"
+              onClick={onClose}
+              className="flex items-center gap-3 text-text-secondary hover:text-white transition-colors"
+            >
+              <FileText size={20} className="text-purple-400" />
+              <span>Patch Notes</span>
+            </Link>
+            <Link
               href="/legal/terms"
               className="flex items-center gap-3 text-text-secondary hover:text-white transition-colors"
             >

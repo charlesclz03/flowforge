@@ -94,6 +94,7 @@ model User {
   // Messaging
   conversations  ConversationParticipant[]
   messagesSent   Message[]
+  feedbackSent   Feedback[]
 }
 
 // Social: Follows
@@ -321,4 +322,14 @@ model Message {
   @@index([conversationId])
   @@index([senderId])
   @@map("messages")
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String?  @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("feedback")
 }
