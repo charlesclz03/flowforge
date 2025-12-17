@@ -704,7 +704,7 @@ export default function PracticePage() {
 
   return (
     <OnboardingLayout showBackButton onBack={() => router.push('/difficultyselection')}>
-      <FirstVisitOverlay />
+      <FirstVisitOverlay isBeatSelected={!!selectedBeat} />
       <PracticeTemplate
         pageHeader={
           <PageHeader

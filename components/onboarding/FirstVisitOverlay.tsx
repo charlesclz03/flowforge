@@ -33,7 +33,11 @@ const TOUR_STEPS: Step[] = [
   },
 ]
 
-export function FirstVisitOverlay() {
+interface Props {
+  isBeatSelected: boolean
+}
+
+export function FirstVisitOverlay({ isBeatSelected }: Props) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
@@ -49,6 +53,17 @@ export function FirstVisitOverlay() {
     return
   }, [])
 
+  // Auto-advance when beat is selected
+  useEffect(() => {
+    if (isVisible && currentStep === 0 && isBeatSelected) {
+      const timer = setTimeout(() => {
+        setCurrentStep(1)
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+    return
+  }, [isBeatSelected, isVisible, currentStep])
+
   // Update rect on step change or resize
   useLayoutEffect(() => {
     if (!isVisible) return
@@ -58,7 +73,7 @@ export function FirstVisitOverlay() {
       const el = document.getElementById(step.targetId)
       if (el) {
         setTargetRect(el.getBoundingClientRect())
-        // Scroll element into view if needed
+        // Scroll element into view if needed (and wait for smooth scroll)
         el.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }
     }
@@ -185,20 +200,29 @@ export function FirstVisitOverlay() {
                 {TOUR_STEPS[currentStep].description}
               </p>
 
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={handleComplete}
-                  className="text-xs text-text-tertiary hover:text-white transition-colors"
-                >
-                  Skip Tour
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors"
-                >
-                  {currentStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
-                  <ArrowRight size={14} />
-                </button>
+              <div className="flex justify-between items-center w-full">
+                {currentStep !== 0 && (
+                  <button
+                    onClick={handleComplete}
+                    className="text-xs text-text-tertiary hover:text-white transition-colors"
+                  >
+                    Skip Tour
+                  </button>
+                )}
+
+                {currentStep !== 0 ? (
+                  <button
+                    onClick={handleNext}
+                    className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors ml-auto"
+                  >
+                    {currentStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
+                    <ArrowRight size={14} />
+                  </button>
+                ) : (
+                  <div className="text-xs text-white/60 bg-white/10 px-3 py-2 rounded-lg animate-pulse mx-auto">
+                    Select a beat to continue...
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
