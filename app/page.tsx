@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Music } from 'lucide-react'
 import { SignInButton } from '@/components/molecules/auth/SignInButton'
+import { LandingHowItWorks } from '@/components/organisms/landing/LandingHowItWorks'
 
 function HomePageContent() {
   const { status, data: session } = useSession()
@@ -63,8 +64,10 @@ function HomePageContent() {
           </div>
         </div>
 
-        {/* Feature Highlights (Mini Carousel or List) */}
-        {/* Keeping it simple for "Spotify Login" feel */}
+        {/* Feature Highlights */}
+        <div className="w-full">
+          <LandingHowItWorks />
+        </div>
       </div>
 
       {/* Actions (Bottom) */}

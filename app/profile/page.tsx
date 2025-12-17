@@ -13,7 +13,9 @@ import {
   QuickActions,
 } from '@/components/organisms/profile'
 import { BadgesDisplay } from '@/components/organisms/profile/BadgesDisplay'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { SettingsDrawer } from '@/components/organisms/settings/SettingsDrawer'
+import { Settings, Trophy } from 'lucide-react'
+import Link from 'next/link'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
 import { GuestStorage } from '@/lib/guest-storage'
@@ -31,6 +33,7 @@ export default function ProfilePage() {
 
   // Edit Profile State
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -112,8 +115,27 @@ export default function ProfilePage() {
 
   return (
     <>
+      <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+
       <ProfileTemplate
-        header={<AppHeader />}
+        header={
+          <div className="flex justify-end items-center p-4 gap-2 safe-top">
+            <Link
+              href="/leaderboard"
+              className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
+              aria-label="Leaderboard"
+            >
+              <Trophy size={20} />
+            </Link>
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
+              aria-label="Settings"
+            >
+              <Settings size={20} />
+            </button>
+          </div>
+        }
         pageHeader={
           <div className="space-y-4">
             <PageHeader

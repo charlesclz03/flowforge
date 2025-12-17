@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Container } from '@/components/atoms/Container'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { PageHeader } from '@/components/organisms/common'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
@@ -44,7 +43,7 @@ export default function InboxPage() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <AppHeader />
+      {/* AppHeader removed for gamified layout */}
       <Container className="pt-8">
         <PageHeader title="Messages" description="Your private conversations." />
 

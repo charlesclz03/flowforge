@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
 import { LeaderboardRow } from '@/components/molecules/social/LeaderboardRow'
@@ -107,7 +106,7 @@ export default async function LeaderboardPage({
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <AppHeader />
+      {/* AppHeader removed for gamified layout */}
       <Container className="pt-8">
         <PageHeader title="Leaderboard" description="Top flows this week." />
 

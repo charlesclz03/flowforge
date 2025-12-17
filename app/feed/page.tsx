@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import { FeedItem } from '@/components/organisms/social/FeedItem'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
 import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
@@ -60,7 +59,7 @@ export default async function FeedPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <AppHeader />
+      {/* AppHeader removed for gamified feel - BottomNav handles navigation */}
       <Container className="pt-8">
         <PageHeader
           title="Community Feed"
