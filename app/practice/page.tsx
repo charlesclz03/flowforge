@@ -76,7 +76,7 @@ export default function PracticePage() {
   const { requestLock, releaseLock } = useWakeLock()
   // ... inside PracticePage
   const [beats, setBeats] = useState<Beat[]>([])
-  const [isLoadingBeats, setIsLoadingBeats] = useState(true)
+  const [_isLoadingBeats, setIsLoadingBeats] = useState(true)
   const [penalty, setPenalty] = useState(0)
   const [restartCount, setRestartCount] = useState(0)
   const [playbackCount, setPlaybackCount] = useState(0)
