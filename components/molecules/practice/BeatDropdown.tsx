@@ -43,6 +43,14 @@ export function BeatDropdown({
       .catch((err) => console.error('Failed to load favorites', err))
   }, [])
 
+  const stopPreview = useCallback(() => {
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause()
+      previewAudioRef.current.currentTime = 0
+    }
+    setPreviewingBeatId(null)
+  }, [])
+
   // Close when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -97,14 +105,6 @@ export function BeatDropdown({
       console.error(error)
       toast.error('Failed to update favorite')
     }
-  }, [])
-
-  const stopPreview = useCallback(() => {
-    if (previewAudioRef.current) {
-      previewAudioRef.current.pause()
-      previewAudioRef.current.currentTime = 0
-    }
-    setPreviewingBeatId(null)
   }, [])
 
   const handlePreview = useCallback(
