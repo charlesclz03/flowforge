@@ -27,8 +27,8 @@ export function PracticeTemplate({
       {/* Success/Error Alerts */}
       {alerts && <div className="flex-shrink-0 mt-4">{alerts}</div>}
 
-      {/* Beat Selector - Desktop only, mobile uses the player info bar */}
-      <div className="flex-shrink-0 hidden md:block mt-4">{beatSelector}</div>
+      {/* Beat Selector - Desktop only, mobile uses the player info bar -> Fixed: Now visible on all devices */}
+      <div className="flex-shrink-0 mt-4 px-4 sm:px-0 w-full max-w-2xl mx-auto">{beatSelector}</div>
 
       {/* Session Configuration - Desktop only */}
       {sessionConfig && <div className="flex-shrink-0 hidden lg:block mt-4">{sessionConfig}</div>}
