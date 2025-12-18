@@ -3,6 +3,25 @@
 
 ---
 
+## 🚀 Update 1.1.1: The Production Forge
+**Release Date:** December 18, 2025
+**Codename:** *Titan's Grip*
+
+The final chains holding back production have been shattered. The deployment pipeline is fully operational, verifying the integrity of the "Bible" requirements.
+
+### 🛠️ Deployment & Stability
+- **Pipeline Restored**: Fixed critical build failures on Vercel (`prisma`, `resend`, `dynamic-server-usage`).
+- **Schema Synced**: `restarts` and `playbacks` metrics now correctly tracking for Badge logic.
+- **Dependencies Secured**: Added `resend` and `react-intersection-observer` to the core manifest.
+- **Dynamic Routing**: Forced dynamic rendering for Feed and Votes API to ensure real-time data accuracy.
+
+### 📜 Documentation
+- **The Bible**: Updated with Section 7 (Technical Stack).
+- **Changelog**: Initialized v1.1.1 history.
+- **Deployment Guide**: Troubleshooting protocols established.
+
+---
+
 ## 🐲 Update 0.8.0: The Social Awakening
 **Release Date:** December 14, 2025
 **Codename:** *Arena of Voices*

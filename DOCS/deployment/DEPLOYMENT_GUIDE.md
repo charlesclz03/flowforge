@@ -1,7 +1,8 @@
 # 🚀 FlowForge Vercel Deployment Guide
 
-**Status**: ✅ Ready for Production Deployment  
-**Date**: November 6, 2025
+**Status**: ✅ Deployed (v1.1.1)  
+**Date**: December 18, 2025
+**Quick Reference**: See `VERCEL_DEPLOY.md` for specific troubleshooting.
 
 ---
 
@@ -398,7 +399,7 @@ Monitor in Supabase Dashboard:
 
 Your FlowForge app is now live on Vercel! 🚀
 
-**Production URL**: https://your-app.vercel.app
+**Production URL**: https://flowforge-freestyle.vercel.app
 
 Share it with the world and start gathering user feedback!
 

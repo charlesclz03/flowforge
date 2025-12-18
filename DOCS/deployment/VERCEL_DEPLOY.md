@@ -48,14 +48,14 @@ Deploy FlowForge to Vercel with proper environment variables and configuration.
 
 ```bash
 # Site URL
-NEXT_PUBLIC_SITE_URL=https://flowforge-pi.vercel.app
+NEXT_PUBLIC_SITE_URL=https://flowforge-freestyle.vercel.app
 
 # Database (Supabase)
 DATABASE_URL=postgresql://...
 DIRECT_URL=postgresql://...
 
 # NextAuth
-NEXTAUTH_URL=https://flowforge-pi.vercel.app
+NEXTAUTH_URL=https://flowforge-freestyle.vercel.app
 NEXTAUTH_SECRET=...
 
 # Google OAuth

@@ -1,7 +1,7 @@
 # FlowForge - Application Overview & Feature Guide
 
 **Date**: December 18, 2025  
-**Version**: 1.1.0 (Production Certified)
+**Version**: 1.1.1 (Production Certified)
 
 ---
 
@@ -52,7 +52,7 @@ The heart of the application, designed for zero-latency performance.
   - **Badge Showcase**: Apex-style badges earned through specific achievements.
   - **Settings Dropdown**: Quick access to user rank, streak status (with "Streak Freeze" indicator), and a "Report Bug" link.
 
-### 6. Social Ecosystem & Dynamic Sharing
+### 4. Social Ecosystem & Dynamic Sharing
 
 - **Public Profiles**: Custom URLs (`/u/[username]`) showcasing the "Rapper Card".
 - **Stat Card Sharing**:
@@ -60,7 +60,7 @@ The heart of the application, designed for zero-latency performance.
 - **The Feed**: Interactive stream with Likes, Comments, and Following.
 - **Duel Mode**: Fairness-first challenges where users compete on the same beat and word seed.
 
-### 7. Gamification & Apex Badge Suite
+### 5. Gamification & Apex Badge Suite
 
 - **Scoring System**:
   - **Flow Density**: Real-time analysis of vocal activity and rhythmic pocket.
@@ -92,6 +92,7 @@ The heart of the application, designed for zero-latency performance.
 - **Database**: PostgreSQL (Supabase) + Prisma ORM
 - **Auth**: NextAuth.js (Google Provider)
 - **Payments**: Stripe
+- **Email**: Resend
 - **Monitoring**: Sentry
 - **Styling**: Tailwind CSS + Lucide Icons + Framer Motion
 - **Deployment**: Vercel
