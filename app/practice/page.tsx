@@ -36,6 +36,7 @@ export default function PracticePage() {
   const { data: session } = useSession()
   /* Clean UI State */
   const [cleanUI, setCleanUI] = useState(false)
+  const [proTipDismissed, setProTipDismissed] = useState(false)
 
   const {
     selectedBeat,
@@ -885,13 +886,22 @@ export default function PracticePage() {
           ) : null
         }
         sessionConfig={
-          !cleanUI ? (
+          !cleanUI && !proTipDismissed ? (
             <div className="hidden lg:block">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
                 <span className="font-bold text-accent-purple">PRO TIP:</span>
-                <span>
+                <span className="flex-1">
                   Press <kbd className="font-sans font-bold text-white">Space</kbd> to Start/Pause
                 </span>
+                <button
+                  onClick={() => setProTipDismissed(true)}
+                  className="ml-2 p-1 hover:bg-white/10 rounded-full transition-colors"
+                  aria-label="Dismiss tip"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             </div>
           ) : null
