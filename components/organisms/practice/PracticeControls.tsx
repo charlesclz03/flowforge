@@ -258,7 +258,7 @@ export function PracticeControls({
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-colors duration-300 group outline-none',
-              'w-[280px] h-[280px] sm:w-[320px] sm:h-[320px]', // Large size
+              'w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px]', // Responsive sizing
               'border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl',
               isPlaying
                 ? 'border-accent-purple/30 shadow-purple-glow'
