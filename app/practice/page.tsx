@@ -352,12 +352,8 @@ export default function PracticePage() {
 
   // Redirect to setup if there is no configured beat
   useEffect(() => {
-    // Check for first visit (Tutorial active)
-    const isFirstVisit =
-      typeof window !== 'undefined' && !localStorage.getItem('flowforge_first_visit_complete')
-
-    if (isLoaded && !selectedBeat && !challengeId && !isFirstVisit) {
-      router.push('/difficultyselection')
+    if (isLoaded && !selectedBeat && !challengeId) {
+      router.push('/howitworks')
     }
   }, [isLoaded, selectedBeat, router, challengeId])
 

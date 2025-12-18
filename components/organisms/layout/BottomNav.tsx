@@ -33,9 +33,9 @@ export function BottomNav() {
     },
     {
       name: 'Practice',
-      href: '/practice',
+      href: '/howitworks',
       icon: Mic,
-      match: (path: string) => path === '/practice' || path === '/difficultyselection',
+      match: (path: string) => path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
       isPrimary: true, // Special flag for center button
     },
     {
