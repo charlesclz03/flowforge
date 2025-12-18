@@ -20,7 +20,7 @@ import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
-import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
+import { BeatSelector } from '@/components/organisms/practice/BeatSelector'
 import { useWakeLock } from '@/hooks/useWakeLock'
 import { analyzeAudio } from '@/lib/scoring'
 import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
@@ -876,17 +876,11 @@ export default function PracticePage() {
         }
         beatSelector={
           !cleanUI ? (
-            <BeatDropdown
+            <BeatSelector
               beats={beats}
               selectedBeat={selectedBeat}
               onSelect={handleBeatChange}
               isPro={isPro}
-              disabled={beatPlayer.isPlaying || isRecording}
-              isLoading={isLoadingBeats}
-              onLockedSelect={() => {
-                setPremiumTrigger('beat')
-                setShowPremiumModal(true)
-              }}
             />
           ) : null
         }
