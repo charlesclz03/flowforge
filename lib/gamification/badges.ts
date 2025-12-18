@@ -74,8 +74,9 @@ export async function checkBadgeConditions(userId: string, newSessionId: string)
 
   // 6. Perfectionist: 5 Restarts in a session
   if (!currentBadges.has('Perfectionist') && currentSession) {
-    // Assuming 'restarts' is stored in metadata OR we check session record
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const meta = (currentSession as any).metadata || {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((currentSession as any).restarts >= 5 || meta.restarts >= 5) {
       earnedBadges.push('Perfectionist')
     }
@@ -83,7 +84,9 @@ export async function checkBadgeConditions(userId: string, newSessionId: string)
 
   // 7. The Listener: 10 Playbacks in a session
   if (!currentBadges.has('The Listener') && currentSession) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const meta = (currentSession as any).metadata || {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((currentSession as any).playbacks >= 10 || meta.playbacks >= 10) {
       earnedBadges.push('The Listener')
     }
