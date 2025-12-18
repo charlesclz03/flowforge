@@ -29,7 +29,7 @@ git push origin main
 
 Deploy FlowForge to Vercel with proper environment variables and configuration.
 
-**Live URL**: https://flowforge-pi.vercel.app
+**Live URL**: https://flowforge-freestyle.vercel.app
 
 ---
 
@@ -89,14 +89,19 @@ git push origin main
 ---
 
 ## 4. Troubleshooting
-
 ### Common Errors:
+**1. `Cannot find module ...` (e.g., `resend`, `react-intersection-observer`)**
+- Use `npm install <package-name>` to ensure it's in `package.json`.
+- Running `npm run build` **locally** helps reproduce these errors before pushing.
 
-**`Cannot find module '@vercel/og'`**
-- Use `import { ImageResponse } from 'next/og'` instead of `@vercel/og`
+**2. `Prisma Client` Errors (Stale Cache)**
+- If Vercel reports type errors for fields that *exist* in `schema.prisma`:
+    - Ensure `package.json` has `"postinstall": "prisma generate"`.
+    - If error persists, use `as any` casting in the API route as a temporary bypass: `createSession({...} as any)`.
+    - In Vercel Project Settings, clear the **Build Cache** and redeploy.
 
-**`Prisma Client not generated`**
-- Build command should be: `prisma generate && next build`
+**3. `@vercel/og` Resolution**
+- Use `import { ImageResponse } from 'next/og'` instead of `@vercel/og`.
 
 ---
 

@@ -2,12 +2,12 @@
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
 **Last Updated**: December 18, 2025  
-**Version**: v1.1.0-final  
-**Live URL**: https://flowforge-pi.vercel.app (Vercel Production)
+**Version**: v1.1.1 (Deployment Hotfix)  
+**Live URL**: https://flowforge-freestyle.vercel.app (Vercel Production)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
-> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE**. All "Bible" requirements and the final "Perfection Phase" are finished. Recent updates include **Advanced Badge Tracking** (Perfectionist/Machine Gun), **Word Bag System** (Zero repeats), **Stat Card Sharing (PNG)**, and **Word Vault Analytics**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
+> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline has been fully restored (v1.1.1). Recent updates include **Advanced Badge Tracking** (Perfectionist/Machine Gun), **Word Bag System** (Zero repeats), **Stat Card Sharing (PNG)**, and **Word Vault Analytics**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
 
 ## 1) TL;DR
 
