@@ -123,8 +123,6 @@ export default function ProfilePage() {
     }
   }, [session])
 
-
-
   const handleEditSuccess = async () => {
     await update() // Refresh session
     router.refresh()

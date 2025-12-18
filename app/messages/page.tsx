@@ -37,7 +37,7 @@ export default function InboxPage() {
       router.push('/')
       return
     }
-    
+
     if (status === 'authenticated') {
       fetch('/api/conversations')
         .then((res) => res.json())

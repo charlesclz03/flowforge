@@ -93,9 +93,7 @@ export function BottomNav() {
                       )
                     : cn(
                         'w-12 h-12 rounded-full',
-                        isActive
-                          ? 'text-white'
-                          : 'text-zinc-500 hover:text-zinc-300'
+                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                       )
                 )}
               >
@@ -103,7 +101,9 @@ export function BottomNav() {
                   size={isPrimary ? 28 : 24}
                   className={cn(
                     'transition-transform duration-300',
-                    isActive && !isPrimary ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]' : '',
+                    isActive && !isPrimary
+                      ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]'
+                      : '',
                     !isActive && !isPrimary ? 'group-hover:scale-110' : ''
                   )}
                   strokeWidth={isActive ? 2.5 : 2}
