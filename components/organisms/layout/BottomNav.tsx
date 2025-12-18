@@ -54,9 +54,9 @@ export function BottomNav() {
   ]
 
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 safe-bottom">
+    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 safe-bottom w-full max-w-[400px] px-4">
       {/* iOS-style Glass Dock */}
-      <div className="relative flex h-16 items-center px-4 gap-1 rounded-[2.5rem] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5">
+      <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5">
         {tabs.map((tab) => {
           const isActive = tab.match ? tab.match(pathname) : pathname === tab.href
           const isPrimary = 'isPrimary' in tab ? tab.isPrimary : false
@@ -68,40 +68,50 @@ export function BottomNav() {
               onClick={bump}
               aria-label={tab.name}
               className={cn(
-                'relative flex items-center justify-center rounded-full transition-all duration-300 group',
-                isPrimary
-                  ? cn(
-                      'absolute left-1/2 -translate-x-1/2 -top-6', // Floating position
-                      'w-16 h-16 shadow-xl',
-                      isActive
-                        ? 'bg-accent-purple text-white shadow-purple-glow'
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                    )
-                  : cn(
-                      'w-12 h-12',
-                      isActive
-                        ? 'text-white'
-                        : 'text-text-secondary hover:text-white hover:bg-white/5'
-                    )
+                'relative flex flex-col items-center justify-center transition-all duration-300 group',
+                isPrimary ? '-mt-8' : 'h-full'
               )}
             >
-              <tab.icon
-                size={isPrimary ? 28 : 22}
-                className={cn(
-                  'transition-transform duration-300',
-                  isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'
-                )}
-                strokeWidth={isActive ? 2.5 : 2}
-              />
-              {/* Active Indicator Dot (for non-primary) */}
+              {/* Spotlight Effect for Non-Primary */}
               {!isPrimary && isActive && (
-                <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-accent-purple" />
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent-purple/30 blur-xl rounded-full pointer-events-none" />
               )}
+              {!isPrimary && isActive && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-1 bg-accent-purple rounded-b-full shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+              )}
+
+              {/* Icon Container */}
+              <div
+                className={cn(
+                  'relative flex items-center justify-center transition-all duration-300',
+                  isPrimary
+                    ? cn(
+                        'w-16 h-16 rounded-full shadow-2xl shadow-purple-900/50',
+                        isActive
+                          ? 'bg-accent-purple text-white scale-110'
+                          : 'bg-accent-purple text-white/90 hover:scale-105'
+                      )
+                    : cn(
+                        'w-12 h-12 rounded-full',
+                        isActive
+                          ? 'text-white'
+                          : 'text-zinc-500 hover:text-zinc-300'
+                      )
+                )}
+              >
+                <tab.icon
+                  size={isPrimary ? 28 : 24}
+                  className={cn(
+                    'transition-transform duration-300',
+                    isActive && !isPrimary ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]' : '',
+                    !isActive && !isPrimary ? 'group-hover:scale-110' : ''
+                  )}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+              </div>
             </Link>
           )
         })}
-        {/* Ghost element to maintain spacing for the absolute primary button in the center */}
-        <div className="w-16 h-16 opacity-0 pointer-events-none" aria-hidden="true" />
       </div>
     </nav>
   )
