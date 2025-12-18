@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { Play as PlayButtonIcon, RefreshCcw } from 'lucide-react'
+import { Play as PlayButtonIcon, RefreshCcw, Eye, EyeOff, Zap, Gauge } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -26,6 +26,11 @@ interface PracticeControlsProps {
   isRecording?: boolean
   recordingDuration?: number
   error?: string | null
+  // New Props
+  onDifficultyChange?: (value: number) => void
+  onFrequencyChange?: (value: number) => void
+  cleanUI?: boolean
+  onToggleCleanUI?: () => void
 }
 
 export function PracticeControls({
@@ -44,6 +49,10 @@ export function PracticeControls({
   isRecording = false,
   recordingDuration = 0,
   error,
+  onDifficultyChange,
+  onFrequencyChange,
+  cleanUI = false,
+  onToggleCleanUI,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -58,33 +67,69 @@ export function PracticeControls({
     if (difficulty <= 1) {
       return {
         label: 'Easy',
-        classes: 'bg-accent-green/20 text-accent-green',
+        classes:
+          'bg-accent-green/20 text-accent-green border-accent-green/30 hover:bg-accent-green/30',
       }
     }
     if (difficulty === 2) {
       return {
         label: 'Medium',
-        classes: 'bg-accent-purple/20 text-accent-purple',
+        classes:
+          'bg-accent-purple/20 text-accent-purple border-accent-purple/30 hover:bg-accent-purple/30',
       }
     }
     return {
       label: 'Hard',
-      classes: 'bg-accent-red/20 text-accent-red',
+      classes: 'bg-accent-red/20 text-accent-red border-accent-red/30 hover:bg-accent-red/30',
     }
   }
 
   const difficultyMeta = getDifficultyMeta()
-  // const frequencyMeta = getFrequencyMeta()
-
-  // Calculate timer ring progress (Countdown to next word)
-  // We want the ring to fill up as we approach the next word change
   const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
 
+  // Handlers for cycling settings
+  const cycleDifficulty = () => {
+    if (!onDifficultyChange) return
+    const nextDiff = difficulty >= 3 ? 1 : difficulty + 1
+    onDifficultyChange(nextDiff)
+  }
+
+  const cycleFrequency = () => {
+    if (!onFrequencyChange) return
+    // Cycle between 2, 4, 8 bars
+    const nextFreq = frequency === 2 ? 4 : frequency === 4 ? 8 : 2
+    onFrequencyChange(nextFreq)
+  }
+
   return (
-    <Card padding="lg">
+    <Card
+      padding="lg"
+      className={cn(
+        'transition-opacity duration-500',
+        cleanUI ? 'bg-black/20 backdrop-blur-sm border-white/5' : ''
+      )}
+    >
       <div className="flex flex-col items-center gap-6 sm:gap-8">
-        {/* Session Info (Text Only) */}
-        <div className="text-center space-y-2">
+        {/* Top Controls Row */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+          {onToggleCleanUI && (
+            <button
+              onClick={onToggleCleanUI}
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
+              title={cleanUI ? 'Show UI' : 'Clean UI'}
+            >
+              {cleanUI ? <Eye size={18} /> : <EyeOff size={18} />}
+            </button>
+          )}
+        </div>
+
+        {/* Session Info (Text Only) - Hidden in Clean UI if desired, or kept minimal */}
+        <div
+          className={cn(
+            'text-center space-y-2 transition-all duration-300',
+            cleanUI ? 'opacity-50 hover:opacity-100' : ''
+          )}
+        >
           <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5/60 px-5 py-2.5 text-sm sm:text-base text-text-primary backdrop-blur-heavy shadow-soft">
             <span className="font-medium truncate max-w-[100px] sm:max-w-none">
               {selectedBeat.title}
@@ -94,16 +139,49 @@ export function PracticeControls({
               {selectedBeat.artistName || 'Producer'}
             </span>
           </div>
+
+          {/* Live Controls: Difficulty & Frequency */}
           <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
-            <div
+            {/* Difficulty Pill */}
+            <button
+              onClick={cycleDifficulty}
+              disabled={!onDifficultyChange}
               className={cn(
-                'inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium',
-                difficultyMeta.classes
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border transition-all',
+                difficultyMeta.classes,
+                !onDifficultyChange && 'cursor-default opacity-80'
               )}
+              title="Click to change difficulty"
             >
+              <Gauge size={10} />
               <span>{difficultyMeta.label}</span>
-            </div>
-            {selectedBeat.bpm} BPM
+            </button>
+
+            {/* BPM Display */}
+            <span className="opacity-50">{selectedBeat.bpm} BPM</span>
+
+            {/* Frequency Pill */}
+            <button
+              onClick={cycleFrequency}
+              disabled={!onFrequencyChange}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+                !onFrequencyChange && 'cursor-default opacity-50'
+              )}
+              title="Click to change word frequency"
+            >
+              <Zap
+                size={10}
+                className={
+                  frequency === 2
+                    ? 'text-accent-red'
+                    : frequency === 4
+                      ? 'text-accent-yellow'
+                      : 'text-accent-blue'
+                }
+              />
+              <span>{frequency} Bars</span>
+            </button>
           </div>
         </div>
 
@@ -117,7 +195,16 @@ export function PracticeControls({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div
+          className={cn(
+            'flex items-center gap-3 transition-opacity duration-300',
+            cleanUI && !isPlaying
+              ? 'opacity-100'
+              : cleanUI
+                ? 'opacity-0 hover:opacity-100'
+                : 'opacity-100'
+          )}
+        >
           {onRestart && (
             <motion.button
               whileHover={{ scale: 1.05 }}

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { EyeOff } from 'lucide-react'
 import { PracticeTemplate } from '@/components/templates'
 import { PageHeader } from '@/components/organisms/common'
 import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
@@ -33,18 +34,24 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 export default function PracticePage() {
   const router = useRouter()
   const { data: session } = useSession()
+  /* Clean UI State */
+  const [cleanUI, setCleanUI] = useState(false)
+
   const {
     selectedBeat,
     setBeat,
     frequency,
     difficulty,
-    // setFrequency, // Unused
-    // setDifficulty, // Unused
+    setFrequency,
+    setDifficulty,
     isTTSEnabled,
     ttsVolume,
     isLoaded,
     mode,
   } = usePracticeSession()
+  // ... (rest of vars)
+  // ...
+
   const [currentWord, setCurrentWord] = useState<string>('')
   const [wordList, setWordList] = useState<string[]>([])
   const [wordIndex, setWordIndex] = useState(0) // Track index for Golden Prompt
@@ -680,6 +687,9 @@ export default function PracticePage() {
     toast.success('Session Restarted', { icon: '🔄' })
   }, [beatPlayer, stopRecording, wordList])
 
+  // Ref to track current word inside interval (prevents stale closure)
+  const currentWordRef = useRef<string>('')
+
   // Timer countdown and word cycling (Modified for Siren)
   useEffect(() => {
     if (!beatPlayer.isPlaying || !selectedBeat || wordList.length === 0) return
@@ -687,6 +697,9 @@ export default function PracticePage() {
     const secondsPerBar = (60 / selectedBeat.bpm) * 4
     const secondsPerPrompt = secondsPerBar * frequency
     const startTime = Date.now()
+
+    // Reset ref on start
+    currentWordRef.current = ''
 
     const interval = setInterval(() => {
       const elapsedMs = Date.now() - startTime
@@ -699,8 +712,7 @@ export default function PracticePage() {
       const nextWordTime = (wordIdx + 1) * secondsPerPrompt
       const timeUntilChange = nextWordTime - elapsedSeconds
 
-      // Siren Check: Activate if within 4 seconds (approx 1 bar at slow bpm, or just anxiety inducing)
-      // Only if not currently changing word
+      // Siren Check
       if (timeUntilChange <= 4 && timeUntilChange > 0.5) {
         // setIsSirenActive(true) // Unused
       } else {
@@ -709,16 +721,10 @@ export default function PracticePage() {
 
       if (elapsedSeconds >= sessionDuration) {
         beatPlayer.stop()
-        if (elapsedSeconds >= sessionDuration) {
-          beatPlayer.stop()
-          stopRecording()
-          releaseLock()
-          setCurrentWord('')
-          // setIsSirenActive(false)
-          return
-        }
+        stopRecording()
+        releaseLock()
         setCurrentWord('')
-        // setIsSirenActive(false)
+        currentWordRef.current = '' // Reset
         return
       }
 
@@ -726,11 +732,12 @@ export default function PracticePage() {
       setWordIndex(wordIdx) // Update state
 
       const newWord = wordList[actualIndex]
-      if (newWord !== currentWord) {
+      // Use Ref to check freshness
+      if (newWord !== currentWordRef.current) {
         setCurrentWord(newWord)
-        // setIsSirenActive(false) // Reset siren on change
+        currentWordRef.current = newWord // Update Ref
 
-        // Trigger TTS using standardized voice
+        // Trigger TTS
         if (newWord) {
           speak(newWord)
         }
@@ -739,7 +746,6 @@ export default function PracticePage() {
 
     return () => {
       clearInterval(interval)
-      // setIsSirenActive(false) // Cleanup
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatPlayer.isPlaying, selectedBeat?.id, frequency, wordList.length, sessionDuration])
@@ -787,27 +793,48 @@ export default function PracticePage() {
   }, [])
 
   return (
-    <OnboardingLayout showBackButton onBack={() => router.push('/difficultyselection')}>
+    <OnboardingLayout
+      showBackButton={!cleanUI}
+      onBack={() => router.push('/difficultyselection')}
+      className={cleanUI ? 'z-[100]' : ''}
+    >
       <FirstVisitOverlay isBeatSelected={!!selectedBeat} />
+      {cleanUI && (
+        <style
+          dangerouslySetInnerHTML={{ __html: `nav.safe-bottom { display: none !important; }` }}
+        />
+      )}
+
       <PracticeTemplate
         pageHeader={
-          <PageHeader
-            title={
-              challengeId ? 'Duel Mode' : mode === 'cypher' ? 'Cypher Mode' : 'Practice Session'
-            }
-            description={
-              challengeId
-                ? 'Drop your best response!'
-                : mode === 'cypher'
-                  ? 'Pass the mic every 4 bars!'
-                  : 'Press play to start your 2-minute freestyle.'
-            }
-          />
+          !cleanUI ? (
+            <PageHeader
+              title={
+                challengeId ? 'Duel Mode' : mode === 'cypher' ? 'Cypher Mode' : 'Freestyle Session'
+              }
+              description={
+                challengeId
+                  ? 'Drop your best response!'
+                  : mode === 'cypher'
+                    ? 'Pass the mic every 4 bars!'
+                    : 'Press play to start your 2-minute freestyle.'
+              }
+              rightAction={
+                <button
+                  onClick={() => setCleanUI(!cleanUI)}
+                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
+                  title="Toggle Clean UI"
+                >
+                  <EyeOff size={20} />
+                </button>
+              }
+            />
+          ) : null
         }
         alerts={
           <>
             {/* Cypher Turn Indicator */}
-            {mode === 'cypher' && beatPlayer.isPlaying && (
+            {mode === 'cypher' && beatPlayer.isPlaying && !cleanUI && (
               <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
                 <div
                   className={`
@@ -843,39 +870,42 @@ export default function PracticePage() {
               data={sessionSummary}
               onClose={() => {
                 setSessionSummary(null)
-                // Reset session logic if needed
               }}
             />
           </>
         }
         beatSelector={
-          <BeatDropdown
-            beats={beats}
-            selectedBeat={selectedBeat}
-            onSelect={handleBeatChange}
-            isPro={isPro}
-            disabled={beatPlayer.isPlaying || isRecording}
-            isLoading={isLoadingBeats}
-            onLockedSelect={() => {
-              setPremiumTrigger('beat')
-              setShowPremiumModal(true)
-            }}
-          />
+          !cleanUI ? (
+            <BeatDropdown
+              beats={beats}
+              selectedBeat={selectedBeat}
+              onSelect={handleBeatChange}
+              isPro={isPro}
+              disabled={beatPlayer.isPlaying || isRecording}
+              isLoading={isLoadingBeats}
+              onLockedSelect={() => {
+                setPremiumTrigger('beat')
+                setShowPremiumModal(true)
+              }}
+            />
+          ) : null
         }
         sessionConfig={
-          <div className="hidden lg:block">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
-              <span className="font-bold text-accent-purple">PRO TIP:</span>
-              <span>
-                Press <kbd className="font-sans font-bold text-white">Space</kbd> to Start/Pause
-              </span>
+          !cleanUI ? (
+            <div className="hidden lg:block">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
+                <span className="font-bold text-accent-purple">PRO TIP:</span>
+                <span>
+                  Press <kbd className="font-sans font-bold text-white">Space</kbd> to Start/Pause
+                </span>
+              </div>
             </div>
-          </div>
+          ) : null
         }
         practiceControls={
           selectedBeat ? (
             <div className="relative w-full flex justify-center items-center">
-              {/* Visualizer in background of controls */}
+              {/* Visualizer in background */}
               <div className="absolute inset-0 pointer-events-none opacity-30 z-0 scale-150">
                 <AudioVisualizer
                   isPlaying={beatPlayer.isPlaying || isRecording}
@@ -905,6 +935,11 @@ export default function PracticePage() {
                     onRestart={handleRestart}
                     difficulty={difficulty}
                     frequency={frequency}
+                    // New Props
+                    onDifficultyChange={setDifficulty}
+                    onFrequencyChange={setFrequency}
+                    cleanUI={cleanUI}
+                    onToggleCleanUI={() => setCleanUI(!cleanUI)}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
                     onSkipWord={() => {
                       setCurrentWord(wordList[(wordIndex + 1) % wordList.length])

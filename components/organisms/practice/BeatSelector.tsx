@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { Beat } from '@/types/database'
 import { BeatCard } from '@/components/molecules/practice/BeatCard'
 import { EmptyState } from '@/components/molecules/feedback/EmptyState'
@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { Search, Dices } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { toast } from 'react-hot-toast'
+import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 
 interface BeatSelectorProps {
   beats: Beat[]
@@ -25,6 +26,51 @@ export function BeatSelector({
   className,
 }: BeatSelectorProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
+
+  // Load favorites on mount
+  useEffect(() => {
+    getFavoriteBeatIds()
+      .then((ids) => {
+        setFavoriteBeatIds(new Set(ids))
+      })
+      .catch((err) => console.error('Failed to load favorites', err))
+  }, [])
+
+  const handleToggleFavorite = useCallback(async (beatId: string) => {
+    // Optimistic Update
+    setFavoriteBeatIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(beatId)) {
+        next.delete(beatId)
+      } else {
+        next.add(beatId)
+      }
+      return next
+    })
+
+    try {
+      const result = await toggleBeatFavorite(beatId)
+      // Revert if correct state doesn't match? No need if server action returns favorited state.
+      // But standard optimistic behavior is usually enough.
+      if (result.favorited !== undefined) {
+        setFavoriteBeatIds((prev) => {
+          const next = new Set(prev)
+          if (result.favorited) next.add(beatId)
+          else next.delete(beatId)
+          return next
+        })
+        toast.success(result.favorited ? 'Added to favorites' : 'Removed from favorites', {
+          icon: result.favorited ? '❤️' : '💔',
+          position: 'bottom-center',
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to update favorite')
+      // Revert optimistic update here if needed, but keeping simple for MVP
+    }
+  }, [])
 
   // Memoize filtered beats computation to avoid re-filtering on every render
   const filteredBeats = useMemo(
@@ -87,8 +133,10 @@ export function BeatSelector({
               key={beat.id}
               beat={beat}
               isSelected={selectedBeat?.id === beat.id}
+              isFavorited={favoriteBeatIds.has(beat.id)}
               isLocked={beat.isPremium && !isPro}
               onSelect={onSelect}
+              onToggleFavorite={handleToggleFavorite}
             />
           ))
         ) : (

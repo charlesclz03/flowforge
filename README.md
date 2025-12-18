@@ -2,8 +2,9 @@
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
 **Last Updated**: December 18, 2025  
-**Version**: v1.1.1 (Deployment Hotfix)  
-**Live URL**: https://flowforge-freestyle.vercel.app (Vercel Production)
+**Version**: v1.1.2 (Social Polish)
+**Status**: 🟢 Production Ready
+**Live URL**: [flowforge-freestyle.vercel.app](https://flowforge-freestyle.vercel.app)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 

@@ -19,7 +19,11 @@ Expand FlowForge beyond the web browser and into deep AI integration. This phase
 - **Goal**: Superior audio latency, background recording, native notifications.
 - **Features**: "Car Mode" (voice only UI), offline-first architecture.
 
-### 2. Advanced AI Tools
+### 2. Social Expansion
+- **Hashtags**: Organize sessions by style or challenge (e.g., #SpeedChallenge).
+- **Trending Feed**: "Top of the Week" algorithm based on Flow Density and engagement.
+
+### 3. Advanced AI Tools
 
 - **Auto-Transcription**: Server-side Whisper integration to transcribe lyrics.
 - **Rhyme Analysis**: AI that highlights multi-syllabic rhyme schemes.

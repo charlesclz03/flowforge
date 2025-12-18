@@ -17,7 +17,7 @@ export function BottomNav() {
   if (!isAuthenticated) return null
 
   // Define tabs
-  // "Practice" is effectively Home/Create for this app.
+  // Order: Feed, Rankings, PRACTICE (Center), Messages, Profile
   const tabs = [
     {
       name: 'Feed',
@@ -26,16 +26,17 @@ export function BottomNav() {
       match: (path: string) => path === '/feed',
     },
     {
-      name: 'Practice',
-      href: '/practice',
-      icon: Mic,
-      match: (path: string) => path === '/practice' || path === '/difficultyselection',
-    },
-    {
       name: 'Rankings',
       href: '/leaderboard',
       icon: Trophy,
       match: (path: string) => path.startsWith('/leaderboard'),
+    },
+    {
+      name: 'Practice',
+      href: '/practice',
+      icon: Mic,
+      match: (path: string) => path === '/practice' || path === '/difficultyselection',
+      isPrimary: true, // Special flag for center button
     },
     {
       name: 'Messages',
@@ -45,18 +46,19 @@ export function BottomNav() {
     },
     {
       name: 'Profile',
-      href: '/profile', // Profile redirects or handled by middleware? App usually has /u/[me] or similar.
-      // Assuming /profile exists or redirects.
+      href: '/profile',
       icon: User,
       match: (path: string) => path.startsWith('/profile') || path.startsWith('/u/'),
     },
   ]
 
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 safe-bottom">
-      <div className="flex items-center gap-1 p-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl">
+    <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 safe-bottom">
+      {/* iOS-style Glass Dock */}
+      <div className="flex items-end gap-2 p-2 rounded-[2rem] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5">
         {tabs.map((tab) => {
           const isActive = tab.match ? tab.match(pathname) : pathname === tab.href
+          const isPrimary = 'isPrimary' in tab ? tab.isPrimary : false
 
           return (
             <Link
@@ -65,20 +67,34 @@ export function BottomNav() {
               onClick={bump}
               aria-label={tab.name}
               className={cn(
-                'relative flex items-center justify-center w-14 h-14 rounded-full transition-all duration-300',
-                isActive
-                  ? 'bg-accent-purple text-white shadow-purple-glow'
-                  : 'text-text-secondary hover:text-white hover:bg-white/5'
+                'relative flex items-center justify-center rounded-full transition-all duration-300 group',
+                isPrimary
+                  ? cn(
+                      'w-16 h-16 mb-2 -mt-4 shadow-xl',
+                      isActive
+                        ? 'bg-accent-purple text-white shadow-purple-glow'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    )
+                  : cn(
+                      'w-12 h-12',
+                      isActive
+                        ? 'bg-white/10 text-white'
+                        : 'text-text-secondary hover:text-white hover:bg-white/5'
+                    )
               )}
             >
               <tab.icon
-                size={24}
+                size={isPrimary ? 28 : 22}
                 className={cn(
                   'transition-transform duration-300',
-                  isActive ? 'scale-110' : 'scale-100'
+                  isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'
                 )}
                 strokeWidth={isActive ? 2.5 : 2}
               />
+              {/* Active Indicator Dot (for non-primary) */}
+              {!isPrimary && isActive && (
+                <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-accent-purple" />
+              )}
             </Link>
           )
         })}

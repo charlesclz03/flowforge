@@ -2,6 +2,15 @@
 
 All notable changes to the FlowForge project will be documented in this file.
 
+## [v1.1.2] - 2025-12-18
+
+### Added
+- **Favorite Beats**: "Heart" icon on Beat Cards to save favorites.
+- **Social**: Favorite beat toggle fully integrated with backend.
+
+### Changed
+- **Roadmap**: Moved Hashtags and Trending Feed to Phase 8 (Social Expansion).
+
 ## [v1.1.1] - 2025-12-18
 
 ### Fixed

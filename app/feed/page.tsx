@@ -7,51 +7,56 @@ import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
 export const dynamic = 'force-dynamic'
 
 async function getInitialFeed() {
-  const items = await prisma.freestyleSession.findMany({
-    take: 10,
-    where: {
-      storageUrl: { not: '' },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    include: {
-      user: true,
-      beat: true,
-      _count: {
-        select: {
-          likes: true,
-          comments: true,
-          duels: true, // Count child sessions (responses)
+  try {
+    const items = await prisma.freestyleSession.findMany({
+      take: 10,
+      where: {
+        storageUrl: { not: '' },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        user: true,
+        beat: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+            duels: true, // Count child sessions (responses)
+          },
         },
       },
-    },
-  })
-
-  // Sign URLs for playback (Server Component Side)
-  // We need to dynamically import Supabase here to avoid client/server bundle issues if any
-  const { createServerClient, RECORDINGS_BUCKET } = await import('@/lib/supabase/server')
-  const supabase = createServerClient()
-  const SIGNED_URL_TTL_SECONDS = 60 * 60 // 1 hour
-
-  const itemsWithSignedUrls = await Promise.all(
-    items.map(async (item) => {
-      if (!item.storageUrl || item.storageUrl.startsWith('http')) {
-        return item
-      }
-
-      const { data } = await supabase.storage
-        .from(RECORDINGS_BUCKET)
-        .createSignedUrl(item.storageUrl, SIGNED_URL_TTL_SECONDS)
-
-      return {
-        ...item,
-        storageUrl: data?.signedUrl || item.storageUrl,
-      }
     })
-  )
 
-  return itemsWithSignedUrls
+    // Sign URLs for playback (Server Component Side)
+    // We need to dynamically import Supabase here to avoid client/server bundle issues if any
+    const { createServerClient, RECORDINGS_BUCKET } = await import('@/lib/supabase/server')
+    const supabase = createServerClient()
+    const SIGNED_URL_TTL_SECONDS = 60 * 60 // 1 hour
+
+    const itemsWithSignedUrls = await Promise.all(
+      items.map(async (item) => {
+        if (!item.storageUrl || item.storageUrl.startsWith('http')) {
+          return item
+        }
+
+        const { data } = await supabase.storage
+          .from(RECORDINGS_BUCKET)
+          .createSignedUrl(item.storageUrl, SIGNED_URL_TTL_SECONDS)
+
+        return {
+          ...item,
+          storageUrl: data?.signedUrl || item.storageUrl,
+        }
+      })
+    )
+
+    return itemsWithSignedUrls
+  } catch (error) {
+    console.error('Failed to fetch feed:', error)
+    return []
+  }
 }
 
 export default async function FeedPage() {
