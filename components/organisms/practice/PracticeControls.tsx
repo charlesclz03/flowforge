@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { Play as PlayButtonIcon } from 'lucide-react'
+import { Play as PlayButtonIcon, RefreshCcw } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -16,7 +16,9 @@ interface PracticeControlsProps {
   currentTime: number
   sessionDuration: number
   currentWord: string
+  // eslint-disable-next-line
   onToggle: () => void
+  onRestart?: () => void
   difficulty: number
   frequency: number
   isGolden?: boolean
@@ -34,6 +36,7 @@ export function PracticeControls({
   sessionDuration,
   currentWord,
   onToggle,
+  onRestart,
   difficulty,
   frequency,
   isGolden = false,
@@ -113,17 +116,32 @@ export function PracticeControls({
           />
         </div>
 
-        {/* Panic Button */}
-        {onSkipWord && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onSkipWord}
-            className="px-6 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
-          >
-            <span>😱 Panic!</span>
-          </motion.button>
-        )}
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          {onRestart && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onRestart}
+              className="px-4 py-2 rounded-full border border-white/20 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10 text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
+              aria-label="Restart Session"
+            >
+              <RefreshCcw size={14} />
+              <span>Restart</span>
+            </motion.button>
+          )}
+
+          {onSkipWord && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onSkipWord}
+              className="px-4 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500/20 text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
+            >
+              <span>😱 Panic!</span>
+            </motion.button>
+          )}
+        </div>
 
         {error && (
           <div className="text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
@@ -214,6 +232,13 @@ export function PracticeControls({
 
                   <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider mt-1">
                     Tap to Stop
+                  </span>
+                </>
+              ) : isLoading ? (
+                <>
+                  <div className="h-16 w-16 mb-2 rounded-full border-2 border-accent-purple/30 border-t-accent-purple animate-spin" />
+                  <span className="text-sm font-medium text-text-tertiary uppercase tracking-widest">
+                    Loading Audio
                   </span>
                 </>
               ) : (

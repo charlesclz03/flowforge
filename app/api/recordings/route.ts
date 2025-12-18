@@ -32,6 +32,8 @@ export async function POST(request: Request) {
     const score = parseInt(formData.get('score') as string) || 0
     const vibe = (formData.get('vibe') as string) || null
     const parentId = (formData.get('parentId') as string) || null
+    const restarts = parseInt(formData.get('restarts') as string) || 0
+    const playbacks = parseInt(formData.get('playbacks') as string) || 0
 
     // Validate required fields
     if (!audioFile || !beatId || !title || !durationSeconds) {
@@ -78,7 +80,8 @@ export async function POST(request: Request) {
     }
 
     // Create session record
-    const sessionResult = await createSession({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sessionResult = await (createSession as any)({
       userId: session.user.id,
       beatId,
       title,
@@ -89,6 +92,8 @@ export async function POST(request: Request) {
       score,
       vibe: vibe || null,
       parentId: parentId || null,
+      restarts,
+      playbacks,
     })
 
     if (!sessionResult.success) {

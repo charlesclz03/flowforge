@@ -1,13 +1,15 @@
-# Phase 7: Future Horizons (Mobile & Advanced AI)
+# Phase 8: Future Vision (Mobile & Advanced AI)
 
-**Status**: 🔭 **VISION**
-**Timeline**: Late 2026+
+**Status**: 🔭 **VISION**  
+**Timeline**: 2026+
 
 ---
 
 ## 🎯 Goal
 
-Expand FlowForge beyond the web browser and into deep AI integration.
+Expand FlowForge beyond the web browser and into deep AI integration. This phase begins after FlowForge V1.1 has been validated by users.
+
+---
 
 ## 📦 Key Initiatives
 
@@ -20,7 +22,7 @@ Expand FlowForge beyond the web browser and into deep AI integration.
 ### 2. Advanced AI Tools
 
 - **Auto-Transcription**: Server-side Whisper integration to transcribe lyrics.
-- **Rhyme Analysis**: AI that highlights multi-syllabic rhyme schemes in the transcript.
+- **Rhyme Analysis**: AI that highlights multi-syllabic rhyme schemes.
 - **"Flow Coach"**: LLM feedback on rhythm, vocabulary variety, and topic adherence.
 
 ### 3. Beat Marketplace
@@ -30,6 +32,10 @@ Expand FlowForge beyond the web browser and into deep AI integration.
 
 ---
 
-## 📝 Note on Phasing
+## ✅ Prerequisite
 
-_Historically, "Phase 7" referred to "Testing & Polish" of the MVP. Since the MVP is complete, Phase 7 now represents this post-social future roadmap._
+Phase 8 begins after user feedback and analytics from the v1.1.0 launch confirm demand for these features.
+
+---
+
+**Last Updated**: December 18, 2025

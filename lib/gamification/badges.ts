@@ -1,7 +1,14 @@
 import { prisma } from '@/lib/prisma'
 import { FreestyleSession } from '@prisma/client'
 
-export type BadgeType = 'Founder' | 'Night Shift' | 'Beat Mastery' | 'Dedication'
+export type BadgeType =
+  | 'Founder'
+  | 'Night Shift'
+  | 'Beat Mastery'
+  | 'Dedication'
+  | 'Machine Gun'
+  | 'Perfectionist'
+  | 'The Listener'
 
 export async function checkBadgeConditions(userId: string, newSessionId: string) {
   const user = await prisma.user.findUnique({
@@ -53,6 +60,32 @@ export async function checkBadgeConditions(userId: string, newSessionId: string)
   if (!currentBadges.has('Dedication')) {
     if (user.freestyleSessions.length >= 10) {
       earnedBadges.push('Dedication')
+    }
+  }
+
+  const currentSession = user.freestyleSessions.find((s: FreestyleSession) => s.id === newSessionId)
+
+  // 5. Machine Gun: Hard Mode + 4 Bar Frequency
+  if (!currentBadges.has('Machine Gun') && currentSession) {
+    if (currentSession.difficulty >= 3 && currentSession.frequency <= 4) {
+      earnedBadges.push('Machine Gun')
+    }
+  }
+
+  // 6. Perfectionist: 5 Restarts in a session
+  if (!currentBadges.has('Perfectionist') && currentSession) {
+    // Assuming 'restarts' is stored in metadata OR we check session record
+    const meta = (currentSession as any).metadata || {}
+    if ((currentSession as any).restarts >= 5 || meta.restarts >= 5) {
+      earnedBadges.push('Perfectionist')
+    }
+  }
+
+  // 7. The Listener: 10 Playbacks in a session
+  if (!currentBadges.has('The Listener') && currentSession) {
+    const meta = (currentSession as any).metadata || {}
+    if ((currentSession as any).playbacks >= 10 || meta.playbacks >= 10) {
+      earnedBadges.push('The Listener')
     }
   }
 

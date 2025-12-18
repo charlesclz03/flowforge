@@ -3,7 +3,9 @@
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Wand2, Share2 } from 'lucide-react'
+import { PostProcessingModal } from './PostProcessingModal'
+import { useState } from 'react'
 
 interface SessionSummaryData {
   score: number
@@ -11,6 +13,7 @@ interface SessionSummaryData {
   description: string
   wordCount: number
   duration: number
+  audioUrl?: string
 }
 
 interface SessionSummaryModalProps {
@@ -20,8 +23,22 @@ interface SessionSummaryModalProps {
 
 export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps) {
   const router = useRouter()
+  const [showStudio, setShowStudio] = useState(false)
 
   if (!data) return null
+
+  if (showStudio && data.audioUrl) {
+    return (
+      <PostProcessingModal
+        audioUrl={data.audioUrl}
+        onClose={() => setShowStudio(false)}
+        onSave={(blob) => {
+          console.log('Processed blob ready for upload:', blob)
+          // Integration point for re-uploading processed audio if needed
+        }}
+      />
+    )
+  }
 
   return (
     <Modal isOpen={!!data} onClose={onClose} title="Session Complete">
@@ -51,6 +68,29 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
 
         {/* Actions */}
         <div className="flex flex-col gap-3">
+          {data.audioUrl && (
+            <Button
+              onClick={() => setShowStudio(true)}
+              variant="outline"
+              className="w-full border-accent-purple text-accent-purple hover:bg-accent-purple/10 flex items-center justify-center gap-2"
+            >
+              <Wand2 size={18} />
+              Studio FX & Mixer
+            </Button>
+          )}
+          {data.audioUrl && (
+            <Button
+              onClick={() => {
+                const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split('on ')[1] || 'FlowForge'}`
+                window.open(url, '_blank')
+              }}
+              variant="outline"
+              className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2"
+            >
+              <Share2 size={18} />
+              Share Record (PNG)
+            </Button>
+          )}
           <Button
             onClick={() => router.push('/recordings')}
             className="w-full bg-white text-black hover:bg-white/90"

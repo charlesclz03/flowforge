@@ -205,6 +205,8 @@ model FreestyleSession {
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
   score           Int      @default(0)
   vibe            String?  // "Hype", "Chill", "Locked In"
+  restarts        Int      @default(0)
+  playbacks       Int      @default(0)
   createdAt       DateTime @default(now()) @map("created_at")
 
   parentId        String?  @map("parent_id")

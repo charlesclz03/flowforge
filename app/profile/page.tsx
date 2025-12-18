@@ -21,6 +21,7 @@ import type { Recording } from '@/components/organisms/profile/StatsSection'
 import { GuestStorage } from '@/lib/guest-storage'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { SocialsForm } from '@/components/organisms/profile/SocialsForm'
+import { getRank } from '@/lib/gamification/ranks'
 
 import { EditProfileDialog } from '@/components/organisms/profile/EditProfileDialog'
 
@@ -28,6 +29,7 @@ export default function ProfilePage() {
   const { data: session, status, update } = useSession()
   const router = useRouter()
   const [recordings, setRecordings] = useState<Recording[]>([])
+  const [wordVaultCount, setWordVaultCount] = useState(0)
   const [isLoadingRecordings, setIsLoadingRecordings] = useState(true)
   const [restorationMessage, setRestorationMessage] = useState<string | null>(null)
 
@@ -42,22 +44,35 @@ export default function ProfilePage() {
   }, [status, router])
 
   useEffect(() => {
-    async function fetchRecordings() {
+    async function fetchStats() {
       try {
-        const response = await fetch('/api/recordings')
-        if (response.ok) {
-          const data = await response.json()
+        const [recRes, statsRes] = await Promise.all([
+          fetch('/api/recordings'),
+          fetch('/api/user/stats'),
+        ])
+
+        if (recRes.ok) {
+          const data = await recRes.json()
           setRecordings(data.recordings || [])
         }
+        if (statsRes.ok) {
+          const data = await statsRes.json()
+          setWordVaultCount(data.wordVaultCount || 0)
+        }
       } catch (error) {
-        console.error('Failed to fetch recordings:', error)
+        console.error('Failed to fetch stats:', error)
       } finally {
         setIsLoadingRecordings(false)
       }
     }
 
+    if (session) {
+      fetchStats()
+    }
+  }, [session])
+
+  useEffect(() => {
     async function checkGuestSession() {
-      // ... (Guest session logic unchanged)
       if (!session?.user) return
 
       try {
@@ -83,7 +98,11 @@ export default function ProfilePage() {
           setTimeout(() => setRestorationMessage(null), 5000)
 
           // Refresh list
-          fetchRecordings()
+          const res = await fetch('/api/recordings')
+          if (res.ok) {
+            const data = await res.json()
+            setRecordings(data.recordings || [])
+          }
         }
       } catch (error) {
         console.error('Failed to restore guest session:', error)
@@ -91,7 +110,6 @@ export default function ProfilePage() {
     }
 
     if (session) {
-      fetchRecordings()
       checkGuestSession()
     }
   }, [session])
@@ -150,12 +168,24 @@ export default function ProfilePage() {
             )}
           </div>
         }
-        accountInfo={<AccountInfo user={session.user} onEdit={() => setIsEditProfileOpen(true)} />}
+        accountInfo={
+          <AccountInfo
+            user={session.user}
+            rank={getRank(
+              recordings.reduce((acc, rec) => acc + (rec.durationSeconds || 0), 0) / 60
+            )}
+            onEdit={() => setIsEditProfileOpen(true)}
+          />
+        }
         subscription={<SubscriptionSection />}
         security={<SecuritySection />}
         stats={
           <div className="space-y-6">
-            <StatsSection recordings={recordings} isLoading={isLoadingRecordings} />
+            <StatsSection
+              recordings={recordings}
+              isLoading={isLoadingRecordings}
+              wordVaultCount={wordVaultCount}
+            />
             <BadgesDisplay badges={session.user.badges || []} />
           </div>
         }

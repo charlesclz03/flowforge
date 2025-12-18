@@ -8,9 +8,18 @@ export class WordGenerator {
   private words: WordData[]
   private usedWords: Set<string> = new Set()
   private currentDifficulty: number = 2
+  private safeMode: boolean = false
 
   constructor(words: WordData[]) {
     this.words = words
+  }
+
+  /**
+   * Set safe mode
+   */
+  setSafeMode(enabled: boolean): void {
+    this.safeMode = enabled
+    this.usedWords.clear()
   }
 
   /**
@@ -25,7 +34,14 @@ export class WordGenerator {
    * Get available words for current difficulty
    */
   private getAvailableWords(): WordData[] {
-    const difficultyWords = filterByDifficulty(this.words, this.currentDifficulty)
+    let difficultyWords = filterByDifficulty(this.words, this.currentDifficulty)
+
+    if (this.safeMode) {
+      const explicitWords = ['fuck', 'shit', 'bitch', 'damn']
+      difficultyWords = difficultyWords.filter(
+        (w) => !explicitWords.some((explicit) => w.wordText.toLowerCase().includes(explicit))
+      )
+    }
 
     // Filter out recently used words
     return difficultyWords.filter((w) => !this.usedWords.has(w.wordText))

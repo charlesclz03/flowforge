@@ -1,7 +1,7 @@
 # FlowForge - Application Overview & Feature Guide
 
-**Date**: December 11, 2025  
-**Version**: 1.0.0 (Gold Master)
+**Date**: December 18, 2025  
+**Version**: 1.1.0 (Production Certified)
 
 ---
 
@@ -13,12 +13,12 @@ The app follows a simple but powerful "Hook Model" loop:
 
 1.  **Trigger**: User wants to practice.
 2.  **Action**: User acts on a prompt (Beat + Words).
-3.  **Variable Reward**: The satisfaction of a good flow + recording playback.
-4.  **Investment**: Saved sessions and streak tracking.
+3.  **Variable Reward**: The satisfaction of a good flow + recording playback + Badge progression.
+4.  **Investment**: Saved sessions, word collection, and streak tracking.
 
 ---
 
-## ✅ Implemented Features (MVP)
+## ✅ Implemented Features (MVP + Perfection Phase)
 
 All features listed here are currently live and functional in the production environment.
 
@@ -28,75 +28,48 @@ The heart of the application, designed for zero-latency performance.
 
 - **Beat Selection**:
   - **Dropdown Interface**: Streamlined dropdown menu for selecting beats without leaving the practice view.
-  - **Detailed Metadata**: Real-time display of Title, Artist, BPM, and Genre.
-  - **Audio Engine**: High-fidelity web audio playback with seamless looping.
+  - **Randomize Mode**: Dice icon to instantly pick a random combination of beat, frequency, and difficulty.
+  - **Preloading Logic**: "Start" button dynamically updates to "Loading Audio..." and is disabled until the beat is ready, ensuring no buffering mid-flow.
 - **Visual Feedback**:
   - **"Orb" Player Design**: Central interactive element with a glowing timer ring that visually counts down to the next word prompt.
   - **Word Prompts**: Large, legible words that appear on-beat, synchronized to the selected frequency (4, 8, or 16 bars).
-  - **Recording Indicator**: Real-time feedback (pulsing red dot) when the microphone is active.
+  - **Word "Bag System"**: Advanced shuffle logic ensuring no word repeats within a 500-word cycle.
+  - **Golden Prompts**: Rare, glowing words that award bonus points if hit in pocket.
 
 ### 2. Audio & Recording System
 
 - **High-Fidelity Recording**: Captures user vocals in `stereo` (where supported) using `audio/webm`.
 - **Mobile Optimization**: Explicitly manages audio routing to ensure playback through main speakers rather than earpiece, preventing volume "ducking" during recording.
-- **Session Management**:
-  - **Auto-Stop**: Sessions automatically end at the limit (2 mins for Free, Unlimited for Pro).
-  - **Cloud Storage**: Recordings are securely uploaded to Supabase Storage.
-- **Guest Mode**:
-  - Unauthenticated users can record a session which is saved locally to their device.
-  - Upon signing in, the guest session is automatically uploaded and attached to their new account.
+- **Studio FX**: Toggleable real-time reverb (ConvolverNode) and vocal volume mixing in the review stage.
+- **Latency Calibration**: Manual nudge slider (+/- 100ms) to perfect vocal synchronization post-recording.
 
 ### 3. User Accounts & Profile
 
-- **Authentication**:
-  - Google OAuth integration for one-tap sign-in.
-  - Secure session management via NextAuth.js.
+- **Authentication**: Google OAuth with auto-sync of guest sessions.
 - **Profile Dashboard**:
-  - **Statistics**: Tracks "Total Recordings", "Minutes Practiced", and "Unique Beats Used".
-  - **Recordings Library**: Chronological list of user's past sessions.
-  - **Subscription Status**: Clear display of Free/Pro status with upgrade options.
+  - **Performance Stats**: Real-time tracking of "Total Recordings", "Minutes Practiced", and "Battle Wins".
+  - **Word Vault Card**: Visual breakdown of your vocabulary library ("X / 2000 Words Collected").
+  - **Badge Showcase**: Apex-style badges earned through specific achievements.
+  - **Settings Dropdown**: Quick access to user rank, streak status (with "Streak Freeze" indicator), and a "Report Bug" link.
 
-### 4. Admin Dashboard
+### 6. Social Ecosystem & Dynamic Sharing
 
-- **Restricted Access**: Only accessible to defined admin users.
-- **Beat Management**:
-  - **Upload**: Interface to upload new beat audio files and cover art.
-  - **Metadata**: Set BPM, Genre, and Artist details.
-  - **Gating**: Mark beats as "Premium" to lock them for Pro users only.
+- **Public Profiles**: Custom URLs (`/u/[username]`) showcasing the "Rapper Card".
+- **Stat Card Sharing**:
+  - **Dynamic PNG Generation**: One-click button to generate a shareable image featuring your session score, vibe, and beat metadata.
+- **The Feed**: Interactive stream with Likes, Comments, and Following.
+- **Duel Mode**: Fairness-first challenges where users compete on the same beat and word seed.
 
-### 5. Monetization (Pro Tier)
-
-- **Stripe Integration**: Secure checkout and subscription management.
-- **Pro Features**:
-  - **Unlimited Recording**: No 2-minute cap.
-  - **Premium Beats**: Access to the full catalog of exclusive instrumentals.
-  - **No Watermark**: Clean audio downloads without the "FlowForge" sonic branding.
-  - **Priority support**: (Implied/Planned).
-
-### 6. Social Ecosystem & Leaderboard
-
-- **Leaderboard**:
-  - **Global Rankings**: Tracks top users based on `Flow Points`.
-  - **Sorting**: Filter by Weekly, Monthly, or All-Time high scores.
-- **Public Profiles**:
-  - `/u/[username]` pages showcasing user stats and session list.
-  - Social media link integration (Instagram/TikTok).
-- **The Feed**:
-  - **Trending**: Curated feed of popular sessions.
-  - **Following**: Activity feed from users you follow.
-  - **Interactions**: Like and Comment on sessions.
-- **Duel Mode**:
-  - **Challenge Mechanic**: Any session can be "challenged", linking the new recording to the original as a response.
-
-### 7. Gamification & Progression
+### 7. Gamification & Apex Badge Suite
 
 - **Scoring System**:
-  - **Flow Density**: Algorithmic analysis of vocal activity to generate a score.
-  - **Vibe Check**: Categorizes delivery energy (e.g., "Hype", "Chill").
-- **Word Vault**:
-  - Tracks every unique word a user has successfully incorporated into their flows.
-  - Stats display for "Total Words Collected".
-- **First Time Overlay**: Interactive guide for new users on their first visit to the Practice page.
+  - **Flow Density**: Real-time analysis of vocal activity and rhythmic pocket.
+  - **Vibe Check**: Energy classification (e.g., "Relentless Pocket", "Locked In").
+- **Badge System**: Eight unique achievements including:
+  - **Machine Gun**: For high-speed flows on Hard Mode + 4 Bar Frequency.
+  - **Perfectionist**: Awarded for persistent rehearsal (5+ restarts in one session).
+  - **The Listener**: Awarded for self-review advocacy (10+ playbacks).
+  - **Panic Button**: Skip current word at the cost of -500 points.
 
 ---
 

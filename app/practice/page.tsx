@@ -21,7 +21,7 @@ import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
-// import { analyzeAudio } from '@/lib/scoring' // Unused now
+import { analyzeAudio } from '@/lib/scoring'
 import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { SessionSummaryModal } from '@/components/molecules/practice/SessionSummaryModal'
@@ -70,6 +70,9 @@ export default function PracticePage() {
   // ... inside PracticePage
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoadingBeats, setIsLoadingBeats] = useState(true)
+  const [penalty, setPenalty] = useState(0)
+  const [restartCount, setRestartCount] = useState(0)
+  const [playbackCount, setPlaybackCount] = useState(0)
 
   // ...
 
@@ -85,7 +88,9 @@ export default function PracticePage() {
       setIsLoadingBeats(false)
     }
   }
-  fetchBeats()
+  useEffect(() => {
+    fetchBeats()
+  }, [])
 
   // ...
 
@@ -197,6 +202,29 @@ export default function PracticePage() {
               console.warn('Vibe check failed', err)
             }
 
+            let finalScore = 0
+            let vibe = vibeResult.vibe
+            const description = vibeResult.description
+
+            try {
+              // Bible 3.1: Physical Analysis for Flow Density
+              const physicalAnalysis = await analyzeAudio(blob)
+              // Combine AI sentiment (vibeResult.score) with Physical Density (physicalAnalysis.score)
+              // AI provides semantic quality, Physical provides technical performance
+              const combinedScore = Math.round(
+                vibeResult.score * 0.4 + physicalAnalysis.score * 0.6
+              )
+              finalScore = Math.max(0, combinedScore - penalty * 500)
+
+              // If physical analysis is super high, maybe upgrade the vibe?
+              if (physicalAnalysis.score > 9000 && vibeResult.vibe === 'Locked In') {
+                vibe = 'Relentless Pocket'
+              }
+            } catch (err) {
+              console.warn('Physical analysis failed, falling back to AI only', err)
+              finalScore = Math.max(0, vibeResult.score - penalty * 500)
+            }
+
             const formData = new FormData()
             formData.append('audio', blob, 'recording.webm')
             formData.append('beatId', selectedBeat.id)
@@ -204,9 +232,11 @@ export default function PracticePage() {
             formData.append('durationSeconds', actualDuration.toString())
             formData.append('frequency', frequency.toString())
             formData.append('difficulty', difficulty.toString())
-            formData.append('score', vibeResult.score.toString()) // Use Vibe Score
-            formData.append('vibe', vibeResult.vibe)
+            formData.append('score', finalScore.toString()) // Use Penalized & Combined Score
+            formData.append('vibe', vibe)
             formData.append('wordsUsed', JSON.stringify(usedWords))
+            formData.append('restarts', restartCount.toString())
+            formData.append('playbacks', playbackCount.toString())
 
             if (challengeId) {
               formData.append('parentId', challengeId)
@@ -225,11 +255,12 @@ export default function PracticePage() {
 
             // Show Session Summary Modal
             setSessionSummary({
-              score: vibeResult.score,
-              vibe: vibeResult.vibe,
-              description: vibeResult.description,
+              score: finalScore,
+              vibe: vibe,
+              description: description,
               wordCount: usedWords.length,
               duration: actualDuration,
+              audioUrl: URL.createObjectURL(blob),
             })
 
             // setSaveMessage('Recording saved successfully! View it in your recordings library.')
@@ -286,7 +317,18 @@ export default function PracticePage() {
         }
       }
     },
-    [selectedBeat, session?.user, frequency, difficulty, handleError, challengeId, usedWords]
+    [
+      selectedBeat,
+      session?.user,
+      frequency,
+      difficulty,
+      handleError,
+      challengeId,
+      usedWords,
+      penalty,
+      restartCount,
+      playbackCount,
+    ]
   )
 
   const {
@@ -344,17 +386,15 @@ export default function PracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBeat?.id])
 
-  // No change needed here if start handles it.
+  // Fetch words when beat and difficulty are selected
   // Fetch words when beat and difficulty are selected
   useEffect(() => {
     if (!selectedBeat) return
 
     async function fetchWords() {
       try {
-        const secondsPerBar = (60 / selectedBeat!.bpm) * 4
-        const secondsPerPrompt = secondsPerBar * frequency
-        const wordsNeeded = Math.ceil(sessionDuration / secondsPerPrompt)
-
+        // Bible 5.2: Bag System - Fetch a larger pool to prevent repeats even with skips
+        const wordsNeeded = 100
         const response = await fetch(
           `/api/words/random?difficulty=${difficulty}&count=${wordsNeeded}`
         )
@@ -611,9 +651,34 @@ export default function PracticePage() {
       // For now, we allow the Countdown to start.
       // If we need to block "Recording" specifically, we do it inside startCountdown or separate UI.
 
+      // Bible: Call AudioContext.resume() on interaction
+      if (typeof window !== 'undefined') {
+        const WinAudioContext =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+        if (WinAudioContext) {
+          const ctx = new WinAudioContext()
+          if (ctx.state === 'suspended') {
+            await ctx.resume()
+          }
+        }
+      }
+
+      setPlaybackCount((prev) => prev + 1)
       startCountdown()
     }
   }, [selectedBeat, isRecording, beatPlayer, handleStop, startCountdown])
+
+  // Quick Restart (Bible 1.1)
+  const handleRestart = useCallback(() => {
+    beatPlayer.stop()
+    stopRecording()
+    setWordIndex(0)
+    setPenalty(0)
+    setRestartCount((prev) => prev + 1)
+    setCurrentWord(wordList[0] || '')
+    toast.success('Session Restarted', { icon: '🔄' })
+  }, [beatPlayer, stopRecording, wordList])
 
   // Timer countdown and word cycling (Modified for Siren)
   useEffect(() => {
@@ -702,6 +767,25 @@ export default function PracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handlePlayPause, isRecording, beatPlayer.isPlaying])
 
+  // Visibility change ducking (Bible 2.1)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && beatPlayer.isPlaying) {
+        handlePlayPause()
+      }
+    }
+    window.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => window.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [beatPlayer.isPlaying, handlePlayPause])
+
+  // Headphone Nudge (Bible 2.3)
+  useEffect(() => {
+    toast('🎧 Headphones recommended for studio quality.', {
+      duration: 3000,
+      position: 'bottom-center',
+    })
+  }, [])
+
   return (
     <OnboardingLayout showBackButton onBack={() => router.push('/difficultyselection')}>
       <FirstVisitOverlay isBeatSelected={!!selectedBeat} />
@@ -778,7 +862,16 @@ export default function PracticePage() {
             }}
           />
         }
-        sessionConfig={null}
+        sessionConfig={
+          <div className="hidden lg:block">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
+              <span className="font-bold text-accent-purple">PRO TIP:</span>
+              <span>
+                Press <kbd className="font-sans font-bold text-white">Space</kbd> to Start/Pause
+              </span>
+            </div>
+          </div>
+        }
         practiceControls={
           selectedBeat ? (
             <div className="relative w-full flex justify-center items-center">
@@ -809,12 +902,14 @@ export default function PracticePage() {
                       null
                     }
                     onToggle={handlePlayPause}
+                    onRestart={handleRestart}
                     difficulty={difficulty}
                     frequency={frequency}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
                     onSkipWord={() => {
                       setCurrentWord(wordList[(wordIndex + 1) % wordList.length])
                       setWordIndex((prev) => prev + 1)
+                      setPenalty((prev) => prev + 1)
                       toast.error('Panic! -500 Points', { icon: '😱' })
                     }}
                   />

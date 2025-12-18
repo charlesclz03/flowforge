@@ -1,4 +1,9 @@
-export type PatchNoteCategory = 'New Features' | 'System Updates' | 'Fixes & Improvements' | 'Visual Overhaul' | 'Premium Features'
+export type PatchNoteCategory =
+  | 'New Features'
+  | 'System Updates'
+  | 'Fixes & Improvements'
+  | 'Visual Overhaul'
+  | 'Premium Features'
 
 export interface PatchNoteItem {
   category: PatchNoteCategory
@@ -16,11 +21,39 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.0',
+    title: 'The Perfectionist',
+    codename: 'Infinite Loop',
+    date: 'December 18, 2025',
+    description:
+      'Reaching for the peak. This update completes the "Bible" requirements with a focus on deep practice mechanics, better progression tracking, and dynamic social sharing.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Word "Bag System": New shuffle algorithm ensures no word repeats until the entire 500-word set is exhausted.',
+          'Stat Card Sharing: Export your sessions as custom PNG images shaped for social media stories.',
+          'Random Mode: A new "Dice" button to instantly shake up your practice setup.',
+          'Bug Reporting: Direct feedback link integrated into the settings dropdown.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          'Advanced Badge Logic: "Perfectionist", "The Listener", and "Machine Gun" badges are now fully automated.',
+          'Beat Preloading: Start buttons now wait for audio assets to be fully ready before allowing entry.',
+          'Panic Penalty: Skips now correctly impact your Flow Density score.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.8.0',
     title: 'The Social Awakening',
     codename: 'Arena of Voices',
     date: 'December 14, 2025',
-    description: 'The silence has been broken. The barriers between emcees have fallen. The Social Awakening brings the community to life with the introduction of public profiles, feeds, and the ultimate test of skill: Duels.',
+    description:
+      'The silence has been broken. The barriers between emcees have fallen. The Social Awakening brings the community to life with the introduction of public profiles, feeds, and the ultimate test of skill: Duels.',
     changes: [
       {
         category: 'New Features',
@@ -45,7 +78,8 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'The Polish & The Pragmatic',
     codename: 'Crystal Clarity',
     date: 'December 14, 2025',
-    description: 'Before the gates opened, the world had to be perfected. This update focused on squashing the bugs that hid in the shadows and refining the experience to a mirror shine.',
+    description:
+      'Before the gates opened, the world had to be perfected. This update focused on squashing the bugs that hid in the shadows and refining the experience to a mirror shine.',
     changes: [
       {
         category: 'Fixes & Improvements',
@@ -62,7 +96,8 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'The Purple Void',
     codename: 'Royal Ascension',
     date: 'December 11, 2025',
-    description: 'A shift in the visual spectrum. The old Orange has faded, replaced by the regal FlowForge Purple (#7D7AFF). This massive design overhaul redefined the aesthetic of the entire platform.',
+    description:
+      'A shift in the visual spectrum. The old Orange has faded, replaced by the regal FlowForge Purple (#7D7AFF). This massive design overhaul redefined the aesthetic of the entire platform.',
     changes: [
       {
         category: 'Visual Overhaul',
@@ -86,7 +121,8 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'The Vault',
     codename: 'Memory Keepers',
     date: 'November 11, 2025',
-    description: 'The ability to capture time. Emcees can now save their sessions to the cloud, building a library of their lyrical evolution.',
+    description:
+      'The ability to capture time. Emcees can now save their sessions to the cloud, building a library of their lyrical evolution.',
     changes: [
       {
         category: 'New Features',
@@ -104,7 +140,8 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'Echoes of the Beat',
     codename: 'Sonic Boom',
     date: 'November 11, 2025',
-    description: 'The core engine roars to life. The audio system was finalized, bringing low-latency playback, perfectly synchronized word prompts, and the visual feedback of the Timer Ring.',
+    description:
+      'The core engine roars to life. The audio system was finalized, bringing low-latency playback, perfectly synchronized word prompts, and the visual feedback of the Timer Ring.',
     changes: [
       {
         category: 'New Features',

@@ -6,6 +6,8 @@ import { Card } from '@/components/atoms/Card'
 import { Edit2 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 
+import { Rank } from '@/lib/gamification/ranks'
+
 interface User {
   name?: string | null
   email?: string | null
@@ -16,10 +18,11 @@ interface User {
 
 interface AccountInfoProps {
   user: User
+  rank?: Rank
   onEdit?: () => void
 }
 
-export function AccountInfo({ user, onEdit }: AccountInfoProps) {
+export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
   return (
     <Card
       title="Profile Information"
@@ -57,6 +60,13 @@ export function AccountInfo({ user, onEdit }: AccountInfoProps) {
           <div className="flex-1 min-w-0">
             <h3 className="text-xl font-bold text-white truncate">{user.username || user.name}</h3>
             <p className="text-text-secondary text-sm truncate">{user.email}</p>
+            {rank && (
+              <div
+                className={`mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 border border-white/10 ${rank.color}`}
+              >
+                {rank.name}
+              </div>
+            )}
             {user.bio && (
               <p className="text-text-tertiary text-sm mt-2 line-clamp-2 italic">"{user.bio}"</p>
             )}

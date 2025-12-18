@@ -2,13 +2,12 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Music, Settings, Trophy } from 'lucide-react'
+import { ArrowLeft, Music, Trophy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
 import { Container } from '@/components/atoms/Container'
 import { SignInButton } from '@/components/molecules/auth/SignInButton'
 import { UserAvatar } from '@/components/molecules/auth/UserAvatar'
-import { SettingsDrawer } from '@/components/organisms/settings/SettingsDrawer'
+import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 
 interface AppHeaderProps {
   showBackButton?: boolean
@@ -19,7 +18,6 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
   const { status, data: session } = useSession()
   const isAuthenticated = status === 'authenticated'
   const router = useRouter()
-  const [showSettings, setShowSettings] = useState(false)
 
   const handleBack = () => {
     if (onBack) {
@@ -50,13 +48,7 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
 
           {/* Account section - top right */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2">
-            <button
-              onClick={() => setShowSettings(true)}
-              className="p-2 text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
-              aria-label="Settings"
-            >
-              <Settings size={20} />
-            </button>
+            <SettingsDropdown />
 
             <Link
               href="/leaderboard"
@@ -92,8 +84,6 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
           </Link>
         </div>
       </Container>
-
-      <SettingsDrawer isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </header>
   )
 }

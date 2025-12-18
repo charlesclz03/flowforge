@@ -12,6 +12,7 @@ export interface PracticeSessionState {
   ttsVolume: number // 0.0 to 1.0
   isLoaded: boolean
   mode: 'solo' | 'cypher'
+  safeMode: boolean
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -21,6 +22,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setTTSEnabled: (enabled: boolean) => void
   setTTSVolume: (volume: number) => void
   setMode: (mode: 'solo' | 'cypher') => void
+  setSafeMode: (enabled: boolean) => void
   startSession: () => void
   stopSession: () => void
   resetSession: () => void
@@ -38,6 +40,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     ttsVolume: 0.5,
     isLoaded: false,
     mode: 'solo',
+    safeMode: false,
   })
 
   // Load state from localStorage on mount
@@ -67,8 +70,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return
     if (!state.isLoaded) return
 
-    const { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode } = state
-    const toSave = { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode }
+    const { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode, safeMode } = state
+    const toSave = { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode, safeMode }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
   }, [state])
 
@@ -96,6 +99,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, mode }))
   }, [])
 
+  const setSafeMode = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, safeMode: enabled }))
+  }, [])
+
   const startSession = useCallback(() => {
     setState((prev) => ({ ...prev, isActive: true }))
   }, [])
@@ -112,6 +119,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       difficulty: 2,
       isActive: false,
       mode: 'solo',
+      safeMode: false,
     }))
   }, [])
 
@@ -125,6 +133,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setTTSEnabled,
         setTTSVolume,
         setMode,
+        setSafeMode,
         startSession,
         stopSession,
         resetSession,
