@@ -25,7 +25,7 @@ export function FeedbackForm() {
 
       setStatus('success')
       setContent('')
-      
+
       // Reset success message after 3 seconds
       setTimeout(() => setStatus('idle'), 3000)
     } catch (error) {
@@ -43,8 +43,8 @@ export function FeedbackForm() {
         <span>📜</span> From the Quill to the Code
       </h3>
       <p className="text-zinc-400 mb-4 text-sm">
-        Have a scroll of wisdom to share? Found a glitch in the matrix? 
-        The developers are listening. Your words help shape the future of FlowForge.
+        Have a scroll of wisdom to share? Found a glitch in the matrix? The developers are
+        listening. Your words help shape the future of FlowForge.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +56,6 @@ export function FeedbackForm() {
             className="w-full h-32 bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-zinc-200 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all resize-none"
             disabled={status === 'submitting' || status === 'success'}
           />
-          
           <AnimatePresence>
             {status === 'success' && (
               <motion.div

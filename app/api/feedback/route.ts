@@ -9,10 +9,7 @@ export async function POST(req: Request) {
     const { content } = await req.json()
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Content is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 })
     }
 
     const feedback = await prisma.feedback.create({
@@ -25,9 +22,6 @@ export async function POST(req: Request) {
     return NextResponse.json(feedback)
   } catch (error) {
     console.error('Error submitting feedback:', error)
-    return NextResponse.json(
-      { error: 'Failed to submit feedback' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to submit feedback' }, { status: 500 })
   }
 }
