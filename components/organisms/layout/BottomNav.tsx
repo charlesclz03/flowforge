@@ -53,7 +53,7 @@ export function BottomNav() {
   ]
 
   return (
-    <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 safe-bottom">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 safe-bottom">
       {/* iOS-style Glass Dock */}
       <div className="flex items-end gap-2 p-2 rounded-[2rem] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5">
         {tabs.map((tab) => {

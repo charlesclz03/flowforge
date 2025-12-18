@@ -20,21 +20,21 @@ export function PracticeTemplate({
   helpSection,
 }: PracticeTemplateProps) {
   return (
-    <div className="flex flex-col h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-120px)] min-h-0">
-      {/* Page Header - Compact on mobile */}
+    <div className="flex flex-col min-h-[calc(100dvh-64px-100px)] pb-4">
+      {/* Page Header */}
       <div className="flex-shrink-0">{pageHeader}</div>
 
       {/* Success/Error Alerts */}
-      {alerts && <div className="flex-shrink-0">{alerts}</div>}
+      {alerts && <div className="flex-shrink-0 mt-4">{alerts}</div>}
 
-      {/* Beat Selector - Hidden on mobile during session, compact otherwise */}
-      <div className="flex-shrink-0 hidden md:block">{beatSelector}</div>
+      {/* Beat Selector - Desktop only, mobile uses the player info bar */}
+      <div className="flex-shrink-0 hidden md:block mt-4">{beatSelector}</div>
 
       {/* Session Configuration - Desktop only */}
-      {sessionConfig && <div className="flex-shrink-0 hidden lg:block">{sessionConfig}</div>}
+      {sessionConfig && <div className="flex-shrink-0 hidden lg:block mt-4">{sessionConfig}</div>}
 
       {/* Practice Controls - Takes remaining space, centered */}
-      <div className="flex-1 flex items-center justify-center min-h-0 py-2">{practiceControls}</div>
+      <div className="flex-1 flex items-center justify-center py-4">{practiceControls}</div>
 
       {/* Help Section - Hidden on mobile */}
       {helpSection && <div className="flex-shrink-0 hidden lg:block">{helpSection}</div>}

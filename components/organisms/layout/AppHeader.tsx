@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { ArrowLeft, Music } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
@@ -13,6 +14,11 @@ interface AppHeaderProps {
 
 export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
   const router = useRouter()
+  const { status } = useSession()
+  const isAuthenticated = status === 'authenticated'
+
+  // Link to howitworks for logged-in users, landing for guests
+  const homeLink = isAuthenticated ? '/howitworks' : '/'
 
   const handleBack = () => {
     if (onBack) {
@@ -46,9 +52,9 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
             <SettingsDropdown />
           </div>
 
-          {/* Centered FlowForge title - always navigates to landing page */}
+          {/* Centered FlowForge title - navigates to howitworks when logged in */}
           <Link
-            href="/"
+            href={homeLink}
             className="flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full px-3 py-1"
             aria-label="Go to FlowForge home"
           >

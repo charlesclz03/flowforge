@@ -34,7 +34,7 @@ export function OnboardingLayout({
         <main
           id="main-content"
           role="main"
-          className="flex flex-1 justify-center px-6 pb-8 pt-4 sm:pt-6"
+          className="flex flex-1 justify-center px-6 pb-24 pt-4 sm:pt-6"
         >
           <div className="w-full max-w-4xl">{children}</div>
         </main>
