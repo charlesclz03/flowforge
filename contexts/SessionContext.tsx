@@ -33,7 +33,7 @@ const PracticeSessionContext = createContext<PracticeSessionContextValue | undef
 export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<PracticeSessionState>({
     selectedBeat: null,
-    frequency: 8,
+    frequency: 4,
     difficulty: 2,
     isActive: false,
     isTTSEnabled: true,
@@ -115,7 +115,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({
       ...prev,
       selectedBeat: null,
-      frequency: 8,
+      frequency: 4,
       difficulty: 2,
       isActive: false,
       mode: 'solo',

@@ -663,52 +663,84 @@ export default function PracticePage() {
     isActive: false,
   })
 
+  // Keep latest params in ref to avoid effect restarts
+  const paramsRef = useRef({
+    frequency,
+    wordList,
+    selectedBeat,
+    sessionDuration,
+    isTTSEnabled
+  })
+
+  useEffect(() => {
+    paramsRef.current = {
+      frequency,
+      wordList,
+      selectedBeat,
+      sessionDuration,
+      isTTSEnabled
+    }
+  }, [frequency, wordList, selectedBeat, sessionDuration, isTTSEnabled])
+
   // Synchronization Loop (High Precision)
   useEffect(() => {
-    if (!beatPlayer.isPlaying || !selectedBeat || wordList.length === 0) {
+    // Only start if playing. Do NOT restart when params change.
+    if (!beatPlayer.isPlaying) {
       sessionStateRef.current.isActive = false
       return
     }
 
     const state = sessionStateRef.current
+    
+    // Only initialize start state if not already active (prevent reset on re-mounts if that were to happen)
+    // But actually, we want to respect the player.
+    // Ideally this effect ONLY runs when isPlaying changes.
     state.isActive = true
     state.startTime = Date.now()
+    // We do NOT reset lastWordIndex here if we are continuing?
+    // Actually, if we just paused/played, we might want to reset or resume.
+    // For now, let's reset to ensure clean slate on Play.
     state.lastWordIndex = -1
 
-    const secondsPerBar = (60 / selectedBeat.bpm) * 4
-    const secondsPerPrompt = secondsPerBar * frequency
-
     const updateLoop = () => {
+      // Check active inside the loop frame
       if (!state.isActive) return
+
+      const params = paramsRef.current
+      if (!params.selectedBeat || params.wordList.length === 0) return
 
       // Use the new precise getter to avoid re-render-stale-props
       const elapsedSeconds = beatPlayer.getPreciseTime()
 
       // 1. Session End Check
-      if (elapsedSeconds >= sessionDuration) {
+      if (elapsedSeconds >= params.sessionDuration) {
         handleStop()
         return
       }
 
       // 2. Word Switching Logic
+      const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
+      const secondsPerPrompt = secondsPerBar * params.frequency
+      
       const wordIdx = Math.floor(elapsedSeconds / secondsPerPrompt)
-      const actualIndex = wordIdx % wordList.length
+      const actualIndex = wordIdx % params.wordList.length
 
       if (wordIdx !== state.lastWordIndex) {
         state.lastWordIndex = wordIdx
-        const newWord = wordList[actualIndex]
+        const newWord = params.wordList[actualIndex]
 
         if (newWord) {
           setCurrentWord(newWord)
           setWordIndex(wordIdx)
-          speak(newWord)
+          
+          // Use logic directly here to avoid closure staleness on 'speak' dependency
+          if (params.isTTSEnabled) {
+            speak(newWord)
+          }
         }
       }
 
       // 3. UI Synchronization
-      // We still call forceUpdate here to keep the Timer Ring smooth,
-      // but since useBeatPlayer is "silent", this is now the ONLY re-render source,
-      // making it much lighter than before.
       forceUpdate()
 
       requestAnimationFrame(updateLoop)
@@ -720,8 +752,10 @@ export default function PracticePage() {
       state.isActive = false
       cancelAnimationFrame(frameId)
     }
+    // Only re-run if play state changes.
+    // We intentionally omit params from deps because we use paramsRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beatPlayer.isPlaying, selectedBeat?.id, frequency, wordList.length, sessionDuration])
+  }, [beatPlayer.isPlaying])
 
   // Desktop Shortcuts
   useEffect(() => {
