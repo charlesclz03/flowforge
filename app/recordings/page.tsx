@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { RecordingsTemplate } from '@/components/templates'
 import { PageHeader } from '@/components/organisms/common'
@@ -14,6 +15,7 @@ import { FreestyleSessionWithBeat } from '@/types/database'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
+  const router = useRouter()
   const [recordings, setRecordings] = useState<FreestyleSessionWithBeat[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const { error, handleError, clearError } = useErrorHandler()
@@ -36,6 +38,13 @@ export default function RecordingsPage() {
       setIsLoading(false)
     }
   }, [clearError, handleError])
+
+  // Handle unauthenticated redirect
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/')
+    }
+  }, [status, router])
 
   // Fetch recordings when authenticated
   useEffect(() => {
@@ -95,13 +104,9 @@ export default function RecordingsPage() {
     )
   }
 
-  // If unauthenticated, middleware should have redirected
-  if (status === 'unauthenticated' || !session) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" />
-      </div>
-    )
+  // If unauthenticated, we redirect in useEffect. Return null to avoid flash.
+  if (status === 'unauthenticated') {
+    return null
   }
 
   return (
