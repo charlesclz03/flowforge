@@ -1,19 +1,21 @@
 # FlowForge Deployment Guide
 
-## ⚠️ IMPORTANT: Deployment Target
+## ✅ Deployment Target: `flowforge-freestyle`
 
-> [!CAUTION]
-> **NEVER deploy to the `flowforge` project on Vercel.**
+> [!NOTE]
+> **December 18, 2025**: The `flowforge` Vercel project has been disconnected from GitHub.
 > 
-> Always deploy to **`flowforge-freestyle`** project.
+> All pushes to `main` now **only** deploy to `flowforge-freestyle`.
 
 ### Correct Workflow:
 
 ```bash
-# Push to the correct GitHub repo
+# Push to deploy
+git add .
+git commit -m "Your message"
 git push origin main
 
-# The correct Vercel project (flowforge-freestyle) will auto-deploy
+# Vercel auto-deploys flowforge-freestyle from main branch
 ```
 
 ### Why This Matters:

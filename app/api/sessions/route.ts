@@ -58,6 +58,8 @@ export async function POST(request: Request) {
       score: 0,
       vibe: null,
       parentId: null,
+      restarts: 0,
+      playbacks: 0,
     })
     if (!result.success) {
       return NextResponse.json(
