@@ -956,7 +956,6 @@ export default function PracticePage() {
                     onDifficultyChange={setDifficulty}
                     onFrequencyChange={setFrequency}
                     cleanUI={cleanUI}
-                    onToggleCleanUI={() => setCleanUI(!cleanUI)}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
                     onSkipWord={() => {
                       setCurrentWord(wordList[(wordIndex + 1) % wordList.length])

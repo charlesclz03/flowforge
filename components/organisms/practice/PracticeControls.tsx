@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { Play as PlayButtonIcon, RefreshCcw, Eye, EyeOff, Zap, Gauge } from 'lucide-react'
+import { Play as PlayButtonIcon, RefreshCcw, Zap, Gauge } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -26,11 +26,9 @@ interface PracticeControlsProps {
   isRecording?: boolean
   recordingDuration?: number
   error?: string | null
-  // New Props
   onDifficultyChange?: (value: number) => void
   onFrequencyChange?: (value: number) => void
   cleanUI?: boolean
-  onToggleCleanUI?: () => void
 }
 
 export function PracticeControls({
@@ -52,7 +50,6 @@ export function PracticeControls({
   onDifficultyChange,
   onFrequencyChange,
   cleanUI = false,
-  onToggleCleanUI,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -109,20 +106,7 @@ export function PracticeControls({
         cleanUI ? 'bg-black/20 backdrop-blur-sm border-white/5' : ''
       )}
     >
-      <div className="flex flex-col items-center gap-6 sm:gap-8">
-        {/* Top Controls Row */}
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
-          {onToggleCleanUI && (
-            <button
-              onClick={onToggleCleanUI}
-              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
-              title={cleanUI ? 'Show UI' : 'Clean UI'}
-            >
-              {cleanUI ? <Eye size={18} /> : <EyeOff size={18} />}
-            </button>
-          )}
-        </div>
-
+      <div className="flex flex-col items-center gap-4 sm:gap-6">
         {/* Session Info (Text Only) - Hidden in Clean UI if desired, or kept minimal */}
         <div
           className={cn(

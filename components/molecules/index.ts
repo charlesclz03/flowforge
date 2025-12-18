@@ -12,7 +12,6 @@ export { SignOutButton } from './auth/SignOutButton'
 export { UserAvatar } from './auth/UserAvatar'
 
 // Practice
-export { BeatCard } from './practice/BeatCard'
 export { DifficultySelector } from './practice/DifficultySelector'
 export { DurationDisplay } from './practice/DurationDisplay'
 export { PlayButton } from './practice/PlayButton'
