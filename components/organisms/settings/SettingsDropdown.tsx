@@ -13,9 +13,10 @@ import {
   Snowflake,
   User,
   Scale,
+  LogOut,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
 
@@ -272,6 +273,23 @@ export function SettingsDropdown() {
                   <Bug size={16} className="mr-3 text-text-secondary" />
                   Report Bug
                 </a>
+              )}
+            </Menu.Item>
+
+            <div className="my-1 border-t border-white/5" />
+
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className={cn(
+                    'flex w-full items-center px-4 py-2.5 text-sm text-text-primary transition-colors',
+                    active ? 'bg-white/5' : ''
+                  )}
+                >
+                  <LogOut size={16} className="mr-3 text-text-secondary" />
+                  Sign Out
+                </button>
               )}
             </Menu.Item>
           </div>
