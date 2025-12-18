@@ -150,7 +150,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
         </div>
         <div className="h-12 w-px bg-white/10" />
         <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">2 min</div>
+          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">2 min+</div>
           <div>Session time</div>
         </div>
       </div>
