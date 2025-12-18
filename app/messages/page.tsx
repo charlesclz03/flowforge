@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
 import Link from 'next/link'
@@ -25,21 +27,30 @@ interface Conversation {
 }
 
 export default function InboxPage() {
+  const { status } = useSession()
+  const router = useRouter()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/conversations')
-      .then((res) => res.json())
-      .then((data) => {
-        setConversations(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error('Failed to load inbox', err)
-        setLoading(false)
-      })
-  }, [])
+    if (status === 'unauthenticated') {
+      router.push('/')
+      return
+    }
+    
+    if (status === 'authenticated') {
+      fetch('/api/conversations')
+        .then((res) => res.json())
+        .then((data) => {
+          setConversations(data)
+          setLoading(false)
+        })
+        .catch((err) => {
+          console.error('Failed to load inbox', err)
+          setLoading(false)
+        })
+    }
+  }, [status, router])
 
   return (
     <div className="min-h-screen bg-background pb-24">

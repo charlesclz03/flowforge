@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { ChevronLeft, Send } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
@@ -13,7 +14,8 @@ interface Message {
 }
 
 export default function ChatPage({ params }: { params: { id: string } }) {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -22,6 +24,13 @@ export default function ChatPage({ params }: { params: { id: string } }) {
 
   // Poll for messages (MVP primitive real-time)
   useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/')
+      return
+    }
+
+    if (status !== 'authenticated') return
+
     const fetchMessages = () => {
       fetch(`/api/conversations/${params.id}/messages`)
         .then((res) => {
@@ -40,7 +49,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
     fetchMessages()
     const interval = setInterval(fetchMessages, 3000) // Poll every 3s
     return () => clearInterval(interval)
-  }, [params.id])
+  }, [params.id, status, router])
 
   // Scroll to bottom on new messages
   useEffect(() => {

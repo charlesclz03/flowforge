@@ -27,5 +27,5 @@ export default withAuth(
 )
 
 export const config = {
-  matcher: ['/review/:path*'],
+  matcher: [],
 }
