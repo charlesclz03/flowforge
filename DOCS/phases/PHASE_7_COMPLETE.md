@@ -51,3 +51,13 @@ With Phase 7 complete, **FlowForge V1.1.0 is 100% certified**. All requirements 
 ## 5. Next Steps
 
 - **Phase 8: Future Vision**: Mobile App, AI Transcription, Beat Marketplace.
+
+## 6. Post-Release Polish & Stabilization (v1.1.1 - v1.1.4)
+
+Following the 1.1.0 release, a comprehensive polish pass was conducted to resolve edge cases and optimize the user experience:
+
+- **Authentication Hardening**: Resolved persistent "redirect loop" issues by migrating from heavy Middleware protection to lightweight Client-Side Guards for key routes (`/profile`, `/recordings`, `/messages`).
+- **Production Readiness**: Fixed all remaining ESLint/Prettier build warnings and removed Edge Runtime from OG generation to ensure 100% clean builds.
+- **Mobile Experience**: Fixed critical bug where the Beat Selector was hidden on mobile devices.
+- **Session Stability**: Fixed an audio looping glitch caused by changing frequency/difficulty mid-session.
+- **Default Config**: Optimized default word frequency to 4 bars based on user feedback.

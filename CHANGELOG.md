@@ -2,6 +2,18 @@
 
 All notable changes to the FlowForge project will be documented in this file.
 
+## [v1.1.4] - 2025-12-18
+
+### Fixed
+- **Auth Redirects**: Fixed "callback loops" and blank pages by moving auth protection from Middleware to Client-Side Guards for Profile, Recordings, Messages, and Review pages.
+- **Audio Loops**: Fixed a bug where changing frequency/difficulty during a session caused audio loops/stutters.
+- **Mobile Visibility**: Fixed the Beat Selector being hidden on mobile devices.
+- **Static Generation**: Removed Edge Runtime from OG Image route to resolve build warnings.
+- **Linting**: Resolved all remaining Prettier/ESLint warnings (Messages, Profile, BottomNav, HowItWorks).
+
+### Changed
+- **Default Frequency**: Set default word frequency to 4 Bars (previously 8).
+
 ## [v1.1.3] - 2025-12-18
 
 ### Added
