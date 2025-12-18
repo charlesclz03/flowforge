@@ -12,6 +12,7 @@ All notable changes to the FlowForge project will be documented in this file.
 - **Linting**: Resolved syntax errors and duplicate braces in `lib/gamification/badges.ts`.
 
 ### Changed
+- **Header UI**: Simplified layout by removing redundant Leaderboard and Profile links (accessible via Bottom Bar). Only Settings remains in the header.
 - **Deployment Target**: Explicitly disconnected `flowforge` Vercel project; now strictly deploying to `flowforge-freestyle`.
 - **Build Process**: Added `postinstall` script (`prisma generate`) to ensure fresh client generation on Vercel.
 

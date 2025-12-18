@@ -2,11 +2,8 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Music, Trophy } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { ArrowLeft, Music } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
-import { SignInButton } from '@/components/molecules/auth/SignInButton'
-import { UserAvatar } from '@/components/molecules/auth/UserAvatar'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 
 interface AppHeaderProps {
@@ -15,8 +12,6 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
-  const { status, data: session } = useSession()
-  const isAuthenticated = status === 'authenticated'
   const router = useRouter()
 
   const handleBack = () => {
@@ -49,25 +44,6 @@ export function AppHeader({ showBackButton = false, onBack }: AppHeaderProps) {
           {/* Account section - top right */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2">
             <SettingsDropdown />
-
-            <Link
-              href="/leaderboard"
-              className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
-              aria-label="Leaderboard"
-            >
-              <Trophy size={20} />
-            </Link>
-
-            {isAuthenticated && session?.user ? (
-              <Link
-                href="/profile"
-                className="inline-flex items-center rounded-full bg-background-card/70 p-1.5 hover:bg-background-card transition-colors"
-              >
-                <UserAvatar mode="avatarOnly" />
-              </Link>
-            ) : (
-              <SignInButton mode="icon" />
-            )}
           </div>
 
           {/* Centered FlowForge title - always navigates to landing page */}
