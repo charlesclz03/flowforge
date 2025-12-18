@@ -43,15 +43,15 @@ export function PageHeader({
             </button>
           )}
 
-          <h1 className="text-3xl sm:text-4xl font-light text-white text-center md:text-left">{title}</h1>
-          {description && <p className="mt-2 text-text-secondary text-center md:text-left">{description}</p>}
+          <h1 className="text-3xl sm:text-4xl font-light text-white text-center md:text-left">
+            {title}
+          </h1>
+          {description && (
+            <p className="mt-2 text-text-secondary text-center md:text-left">{description}</p>
+          )}
         </div>
-        
-        {rightAction && (
-          <div className="ml-4">
-            {rightAction}
-          </div>
-        )}
+
+        {rightAction && <div className="ml-4">{rightAction}</div>}
       </div>
     </div>
   )

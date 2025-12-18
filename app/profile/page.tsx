@@ -35,7 +35,6 @@ export default function ProfilePage() {
   // Edit Profile State
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
 
-
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/')
@@ -131,19 +130,20 @@ export default function ProfilePage() {
   }
 
   return (
-    <ProfileTemplate
-      header={
-        <div className="flex justify-end items-center p-4 gap-2 safe-top">
-          <Link
-            href="/leaderboard"
-            className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
-            aria-label="Leaderboard"
-          >
-            <Trophy size={20} />
-          </Link>
-        </div>
-      }
-      pageHeader={
+    <>
+      <ProfileTemplate
+        header={
+          <div className="flex justify-end items-center p-4 gap-2 safe-top">
+            <Link
+              href="/leaderboard"
+              className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
+              aria-label="Leaderboard"
+            >
+              <Trophy size={20} />
+            </Link>
+          </div>
+        }
+        pageHeader={
           <div className="space-y-4">
             <PageHeader
               title="Profile"
