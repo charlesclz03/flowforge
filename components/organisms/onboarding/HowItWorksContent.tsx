@@ -79,8 +79,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Precision timing</h4>
               <p className="text-sm text-text-secondary">
-                iOS Clock-inspired timer with visual progress ring. Know exactly where you are in
-                your 2-minute session.
+                your session. Standard sessions run for 2 minutes, perfect for daily practice.
               </p>
             </div>
           </div>
@@ -105,7 +104,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Beat synchronization</h4>
               <p className="text-sm text-text-secondary">
-                Words appear precisely timed to musical bars. Choose between 4, 8, or 16 bar
+                Words appear precisely timed to musical bars. Choose between 2, 4, or 8 bar
                 intervals.
               </p>
             </div>
@@ -152,7 +151,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
         <div className="h-12 w-px bg-white/10" />
         <div>
           <div className="mb-1 text-2xl sm:text-3xl text-text-primary">2 min</div>
-          <div>Practice sessions</div>
+          <div>Session time</div>
         </div>
       </div>
     </div>
