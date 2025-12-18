@@ -4,7 +4,7 @@ import { Music, Timer, Mic, Sparkles, Zap, Target } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 
 interface HowItWorksContentProps {
-  onStartPractice: () => void
+  onStartPractice?: () => void
 }
 
 export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {

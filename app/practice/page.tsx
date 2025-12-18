@@ -669,7 +669,7 @@ export default function PracticePage() {
     wordList,
     selectedBeat,
     sessionDuration,
-    isTTSEnabled
+    isTTSEnabled,
   })
 
   useEffect(() => {
@@ -678,7 +678,7 @@ export default function PracticePage() {
       wordList,
       selectedBeat,
       sessionDuration,
-      isTTSEnabled
+      isTTSEnabled,
     }
   }, [frequency, wordList, selectedBeat, sessionDuration, isTTSEnabled])
 
@@ -691,7 +691,6 @@ export default function PracticePage() {
     }
 
     const state = sessionStateRef.current
-    
     // Only initialize start state if not already active (prevent reset on re-mounts if that were to happen)
     // But actually, we want to respect the player.
     // Ideally this effect ONLY runs when isPlaying changes.
@@ -721,7 +720,7 @@ export default function PracticePage() {
       // 2. Word Switching Logic
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
       const secondsPerPrompt = secondsPerBar * params.frequency
-      
+
       const wordIdx = Math.floor(elapsedSeconds / secondsPerPrompt)
       const actualIndex = wordIdx % params.wordList.length
 
@@ -732,7 +731,7 @@ export default function PracticePage() {
         if (newWord) {
           setCurrentWord(newWord)
           setWordIndex(wordIdx)
-          
+
           // Use logic directly here to avoid closure staleness on 'speak' dependency
           if (params.isTTSEnabled) {
             speak(newWord)
