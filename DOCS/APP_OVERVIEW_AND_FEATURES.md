@@ -1,7 +1,7 @@
 # FlowForge - Application Overview & Feature Guide
 
 **Date**: December 18, 2025  
-**Version**: 1.1.1 (Production Certified)
+**Version**: 1.1.3 (UI/UX Polish)
 
 ---
 
@@ -28,6 +28,8 @@ The heart of the application, designed for zero-latency performance.
 
 - **Beat Selection**:
   - **Dropdown Interface**: Streamlined dropdown menu for selecting beats without leaving the practice view.
+  - **Beat Preview**: Play button to preview beats before selecting.
+  - **Favorite Beats**: Heart icon to save favorite beats for quick access.
   - **Randomize Mode**: Dice icon to instantly pick a random combination of beat, frequency, and difficulty.
   - **Preloading Logic**: "Start" button dynamically updates to "Loading Audio..." and is disabled until the beat is ready, ensuring no buffering mid-flow.
 - **Visual Feedback**:

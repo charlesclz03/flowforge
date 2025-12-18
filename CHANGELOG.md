@@ -2,6 +2,29 @@
 
 All notable changes to the FlowForge project will be documented in this file.
 
+## [v1.1.3] - 2025-12-18
+
+### Added
+- **Beat Preview**: Play button in BeatDropdown to preview beats before selecting.
+- **Favorite Beats in Dropdown**: Heart icon to favorite beats directly in the dropdown menu.
+
+### Changed
+- **Logo Navigation**: FlowForge logo now links to `/howitworks` for authenticated users (home hub).
+- **Bottom Nav**: Repositioned from `bottom-8` to `bottom-4` for Instagram-like positioning.
+- **Layout Padding**: All layouts now have proper `pb-24` padding to prevent bottom nav overlap.
+- **Practice Template**: Simplified layout calculation for consistent mobile experience.
+- **HowItWorks**: Now serves as the main home page for logged-in users.
+
+### Removed
+- **BeatSelector Component**: Merged into BeatDropdown; deleted unused component.
+- **BeatCard Component**: Deleted; functionality merged into BeatDropdown.
+- **Duplicate Clean UI Toggle**: Removed from PracticeControls (now only in PageHeader).
+
+### Fixed
+- **Component Overlap**: Fixed overlapping elements on Practice page.
+- **Unused Imports**: Cleaned up Eye/EyeOff and other unused imports.
+- **Prisma Queries**: Fixed FavoriteBeat queries to use correct findFirst pattern.
+
 ## [v1.1.2] - 2025-12-18
 
 ### Added

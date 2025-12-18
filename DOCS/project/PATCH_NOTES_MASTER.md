@@ -3,6 +3,25 @@
 
 ---
 
+## 🎨 Update 1.1.3: The Flow Refinement
+**Release Date:** December 18, 2025
+**Codename:** *Silk Touch*
+
+The interface has been refined to a mirror shine. Navigation now flows like a seasoned freestyle—smooth, intuitive, and never jarring.
+
+### ✨ UX Improvements
+- **Logo Home Navigation**: FlowForge logo now takes you to `/howitworks` (the true home for freestylers).
+- **Instagram-Style Bottom Nav**: Repositioned and properly spaced—content never overlaps.
+- **Beat Preview**: Preview beats before selecting with the new Play button in dropdown.
+- **Favorite Beats**: Heart icon to save your go-to instrumentals.
+
+### 🧹 Code Cleanup
+- **Component Consolidation**: Merged BeatSelector and BeatCard into BeatDropdown.
+- **Removed Duplicates**: Clean UI toggle now only in header (no more double buttons).
+- **Layout Fixes**: Proper padding ensures content respects the bottom navigation.
+
+---
+
 ## 🚀 Update 1.1.1: The Production Forge
 **Release Date:** December 18, 2025
 **Codename:** *Titan's Grip*
