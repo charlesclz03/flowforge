@@ -26,7 +26,7 @@ export function ProfileTemplate({
     <div className="min-h-screen bg-background">
       {header}
 
-      <main className="py-8">
+      <main className="py-8 pb-32">
         <Container>
           <div className="space-y-8">
             {/* Page Header */}

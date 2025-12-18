@@ -123,9 +123,7 @@ export default function ProfilePage() {
     }
   }, [session])
 
-  if (status === 'unauthenticated') {
-    return null
-  }
+
 
   const handleEditSuccess = async () => {
     await update() // Refresh session
