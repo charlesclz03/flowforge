@@ -15,6 +15,7 @@ import {
 import { BadgesDisplay } from '@/components/organisms/profile/BadgesDisplay'
 import { Trophy } from 'lucide-react'
 import Link from 'next/link'
+import { Card } from '@/components/atoms/Card'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
 import { GuestStorage } from '@/lib/guest-storage'
@@ -39,6 +40,16 @@ export default function ProfilePage() {
     if (status === 'unauthenticated') {
       router.push('/')
     }
+  }, [status, router])
+
+  // Fallback for stuck session loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (status === 'loading') {
+        router.push('/')
+      }
+    }, 7000)
+    return () => clearTimeout(timer)
   }, [status, router])
 
   useEffect(() => {
@@ -112,15 +123,7 @@ export default function ProfilePage() {
     }
   }, [session])
 
-  if (status === 'loading') {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" />
-      </div>
-    )
-  }
-
-  if (!session) {
+  if (status === 'unauthenticated') {
     return null
   }
 
@@ -128,6 +131,8 @@ export default function ProfilePage() {
     await update() // Refresh session
     router.refresh()
   }
+
+  const isLoading = status === 'loading'
 
   return (
     <>
@@ -158,13 +163,21 @@ export default function ProfilePage() {
           </div>
         }
         accountInfo={
-          <AccountInfo
-            user={session.user}
-            rank={getRank(
-              recordings.reduce((acc, rec) => acc + (rec.durationSeconds || 0), 0) / 60
-            )}
-            onEdit={() => setIsEditProfileOpen(true)}
-          />
+          isLoading || !session ? (
+            <Card title="Profile Information">
+              <div className="py-8 text-center">
+                <Spinner size="md" className="mx-auto" />
+              </div>
+            </Card>
+          ) : (
+            <AccountInfo
+              user={session.user}
+              rank={getRank(
+                recordings.reduce((acc, rec) => acc + (rec.durationSeconds || 0), 0) / 60
+              )}
+              onEdit={() => setIsEditProfileOpen(true)}
+            />
+          )
         }
         subscription={<SubscriptionSection />}
         security={<SecuritySection />}
@@ -175,23 +188,25 @@ export default function ProfilePage() {
               isLoading={isLoadingRecordings}
               wordVaultCount={wordVaultCount}
             />
-            <BadgesDisplay badges={session.user.badges || []} />
+            <BadgesDisplay badges={session?.user?.badges || []} />
           </div>
         }
         quickActions={
           <div className="space-y-8">
             <QuickActions />
-            <SocialsForm initialSocials={session.user.socials || {}} />
+            <SocialsForm initialSocials={session?.user?.socials || {}} />
           </div>
         }
       />
 
-      <EditProfileDialog
-        isOpen={isEditProfileOpen}
-        onClose={() => setIsEditProfileOpen(false)}
-        user={session.user}
-        onSuccess={handleEditSuccess}
-      />
+      {session && (
+        <EditProfileDialog
+          isOpen={isEditProfileOpen}
+          onClose={() => setIsEditProfileOpen(false)}
+          user={session.user}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </>
   )
 }

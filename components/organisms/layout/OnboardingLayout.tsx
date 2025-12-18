@@ -9,6 +9,9 @@ interface OnboardingLayoutProps {
   children: ReactNode
   className?: string
   showBackButton?: boolean
+  showSettings?: boolean
+  showHeader?: boolean
+  showProgress?: boolean
   onBack?: () => void
 }
 
@@ -16,6 +19,9 @@ export function OnboardingLayout({
   children,
   className,
   showBackButton = false,
+  showSettings = true,
+  showHeader = true,
+  showProgress = true,
   onBack,
 }: OnboardingLayoutProps) {
   return (
@@ -29,7 +35,12 @@ export function OnboardingLayout({
 
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
-        <AppHeader showBackButton={showBackButton} onBack={onBack} />
+        <AppHeader
+          showBackButton={showBackButton}
+          showSettings={showSettings}
+          onBack={onBack}
+          hide={!showHeader}
+        />
 
         <main
           id="main-content"
@@ -41,7 +52,7 @@ export function OnboardingLayout({
       </div>
 
       {/* Bottom page progress indicator */}
-      <OnboardingProgress />
+      {showProgress && <OnboardingProgress />}
     </div>
   )
 }

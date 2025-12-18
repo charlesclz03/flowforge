@@ -53,7 +53,7 @@ export function BeatDropdown({
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [stopPreview])
 
   // Cleanup audio on unmount
   useEffect(() => {
@@ -67,7 +67,7 @@ export function BeatDropdown({
 
   const handleToggleFavorite = useCallback(async (beatId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    
+
     // Optimistic Update
     setFavoriteBeatIds((prev) => {
       const next = new Set(prev)
@@ -107,30 +107,41 @@ export function BeatDropdown({
     setPreviewingBeatId(null)
   }, [])
 
-  const handlePreview = useCallback((beat: Beat, e: React.MouseEvent) => {
-    e.stopPropagation()
-    
-    // If already previewing this beat, stop it
-    if (previewingBeatId === beat.id) {
+  const handlePreview = useCallback(
+    (beat: Beat, e: React.MouseEvent) => {
+      e.stopPropagation()
+
+      // If already previewing this beat, stop it
+      if (previewingBeatId === beat.id) {
+        stopPreview()
+        return
+      }
+
+      // Stop any current preview
       stopPreview()
-      return
-    }
 
-    // Stop any current preview
-    stopPreview()
+      // Start new preview
+      const audio = new Audio(beat.storageUrl)
+      audio.volume = 0.5
+      audio.onended = () => setPreviewingBeatId(null)
+      audio.play().catch((err) => {
+        console.error('Failed to preview beat:', err)
+        if (err.name === 'NotAllowedError') {
+          toast.error('Playback blocked by browser. Click again to play.')
+        } else if (err.name === 'NotSupportedError' || beat.storageUrl.includes('pixabay')) {
+          toast.error('External beat source unavailable. Try another beat.', {
+            icon: '⚠️',
+          })
+        } else {
+          toast.error('Could not preview beat')
+        }
+      })
 
-    // Start new preview
-    const audio = new Audio(beat.storageUrl)
-    audio.volume = 0.5
-    audio.onended = () => setPreviewingBeatId(null)
-    audio.play().catch((err) => {
-      console.error('Failed to preview beat:', err)
-      toast.error('Could not preview beat')
-    })
-    
-    previewAudioRef.current = audio
-    setPreviewingBeatId(beat.id)
-  }, [previewingBeatId, stopPreview])
+      previewAudioRef.current = audio
+      setPreviewingBeatId(beat.id)
+    },
+    [previewingBeatId, stopPreview]
+  )
 
   if (isLoading) {
     return (
@@ -271,10 +282,7 @@ export function BeatDropdown({
                         )}
                         title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
                       >
-                        <Heart
-                          size={14}
-                          fill={isFavorited ? 'currentColor' : 'none'}
-                        />
+                        <Heart size={14} fill={isFavorited ? 'currentColor' : 'none'} />
                       </button>
 
                       {beat.isPremium && (

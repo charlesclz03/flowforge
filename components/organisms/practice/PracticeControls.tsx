@@ -16,13 +16,11 @@ interface PracticeControlsProps {
   currentTime: number
   sessionDuration: number
   currentWord: string
-  // eslint-disable-next-line
   onToggle: () => void
   onRestart?: () => void
   difficulty: number
   frequency: number
   isGolden?: boolean
-  onSkipWord?: () => void
   isRecording?: boolean
   recordingDuration?: number
   error?: string | null
@@ -43,7 +41,6 @@ export function PracticeControls({
   difficulty,
   frequency,
   isGolden = false,
-  onSkipWord,
   isRecording = false,
   recordingDuration = 0,
   error,
@@ -199,17 +196,6 @@ export function PracticeControls({
             >
               <RefreshCcw size={14} />
               <span>Restart</span>
-            </motion.button>
-          )}
-
-          {onSkipWord && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onSkipWord}
-              className="px-4 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500/20 text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
-            >
-              <span>😱 Panic!</span>
             </motion.button>
           )}
         </div>

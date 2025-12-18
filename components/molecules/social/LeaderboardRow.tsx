@@ -66,7 +66,7 @@ export function LeaderboardRow({
         <div className="font-numeral font-bold text-xl sm:text-2xl text-white">
           {score.toLocaleString()}
         </div>
-        <div className="text-[10px] text-text-tertiary uppercase tracking-wider">Points</div>
+        <div className="text-[10px] text-text-tertiary uppercase tracking-wider">Sessions</div>
       </div>
     </Link>
   )

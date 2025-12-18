@@ -36,7 +36,7 @@ The heart of the application, designed for zero-latency performance.
   - **"Orb" Player Design**: Central interactive element with a glowing timer ring that visually counts down to the next word prompt.
   - **Word Prompts**: Large, legible words that appear on-beat, synchronized to the selected frequency (4, 8, or 16 bars).
   - **Word "Bag System"**: Advanced shuffle logic ensuring no word repeats within a 500-word cycle.
-  - **Golden Prompts**: Rare, glowing words that award bonus points if hit in pocket.
+  - **Golden Prompts**: Rare, glowing words appearing every 50 words to reward persistence. (Scoring integration deferred to V2).
 
 ### 2. Audio & Recording System
 
@@ -64,14 +64,12 @@ The heart of the application, designed for zero-latency performance.
 
 ### 5. Gamification & Apex Badge Suite
 
-- **Scoring System**:
-  - **Flow Density**: Real-time analysis of vocal activity and rhythmic pocket.
-  - **Vibe Check**: Energy classification (e.g., "Relentless Pocket", "Locked In").
+- **Session Leaderboard**:
+  - **Engagement First**: Rankings are now based on total sessions completed entirely, prioritizing persistence and practice volume.
 - **Badge System**: Eight unique achievements including:
   - **Machine Gun**: For high-speed flows on Hard Mode + 4 Bar Frequency.
   - **Perfectionist**: Awarded for persistent rehearsal (5+ restarts in one session).
   - **The Listener**: Awarded for self-review advocacy (10+ playbacks).
-  - **Panic Button**: Skip current word at the cost of -500 points.
 
 ---
 
@@ -83,6 +81,8 @@ The heart of the application, designed for zero-latency performance.
 - **Advanced AI**:
   - **Rhyme Highlighting**: Server-side transcription + rhyme scheme analysis.
   - **Flow Coach**: LLM-based feedback on vocabulary diversity.
+  - **Flow Density & Vibe Check**: Technical analysis of vocal performance and energy.
+  - **Panic Button**: Optional word skip mechanism for beginners.
 - **Battles**: Real-time synchronous multiplayer battles.
 
 ---

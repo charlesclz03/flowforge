@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { Container } from '@/components/atoms/Container'
@@ -20,76 +21,51 @@ interface LeaderboardUser {
   flowPoints: number
 }
 
-interface WeeklyScore {
-  userId: string
-  _sum: {
-    score: number | null
-  }
-}
-
 async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardUser[]> {
+  const where: Prisma.FreestyleSessionWhereInput = {}
+
   if (period === 'weekly') {
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-
-    // Aggregate scores from sessions in the last 7 days
-    const weeklyScores = await prisma.freestyleSession.groupBy({
-      by: ['userId'],
-      where: {
-        createdAt: { gte: sevenDaysAgo },
-        score: { gt: 0 }, // Only count scored sessions
-      },
-      _sum: {
-        score: true,
-      },
-      orderBy: {
-        _sum: {
-          score: 'desc',
-        },
-      },
-      take: 50,
-    })
-
-    // Fetch user details for these scores
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const userIds = weeklyScores.map((s: any) => s.userId)
-    const users = await prisma.user.findMany({
-      where: { id: { in: userIds } },
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        image: true,
-      },
-    })
-
-    // Map scores back to users
-    return weeklyScores.map((entry: unknown) => {
-      const scoreEntry = entry as WeeklyScore
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const user = users.find((u: any) => u.id === scoreEntry.userId)
-      return {
-        id: scoreEntry.userId,
-        username: user?.username || null,
-        name: user?.name || null,
-        image: user?.image || null,
-        flowPoints: scoreEntry._sum.score || 0,
-      }
-    })
+    where.createdAt = { gte: sevenDaysAgo }
   }
 
-  // All Time: Use the pre-calculated flowPoints field on User
-  return prisma.user.findMany({
-    take: 50,
-    orderBy: {
-      flowPoints: 'desc',
+  // Aggregate count of sessions per user
+  const sessionCounts = await prisma.freestyleSession.groupBy({
+    by: ['userId'],
+    where,
+    _count: {
+      id: true,
     },
+    orderBy: {
+      _count: {
+        id: 'desc',
+      },
+    },
+    take: 50,
+  })
+
+  // Fetch user details for these sessions
+  const userIds = sessionCounts.map((s) => s.userId)
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
     select: {
       id: true,
       username: true,
       name: true,
       image: true,
-      flowPoints: true,
     },
+  })
+
+  // Map back to LeaderboardUser format
+  return sessionCounts.map((entry) => {
+    const user = users.find((u) => u.id === entry.userId)
+    return {
+      id: entry.userId,
+      username: user?.username || null,
+      name: user?.name || null,
+      image: user?.image || null,
+      flowPoints: entry._count.id || 0,
+    }
   })
 }
 

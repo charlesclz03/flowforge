@@ -5,6 +5,8 @@ import { SessionProvider } from '@/components/auth/SessionProvider'
 import { PracticeSessionProvider } from '@/contexts/SessionContext'
 import { BottomNav } from '@/components/organisms/layout/BottomNav'
 import { AudioContextUnlock } from '@/components/utils/AudioContextUnlock'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
@@ -96,15 +98,17 @@ export const viewport: Viewport = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en">
       <body className="bg-background text-text-primary antialiased min-h-[100dvh]">
-        <SessionProvider>
+        <SessionProvider session={session}>
           <PracticeSessionProvider>
             <a
               href="#main-content"

@@ -7,7 +7,6 @@ const STEP_PATHS: { path: string; index: number }[] = [
   { path: '/howitworks', index: 0 },
   { path: '/difficultyselection', index: 1 },
   { path: '/selectdifficulty', index: 1 },
-  { path: '/practice', index: 2 },
 ]
 
 export function OnboardingProgress({ className }: { className?: string }) {
@@ -18,6 +17,8 @@ export function OnboardingProgress({ className }: { className?: string }) {
   // Only render on onboarding-related pages
   if (activeStep === undefined) return null
 
+  const steps = Array.from(new Set(STEP_PATHS.map((s) => s.index))).sort((a, b) => a - b)
+
   return (
     <div
       className={cn(
@@ -25,11 +26,10 @@ export function OnboardingProgress({ className }: { className?: string }) {
         className
       )}
     >
-      {[0, 1, 2].map((index) => {
+      {steps.map((index) => {
         const isActive = index === activeStep
         return (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: progress indicator is static
             key={index}
             className={cn(
               'h-2 rounded-full transition-all duration-300',

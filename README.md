@@ -135,7 +135,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 - **Phase 6: Social & Gamification (Complete)**
   - Public Profiles ("Rapper Card") and Feed.
   - The "Duel" (Challenge friends) with Voting.
-  - Badges, Scoring, and Word Vault.
+  - Badges, Session Tracking, and Word Vault.
 - **Phase 7: Perfection & Certification (Complete)**
   - Word "Bag System" (500+ unique words, no repeats).
   - Advanced Badges (Machine Gun, Perfectionist, Listener).
@@ -157,7 +157,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 - **Audio System**: High-fidelity recording with mobile optimizations, real-time audio watermark for free users.
 - **Social Ecosystem**: Public Profiles, Feed, Follow/Like/Comment systems, and "Duel Mode" with community voting.
 - **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks.
-- **Gamification**: Full Badge Suite (8+ badges), Flow Density Score, Word Vault (Bag System), and Panic Penalty.
+- **Gamification**: Full Badge Suite (8+ badges), Session Count Tracking, and Word Vault (Bag System). (Scoring & Panic Button deferred to V2).
 - **Viral Growth**: Stat Card sharing (PNG), Public Duel links, and SEO-optimized profiles.
 - **Infrastructure**: NextAuth (Google), Prisma/Postgres, Supabase Storage, Sentry Logging, Auto-cleanup Cron.
 

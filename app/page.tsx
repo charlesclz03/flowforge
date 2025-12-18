@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
+import { useEffect, Suspense, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -12,6 +12,7 @@ function HomePageContent() {
   const { status, data: session } = useSession()
   const searchParams = useSearchParams()
   const router = useRouter()
+  const [isTimedOut, setIsTimedOut] = useState(false)
   const isAuthenticated = status === 'authenticated'
 
   // Redirect to callbackUrl after sign-in
@@ -29,8 +30,16 @@ function HomePageContent() {
     }
   }, [isAuthenticated, session, searchParams, router])
 
+  // Fallback for stuck session
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (status === 'loading') setIsTimedOut(true)
+    }, 6000)
+    return () => clearTimeout(timer)
+  }, [status])
+
   // If loading or authenticated (and redirecting), show minimal loader
-  if (status === 'loading' || isAuthenticated) {
+  if ((status === 'loading' || isAuthenticated) && !isTimedOut) {
     return (
       <main className="flex h-[100dvh] items-center justify-center bg-black">
         <div className="animate-pulse">

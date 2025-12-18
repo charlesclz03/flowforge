@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { EyeOff } from 'lucide-react'
+import { EyeOff, Eye } from 'lucide-react'
 import { PracticeTemplate } from '@/components/templates'
 import { PageHeader } from '@/components/organisms/common'
 import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
@@ -22,7 +22,6 @@ import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
-import { analyzeAudio } from '@/lib/scoring'
 import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { SessionSummaryModal } from '@/components/molecules/practice/SessionSummaryModal'
@@ -78,7 +77,6 @@ export default function PracticePage() {
   // ... inside PracticePage
   const [beats, setBeats] = useState<Beat[]>([])
   const [_isLoadingBeats, setIsLoadingBeats] = useState(true)
-  const [penalty, setPenalty] = useState(0)
   const [restartCount, setRestartCount] = useState(0)
   const [playbackCount, setPlaybackCount] = useState(0)
 
@@ -216,47 +214,10 @@ export default function PracticePage() {
               measuredDuration > 0 ? measuredDuration : fallbackDuration
             )
 
-            // Perform AI Vibe Check
-            let vibeResult = { vibe: 'Freestyle Flow', score: 0, description: 'Nice session!' }
-            try {
-              const vibeRes = await fetch('/api/ai/vibe-check', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  words: usedWords,
-                  bpm: selectedBeat.bpm,
-                  title: selectedBeat.title,
-                }),
-              })
-              if (vibeRes.ok) {
-                vibeResult = await vibeRes.json()
-              }
-            } catch (err) {
-              console.warn('Vibe check failed', err)
-            }
-
-            let finalScore = 0
-            let vibe = vibeResult.vibe
-            const description = vibeResult.description
-
-            try {
-              // Bible 3.1: Physical Analysis for Flow Density
-              const physicalAnalysis = await analyzeAudio(blob)
-              // Combine AI sentiment (vibeResult.score) with Physical Density (physicalAnalysis.score)
-              // AI provides semantic quality, Physical provides technical performance
-              const combinedScore = Math.round(
-                vibeResult.score * 0.4 + physicalAnalysis.score * 0.6
-              )
-              finalScore = Math.max(0, combinedScore - penalty * 500)
-
-              // If physical analysis is super high, maybe upgrade the vibe?
-              if (physicalAnalysis.score > 9000 && vibeResult.vibe === 'Locked In') {
-                vibe = 'Relentless Pocket'
-              }
-            } catch (err) {
-              console.warn('Physical analysis failed, falling back to AI only', err)
-              finalScore = Math.max(0, vibeResult.score - penalty * 500)
-            }
+            // Scoring and Vibe Check (Phase 8 V2)
+            const vibe = 'Freestyle Flow'
+            const description = 'Nice session!'
+            const finalScore = 0
 
             const formData = new FormData()
             formData.append('audio', blob, 'recording.webm')
@@ -358,7 +319,6 @@ export default function PracticePage() {
       handleError,
       challengeId,
       usedWords,
-      penalty,
       restartCount,
       playbackCount,
     ]
@@ -694,7 +654,6 @@ export default function PracticePage() {
     beatPlayer.stop()
     stopRecording()
     setWordIndex(0)
-    setPenalty(0)
     setRestartCount((prev) => prev + 1)
     setCurrentWord(wordList[0] || '')
     toast.success('Session Restarted', { icon: '🔄' })
@@ -813,6 +772,9 @@ export default function PracticePage() {
   return (
     <OnboardingLayout
       showBackButton={!cleanUI}
+      showHeader={!cleanUI}
+      showSettings={!cleanUI}
+      showProgress={!cleanUI}
       onBack={() => router.push('/difficultyselection')}
       className={cleanUI ? 'z-[100]' : ''}
     >
@@ -821,6 +783,18 @@ export default function PracticePage() {
         <style
           dangerouslySetInnerHTML={{ __html: `nav.safe-bottom { display: none !important; }` }}
         />
+      )}
+
+      {/* Restore UI Button (Visible only in Clean Mode) */}
+      {cleanUI && (
+        <button
+          onClick={() => setCleanUI(false)}
+          className="fixed top-6 right-6 z-[200] p-4 rounded-full bg-accent-purple/20 hover:bg-accent-purple/40 text-white backdrop-blur-heavy border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-purple-glow group"
+          title="Restore UI"
+        >
+          <Eye size={24} className="group-hover:rotate-12 transition-transform" />
+          <span className="sr-only">Restore UI</span>
+        </button>
       )}
 
       <PracticeTemplate
@@ -974,12 +948,6 @@ export default function PracticePage() {
                     onFrequencyChange={setFrequency}
                     cleanUI={cleanUI}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
-                    onSkipWord={() => {
-                      setCurrentWord(wordList[(wordIndex + 1) % wordList.length])
-                      setWordIndex((prev) => prev + 1)
-                      setPenalty((prev) => prev + 1)
-                      toast.error('Panic! -500 Points', { icon: '😱' })
-                    }}
                   />
                 </ErrorBoundary>
               </div>
