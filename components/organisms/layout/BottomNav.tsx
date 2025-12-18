@@ -35,7 +35,8 @@ export function BottomNav() {
       name: 'Practice',
       href: '/howitworks',
       icon: Mic,
-      match: (path: string) => path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
+      match: (path: string) =>
+        path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
       isPrimary: true, // Special flag for center button
     },
     {
@@ -53,9 +54,9 @@ export function BottomNav() {
   ]
 
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 safe-bottom">
+    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 safe-bottom">
       {/* iOS-style Glass Dock */}
-      <div className="flex items-end gap-2 p-2 rounded-[2rem] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5">
+      <div className="relative flex h-16 items-center px-4 gap-1 rounded-[2.5rem] bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl shadow-black/50 ring-1 ring-white/5">
         {tabs.map((tab) => {
           const isActive = tab.match ? tab.match(pathname) : pathname === tab.href
           const isPrimary = 'isPrimary' in tab ? tab.isPrimary : false
@@ -70,7 +71,8 @@ export function BottomNav() {
                 'relative flex items-center justify-center rounded-full transition-all duration-300 group',
                 isPrimary
                   ? cn(
-                      'w-16 h-16 mb-2 -mt-4 shadow-xl',
+                      'absolute left-1/2 -translate-x-1/2 -top-6', // Floating position
+                      'w-16 h-16 shadow-xl',
                       isActive
                         ? 'bg-accent-purple text-white shadow-purple-glow'
                         : 'bg-white/10 text-white hover:bg-white/20'
@@ -78,7 +80,7 @@ export function BottomNav() {
                   : cn(
                       'w-12 h-12',
                       isActive
-                        ? 'bg-white/10 text-white'
+                        ? 'text-white'
                         : 'text-text-secondary hover:text-white hover:bg-white/5'
                     )
               )}
@@ -98,6 +100,8 @@ export function BottomNav() {
             </Link>
           )
         })}
+        {/* Ghost element to maintain spacing for the absolute primary button in the center */}
+        <div className="w-16 h-16 opacity-0 pointer-events-none" aria-hidden="true" />
       </div>
     </nav>
   )
