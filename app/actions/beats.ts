@@ -14,12 +14,10 @@ export async function toggleBeatFavorite(beatId: string) {
     const userId = session.user.id
 
     // Check if exists
-    const existing = await prisma.favoriteBeat.findUnique({
+    const existing = await prisma.favoriteBeat.findFirst({
       where: {
-        userId_beatId: {
-          userId,
-          beatId,
-        },
+        userId,
+        beatId,
       },
     })
 
@@ -27,10 +25,7 @@ export async function toggleBeatFavorite(beatId: string) {
       // Remove
       await prisma.favoriteBeat.delete({
         where: {
-          userId_beatId: {
-            userId,
-            beatId,
-          },
+          id: existing.id,
         },
       })
       return { favorited: false }
