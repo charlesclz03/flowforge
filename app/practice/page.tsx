@@ -20,7 +20,7 @@ import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
-import { BeatSelector } from '@/components/organisms/practice/BeatSelector'
+import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
 import { analyzeAudio } from '@/lib/scoring'
 import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
@@ -877,11 +877,17 @@ export default function PracticePage() {
         }
         beatSelector={
           !cleanUI ? (
-            <BeatSelector
+            <BeatDropdown
               beats={beats}
               selectedBeat={selectedBeat}
               onSelect={handleBeatChange}
               isPro={isPro}
+              disabled={beatPlayer.isPlaying || isRecording}
+              isLoading={_isLoadingBeats}
+              onLockedSelect={() => {
+                setPremiumTrigger('beat')
+                setShowPremiumModal(true)
+              }}
             />
           ) : null
         }
@@ -898,7 +904,14 @@ export default function PracticePage() {
                   className="ml-2 p-1 hover:bg-white/10 rounded-full transition-colors"
                   aria-label="Dismiss tip"
                 >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
                 </button>
