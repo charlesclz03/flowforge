@@ -29,6 +29,19 @@ export class AudioPlayer {
         this.onEndedCallback()
       }
     })
+
+    // Handle buffering/loading issues
+    this.audio.addEventListener('waiting', () => {
+      console.warn('Audio is buffering...')
+    })
+
+    this.audio.addEventListener('stalled', () => {
+      console.warn('Audio playback stalled')
+    })
+
+    this.audio.addEventListener('error', (e) => {
+      console.error('HTMLAudioElement Error:', e)
+    })
   }
 
   /**
@@ -37,16 +50,36 @@ export class AudioPlayer {
   async load(url: string): Promise<void> {
     if (!this.audio) throw new Error('Audio not initialized')
 
+    // Stop current playback before loading new
+    this.audio.pause()
+
     return new Promise((resolve, reject) => {
       if (!this.audio) return reject(new Error('Audio not initialized'))
 
-      // Encode the URL to handle spaces and special characters while keeping protocol separators intact
       const encodedUrl = encodeURI(url)
+
+      // Setup temporary load handlers
+      const handleCanPlayThrough = () => {
+        this.audio?.removeEventListener('canplaythrough', handleCanPlayThrough)
+        this.audio?.removeEventListener('error', handleError)
+        resolve()
+      }
+
+      const handleError = (e: ErrorEvent | Event) => {
+        this.audio?.removeEventListener('canplaythrough', handleCanPlayThrough)
+        this.audio?.removeEventListener('error', handleError)
+        reject(
+          new Error(
+            'Failed to load audio: ' + (e instanceof ErrorEvent ? e.message : 'Network error')
+          )
+        )
+      }
+
+      this.audio.addEventListener('canplaythrough', handleCanPlayThrough)
+      this.audio.addEventListener('error', handleError)
+
       this.audio.src = encodedUrl
       this.audio.load()
-
-      this.audio.onloadeddata = () => resolve()
-      this.audio.onerror = () => reject(new Error('Failed to load audio'))
     })
   }
 

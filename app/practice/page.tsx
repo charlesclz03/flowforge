@@ -84,21 +84,46 @@ export default function PracticePage() {
 
   // ...
 
-  // Fetch Beats
-  const fetchBeats = async () => {
-    try {
-      const res = await fetch('/api/beats')
-      const data = await res.json()
-      if (data.beats) setBeats(data.beats)
-    } catch (err) {
-      console.error('Failed to load beats', err)
-    } finally {
-      setIsLoadingBeats(false)
-    }
-  }
+  // Parallel Fetch Initialization
   useEffect(() => {
-    fetchBeats()
-  }, [])
+    const initSession = async () => {
+      setIsLoadingBeats(true)
+      try {
+        const [beatsRes, wordsRes] = await Promise.all([
+          fetch('/api/beats'),
+          fetch(`/api/words/random?difficulty=${difficulty}&count=100`),
+        ])
+
+        const [beatsData, wordsData] = await Promise.all([beatsRes.json(), wordsRes.json()])
+
+        if (beatsData.beats) setBeats(beatsData.beats)
+        if (wordsData.words) {
+          const words = wordsData.words.map((w: { wordText: string }) => w.wordText)
+          setWordList(words)
+          if (!currentWord && words.length > 0) setCurrentWord(words[0])
+        }
+      } catch (err) {
+        console.error('Initialization error:', err)
+        handleError(err, ErrorCodes.BEAT_LOAD_FAILED) // Corrected from FETCH_DATA_FAILED
+      } finally {
+        setIsLoadingBeats(false)
+      }
+    }
+
+    initSession()
+
+    // Bible 2.1: Context Resume & TTS Warm-up
+    const warmUpTTS = () => {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const u = new SpeechSynthesisUtterance('')
+        u.volume = 0
+        window.speechSynthesis.speak(u)
+      }
+    }
+    warmUpTTS()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Intentional once on mount to avoid fetch loops during session
 
   // ...
 
@@ -457,31 +482,18 @@ export default function PracticePage() {
   // Robust Speak Helper
   const speak = useCallback(
     (text: string, force = false) => {
-      if (typeof window === 'undefined' || !window.speechSynthesis) {
-        console.warn('TTS: SpeechSynthesis not available')
-        return
-      }
+      if (typeof window === 'undefined' || !window.speechSynthesis) return
 
-      console.log(`TTS Speaking: "${text}"`, {
-        voice: voice?.name,
-        volume: ttsVolume,
-        enabled: isTTSEnabled,
-        force,
-      })
+      if (!isTTSEnabled && !force) return
 
-      if (!isTTSEnabled && !force) {
-        console.log('TTS: Skipped (Disabled)')
-        return
-      }
+      // Instead of cancel(), we check for speaking to avoid "jams"
+      // but only if we really need to clear the air.
+      // window.speechSynthesis.cancel()
 
-      window.speechSynthesis.cancel() // Always cancel previous
       const u = new SpeechSynthesisUtterance(text)
-      u.rate = 1.2
+      u.rate = 1.1 // Slightly slower for better clarity
       u.volume = ttsVolume
       if (voice) u.voice = voice
-
-      u.onerror = (e) => console.error('TTS Error:', e)
-      u.onstart = () => console.log('TTS Started')
 
       window.speechSynthesis.speak(u)
     },
@@ -688,65 +700,70 @@ export default function PracticePage() {
     toast.success('Session Restarted', { icon: '🔄' })
   }, [beatPlayer, stopRecording, wordList])
 
-  // Ref to track current word inside interval (prevents stale closure)
-  const currentWordRef = useRef<string>('')
+  // Ref-based state for high-frequency tracking (prevents re-renders)
+  const sessionStateRef = useRef({
+    lastWordIndex: -1,
+    lastFrameTime: 0,
+    startTime: 0,
+    isActive: false,
+  })
 
-  // Timer countdown and word cycling (Modified for Siren)
+  // Synchronization Loop (High Precision)
   useEffect(() => {
-    if (!beatPlayer.isPlaying || !selectedBeat || wordList.length === 0) return
+    if (!beatPlayer.isPlaying || !selectedBeat || wordList.length === 0) {
+      sessionStateRef.current.isActive = false
+      return
+    }
+
+    const state = sessionStateRef.current
+    state.isActive = true
+    state.startTime = Date.now()
+    state.lastWordIndex = -1
 
     const secondsPerBar = (60 / selectedBeat.bpm) * 4
     const secondsPerPrompt = secondsPerBar * frequency
-    const startTime = Date.now()
 
-    // Reset ref on start
-    currentWordRef.current = ''
+    const updateLoop = () => {
+      if (!state.isActive) return
 
-    const interval = setInterval(() => {
-      const elapsedMs = Date.now() - startTime
-      const elapsedSeconds = elapsedMs / 1000
+      // Use the new precise getter to avoid re-render-stale-props
+      const elapsedSeconds = beatPlayer.getPreciseTime()
 
-      forceUpdate()
-
-      // Calculate time until next word change
-      const wordIdx = Math.floor(elapsedSeconds / secondsPerPrompt)
-      const nextWordTime = (wordIdx + 1) * secondsPerPrompt
-      const timeUntilChange = nextWordTime - elapsedSeconds
-
-      // Siren Check
-      if (timeUntilChange <= 4 && timeUntilChange > 0.5) {
-        // setIsSirenActive(true) // Unused
-      } else {
-        // setIsSirenActive(false)
-      }
-
+      // 1. Session End Check
       if (elapsedSeconds >= sessionDuration) {
-        beatPlayer.stop()
-        stopRecording()
-        releaseLock()
-        setCurrentWord('')
-        currentWordRef.current = '' // Reset
+        handleStop()
         return
       }
 
+      // 2. Word Switching Logic
+      const wordIdx = Math.floor(elapsedSeconds / secondsPerPrompt)
       const actualIndex = wordIdx % wordList.length
-      setWordIndex(wordIdx) // Update state
 
-      const newWord = wordList[actualIndex]
-      // Use Ref to check freshness
-      if (newWord !== currentWordRef.current) {
-        setCurrentWord(newWord)
-        currentWordRef.current = newWord // Update Ref
+      if (wordIdx !== state.lastWordIndex) {
+        state.lastWordIndex = wordIdx
+        const newWord = wordList[actualIndex]
 
-        // Trigger TTS
         if (newWord) {
+          setCurrentWord(newWord)
+          setWordIndex(wordIdx)
           speak(newWord)
         }
       }
-    }, 100)
+
+      // 3. UI Synchronization
+      // We still call forceUpdate here to keep the Timer Ring smooth,
+      // but since useBeatPlayer is "silent", this is now the ONLY re-render source,
+      // making it much lighter than before.
+      forceUpdate()
+
+      requestAnimationFrame(updateLoop)
+    }
+
+    const frameId = requestAnimationFrame(updateLoop)
 
     return () => {
-      clearInterval(interval)
+      state.isActive = false
+      cancelAnimationFrame(frameId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatPlayer.isPlaying, selectedBeat?.id, frequency, wordList.length, sessionDuration])

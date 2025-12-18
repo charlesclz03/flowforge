@@ -6,20 +6,21 @@ import { BeatMetadata } from '@/lib/beats/types'
 
 export function useBeatPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const playerRef = useRef<AudioPlayer | null>(null)
   const currentBeatRef = useRef<BeatMetadata | null>(null)
+  const timeRef = useRef(0)
 
   // Initialize player
   useEffect(() => {
     playerRef.current = new AudioPlayer()
 
     playerRef.current.onTimeUpdate((time) => {
-      setCurrentTime(time)
+      timeRef.current = time
+      // No longer calling setCurrentTime(time) here to avoid re-renders
     })
 
     playerRef.current.onEnded(() => {
@@ -40,8 +41,8 @@ export function useBeatPlayer() {
     if (!playerRef.current) return
 
     setIsLoading(true)
-    // Clear any previous error before attempting a new load
     setError(null)
+    timeRef.current = 0
 
     try {
       await playerRef.current.load(beat.storageUrl)
@@ -49,9 +50,6 @@ export function useBeatPlayer() {
 
       const state = playerRef.current.getState()
       setDuration(state.duration)
-
-      // If we successfully loaded, ensure any stale error message is cleared
-      setError(null)
       setIsLoading(false)
     } catch (err) {
       console.error('Error loading beat:', err)
@@ -94,7 +92,7 @@ export function useBeatPlayer() {
 
     playerRef.current.stop()
     setIsPlaying(false)
-    setCurrentTime(0)
+    timeRef.current = 0
   }, [])
 
   /**
@@ -115,7 +113,7 @@ export function useBeatPlayer() {
     if (!playerRef.current) return
 
     playerRef.current.seek(time)
-    setCurrentTime(time)
+    timeRef.current = time
   }, [])
 
   /**
@@ -139,7 +137,8 @@ export function useBeatPlayer() {
   return {
     // State
     isPlaying,
-    currentTime,
+    currentTime: timeRef.current, // Caution: This won't trigger re-renders when it changes!
+    getPreciseTime: () => timeRef.current, // Expose direct getter for loop
     duration,
     isLoading,
     error,
