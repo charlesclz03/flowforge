@@ -93,13 +93,18 @@ export const BeatCard = memo(function BeatCard({
           className="absolute top-1/2 -translate-y-1/2 right-4 p-2 text-text-secondary hover:text-accent-pink transition-colors z-10"
           title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <div className={cn("transition-transform active:scale-90", isFavorited && "text-accent-pink")}>
+          <div
+            className={cn(
+              'transition-transform active:scale-90',
+              isFavorited && 'text-accent-pink'
+            )}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
               height="20"
               viewBox="0 0 24 24"
-              fill={isFavorited ? "currentColor" : "none"}
+              fill={isFavorited ? 'currentColor' : 'none'}
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
