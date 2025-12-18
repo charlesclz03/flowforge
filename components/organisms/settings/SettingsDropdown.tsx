@@ -12,6 +12,7 @@ import {
   Bug,
   Snowflake,
   User,
+  Scale,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -240,7 +241,7 @@ export function SettingsDropdown() {
                     active ? 'bg-white/5' : ''
                   )}
                 >
-                  <span className="w-4 mr-3" />
+                  <Scale size={16} className="mr-3 text-text-secondary" />
                   Terms of Service
                 </Link>
               )}
