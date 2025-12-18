@@ -60,7 +60,8 @@ export async function POST(request: Request) {
       parentId: null,
       restarts: 0,
       playbacks: 0,
-    })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || 'Failed to create session' },
