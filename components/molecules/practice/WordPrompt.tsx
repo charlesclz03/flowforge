@@ -24,19 +24,7 @@ export function WordPrompt({ word, show, className, isGolden }: WordPromptProps)
   }, [show, word])
 
   if (!displayWord) {
-    return (
-      <div className={cn('flex items-center justify-center min-h-[120px]', className)}>
-        <h2
-          className={cn(
-            'text-3xl sm:text-4xl font-light tracking-tight text-center',
-            'text-gradient',
-            'drop-shadow-lg'
-          )}
-        >
-          READY
-        </h2>
-      </div>
-    )
+    return null
   }
 
   return (

@@ -326,20 +326,18 @@ export default function PracticeControls({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center w-full h-full">
-                  <div className="flex flex-col items-center justify-center w-full h-full">
-                    <div
-                      className={cn(
-                        'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
-                        !isPro
-                          ? 'bg-white/5 border border-white/10 text-white/20'
-                          : 'bg-red-500 text-white shadow-red-500/20'
-                      )}
-                    >
-                      {isPro && (
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
-                      )}
-                      <StudioMicIcon size={48} />
-                    </div>
+                  <div
+                    className={cn(
+                      'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
+                      !isPro
+                        ? 'bg-white/5 border border-white/10 text-white/20'
+                        : 'bg-red-500 text-white shadow-red-500/20'
+                    )}
+                  >
+                    {isPro && (
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
+                    )}
+                    <StudioMicIcon size={48} />
                   </div>
                 </div>
               )}
