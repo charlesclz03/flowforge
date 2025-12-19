@@ -24,6 +24,16 @@ export function useRecording({
   const recorderRef = useRef<AudioRecorder | null>(null)
   const durationIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Refs for callbacks to avoid re-initialization
+  const onCompleteRef = useRef(onComplete)
+  const onMaxDurationRef = useRef(onMaxDurationReached)
+
+  // Update refs when props change
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+    onMaxDurationRef.current = onMaxDurationReached
+  }, [onComplete, onMaxDurationReached])
+
   // Initialize recorder
   useEffect(() => {
     recorderRef.current = new AudioRecorder()
@@ -36,8 +46,8 @@ export function useRecording({
       const finalDuration = recorderRef.current?.getDuration() || 0
       setDuration(finalDuration)
 
-      if (onComplete) {
-        onComplete(blob, finalDuration)
+      if (onCompleteRef.current) {
+        onCompleteRef.current(blob, finalDuration)
       }
     })
 
@@ -55,8 +65,8 @@ export function useRecording({
     })
 
     recorderRef.current.onMaxDuration(() => {
-      if (onMaxDurationReached) {
-        onMaxDurationReached()
+      if (onMaxDurationRef.current) {
+        onMaxDurationRef.current()
       }
     })
 
@@ -68,7 +78,7 @@ export function useRecording({
         clearInterval(durationIntervalRef.current)
       }
     }
-  }, [onComplete, onMaxDurationReached])
+  }, []) // Empty dependency array - purely mount/unmount logic for the recorder instance
 
   // Route Guard: Warn before leaving if recording or unsaved data exists
   useEffect(() => {
