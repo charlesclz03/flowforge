@@ -91,6 +91,7 @@ export async function POST(request: Request) {
       difficulty,
       score,
       vibe: vibe || null,
+      mode: 'solo',
       restarts,
       playbacks,
     })
