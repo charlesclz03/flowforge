@@ -331,7 +331,7 @@ export default function PracticeControls({
               ) : (
                 <div className="flex flex-col items-center justify-center w-full h-full">
                   <div className="flex flex-col items-center gap-8">
-                    <h2 className="text-6xl sm:text-7xl font-light tracking-[0.25em] text-white/90 uppercase leading-none animate-in fade-in zoom-in-95 duration-700">
+                    <h2 className="text-5xl sm:text-6xl font-light tracking-[0.25em] text-white/90 uppercase leading-none animate-in fade-in zoom-in-95 duration-700">
                       Ready
                     </h2>
 
@@ -357,7 +357,10 @@ export default function PracticeControls({
 
         {/* Record Notifier */}
         <button
-          onClick={handleRecordClick}
+          onClick={(e) => {
+            e.stopPropagation()
+            onUpgrade?.() // Always trigger upgrade/info modal, never record
+          }}
           className="mt-4 flex items-center justify-center group/rec outline-none transition-transform hover:scale-105 active:scale-95"
         >
           <div className="flex items-center gap-2 px-6 py-2">

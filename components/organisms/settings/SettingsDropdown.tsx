@@ -1,19 +1,8 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import {
-  Settings,
-  Shield,
-  Smartphone,
-  Volume2,
-  Mic,
-  FileText,
-  Bug,
-  User,
-  Scale,
-  LogOut,
-} from 'lucide-react'
+import { Settings, Shield, Volume2, Mic, FileText, Bug, User, Scale, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
@@ -21,7 +10,6 @@ import { cn } from '@/lib/utils'
 
 export function SettingsDropdown() {
   const { data: session } = useSession()
-  const [visualizer, setVisualizer] = useState<'ring' | 'wave'>('ring')
   const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume } = usePracticeSession()
 
   return (
@@ -60,55 +48,6 @@ export function SettingsDropdown() {
 
           {/* Main Controls */}
           <div className="py-1">
-            {/* Visualizer Style */}
-
-            {/* Visualizer Style */}
-            <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={cn(
-                    'flex items-center justify-between px-4 py-3 transition-colors',
-                    active ? 'bg-white/5' : ''
-                  )}
-                >
-                  <div className="flex items-center gap-3 text-sm text-white">
-                    <Smartphone size={16} className="text-accent-purple" />
-                    <span>Visualizer</span>
-                  </div>
-                  <div className="flex bg-black/20 rounded-lg p-0.5">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setVisualizer('ring')
-                      }}
-                      className={cn(
-                        'px-2 py-1 text-[10px] font-medium rounded-md transition-all',
-                        visualizer === 'ring'
-                          ? 'bg-background-elevated text-white shadow-sm'
-                          : 'text-text-secondary hover:text-white'
-                      )}
-                    >
-                      Ring
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setVisualizer('wave')
-                      }}
-                      className={cn(
-                        'px-2 py-1 text-[10px] font-medium rounded-md transition-all',
-                        visualizer === 'wave'
-                          ? 'bg-background-elevated text-white shadow-sm'
-                          : 'text-text-secondary hover:text-white'
-                      )}
-                    >
-                      Wave
-                    </button>
-                  </div>
-                </div>
-              )}
-            </Menu.Item>
-
             {/* TTS Toggle */}
             <Menu.Item>
               {({ active }) => (
