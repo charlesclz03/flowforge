@@ -8,7 +8,7 @@
 
 ## 🎯 Goal
 
-Transform FlowForge from a free tool into a sustainable busines by introducing a "Pro" tier (€4.99/mo or €49.99/yr) that offers tangible value to serious artists.
+Transform Freestyla from a free tool into a sustainable busines by introducing a "Pro" tier (€4.99/mo or €49.99/yr) that offers tangible value to serious artists.
 
 ## 📦 Key Features
 

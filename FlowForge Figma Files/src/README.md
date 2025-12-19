@@ -1,8 +1,8 @@
-# 🎵 FlowForge - Freestyle Practice App
+# 🎵 Freestyla - Freestyle Practice App
 
 A beautiful, minimal freestyle rap practice application with iOS-inspired design and purple gradient theming.
 
-![FlowForge](https://img.shields.io/badge/FlowForge-v2.0-purple?style=for-the-badge)
+![Freestyla](https://img.shields.io/badge/Freestyla-v2.0-purple?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan?style=for-the-badge&logo=tailwindcss)
@@ -69,7 +69,7 @@ The app will open at `http://localhost:5173`
 
 ### 1️⃣ How It Works Page
 
-- Read about FlowForge features
+- Read about Freestyla features
 - See statistics (50+ beats, 1,000+ words)
 - Click **"Start Practicing"** to begin
 
@@ -199,7 +199,7 @@ Edit `/styles/globals.css`:
 npm install @capacitor/core @capacitor/cli @capacitor/android
 
 # Initialize
-npx cap init FlowForge com.yourname.flowforge
+npx cap init Freestyla com.yourname.flowforge
 
 # Build web app
 npm run build
@@ -367,4 +367,4 @@ npm run lint         # Run linter
 
 ---
 
-**FlowForge v2.0** - The freestyle command center 🎤
+**Freestyla v2.0** - The freestyle command center 🎤

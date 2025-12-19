@@ -30,7 +30,7 @@
 
 - **Status:** Planned
 - **Details:**
-  - Audio tag ("Recorded on FlowForge") mixed into free-tier downloads/shares.
+  - Audio tag ("Recorded on Freestyla") mixed into free-tier downloads/shares.
 
 ## 🚫 Excluded
 

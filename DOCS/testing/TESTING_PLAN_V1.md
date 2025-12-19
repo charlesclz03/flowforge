@@ -1,4 +1,4 @@
-# 🧪 FlowForge V1.0 - Comprehensive Testing Plan (Quality Assurance)
+# 🧪 Freestyla V1.0 - Comprehensive Testing Plan (Quality Assurance)
 
 **Status**: 🚀 Ready for Execution
 **Objective**: Validate end-to-end functionality of all 7 phases before Production Launch.

@@ -49,7 +49,7 @@ Added three new sections with anchor IDs:
 #### FAQ Section (`#faq`)
 
 - Interactive accordion-style FAQ items:
-  - What is FlowForge?
+  - What is Freestyla?
   - How does the word prompt system work?
   - Can I download my recordings?
   - What browsers are supported?

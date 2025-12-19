@@ -5,7 +5,7 @@
 
 ## Overview
 
-Phase 3 successfully integrated the complete audio system for FlowForge, including beat playback, microphone recording, word prompt generation, and synchronized timing. The practice page is now fully functional with a polished UI/UX.
+Phase 3 successfully integrated the complete audio system for Freestyla, including beat playback, microphone recording, word prompt generation, and synchronized timing. The practice page is now fully functional with a polished UI/UX.
 
 ---
 

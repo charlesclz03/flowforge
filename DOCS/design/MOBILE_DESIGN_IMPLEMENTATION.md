@@ -5,7 +5,7 @@
 
 ## Overview
 
-FlowForge is now a mobile-first webapp that matches all design screenshots while maintaining desktop compatibility. The app uses purple (#7D7AFF) as the primary accent color throughout.
+Freestyla is now a mobile-first webapp that matches all design screenshots while maintaining desktop compatibility. The app uses purple (#7D7AFF) as the primary accent color throughout.
 
 ## Key Changes Implemented
 
@@ -100,7 +100,7 @@ Difficulty                    [Medium]
 
 ### ✅ Screenshot 006 - Setup Your Session
 
-- Back button + FlowForge logo header
+- Back button + Freestyla logo header
 - "Setup Your Session" title
 - "Configure settings and choose your beat" subtitle
 - Difficulty slider with purple styling
@@ -117,7 +117,7 @@ Difficulty                    [Medium]
 
 ### ✅ Screenshot 010 - Practice Screen (Before Playing)
 
-- Back button + FlowForge logo
+- Back button + Freestyla logo
 - Session info pill formatted correctly
 - Large "2:00" timer
 - Purple play button with glow effect

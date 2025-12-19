@@ -1,10 +1,10 @@
-# FlowForge Deployment Guide
+# Freestyla Deployment Guide
 
 ## ✅ Deployment Target: `flowforge-freestyle`
 
 > [!NOTE]
 > **December 18, 2025**: The `flowforge` Vercel project has been disconnected from GitHub.
-> 
+>
 > All pushes to `main` now **only** deploy to `flowforge-freestyle`.
 
 ### Correct Workflow:
@@ -19,6 +19,7 @@ git push origin main
 ```
 
 ### Why This Matters:
+
 - `flowforge` is a different project with different environment variables
 - `flowforge-freestyle` is the correct project linked to this codebase
 - Deploying to the wrong project will cause build failures and missing env vars
@@ -27,7 +28,7 @@ git push origin main
 
 ## Overview
 
-Deploy FlowForge to Vercel with proper environment variables and configuration.
+Deploy Freestyla to Vercel with proper environment variables and configuration.
 
 **Live URL**: https://flowforge-freestyle.vercel.app
 
@@ -89,18 +90,23 @@ git push origin main
 ---
 
 ## 4. Troubleshooting
+
 ### Common Errors:
+
 **1. `Cannot find module ...` (e.g., `resend`, `react-intersection-observer`)**
+
 - Use `npm install <package-name>` to ensure it's in `package.json`.
 - Running `npm run build` **locally** helps reproduce these errors before pushing.
 
 **2. `Prisma Client` Errors (Stale Cache)**
-- If Vercel reports type errors for fields that *exist* in `schema.prisma`:
-    - Ensure `package.json` has `"postinstall": "prisma generate"`.
-    - If error persists, use `as any` casting in the API route as a temporary bypass: `createSession({...} as any)`.
-    - In Vercel Project Settings, clear the **Build Cache** and redeploy.
+
+- If Vercel reports type errors for fields that _exist_ in `schema.prisma`:
+  - Ensure `package.json` has `"postinstall": "prisma generate"`.
+  - If error persists, use `as any` casting in the API route as a temporary bypass: `createSession({...} as any)`.
+  - In Vercel Project Settings, clear the **Build Cache** and redeploy.
 
 **3. `@vercel/og` Resolution**
+
 - Use `import { ImageResponse } from 'next/og'` instead of `@vercel/og`.
 
 ---

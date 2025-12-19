@@ -4,7 +4,7 @@
 
 ## Overview
 
-This document outlines the implementation plan for audio file uploads to Google Cloud Storage (GCS) for FlowForge V2.
+This document outlines the implementation plan for audio file uploads to Google Cloud Storage (GCS) for Freestyla V2.
 
 ## Architecture
 
@@ -76,7 +76,7 @@ gsutil cors set cors.json gs://flowforge-audio
 ```bash
 # Create service account
 gcloud iam service-accounts create flowforge-uploader \
-  --display-name="FlowForge Audio Uploader"
+  --display-name="Freestyla Audio Uploader"
 
 # Grant Storage Object Creator role
 gcloud projects add-iam-policy-binding flowforge-prod \

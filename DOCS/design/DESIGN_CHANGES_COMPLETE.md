@@ -46,7 +46,7 @@
 
 ## Design Compliance
 
-All screenshots from `DOCS/FlowForge Design Assets/` have been analyzed and implemented:
+All screenshots from `DOCS/Freestyla Design Assets/` have been analyzed and implemented:
 
 ### Screenshot 002 - Feature Cards
 
@@ -56,7 +56,7 @@ All screenshots from `DOCS/FlowForge Design Assets/` have been analyzed and impl
 
 ### Screenshot 006 - Setup Your Session
 
-- ✅ Back button with FlowForge logo
+- ✅ Back button with Freestyla logo
 - ✅ "Setup Your Session" title
 - ✅ "Configure settings and choose your beat" subtitle
 - ✅ Difficulty slider with label and description
@@ -73,7 +73,7 @@ All screenshots from `DOCS/FlowForge Design Assets/` have been analyzed and impl
 
 ### Screenshot 010 - Practice Screen
 
-- ✅ Back button + FlowForge logo
+- ✅ Back button + Freestyla logo
 - ✅ Session info pill: "Skyline • RhythmLab • 88 BPM"
 - ✅ Large timer: "2:00"
 - ✅ Purple play button with glow

@@ -77,7 +77,7 @@
 
 - Interactive accordion-style questions
 - Four key questions answered:
-  - What is FlowForge?
+  - What is Freestyla?
   - How does the word prompt system work?
   - Can I download my recordings?
   - What browsers are supported?

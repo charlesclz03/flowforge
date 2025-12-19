@@ -7,7 +7,7 @@
 
 ## 🎯 Goal
 
-Expand FlowForge beyond the web browser and into deep AI integration. This phase begins after FlowForge V1.1 has been validated by users.
+Expand Freestyla beyond the web browser and into deep AI integration. This phase begins after Freestyla V1.1 has been validated by users.
 
 ---
 
@@ -20,6 +20,7 @@ Expand FlowForge beyond the web browser and into deep AI integration. This phase
 - **Features**: "Car Mode" (voice only UI), offline-first architecture.
 
 ### 2. Social Expansion
+
 - **Hashtags**: Organize sessions by style or challenge (e.g., #SpeedChallenge).
 - **Trending Feed**: "Top of the Week" algorithm based on Flow Density and engagement.
 
@@ -32,7 +33,7 @@ Expand FlowForge beyond the web browser and into deep AI integration. This phase
 ### 3. Beat Marketplace
 
 - Allow producers to upload beats and sell licenses.
-- Revenue share model for FlowForge.
+- Revenue share model for Freestyla.
 
 ---
 

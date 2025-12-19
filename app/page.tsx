@@ -4,9 +4,9 @@ import { useEffect, Suspense, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Music } from 'lucide-react'
 import { SignInButton } from '@/components/molecules/auth/SignInButton'
 import { LandingHowItWorks } from '@/components/organisms/landing/LandingHowItWorks'
+import Image from 'next/image'
 
 function HomePageContent() {
   const { status, data: session } = useSession()
@@ -43,7 +43,14 @@ function HomePageContent() {
     return (
       <main className="flex h-[100dvh] items-center justify-center bg-black">
         <div className="animate-pulse">
-          <Music className="h-12 w-12 text-accent-purple" />
+          <Image
+            src="/logo.png"
+            alt="Loading..."
+            width={48}
+            height={48}
+            priority
+            className="h-12 w-12 object-contain drop-shadow-neon"
+          />
         </div>
       </main>
     )
@@ -63,12 +70,19 @@ function HomePageContent() {
         <div className="space-y-6">
           <div className="flex justify-center">
             <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
-              <Music className="h-10 w-10 text-accent-purple drop-shadow-neon" />
+              <Image
+                src="/logo.png"
+                alt="Freestyla Logo"
+                width={48}
+                height={48}
+                priority
+                className="h-12 w-12 object-contain drop-shadow-neon"
+              />
             </div>
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">FlowForge</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">Freestyla</h1>
             <p className="text-lg font-medium text-text-secondary">Master your freestyle.</p>
           </div>
         </div>

@@ -1,6 +1,6 @@
-# FlowForge Setup Guide
+# Freestyla Setup Guide
 
-This guide will help you set up the development environment for FlowForge.
+This guide will help you set up the development environment for Freestyla.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ npm install
 
 ### 2. Database Setup (Supabase)
 
-FlowForge uses Supabase for PostgreSQL database hosting.
+Freestyla uses Supabase for PostgreSQL database hosting.
 
 #### Steps:
 

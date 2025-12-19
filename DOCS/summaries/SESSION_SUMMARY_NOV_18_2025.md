@@ -20,7 +20,7 @@
     - Crown icon, matching the design screenshot.
 
 - **Navigation & hero polish**
-  - Made the **FlowForge header logo/title** clickable on all pages that use `AppHeader` / `OnboardingLayout`; it now always returns to the landing page (`/`).
+  - Made the **Freestyla header logo/title** clickable on all pages that use `AppHeader` / `OnboardingLayout`; it now always returns to the landing page (`/`).
   - Centered the **“Practice Here”** CTA button within the landing `LandingHero` so it matches the visual design.
 
 ---

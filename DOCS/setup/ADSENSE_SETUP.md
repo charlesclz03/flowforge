@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add non-intrusive banner ads for free-tier users in FlowForge.
+Add non-intrusive banner ads for free-tier users in Freestyla.
 
 ## 1. AdSense Account Setup
 
@@ -160,7 +160,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 2. Click "New ad unit"
 3. Choose "Display ads"
 4. Configure:
-   - **Name**: FlowForge Bottom Banner
+   - **Name**: Freestyla Bottom Banner
    - **Size**: Responsive
    - **Ad type**: Display ads
 5. Click "Create"

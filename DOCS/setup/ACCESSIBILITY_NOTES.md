@@ -1,4 +1,4 @@
-# FlowForge UI Accessibility Notes
+# Freestyla UI Accessibility Notes
 
 _Updated: November 6, 2025_
 

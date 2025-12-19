@@ -16,7 +16,7 @@
 
 ```bash
 killall -9 node
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 xattr -cr .
 rm -rf node_modules .next
 npm install

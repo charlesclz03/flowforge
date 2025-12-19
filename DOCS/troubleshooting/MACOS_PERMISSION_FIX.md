@@ -2,7 +2,7 @@
 
 ## Problem Summary
 
-When running FlowForge on macOS, you may encounter permission errors that prevent the development server from starting properly.
+When running Freestyla on macOS, you may encounter permission errors that prevent the development server from starting properly.
 
 ---
 
@@ -46,7 +46,7 @@ Files showing `@` symbol when listing:
 ### Step 2: Clean the Project
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 
 # Kill all Node processes
 killall -9 node
@@ -93,10 +93,10 @@ ulimit -n 10240
 The folder name "AI BUSINESS" with a space might cause issues:
 
 ```bash
-mv "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle" \
-   "/Users/c0369/Documents/FlowForge-Freestyle"
+mv "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle" \
+   "/Users/c0369/Documents/Freestyla-Freestyle"
 
-cd "/Users/c0369/Documents/FlowForge-Freestyle"
+cd "/Users/c0369/Documents/Freestyla-Freestyle"
 npm run dev
 ```
 
@@ -203,7 +203,7 @@ diskutil verifyVolume /
 
 ```bash
 # Complete reset
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 killall -9 node
 rm -rf node_modules .next package-lock.json
 npm cache clean --force

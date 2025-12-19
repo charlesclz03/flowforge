@@ -1,6 +1,6 @@
-# 🚀 START HERE - FlowForge Quick Start
+# 🚀 START HERE - Freestyla Quick Start
 
-**Welcome!** This is your entry point to the FlowForge project.
+**Welcome!** This is your entry point to the Freestyla project.
 
 ---
 
@@ -10,13 +10,13 @@
 **Version**: v1.1.0-final  
 **Completion**: 100% (Full Bible Alignment)
 
-> **NOTE**: FlowForge is **COMPLETE**. All core, premium, social, and gamification features are fully built and deployed. The project is now ready for global launch.
+> **NOTE**: Freestyla is **COMPLETE**. All core, premium, social, and gamification features are fully built and deployed. The project is now ready for global launch.
 
 ---
 
-## 🎯 What is FlowForge?
+## 🎯 What is Freestyla?
 
-**FlowForge** is an AI-powered freestyle rap practice web app that helps aspiring artists:
+**Freestyla** is an AI-powered freestyle rap practice web app that helps aspiring artists:
 
 - Practice with high-quality beats and synchronized word prompts
 - Record, review, and share practice sessions
@@ -30,7 +30,7 @@
 ## ⚡ Quick Start (Development)
 
 ```bash
-cd "c:\Projects\FlowForge - Freestyle"
+cd "c:\Projects\Freestyla - Freestyle"
 npm install
 npx prisma generate
 npm run dev
@@ -43,12 +43,15 @@ Visit: http://localhost:3000
 ## 📚 Essential Documentation
 
 ### 1. Product Vision
-- **[FlowForge V1.0: The Bible](DOCS/FlowForge%20V1.0_%20The%20Bible.md)**: The core requirements—now 100% complete.
+
+- **[Freestyla V1.0: The Bible](DOCS/Freestyla%20V1.0_%20The%20Bible.md)**: The core requirements—now 100% complete.
 
 ### 2. Feature Guide
+
 - **[APP_OVERVIEW_AND_FEATURES.md](DOCS/APP_OVERVIEW_AND_FEATURES.md)**: Full breakdown of implemented features.
 
 ### 3. Status & Roadmap
+
 - **[CURRENT_STATUS_SUMMARY.md](DOCS/summaries/CURRENT_STATUS_SUMMARY.md)**: Current project health.
 - **[PHASE_8_FUTURE_ROADMAP.md](DOCS/phases/PHASE_8_FUTURE_ROADMAP.md)**: Mobile and AI vision.
 
@@ -72,7 +75,7 @@ npx prisma migrate dev   # Run migrations
 ## 📂 Project Structure
 
 ```
-FlowForge - Freestyle/
+Freestyla - Freestyle/
 ├── app/                 # Next.js App Router
 │   ├── api/             # API Routes (Recordings, Duels, Votes)
 │   ├── practice/        # Core Practice Engine

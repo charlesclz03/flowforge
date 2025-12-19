@@ -14,7 +14,7 @@ Now includes **both** configuration sliders at the top:
 
 ```
 ┌─────────────────────────────────────┐
-│  Back  <  FlowForge  >              │
+│  Back  <  Freestyla  >              │
 ├─────────────────────────────────────┤
 │                                     │
 │      Setup Your Session             │
@@ -52,7 +52,7 @@ Now **focused only on playback**:
 
 ```
 ┌─────────────────────────────────────┐
-│  Back  <  FlowForge  >              │
+│  Back  <  Freestyla  >              │
 ├─────────────────────────────────────┤
 │                                     │
 │  Midnight Flow • ProducerX • 88 BPM │
@@ -134,7 +134,7 @@ This allows:
 
 ## ✨ Everything is Ready!
 
-Your FlowForge app now has:
+Your Freestyla app now has:
 
 ✅ **Purple theme** throughout  
 ✅ **Sliders on Beat Selector page** (above beat grid)  

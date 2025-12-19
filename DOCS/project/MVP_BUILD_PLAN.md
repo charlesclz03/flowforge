@@ -1,4 +1,4 @@
-# FlowForge MVP Build Plan
+# Freestyla MVP Build Plan
 
 **Date**: November 6, 2025  
 **Status**: ✅ **COMPLETED / ARCHIVED** (See `PROJECT_STATUS.md` for current state)
@@ -726,7 +726,7 @@ flowforge/
 
 ```
 ┌───────────────────┐
-│ ☰  FlowForge  👤 │
+│ ☰  Freestyla  👤 │
 ├───────────────────┤
 │                   │
 │  Beat Selector ▼  │

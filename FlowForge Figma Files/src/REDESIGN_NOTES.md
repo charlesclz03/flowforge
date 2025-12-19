@@ -1,4 +1,4 @@
-# FlowForge Redesign - Complete Documentation
+# Freestyla Redesign - Complete Documentation
 
 ## 🎨 What Changed
 
@@ -120,7 +120,7 @@ npm install @capacitor/core @capacitor/cli
 npm install @capacitor/android
 
 # Initialize Capacitor
-npx cap init FlowForge com.yourname.flowforge
+npx cap init Freestyla com.yourname.flowforge
 
 # Build your web app
 npm run build
@@ -145,7 +145,7 @@ Similar to Capacitor but older technology.
 
 ```bash
 npm install -g cordova
-cordova create flowforge com.yourname.flowforge FlowForge
+cordova create flowforge com.yourname.flowforge Freestyla
 # Copy your built files to www/
 cordova platform add android
 cordova build android --release
@@ -242,7 +242,7 @@ To preview on your phone:
 
 ## 🎉 Summary
 
-Your FlowForge app has been completely redesigned with:
+Your Freestyla app has been completely redesigned with:
 
 - ✨ Purple accent theme
 - ✨ 3-page onboarding flow

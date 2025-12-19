@@ -1,6 +1,6 @@
 # Supabase Storage Setup Guide
 
-This guide will help you set up Supabase Storage for recording uploads in FlowForge.
+This guide will help you set up Supabase Storage for recording uploads in Freestyla.
 
 ## Prerequisites
 

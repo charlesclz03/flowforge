@@ -6,7 +6,9 @@ import { Button } from '@/components/atoms/Button'
 import { UploadCloud, Music, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 
-export default function UploadBeatPage() {
+import React from 'react'
+
+const UploadBeatPage = (): React.JSX.Element => {
   const router = useRouter()
   const [file, setFile] = useState<File | null>(null)
   const [duration, setDuration] = useState<number>(0)
@@ -234,3 +236,5 @@ export default function UploadBeatPage() {
     </div>
   )
 }
+
+export default UploadBeatPage as any

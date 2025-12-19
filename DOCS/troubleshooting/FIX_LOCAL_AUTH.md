@@ -8,13 +8,13 @@
 ### Step 1: Go to Google Cloud Console
 
 1.  Visit [Google Cloud Console > Credentials](https://console.cloud.google.com/apis/credentials).
-2.  Make sure you are in the **FlowForge** project.
+2.  Make sure you are in the **Freestyla** project.
 
 ### Step 2: Create a New Client
 
 1.  Click **+ CREATE CREDENTIALS** > **OAuth client ID**.
 2.  **Application type**: Web application.
-3.  **Name**: `FlowForge Local Dev`.
+3.  **Name**: `Freestyla Local Dev`.
 4.  **Authorized JavaScript origins**:
     - `http://localhost:3000`
 5.  **Authorized redirect URIs**:

@@ -2,7 +2,7 @@
 
 ## Overview
 
-FlowForge's atomic design implementation has been professionally optimized for performance, scalability, and speed. This document details the specific optimizations applied.
+Freestyla's atomic design implementation has been professionally optimized for performance, scalability, and speed. This document details the specific optimizations applied.
 
 ---
 

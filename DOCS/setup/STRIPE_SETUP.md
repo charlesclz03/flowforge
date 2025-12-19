@@ -2,7 +2,7 @@
 
 ## Overview
 
-Implement Stripe for FlowForge Pro subscription ($4.99/month or $49.99/year).
+Implement Stripe for Freestyla Pro subscription ($4.99/month or $49.99/year).
 
 ## 1. Stripe Account Setup
 
@@ -35,14 +35,14 @@ STRIPE_PRICE_ID_YEARLY=price_1Sci5F6H8HsUye00a27boBkW
 
 ### Monthly Plan
 
-- Name: FlowForge Pro (Monthly)
+- Name: Freestyla Pro (Monthly)
 - Price: $4.99 USD
 - Billing period: Monthly
 - Copy Price ID → `STRIPE_PRICE_ID_MONTHLY`
 
 ### Yearly Plan
 
-- Name: FlowForge Pro (Yearly)
+- Name: Freestyla Pro (Yearly)
 - Price: $49.99 USD
 - Billing period: Yearly
 - Copy Price ID → `STRIPE_PRICE_ID_YEARLY`

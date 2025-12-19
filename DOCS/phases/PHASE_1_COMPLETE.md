@@ -100,7 +100,7 @@ env.example (added NextAuth variables)
    - Click "Create Credentials" → "OAuth client ID"
    - Choose "Web application"
    - Configure:
-     - **Name**: FlowForge Web Client
+     - **Name**: Freestyla Web Client
      - **Authorized JavaScript origins**:
        - `http://localhost:3000`
      - **Authorized redirect URIs**:

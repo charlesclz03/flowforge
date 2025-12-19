@@ -2,7 +2,7 @@
 
 ## Overview
 
-FlowForge has been successfully refactored to follow **Atomic Design principles**, providing a clean, scalable, and maintainable component architecture. This refactor touched **every page component** and reorganized **50+ files** into a proper hierarchy.
+Freestyla has been successfully refactored to follow **Atomic Design principles**, providing a clean, scalable, and maintainable component architecture. This refactor touched **every page component** and reorganized **50+ files** into a proper hierarchy.
 
 ## What Was Done
 
@@ -377,7 +377,7 @@ Any imports from these directories will fail.
 
 ## Migration Guide
 
-For developers working on FlowForge:
+For developers working on Freestyla:
 
 ### Adding New Components
 
@@ -419,7 +419,7 @@ For developers working on FlowForge:
 
 ## Conclusion
 
-The atomic design refactor has been successfully completed! FlowForge now has:
+The atomic design refactor has been successfully completed! Freestyla now has:
 
 ✅ A clear, scalable component architecture  
 ✅ Improved code organization and maintainability  

@@ -2,7 +2,7 @@
 
 **Session Duration**: Multi-hour working block  
 **Focus Areas**: Figma alignment, onboarding/practice layout unification, header & auth polish, pricing and copy corrections  
-**Overall Progress**: MVP still ~80% complete (Phases 1–4 done; UX now closely matches the FlowForge Figma design)
+**Overall Progress**: MVP still ~80% complete (Phases 1–4 done; UX now closely matches the Freestyla Figma design)
 
 ---
 
@@ -21,7 +21,7 @@
 
 - Created `components/organisms/layout/OnboardingLayout.tsx` to standardize the core app shell:
   - Full-screen **black → purple gradient** background with ambient glow orbs.
-  - Sticky `AppHeader` at the top (music-note + FlowForge wordmark, avatar/Google icon on the right).
+  - Sticky `AppHeader` at the top (music-note + Freestyla wordmark, avatar/Google icon on the right).
   - Centered content area: `main#main-content` with `flex flex-1 items-center justify-center p-6`.
   - Bottom **page progress indicator** (`OnboardingProgress`) with three dots, highlighting:
     - Step 1: `/howitworks`
@@ -135,7 +135,7 @@ Overall, `/difficultyselection` now feels like the middle step of a 3-page wizar
 ### AppHeader refinements
 
 - `AppHeader`:
-  - Centered FlowForge title now includes a **music note icon** (`lucide-react` `Music`) in purple, matching the Figma header icon.
+  - Centered Freestyla title now includes a **music note icon** (`lucide-react` `Music`) in purple, matching the Figma header icon.
   - Back button support:
     - Props: `showBackButton` and `onBack`.
     - Renders a small text back button on the left when enabled (used on onboarding and practice pages).
@@ -168,7 +168,7 @@ Result: the header is visually lighter and closer to the Figma navigation bar, w
 - Hero CTA:
   - The primary CTA text changed from **“Play Now!”** to **“Practice Here”**.
   - Both authenticated Link and unauthenticated `SignInButton` use the same gradient style (`btn-primary bg-gradient-pulse`), routing to `/howitworks`.
-  - The “FlowForge Sessions” pill above the headline has been removed for a simpler hero.
+  - The “Freestyla Sessions” pill above the headline has been removed for a simpler hero.
 - Hero stats:
   - Updated `Beats Curated` from **15+ → 10+** to reflect the current seed data.
 
@@ -241,7 +241,7 @@ Result: the header is visually lighter and closer to the Figma navigation bar, w
 ## ▶️ How to Resume Work Next Session
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 npm install           # only if dependencies changed
 npm run dev           # dev server at http://localhost:3000
 ```

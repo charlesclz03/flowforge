@@ -194,7 +194,7 @@ Once everything is working:
 
 - [Supabase Storage Documentation](https://supabase.com/docs/guides/storage)
 - [Supabase Storage Policies](https://supabase.com/docs/guides/storage/security/access-control)
-- [FlowForge Storage Setup Guide](DOCS/SUPABASE_STORAGE_SETUP.md)
+- [Freestyla Storage Setup Guide](DOCS/SUPABASE_STORAGE_SETUP.md)
 
 ---
 

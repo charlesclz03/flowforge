@@ -3,7 +3,7 @@
 ## Session Overview
 
 **Date:** November 14, 2025  
-**Objective:** Kill all processes, clear cache, and start testing the FlowForge application  
+**Objective:** Kill all processes, clear cache, and start testing the Freestyla application  
 **Status:** 🟡 In Progress - Resolving Permission Issues
 
 ---
@@ -215,7 +215,7 @@ NEXTAUTH_SECRET=test-secret-for-development-only
 ```bash
 # Complete clean restart
 killall -9 node
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 rm -rf .next
 npm run dev
 ```

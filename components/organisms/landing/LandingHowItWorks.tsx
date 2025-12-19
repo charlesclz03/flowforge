@@ -24,7 +24,7 @@ export function LandingHowItWorks() {
         <div className="space-y-2">
           <h3 className="text-base font-medium text-text-primary">3. Press play & flow</h3>
           <p>
-            Hit play to start your 2‑minute run. Words appear on‑beat while FlowForge records, so
+            Hit play to start your 2‑minute run. Words appear on‑beat while Freestyla records, so
             you can review your take and track progress.
           </p>
         </div>

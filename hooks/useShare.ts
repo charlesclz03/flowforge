@@ -12,10 +12,10 @@ export function useShare() {
 
   const share = useCallback(async (data: ShareData) => {
     setIsSharing(true)
-    
+
     // Ensure we have a full URL
     const url = data.url || window.location.href
-    
+
     try {
       // Check for native share support
       if (typeof navigator !== 'undefined' && navigator.share) {
@@ -24,7 +24,7 @@ export function useShare() {
           text: data.text || 'Check out this flow!',
           url,
         })
-        // Note: successful share promise resolution doesn't guarantee user didn't cancel, 
+        // Note: successful share promise resolution doesn't guarantee user didn't cancel,
         // but generally means the sheet opened.
       } else {
         // Fallback to clipboard

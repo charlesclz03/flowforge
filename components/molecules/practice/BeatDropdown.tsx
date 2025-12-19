@@ -21,10 +21,7 @@ interface BeatDropdownProps {
   hideLocalTab?: boolean
 }
 
-// Temporary interface until types are fully propagated
-interface ExtendedBeat extends Beat {
-  tags?: string[]
-}
+// Beat type now includes tags
 
 export function BeatDropdown({
   beats,
@@ -200,7 +197,7 @@ export function BeatDropdown({
   const allTags = Array.from(
     new Set(
       beats.flatMap((b) => {
-        const tags = (b as ExtendedBeat).tags || []
+        const tags = b.tags || []
         if (b.genre) tags.push(b.genre)
         return tags
       })
@@ -211,7 +208,7 @@ export function BeatDropdown({
 
   const displayedBeats = selectedGenre
     ? beats.filter((b) => {
-        const tags = (b as ExtendedBeat).tags || []
+        const tags = b.tags || []
         if (b.genre) tags.push(b.genre)
         return tags.includes(selectedGenre)
       })
@@ -381,7 +378,7 @@ export function BeatDropdown({
                             </div>
                             <div className="text-xs text-text-secondary flex items-center gap-2">
                               <span>{beat.bpm} BPM</span>
-                              {(beat as ExtendedBeat).tags?.slice(0, 2).map((t) => (
+                              {(beat.tags || []).slice(0, 2).map((t: string) => (
                                 <span key={t} className="opacity-70">
                                   #{t}
                                 </span>

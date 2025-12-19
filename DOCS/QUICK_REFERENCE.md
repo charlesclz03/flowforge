@@ -1,9 +1,9 @@
-# FlowForge - Quick Reference Card 🚀
+# Freestyla - Quick Reference Card 🚀
 
 ## Start Development Server
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 npm run dev
 ```
 
@@ -129,7 +129,7 @@ npm test
 ## File Structure
 
 ```
-FlowForge - Freestyle/
+Freestyla - Freestyle/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   │   ├── beats/

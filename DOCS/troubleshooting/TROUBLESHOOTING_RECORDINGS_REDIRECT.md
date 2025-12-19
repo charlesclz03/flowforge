@@ -122,6 +122,7 @@ export const config = {
    ```
 
 2. Check if sessions table exists:
+
    ```bash
    npx prisma studio
    ```

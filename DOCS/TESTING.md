@@ -1,4 +1,4 @@
-# FlowForge API Testing Guide
+# Freestyla API Testing Guide
 
 > **Note:** `/api/recordings` now handles authenticated uploads + session creation via FormData. The legacy `/api/sessions` endpoints documented below remain for reference but require authentication and no longer accept anonymous writes.
 

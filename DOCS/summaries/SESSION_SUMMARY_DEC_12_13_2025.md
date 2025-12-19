@@ -1,4 +1,4 @@
-# FlowForge - Session Summary: December 12-13, 2025
+# Freestyla - Session Summary: December 12-13, 2025
 
 **Date**: December 12-13, 2025  
 **Focus**: Post-Restart Recovery & Deployment Fix

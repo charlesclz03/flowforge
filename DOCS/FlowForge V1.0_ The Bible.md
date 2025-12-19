@@ -1,4 +1,4 @@
-# **💎 FlowForge V1.0: The Bible**
+# **💎 Freestyla V1.0: The Bible**
 
 **Status**: ✅ 100% Certified Complete & Production Ready  
 **Final Audit**: December 18, 2025
@@ -108,9 +108,11 @@
 - **SEO Metadata:** Keywords: "Freestyle Rap Generator," "Online Cypher."
 
 ---
+
 ## **7. Technical Stack & Deployment [COMPLETE]**
 
 ### **7.1 Architecture**
+
 - **Framework:** Next.js 14 (App Router)
 - **Database:** Supabase (PostgreSQL) + Prisma ORM
 - **Auth:** NextAuth.js (Google Provider)
@@ -120,10 +122,12 @@
 - **Visuals:** Canvas API (Audio Visualizer)
 
 ### **7.2 Critical Schema Fields**
+
 - **Session Tracking:** `restarts` and `playbacks` fields in `FreestyleSession` drive badges.
 - **Data Integrity:** `postinstall` script ensures Prisma Client synchronization.
 
 ### **7.3 Deployment Pipeline**
+
 - **Strict Target:** Deploys only to `flowforge-freestyle` project.
 - **Build Checks:** Includes linting, type-checking (with specific bypasses for stale cache), and static generation validation.
 

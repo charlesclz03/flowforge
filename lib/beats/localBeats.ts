@@ -38,9 +38,9 @@ function openDB(): Promise<IDBDatabase> {
 export async function addLocalBeat(file: File): Promise<Beat> {
   const db = await openDB()
   const id = `local-${crypto.randomUUID()}`
-  
-  const title = file.name.replace(/\.[^/.]+$/, "")
-  
+
+  const title = file.name.replace(/\.[^/.]+$/, '')
+
   const newBeat: LocalBeat = {
     id,
     title,
@@ -53,7 +53,7 @@ export async function addLocalBeat(file: File): Promise<Beat> {
     difficulty: 'Medium',
     file,
     createdAt: Date.now(),
-    tags: []
+    tags: [],
   }
 
   return new Promise((resolve, reject) => {
@@ -68,7 +68,7 @@ export async function addLocalBeat(file: File): Promise<Beat> {
         ...newBeat,
         storageUrl: url,
         createdAt: new Date(newBeat.createdAt),
-        updatedAt: new Date(newBeat.createdAt)
+        updatedAt: new Date(newBeat.createdAt),
       } as unknown as Beat // casting because Prisma Beat has strict types
       resolve(beat)
     }
@@ -85,12 +85,12 @@ export async function getLocalBeats(): Promise<Beat[]> {
 
     request.onsuccess = () => {
       const results = request.result as LocalBeat[]
-      const beats = results.map(b => ({
+      const beats = results.map((b) => ({
         ...b,
         file: undefined, // Don't expose file blob directly
         storageUrl: URL.createObjectURL(b.file),
         createdAt: new Date(b.createdAt),
-        updatedAt: new Date(b.createdAt)
+        updatedAt: new Date(b.createdAt),
       })) as unknown as Beat[]
       resolve(beats)
     }

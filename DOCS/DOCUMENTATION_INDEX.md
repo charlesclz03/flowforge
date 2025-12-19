@@ -1,4 +1,4 @@
-# FlowForge - Documentation Index
+# Freestyla - Documentation Index
 
 **Last Updated**: December 13, 2025  
 **Project Status**: ~85% Complete - Phase 5 (Premium/Stripe) In Progress, Core MVP Deployed ✅
@@ -53,8 +53,8 @@
 
 - **[REDESIGN_COMPLETE.md](REDESIGN_COMPLETE.md)** - 🎨 Purple-based design redesign (November 11, 2025)
 - **[DESIGN_SYSTEM_REFERENCE.md](DESIGN_SYSTEM_REFERENCE.md)** - Complete design system documentation
-- **[DOCS/FlowForge Design.md](DOCS/FlowForge%20Design.md)** - Original design document
-- **[DOCS/FlowForge Design Assets/](DOCS/FlowForge%20Design%20Assets/)** - Design screenshots (11 JPG files)
+- **[DOCS/Freestyla Design.md](DOCS/Freestyla%20Design.md)** - Original design document
+- **[DOCS/Freestyla Design Assets/](DOCS/Freestyla%20Design%20Assets/)** - Design screenshots (11 JPG files)
 
 ### 📖 Setup Guides (in DOCS/)
 

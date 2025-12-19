@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, Music } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 
@@ -70,12 +70,18 @@ export function AppHeader({
             <Link
               href={homeLink}
               className="flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full px-3 py-1"
-              aria-label="Go to FlowForge home"
+              aria-label="Go to Freestyla home"
             >
-              <Music className="h-5 w-5 text-accent-purple" />
+              <div className="relative h-8 w-8">
+                <img
+                  src="/logo.png"
+                  alt="Freestyla Logo"
+                  className="object-contain w-full h-full drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
+                />
+              </div>
               <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
-                <span className="text-text-primary">Flow</span>
-                <span className="text-accent-purple">Forge</span>
+                <span className="text-text-primary">Free</span>
+                <span className="text-accent-purple">Styla</span>
               </h1>
             </Link>
           )}

@@ -91,7 +91,7 @@ export function PracticeControls({
     if (difficulty === 3) {
       return {
         label: 'Hard',
-        classes: 'bg-accent-red/20 text-accent-red border-accent-red/30 hover:bg-accent-red/30',
+        classes: 'bg-accent-red/20 text-accent-red',
       }
     }
     // Random / Mixed

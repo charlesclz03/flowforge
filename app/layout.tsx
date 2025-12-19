@@ -11,11 +11,11 @@ import { authOptions } from '@/lib/auth'
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: 'FlowForge - AI-Powered Freestyle Rap Practice',
-    template: '%s | FlowForge',
+    default: 'Freestyla - AI-Powered Freestyle Rap Practice',
+    template: '%s | Freestyla',
   },
   description:
-    'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity anytime, anywhere.',
+    'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity with Freestyla.',
   keywords: [
     'freestyle rap',
     'rap practice',
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     'rap training',
     'music practice',
   ],
-  authors: [{ name: 'FlowForge Team' }],
-  creator: 'FlowForge',
-  publisher: 'FlowForge',
+  authors: [{ name: 'Freestyla Team' }],
+  creator: 'Freestyla',
+  publisher: 'Freestyla',
   formatDetection: {
     email: false,
     address: false,
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    siteName: 'FlowForge',
-    title: 'FlowForge - AI-Powered Freestyle Rap Practice',
+    siteName: 'Freestyla',
+    title: 'Freestyla - AI-Powered Freestyle Rap Practice',
     description:
       'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
     images: [
@@ -49,17 +49,17 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'FlowForge - AI-Powered Freestyle Rap Practice',
+        alt: 'Freestyla - AI-Powered Freestyle Rap Practice',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FlowForge - AI-Powered Freestyle Rap Practice',
+    title: 'Freestyla - AI-Powered Freestyle Rap Practice',
     description:
       'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
     images: ['/og-image.png'],
-    creator: '@flowforge',
+    creator: '@freestyla',
   },
   robots: {
     index: true,

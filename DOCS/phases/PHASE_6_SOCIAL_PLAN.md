@@ -8,7 +8,7 @@
 
 ## 🎯 Goal
 
-Turn FlowForge from a solitary practice tool into a vibrant community where rappers can share, compete, and grow together.
+Turn Freestyla from a solitary practice tool into a vibrant community where rappers can share, compete, and grow together.
 
 ## 📦 Key Features
 
@@ -32,7 +32,7 @@ Turn FlowForge from a solitary practice tool into a vibrant community where rapp
 
 ### 4. Audio & Sharing Polish
 
-- [ ] **Audio Watermark**: Append "Recorded on FlowForge" audio tag to the end of downloaded files (Brand Growth).
+- [ ] **Audio Watermark**: Append "Recorded on Freestyla" audio tag to the end of downloaded files (Brand Growth).
 - [ ] **Social Sharing**: Link preview generation (OGP tags) for `flowforge.com/r/[id]`.
 
 ---
@@ -48,4 +48,4 @@ Turn FlowForge from a solitary practice tool into a vibrant community where rapp
 
 ## 🔮 Vision
 
-Social features are the "viral engine" of FlowForge. While the tool provides utility, the community provides retention.
+Social features are the "viral engine" of Freestyla. While the tool provides utility, the community provides retention.

@@ -2,7 +2,7 @@
 
 ## What You Need to Create
 
-Your FlowForge app needs the following visual assets to be production-ready:
+Your Freestyla app needs the following visual assets to be production-ready:
 
 ### 1. Favicon & Icons
 
@@ -24,13 +24,13 @@ Your FlowForge app needs the following visual assets to be production-ready:
 1. **Create Logo/Icon**:
    - Go to [canva.com](https://canva.com)
    - Search for "Logo" template
-   - Design a simple "FF" or "FlowForge" logo
+   - Design a simple "FF" or "Freestyla" logo
    - Colors: Black background (#000000), Orange accent (#FF6B35)
    - Download as PNG
 
 2. **Create OG Image**:
    - Search for "Facebook Post" template (1200x630)
-   - Add text: "FlowForge"
+   - Add text: "Freestyla"
    - Subtitle: "AI-Powered Freestyle Rap Practice"
    - Use dark background with orange accents
    - Add microphone or music wave graphics
@@ -55,7 +55,7 @@ Your FlowForge app needs the following visual assets to be production-ready:
 **For OG Image**:
 
 1. Go to [og-image.vercel.app](https://og-image.vercel.app)
-2. Enter: "FlowForge"
+2. Enter: "Freestyla"
 3. Customize colors and style
 4. Download the generated image
 
@@ -63,8 +63,8 @@ Your FlowForge app needs the following visual assets to be production-ready:
 
 Use AI tools like:
 
-- **Midjourney**: `/imagine logo for FlowForge, hip hop freestyle app, minimalist, black and orange`
-- **DALL-E**: "Create a minimalist logo for FlowForge, a freestyle rap practice app"
+- **Midjourney**: `/imagine logo for Freestyla, hip hop freestyle app, minimalist, black and orange`
+- **DALL-E**: "Create a minimalist logo for Freestyla, a freestyle rap practice app"
 - **Stable Diffusion**: Similar prompts
 
 ## Design Guidelines
@@ -96,7 +96,7 @@ Use AI tools like:
 Once you have your assets, place them in:
 
 ```
-/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle/public/
+/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle/public/
 ├── favicon.ico
 ├── icon-16x16.png
 ├── icon-32x32.png
@@ -119,7 +119,7 @@ If you want to move fast, here's a simple text-based approach:
 ### OG Image:
 
 - Black background
-- Large "FlowForge" text in white
+- Large "Freestyla" text in white
 - Subtitle: "AI-Powered Freestyle Rap Practice" in orange
 - Simple sound wave graphic at bottom
 

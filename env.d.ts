@@ -1,3 +1,5 @@
+/// <reference lib="es5" />
+/// <reference lib="dom" />
 declare namespace NodeJS {
   interface ProcessEnv {
     // Database

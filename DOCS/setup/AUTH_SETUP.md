@@ -16,7 +16,7 @@ npm install next-auth
 4. Click **Create Credentials** → **OAuth client ID**
 5. Choose **Web application**
 6. Configure:
-   - **Name**: FlowForge Web Client
+   - **Name**: Freestyla Web Client
    - **Authorized JavaScript origins**:
      - `http://localhost:3000`
      - `https://flowforge.app`

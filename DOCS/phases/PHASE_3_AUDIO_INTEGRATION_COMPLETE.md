@@ -194,7 +194,7 @@ setInterval(() => {
 ### 1. Start Dev Server
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 npm run dev
 ```
 

@@ -1,12 +1,12 @@
-# FlowForge Design Audit - Matching Screenshots
+# Freestyla Design Audit - Matching Screenshots
 
 **Date**: Current Session  
 **Purpose**: Ensure app matches design screenshots exactly
 
 ## Design Screenshot Reference
 
-- Location: `DOCS/FlowForge Design Assets/` (11 JPG files)
-- Design Document: `DOCS/FlowForge Design.md`
+- Location: `DOCS/Freestyla Design Assets/` (11 JPG files)
+- Design Document: `DOCS/Freestyla Design.md`
 
 ## Pages According to Design Document
 

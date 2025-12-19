@@ -71,8 +71,9 @@ export function AdminUploadSection() {
       // Reset file input manually if needed
       const fileInput = document.getElementById('beat-upload') as HTMLInputElement
       if (fileInput) fileInput.value = ''
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload beat')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to upload beat'
+      setError(message)
     } finally {
       setIsLoading(false)
     }

@@ -76,7 +76,7 @@
 Your app is ready to run:
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 npm run dev
 ```
 
@@ -170,7 +170,7 @@ When ready to deploy:
 
 ## Congratulations! 🎊
 
-Your FlowForge app now has:
+Your Freestyla app now has:
 
 - ✅ Full database integration
 - ✅ Working API endpoints

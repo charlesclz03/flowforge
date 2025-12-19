@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
             marginBottom: 20,
           }}
         >
-          FLOWFORGE
+          FREESTYLA
         </div>
 
         {/* User Info */}

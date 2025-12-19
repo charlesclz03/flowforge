@@ -2,7 +2,7 @@
 
 ## Overview
 
-All FlowForge documentation has been reorganized into the `DOCS/` directory with logical categorization for easy navigation and maintenance.
+All Freestyla documentation has been reorganized into the `DOCS/` directory with logical categorization for easy navigation and maintenance.
 
 ## 📊 Statistics
 
@@ -31,15 +31,15 @@ DOCS/
 │   ├── DESIGN_AUDIT.md
 │   ├── DESIGN_CHANGES_COMPLETE.md
 │   ├── DESIGN_SYSTEM_REFERENCE.md
-│   ├── FlowForge Design.md
+│   ├── Freestyla Design.md
 │   ├── MOBILE_DESIGN_IMPLEMENTATION.md
 │   └── REDESIGN_COMPLETE.md
 │
 ├── DOCS_TEXT/              (4 files)  ← Text versions of PDFs
 │   ├── Flowforge - AI Development Toolset.txt
-│   ├── FlowForge Business Analysis and Projections.txt
-│   ├── FlowForge Business Plan & Technical Blueprint (1).txt
-│   └── FlowForge.txt
+│   ├── Freestyla Business Analysis and Projections.txt
+│   ├── Freestyla Business Plan & Technical Blueprint (1).txt
+│   └── Freestyla.txt
 │
 ├── phases/                 (9 files)  ← Development phases
 │   ├── PHASE_1_COMPLETE.md
@@ -105,7 +105,7 @@ DOCS/
 │   ├── QUICK_FIX_GUIDE.md
 │   └── TROUBLESHOOTING_RECORDINGS_REDIRECT.md
 │
-├── FlowForge Design Assets/ (11 JPG files)
+├── Freestyla Design Assets/ (11 JPG files)
 ├── DOCUMENTATION_INDEX.md
 ├── QUICK_REFERENCE.md
 ├── README.md               ← Documentation index
@@ -297,9 +297,9 @@ DOCS/troubleshooting/
 DOCS/design/
 ├── DESIGN_SYSTEM_REFERENCE.md
 ├── DESIGN_AUDIT.md
-└── FlowForge Design.md
+└── Freestyla Design.md
 
-DOCS/FlowForge Design Assets/
+DOCS/Freestyla Design Assets/
 └── [11 design mockup JPGs]
 ```
 
@@ -356,7 +356,7 @@ DOCS/atomic-design/
 ### Before Reorganization
 
 ```
-FlowForge - Freestyle/
+Freestyla - Freestyle/
 ├── README.md
 ├── ATOMIC_DESIGN_COMPLETE.md
 ├── PHASE_1_COMPLETE.md
@@ -375,7 +375,7 @@ FlowForge - Freestyle/
 ### After Reorganization
 
 ```
-FlowForge - Freestyle/
+Freestyla - Freestyle/
 ├── README.md              ← Only MD file in root
 └── DOCS/
     ├── README.md          ← Documentation hub

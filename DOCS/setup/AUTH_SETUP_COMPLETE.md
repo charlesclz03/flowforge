@@ -40,7 +40,7 @@ Visit: **http://localhost:3000**
 
 1. Click the **"Sign in with Google"** button
 2. Choose your Google account
-3. Grant permissions to FlowForge
+3. Grant permissions to Freestyla
 4. You'll be redirected back to the app
 
 ### Step 3: Verify Success
@@ -71,12 +71,12 @@ Look for:
 1. **Click "Sign in with Google"**
    - Redirects to Google OAuth consent screen
 
-2. **Authorize FlowForge**
+2. **Authorize Freestyla**
    - Google asks for permissions
    - You approve access
 
 3. **Redirect Back**
-   - Google sends you back to FlowForge
+   - Google sends you back to Freestyla
    - NextAuth creates your user account
    - Session is stored in database
    - You're redirected to `/practice` (will show 404 for now - that's OK!)

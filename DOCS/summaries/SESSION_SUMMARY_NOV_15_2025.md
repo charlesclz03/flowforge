@@ -10,7 +10,7 @@
 
 1. Clean up code style and remove TypeScript `any` usage where possible.
 2. Align the practice experience with the 3-step mobile game flow from the design assets.
-3. Simplify the header into a minimal “HUD” that matches the FlowForge design mocks.
+3. Simplify the header into a minimal “HUD” that matches the Freestyla design mocks.
 4. Keep tests, lint, and build 100% green.
 
 All of these were achieved.
@@ -49,7 +49,7 @@ All of these were achieved.
 - Behavior:
   - On mount, calls `resetSession()` so every run starts clean.
   - Uses `PracticeTemplate` + `AppHeader`.
-  - `PageHeader` copy: “How FlowForge Works” with a short 3-step description.
+  - `PageHeader` copy: “How Freestyla Works” with a short 3-step description.
   - Main content reuses `PracticeHelpSection` as a full-page explainer.
   - CTA button: **“Next: Choose beat & difficulty”** → navigates to `/difficultyselection`.
 
@@ -94,13 +94,13 @@ All of these were achieved.
 
 ### 5) Game-Style HUD Header (All Pages Using `AppHeader`)
 
-- `components/organisms/layout/AppHeader.tsx` was redesigned to match the FlowForge design assets:
+- `components/organisms/layout/AppHeader.tsx` was redesigned to match the Freestyla design assets:
   - Removed all traditional nav links (Practice, Recordings, How it Works, Pricing, FAQ).
   - New layout:
     - **Left**: compact account pill:
       - If authenticated: avatar + truncated name/email linking to `/profile`.
       - If signed out: small “Sign in with Google” chip.
-    - **Center**: uppercase “FlowForge” wordmark with purple accent, mimicking a HUD title bar.
+    - **Center**: uppercase “Freestyla” wordmark with purple accent, mimicking a HUD title bar.
   - Header is still sticky with blur and border, but visually minimal—more like a game HUD than a website navbar.
 
 ### 6) Housekeeping & Verification
@@ -126,7 +126,7 @@ All of these were achieved.
 ## ▶️ How to Run From a Clean Start Next Time
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 npm install        # if dependencies changed or on a new machine
 npm run dev        # dev server on http://localhost:3000
 ```
@@ -148,7 +148,7 @@ Smoke tests:
    - `/practice`: Adjust the timer ring and play button visuals to match the spec in 0010/0011 (thicker ring, centered button, keeping purple theme).
 
 2. **Header micro-interactions**
-   - Consider adding a subtle “Back” affordance in the header on `/howitworks`, `/difficultyselection`, and `/practice` that pairs with the centered “FlowForge” title, mirroring the design’s back arrow.
+   - Consider adding a subtle “Back” affordance in the header on `/howitworks`, `/difficultyselection`, and `/practice` that pairs with the centered “Freestyla” title, mirroring the design’s back arrow.
 
 3. **Session review entry point**
    - After a successful recorded session, consider adding an optional “View in Recordings” button in the success alert to jump directly to `/recordings`.
@@ -158,4 +158,4 @@ Smoke tests:
 
 ---
 
-**Bottom line**: The core practice loop is now structured as a three-step, game-like experience backed by a shared session context, with a minimal FlowForge HUD header framing every step. The next session should focus on visual polish and micro-interactions to fully match the provided design assets.
+**Bottom line**: The core practice loop is now structured as a three-step, game-like experience backed by a shared session context, with a minimal Freestyla HUD header framing every step. The next session should focus on visual polish and micro-interactions to fully match the provided design assets.

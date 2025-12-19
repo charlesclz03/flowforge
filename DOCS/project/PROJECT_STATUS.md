@@ -1,4 +1,4 @@
-# FlowForge - Project Status
+# Freestyla - Project Status
 
 **Last Updated:** December 14, 2025  
 **Current Phase**:- **Phase 8: Pre-Launch Testing & Launch** - 🧪 **IN PROGRESS**
@@ -182,7 +182,7 @@
 
 ### Design Source
 
-- Design screenshots: `DOCS/FlowForge Design Assets/` (11 JPG files)
+- Design screenshots: `DOCS/Freestyla Design Assets/` (11 JPG files)
 - Documentation: `REDESIGN_COMPLETE.md`
 - Design System: `DESIGN_SYSTEM_REFERENCE.md` (updated)
 

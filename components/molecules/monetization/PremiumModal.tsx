@@ -46,11 +46,11 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
       case 'history':
         return {
           title: 'View Full History',
-          description: 'Save and review all your past sessions with FlowForge Premium.',
+          description: 'Save and review all your past sessions with Freestyla Premium.',
         }
       default:
         return {
-          title: 'Upgrade to FlowForge Pro',
+          title: 'Upgrade to Freestyla Pro',
           description: 'Take your freestyle skills to the next level with professional tools.',
         }
     }
@@ -110,6 +110,7 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
           </div>
 
           <button
+            onClick={() => {
               router.push('/profile')
             }}
             className="w-full py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-gray-100 transition-transform active:scale-95 shadow-glow"

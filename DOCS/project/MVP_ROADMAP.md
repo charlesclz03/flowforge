@@ -1,4 +1,4 @@
-# FlowForge MVP Roadmap
+# Freestyla MVP Roadmap
 
 **Last Updated**: December 10, 2025  
 **Current Phase**: Pre-Launch Polish (Phase 6)

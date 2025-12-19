@@ -1,6 +1,6 @@
-# FlowForge Documentation
+# Freestyla Documentation
 
-Welcome to the FlowForge documentation! All project documentation is organized into logical categories for easy navigation.
+Welcome to the Freestyla documentation! All project documentation is organized into logical categories for easy navigation.
 
 ## 📁 Directory Structure
 
@@ -10,7 +10,7 @@ DOCS/
 ├── deployment/           ← Deployment guides and infrastructure
 ├── design/               ← Design system and UI documentation
 ├── DOCS_TEXT/           ← Text versions of PDF documents
-├── FlowForge Design Assets/ ← Design mockups and assets
+├── Freestyla Design Assets/ ← Design mockups and assets
 ├── phases/              ← Development phase documentation
 ├── project/             ← Project planning and roadmaps
 ├── setup/               ← Setup guides and configuration
@@ -197,14 +197,14 @@ Debugging and problem-solving guides:
 
 ### PDFs
 
-- **FlowForge.pdf** - Main project overview
-- **FlowForge Business Plan & Technical Blueprint (1).pdf** - Business plan
-- **FlowForge Business Analysis and Projections.pdf** - Business analysis
+- **Freestyla.pdf** - Main project overview
+- **Freestyla Business Plan & Technical Blueprint (1).pdf** - Business plan
+- **Freestyla Business Analysis and Projections.pdf** - Business analysis
 - **Flowforge - AI Development Toolset.pdf** - Development toolset
 
 ### Design Assets
 
-- **FlowForge Design Assets/** - 11 design mockup images
+- **Freestyla Design Assets/** - 11 design mockup images
 
 ## 🆘 Need Help?
 
@@ -239,7 +239,7 @@ When adding new documentation:
 ## 🔄 Last Updated
 
 **Date:** November 2025  
-**Maintainer:** FlowForge Development Team
+**Maintainer:** Freestyla Development Team
 
 ---
 

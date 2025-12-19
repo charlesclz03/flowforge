@@ -1,4 +1,4 @@
-# ✨ FlowForge Redesign - What's New
+# ✨ Freestyla Redesign - What's New
 
 ## 🎨 Visual Changes
 
@@ -20,7 +20,7 @@
 
 - **Purpose**: Introduction and feature showcase
 - **Content**:
-  - FlowForge logo with purple accent
+  - Freestyla logo with purple accent
   - 3 numbered feature cards
   - 4 detailed feature descriptions
   - Large "Start Practicing" CTA button
@@ -250,4 +250,4 @@ See `REDESIGN_NOTES.md` for detailed Android packaging instructions.
 
 ---
 
-**Enjoy your new FlowForge!** 🎉
+**Enjoy your new Freestyla!** 🎉

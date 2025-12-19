@@ -1,7 +1,7 @@
-# FlowForge - Design System Reference
+# Freestyla - Design System Reference
 
 **Last Updated**: November 11, 2025  
-**Purpose**: Comprehensive design system documentation for FlowForge  
+**Purpose**: Comprehensive design system documentation for Freestyla  
 **Status**: ✅ **Updated to Purple-Based Design**
 
 ---
@@ -586,7 +586,7 @@ STOP_ICON_SIZE_RATIO: 0.15
 
 ## 📸 Design Reference
 
-**Design Source**: `DOCS/FlowForge Design Assets/` (11 design screenshots)
+**Design Source**: `DOCS/Freestyla Design Assets/` (11 design screenshots)
 
 All design screenshots have been analyzed and implemented:
 
@@ -650,4 +650,4 @@ All design screenshots have been analyzed and implemented:
 **Files Updated**: 13 components + 3 core design files  
 **Documentation**: See `REDESIGN_COMPLETE.md` for full details
 
-The FlowForge design system has been successfully updated to use **purple** (#7D7AFF) as the primary accent color throughout the application, with orange reserved exclusively for premium badges.
+The Freestyla design system has been successfully updated to use **purple** (#7D7AFF) as the primary accent color throughout the application, with orange reserved exclusively for premium badges.

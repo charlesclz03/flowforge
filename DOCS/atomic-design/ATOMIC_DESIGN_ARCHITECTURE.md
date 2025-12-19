@@ -2,7 +2,7 @@
 
 ## Overview
 
-FlowForge now follows **Atomic Design principles** for component organization. This structure provides a clear hierarchy from basic building blocks to complete pages, making the codebase more maintainable, scalable, and easier to understand.
+Freestyla now follows **Atomic Design principles** for component organization. This structure provides a clear hierarchy from basic building blocks to complete pages, making the codebase more maintainable, scalable, and easier to understand.
 
 ## The Atomic Design Hierarchy
 
@@ -127,7 +127,6 @@ Page-level structures that arrange organisms into layouts. Templates define the 
 
 ```tsx
 import { PracticeTemplate } from '@/components/templates'
-
 ;<PracticeTemplate
   header={<AppHeader />}
   pageHeader={<PageHeader title="Practice" />}
@@ -246,7 +245,7 @@ export function MyComponent({ title, onAction, isActive = false }: MyComponentPr
 
 ### Styling
 
-FlowForge uses:
+Freestyla uses:
 
 - **Tailwind CSS** for utility-first styling
 - **CSS Modules** for component-specific styles (when needed)
@@ -389,4 +388,4 @@ components/
 ---
 
 **Last Updated:** November 2025  
-**Maintained by:** FlowForge Development Team
+**Maintained by:** Freestyla Development Team

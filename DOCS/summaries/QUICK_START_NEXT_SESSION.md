@@ -8,7 +8,7 @@
 ## 🚀 Instant Start
 
 ```bash
-cd "c:\Projects\FlowForge - Freestyle"
+cd "c:\Projects\Freestyla - Freestyle"
 git pull origin main
 npm install
 npx prisma generate
@@ -21,7 +21,7 @@ Open: http://localhost:3000
 
 ## 📊 Current State
 
-**FlowForge is COMPLETE.** All features from "The Bible" are implemented.
+**Freestyla is COMPLETE.** All features from "The Bible" are implemented.
 
 - **Version**: v1.1.0-final
 - **Status**: 100% Certified
@@ -31,33 +31,37 @@ Open: http://localhost:3000
 
 ## 📚 Key Docs
 
-| Document | Purpose |
-|----------|---------|
-| [README.md](../../README.md) | Project Overview |
-| [The Bible](../FlowForge%20V1.0_%20The%20Bible.md) | Product Requirements (100% Complete) |
-| [Features Guide](../APP_OVERVIEW_AND_FEATURES.md) | Full Feature List |
-| [Status Summary](./CURRENT_STATUS_SUMMARY.md) | Project Health |
+| Document                                           | Purpose                              |
+| -------------------------------------------------- | ------------------------------------ |
+| [README.md](../../README.md)                       | Project Overview                     |
+| [The Bible](../Freestyla%20V1.0_%20The%20Bible.md) | Product Requirements (100% Complete) |
+| [Features Guide](../APP_OVERVIEW_AND_FEATURES.md)  | Full Feature List                    |
+| [Status Summary](./CURRENT_STATUS_SUMMARY.md)      | Project Health                       |
 
 ---
 
 ## 🛠️ Common Tasks
 
 ### Run Dev Server
+
 ```bash
 npm run dev
 ```
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Lint & Fix
+
 ```bash
 npm run lint
 ```
 
 ### Open DB GUI
+
 ```bash
 npx prisma studio
 ```

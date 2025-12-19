@@ -5,7 +5,7 @@
 
 ## 🎯 Objectives Met
 
-The goal of this phase was to transform FlowForge from a solitary practice tool into a social platform.
+The goal of this phase was to transform Freestyla from a solitary practice tool into a social platform.
 
 ### Key Features Delivered:
 

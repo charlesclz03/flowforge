@@ -9,7 +9,7 @@
 
 ## 🎉 Achievement Unlocked
 
-You've successfully implemented **complete authentication infrastructure** for FlowForge! The app now has:
+You've successfully implemented **complete authentication infrastructure** for Freestyla! The app now has:
 
 - ✅ Google Sign-In capability
 - ✅ User session management
@@ -158,7 +158,7 @@ NEXTAUTH_URL=http://localhost:3000
    - APIs & Services → Credentials
    - Create Credentials → OAuth client ID
    - Application type: Web application
-   - Name: FlowForge Web Client
+   - Name: Freestyla Web Client
    - **Authorized JavaScript origins:**
      - `http://localhost:3000`
    - **Authorized redirect URIs:**

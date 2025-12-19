@@ -1,4 +1,4 @@
-## FlowForge 🎤
+## Freestyla 🎤
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
 **Last Updated**: December 18, 2025  
@@ -63,7 +63,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 - **RapChat / Rap Fame**: Social recording studios with large libraries; weak real‑time practice tools and engagement loop for skill growth. Historically low monetization/conversion.
 - **YouTube Type Beats**: Infinite beats but non‑interactive and multi‑app friction.
 - **RapScript/RhymeZone**: Standalone word/rhyme tools; not integrated, not on‑beat.
-- **FlowForge Edge**: Integrated beat + on‑beat prompts + recorder; future AI scoring moat.
+- **Freestyla Edge**: Integrated beat + on‑beat prompts + recorder; future AI scoring moat.
 
 ## 6) Business Model
 
@@ -147,6 +147,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
   - AI Transcription & Scoring.
 
 ## 13) New Agent Onboarding
+
 ... (etc) ...
 
 ## 20) Current Build Status (✅ PROJECT CERTIFIED COMPLETE)

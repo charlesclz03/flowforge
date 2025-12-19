@@ -1,4 +1,4 @@
-# 🚀 FlowForge Vercel Deployment Guide
+# 🚀 Freestyla Vercel Deployment Guide
 
 **Status**: ✅ Deployed (v1.1.1)  
 **Date**: December 18, 2025
@@ -27,7 +27,7 @@
 If you haven't already pushed to GitHub:
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/FlowForge - Freestyle"
+cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
 
 # Initialize git (if not already done)
 git init
@@ -36,7 +36,7 @@ git init
 git add .
 
 # Commit
-git commit -m "feat: production-ready FlowForge MVP"
+git commit -m "feat: production-ready Freestyla MVP"
 
 # Create GitHub repo and push
 # (Follow GitHub's instructions to create a new repository)
@@ -397,7 +397,7 @@ Monitor in Supabase Dashboard:
 
 ## 🎉 Congratulations!
 
-Your FlowForge app is now live on Vercel! 🚀
+Your Freestyla app is now live on Vercel! 🚀
 
 **Production URL**: https://flowforge-freestyle.vercel.app
 

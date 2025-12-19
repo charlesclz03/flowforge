@@ -60,7 +60,12 @@ export async function POST(req: NextRequest) {
       data: { publicUrl },
     } = supabase.storage.from('audio').getPublicUrl(fileName)
 
-    const tags = tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : []
+    const tags = tagsRaw
+      ? tagsRaw
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : []
 
     // 4. Create Database Record
     const beat = await prisma.beat.create({

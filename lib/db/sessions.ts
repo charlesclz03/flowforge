@@ -21,7 +21,7 @@ export async function createSession(
       return { success: true, data: created }
     }
     const session = await prisma.freestyleSession.create({
-      data,
+      data: data as Prisma.FreestyleSessionUncheckedCreateInput,
     })
 
     return {
@@ -57,6 +57,7 @@ export async function getSessions(
           duration: null,
           artistName: 'FlowForge Beats',
           difficulty: 'Easy',
+          tags: [],
           createdAt: new Date(),
           updatedAt: new Date(),
           sessions: [],
@@ -130,6 +131,7 @@ export async function getSessionById(
           duration: null,
           artistName: 'FlowForge Beats',
           difficulty: 'Easy',
+          tags: [],
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -1,4 +1,4 @@
-# FlowForge - Application Overview & Feature Guide
+# Freestyla - Application Overview & Feature Guide
 
 **Date**: December 18, 2025  
 **Version**: 1.1.3 (UI/UX Polish)
@@ -7,7 +7,7 @@
 
 ## 🚀 Application Overview
 
-**FlowForge** is a specialized web application designed to help rappers, poets, and vocalists practice their freestyle skills. It creates a focused, high-pressure environment by combining instrumental beats with timed word prompts, forcing users to improvise and improve their lyrical adaptability.
+**Freestyla** is a specialized web application designed to help rappers, poets, and vocalists practice their freestyle skills. It creates a focused, high-pressure environment by combining instrumental beats with timed word prompts, forcing users to improvise and improve their lyrical adaptability.
 
 The app follows a simple but powerful "Hook Model" loop:
 
