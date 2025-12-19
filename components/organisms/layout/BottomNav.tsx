@@ -32,7 +32,7 @@ export function BottomNav() {
     },
     {
       name: 'Record',
-      href: '/practice',
+      href: '/difficultyselection',
       icon: Mic,
       match: (path: string) =>
         path === '/practice' || path === '/difficultyselection' || path === '/howitworks',

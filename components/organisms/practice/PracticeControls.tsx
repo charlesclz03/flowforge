@@ -108,8 +108,8 @@ export function PracticeControls({
       return
     }
 
+    // Non-Pro users see premium modal when trying to start recording
     if (!isPro && !isPlaying) {
-      // Trigger upgrade modal if not Pro and trying to start
       onUpgrade?.()
       return
     }
@@ -257,7 +257,7 @@ export function PracticeControls({
               // Dynamic Border & BG Colors based on State
               isPlaying
                 ? isRecording && !isInfiniteMode
-                  ? 'border-red-500/50 bg-black/40 shadow-red-glow' // Recording Active (Pro)
+                  ? 'border-red-500/50 bg-black/40 shadow-red-glow' // Recording Active
                   : 'border-accent-purple/30 bg-black/40 shadow-purple-glow' // Just Playing / Infinite
                 : !isPro
                   ? 'border-white/5 bg-white/5 hover:bg-white/10 cursor-pointer' // Locked (Free) -> Gray
@@ -334,12 +334,12 @@ export function PracticeControls({
                   </span>
                 </>
               ) : !isPro ? (
-                // Locked State (Free)
+                // Locked State (Free) - Gray Mic
                 <div className="h-24 w-24 rounded-full bg-white/5 border-2 border-white/10 text-white/20 flex items-center justify-center shadow-lg transition-transform duration-300">
                   <Mic size={48} />
                 </div>
               ) : (
-                // Ready State (Pro)
+                // Ready State (Pro) - Red Mic
                 <div className="h-24 w-24 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
                   <Mic size={48} className="fill-current" />

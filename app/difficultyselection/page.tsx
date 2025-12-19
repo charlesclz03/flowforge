@@ -239,14 +239,6 @@ export default function DifficultySelectionPage() {
             {canStart ? 'Practice' : 'Select a beat to continue'}
           </Button>
         </div>
-
-        {/* Beat counts */}
-        {!isLoadingBeats && beats.length > 0 && (
-          <div className="text-center text-sm text-text-secondary">
-            {beats.filter((b) => !b.isPremium).length} free beats •{' '}
-            {beats.filter((b) => b.isPremium).length} premium beats
-          </div>
-        )}
       </div>
 
       <PremiumModal
