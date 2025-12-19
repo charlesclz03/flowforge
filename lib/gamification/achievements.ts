@@ -6,17 +6,15 @@ export class AchievementSystem {
     userId: string,
     context: {
       type: 'SESSION_COMPLETE' | 'RECORDING_SAVED'
-      meta?: any
+      meta?: Record<string, unknown>
     }
   ) {
     const newlyUnlocked: string[] = []
 
     // Fetch user stats for checks
-    // We can optimize this by only fetching what's needed based on context,
-    // but for MVP fetching aggregates is safer.
     const sessionCount = await prisma.freestyleSession.count({ where: { userId } })
     const recordingCount = await prisma.freestyleSession.count({
-      where: { userId, storageUrl: { not: null } }, // Assuming saved sessions have storageUrl
+      where: { userId, storageUrl: { not: null } },
     })
 
     // Fetch distinct beats used
@@ -99,37 +97,17 @@ export class AchievementSystem {
     if (period === 'weekly') {
       const now = new Date()
       const day = now.getDay()
-      const diff = now.getDate() - day + (day < 3 ? -4 : 3) // Adjust to get last Wednesday?
-      // User said "resetting every wednesday".
-      // If today is Wed (3), start is today 00:00.
-      // If today is Thu (4), start is yesterday.
-      // If today is Tue (2), start is last Wed.
-
-      // Simple logic: Find last Wednesday
+      // Find last Wednesday
       const d = new Date()
-      d.setHours(0, 0, 0, 0) // Reset time
+      d.setHours(0, 0, 0, 0)
       while (d.getDay() !== 3) {
         d.setDate(d.getDate() - 1)
       }
-      // If we are currently ON Wednesday, wait, "resetting every Wednesday".
-      // Does it reset AT Wednesday start? Yes.
-      // So if today is Fri, last Wed is correct.
-      // If today is Wed, today 00:00 is correct.
 
       whereClause = {
         unlockedAt: { gte: d },
       }
     }
-
-    // We need to sum points.
-    // Prisma aggregate doesn't support joining for sum easily in one go without raw query or separate aggregation.
-    // Fetching grouped counts and then joining achievement points might be expensive if many achievements.
-    // Better: Group by user, include achievements.
-
-    // Actually, `groupBy` on `UserAchievement` doesn't give us access to `achievement.points`.
-    // We might need a raw query for performance or fetch and compute.
-    // For MVP/small scale, fetch all user achievements (filtered by date) and aggregate in code?
-    // Or `findMany` with `include: { achievement: true }`.
 
     const entries = await prisma.userAchievement.findMany({
       where: whereClause,

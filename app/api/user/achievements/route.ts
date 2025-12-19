@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { prisma } from '@/lib/prisma'
 
-
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
@@ -15,16 +14,16 @@ export async function GET() {
     const userAchievements = await prisma.userAchievement.findMany({
       where: { userId: session.user.id },
       include: { achievement: true },
-      orderBy: { unlockedAt: 'desc' }
+      orderBy: { unlockedAt: 'desc' },
     })
 
     const allAchievements = await prisma.achievement.findMany({
-        orderBy: { points: 'asc' }
+      orderBy: { points: 'asc' },
     })
 
-    return NextResponse.json({ 
-        userAchievements,
-        allAchievements
+    return NextResponse.json({
+      userAchievements,
+      allAchievements,
     })
   } catch (error) {
     console.error('Failed to fetch achievements', error)
