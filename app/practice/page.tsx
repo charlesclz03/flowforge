@@ -30,7 +30,7 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 export default function PracticePage() {
   const router = useRouter()
   const { data: session } = useSession()
-  const [isInfiniteMode, setIsInfiniteMode] = useState(false)
+  const [isInfiniteMode] = useState(false)
 
   const {
     selectedBeat,
@@ -950,21 +950,6 @@ export default function PracticePage() {
                       }
                     }}
                     isInfiniteMode={isInfiniteMode}
-                    onToggleInfiniteMode={() => {
-                      const newState = !isInfiniteMode
-                      setIsInfiniteMode(newState)
-                      if (newState) {
-                        toast('Practice Mode Enabled (No Recording)', {
-                          icon: '♾️',
-                          duration: 2000,
-                        })
-                      } else {
-                        toast('Recording Mode Enabled', {
-                          icon: '🔴',
-                          duration: 2000,
-                        })
-                      }
-                    }}
                   />
                 </ErrorBoundary>
               </div>
