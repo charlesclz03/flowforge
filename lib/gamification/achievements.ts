@@ -95,8 +95,6 @@ export class AchievementSystem {
     let whereClause = {}
 
     if (period === 'weekly') {
-      const now = new Date()
-      const day = now.getDay()
       // Find last Wednesday
       const d = new Date()
       d.setHours(0, 0, 0, 0)

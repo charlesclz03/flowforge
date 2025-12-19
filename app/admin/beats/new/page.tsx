@@ -237,4 +237,5 @@ const UploadBeatPage = (): React.JSX.Element => {
   )
 }
 
-export default UploadBeatPage as any
+export default UploadBeatPage
+

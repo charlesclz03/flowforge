@@ -5,15 +5,8 @@ import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
 import { Disc3, Search, SlidersHorizontal, Music } from 'lucide-react'
-import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown' // Import type or similar if needed? No, we use BeatGridCard
-import { Input } from '@/components/atoms/Input'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
-
-// Mocking getBeats for client-side example, or duplicate logic.
-// In reality, we should fetch from API or pass as server props.
-// For now, fetching client side.
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -22,14 +15,13 @@ export default function TracksPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
   const router = useRouter()
-  const { data: session } = useSession()
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [beatsRes, favs] = await Promise.all([
-          fetch('/api/beats').then(res => res.json()),
-          getFavoriteBeatIds()
+          fetch('/api/beats').then((res) => res.json()),
+          getFavoriteBeatIds(),
         ])
         setBeats(beatsRes)
         setFavoriteIds(new Set(favs))
@@ -45,9 +37,6 @@ export default function TracksPage() {
   const handlePlay = (beat: Beat) => {
     if (playingBeatId === beat.id) {
       setPlayingBeatId(null)
-      // Stop logic would need audio context or ref
-      // Ideally we use a global player or local audio element.
-      // For MVP, simplistic preview:
       const audio = document.getElementById('preview-audio') as HTMLAudioElement
       if (audio) {
         audio.pause()
@@ -66,7 +55,6 @@ export default function TracksPage() {
 
   const handleToggleFavorite = async (beatId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    // Optimistic Update
     const newFavs = new Set(favoriteIds)
     if (newFavs.has(beatId)) {
       newFavs.delete(beatId)
@@ -78,16 +66,17 @@ export default function TracksPage() {
     await toggleBeatFavorite(beatId)
   }
 
-  const filteredBeats = beats.filter(b => 
-    b.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    b.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredBeats = beats.filter(
+    (b) =>
+      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   return (
-    <div className="min-h-screen bg-background pb-32"> {/* pb-32 for bottom nav */}
+    <div className="min-h-screen bg-background pb-32">
       <audio id="preview-audio" className="hidden" />
-      
+
       <div className="px-6 pt-12 pb-6 space-y-6">
         <div className="flex items-center justify-between">
           <PageHeader
@@ -99,13 +88,15 @@ export default function TracksPage() {
           </div>
         </div>
 
-        {/* Search & Filter */}
         <div className="flex gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search beats, artists, vibes..." 
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary"
+              size={18}
+            />
+            <input
+              type="text"
+              placeholder="Search beats, artists, vibes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-white placeholder:text-text-tertiary focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 transition-all"
@@ -116,24 +107,23 @@ export default function TracksPage() {
           </button>
         </div>
 
-        {/* Beats Grid */}
         {isLoading ? (
           <div className="grid grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map(i => (
+            {[1, 2, 3, 4].map((i) => (
               <div key={i} className="aspect-square rounded-2xl bg-white/5 animate-pulse" />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {filteredBeats.map(beat => (
+            {filteredBeats.map((beat) => (
               <BeatGridCard
                 key={beat.id}
                 beat={beat}
-                isSelected={false} // No selection state in this view (yet)
+                isSelected={false}
                 isPlaying={playingBeatId === beat.id}
                 isFavorited={favoriteIds.has(beat.id)}
                 onPlay={() => handlePlay(beat)}
-                onSelect={() => router.push(`/practice?beat=${beat.id}`)} // Or open modal? "clicking one starts a practice session"
+                onSelect={() => router.push(`/practice?beat=${beat.id}`)}
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
               />
             ))}
@@ -145,7 +135,7 @@ export default function TracksPage() {
             <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
               <Music size={32} />
             </div>
-            <p>No beats found looking for "{searchQuery}"</p>
+            <p>No beats found looking for &quot;{searchQuery}&quot;</p>
           </div>
         )}
       </div>

@@ -27,10 +27,10 @@ export default async function SessionPage({ params }: { params: { id: string } }
 
   let storageUrl = sessionData.storageUrl
   if (storageUrl && !storageUrl.startsWith('http')) {
-      const { data } = await supabase.storage
-        .from(RECORDINGS_BUCKET)
-        .createSignedUrl(storageUrl, SIGNED_URL_TTL_SECONDS)
-      if (data?.signedUrl) storageUrl = data.signedUrl
+    const { data } = await supabase.storage
+      .from(RECORDINGS_BUCKET)
+      .createSignedUrl(storageUrl, SIGNED_URL_TTL_SECONDS)
+    if (data?.signedUrl) storageUrl = data.signedUrl
   }
 
   return (
@@ -44,32 +44,28 @@ export default async function SessionPage({ params }: { params: { id: string } }
       </Link>
 
       <Card className="p-6">
-         <div className="flex items-center gap-4 mb-4">
-             <div className="w-12 h-12 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple">
-                 <Mic size={24} />
-             </div>
-             <div>
-                 <h1 className="text-xl font-bold text-white max-w-[300px] truncate">{sessionData.title}</h1>
-                 <p className="text-sm text-text-secondary">
-                     by {sessionData.user.name || 'Anonymous'} • {sessionData.beat.title}
-                 </p>
-             </div>
-         </div>
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple">
+            <Mic size={24} />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white max-w-[300px] truncate">
+              {sessionData.title}
+            </h1>
+            <p className="text-sm text-text-secondary">
+              by {sessionData.user.name || 'Anonymous'} • {sessionData.beat.title}
+            </p>
+          </div>
+        </div>
 
-         {storageUrl && (
-             <audio 
-                controls 
-                className="w-full mt-2" 
-                src={storageUrl}
-             />
-         )}
+        {storageUrl && <audio controls className="w-full mt-2" src={storageUrl} />}
 
-         <div className="mt-4 text-xs text-text-tertiary flex items-center gap-4">
-             <span>{new Date(sessionData.createdAt).toLocaleDateString()}</span>
-             {sessionData.durationSeconds && (
-                 <span>{Math.round(sessionData.durationSeconds)}s duration</span>
-             )}
-         </div>
+        <div className="mt-4 text-xs text-text-tertiary flex items-center gap-4">
+          <span>{new Date(sessionData.createdAt).toLocaleDateString()}</span>
+          {sessionData.durationSeconds && (
+            <span>{Math.round(sessionData.durationSeconds)}s duration</span>
+          )}
+        </div>
       </Card>
     </Container>
   )

@@ -127,9 +127,6 @@ export default function ProfilePage() {
 
   if (!session?.user) return null
 
-  const isPro =
-    session.user.subscriptionStatus === 'active' || session.user.subscriptionStatus === 'trialing'
-
   return (
     <OnboardingLayout showBackButton={false} showSettings={false} className="bg-background pb-32">
       {restorationMessage && (
@@ -154,7 +151,7 @@ export default function ProfilePage() {
             onEdit={() => setIsEditProfileOpen(true)}
           />
         }
-        subscription={<SubscriptionSection isPro={isPro} />}
+        subscription={<SubscriptionSection />}
         security={<SecuritySection />}
         stats={
           <div className="space-y-6">

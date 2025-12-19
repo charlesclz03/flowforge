@@ -51,17 +51,22 @@ export function LeaderboardRow({
           <Image src={image} alt={username} fill className="object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-             <User size={20} className="text-white/50" />
+            <User size={20} className="text-white/50" />
           </div>
         )}
       </div>
 
       {/* Name */}
       <div className="flex-1 min-w-0">
-        <div className={cn("font-medium truncate", isCurrentUser ? "text-accent-purple" : "text-white")}>
+        <div
+          className={cn(
+            'font-medium truncate',
+            isCurrentUser ? 'text-accent-purple' : 'text-white'
+          )}
+        >
           {username}
         </div>
-        {isCurrentUser && <div className="text-[10px] text-accent-purple/70">That's you!</div>}
+        {isCurrentUser && <div className="text-[10px] text-accent-purple/70">That&apos;s you!</div>}
       </div>
 
       {/* Score */}
