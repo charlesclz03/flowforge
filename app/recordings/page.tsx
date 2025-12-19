@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { RecordingsTemplate } from '@/components/templates'
+import { Lock } from 'lucide-react'
 import { PageHeader } from '@/components/organisms/common'
 import { RecordingsList, RecordingsStats } from '@/components/organisms/recordings'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { Spinner } from '@/components/atoms/Spinner'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
@@ -109,25 +109,61 @@ export default function RecordingsPage() {
     return null
   }
 
+  // Determine if user is pro
+  const isPro =
+    session?.user?.subscriptionStatus === 'active' ||
+    session?.user?.subscriptionStatus === 'trialing'
+
+  // If free user, show locked state
+  if (!isPro) {
+    return (
+      <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+        <div className="pt-8 pb-32 px-4">
+          <PageHeader
+            title="My Recordings"
+            description="Upgrade to Pro to access your session history"
+          />
+          <div className="mt-12 text-center space-y-6 max-w-md mx-auto">
+            <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-10 h-10 text-text-tertiary" />
+            </div>
+            <h3 className="text-xl font-bold text-white">History Locked</h3>
+            <p className="text-text-secondary">
+              Free users can practice anytime, but access to past recordings is a Pro feature.
+              Upgrade to unlock your full history, downloads, and more.
+            </p>
+            <button
+              // We would trigger the modal here ideally, but for now just redirect or show nothing
+              onClick={() => router.push('/profile')} // Or any upgrade path
+              className="bg-accent-purple text-white px-8 py-3 rounded-full font-bold hover:bg-accent-purple/90 transition-colors"
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+      </OnboardingLayout>
+    )
+  }
+
   return (
-    <RecordingsTemplate
-      header={<AppHeader />}
-      pageHeader={
+    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+      <div className="pt-8 pb-32">
         <PageHeader
           title="My Recordings"
           description="View, play, and download your practice sessions"
         />
-      }
-      alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
-      recordingsList={
-        <RecordingsList
-          recordings={recordings}
-          isLoading={isLoading}
-          onDelete={handleDelete}
-          onDownload={handleDownload}
-        />
-      }
-      stats={<RecordingsStats recordings={recordings} />}
-    />
+        {error && <ErrorAlert error={error} onDismiss={clearError} />}
+
+        <div className="mt-8 space-y-8">
+          <RecordingsStats recordings={recordings} />
+          <RecordingsList
+            recordings={recordings}
+            isLoading={isLoading}
+            onDelete={handleDelete}
+            onDownload={handleDownload}
+          />
+        </div>
+      </div>
+    </OnboardingLayout>
   )
 }

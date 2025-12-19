@@ -6,12 +6,14 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const count = parseInt(searchParams.get('count') || '10')
+    const category = searchParams.get('category') || undefined
     const difficulty = searchParams.get('difficulty')
       ? parseInt(searchParams.get('difficulty')!)
       : undefined
 
     const result = await getRandomWords(count, {
       difficultyLevel: difficulty,
+      category: category,
     })
 
     if (!result.success) {

@@ -19,8 +19,23 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id
-        // @ts-expect-error - user object from adapter has additional fields
-        session.user.subscriptionStatus = user.subscriptionStatus
+
+        // Superadmin Override
+        const SUPERADMIN_EMAILS = [
+          'charles.cluzeaud@gmail.com',
+          'triplyricist@gmail.com',
+        ]
+        if (session.user.email && SUPERADMIN_EMAILS.includes(session.user.email)) {
+          // Force active subscription for superadmin
+          session.user.subscriptionStatus = 'active'
+          session.user.role = 'SUPERADMIN'
+        } else {
+          // @ts-expect-error - user object from adapter has additional fields
+          session.user.subscriptionStatus = user.subscriptionStatus
+          // @ts-expect-error - role is custom field
+          session.user.role = user.role || 'USER'
+        }
+
         // @ts-expect-error - user object from adapter has additional fields
         session.user.badges = user.badges
         // @ts-expect-error - user object from adapter has additional fields

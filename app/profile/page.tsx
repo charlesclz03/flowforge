@@ -13,8 +13,7 @@ import {
   QuickActions,
 } from '@/components/organisms/profile'
 import { BadgesDisplay } from '@/components/organisms/profile/BadgesDisplay'
-import { Trophy } from 'lucide-react'
-import Link from 'next/link'
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { Card } from '@/components/atoms/Card'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
@@ -24,6 +23,7 @@ import { SocialsForm } from '@/components/organisms/profile/SocialsForm'
 import { getRank } from '@/lib/gamification/ranks'
 
 import { EditProfileDialog } from '@/components/organisms/profile/EditProfileDialog'
+import { AdminUploadSection } from '@/components/organisms/profile/AdminUploadSection'
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession()
@@ -130,20 +130,12 @@ export default function ProfilePage() {
 
   const isLoading = status === 'loading'
 
+  // Clean header logic: We just use OnboardingLayout which provides AppHeader with Settings.
+  // The 'Trophy' link is removed as requested by user ("header like howitworks").
+
   return (
-    <>
+    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
       <ProfileTemplate
-        header={
-          <div className="flex justify-end items-center p-4 gap-2 safe-top">
-            <Link
-              href="/leaderboard"
-              className="p-2 text-text-secondary hover:text-accent-yellow transition-colors rounded-full hover:bg-white/5"
-              aria-label="Leaderboard"
-            >
-              <Trophy size={20} />
-            </Link>
-          </div>
-        }
         pageHeader={
           <div className="space-y-4">
             <PageHeader
@@ -187,6 +179,7 @@ export default function ProfilePage() {
             <BadgesDisplay badges={session?.user?.badges || []} />
           </div>
         }
+        adminSection={session?.user?.role === 'SUPERADMIN' ? <AdminUploadSection /> : undefined}
         quickActions={
           <div className="space-y-8">
             <QuickActions />
@@ -203,6 +196,6 @@ export default function ProfilePage() {
           onSuccess={handleEditSuccess}
         />
       )}
-    </>
+    </OnboardingLayout>
   )
 }

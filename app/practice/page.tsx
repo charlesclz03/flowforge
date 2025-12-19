@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { EyeOff, Eye } from 'lucide-react'
 import { PracticeTemplate } from '@/components/templates'
+import { Switch } from '@/components/atoms/Switch'
 import { PageHeader } from '@/components/organisms/common'
 import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
@@ -36,6 +36,7 @@ export default function PracticePage() {
   /* Clean UI State */
   const [cleanUI, setCleanUI] = useState(false)
   const [proTipDismissed, setProTipDismissed] = useState(false)
+  const [isInfiniteMode, setIsInfiniteMode] = useState(false)
 
   const {
     selectedBeat,
@@ -48,6 +49,7 @@ export default function PracticePage() {
     ttsVolume,
     isLoaded,
     mode,
+    wordCategory,
   } = usePracticeSession()
   // ... (rest of vars)
   // ...
@@ -89,7 +91,9 @@ export default function PracticePage() {
       try {
         const [beatsRes, wordsRes] = await Promise.all([
           fetch('/api/beats'),
-          fetch(`/api/words/random?difficulty=${difficulty}&count=100`),
+          fetch(
+            `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ''}`
+          ),
         ])
 
         const [beatsData, wordsData] = await Promise.all([beatsRes.json(), wordsRes.json()])
@@ -184,6 +188,18 @@ export default function PracticePage() {
 
   const handleRecordingComplete = useCallback(
     async (blob: Blob, recordedDuration: number) => {
+      // Infinite Mode Check
+      if (isInfiniteMode) {
+        toast('Session Completed (Practice Mode)', {
+          icon: '♾️',
+          style: {
+            background: 'linear-gradient(to right, #6b21a8, #c026d3)',
+            color: '#fff',
+          },
+        })
+        return
+      }
+
       // Minimum size threshold (e.g., 1KB) to filter out "silence" or failed inits
       if (blob.size < 1000) {
         console.warn('Recording blob is empty or too small', blob.size)
@@ -255,6 +271,7 @@ export default function PracticePage() {
               wordCount: usedWords.length,
               duration: actualDuration,
               audioUrl: URL.createObjectURL(blob),
+              newBadges: data.session?.newBadges,
             })
 
             // setSaveMessage('Recording saved successfully! View it in your recordings library.')
@@ -321,6 +338,7 @@ export default function PracticePage() {
       usedWords,
       restartCount,
       playbackCount,
+      isInfiniteMode,
     ]
   )
 
@@ -860,14 +878,12 @@ export default function PracticePage() {
 
       {/* Restore UI Button (Visible only in Clean Mode) */}
       {cleanUI && (
-        <button
-          onClick={() => setCleanUI(false)}
-          className="fixed top-6 right-6 z-[200] p-4 rounded-full bg-accent-purple/20 hover:bg-accent-purple/40 text-white backdrop-blur-heavy border border-white/20 transition-all hover:scale-110 active:scale-95 shadow-purple-glow group"
-          title="Restore UI"
-        >
-          <Eye size={24} className="group-hover:rotate-12 transition-transform" />
-          <span className="sr-only">Restore UI</span>
-        </button>
+        <div className="fixed top-6 right-6 z-[200] px-4 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-3 shadow-xl transition-all hover:bg-black/60">
+          <span className="text-xs font-bold text-white/80 uppercase tracking-wider">
+            Clean Mode
+          </span>
+          <Switch checked={cleanUI} onCheckedChange={setCleanUI} />
+        </div>
       )}
 
       <PracticeTemplate
@@ -885,13 +901,16 @@ export default function PracticePage() {
                     : 'Press play to start your 2-minute freestyle.'
               }
               rightAction={
-                <button
-                  onClick={() => setCleanUI(!cleanUI)}
-                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
-                  title="Toggle Clean UI"
-                >
-                  <EyeOff size={20} />
-                </button>
+                <div className="flex items-center gap-3 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
+                  <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider hidden sm:block">
+                    Clean UI
+                  </span>
+                  <Switch
+                    checked={cleanUI}
+                    onCheckedChange={setCleanUI}
+                    aria-label="Toggle Clean UI"
+                  />
+                </div>
               }
             />
           ) : null
@@ -1021,6 +1040,27 @@ export default function PracticePage() {
                     onFrequencyChange={setFrequency}
                     cleanUI={cleanUI}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
+                    isPro={isPro}
+                    onUpgrade={() => {
+                      setPremiumTrigger('recording')
+                      setShowPremiumModal(true)
+                    }}
+                    isInfiniteMode={isInfiniteMode}
+                    onToggleInfiniteMode={() => {
+                      const newState = !isInfiniteMode
+                      setIsInfiniteMode(newState)
+                      if (newState) {
+                        toast('Practice Mode Enabled (No Recording)', {
+                          icon: '♾️',
+                          duration: 2000,
+                        })
+                      } else {
+                        toast('Recording Mode Enabled', {
+                          icon: '🔴',
+                          duration: 2000,
+                        })
+                      }
+                    }}
                   />
                 </ErrorBoundary>
               </div>
@@ -1029,6 +1069,7 @@ export default function PracticePage() {
         }
         helpSection={null}
       />
+      <SessionSummaryModal data={sessionSummary} onClose={() => setSessionSummary(null)} />
       <GuestLoginModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} />
       <PremiumModal
         isOpen={showPremiumModal}

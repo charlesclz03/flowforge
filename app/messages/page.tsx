@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { MessageSquare } from 'lucide-react'
 import Image from 'next/image'
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 
 // Define types locally for now or import
 interface Conversation {
@@ -53,9 +54,8 @@ export default function InboxPage() {
   }, [status, router])
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* AppHeader removed for gamified layout */}
-      <Container className="pt-8">
+    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+      <Container className="pt-8 pb-24">
         <PageHeader title="Messages" description="Your private conversations." />
 
         <div className="mt-6 space-y-4">
@@ -132,6 +132,6 @@ export default function InboxPage() {
           )}
         </div>
       </Container>
-    </div>
+    </OnboardingLayout>
   )
 }

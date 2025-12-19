@@ -1,54 +1,48 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { Container } from '@/components/atoms/Container'
 
 interface ProfileTemplateProps {
-  header: ReactNode
   pageHeader: ReactNode
   accountInfo: ReactNode
   subscription: ReactNode
   security: ReactNode
   stats: ReactNode
   quickActions: ReactNode
+  adminSection?: ReactNode
 }
 
 export function ProfileTemplate({
-  header,
   pageHeader,
   accountInfo,
   subscription,
   security,
   stats,
   quickActions,
+  adminSection,
 }: ProfileTemplateProps) {
   return (
-    <div className="min-h-screen bg-background">
-      {header}
+    <div className="space-y-8 pb-32">
+      {/* Page Header */}
+      {pageHeader}
 
-      <main className="py-8 pb-32">
-        <Container>
-          <div className="space-y-8">
-            {/* Page Header */}
-            {pageHeader}
+      {/* Account Information */}
+      {accountInfo}
 
-            {/* Account Information */}
-            {accountInfo}
+      {/* Subscription Management */}
+      {subscription}
 
-            {/* Subscription Management */}
-            {subscription}
+      {/* Security Settings */}
+      {security}
 
-            {/* Security Settings */}
-            {security}
+      {/* Stats */}
+      {stats}
 
-            {/* Stats */}
-            {stats}
+      {/* Quick Actions */}
+      {quickActions}
 
-            {/* Quick Actions */}
-            {quickActions}
-          </div>
-        </Container>
-      </main>
+      {/* Admin Section */}
+      {adminSection}
     </div>
   )
 }

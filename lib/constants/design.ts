@@ -132,7 +132,7 @@ export const BLURS = {
 // Recording constants
 export const RECORDING_CONFIG = {
   FREE_TIER_LIMIT_SECONDS: 120, // 2 minutes
-  PRO_TIER_LIMIT_SECONDS: null, // Unlimited
+  PRO_TIER_LIMIT_SECONDS: 600, // 10 minutes from now on (previously unlimited)
   SAMPLE_RATE: 44100,
   CHANNELS: 2,
   MIME_TYPE: 'audio/wav',

@@ -1,7 +1,15 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { Play as PlayButtonIcon, RefreshCcw, Zap, Gauge } from 'lucide-react'
+import {
+  Play as PlayButtonIcon,
+  RefreshCcw,
+  Zap,
+  Gauge,
+  Mic,
+  MicOff,
+  Infinity as InfinityIcon,
+} from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -22,11 +30,15 @@ interface PracticeControlsProps {
   frequency: number
   isGolden?: boolean
   isRecording?: boolean
+  isInfiniteMode?: boolean
   recordingDuration?: number
   error?: string | null
   onDifficultyChange?: (value: number) => void
   onFrequencyChange?: (value: number) => void
+  onToggleInfiniteMode?: () => void
   cleanUI?: boolean
+  isPro?: boolean
+  onUpgrade?: () => void
 }
 
 export function PracticeControls({
@@ -42,11 +54,15 @@ export function PracticeControls({
   frequency,
   isGolden = false,
   isRecording = false,
+  isInfiniteMode = false,
   recordingDuration = 0,
   error,
   onDifficultyChange,
   onFrequencyChange,
+  onToggleInfiniteMode,
   cleanUI = false,
+  isPro = false,
+  onUpgrade,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -195,6 +211,25 @@ export function PracticeControls({
                 : 'opacity-100'
           )}
         >
+          {/* Infinite Mode Toggle (Pro Only) */}
+          {isPro && onToggleInfiniteMode && !isPlaying && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onToggleInfiniteMode}
+              className={cn(
+                'px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2',
+                isInfiniteMode
+                  ? 'border-accent-purple/50 bg-accent-purple/20 text-accent-purple hover:bg-accent-purple/30'
+                  : 'border-white/20 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10'
+              )}
+              aria-label="Toggle Recording"
+            >
+              {isInfiniteMode ? <MicOff size={14} /> : <Mic size={14} />}
+              <span>{isInfiniteMode ? 'No Rec' : 'Record'}</span>
+            </motion.button>
+          )}
+
           {onRestart && (
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -223,7 +258,7 @@ export function PracticeControls({
             whileTap={{ scale: 0.95 }}
             animate={
               isPlaying
-                ? isRecording
+                ? isRecording && !isInfiniteMode
                   ? { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 1.5 } } // Heartbeat
                   : { scale: 1 }
                 : { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 3 } } // Idle Breath
@@ -232,16 +267,28 @@ export function PracticeControls({
               if (typeof navigator !== 'undefined' && navigator.vibrate) {
                 navigator.vibrate(10)
               }
+              if (!isPro && !isPlaying) {
+                // Trigger upgrade modal if not Pro and trying to start
+                onUpgrade?.()
+                return
+              }
               onToggle()
             }}
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-colors duration-300 group outline-none',
-              'w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px]', // Responsive sizing
-              'border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl',
+              'w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px]',
+              'border backdrop-blur-md shadow-2xl',
+              // Dynamic Border & BG Colors based on State
               isPlaying
-                ? 'border-accent-purple/30 shadow-purple-glow'
-                : 'hover:bg-white/5 hover:border-white/20'
+                ? isRecording && !isInfiniteMode
+                  ? 'border-red-500/50 bg-black/40 shadow-red-glow' // Recording Active (Pro)
+                  : 'border-accent-purple/30 bg-black/40 shadow-purple-glow' // Just Playing / Infinite
+                : !isPro
+                  ? 'border-white/5 bg-white/5 hover:bg-white/10 cursor-pointer' // Locked (Free) -> Gray
+                  : isInfiniteMode
+                    ? 'border-accent-purple/30 bg-black/40 hover:bg-accent-purple/10' // Infinite Ready
+                    : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20' // Ready (Pro)
             )}
           >
             {/* Ambient Glows */}
@@ -273,7 +320,7 @@ export function PracticeControls({
               {isPlaying ? (
                 <>
                   <div className="flex items-center gap-2 mb-2">
-                    {isRecording && (
+                    {isRecording && !isInfiniteMode && (
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
@@ -282,18 +329,22 @@ export function PracticeControls({
                     <span
                       className={cn(
                         'text-[10px] font-bold uppercase tracking-[0.2em]',
-                        isRecording ? 'text-red-400' : 'text-accent-purple'
+                        isRecording && !isInfiniteMode ? 'text-red-400' : 'text-accent-purple'
                       )}
                     >
-                      {isRecording ? 'Recording' : 'Playing'}
+                      {isInfiniteMode ? 'Free Flow' : isRecording ? 'Recording' : 'Playing'}
                     </span>
                   </div>
 
                   <span className="text-5xl sm:text-6xl font-light text-white tabular-nums tracking-tighter">
-                    {/* Show elapsed recording time if recording, otherwise countdown */}
-                    {isRecording
-                      ? formatTime(recordingDuration)
-                      : formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
+                    {/* Show elapsed recording time if recording, otherwise countdown or infinite */}
+                    {isInfiniteMode ? (
+                      <InfinityIcon size={64} className="text-white/80 animate-pulse-slow" />
+                    ) : isRecording ? (
+                      formatTime(recordingDuration)
+                    ) : (
+                      formatTime(Math.max(0, sessionDuration - (currentTime || 0)))
+                    )}
                   </span>
 
                   <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider mt-1">
@@ -307,7 +358,23 @@ export function PracticeControls({
                     Loading Audio
                   </span>
                 </>
+              ) : !isPro ? (
+                // Locked State (Free)
+                <>
+                  <div className="h-16 w-16 mb-2 rounded-full bg-white/10 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <PlayButtonIcon className="ml-1 w-6 h-6 opacity-50" />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-bold text-text-secondary uppercase tracking-widest">
+                      Preview Only
+                    </span>
+                    <span className="text-[10px] bg-accent-purple/20 text-accent-purple px-2 py-0.5 rounded-full mt-1 font-bold">
+                      UPGRADE TO RECORD
+                    </span>
+                  </div>
+                </>
               ) : (
+                // Ready State (Pro)
                 <>
                   <div className="h-16 w-16 mb-2 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <PlayButtonIcon className="ml-1 w-6 h-6" />

@@ -3,6 +3,7 @@ import { FeedItem } from '@/components/organisms/social/FeedItem'
 import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
 import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 
 export const dynamic = 'force-dynamic'
 
@@ -63,9 +64,8 @@ export default async function FeedPage() {
   const feedItems = await getInitialFeed()
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* AppHeader removed for gamified feel - BottomNav handles navigation */}
-      <Container className="pt-8">
+    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+      <Container className="pt-8 pb-32">
         <PageHeader
           title="Community Feed"
           description="Discover the freshest flows from around the world."
@@ -84,6 +84,6 @@ export default async function FeedPage() {
           </ErrorBoundary>
         </div>
       </Container>
-    </div>
+    </OnboardingLayout>
   )
 }

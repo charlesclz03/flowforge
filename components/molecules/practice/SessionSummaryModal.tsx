@@ -3,9 +3,10 @@
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
-import { Sparkles, Wand2, Share2 } from 'lucide-react'
+import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
 import { PostProcessingModal } from './PostProcessingModal'
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 interface SessionSummaryData {
   score: number
@@ -14,6 +15,7 @@ interface SessionSummaryData {
   wordCount: number
   duration: number
   audioUrl?: string
+  newBadges?: string[]
 }
 
 interface SessionSummaryModalProps {
@@ -34,10 +36,31 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
         onClose={() => setShowStudio(false)}
         onSave={(blob) => {
           console.log('Processed blob ready for upload:', blob)
-          // Integration point for re-uploading processed audio if needed
         }}
       />
     )
+  }
+
+  const handleNativeShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My FlowForge Session',
+          text: `Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FlowForge #Freestyle`,
+          url: window.location.origin,
+        })
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Share failed:', err)
+        }
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(
+        `I just flowed on FlowForge! Vibe score: ${data.score}. Join me at ${window.location.origin}`
+      )
+      toast.success('Share link copied to clipboard!')
+    }
   }
 
   return (
@@ -53,6 +76,29 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
           </h2>
           <p className="text-text-secondary text-lg">{data.description}</p>
         </div>
+
+        {/* New Badges Notification */}
+        {data.newBadges && data.newBadges.length > 0 && (
+          <div className="bg-accent-purple/10 border border-accent-purple/30 rounded-2xl p-4 animate-in zoom-in-95 duration-500">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-8 w-8 rounded-full bg-accent-purple/20 flex items-center justify-center">
+                <Crown size={18} className="text-accent-purple" />
+              </div>
+              <h3 className="font-bold text-white">New Achievements!</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {data.newBadges.map((badge) => (
+                <div
+                  key={badge}
+                  className="px-3 py-1.5 rounded-lg bg-accent-purple/20 border border-accent-purple/30 text-xs font-bold text-accent-purple flex items-center gap-2"
+                >
+                  <Sparkles size={12} />
+                  {badge}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
@@ -79,17 +125,26 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
             </Button>
           )}
           {data.audioUrl && (
-            <Button
-              onClick={() => {
-                const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split('on ')[1] || 'FlowForge'}`
-                window.open(url, '_blank')
-              }}
-              variant="outline"
-              className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2"
-            >
-              <Share2 size={18} />
-              Share Record (PNG)
-            </Button>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => {
+                  const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split('on ')[1] || 'FlowForge'}`
+                  window.open(url, '_blank')
+                }}
+                variant="outline"
+                className="border-white/10 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2"
+              >
+                <Share2 size={16} />
+                PNG Record
+              </Button>
+              <Button
+                onClick={handleNativeShare}
+                className="bg-accent-blue text-white hover:bg-accent-blue/90 flex items-center justify-center gap-2"
+              >
+                <Share2 size={16} />
+                Share
+              </Button>
+            </div>
           )}
           <Button
             onClick={() => router.push('/recordings')}

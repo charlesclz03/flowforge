@@ -13,6 +13,7 @@ export interface PracticeSessionState {
   isLoaded: boolean
   mode: 'solo' | 'cypher'
   safeMode: boolean
+  wordCategory: string | null
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -23,6 +24,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setTTSVolume: (volume: number) => void
   setMode: (mode: 'solo' | 'cypher') => void
   setSafeMode: (enabled: boolean) => void
+  setWordCategory: (category: string | null) => void
   startSession: () => void
   stopSession: () => void
   resetSession: () => void
@@ -41,6 +43,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     isLoaded: false,
     mode: 'solo',
     safeMode: false,
+    wordCategory: null,
   })
 
   // Load state from localStorage on mount
@@ -70,8 +73,26 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return
     if (!state.isLoaded) return
 
-    const { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode, safeMode } = state
-    const toSave = { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode, safeMode }
+    const {
+      selectedBeat,
+      frequency,
+      difficulty,
+      isTTSEnabled,
+      ttsVolume,
+      mode,
+      safeMode,
+      wordCategory,
+    } = state
+    const toSave = {
+      selectedBeat,
+      frequency,
+      difficulty,
+      isTTSEnabled,
+      ttsVolume,
+      mode,
+      safeMode,
+      wordCategory,
+    }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
   }, [state])
 
@@ -103,6 +124,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, safeMode: enabled }))
   }, [])
 
+  const setWordCategory = useCallback((category: string | null) => {
+    setState((prev) => ({ ...prev, wordCategory: category }))
+  }, [])
+
   const startSession = useCallback(() => {
     setState((prev) => ({ ...prev, isActive: true }))
   }, [])
@@ -120,6 +145,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isActive: false,
       mode: 'solo',
       safeMode: false,
+      wordCategory: null,
     }))
   }, [])
 
@@ -134,6 +160,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setTTSVolume,
         setMode,
         setSafeMode,
+        setWordCategory,
         startSession,
         stopSession,
         resetSession,

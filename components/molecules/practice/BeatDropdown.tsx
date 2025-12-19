@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Beat } from '@/types/database'
-import { Crown, Check, ChevronDown, Music, Play, Square, Heart } from 'lucide-react'
+import { Crown, Check, ChevronDown, Music, Play, Square, Heart, Upload, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/atoms/Skeleton'
 import { toast } from 'react-hot-toast'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
+import { addLocalBeat, getLocalBeats, deleteLocalBeat } from '@/lib/beats/localBeats'
 
 interface BeatDropdownProps {
   beats: Beat[]
@@ -16,6 +18,12 @@ interface BeatDropdownProps {
   disabled?: boolean
   isPro?: boolean
   isLoading?: boolean
+  hideLocalTab?: boolean
+}
+
+// Temporary interface until types are fully propagated
+interface ExtendedBeat extends Beat {
+  tags?: string[]
 }
 
 export function BeatDropdown({
@@ -26,15 +34,22 @@ export function BeatDropdown({
   disabled = false,
   isPro = false,
   isLoading = false,
+  hideLocalTab = false,
 }: BeatDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
   const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null)
-  const previewAudioRef = useRef<HTMLAudioElement | null>(null)
 
+  // Local Beats State
+  const [localBeats, setLocalBeats] = useState<Beat[]>([])
+
+  // Filter State
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
+
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Load favorites on mount
+  // Load favorites
   useEffect(() => {
     getFavoriteBeatIds()
       .then((ids) => {
@@ -42,6 +57,13 @@ export function BeatDropdown({
       })
       .catch((err) => console.error('Failed to load favorites', err))
   }, [])
+
+  // Load local beats when Pro
+  useEffect(() => {
+    if (isPro && isOpen) {
+      getLocalBeats().then(setLocalBeats).catch(console.error)
+    }
+  }, [isPro, isOpen])
 
   const stopPreview = useCallback(() => {
     if (previewAudioRef.current) {
@@ -76,14 +98,10 @@ export function BeatDropdown({
   const handleToggleFavorite = useCallback(async (beatId: string, e: React.MouseEvent) => {
     e.stopPropagation()
 
-    // Optimistic Update
     setFavoriteBeatIds((prev) => {
       const next = new Set(prev)
-      if (next.has(beatId)) {
-        next.delete(beatId)
-      } else {
-        next.add(beatId)
-      }
+      if (next.has(beatId)) next.delete(beatId)
+      else next.add(beatId)
       return next
     })
 
@@ -111,16 +129,13 @@ export function BeatDropdown({
     (beat: Beat, e: React.MouseEvent) => {
       e.stopPropagation()
 
-      // If already previewing this beat, stop it
       if (previewingBeatId === beat.id) {
         stopPreview()
         return
       }
 
-      // Stop any current preview
       stopPreview()
 
-      // Start new preview
       const audio = new Audio(beat.storageUrl)
       audio.volume = 0.5
       audio.onended = () => setPreviewingBeatId(null)
@@ -143,6 +158,65 @@ export function BeatDropdown({
     [previewingBeatId, stopPreview]
   )
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate type
+    if (!file.type.startsWith('audio/')) {
+      toast.error('Please upload an audio file')
+      return
+    }
+
+    try {
+      const newBeat = await addLocalBeat(file)
+      setLocalBeats((prev) => [newBeat, ...prev])
+      toast.success('Beat uploaded locally!')
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to save local beat')
+    }
+  }
+
+  const handleDeleteLocal = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!confirm('Delete this local beat?')) return
+
+    try {
+      await deleteLocalBeat(id)
+      setLocalBeats((prev) => prev.filter((b) => b.id !== id))
+      toast.success('Beat deleted')
+      if (selectedBeat?.id === id) {
+        // maybe select default?
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to delete')
+    }
+  }
+
+  // Filter Logic
+  // Extract genres/tags
+  const allTags = Array.from(
+    new Set(
+      beats.flatMap((b) => {
+        const tags = (b as ExtendedBeat).tags || []
+        if (b.genre) tags.push(b.genre)
+        return tags
+      })
+    )
+  )
+    .filter(Boolean)
+    .sort()
+
+  const displayedBeats = selectedGenre
+    ? beats.filter((b) => {
+        const tags = (b as ExtendedBeat).tags || []
+        if (b.genre) tags.push(b.genre)
+        return tags.includes(selectedGenre)
+      })
+    : beats
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -157,7 +231,6 @@ export function BeatDropdown({
       <label className="text-lg font-medium text-white">Beat</label>
 
       <div className="relative">
-        {/* Trigger Button */}
         <button
           id="tour-beat-select"
           type="button"
@@ -194,118 +267,231 @@ export function BeatDropdown({
           />
         </button>
 
-        {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[300px] overflow-y-auto rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5">
-            <div className="p-2 space-y-1">
-              {beats.map((beat) => {
-                const isSelected = selectedBeat?.id === beat.id
-                const isLocked = beat.isPremium && !isPro
-                const isFavorited = favoriteBeatIds.has(beat.id)
-                const isPreviewing = previewingBeatId === beat.id
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[400px] overflow-hidden rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
+            <Tabs defaultValue="library" className="flex flex-col h-full">
+              <div className="px-3 pt-3 pb-2 border-b border-white/5">
+                <TabsList className="w-full bg-white/5">
+                  <TabsTrigger value="library" className="flex-1">
+                    Library
+                  </TabsTrigger>
+                  {isPro && !hideLocalTab && (
+                    <TabsTrigger value="local" className="flex-1 gap-2">
+                      My Uploads <Crown size={10} className="text-accent-orange" />
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+              </div>
 
-                return (
-                  <div
-                    key={beat.id}
+              {/* Library Tab */}
+              <TabsContent value="library" className="flex-1 overflow-y-auto mt-0">
+                {/* Genre Filter Strip */}
+                <div className="px-3 py-2 flex gap-2 overflow-x-auto no-scrollbar mask-gradient-x border-b border-white/5">
+                  <button
+                    onClick={() => setSelectedGenre(null)}
                     className={cn(
-                      'flex items-center rounded-lg p-3 transition-colors',
-                      isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5',
-                      isLocked && 'opacity-70 hover:bg-accent-purple/5'
+                      'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium transition-colors border',
+                      !selectedGenre
+                        ? 'bg-accent-purple text-white border-accent-purple'
+                        : 'bg-white/5 text-text-secondary border-white/10 hover:bg-white/10'
                     )}
                   >
-                    {/* Preview Button */}
+                    All
+                  </button>
+                  {allTags.map((genre) => (
                     <button
-                      onClick={(e) => handlePreview(beat, e)}
+                      key={genre}
+                      onClick={() => setSelectedGenre(genre)}
                       className={cn(
-                        'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
-                        isPreviewing
-                          ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
-                          : isSelected
-                            ? 'border-accent-purple/30 bg-accent-purple/20 text-accent-purple'
-                            : 'border-white/10 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10'
+                        'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium transition-colors border',
+                        selectedGenre === genre
+                          ? 'bg-accent-purple text-white border-accent-purple'
+                          : 'bg-white/5 text-text-secondary border-white/10 hover:bg-white/10'
                       )}
-                      title={isPreviewing ? 'Stop preview' : 'Preview beat'}
                     >
-                      {isPreviewing ? <Square size={14} /> : <Play size={14} className="ml-0.5" />}
+                      #{genre}
                     </button>
-
-                    {/* Main Click Area */}
-                    <button
-                      onClick={() => {
-                        if (isLocked) {
-                          if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                            navigator.vibrate(50)
-                          }
-                          onLockedSelect?.()
-                          setIsOpen(false)
-                          stopPreview()
-                          return
-                        }
-                        if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                          navigator.vibrate(10)
-                        }
-                        onSelect(beat)
-                        setIsOpen(false)
-                        stopPreview()
-                      }}
-                      className="flex-1 text-left"
-                    >
-                      <div
-                        className={cn(
-                          'font-medium text-sm',
-                          isSelected ? 'text-accent-purple' : 'text-white'
-                        )}
-                      >
-                        {beat.title}
-                      </div>
-                      <div className="text-xs text-text-secondary flex items-center gap-2">
-                        <span>{beat.bpm} BPM</span>
-                        {beat.genre && (
-                          <>
-                            <span className="h-0.5 w-0.5 rounded-full bg-text-tertiary" />
-                            <span>{beat.genre}</span>
-                          </>
-                        )}
-                      </div>
-                    </button>
-
-                    {/* Right Side Icons */}
-                    <div className="flex items-center gap-2 ml-2">
-                      {/* Favorite Button */}
-                      <button
-                        onClick={(e) => handleToggleFavorite(beat.id, e)}
-                        className={cn(
-                          'p-1.5 rounded-full transition-colors',
-                          isFavorited
-                            ? 'text-accent-pink'
-                            : 'text-text-tertiary hover:text-accent-pink'
-                        )}
-                        title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-                      >
-                        <Heart size={14} fill={isFavorited ? 'currentColor' : 'none'} />
-                      </button>
-
-                      {beat.isPremium && (
-                        <div className="flex items-center gap-1 rounded-full bg-accent-orange/10 px-2 py-0.5 border border-accent-orange/20">
-                          <Crown size={10} className="text-accent-orange" />
-                          <span className="text-[10px] font-bold text-accent-orange uppercase tracking-wider">
-                            Pro
-                          </span>
-                        </div>
-                      )}
-
-                      {isSelected && <Check size={16} className="text-accent-purple" />}
-                    </div>
-                  </div>
-                )
-              })}
-
-              {beats.length === 0 && (
-                <div className="p-4 text-center text-sm text-text-secondary">
-                  No beats available
+                  ))}
                 </div>
+
+                <div className="p-2 space-y-1">
+                  {displayedBeats.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-text-secondary">
+                      {selectedGenre ? 'No beats found with this tag.' : 'No beats available.'}
+                    </div>
+                  ) : (
+                    displayedBeats.map((beat) => {
+                      const isSelected = selectedBeat?.id === beat.id
+                      const isLocked = beat.isPremium && !isPro
+                      const isFavorited = favoriteBeatIds.has(beat.id)
+                      const isPreviewing = previewingBeatId === beat.id
+
+                      return (
+                        <div
+                          key={beat.id}
+                          className={cn(
+                            'flex items-center rounded-lg p-3 transition-colors',
+                            isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5',
+                            isLocked && 'opacity-70 hover:bg-accent-purple/5'
+                          )}
+                        >
+                          <button
+                            onClick={(e) => handlePreview(beat, e)}
+                            className={cn(
+                              'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
+                              isPreviewing
+                                ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
+                                : isSelected
+                                  ? 'border-accent-purple/30 bg-accent-purple/20 text-accent-purple'
+                                  : 'border-white/10 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10'
+                            )}
+                          >
+                            {isPreviewing ? (
+                              <Square size={14} />
+                            ) : (
+                              <Play size={14} className="ml-0.5" />
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              if (isLocked) {
+                                if (typeof navigator !== 'undefined' && navigator.vibrate)
+                                  navigator.vibrate(50)
+                                onLockedSelect?.()
+                                setIsOpen(false)
+                                stopPreview()
+                                return
+                              }
+                              if (typeof navigator !== 'undefined' && navigator.vibrate)
+                                navigator.vibrate(10)
+                              onSelect(beat)
+                              setIsOpen(false)
+                              stopPreview()
+                            }}
+                            className="flex-1 text-left"
+                          >
+                            <div
+                              className={cn(
+                                'font-medium text-sm',
+                                isSelected ? 'text-accent-purple' : 'text-white'
+                              )}
+                            >
+                              {beat.title}
+                            </div>
+                            <div className="text-xs text-text-secondary flex items-center gap-2">
+                              <span>{beat.bpm} BPM</span>
+                              {(beat as ExtendedBeat).tags?.slice(0, 2).map((t) => (
+                                <span key={t} className="opacity-70">
+                                  #{t}
+                                </span>
+                              )) ||
+                                (beat.genre && <span className="opacity-70">#{beat.genre}</span>)}
+                            </div>
+                          </button>
+
+                          <div className="flex items-center gap-2 ml-2">
+                            <button
+                              onClick={(e) => handleToggleFavorite(beat.id, e)}
+                              className={cn(
+                                'p-1.5 rounded-full transition-colors',
+                                isFavorited
+                                  ? 'text-accent-pink'
+                                  : 'text-text-tertiary hover:text-accent-pink'
+                              )}
+                            >
+                              <Heart size={14} fill={isFavorited ? 'currentColor' : 'none'} />
+                            </button>
+                            {beat.isPremium && (
+                              <div className="flex items-center gap-1 rounded-full bg-accent-orange/10 px-2 py-0.5 border border-accent-orange/20">
+                                <Crown size={10} className="text-accent-orange" />
+                              </div>
+                            )}
+                            {isSelected && <Check size={16} className="text-accent-purple" />}
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </TabsContent>
+
+              {/* Local Tab */}
+              {isPro && (
+                <TabsContent value="local" className="flex-1 overflow-y-auto mt-0">
+                  <div className="p-4 border-b border-white/5">
+                    <label className="flex items-center justify-center w-full gap-2 p-3 text-sm font-medium text-white transition-colors border border-dashed rounded-xl cursor-pointer bg-white/5 border-white/20 hover:bg-white/10 hover:border-accent-purple/50 hover:text-accent-purple">
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        className="hidden"
+                        onChange={handleFileUpload}
+                      />
+                      <Upload size={16} />
+                      <span>Upload Local Track</span>
+                    </label>
+                    <p className="mt-2 text-[10px] text-center text-text-tertiary">
+                      Stored in your browser (IndexedDB). Not synced to cloud.
+                    </p>
+                  </div>
+                  <div className="p-2 space-y-1">
+                    {localBeats.length === 0 ? (
+                      <div className="p-8 text-center text-sm text-text-secondary">
+                        No local tracks yet.
+                      </div>
+                    ) : (
+                      localBeats.map((beat) => {
+                        const isSelected = selectedBeat?.id === beat.id
+                        const isPreviewing = previewingBeatId === beat.id
+                        return (
+                          <div
+                            key={beat.id}
+                            className={cn(
+                              'flex items-center rounded-lg p-3 transition-colors',
+                              isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5'
+                            )}
+                          >
+                            <button
+                              onClick={(e) => handlePreview(beat, e)}
+                              className={cn(
+                                'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
+                                isPreviewing
+                                  ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
+                                  : 'border-white/10 bg-white/5 text-text-secondary hover:text-white'
+                              )}
+                            >
+                              {isPreviewing ? (
+                                <Square size={14} />
+                              ) : (
+                                <Play size={14} className="ml-0.5" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => {
+                                onSelect(beat)
+                                setIsOpen(false)
+                                stopPreview()
+                              }}
+                              className="flex-1 text-left"
+                            >
+                              <div className="font-medium text-white text-sm">{beat.title}</div>
+                              <div className="text-xs text-text-secondary">Local Storage</div>
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteLocal(beat.id, e)}
+                              className="p-2 text-text-tertiary hover:text-red-400 transition-colors"
+                              title="Delete local beat"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        )
+                      })
+                    )}
+                  </div>
+                </TabsContent>
               )}
-            </div>
+            </Tabs>
           </div>
         )}
       </div>

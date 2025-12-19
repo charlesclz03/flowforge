@@ -9,6 +9,10 @@ export type BadgeType =
   | 'Machine Gun'
   | 'Perfectionist'
   | 'The Listener'
+  | 'Cypher King'
+  | 'Local Hero'
+  | 'Early Bird'
+  | 'Lyricist'
 
 export async function checkBadgeConditions(userId: string, newSessionId: string) {
   const user = await prisma.user.findUnique({
@@ -89,6 +93,33 @@ export async function checkBadgeConditions(userId: string, newSessionId: string)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((currentSession as any).playbacks >= 10 || meta.playbacks >= 10) {
       earnedBadges.push('The Listener')
+    }
+  }
+
+  // 8. Cypher King: 5 Cypher mode sessions
+  if (!currentBadges.has('Cypher King')) {
+    const cypherSessions = (user.freestyleSessions as unknown as Array<{ mode: string }>).filter(
+      (s) => s.mode === 'cypher'
+    ).length
+    if (cypherSessions >= 5) {
+      earnedBadges.push('Cypher King')
+    }
+  }
+
+  // 9. Early Bird: Session between 5 AM and 9 AM
+  if (!currentBadges.has('Early Bird')) {
+    const currentHour = new Date().getHours()
+    if (currentHour >= 5 && currentHour <= 9) {
+      earnedBadges.push('Early Bird')
+    }
+  }
+
+  // 10. Lyricist: 50 Total Minutes
+  if (!currentBadges.has('Lyricist')) {
+    const totalMinutes =
+      user.freestyleSessions.reduce((acc, s) => acc + (s.durationSeconds || 0), 0) / 60
+    if (totalMinutes >= 50) {
+      earnedBadges.push('Lyricist')
     }
   }
 

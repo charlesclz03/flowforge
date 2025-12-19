@@ -18,6 +18,7 @@ model Beat {
   storageUrl      String   @map("storage_url")
   isPremium       Boolean  @default(false) @map("is_premium")
   genre           String?
+  tags            String[] @default([])
   duration        Int?     // Duration in seconds
   artistName      String?  @map("artist_name")
   difficulty      String   @default("Medium") // "Easy", "Medium", "Hard"
@@ -62,6 +63,8 @@ model User {
   subscriptionStatus String?   @default("free") @map("subscription_status")
   // Values: "free", "active", "past_due", "canceled", "trialing"
   
+  role String @default("USER") // "USER", "SUPERADMIN"
+
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
@@ -205,6 +208,7 @@ model FreestyleSession {
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
   score           Int      @default(0)
   vibe            String?  // "Hype", "Chill", "Locked In"
+  mode            String   @default("solo") // "solo", "cypher"
   restarts        Int      @default(0)
   playbacks       Int      @default(0)
   createdAt       DateTime @default(now()) @map("created_at")

@@ -13,6 +13,10 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
+import { ChevronDown, Sparkles, User, Users, Music } from 'lucide-react'
+import { Switch } from '@/components/atoms/Switch'
+import { cn } from '@/lib/utils'
+import { toast } from 'react-hot-toast'
 
 type Frequency = 4 | 8 | 16
 
@@ -32,7 +36,12 @@ export default function DifficultySelectionPage() {
     setDifficulty,
     mode,
     setMode,
+    wordCategory,
+    setWordCategory,
   } = usePracticeSession()
+
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
+  const [showLocalTracks, setShowLocalTracks] = useState(false)
 
   const isPro =
     session?.user?.subscriptionStatus === 'active' ||
@@ -78,30 +87,6 @@ export default function DifficultySelectionPage() {
 
         {/* Configuration Sliders */}
         <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
-          {/* Mode Toggle */}
-          <div className="flex bg-white/5 p-1 rounded-xl">
-            <button
-              onClick={() => setMode('solo')}
-              className={`flex-1 py-3 rounded-lg font-bold transition-all ${
-                mode === 'solo'
-                  ? 'bg-accent-purple text-white shadow-lg'
-                  : 'text-text-secondary hover:text-white'
-              }`}
-            >
-              Solo
-            </button>
-            <button
-              onClick={() => setMode('cypher')}
-              className={`flex-1 py-3 rounded-lg font-bold transition-all ${
-                mode === 'cypher'
-                  ? 'bg-accent-cyan text-black shadow-lg'
-                  : 'text-text-secondary hover:text-white'
-              }`}
-            >
-              Pass the Mic (2P)
-            </button>
-          </div>
-
           <DifficultySelector
             value={difficulty || SESSION_CONFIG.DEFAULT_DIFFICULTY}
             onChange={setDifficulty}
@@ -119,7 +104,121 @@ export default function DifficultySelectionPage() {
             disabled={isLoadingBeats}
             onLockedSelect={() => setShowPremiumModal(true)}
             isPro={isPro}
+            hideLocalTab={!showLocalTracks}
           />
+
+          {/* Advanced Section */}
+          <div className="pt-2">
+            <button
+              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+              className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-white transition-colors group"
+            >
+              <div
+                className={cn(
+                  'p-1 rounded-md bg-white/5 group-hover:bg-white/10 transition-colors',
+                  isAdvancedOpen && 'bg-accent-purple/20 text-accent-purple'
+                )}
+              >
+                <ChevronDown
+                  className={cn(
+                    'transition-transform duration-300',
+                    isAdvancedOpen && 'rotate-180'
+                  )}
+                  size={14}
+                />
+              </div>
+              <span>Advanced Settings</span>
+              {!isAdvancedOpen && (wordCategory || mode === 'cypher') && (
+                <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1" />
+              )}
+            </button>
+
+            {isAdvancedOpen && (
+              <div className="mt-6 space-y-8 pt-6 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
+                {/* Solo/Pass the Mic Slider */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-text-secondary flex items-center gap-2">
+                    Session Mode
+                  </label>
+                  <div className="flex bg-black/40 p-1 rounded-2xl border border-white/5">
+                    <button
+                      onClick={() => setMode('solo')}
+                      className={cn(
+                        'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all',
+                        mode === 'solo'
+                          ? 'bg-accent-purple text-white shadow-lg'
+                          : 'text-text-secondary hover:text-white'
+                      )}
+                    >
+                      <User size={16} />
+                      Solo
+                    </button>
+                    <button
+                      onClick={() => setMode('cypher')}
+                      className={cn(
+                        'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all',
+                        mode === 'cypher'
+                          ? 'bg-accent-cyan text-black shadow-lg'
+                          : 'text-text-secondary hover:text-white'
+                      )}
+                    >
+                      <Users size={16} />
+                      Pass Mic (2P)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Theme Dropdown */}
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-text-secondary flex items-center gap-2">
+                    Word Theme
+                    <Sparkles size={12} className="text-accent-orange" />
+                  </label>
+                  <select
+                    value={wordCategory || 'All'}
+                    onChange={(e) =>
+                      setWordCategory(e.target.value === 'All' ? null : e.target.value)
+                    }
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-purple appearance-none"
+                  >
+                    {['All', 'Street', 'Political', 'Abstract', 'Nature', 'Ego Trip', 'Life'].map(
+                      (theme) => (
+                        <option key={theme} value={theme}>
+                          {theme}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+
+                {/* Local Uploads Toggle/Quick Access */}
+                <div className="p-4 rounded-2xl bg-accent-purple/5 border border-accent-purple/10 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-accent-purple/20 flex items-center justify-center text-accent-purple">
+                      <Music size={20} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">
+                        Enable Local Tracks ({isPro ? 'Pro' : 'Locked'})
+                      </p>
+                      <p className="text-xs text-text-tertiary">Select files from your device</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={showLocalTracks}
+                    onCheckedChange={(checked) => {
+                      if (!isPro && checked) {
+                        setShowPremiumModal(true)
+                        return
+                      }
+                      setShowLocalTracks(checked)
+                      if (checked) toast.success('Upload tab enabled in Beat selection')
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Continue button */}

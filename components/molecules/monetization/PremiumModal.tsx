@@ -3,6 +3,7 @@
 import { X, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useRouter } from 'next/navigation'
 
 interface PremiumModalProps {
   isOpen: boolean
@@ -11,7 +12,7 @@ interface PremiumModalProps {
 }
 
 export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
-  // const router = useRouter()
+  const router = useRouter()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -109,15 +110,11 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
           </div>
 
           <button
-            onClick={() => {
-              // In a real app, this would open Stripe checkout
-              // For now, we simulate success or redirect
-              // router.push('/api/stripe/checkout')
-              alert('Redirecting to Checkout...')
+              router.push('/profile')
             }}
             className="w-full py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-gray-100 transition-transform active:scale-95 shadow-glow"
           >
-            Get Pro - $9/mo
+            Get Pro - 3.99€/mo
           </button>
 
           <p className="mt-4 text-center text-xs text-text-tertiary">

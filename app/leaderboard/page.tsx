@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/organisms/common'
 import { LeaderboardRow } from '@/components/molecules/social/LeaderboardRow'
 import { Trophy } from 'lucide-react'
 import Link from 'next/link'
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 
 // Cache for 60 seconds
 export const revalidate = 60
@@ -81,9 +82,8 @@ export default async function LeaderboardPage({
   const users = await getLeaderboard(period)
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* AppHeader removed for gamified layout */}
-      <Container className="pt-8">
+    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+      <Container className="pt-8 pb-32">
         <PageHeader title="Leaderboard" description="Top flows this week." />
 
         <div className="mt-8 space-y-4 max-w-2xl mx-auto">
@@ -133,6 +133,6 @@ export default async function LeaderboardPage({
           </div>
         </div>
       </Container>
-    </div>
+    </OnboardingLayout>
   )
 }

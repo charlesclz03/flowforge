@@ -1,6 +1,18 @@
 import { Card } from '@/components/atoms/Card'
 // import { BadgeType } from '@/lib/gamification/badges'
-import { Crown, Moon, Star, Flame, LucideIcon } from 'lucide-react'
+import {
+  Crown,
+  Moon,
+  Star,
+  Flame,
+  Zap,
+  Crosshair,
+  Headphones,
+  Users,
+  Coffee,
+  PenTool,
+  LucideIcon,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface BadgesDisplayProps {
@@ -34,6 +46,42 @@ const BADGE_CONFIG: Record<
     label: 'Dedication',
     description: 'Recorded 10+ sessions total.',
     color: 'text-orange-500 bg-orange-500/10 border-orange-500/20',
+  },
+  'Machine Gun': {
+    icon: Zap,
+    label: 'Machine Gun',
+    description: 'Fast bars on hard mode.',
+    color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+  },
+  Perfectionist: {
+    icon: Crosshair,
+    label: 'Perfectionist',
+    description: 'Restarted 5+ times to get it right.',
+    color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+  },
+  'The Listener': {
+    icon: Headphones,
+    label: 'The Listener',
+    description: 'Listened to playbacks 10+ times.',
+    color: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+  },
+  'Cypher King': {
+    icon: Users,
+    label: 'Cypher King',
+    description: 'Mastered the pass-the-mic flow.',
+    color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+  },
+  'Early Bird': {
+    icon: Coffee,
+    label: 'Early Bird',
+    description: 'Spitting bars before breakfast.',
+    color: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+  },
+  Lyricist: {
+    icon: PenTool,
+    label: 'Lyricist',
+    description: 'Over 50 minutes of recorded material.',
+    color: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
   },
 }
 
