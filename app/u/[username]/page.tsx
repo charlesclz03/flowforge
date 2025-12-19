@@ -5,7 +5,6 @@ import { Avatar } from '@/components/atoms/Avatar'
 import { Card } from '@/components/atoms/Card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
 import { FreestyleSession, Beat } from '@prisma/client'
-import { ShareProfileButton } from '@/components/molecules/social/ShareProfileButton'
 
 interface SocialLinks {
   instagram?: string
