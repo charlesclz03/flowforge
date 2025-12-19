@@ -17,7 +17,7 @@ export function FlowForgeWordmark({ size = 'lg', className }: FlowForgeWordmarkP
       <div className="flex items-center justify-center space-x-3">
         <Image
           src="/logo.png"
-          alt="Freestyla Logo"
+          alt="FreeStyla Logo"
           width={48}
           height={48}
           className={cn(iconClasses, 'object-contain drop-shadow-neon')}

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { ArrowLeft } from 'lucide-react'
@@ -70,13 +71,15 @@ export function AppHeader({
             <Link
               href={homeLink}
               className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
-              aria-label="Go to Freestyla home"
+              aria-label="Go to FreeStyla home"
             >
               <div className="relative h-8 w-8">
-                <img
+                <Image
                   src="/logo.png"
-                  alt="Freestyla Logo"
-                  className="object-contain w-full h-full drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
+                  alt="FreeStyla Logo"
+                  width={32}
+                  height={32}
+                  className="object-contain drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
                 />
               </div>
               <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">

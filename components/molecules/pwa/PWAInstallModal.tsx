@@ -62,7 +62,7 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
 
                 <div className="mt-2 text-center">
                   <p className="text-text-secondary mb-6">
-                    Install Freestyla for the best experience, lower latency, and fullscreen mode.
+                    Install FreeStyla for the best experience, lower latency, and fullscreen mode.
                   </p>
 
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/5 space-y-4 text-left">

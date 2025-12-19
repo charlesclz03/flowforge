@@ -11,11 +11,11 @@ import { authOptions } from '@/lib/auth'
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: 'Freestyla - AI-Powered Freestyle Rap Practice',
-    template: '%s | Freestyla',
+    default: 'FreeStyla - AI-Powered Freestyle Rap Practice',
+    template: '%s | FreeStyla',
   },
   description:
-    'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity with Freestyla.',
+    'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity with FreeStyla.',
   keywords: [
     'freestyle rap',
     'rap practice',
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     'rap training',
     'music practice',
   ],
-  authors: [{ name: 'Freestyla Team' }],
-  creator: 'Freestyla',
-  publisher: 'Freestyla',
+  authors: [{ name: 'FreeStyla Team' }],
+  creator: 'FreeStyla',
+  publisher: 'FreeStyla',
   formatDetection: {
     email: false,
     address: false,
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    siteName: 'Freestyla',
-    title: 'Freestyla - AI-Powered Freestyle Rap Practice',
+    siteName: 'FreeStyla',
+    title: 'FreeStyla - AI-Powered Freestyle Rap Practice',
     description:
       'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
     images: [
@@ -49,13 +49,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Freestyla - AI-Powered Freestyle Rap Practice',
+        alt: 'FreeStyla - AI-Powered Freestyle Rap Practice',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Freestyla - AI-Powered Freestyle Rap Practice',
+    title: 'FreeStyla - AI-Powered Freestyle Rap Practice',
     description:
       'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
     images: ['/og-image.png'],

@@ -72,7 +72,7 @@ function HomePageContent() {
             <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
               <Image
                 src="/logo.png"
-                alt="Freestyla Logo"
+                alt="FreeStyla Logo"
                 width={48}
                 height={48}
                 priority
@@ -82,7 +82,7 @@ function HomePageContent() {
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">Freestyla</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">FreeStyla</h1>
             <p className="text-lg font-medium text-text-secondary">Master your freestyle.</p>
           </div>
         </div>

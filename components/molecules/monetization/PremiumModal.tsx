@@ -46,11 +46,11 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
       case 'history':
         return {
           title: 'View Full History',
-          description: 'Save and review all your past sessions with Freestyla Premium.',
+          description: 'Save and review all your past sessions with FreeStyla Premium.',
         }
       default:
         return {
-          title: 'Upgrade to Freestyla Pro',
+          title: 'Upgrade to FreeStyla Pro',
           description: 'Take your freestyle skills to the next level with professional tools.',
         }
     }
