@@ -272,8 +272,17 @@ export function BeatDropdown({
                   <TabsTrigger value="library" className="flex-1">
                     Library
                   </TabsTrigger>
-                  {isPro && !hideLocalTab && (
-                    <TabsTrigger value="local" className="flex-1 gap-2">
+                  {!hideLocalTab && (
+                    <TabsTrigger
+                      value="local"
+                      className="flex-1 gap-2"
+                      onClick={(e) => {
+                        if (!isPro) {
+                          e.preventDefault()
+                          onLockedSelect?.()
+                        }
+                      }}
+                    >
                       My Uploads <Crown size={10} className="text-accent-orange" />
                     </TabsTrigger>
                   )}

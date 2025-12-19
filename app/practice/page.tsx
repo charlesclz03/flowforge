@@ -30,8 +30,6 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 export default function PracticePage() {
   const router = useRouter()
   const { data: session } = useSession()
-  /* Clean UI State - Removed */
-  const [proTipDismissed, setProTipDismissed] = useState(false)
   const [isInfiniteMode, setIsInfiniteMode] = useState(false)
 
   const {
@@ -824,6 +822,13 @@ export default function PracticePage() {
       duration: 3000,
       position: 'bottom-center',
     })
+    // Pro Tip for desktop users
+    setTimeout(() => {
+      toast('💡 Press Space to Start/Pause', {
+        duration: 4000,
+        position: 'bottom-center',
+      })
+    }, 3500)
   }, [])
 
   return (
@@ -893,34 +898,7 @@ export default function PracticePage() {
             }}
           />
         }
-        sessionConfig={
-          !proTipDismissed ? (
-            <div className="hidden lg:block">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
-                <span className="font-bold text-accent-purple">PRO TIP:</span>
-                <span className="flex-1">
-                  Press <kbd className="font-sans font-bold text-white">Space</kbd> to Start/Pause
-                </span>
-                <button
-                  onClick={() => setProTipDismissed(true)}
-                  className="ml-2 p-1 hover:bg-white/10 rounded-full transition-colors"
-                  aria-label="Dismiss tip"
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          ) : null
-        }
+        sessionConfig={null}
         practiceControls={
           selectedBeat ? (
             <div className="relative w-full flex justify-center items-center">
@@ -987,7 +965,6 @@ export default function PracticePage() {
         }
         helpSection={null}
       />
-      <SessionSummaryModal data={sessionSummary} onClose={() => setSessionSummary(null)} />
       <GuestLoginModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} />
       <PremiumModal
         isOpen={showPremiumModal}

@@ -23,7 +23,7 @@ export default function TracksPage() {
           fetch('/api/beats').then((res) => res.json()),
           getFavoriteBeatIds(),
         ])
-        setBeats(beatsRes)
+        setBeats(beatsRes.beats || [])
         setFavoriteIds(new Set(favs))
       } catch (e) {
         console.error(e)

@@ -11,7 +11,6 @@ import {
   FileText,
   Bug,
   User,
-  Users,
   Scale,
   LogOut,
 } from 'lucide-react'
@@ -23,16 +22,7 @@ import { cn } from '@/lib/utils'
 export function SettingsDropdown() {
   const { data: session } = useSession()
   const [visualizer, setVisualizer] = useState<'ring' | 'wave'>('ring')
-  const {
-    isTTSEnabled,
-    setTTSEnabled,
-    ttsVolume,
-    setTTSVolume,
-    mode,
-    setMode,
-    cypherPlayers,
-    setCypherPlayers,
-  } = usePracticeSession()
+  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume } = usePracticeSession()
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -70,74 +60,6 @@ export function SettingsDropdown() {
 
           {/* Main Controls */}
           <div className="py-1">
-            {/* Session Mode */}
-            <div className="px-4 py-3 border-b border-white/5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3 text-sm text-white">
-                  <Users size={16} className="text-accent-blue" />
-                  <span>Mode</span>
-                </div>
-                <div className="flex bg-black/20 rounded-lg p-0.5">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setMode('solo')
-                    }}
-                    className={cn(
-                      'px-2 py-1 text-[10px] font-medium rounded-md transition-all',
-                      mode === 'solo'
-                        ? 'bg-background-elevated text-white shadow-sm'
-                        : 'text-text-secondary hover:text-white'
-                    )}
-                  >
-                    Solo
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setMode('cypher')
-                    }}
-                    className={cn(
-                      'px-2 py-1 text-[10px] font-medium rounded-md transition-all',
-                      mode === 'cypher'
-                        ? 'bg-background-elevated text-white shadow-sm'
-                        : 'text-text-secondary hover:text-white'
-                    )}
-                  >
-                    Cypher
-                  </button>
-                </div>
-              </div>
-
-              {/* Player Count Selector (Cypher Only) */}
-              {mode === 'cypher' && (
-                <div className="flex items-center gap-2 pl-7">
-                  <span className="text-[10px] text-text-tertiary uppercase tracking-wider">
-                    Players:
-                  </span>
-                  <div className="flex gap-1">
-                    {[2, 3, 4, 5].map((count) => (
-                      <button
-                        key={count}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setCypherPlayers(count)
-                        }}
-                        className={cn(
-                          'w-6 h-6 rounded flex items-center justify-center text-[10px] font-medium transition-colors border',
-                          cypherPlayers === count
-                            ? 'bg-accent-blue/20 border-accent-blue text-accent-blue'
-                            : 'bg-white/5 border-transparent text-text-secondary hover:bg-white/10'
-                        )}
-                      >
-                        {count}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Visualizer Style */}
 
             {/* Visualizer Style */}
@@ -319,20 +241,22 @@ export function SettingsDropdown() {
 
             <div className="my-1 border-t border-white/5" />
 
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => signOut({ callbackUrl: '/' })}
-                  className={cn(
-                    'flex w-full items-center px-4 py-2.5 text-sm text-text-primary transition-colors',
-                    active ? 'bg-white/5' : ''
-                  )}
-                >
-                  <LogOut size={16} className="mr-3 text-text-secondary" />
-                  Sign Out
-                </button>
-              )}
-            </Menu.Item>
+            {session && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className={cn(
+                      'flex w-full items-center px-4 py-2.5 text-sm text-text-primary transition-colors',
+                      active ? 'bg-white/5' : ''
+                    )}
+                  >
+                    <LogOut size={16} className="mr-3 text-text-secondary" />
+                    Sign Out
+                  </button>
+                )}
+              </Menu.Item>
+            )}
           </div>
         </Menu.Items>
       </Transition>

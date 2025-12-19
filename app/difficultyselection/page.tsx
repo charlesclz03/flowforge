@@ -163,7 +163,7 @@ export default function DifficultySelectionPage() {
                       )}
                     >
                       <Users size={16} />
-                      Pass Mic (2P)
+                      Cypher
                     </button>
                   </div>
                 </div>
