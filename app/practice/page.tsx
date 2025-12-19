@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { PracticeTemplate } from '@/components/templates'
-import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
+import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
@@ -21,7 +21,7 @@ import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
-import { SessionSummaryModal } from '@/components/molecules/practice/SessionSummaryModal'
+import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
 import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
 
 import { Beat } from '@/types/database'
@@ -236,6 +236,9 @@ export default function PracticePage() {
               duration: actualDuration,
               audioUrl: URL.createObjectURL(blob),
               newBadges: data.session?.newBadges,
+              difficulty: difficulty,
+              bpm: selectedBeat.bpm,
+              frequency: frequency,
             })
 
             // setSaveMessage('Recording saved successfully! View it in your recordings library.')
@@ -937,9 +940,14 @@ export default function PracticePage() {
                     onFrequencyChange={setFrequency}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
                     isPro={isPro}
+                    isAuthenticated={!!session}
                     onUpgrade={() => {
-                      setPremiumTrigger('recording')
-                      setShowPremiumModal(true)
+                      if (!session) {
+                        setShowGuestModal(true)
+                      } else {
+                        setPremiumTrigger('recording')
+                        setShowPremiumModal(true)
+                      }
                     }}
                     isInfiniteMode={isInfiniteMode}
                     onToggleInfiniteMode={() => {

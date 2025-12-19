@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
 import { RefreshCcw, Zap, Gauge, Mic, MicOff, Infinity as InfinityIcon } from 'lucide-react'
@@ -11,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
 import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
-interface PracticeControlsProps {
+type PracticeControlsProps = {
   selectedBeat: Beat
   isPlaying: boolean
   isLoading: boolean
@@ -31,10 +29,11 @@ interface PracticeControlsProps {
   onFrequencyChange?: (value: number) => void
   onToggleInfiniteMode?: () => void
   isPro?: boolean
+  isAuthenticated?: boolean
   onUpgrade?: () => void
 }
 
-export function PracticeControls({
+export default function PracticeControls({
   selectedBeat,
   isPlaying,
   isLoading,
@@ -54,6 +53,7 @@ export function PracticeControls({
   onFrequencyChange,
   onToggleInfiniteMode,
   isPro = false,
+  isAuthenticated = false,
   onUpgrade,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
@@ -105,6 +105,12 @@ export function PracticeControls({
     if (typeof window !== 'undefined' && !localStorage.getItem('hasWarnedPWA')) {
       setShowPWAInstall(true)
       localStorage.setItem('hasWarnedPWA', 'true')
+      return
+    }
+
+    // Guests see login prompt (via onUpgrade which we'll map to login if guest)
+    if (!isAuthenticated && !isPlaying) {
+      onUpgrade?.()
       return
     }
 
@@ -333,16 +339,59 @@ export function PracticeControls({
                     Loading Audio
                   </span>
                 </>
-              ) : !isPro ? (
-                // Locked State (Free) - Gray Mic
-                <div className="h-24 w-24 rounded-full bg-white/5 border-2 border-white/10 text-white/20 flex items-center justify-center shadow-lg transition-transform duration-300">
-                  <Mic size={48} />
-                </div>
               ) : (
-                // Ready State (Pro) - Red Mic
-                <div className="h-24 w-24 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
-                  <Mic size={48} className="fill-current" />
+                <div className="flex flex-col items-center">
+                  {/* Session Recap Tags (New) */}
+                  <div className="flex items-center gap-2 mb-8 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150">
+                    <div className="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full border border-white/40 flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                      </div>
+                      <span className="text-sm font-medium text-white/60 capitalize">
+                        {difficulty === 1
+                          ? 'Beginner'
+                          : difficulty === 2
+                            ? 'Medium'
+                            : difficulty === 3
+                              ? 'Hard'
+                              : 'Random'}
+                      </span>
+                    </div>
+
+                    <span className="text-sm font-bold text-white/20">{selectedBeat.bpm} BPM</span>
+
+                    <div className="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 flex items-center gap-2">
+                      <svg
+                        className="w-4 h-4 text-white/40"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                      </svg>
+                      <span className="text-sm font-medium text-white/60">{frequency} Bars</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-6">
+                    <h2 className="text-6xl sm:text-7xl font-light tracking-[0.2em] text-white/90 uppercase mb-4 animate-in fade-in zoom-in-95 duration-700">
+                      Ready
+                    </h2>
+
+                    {!isPro ? (
+                      // Locked State (Free) - Gray Mic
+                      <div className="h-24 w-24 rounded-full bg-white/5 border-2 border-white/10 text-white/20 flex items-center justify-center shadow-lg transition-transform duration-300">
+                        <Mic size={48} />
+                      </div>
+                    ) : (
+                      // Ready State (Pro) - Red Mic
+                      <div className="h-24 w-24 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
+                        <Mic size={48} className="fill-current" />
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

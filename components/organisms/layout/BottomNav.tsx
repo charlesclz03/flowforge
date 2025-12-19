@@ -22,7 +22,7 @@ export function BottomNav() {
       name: 'Vinyl',
       href: '/tracks',
       icon: Disc3,
-      match: (path: string) => path === '/tracks' || path === '/',
+      match: (path: string) => path === '/tracks',
     },
     {
       name: 'Trophy',
@@ -36,13 +36,14 @@ export function BottomNav() {
       icon: Mic,
       match: (path: string) =>
         path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
-      isPrimary: true, // Special flag for center button
+      isPrimary: true,
     },
     {
       name: 'Recordings',
       href: '/recordings',
       icon: CassetteTape,
       match: (path: string) => path.startsWith('/recordings'),
+      requiresAuth: true,
     },
     {
       name: 'Profile',
@@ -57,7 +58,7 @@ export function BottomNav() {
     bump()
 
     // Check if this tab requires auth and user is not authenticated
-    if ('requiresAuth' in tab && tab.requiresAuth && !isAuthenticated) {
+    if (tab.requiresAuth && !isAuthenticated) {
       e.preventDefault()
       setShowLoginPrompt(true)
       return

@@ -1,5 +1,3 @@
-'use client'
-
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
@@ -16,14 +14,17 @@ interface SessionSummaryData {
   duration: number
   audioUrl?: string
   newBadges?: string[]
+  difficulty: number
+  bpm: number
+  frequency: number
 }
 
-interface SessionSummaryModalProps {
+type SessionSummaryModalProps = {
   data: SessionSummaryData | null
   onClose: () => void
 }
 
-export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps) {
+export default function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps) {
   const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
 
@@ -45,8 +46,8 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: 'My FlowForge Session',
-          text: `Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FlowForge #Freestyle`,
+          title: 'My FreeStyla Session',
+          text: `Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`,
           url: window.location.origin,
         })
       } catch (err) {
@@ -57,7 +58,7 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
     } else {
       // Fallback: Copy to clipboard
       navigator.clipboard.writeText(
-        `I just flowed on FlowForge! Vibe score: ${data.score}. Join me at ${window.location.origin}`
+        `I just flowed on FreeStyla! Vibe score: ${data.score}. Join me at ${window.location.origin}`
       )
       toast.success('Share link copied to clipboard!')
     }
@@ -66,6 +67,22 @@ export function SessionSummaryModal({ data, onClose }: SessionSummaryModalProps)
   return (
     <Modal isOpen={!!data} onClose={onClose} title="Session Complete">
       <div className="space-y-6">
+        {/* Session Details Recap (New) */}
+        <div className="flex items-center justify-center gap-2 text-xs font-bold text-text-tertiary uppercase tracking-widest opacity-60">
+          <span>
+            {data.difficulty === 1
+              ? 'Beginner'
+              : data.difficulty === 2
+                ? 'Medium'
+                : data.difficulty === 3
+                  ? 'Hard'
+                  : 'Random'}
+          </span>
+          <span className="w-1 h-1 rounded-full bg-white/20" />
+          <span>{data.bpm} BPM</span>
+          <span className="w-1 h-1 rounded-full bg-white/20" />
+          <span>{data.frequency} Bars</span>
+        </div>
         {/* Score & Vibe */}
         <div className="text-center space-y-2">
           <div className="inline-block p-4 rounded-full bg-accent-purple/20 border border-accent-purple/50 mb-2">

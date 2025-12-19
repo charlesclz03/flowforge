@@ -23,6 +23,8 @@ export function AudioVisualizer({
   const analyzerRef = useRef<AnalyserNode>()
   const audioCtxRef = useRef<AudioContext>()
   const sourceRef = useRef<MediaStreamAudioSourceNode>()
+  const lastTimeRef = useRef(0)
+  const lastDrawTimeRef = useRef(Date.now())
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -67,38 +69,37 @@ export function AudioVisualizer({
       ctx.fillStyle = color
 
       if (mode === 'stream' && analyzerRef.current) {
+        if (!isPlaying) {
+          // Flat line logic for stream mode if needed, but for now just freeze/hide
+          ctx.globalAlpha = 0.2
+          ctx.fillRect(0, height / 2, width, 2)
+          return
+        }
         const bufferLength = analyzerRef.current.frequencyBinCount
         const dataArray = new Uint8Array(bufferLength)
         analyzerRef.current.getByteFrequencyData(dataArray)
 
-        // Map 32 bins to our bars count
         for (let i = 0; i < bars; i++) {
-          // simple mapping
           const index = Math.floor(i * (bufferLength / bars))
           const value = dataArray[index] || 0
           const barHeight = (value / 255) * height
-
-          // Centered
           const x = i * (barWidth + gap)
-          const y = height - barHeight
-
-          // Rounded tops?
+          const y = (height - barHeight) / 2
           ctx.fillRect(x, y, barWidth, barHeight)
         }
       } else {
-        // Simulation Mode (Perlin noise-ish or simple random lerp)
-        if (!isPlaying) {
-          // Flat line
-          ctx.globalAlpha = 0.2
-          ctx.fillRect(0, height - 2, width, 2)
-          return
+        // Simulation Mode - Freeze logic
+        const now = Date.now()
+        if (isPlaying) {
+          const delta = now - lastDrawTimeRef.current
+          lastTimeRef.current += delta / 100
         }
+        lastDrawTimeRef.current = now
 
-        const time = Date.now() / 100
+        const time = lastTimeRef.current
         for (let i = 0; i < bars; i++) {
-          // Create a wave effect
           const noise = Math.sin(time + i * 0.5) * 0.5 + 0.5
-          const random = Math.random() * 0.3
+          const random = isPlaying ? Math.random() * 0.3 : 0.1
           const hPercent = noise * 0.7 + random
           const barHeight = hPercent * height * 0.8 // Max 80% height
 
@@ -117,16 +118,12 @@ export function AudioVisualizer({
     if (isPlaying) {
       draw()
     } else {
-      // Draw static frame
-      if (animationRef.current) cancelAnimationFrame(animationRef.current)
-      draw()
+      draw() // Draw one frozen frame
     }
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current)
       resizeObserver.disconnect()
-      // Cleanup audio context if we created it
-      // We generally keep audio contexts alive in React unless component unmounts for good
     }
   }, [isPlaying, mode, stream, color])
 
