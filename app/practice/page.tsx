@@ -382,16 +382,60 @@ export default function PracticePage() {
 
     async function fetchWords() {
       try {
-        // Bible 5.2: Bag System - Fetch a larger pool to prevent repeats even with skips
-        const wordsNeeded = 100
-        const response = await fetch(
-          `/api/words/random?difficulty=${difficulty}&count=${wordsNeeded}`
-        )
+        // Bible 5.2 & "1-Hour Rule": Bag System + History Filtering
+        // We fetch more words than needed to allow for client-side filtering
+        const fetchCount = 200
+
+        // Handle "Random" difficulty (4) by omitting the parameter
+        const diffParam = difficulty === 4 ? '' : `&difficulty=${difficulty}`
+
+        const response = await fetch(`/api/words/random?count=${fetchCount}${diffParam}`)
         const data = await response.json()
 
         if (data.words && data.words.length > 0) {
-          const words = data.words.map((w: { wordText: string }) => w.wordText)
+          const fetchedWords = data.words as { id: string; wordText: string }[]
+
+          // 1. Get History from LocalStorage
+          const HISTORY_KEY = 'flowforge_seen_words'
+          let seenHistory: Record<string, number> = {}
+          try {
+            const raw = localStorage.getItem(HISTORY_KEY)
+            if (raw) seenHistory = JSON.parse(raw)
+          } catch (e) {
+            console.error('Failed to parse word history', e)
+          }
+
+          // 2. Prune History (Older than 1 hour)
+          const ONE_HOUR = 60 * 60 * 1000
+          const now = Date.now()
+          Object.keys(seenHistory).forEach((wordId) => {
+            if (now - seenHistory[wordId] > ONE_HOUR) {
+              delete seenHistory[wordId]
+            }
+          })
+
+          // 3. Filter Words
+          let availableWords = fetchedWords.filter((w) => !seenHistory[w.id])
+
+          // Fallback: If we filtered too aggressively, use original pool (Silent Recycling)
+          if (availableWords.length < 10) {
+            availableWords = fetchedWords
+          }
+
+          // 4. Update State
+          const words = availableWords.map((w) => w.wordText)
           setWordList(words)
+
+          // 5. Optimistically Update History
+          // Mark all loaded words as "seen" now so they aren't fetched again next time.
+          // This is a bulk "reservation" strategy suitable for this app.
+          const nowTime = Date.now()
+          availableWords.forEach((w) => {
+            seenHistory[w.id] = nowTime
+          })
+
+          // Save pruned history back
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(seenHistory))
         }
       } catch (err) {
         handleError(err, ErrorCodes.FETCH_WORDS_FAILED)

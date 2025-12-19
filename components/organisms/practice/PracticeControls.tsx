@@ -69,12 +69,20 @@ export function PracticeControls({
       return {
         label: 'Medium',
         classes:
-          'bg-accent-purple/20 text-accent-purple border-accent-purple/30 hover:bg-accent-purple/30',
+          'bg-accent-yellow/20 text-accent-yellow border-accent-yellow/30 hover:bg-accent-yellow/30',
       }
     }
+    if (difficulty === 3) {
+      return {
+        label: 'Hard',
+        classes: 'bg-accent-red/20 text-accent-red border-accent-red/30 hover:bg-accent-red/30',
+      }
+    }
+    // Random / Mixed
     return {
-      label: 'Hard',
-      classes: 'bg-accent-red/20 text-accent-red border-accent-red/30 hover:bg-accent-red/30',
+      label: 'Random',
+      classes:
+        'bg-accent-purple/20 text-accent-purple border-accent-purple/30 hover:bg-accent-purple/30',
     }
   }
 
@@ -84,7 +92,8 @@ export function PracticeControls({
   // Handlers for cycling settings
   const cycleDifficulty = () => {
     if (!onDifficultyChange) return
-    const nextDiff = difficulty >= 3 ? 1 : difficulty + 1
+    // Cycle 1->2->3->4(Random)->1
+    const nextDiff = difficulty >= 4 ? 1 : difficulty + 1
     onDifficultyChange(nextDiff)
   }
 
@@ -135,7 +144,7 @@ export function PracticeControls({
               title="Click to change difficulty"
             >
               <Gauge size={10} />
-              <span>{difficultyMeta.label}</span>
+              <span className="min-w-[40px] text-center">{difficultyMeta.label}</span>
             </button>
 
             {/* BPM Display */}
