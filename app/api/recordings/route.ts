@@ -107,23 +107,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check Badges
-    try {
-      if (sessionResult.data?.id) {
-        const { checkBadgeConditions } = await import('@/lib/gamification/badges')
-        const earnedBadges = await checkBadgeConditions(session.user.id, sessionResult.data.id)
-
-        if (earnedBadges && earnedBadges.length > 0) {
-          console.log(`User ${session.user.id} earned badges:`, earnedBadges)
-          // Attach to response so frontend can show a toast/confetti
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(sessionResult.data as any).newBadges = earnedBadges
-        }
-      }
-    } catch (e) {
-      console.error('Badge check failed', e)
-    }
-
     // Word Vault: Ingest used words
     const wordsUsedRaw = formData.get('wordsUsed') as string
     if (wordsUsedRaw) {
