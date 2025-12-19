@@ -1,6 +1,29 @@
-# 📜 Freestyla - The Meta Manifest
+# 📜 FreeStyla - The Meta Manifest
 
 _System logs, balance changes, and the constant evolution of the grind._
+
+---
+
+## 🎤 Update 1.2.1: The Rebrand
+
+**Release Date:** December 19, 2025
+**Codename:** _Identity_
+
+FreeStyla gets its official branding treatment. New transparent icon, proper capitalization, and optimized image loading.
+
+### 🎨 Branding Updates
+
+- **FreeStyla**:  Proper capitalization applied everywhere (manifest, metadata, components).
+- **Transparent Icon**: New app icon with no background—looks clean on any device.
+- **Icon Files Updated**: logo.png, icon.png, icon-192x192.png, icon-512x512.png, apple-touch-icon.png, og-image.png.
+
+### 🔧 Technical Improvements
+
+- **next/image Optimization**: AppHeader now uses Next.js Image component for better LCP.
+- **CRLF Fixes**: BeatGridCard line endings normalized.
+- **Mic Logic Fix**: Non-Pro users see gray mic (opens premium modal), Pro users see red mic.
+- **Navigation Fix**: Record button redirects to difficulty selection page.
+- **Footer Overlap Fix**: Removed "free beats • premium beats" text overlapping bottom nav.
 
 ---
 
