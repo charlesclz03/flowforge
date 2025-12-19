@@ -4,6 +4,35 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🎭 Update 1.2.0: The Guest Experience
+
+**Release Date:** December 19, 2025
+**Codename:** _Open Doors_
+
+The practice gym is now truly open to everyone. Guest users can now experience the full app without friction, and the navigation flows like silk.
+
+### ✨ Guest Experience Overhaul
+
+- **Universal Bottom Nav**: Navigation dock now visible for ALL users—guests included.
+- **Smart Profile Tab**: Guests clicking Profile see a login modal instead of 401 errors.
+- **Sign-Out Visibility**: Sign out button hidden when not logged in (no more confusion).
+- **My Uploads Premium Gate**: Tab visible to all, premium modal for non-Pro users.
+
+### 🎨 UI Fixes & Polish
+
+- **Cypher Rename**: "Pass Mic (2P)" renamed to "Cypher" for clarity.
+- **Duplicate Modal Fix**: Removed duplicate SessionSummaryModal from practice page.
+- **Pro Tip Toast**: Converted inline Pro Tip to toast notification.
+- **Mode Toggle Cleanup**: Removed duplicate Session Mode toggle from settings dropdown.
+- **TabsTrigger Enhancement**: Added onClick prop support for custom tab behavior.
+
+### 🔧 Technical Fixes
+
+- **Tracks Page**: Fixed beats array extraction from API response.
+- **Badge System Removal**: Cleaned up obsolete gamification code.
+
+---
+
 ## 🎨 Update 1.1.3: The Flow Refinement
 
 **Release Date:** December 18, 2025
