@@ -20,7 +20,6 @@ import { GuestStorage } from '@/lib/guest-storage'
 import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { useWakeLock } from '@/hooks/useWakeLock'
-import { FirstVisitOverlay } from '@/components/onboarding/FirstVisitOverlay'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { SessionSummaryModal } from '@/components/molecules/practice/SessionSummaryModal'
 import { ErrorBoundary } from '@/components/utils/ErrorBoundary'
@@ -147,39 +146,9 @@ export default function PracticePage() {
     stopPlayback()
   }
 
-  // Challenge Logic
-  const searchParams =
-    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
-  const challengeId = searchParams?.get('challengeId')
-
-  useEffect(() => {
-    if (challengeId) {
-      // Fetch challenge details
-      // Actually, let's use the server action we created: getChallengeSession
-      // But we can't call server action directly in useEffect easily without wrapping or treating it as promise.
-      // Next.js Server Actions can be called from client components.
-
-      const loadChallenge = async () => {
-        try {
-          // Dynamic import to avoid server-side module issues in client component if checking 'use server' isn't enough?
-          // Actually, we can just import it.
-          const { getChallengeSession } = await import('@/app/actions/social')
-          const data = await getChallengeSession(challengeId)
-
-          if (data && data.beat) {
-            setBeat(data.beat)
-            // setFrequency(data.frequency) // Need setters in context if we want to force it
-            // setDifficulty(data.difficulty)
-            // For now, just setting the beat is the MVP "Duel".
-            // Ideally we show a banner "Challenging..."
-          }
-        } catch (err) {
-          console.error('Failed to load challenge', err)
-        }
-      }
-      loadChallenge()
-    }
-  }, [challengeId, setBeat])
+  // Challenge Logic - Deprecated (Duels removed)
+  // const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null
+  // const challengeId = searchParams?.get('challengeId')
 
   // Guest Save Warning: Prevent accidental refresh/close during recording
 
@@ -245,9 +214,9 @@ export default function PracticePage() {
             formData.append('restarts', restartCount.toString())
             formData.append('playbacks', playbackCount.toString())
 
-            if (challengeId) {
-              formData.append('parentId', challengeId)
-            }
+            // if (challengeId) {
+            //   formData.append('parentId', challengeId)
+            // }
 
             const response = await fetch('/api/recordings', {
               method: 'POST',
@@ -331,7 +300,7 @@ export default function PracticePage() {
       frequency,
       difficulty,
       handleError,
-      challengeId,
+      // challengeId,
       usedWords,
       restartCount,
       playbackCount,
@@ -367,10 +336,10 @@ export default function PracticePage() {
 
   // Redirect to setup if there is no configured beat
   useEffect(() => {
-    if (isLoaded && !selectedBeat && !challengeId) {
+    if (isLoaded && !selectedBeat) {
       router.push('/howitworks')
     }
-  }, [isLoaded, selectedBeat, router, challengeId])
+  }, [isLoaded, selectedBeat, router])
 
   // Load beat audio when selected
   useEffect(() => {
@@ -865,8 +834,6 @@ export default function PracticePage() {
       showProgress={true}
       onBack={() => router.push('/difficultyselection')}
     >
-      <FirstVisitOverlay isBeatSelected={!!selectedBeat} />
-
       <PracticeTemplate
         pageHeader={null}
         alerts={

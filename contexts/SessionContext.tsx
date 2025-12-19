@@ -13,6 +13,7 @@ export interface PracticeSessionState {
   isLoaded: boolean
   mode: 'solo' | 'cypher'
   wordCategory: string | null
+  cypherPlayers: number
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -22,6 +23,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setTTSEnabled: (enabled: boolean) => void
   setTTSVolume: (volume: number) => void
   setMode: (mode: 'solo' | 'cypher') => void
+  setCypherPlayers: (count: number) => void
   setWordCategory: (category: string | null) => void
   startSession: () => void
   stopSession: () => void
@@ -40,6 +42,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     ttsVolume: 0.5,
     isLoaded: false,
     mode: 'solo',
+    cypherPlayers: 2,
     wordCategory: null,
   })
 
@@ -70,8 +73,16 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return
     if (!state.isLoaded) return
 
-    const { selectedBeat, frequency, difficulty, isTTSEnabled, ttsVolume, mode, wordCategory } =
-      state
+    const {
+      selectedBeat,
+      frequency,
+      difficulty,
+      isTTSEnabled,
+      ttsVolume,
+      mode,
+      cypherPlayers,
+      wordCategory,
+    } = state
     const toSave = {
       selectedBeat,
       frequency,
@@ -79,6 +90,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isTTSEnabled,
       ttsVolume,
       mode,
+      cypherPlayers,
       wordCategory,
     }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
@@ -108,6 +120,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, mode }))
   }, [])
 
+  const setCypherPlayers = useCallback((count: number) => {
+    setState((prev) => ({ ...prev, cypherPlayers: count }))
+  }, [])
+
   const setWordCategory = useCallback((category: string | null) => {
     setState((prev) => ({ ...prev, wordCategory: category }))
   }, [])
@@ -128,6 +144,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       difficulty: 2,
       isActive: false,
       mode: 'solo',
+      cypherPlayers: 2,
       wordCategory: null,
     }))
   }, [])
@@ -142,6 +159,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setTTSEnabled,
         setTTSVolume,
         setMode,
+        setCypherPlayers,
         setWordCategory,
         startSession,
         stopSession,
