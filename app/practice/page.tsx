@@ -906,7 +906,7 @@ export default function PracticePage() {
           selectedBeat ? (
             <div className="relative w-full flex justify-center items-center">
               {/* Visualizer in background */}
-              <div className="absolute inset-0 pointer-events-none opacity-30 z-0 scale-150">
+              <div className="absolute flex justify-center items-center w-full h-[300px] pointer-events-none opacity-30 z-0 max-w-2xl">
                 <AudioVisualizer
                   isPlaying={beatPlayer.isPlaying || isRecording}
                   mode={isRecording ? 'stream' : 'simulation'}

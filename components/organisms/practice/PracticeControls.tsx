@@ -111,10 +111,6 @@ export default function PracticeControls({
       return
     }
 
-    if (!isPro && !isPlaying) {
-      onUpgrade?.()
-      return
-    }
     onToggle()
   }
 
@@ -330,11 +326,7 @@ export default function PracticeControls({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center w-full h-full">
-                  <div className="flex flex-col items-center gap-8">
-                    <h2 className="text-5xl sm:text-6xl font-light tracking-[0.25em] text-white/90 uppercase leading-none animate-in fade-in zoom-in-95 duration-700">
-                      Ready
-                    </h2>
-
+                  <div className="flex flex-col items-center justify-center w-full h-full">
                     <div
                       className={cn(
                         'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
