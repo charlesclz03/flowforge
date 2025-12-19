@@ -198,15 +198,14 @@ export default function DifficultySelectionPage() {
                       <Music size={20} />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-white">
-                        Enable Local Tracks ({isPro ? 'Pro' : 'Locked'})
-                      </p>
+                      <p className="text-sm font-bold text-white">Enable Local Tracks</p>
                       <p className="text-xs text-text-tertiary">Select files from your device</p>
                     </div>
                   </div>
                   <Switch
                     checked={showLocalTracks}
                     onCheckedChange={(checked) => {
+                      // Logic remains same but verifying display text change is main request
                       if (!isPro && checked) {
                         setShowPremiumModal(true)
                         return

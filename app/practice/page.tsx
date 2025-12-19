@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { PracticeTemplate } from '@/components/templates'
-import { Switch } from '@/components/atoms/Switch'
-import { PageHeader } from '@/components/organisms/common'
 import { PracticeControls } from '@/components/organisms/practice/PracticeControls'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
@@ -33,8 +31,7 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 export default function PracticePage() {
   const router = useRouter()
   const { data: session } = useSession()
-  /* Clean UI State */
-  const [cleanUI, setCleanUI] = useState(false)
+  /* Clean UI State - Removed */
   const [proTipDismissed, setProTipDismissed] = useState(false)
   const [isInfiniteMode, setIsInfiniteMode] = useState(false)
 
@@ -862,63 +859,20 @@ export default function PracticePage() {
 
   return (
     <OnboardingLayout
-      showBackButton={!cleanUI}
-      showHeader={!cleanUI}
-      showSettings={!cleanUI}
-      showProgress={!cleanUI}
+      showBackButton={true}
+      showHeader={true}
+      showSettings={true}
+      showProgress={true}
       onBack={() => router.push('/difficultyselection')}
-      className={cleanUI ? 'z-[100]' : ''}
     >
       <FirstVisitOverlay isBeatSelected={!!selectedBeat} />
-      {cleanUI && (
-        <style
-          dangerouslySetInnerHTML={{ __html: `nav.safe-bottom { display: none !important; }` }}
-        />
-      )}
-
-      {/* Restore UI Button (Visible only in Clean Mode) */}
-      {cleanUI && (
-        <div className="fixed top-6 right-6 z-[200] px-4 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-3 shadow-xl transition-all hover:bg-black/60">
-          <span className="text-xs font-bold text-white/80 uppercase tracking-wider">
-            Clean Mode
-          </span>
-          <Switch checked={cleanUI} onCheckedChange={setCleanUI} />
-        </div>
-      )}
 
       <PracticeTemplate
-        pageHeader={
-          !cleanUI ? (
-            <PageHeader
-              title={
-                challengeId ? 'Duel Mode' : mode === 'cypher' ? 'Cypher Mode' : 'Freestyle Session'
-              }
-              description={
-                challengeId
-                  ? 'Drop your best response!'
-                  : mode === 'cypher'
-                    ? 'Pass the mic every 4 bars!'
-                    : 'Press play to start your 2-minute freestyle.'
-              }
-              rightAction={
-                <div className="flex items-center gap-3 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
-                  <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider hidden sm:block">
-                    Clean UI
-                  </span>
-                  <Switch
-                    checked={cleanUI}
-                    onCheckedChange={setCleanUI}
-                    aria-label="Toggle Clean UI"
-                  />
-                </div>
-              }
-            />
-          ) : null
-        }
+        pageHeader={null}
         alerts={
           <>
             {/* Cypher Turn Indicator */}
-            {mode === 'cypher' && beatPlayer.isPlaying && !cleanUI && (
+            {mode === 'cypher' && beatPlayer.isPlaying && (
               <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
                 <div
                   className={`
@@ -959,23 +913,21 @@ export default function PracticePage() {
           </>
         }
         beatSelector={
-          !cleanUI ? (
-            <BeatDropdown
-              beats={beats}
-              selectedBeat={selectedBeat}
-              onSelect={handleBeatChange}
-              isPro={isPro}
-              disabled={beatPlayer.isPlaying || isRecording}
-              isLoading={_isLoadingBeats}
-              onLockedSelect={() => {
-                setPremiumTrigger('beat')
-                setShowPremiumModal(true)
-              }}
-            />
-          ) : null
+          <BeatDropdown
+            beats={beats}
+            selectedBeat={selectedBeat}
+            onSelect={handleBeatChange}
+            isPro={isPro}
+            disabled={beatPlayer.isPlaying || isRecording}
+            isLoading={_isLoadingBeats}
+            onLockedSelect={() => {
+              setPremiumTrigger('beat')
+              setShowPremiumModal(true)
+            }}
+          />
         }
         sessionConfig={
-          !cleanUI && !proTipDismissed ? (
+          !proTipDismissed ? (
             <div className="hidden lg:block">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-text-tertiary text-xs">
                 <span className="font-bold text-accent-purple">PRO TIP:</span>
@@ -1038,7 +990,6 @@ export default function PracticePage() {
                     // New Props
                     onDifficultyChange={setDifficulty}
                     onFrequencyChange={setFrequency}
-                    cleanUI={cleanUI}
                     isGolden={(wordIndex + 1) % 50 === 0 && wordIndex > 0}
                     isPro={isPro}
                     onUpgrade={() => {

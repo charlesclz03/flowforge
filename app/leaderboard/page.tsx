@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { Container } from '@/components/atoms/Container'
 import { PageHeader } from '@/components/organisms/common'
-import { LeaderboardRow } from '@/components/molecules/social/LeaderboardRow'
+import { LeaderboardRow } from '@/components/molecules/leaderboard/LeaderboardRow'
 import { Trophy } from 'lucide-react'
 import Link from 'next/link'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
@@ -23,30 +23,52 @@ interface LeaderboardUser {
 }
 
 async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardUser[]> {
-  const where: Prisma.FreestyleSessionWhereInput = {}
+  const where: Prisma.UserAchievementWhereInput = {}
 
   if (period === 'weekly') {
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    where.createdAt = { gte: sevenDaysAgo }
+    // Resetting every Wednesday logic
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
+    // Adjust to last Wednesday
+    // Day 0 = Sun, 3 = Wed.
+    // If today is Wed (3), diff is 0? No, resetting every Wednesday means from THIS Wednesday.
+    // If today is Thu, from yesterday.
+    // If today is Tue, from last Wed.
+    const day = d.getDay() // 0-6
+    const diff = (day < 3 ? 7 : 0) + day - 3
+    d.setDate(d.getDate() - diff)
+
+    where.unlockedAt = { gte: d }
   }
 
-  // Aggregate count of sessions per user
-  const sessionCounts = await prisma.freestyleSession.groupBy({
-    by: ['userId'],
+  // Fetch all achievements in period
+  // We want to sum points per user.
+  // Fastest way might be raw query but let's stick to Prisma for now.
+  const userAchievements = await prisma.userAchievement.findMany({
     where,
-    _count: {
-      id: true,
-    },
-    orderBy: {
-      _count: {
-        id: 'desc',
+    select: {
+      userId: true,
+      achievement: {
+        select: { points: true },
       },
     },
-    take: 50,
   })
 
-  // Fetch user details for these sessions
-  const userIds = sessionCounts.map((s) => s.userId)
+  // Aggregate
+  const scores: Record<string, number> = {}
+  userAchievements.forEach((ua) => {
+    scores[ua.userId] = (scores[ua.userId] || 0) + ua.achievement.points
+  })
+
+  // Sort and take top 50
+  const sortedEntries = Object.entries(scores)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 50)
+
+  if (sortedEntries.length === 0) return []
+
+  // Fetch User Details
+  const userIds = sortedEntries.map(([uid]) => uid)
   const users = await prisma.user.findMany({
     where: { id: { in: userIds } },
     select: {
@@ -57,15 +79,15 @@ async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardU
     },
   })
 
-  // Map back to LeaderboardUser format
-  return sessionCounts.map((entry) => {
-    const user = users.find((u) => u.id === entry.userId)
+  // Map back
+  return sortedEntries.map(([uid, score]) => {
+    const user = users.find((u) => u.id === uid)
     return {
-      id: entry.userId,
+      id: uid,
       username: user?.username || null,
       name: user?.name || null,
       image: user?.image || null,
-      flowPoints: entry._count.id || 0,
+      flowPoints: score, // Mapping "points" to flowPoints prop for compatibility with LeaderboardRow
     }
   })
 }

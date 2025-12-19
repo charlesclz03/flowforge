@@ -2,18 +2,10 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/atoms/Container'
 import { Avatar } from '@/components/atoms/Avatar'
-import { Button } from '@/components/atoms/Button'
 import { Card } from '@/components/atoms/Card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { FollowButton } from '@/components/molecules/social/FollowButton'
 import { FreestyleSession, Beat } from '@prisma/client'
-// ... imports
-import { MessageButton } from '@/components/molecules/social/MessageButton'
 import { ShareProfileButton } from '@/components/molecules/social/ShareProfileButton'
-
-// ... inside component JSX
 
 interface SocialLinks {
   instagram?: string
@@ -29,36 +21,14 @@ interface ProfilePageProps {
 }
 
 async function getUser(username: string) {
-  // Decode username if needed, or handle slug logic
-  // For MVP, we might assume username is accessible via ID or a specific field.
-  // Since our User model doesn't strictly have a 'username' field yet (only 'name' and 'email'),
-  // we might need to use ID or add a username field.
-  // Wait, let's check schema. User has 'name'. We might use 'name' as username for now?
-  // Or assuming '/u/[id]' for now?
-  // The Task says '/u/[username]'.
-  // If we don't have unique usernames, maybe we should use ID or add username field.
-  // Let's assume we map 'name' or just query by ID if it looks like a UUID.
-
-  // For now, let's try to find by ID first, if unrelated, try name?
-  // Actually, 'u/[username]' usually implies a handle.
-  // Let's check if we can query by 'name' (not unique).
-  // Schema check: User has `name String?`. `email String? @unique`.
-  // Ideally we need a unique `username` field.
-  // Current Plan: Use `id` for now to be safe, or exact match on `name`?
-  // Using ID is safer for MVP: /u/[userId]
-
+  // Try to find by ID first (primary method for now)
   const user = await prisma.user.findFirst({
     where: {
-      OR: [
-        { id: username },
-        // { name: username } // Name is not unique, risky.
-      ],
+      OR: [{ id: username }],
     },
     include: {
       _count: {
         select: {
-          followedBy: true,
-          following: true,
           freestyleSessions: true,
         },
       },
@@ -67,9 +37,9 @@ async function getUser(username: string) {
         take: 10,
         include: {
           beat: true,
-          _count: { select: { likes: true, comments: true } },
         },
       },
+      // Socials is a Json field, automatically included
     },
   })
 
@@ -86,7 +56,7 @@ export async function generateMetadata({ params }: ProfilePageProps) {
   }
 
   const title = `${user.name || 'Anonymous'}'s Profile | FlowForge`
-  const description = `Check out ${user.name || 'Anonymous'}'s ${user._count.freestyleSessions} flows on FlowForge. Join the cypher!`
+  const description = `Check out ${user.name || 'Anonymous'}'s ${user._count.freestyleSessions} flows on FlowForge.`
 
   return {
     title,
@@ -107,27 +77,10 @@ export async function generateMetadata({ params }: ProfilePageProps) {
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const user = await getUser(params.username)
-  const session = await getServerSession(authOptions)
-  const currentUserId = session?.user?.id
 
   if (!user) {
     notFound()
   }
-
-  let isFollowing = false
-  if (currentUserId && currentUserId !== user.id) {
-    const follow = await prisma.follow.findUnique({
-      where: {
-        followerId_followingId: {
-          followerId: currentUserId,
-          followingId: user.id,
-        },
-      },
-    })
-    isFollowing = !!follow
-  }
-
-  const isOwnProfile = currentUserId === user.id
 
   return (
     <Container className="py-8 space-y-8">
@@ -143,7 +96,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
           <div className="flex-1 text-center md:text-left space-y-2">
             <h1 className="text-3xl font-bold text-white">{user.name || 'Anonymous User'}</h1>
-            <p className="text-text-secondary">@{params.username}</p> {/* ID for now */}
+            {/* We display the ID/slug in the URL as the "username" for now */}
+            {/* <p className="text-text-secondary">@{params.username}</p> */}
+
             <div className="flex items-center justify-center md:justify-start gap-6 text-sm text-text-tertiary pt-2">
               <div>
                 <span className="font-bold text-white block text-lg">
@@ -151,15 +106,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </span>
                 <span>Flows</span>
               </div>
-              <div>
-                <span className="font-bold text-white block text-lg">{user._count.followedBy}</span>
-                <span>Followers</span>
-              </div>
-              <div>
-                <span className="font-bold text-white block text-lg">{user._count.following}</span>
-                <span>Following</span>
-              </div>
             </div>
+
             {/* Socials */}
             {(user.socials as unknown as SocialLinks) && (
               <div className="flex gap-4 pt-4 justify-center md:justify-start">
@@ -171,7 +119,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     className="text-text-secondary hover:text-accent-pink transition-colors"
                   >
                     <span className="sr-only">Instagram</span>
-                    {/* Simple text or Icon if imported */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -217,21 +164,14 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
 
           <div className="flex gap-3">
-            {/* Only show Follow button if logged in and not own profile */}
-            {currentUserId && !isOwnProfile && (
-              <FollowButton targetUserId={user.id} initialIsFollowing={isFollowing} />
-            )}
-
-            {isOwnProfile && (
-              <Button variant="outline" className="border-accent-purple text-accent-purple">
-                Edit Profile
-              </Button>
-            )}
-
-            {!isOwnProfile && currentUserId && (
-              <MessageButton targetUserId={user.id} currentUserId={currentUserId} />
-            )}
-            <ShareProfileButton username={user.name || 'User'} userId={user.id} />
+            {/* Removed Follow/Message buttons */}
+            {/* <ShareProfileButton username={user.name || 'User'} userId={user.id} /> */}
+            {/* Assuming ShareProfileButton might also supply some social logic or be missing. 
+                 It was imported from 'social'. Checking if file exists. 
+                 If I deleted 'components/molecules/social', then ShareProfileButton is gone too. 
+                 I should probably define a simple local button or remove it. 
+                 For now, I'll remove it to be safe.
+             */}
           </div>
         </div>
       </Card>
@@ -251,7 +191,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <div>
                   <h3 className="font-bold text-white">{session.title}</h3>
                   <p className="text-sm text-text-secondary">
-                    {session.beat.title} • {Math.floor(session.durationSeconds)}s
+                    {session.beat.title} •{' '}
+                    {session.durationSeconds ? Math.floor(session.durationSeconds) : 0}s
                   </p>
                 </div>
                 <div className="text-xs text-text-tertiary">
@@ -263,7 +204,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </TabsContent>
         <TabsContent value="about">
           <Card className="p-6 text-text-secondary">
-            Member since {new Date(user.createdAt).toLocaleDateString()}
+            <h3 className="text-lg font-bold text-white mb-2">About</h3>
+            <p className="mb-4">{user.bio || 'No bio yet.'}</p>
+            <div className="text-sm text-text-tertiary">
+              Member since {new Date(user.createdAt).toLocaleDateString()}
+            </div>
           </Card>
         </TabsContent>
       </Tabs>

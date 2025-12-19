@@ -69,7 +69,7 @@ export function AppHeader({
           {showTitle && (
             <Link
               href={homeLink}
-              className="flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full px-3 py-1"
+              className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
               aria-label="Go to Freestyla home"
             >
               <div className="relative h-8 w-8">

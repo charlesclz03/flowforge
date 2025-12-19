@@ -142,6 +142,7 @@ DOCS/SUPABASE_STORAGE_SETUP.md       # ✨ NEW: Supabase Storage setup
 DOCS/STRIPE_SETUP.md                 # Payments
 DOCS/GCS_UPLOAD_PLAN.md              # File uploads (legacy)
 DOCS/ADSENSE_SETUP.md                # Monetization
+DOCS/Feedback_Analysis_Report.md     # 🧠 Competitor Analysis & Roadmap
 ```
 
 ### 🚀 Quick Reference (2 files)

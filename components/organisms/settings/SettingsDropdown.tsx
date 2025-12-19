@@ -10,7 +10,6 @@ import {
   Mic,
   FileText,
   Bug,
-  Snowflake,
   User,
   Scale,
   LogOut,
@@ -23,8 +22,7 @@ import { cn } from '@/lib/utils'
 export function SettingsDropdown() {
   const { data: session } = useSession()
   const [visualizer, setVisualizer] = useState<'ring' | 'wave'>('ring')
-  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, safeMode, setSafeMode } =
-    usePracticeSession()
+  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume } = usePracticeSession()
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -55,12 +53,6 @@ export function SettingsDropdown() {
                 </p>
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-text-secondary">Lyricist</p>
-                  <div className="flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 border border-blue-500/20">
-                    <Snowflake size={10} className="text-blue-400" />
-                    <span className="text-[10px] font-bold text-blue-400 uppercase tracking-tighter">
-                      Streak Freeze
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -68,36 +60,7 @@ export function SettingsDropdown() {
 
           {/* Main Controls */}
           <div className="py-1">
-            {/* Safe Mode */}
-            <Menu.Item>
-              {({ active }) => (
-                <div
-                  className={cn(
-                    'flex items-center justify-between px-4 py-3 transition-colors cursor-pointer',
-                    active ? 'bg-white/5' : ''
-                  )}
-                  onClick={() => setSafeMode(!safeMode)}
-                >
-                  <div className="flex items-center gap-3 text-sm text-white">
-                    <Shield size={16} className="text-accent-blue" />
-                    <span>Safe Mode</span>
-                  </div>
-                  <div
-                    className={cn(
-                      'w-9 h-5 rounded-full transition-colors relative',
-                      safeMode ? 'bg-accent-blue' : 'bg-white/20'
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm',
-                        safeMode ? 'left-4.5' : 'left-0.5'
-                      )}
-                    />
-                  </div>
-                </div>
-              )}
-            </Menu.Item>
+            {/* Visualizer Style */}
 
             {/* Visualizer Style */}
             <Menu.Item>

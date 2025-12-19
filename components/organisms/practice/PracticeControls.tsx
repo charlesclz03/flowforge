@@ -1,21 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
-import {
-  Play as PlayButtonIcon,
-  RefreshCcw,
-  Zap,
-  Gauge,
-  Mic,
-  MicOff,
-  Infinity as InfinityIcon,
-} from 'lucide-react'
+import { RefreshCcw, Zap, Gauge, Mic, MicOff, Infinity as InfinityIcon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
+import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -36,7 +30,6 @@ interface PracticeControlsProps {
   onDifficultyChange?: (value: number) => void
   onFrequencyChange?: (value: number) => void
   onToggleInfiniteMode?: () => void
-  cleanUI?: boolean
   isPro?: boolean
   onUpgrade?: () => void
 }
@@ -60,7 +53,6 @@ export function PracticeControls({
   onDifficultyChange,
   onFrequencyChange,
   onToggleInfiniteMode,
-  cleanUI = false,
   isPro = false,
   onUpgrade,
 }: PracticeControlsProps) {
@@ -105,6 +97,25 @@ export function PracticeControls({
   const difficultyMeta = getDifficultyMeta()
   const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
 
+  // PWA Prompt State
+  const [showPWAInstall, setShowPWAInstall] = useState(false)
+
+  const handleRecordClick = () => {
+    // Check if we need to show PWA prompt (first time record)
+    if (typeof window !== 'undefined' && !localStorage.getItem('hasWarnedPWA')) {
+      setShowPWAInstall(true)
+      localStorage.setItem('hasWarnedPWA', 'true')
+      return
+    }
+
+    if (!isPro && !isPlaying) {
+      // Trigger upgrade modal if not Pro and trying to start
+      onUpgrade?.()
+      return
+    }
+    onToggle()
+  }
+
   // Handlers for cycling settings
   const cycleDifficulty = () => {
     if (!onDifficultyChange) return
@@ -121,74 +132,50 @@ export function PracticeControls({
   }
 
   return (
-    <Card
-      padding="lg"
-      className={cn(
-        'transition-opacity duration-500',
-        cleanUI ? 'bg-black/20 backdrop-blur-sm border-white/5' : ''
-      )}
-    >
+    <Card padding="lg" className={cn('transition-opacity duration-500')}>
       <div className="flex flex-col items-center gap-4 sm:gap-6">
-        {/* Session Info (Text Only) - Hidden in Clean UI if desired, or kept minimal */}
-        <div
-          className={cn(
-            'text-center space-y-2 transition-all duration-300',
-            cleanUI ? 'opacity-50 hover:opacity-100' : ''
-          )}
-        >
-          <div className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5/60 px-5 py-2.5 text-sm sm:text-base text-text-primary backdrop-blur-heavy shadow-soft">
-            <span className="font-medium truncate max-w-[100px] sm:max-w-none">
-              {selectedBeat.title}
-            </span>
-            <span className="text-accent-purple text-lg">•</span>
-            <span className="text-text-secondary truncate max-w-[90px] sm:max-w-none">
-              {selectedBeat.artistName || 'Producer'}
-            </span>
-          </div>
+        {/* Live Controls: Difficulty & Frequency */}
+        <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
+          {/* Difficulty Pill */}
+          <button
+            onClick={cycleDifficulty}
+            disabled={!onDifficultyChange}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border transition-all',
+              difficultyMeta.classes,
+              !onDifficultyChange && 'cursor-default opacity-80'
+            )}
+            title="Click to change difficulty"
+          >
+            <Gauge size={10} />
+            <span className="min-w-[40px] text-center">{difficultyMeta.label}</span>
+          </button>
 
-          {/* Live Controls: Difficulty & Frequency */}
-          <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider text-text-tertiary">
-            {/* Difficulty Pill */}
-            <button
-              onClick={cycleDifficulty}
-              disabled={!onDifficultyChange}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border transition-all',
-                difficultyMeta.classes,
-                !onDifficultyChange && 'cursor-default opacity-80'
-              )}
-              title="Click to change difficulty"
-            >
-              <Gauge size={10} />
-              <span className="min-w-[40px] text-center">{difficultyMeta.label}</span>
-            </button>
+          {/* BPM Display */}
+          <span className="opacity-50">{selectedBeat.bpm} BPM</span>
 
-            {/* BPM Display */}
-            <span className="opacity-50">{selectedBeat.bpm} BPM</span>
-
-            {/* Frequency Pill */}
-            <button
-              onClick={cycleFrequency}
-              disabled={!onFrequencyChange}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
-                !onFrequencyChange && 'cursor-default opacity-50'
-              )}
-              title="Click to change word frequency"
-            >
-              <Zap
-                size={10}
-                className={
-                  frequency === 2
-                    ? 'text-accent-red'
-                    : frequency === 4
-                      ? 'text-accent-yellow'
-                      : 'text-accent-blue'
-                }
-              />
-              <span>{frequency} Bars</span>
-            </button>
-          </div>
+          {/* Frequency Pill */}
+          <button
+            onClick={cycleFrequency}
+            disabled={!onFrequencyChange}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.7rem] font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+              !onFrequencyChange && 'cursor-default opacity-50'
+            )}
+            title="Click to change word frequency"
+          >
+            <Zap
+              size={10}
+              className={
+                frequency === 2
+                  ? 'text-accent-red'
+                  : frequency === 4
+                    ? 'text-accent-yellow'
+                    : 'text-accent-blue'
+              }
+            />
+            <span>{frequency} Bars</span>
+          </button>
         </div>
 
         {/* Word Prompt */}
@@ -202,14 +189,7 @@ export function PracticeControls({
 
         {/* Action Buttons */}
         <div
-          className={cn(
-            'flex items-center gap-3 transition-opacity duration-300',
-            cleanUI && !isPlaying
-              ? 'opacity-100'
-              : cleanUI
-                ? 'opacity-0 hover:opacity-100'
-                : 'opacity-100'
-          )}
+          className={cn('flex items-center gap-3 transition-opacity duration-300', 'opacity-100')}
         >
           {/* Infinite Mode Toggle (Pro Only) */}
           {isPro && onToggleInfiniteMode && !isPlaying && (
@@ -267,12 +247,7 @@ export function PracticeControls({
               if (typeof navigator !== 'undefined' && navigator.vibrate) {
                 navigator.vibrate(10)
               }
-              if (!isPro && !isPlaying) {
-                // Trigger upgrade modal if not Pro and trying to start
-                onUpgrade?.()
-                return
-              }
-              onToggle()
+              handleRecordClick()
             }}
             disabled={isLoading}
             className={cn(
@@ -360,34 +335,29 @@ export function PracticeControls({
                 </>
               ) : !isPro ? (
                 // Locked State (Free)
-                <>
-                  <div className="h-16 w-16 mb-2 rounded-full bg-white/10 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <PlayButtonIcon className="ml-1 w-6 h-6 opacity-50" />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-sm font-bold text-text-secondary uppercase tracking-widest">
-                      Preview Only
-                    </span>
-                    <span className="text-[10px] bg-accent-purple/20 text-accent-purple px-2 py-0.5 rounded-full mt-1 font-bold">
-                      UPGRADE TO RECORD
-                    </span>
-                  </div>
-                </>
+                <div className="h-24 w-24 rounded-full bg-white/5 border-2 border-white/10 text-white/20 flex items-center justify-center shadow-lg transition-transform duration-300">
+                  <Mic size={48} />
+                </div>
               ) : (
                 // Ready State (Pro)
-                <>
-                  <div className="h-16 w-16 mb-2 rounded-full bg-white text-black flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <PlayButtonIcon className="ml-1 w-6 h-6" />
-                  </div>
-                  <span className="text-sm font-medium text-text-secondary uppercase tracking-widest">
-                    Start Session
-                  </span>
-                </>
+                <div className="h-24 w-24 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
+                  <Mic size={48} className="fill-current" />
+                </div>
               )}
             </div>
           </motion.button>
         </div>
       </div>
+
+      <PWAInstallModal
+        isOpen={showPWAInstall}
+        onClose={() => {
+          setShowPWAInstall(false)
+          // Optionally auto-start after closing? User said "prompt before", usually implies "read this first".
+          // We'll let them click record again to start.
+        }}
+      />
     </Card>
   )
 }

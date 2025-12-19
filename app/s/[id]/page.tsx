@@ -3,8 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/atoms/Container'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
-import { SharedSessionPlayer } from '@/components/organisms/social/SharedSessionPlayer'
 import Link from 'next/link'
+import { Mic } from 'lucide-react'
 
 interface ListenPageProps {
   params: {
@@ -18,9 +18,6 @@ async function getSession(id: string) {
     include: {
       user: true,
       beat: true,
-      _count: {
-        select: { likes: true, comments: true },
-      },
     },
   })
   return session
@@ -76,15 +73,23 @@ export default async function ListenPage({ params }: ListenPageProps) {
         </div>
 
         {/* Player Card */}
-        <Card padding="sm" className="overflow-hidden shadow-2xl border-white/10">
-          <SharedSessionPlayer
-            title={session.beat.title}
-            artist={session.user.name || 'Anonymous'}
-            audioUrl={session.storageUrl || ''}
-            avatarUrl={session.user.image}
-            duration={session.durationSeconds}
-            likes={session._count.likes}
-          />
+        <Card padding="sm" className="overflow-hidden shadow-2xl border-white/10 p-6">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="w-20 h-20 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple shadow-inner">
+              <Mic size={32} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white max-w-[300px] truncate">
+                {session.user.name || 'Anonymous'}
+              </h2>
+              <p className="text-text-secondary text-sm">{session.beat.title}</p>
+            </div>
+
+            {/* Audio */}
+            {session.storageUrl && (
+              <audio controls className="w-full mt-2" src={session.storageUrl} />
+            )}
+          </div>
         </Card>
 
         {/* CTA */}

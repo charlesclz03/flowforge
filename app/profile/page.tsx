@@ -12,15 +12,13 @@ import {
   StatsSection,
   QuickActions,
 } from '@/components/organisms/profile'
-import { BadgesDisplay } from '@/components/organisms/profile/BadgesDisplay'
+// Removed BadgesDisplay and SocialsForm
+import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
-import { Card } from '@/components/atoms/Card'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
 import { GuestStorage } from '@/lib/guest-storage'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
-import { SocialsForm } from '@/components/organisms/profile/SocialsForm'
-import { getRank } from '@/lib/gamification/ranks'
 
 import { EditProfileDialog } from '@/components/organisms/profile/EditProfileDialog'
 import { AdminUploadSection } from '@/components/organisms/profile/AdminUploadSection'
@@ -102,72 +100,61 @@ export default function ProfilePage() {
         })
 
         if (response.ok) {
+          setRestorationMessage('Guest session restored to your account!')
+          // Clear guest storage
           await GuestStorage.clearSession()
-          setRestorationMessage('Guest recording saved successfully! View it below.')
-          setTimeout(() => setRestorationMessage(null), 5000)
-
           // Refresh list
-          const res = await fetch('/api/recordings')
-          if (res.ok) {
-            const data = await res.json()
-            setRecordings(data.recordings || [])
-          }
+          const recRes = await fetch('/api/recordings')
+          const data = await recRes.json()
+          setRecordings(data.recordings || [])
         }
-      } catch (error) {
-        console.error('Failed to restore guest session:', error)
+      } catch (err) {
+        console.error('Failed to restore guest session', err)
       }
     }
-
-    if (session) {
-      checkGuestSession()
-    }
+    checkGuestSession()
   }, [session])
 
-  const handleEditSuccess = async () => {
-    await update() // Refresh session
-    router.refresh()
+  if (status === 'loading') {
+    return (
+      <OnboardingLayout>
+        <div className="flex h-[50vh] items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      </OnboardingLayout>
+    )
   }
 
-  const isLoading = status === 'loading'
+  if (!session?.user) return null
 
-  // Clean header logic: We just use OnboardingLayout which provides AppHeader with Settings.
-  // The 'Trophy' link is removed as requested by user ("header like howitworks").
+  const isPro =
+    session.user.subscriptionStatus === 'active' || session.user.subscriptionStatus === 'trialing'
 
   return (
-    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+    <OnboardingLayout showBackButton={false} showSettings={false} className="bg-background pb-32">
+      {restorationMessage && (
+        <div className="mx-auto max-w-md p-4">
+          <SuccessAlert
+            message={restorationMessage}
+            onDismiss={() => setRestorationMessage(null)}
+          />
+        </div>
+      )}
+
       <ProfileTemplate
         pageHeader={
-          <div className="space-y-4">
-            <PageHeader
-              title="Profile"
-              description="Manage your account settings and preferences"
-            />
-            {restorationMessage && (
-              <SuccessAlert
-                message={restorationMessage}
-                onDismiss={() => setRestorationMessage(null)}
-              />
-            )}
+          <div className="px-6 pt-8 pb-4">
+            <PageHeader title="Profile" description="Your stats and settings." />
           </div>
         }
         accountInfo={
-          isLoading || !session ? (
-            <Card title="Profile Information">
-              <div className="py-8 text-center">
-                <Spinner size="md" className="mx-auto" />
-              </div>
-            </Card>
-          ) : (
-            <AccountInfo
-              user={session.user}
-              rank={getRank(
-                recordings.reduce((acc, rec) => acc + (rec.durationSeconds || 0), 0) / 60
-              )}
-              onEdit={() => setIsEditProfileOpen(true)}
-            />
-          )
+          <AccountInfo
+            user={session.user}
+            // Removed isPro prop as AccountInfo doesn't accept it
+            onEdit={() => setIsEditProfileOpen(true)}
+          />
         }
-        subscription={<SubscriptionSection />}
+        subscription={<SubscriptionSection isPro={isPro} />}
         security={<SecuritySection />}
         stats={
           <div className="space-y-6">
@@ -176,26 +163,29 @@ export default function ProfilePage() {
               isLoading={isLoadingRecordings}
               wordVaultCount={wordVaultCount}
             />
-            <BadgesDisplay badges={session?.user?.badges || []} />
+            <AchievementsDisplay />
           </div>
         }
-        adminSection={session?.user?.role === 'SUPERADMIN' ? <AdminUploadSection /> : undefined}
         quickActions={
           <div className="space-y-8">
             <QuickActions />
-            <SocialsForm initialSocials={session?.user?.socials || {}} />
           </div>
+        }
+        adminSection={
+          session?.user?.id &&
+          (process.env.NEXT_PUBLIC_ADMIN_EMAILS?.includes(session.user.email || '') ||
+            session.user.email === 'admin@flowforge.com') ? (
+            <AdminUploadSection />
+          ) : undefined
         }
       />
 
-      {session && (
-        <EditProfileDialog
-          isOpen={isEditProfileOpen}
-          onClose={() => setIsEditProfileOpen(false)}
-          user={session.user}
-          onSuccess={handleEditSuccess}
-        />
-      )}
+      <EditProfileDialog
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+        user={session.user}
+        onSuccess={update} // Renamed from onUpdate to onSuccess
+      />
     </OnboardingLayout>
   )
 }

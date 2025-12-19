@@ -25,7 +25,7 @@ export function OnboardingLayout({
   onBack,
 }: OnboardingLayoutProps) {
   return (
-    <div className={cn('min-h-screen bg-black text-white overflow-hidden', className)}>
+    <div className={cn('min-h-screen bg-black text-white', className)}>
       {/* Animated background gradient */}
       <div className="fixed inset-0 bg-gradient-to-br from-black via-purple-950/20 to-black" />
 

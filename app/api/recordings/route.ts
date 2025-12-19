@@ -3,6 +3,7 @@ import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
 import { createSession } from '@/lib/db/sessions'
 import { randomUUID } from 'crypto'
+import { AchievementSystem } from '@/lib/gamification/achievements'
 
 export const dynamic = 'force-dynamic'
 const SIGNED_URL_TTL_SECONDS = 60 * 60
@@ -144,8 +145,13 @@ export async function POST(request: Request) {
             })
           }
         }
+
+        // Check for Achievements
+        await AchievementSystem.checkAndUnlock(session.user.id, {
+          type: 'RECORDING_SAVED',
+        })
       } catch (e) {
-        console.error('Word Vault ingestion failed', e)
+        console.error('Word Vault/Achievement ingestion failed', e)
       }
     }
 

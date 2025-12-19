@@ -149,3 +149,31 @@ In the beginning, there was code. The infrastructure was forged from the void.
 - **Database** connected (Supabase & Prisma).
 - **Authentication** secured (Google OAuth).
 - **Design System** established (Tailwind CSS).
+
+---
+
+## 🎮 Update 1.2.0: The Gamification Pivot
+
+**Release Date:** December 19, 2025
+**Codename:** _Level Up_
+
+We have pivoted! Freestyla is no longer about social noise; it's about **you vs. the beat**. The platform has been reimagined as a personal practice gym with deep gamification.
+
+### 🏆 Achievements
+- **Unlockable Badges**: Earn recognition for streaks, session milestones, and exploring new genres.
+- **Points System**: Every achievement contributes to your global Flow Score.
+- **Instant Feedback**: Get notified immediately when you level up your skills.
+
+### 📊 Leaderboard 2.0
+- **Skill-Based Ranking**: The leaderboard now ranks by **Achievement Points**, not just activity.
+- **Weekly Cycles**: Ranks reset every Wednesday. Can you claim the crown this week?
+
+### 🧭 Navigation & Core Experience
+- **Vinyl Home**: The new home screen is a dedicated **Beat Catalog**. Find your sound faster with search and filters.
+- **Simplified Nav**: Removed Feed and Messages to focus purely on **Practice** and **Progress**.
+- **Recorder Library**: A dedicated tab for your personal recordings.
+
+### 🧹 Deprecated Features
+- **Social Feed**: Removed to reduce distraction.
+- **Direct Messaging**: Removed to focus on solo practice.
+

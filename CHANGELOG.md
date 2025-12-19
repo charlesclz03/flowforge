@@ -1,6 +1,30 @@
 # Changelog
 
-All notable changes to the Freestyla project will be documented in this file.
+
+## [v1.1.7] - 2025-12-19
+
+### Added
+
+- **PWA Install Modal**: Intelligent installation prompt for iOS/Android users to encourage "Add to Home Screen" for better fullscreen experience and reduced audio latency.
+- **Environment Types**: Added explicit `es5` and `dom` lib references to `env.d.ts` to fix type checking in certain environments.
+
+## [v1.1.6] - 2025-12-19
+
+### Added
+
+- **PWA Install Prompt**: New "Install App" modal appears on the first recording attempt to guide users (iOS/Android) for better latency/fullscreen experience.
+
+### Changed
+
+- **Bottom Navigation**: Updated to 5-tab layout: Vinyl (`/tracks`), Trophy (`/leaderboard`), Record (`/practice`), Recordings (`/recordings`), Profile (`/profile`).
+- **Recordings Page**: Now visible to non-Pro users as a blurred background list with a blocking "Unlock with Premium" modal.
+- **Record Button**: Updated UI to a Microphone icon (Gray for Free, Glowing Red for Pro).
+
+### Removed
+
+- **Streak Freeze**: Removed all UI and logic.
+- **Safe Mode**: Removed all UI and logic.
+
 
 ## [v1.1.5] - 2025-12-18
 

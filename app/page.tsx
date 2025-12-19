@@ -24,8 +24,8 @@ function HomePageContent() {
         console.log('Redirecting to callback URL:', decodedUrl)
         router.push(decodedUrl)
       } else {
-        // If logged in and no callback, go to practice (App Home)
-        router.push('/practice')
+        // If logged in and no callback, go to Vinyl (Home)
+        router.push('/tracks')
       }
     }
   }, [isAuthenticated, session, searchParams, router])

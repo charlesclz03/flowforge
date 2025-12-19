@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, Mic, Trophy, User, MessageCircle } from 'lucide-react'
+import { Disc3, Mic, Trophy, User, CassetteTape } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -17,33 +17,33 @@ export function BottomNav() {
   if (!isAuthenticated) return null
 
   // Define tabs
-  // Order: Feed, Rankings, PRACTICE (Center), Messages, Profile
+  // Order: Vinyl (Home), Rankings, PRACTICE (Center), Recordings, Profile
   const tabs = [
     {
-      name: 'Feed',
-      href: '/feed',
-      icon: Home,
-      match: (path: string) => path === '/feed',
+      name: 'Vinyl',
+      href: '/tracks',
+      icon: Disc3,
+      match: (path: string) => path === '/tracks' || path === '/',
     },
     {
-      name: 'Rankings',
+      name: 'Trophy',
       href: '/leaderboard',
       icon: Trophy,
       match: (path: string) => path.startsWith('/leaderboard'),
     },
     {
-      name: 'Practice',
-      href: '/howitworks',
+      name: 'Record',
+      href: '/practice',
       icon: Mic,
       match: (path: string) =>
         path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
       isPrimary: true, // Special flag for center button
     },
     {
-      name: 'Messages',
-      href: '/messages',
-      icon: MessageCircle,
-      match: (path: string) => path.startsWith('/messages'),
+      name: 'Recordings',
+      href: '/recordings',
+      icon: CassetteTape,
+      match: (path: string) => path.startsWith('/recordings'),
     },
     {
       name: 'Profile',
