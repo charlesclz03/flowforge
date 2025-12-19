@@ -31,7 +31,9 @@ export class AchievementSystem {
       where: { userId },
       select: { achievementId: true, achievement: { select: { code: true } } },
     })
-    const unlockedCodes = new Set(userAchievements.map((ua) => ua.achievement.code))
+    const unlockedCodes = new Set(
+      userAchievements.map((ua: { achievement: { code: string } }) => ua.achievement.code)
+    )
 
     // Define Checks
     const checks = [
@@ -138,7 +140,7 @@ export class AchievementSystem {
 
     // Aggregate in memory
     const scores: Record<string, number> = {}
-    entries.forEach((entry) => {
+    entries.forEach((entry: { userId: string; achievement: { points: number } }) => {
       const pts = entry.achievement.points
       scores[entry.userId] = (scores[entry.userId] || 0) + pts
     })
