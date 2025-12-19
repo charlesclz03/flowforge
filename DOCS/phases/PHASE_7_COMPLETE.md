@@ -61,3 +61,5 @@ Following the 1.1.0 release, a comprehensive polish pass was conducted to resolv
 - **Mobile Experience**: Fixed critical bug where the Beat Selector was hidden on mobile devices.
 - **Session Stability**: Fixed an audio looping glitch caused by changing frequency/difficulty mid-session.
 - **Default Config**: Optimized default word frequency to 4 bars based on user feedback.
+- **Random Difficulty**: Introduced a new dynamic difficulty setting that shuffles all word complexities.
+- **Smart Word Distribution**: Implemented a "1-Hour No Repeat" rule to prevent word fatigue during extended practice sessions.

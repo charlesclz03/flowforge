@@ -14,6 +14,7 @@ const difficultyDescriptions: Record<number, string> = {
   1: '1-2 syllable words, easy warm-up',
   2: '3-4 syllable words, moderate challenge',
   3: '4+ syllable words, advanced practice',
+  4: 'Everything from simple to complex, mixed randomly',
 }
 
 export function DifficultySelector({
@@ -31,21 +32,23 @@ export function DifficultySelector({
       ? 'bg-accent-green/20 text-accent-green'
       : value === 2
         ? 'bg-accent-purple/20 text-accent-purple'
-        : 'bg-accent-red/20 text-accent-red'
+        : value === 3
+          ? 'bg-accent-red/20 text-accent-red'
+          : 'bg-accent-purple/20 text-accent-purple' // Random uses purple same as logo
 
   return (
     <div className={cn('space-y-4', className)}>
       <div className="flex items-center justify-between">
         <label className="text-base text-text-primary">Difficulty</label>
         <span className={cn('px-3 py-1 rounded-full text-sm font-medium', badgeClasses)}>
-          {SESSION_CONFIG.DIFFICULTY_LABELS[value as 1 | 2 | 3]}
+          {SESSION_CONFIG.DIFFICULTY_LABELS[value as 1 | 2 | 3 | 4]}
         </span>
       </div>
 
       <input
         type="range"
         min="1"
-        max="3"
+        max="4"
         step="1"
         value={value}
         onChange={handleSliderChange}
@@ -62,7 +65,7 @@ export function DifficultySelector({
           disabled && 'opacity-50 cursor-not-allowed'
         )}
         style={{
-          background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${((value - 1) / 2) * 100}%, rgba(255,255,255,0.1) ${((value - 1) / 2) * 100}%, rgba(255,255,255,0.1) 100%)`,
+          background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) 100%)`,
         }}
       />
 

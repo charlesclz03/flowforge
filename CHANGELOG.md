@@ -2,6 +2,12 @@
 
 All notable changes to the FlowForge project will be documented in this file.
 
+## [v1.1.5] - 2025-12-18
+
+### Added
+- **Random Difficulty**: Added a new "Random" (Level 4) difficulty mode that mixes words from all complexity levels.
+- **Smart Word Logic**: Implemented "1-Hour No Repeat" rule. Words seen in a session are now saved to local history and filtered out of future sessions for 60 minutes to ensure variety.
+
 ## [v1.1.4] - 2025-12-18
 
 ### Fixed

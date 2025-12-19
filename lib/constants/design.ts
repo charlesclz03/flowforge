@@ -145,11 +145,13 @@ export const SESSION_CONFIG = {
     EASY: 1,
     MEDIUM: 2,
     HARD: 3,
+    RANDOM: 4,
   } as const,
   DIFFICULTY_LABELS: {
     1: 'Easy',
     2: 'Medium',
     3: 'Hard',
+    4: 'Random',
   } as const,
   DEFAULT_DURATION_SECONDS: 120, // 2 minutes for free tier
   DEFAULT_FREQUENCY: 8, // 8 bars
