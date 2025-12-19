@@ -12,8 +12,8 @@ export function GuestLoginModal({ isOpen, onClose }: GuestLoginModalProps) {
   if (!isOpen) return null
 
   const handleSignIn = () => {
-    // Redirect to profile after login to trigger the restoration logic
-    signIn('google', { callbackUrl: '/profile' })
+    // Redirect to difficulty selection after login
+    signIn('google', { callbackUrl: '/difficultyselection' })
   }
 
   return (

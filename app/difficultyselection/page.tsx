@@ -87,71 +87,6 @@ export default function DifficultySelectionPage() {
           </p>
         </div>
 
-        {/* Session Mode Selector */}
-        <div className="space-y-4">
-          <label className="text-sm font-medium text-text-secondary uppercase tracking-wider">
-            Session Mode
-          </label>
-          <div className="relative flex bg-black/40 p-1.5 rounded-2xl border border-white/5 h-16">
-            {/* Animated Background Highlight */}
-            <div
-              className={cn(
-                'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-blue rounded-xl transition-all duration-300 shadow-lg shadow-accent-blue/20',
-                mode === 'cypher' ? 'left-[calc(50%+1.5px)]' : 'left-1.5'
-              )}
-            />
-
-            <button
-              onClick={() => setMode('solo')}
-              className={cn(
-                'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
-                mode === 'solo' ? 'text-white' : 'text-text-secondary hover:text-white'
-              )}
-            >
-              <User size={18} />
-              <span className="text-lg">Solo</span>
-            </button>
-            <button
-              onClick={() => setMode('cypher')}
-              className={cn(
-                'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
-                mode === 'cypher' ? 'text-white' : 'text-text-secondary hover:text-white'
-              )}
-            >
-              <Users size={18} />
-              <span className="text-lg">Cypher</span>
-            </button>
-          </div>
-
-          {/* Cypher Player Selector (Expands when Cypher is selected) */}
-          {mode === 'cypher' && (
-            <div className="animate-in fade-in slide-in-from-top-2 duration-300 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-text-secondary">Number of Players</label>
-                <div className="flex items-center gap-4">
-                  {[2, 3, 4].map((count) => (
-                    <button
-                      key={count}
-                      onClick={() => setCypherPlayers(count)}
-                      className={cn(
-                        'h-10 w-10 rounded-lg border font-bold transition-all',
-                        cypherPlayers === count
-                          ? 'bg-accent-purple border-accent-purple text-white shadow-glow-sm'
-                          : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'
-                      )}
-                    >
-                      {count}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <p className="text-xs text-text-secondary italic">
-                Players will take turns every {frequency} bars.
-              </p>
-            </div>
-          )}
-        </div>
-
         {/* Configuration Sliders */}
         <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
           <DifficultySelector
@@ -195,13 +130,80 @@ export default function DifficultySelectionPage() {
                 />
               </div>
               <span>Advanced Settings</span>
-              {!isAdvancedOpen && wordCategory && (
+              {!isAdvancedOpen && (wordCategory || mode === 'cypher') && (
                 <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1" />
               )}
             </button>
 
             {isAdvancedOpen && (
               <div className="mt-6 space-y-8 pt-6 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
+                {/* Session Mode Selector */}
+                <div className="space-y-4">
+                  <label className="text-sm font-medium text-text-secondary uppercase tracking-wider">
+                    Session Mode
+                  </label>
+                  <div className="relative flex bg-black/40 p-1.5 rounded-2xl border border-white/5 h-16">
+                    {/* Animated Background Highlight */}
+                    <div
+                      className={cn(
+                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-blue rounded-xl transition-all duration-300 shadow-lg shadow-accent-blue/20',
+                        mode === 'cypher' ? 'left-[calc(50%+1.5px)]' : 'left-1.5'
+                      )}
+                    />
+
+                    <button
+                      onClick={() => setMode('solo')}
+                      className={cn(
+                        'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
+                        mode === 'solo' ? 'text-white' : 'text-text-secondary hover:text-white'
+                      )}
+                    >
+                      <User size={18} />
+                      <span className="text-lg">Solo</span>
+                    </button>
+                    <button
+                      onClick={() => setMode('cypher')}
+                      className={cn(
+                        'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
+                        mode === 'cypher' ? 'text-white' : 'text-text-secondary hover:text-white'
+                      )}
+                    >
+                      <Users size={18} />
+                      <span className="text-lg">Cypher</span>
+                    </button>
+                  </div>
+
+                  {/* Cypher Player Selector (Expands when Cypher is selected) */}
+                  {mode === 'cypher' && (
+                    <div className="animate-in fade-in slide-in-from-top-2 duration-300 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm font-medium text-text-secondary">
+                          Number of Players
+                        </label>
+                        <div className="flex items-center gap-3">
+                          {[2, 3, 4, 5].map((count) => (
+                            <button
+                              key={count}
+                              onClick={() => setCypherPlayers(count)}
+                              className={cn(
+                                'h-10 w-10 rounded-lg border font-bold transition-all',
+                                cypherPlayers === count
+                                  ? 'bg-accent-blue border-accent-blue text-white shadow-glow-sm'
+                                  : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'
+                              )}
+                            >
+                              {count}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-xs text-text-secondary italic">
+                        Players will take turns every {frequency} bars.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 {/* Theme Dropdown */}
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-text-secondary flex items-center gap-2">
@@ -239,7 +241,6 @@ export default function DifficultySelectionPage() {
                   <Switch
                     checked={showLocalTracks}
                     onCheckedChange={(checked) => {
-                      // Logic remains same but verifying display text change is main request
                       if (!isPro && checked) {
                         setShowPremiumModal(true)
                         return
