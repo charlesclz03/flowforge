@@ -4,6 +4,30 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🌊 Update 1.3.0: Universal Gateway
+
+**Release Date:** December 19, 2024
+**Codename:** _Flow Without Borders_
+
+The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
+
+### ✨ The Universal Gateway
+- **Zero-Friction Practice**: Guests can now reach the practice floor without a login wall. Redirects from `/` now lead straight to the gym.
+- **Strategic Auth**: Login prompts are now focused only where they matter—on **Recordings**, **Profile**, and the **Record** button for guests.
+- **Universal Bottom Nav**: A refined, consistent docking experience for every visitor.
+
+### 👥 Cypher Mode Expansion
+- **Blue Indicator UI**: A high-visibility blue highlight for the mode selector.
+- **Dynamic Player Selection**: Choose between 2, 3, or 4 players instantly when entering Cypher mode.
+- **Practice Recap**: Your session settings (Difficulty, BPM, Bars) are now visible at all times above the "READY" state.
+
+### 🎨 Visual & Technical Polish
+- **Frozen Visualizer**: The visualizer now maintains its state when the beat stops—no more flat lines.
+- **Session Recaps**: Complete summary of your session parameters (Difficulty, BPM, Frequency) in the final recap modal.
+- **Lint Cleanup**: Fixed persistent serialization warnings by optimizing component boundaries.
+
+---
+
 ## 🎤 Update 1.2.1: The Rebrand
 
 **Release Date:** December 19, 2025
