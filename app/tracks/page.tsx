@@ -70,7 +70,7 @@ export default function TracksPage() {
     (b) =>
       b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
+      b.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   return (

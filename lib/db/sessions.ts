@@ -52,6 +52,7 @@ export async function getSessions(
           title: 'Local Beat',
           bpm: 90,
           storageUrl: '/beats/placeholder.mp3',
+          coverImage: null,
           isPremium: false,
           genre: null,
           duration: null,
@@ -60,7 +61,6 @@ export async function getSessions(
           tags: [],
           createdAt: new Date(),
           updatedAt: new Date(),
-          sessions: [],
         },
       }))
       return { success: true, data: mapped }
@@ -126,6 +126,7 @@ export async function getSessionById(
           title: 'Local Beat',
           bpm: 90,
           storageUrl: '/beats/placeholder.mp3',
+          coverImage: null,
           isPremium: false,
           genre: null,
           duration: null,

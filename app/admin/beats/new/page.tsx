@@ -238,4 +238,3 @@ const UploadBeatPage = (): React.JSX.Element => {
 }
 
 export default UploadBeatPage
-

@@ -1,9 +1,26 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Achievement, UserAchievement } from '@prisma/client'
 import { cn } from '@/lib/utils'
 import { Trophy, Lock } from 'lucide-react'
+
+// Types matching the API response
+interface Achievement {
+  id: string
+  code: string
+  name: string
+  description: string
+  points: number
+  icon: string | null
+}
+
+interface UserAchievementWithAchievement {
+  id: string
+  achievementId: string
+  userId: string
+  unlockedAt: Date | string
+  achievement: Achievement
+}
 
 type EnrichedAchievement = Achievement & {
   unlockedAt?: Date | string
@@ -21,9 +38,7 @@ export function AchievementsDisplay() {
         const res = await fetch('/api/user/achievements')
         if (res.ok) {
           const data = await res.json()
-          const userAch = data.userAchievements as (UserAchievement & {
-            achievement: Achievement
-          })[]
+          const userAch = data.userAchievements as UserAchievementWithAchievement[]
           const allAch = data.allAchievements as Achievement[]
 
           const unlockedMap = new Map(userAch.map((ua) => [ua.achievementId, ua.unlockedAt]))
