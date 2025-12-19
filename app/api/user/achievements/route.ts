@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { prisma } from '@/lib/prisma'
-import { Achievement } from '@prisma/client'
+
 
 export const dynamic = 'force-dynamic'
 
