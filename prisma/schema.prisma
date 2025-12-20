@@ -23,12 +23,18 @@ model Beat {
   duration        Int?     // Duration in seconds
   artistName      String?  @map("artist_name")
   difficulty      String   @default("Medium") // "Easy", "Medium", "Hard"
+  
+  // User Uploads & Calibration
+  uploaderId      String?  @map("uploader_id")
+  offset          Float    @default(0) // Start point calibration in seconds
+  
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
   sessions        FreestyleSession[]
   favoritedBy     FavoriteBeat[]
+  uploader        User?    @relation(fields: [uploaderId], references: [id])
 
   @@map("beats")
 }
@@ -80,6 +86,7 @@ model User {
   // Word Vault
   collectedWords CollectedWord[]
   favoriteBeats FavoriteBeat[]
+  uploadedBeats Beat[]
 
   // Achievements
   achievements UserAchievement[]

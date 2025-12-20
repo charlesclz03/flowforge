@@ -12,6 +12,11 @@ export function ManageSubscriptionButton() {
         method: 'POST',
       })
 
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to open portal')
+      }
+
       const { url } = await response.json()
 
       if (url) {
@@ -19,7 +24,7 @@ export function ManageSubscriptionButton() {
       }
     } catch (error) {
       console.error('Portal error:', error)
-      alert('Failed to open billing portal')
+      alert(error instanceof Error ? error.message : 'Failed to open billing portal')
     } finally {
       setLoading(false)
     }

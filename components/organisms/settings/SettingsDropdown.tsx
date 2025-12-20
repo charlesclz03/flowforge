@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 export function SettingsDropdown() {
   const { data: session } = useSession()
-  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume } = usePracticeSession()
+  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } = usePracticeSession()
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -81,6 +81,29 @@ export function SettingsDropdown() {
                 </div>
               )}
             </Menu.Item>
+
+            {/* Admin Only: Test Voice */}
+            {['triplyricist@gmail.com', 'charles.cluzeaud@gmail.com'].includes(
+              session?.user?.email || ''
+            ) && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      testVoice()
+                    }}
+                    className={cn(
+                      'flex w-full items-center px-4 py-2 text-xs font-medium text-accent-purple transition-colors',
+                      active ? 'bg-white/5' : ''
+                    )}
+                  >
+                    <Mic size={14} className="mr-3" />
+                    Test Voice (Admin)
+                  </button>
+                )}
+              </Menu.Item>
+            )}
 
             {/* Volume Slider - Inline or separate? Separate looks cleaner */}
             {isTTSEnabled && (

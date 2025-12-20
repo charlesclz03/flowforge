@@ -17,13 +17,21 @@ export type BeatResponse = {
   id: string
   title: string
   bpm: number
-  storageUrl: string
-  isPremium: boolean
+  key?: string
   genre: string | null
-  duration: number | null
-  artistName: string | null
+  tags: string[]
+  storageUrl: string
+  coverImage?: string | null
+  duration?: number | null
+  artistName?: string | null
+  uploaderId?: string | null // Added
+  offset: number // Added (Float in Prisma, number in TS)
+  isPremium: boolean
+  difficulty: 'Easy' | 'Medium' | 'Hard'
+  order?: number
+  createdAt: Date
+  updatedAt: Date
 }
-
 export type WordResponse = {
   id: string
   wordText: string

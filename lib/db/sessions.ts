@@ -61,6 +61,8 @@ export async function getSessions(
           tags: [],
           createdAt: new Date(),
           updatedAt: new Date(),
+          offset: 0,
+          uploaderId: null,
         },
       }))
       return { success: true, data: mapped }
@@ -135,6 +137,8 @@ export async function getSessionById(
           tags: [],
           createdAt: new Date(),
           updatedAt: new Date(),
+          offset: 0,
+          uploaderId: null,
         },
       }
       return { success: true, data: withBeat }

@@ -5,6 +5,7 @@ import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { Camera, Loader2 } from 'lucide-react'
 import Image from 'next/image'
+import { toast } from 'react-hot-toast'
 
 interface EditProfileDialogProps {
   isOpen: boolean
@@ -58,6 +59,7 @@ export function EditProfileDialog({ isOpen, onClose, user, onSuccess }: EditProf
         throw new Error(data.error || 'Failed to update profile')
       }
 
+      toast.success('Profile updated successfully')
       onSuccess()
       onClose()
     } catch (err) {

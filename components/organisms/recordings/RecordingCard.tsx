@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import Link from 'next/link'
-import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
+import { Download, Trash2, Play, Pause, Music, Video, Share2 } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
+import { toast } from 'react-hot-toast'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { VideoGenerator } from '@/components/features/export/VideoGenerator'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
@@ -198,6 +199,36 @@ export const RecordingCard = memo(function RecordingCard({
           >
             Delete
           </Button>
+
+          {/* Share Button */}
+          {recording.storageUrl && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={async () => {
+                const shareUrl = `${window.location.origin}/review/${recording.id}`
+                const shareData = {
+                  title: recording.title,
+                  text: `Check out my freestyle flow on FlowForge!`,
+                  url: shareUrl,
+                }
+
+                if (typeof navigator !== 'undefined' && navigator.share) {
+                  try {
+                    await navigator.share(shareData)
+                  } catch (err) {
+                    // Ignore abort
+                  }
+                } else {
+                  navigator.clipboard.writeText(shareUrl)
+                  toast.success('Link copied to clipboard!')
+                }
+              }}
+              leftIcon={<Share2 size={16} />}
+            >
+              Share
+            </Button>
+          )}
 
           {/* Export Button */}
           {recording.storageUrl && (

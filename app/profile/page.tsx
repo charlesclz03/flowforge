@@ -13,7 +13,7 @@ import {
   QuickActions,
 } from '@/components/organisms/profile'
 // Removed BadgesDisplay and SocialsForm
-import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
+// Removed AchievementsDisplay (Moved to Leaderboard)
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { Spinner } from '@/components/atoms/Spinner'
 import type { Recording } from '@/components/organisms/profile/StatsSection'
@@ -160,7 +160,7 @@ export default function ProfilePage() {
               isLoading={isLoadingRecordings}
               wordVaultCount={wordVaultCount}
             />
-            <AchievementsDisplay />
+            {/* Achievements moved to Leaderboard */}
           </div>
         }
         quickActions={

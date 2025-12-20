@@ -7,7 +7,9 @@ import { PageHeader } from '@/components/organisms/common'
 import { LeaderboardRow } from '@/components/molecules/leaderboard/LeaderboardRow'
 import { Trophy } from 'lucide-react'
 import Link from 'next/link'
+import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/atoms/Tabs'
 
 // Cache for 60 seconds
 export const revalidate = 60
@@ -109,50 +111,63 @@ export default async function LeaderboardPage({
         <PageHeader title="Leaderboard" description="Top flows this week." />
 
         <div className="mt-8 space-y-4 max-w-2xl mx-auto">
-          {/* Header / Tabs */}
-          <div className="flex gap-4 mb-6 border-b border-white/10 pb-2">
-            <Link
-              href="/leaderboard?period=all_time"
-              className={`px-4 py-2 font-medium transition-colors border-b-2 ${
-                period === 'all_time'
-                  ? 'text-white border-accent-purple'
-                  : 'text-text-tertiary border-transparent hover:text-white'
-              }`}
-            >
-              All Time
-            </Link>
-            <Link
-              href="/leaderboard?period=weekly"
-              className={`px-4 py-2 font-medium transition-colors border-b-2 ${
-                period === 'weekly'
-                  ? 'text-white border-accent-purple'
-                  : 'text-text-tertiary border-transparent hover:text-white'
-              }`}
-            >
-              Weekly
-            </Link>
-          </div>
+          <Tabs defaultValue="achievements" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-surface-elevated/50 p-1">
+              <TabsTrigger value="achievements">Achievements</TabsTrigger>
+              <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
+            </TabsList>
 
-          <div className="space-y-3">
-            {users.map((user, index) => (
-              <LeaderboardRow
-                key={user.id}
-                rank={index + 1}
-                userId={user.id}
-                username={user.username || user.name || 'Anonymous'}
-                image={user.image}
-                score={user.flowPoints}
-                isCurrentUser={user.id === currentUserId}
-              />
-            ))}
-
-            {users.length === 0 && (
-              <div className="text-center py-12 text-text-tertiary">
-                <Trophy className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                <p>No legends yet. Be the first.</p>
+            <TabsContent value="leaderboard" className="mt-0">
+              {/* Leaderboard Filters */}
+              <div className="flex gap-4 mb-6 border-b border-white/10 pb-2">
+                <Link
+                  href="/leaderboard?period=all_time"
+                  className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+                    period === 'all_time'
+                      ? 'text-white border-accent-purple'
+                      : 'text-text-tertiary border-transparent hover:text-white'
+                  }`}
+                >
+                  All Time
+                </Link>
+                <Link
+                  href="/leaderboard?period=weekly"
+                  className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+                    period === 'weekly'
+                      ? 'text-white border-accent-purple'
+                      : 'text-text-tertiary border-transparent hover:text-white'
+                  }`}
+                >
+                  Weekly
+                </Link>
               </div>
-            )}
-          </div>
+
+              <div className="space-y-3">
+                {users.map((user, index) => (
+                  <LeaderboardRow
+                    key={user.id}
+                    rank={index + 1}
+                    userId={user.id}
+                    username={user.username || user.name || 'Anonymous'}
+                    image={user.image}
+                    score={user.flowPoints}
+                    isCurrentUser={user.id === currentUserId}
+                  />
+                ))}
+
+                {users.length === 0 && (
+                  <div className="text-center py-12 text-text-tertiary">
+                    <Trophy className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <p>No legends yet. Be the first.</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="achievements" className="mt-0">
+              <AchievementsDisplay />
+            </TabsContent>
+          </Tabs>
         </div>
       </Container>
     </OnboardingLayout>

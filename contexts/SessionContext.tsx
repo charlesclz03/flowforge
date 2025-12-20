@@ -25,6 +25,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setMode: (mode: 'solo' | 'cypher') => void
   setCypherPlayers: (count: number) => void
   setWordCategory: (category: string | null) => void
+  testVoice: () => void
   startSession: () => void
   stopSession: () => void
   resetSession: () => void
@@ -161,6 +162,16 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setMode,
         setCypherPlayers,
         setWordCategory,
+        testVoice: useCallback(() => {
+          if (typeof window !== 'undefined' && window.speechSynthesis) {
+            const u = new SpeechSynthesisUtterance(
+              'Mic check, one two. FlowForge audio systems operational.'
+            )
+            u.rate = 1.1
+            u.volume = state.ttsVolume
+            window.speechSynthesis.speak(u)
+          }
+        }, [state.ttsVolume]),
         startSession,
         stopSession,
         resetSession,

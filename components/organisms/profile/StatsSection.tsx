@@ -3,12 +3,14 @@
 import { Card } from '@/components/atoms/Card'
 import { Spinner } from '@/components/atoms/Spinner'
 import { StatCard } from '@/components/molecules/display/StatCard'
+import { HistoryGraph } from './HistoryGraph'
 import { Trophy } from 'lucide-react'
 
 export interface Recording {
   id: string
   beatId: string
   durationSeconds: number
+  createdAt: string
 }
 
 interface StatsSectionProps {
@@ -18,6 +20,12 @@ interface StatsSectionProps {
 }
 
 export function StatsSection({ recordings, isLoading, wordVaultCount = 0 }: StatsSectionProps) {
+  const totalMinutes = Math.floor(
+    recordings.reduce((total, r) => total + (r.durationSeconds || 0), 0) / 60
+  )
+
+  const flowDensity = totalMinutes > 0 ? Math.round(wordVaultCount / totalMinutes) : 0
+
   if (!isLoading && recordings.length === 0) {
     return (
       <Card title="Your Stats">
@@ -43,19 +51,20 @@ export function StatsSection({ recordings, isLoading, wordVaultCount = 0 }: Stat
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Total Recordings" value={recordings.length} variant="compact" />
+          <StatCard label="Minutes Practiced" value={totalMinutes} variant="compact" />
           <StatCard
-            label="Minutes Practiced"
-            value={Math.floor(
-              recordings.reduce((total, r) => total + (r.durationSeconds || 0), 0) / 60
-            )}
+            label="Flow Density"
+            value={`${flowDensity} wpm`}
             variant="compact"
-          />
-          <StatCard
-            label="Unique Beats"
-            value={new Set(recordings.map((r) => r.beatId)).size}
-            variant="compact"
+            className="text-accent-cyan"
           />
           <StatCard label="Word Vault" value={`${wordVaultCount} / 2000`} variant="compact" />
+        </div>
+      )}
+
+      {!isLoading && recordings.length > 0 && (
+        <div className="mt-4 h-64">
+          <HistoryGraph recordings={recordings} />
         </div>
       )}
     </Card>

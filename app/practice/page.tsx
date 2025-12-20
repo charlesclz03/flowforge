@@ -467,20 +467,27 @@ export default function PracticePage() {
   // Robust Speak Helper
   const speak = useCallback(
     (text: string, force = false) => {
-      if (typeof window === 'undefined' || !window.speechSynthesis) return
+      // Explicit error logging
+      if (typeof window === 'undefined') return
+      if (!window.speechSynthesis) {
+        console.warn('TTS: speechSynthesis API not supported')
+        return
+      }
 
       if (!isTTSEnabled && !force) return
 
-      // Instead of cancel(), we check for speaking to avoid "jams"
-      // but only if we really need to clear the air.
-      // window.speechSynthesis.cancel()
+      try {
+        const u = new SpeechSynthesisUtterance(text)
+        u.rate = 1.1 // Slightly slower for better clarity
+        u.volume = ttsVolume
+        if (voice) u.voice = voice
 
-      const u = new SpeechSynthesisUtterance(text)
-      u.rate = 1.1 // Slightly slower for better clarity
-      u.volume = ttsVolume
-      if (voice) u.voice = voice
+        u.onerror = (e) => console.error('TTS Error:', e)
 
-      window.speechSynthesis.speak(u)
+        window.speechSynthesis.speak(u)
+      } catch (err) {
+        console.error('TTS Execution Error:', err)
+      }
     },
     [isTTSEnabled, ttsVolume, voice]
   )

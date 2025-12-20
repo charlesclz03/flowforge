@@ -4,6 +4,10 @@ import { authOptions } from '@/lib/auth'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.warn('STRIPE_SECRET_KEY is missing')
+}
+
 export async function POST() {
   try {
     const session = await getServerSession(authOptions)

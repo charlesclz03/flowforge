@@ -14,6 +14,7 @@ interface User {
   image?: string | null
   username?: string | null
   bio?: string | null
+  subscriptionStatus?: string | null
 }
 
 interface AccountInfoProps {
@@ -23,6 +24,8 @@ interface AccountInfoProps {
 }
 
 export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
+  const isPro = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
+
   return (
     <Card
       title="Profile Information"
@@ -81,7 +84,9 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
           </div>
           <div className="rounded-xl border border-stroke-subtle/20 bg-background-elevated/50 p-4">
             <p className="text-sm text-text-tertiary">Account Type</p>
-            <p className="mt-1 text-white">Free Tier</p>
+            <p className="mt-1 text-white">
+              {isPro ? <span className="text-accent-purple font-bold">Pro Plan</span> : 'Free Tier'}
+            </p>
           </div>
         </div>
       </div>

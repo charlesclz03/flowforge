@@ -11,6 +11,14 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
 
+### 🐛 QA Audit Log (Dec 19, 2025)
+A comprehensive "Pro" audit of v1.3.0 revealed critical areas for the next patch:
+- **CRITICAL**: Stripe Portal (`/api/stripe/portal`) is returning 404.
+- **CRITICAL**: Cypher/Duel modes (`/cypher`) are inaccessible (404).
+- **Major**: Missing "Share" functionality for viral loops.
+- **Minor**: "Pro" users show "Free Tier" badge in UI.
+- **Minor**: Toast notifications missing on settings save.
+
 ### ✨ The Universal Gateway
 - **Zero-Friction Practice**: Guests can now reach the practice floor without a login wall. Redirects from `/` now lead straight to the gym.
 - **Strategic Auth**: Login prompts are now focused only where they matter—on **Recordings**, **Profile**, and the **Record** button for guests.

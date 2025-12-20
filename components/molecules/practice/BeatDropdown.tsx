@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
 import { addLocalBeat, getLocalBeats, deleteLocalBeat } from '@/lib/beats/localBeats'
+import { UserBeatUploadModal } from './UserBeatUploadModal'
 
 interface BeatDropdownProps {
   beats: Beat[]
@@ -39,12 +40,31 @@ export function BeatDropdown({
 
   // Local Beats State
   const [localBeats, setLocalBeats] = useState<Beat[]>([])
+  const [myBeats, setMyBeats] = useState<Beat[]>([])
+  const [showUploadModal, setShowUploadModal] = useState(false)
 
   // Filter State
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
 
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const fetchMyBeats = useCallback(async () => {
+    if (!isPro) return
+    try {
+      const res = await fetch('/api/user/beats')
+      if (res.ok) {
+        const data = await res.json()
+        setMyBeats(data.beats || [])
+      }
+    } catch (e) {
+      console.error('Failed to fetch my beats', e)
+    }
+  }, [isPro])
+
+  useEffect(() => {
+    if (isOpen && isPro) fetchMyBeats()
+  }, [isOpen, isPro, fetchMyBeats])
 
   // Load favorites
   useEffect(() => {
@@ -272,6 +292,11 @@ export function BeatDropdown({
                   <TabsTrigger value="library" className="flex-1">
                     Library
                   </TabsTrigger>
+                  {isPro && (
+                    <TabsTrigger value="my-beats" className="flex-1 gap-2">
+                      My Beats <Crown size={10} className="text-accent-orange" />
+                    </TabsTrigger>
+                  )}
                   {!hideLocalTab && (
                     <TabsTrigger
                       value="local"
@@ -283,7 +308,7 @@ export function BeatDropdown({
                         }
                       }}
                     >
-                      My Uploads <Crown size={10} className="text-accent-orange" />
+                      Local <span className="text-[10px] opacity-50">(Browser)</span>
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -422,6 +447,77 @@ export function BeatDropdown({
                 </div>
               </TabsContent>
 
+              {/* My Beats Tab (Cloud) */}
+              <TabsContent value="my-beats" className="flex-1 overflow-y-auto mt-0">
+                <div className="p-4 border-b border-white/5">
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="flex items-center justify-center w-full gap-2 p-3 text-sm font-medium text-white transition-colors border border-dashed rounded-xl cursor-pointer bg-white/5 border-white/20 hover:bg-white/10 hover:border-accent-purple/50 hover:text-accent-purple"
+                  >
+                    <Upload size={16} />
+                    <span>Upload New Beat</span>
+                  </button>
+                  <p className="mt-2 text-[10px] text-center text-text-tertiary">
+                    Synced to your account. Calibrate start points for perfect timing.
+                  </p>
+                </div>
+                <div className="p-2 space-y-1">
+                  {myBeats.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-text-secondary">
+                      No beats uploaded yet.
+                    </div>
+                  ) : (
+                    myBeats.map((beat) => {
+                      const isSelected = selectedBeat?.id === beat.id
+                      const isPreviewing = previewingBeatId === beat.id
+                      return (
+                        <div
+                          key={beat.id}
+                          className={cn(
+                            'flex items-center rounded-lg p-3 transition-colors',
+                            isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5'
+                          )}
+                        >
+                          <button
+                            onClick={(e) => handlePreview(beat, e)}
+                            className={cn(
+                              'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
+                              isPreviewing
+                                ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
+                                : 'border-white/10 bg-white/5 text-text-secondary hover:text-white'
+                            )}
+                          >
+                            {isPreviewing ? (
+                              <Square size={14} />
+                            ) : (
+                              <Play size={14} className="ml-0.5" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => {
+                              onSelect(beat)
+                              setIsOpen(false)
+                              stopPreview()
+                            }}
+                            className="flex-1 text-left"
+                          >
+                            <div className="font-medium text-white text-sm">{beat.title}</div>
+                            <div className="text-xs text-text-secondary flex gap-2">
+                              <span>{beat.bpm} BPM</span>
+                              {beat.offset > 0 && (
+                                <span className="text-accent-cyan">
+                                  Offset: {beat.offset.toFixed(2)}s
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </TabsContent>
+
               {/* Local Tab */}
               {isPro && (
                 <TabsContent value="local" className="flex-1 overflow-y-auto mt-0">
@@ -501,6 +597,16 @@ export function BeatDropdown({
           </div>
         )}
       </div>
+
+      <UserBeatUploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        isPro={isPro}
+        onSuccess={() => {
+          fetchMyBeats() // Refresh list
+          toast.success('Library updated')
+        }}
+      />
     </div>
   )
 }
