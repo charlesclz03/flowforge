@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
 import { AddBeatCard } from '@/components/molecules/tracks/AddBeatCard'
-import { Plus } from 'lucide-react'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -232,23 +231,16 @@ export default function TracksPage() {
           </div>
         )}
 
-        {filteredBeats.length === 0 && !isLoading && (
-          <div className="py-20 text-center space-y-4 opacity-50">
-            <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-              <Music size={32} />
+        {filteredBeats.length === 0 &&
+          !isLoading &&
+          (activeTab !== 'mine' || searchQuery.length > 0) && (
+            <div className="py-20 text-center space-y-4 opacity-50">
+              <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                <Music size={32} />
+              </div>
+              <p>No beats found looking for &quot;{searchQuery}&quot;</p>
             </div>
-            <p>No beats found looking for &quot;{searchQuery}&quot;</p>
-            {activeTab === 'mine' && (
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="mt-4 flex items-center gap-2 px-6 py-3 bg-accent-purple text-white rounded-full font-semibold hover:scale-105 transition-transform"
-              >
-                <Plus size={20} />
-                Upload your first beat
-              </button>
-            )}
-          </div>
-        )}
+          )}
       </div>
       <UserBeatUploadModal
         isOpen={isUploadModalOpen}
