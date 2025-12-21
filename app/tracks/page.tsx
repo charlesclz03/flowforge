@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
-import { Search, Music, Plus } from 'lucide-react'
+import { Search, Music, Plus, Lock } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
-import { AddBeatCard } from '@/components/molecules/tracks/AddBeatCard'
+import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -20,6 +20,11 @@ export default function TracksPage() {
   const router = useRouter()
   const { data: session } = useSession()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
+
+  // Safe cast for user extended properties
+  const user = session?.user
+  const isPro = user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
 
   useEffect(() => {
     async function fetchData() {
@@ -33,8 +38,6 @@ export default function TracksPage() {
         const publicBeats = beatsRes.beats || []
         const userBeats = userBeatsRes.beats || []
 
-        // Merge beats, potentially removing duplicates if logic requires, but usually IDs are unique.
-        // User beats designated by uploaderId, but Beat interface should handle it.
         setBeats([...userBeats, ...publicBeats])
         setFavoriteIds(new Set(favs))
       } catch (e) {
@@ -69,6 +72,14 @@ export default function TracksPage() {
 
   useEffect(() => {
     fetchBeats()
+
+    return () => {
+      const audio = document.getElementById('preview-audio') as HTMLAudioElement
+      if (audio) {
+        audio.pause()
+        audio.currentTime = 0
+      }
+    }
   }, [])
 
   const handlePlay = (beat: Beat) => {
@@ -111,8 +122,6 @@ export default function TracksPage() {
       if (!res.ok) throw new Error('Failed to delete')
 
       setBeats((prev) => prev.filter((b) => b.id !== beatId))
-      // toast.success('Beat deleted') // Toast usage requires toaster but basic alert/log is fine if toast component isn't readily available in this scope, but usually it is.
-      // Assuming layout provider handles toasts or simple console for now if imports missing.
     } catch (e) {
       console.error(e)
       alert('Failed to delete beat')
@@ -121,24 +130,27 @@ export default function TracksPage() {
 
   const [activeTab, setActiveTab] = useState<'public' | 'mine'>('public')
 
+  const handleTabChange = (tab: 'public' | 'mine') => {
+    if (tab === 'mine' && !isPro) {
+      setIsPremiumModalOpen(true)
+      return
+    }
+    setActiveTab(tab)
+  }
+
+  const handleNewBeatClick = () => {
+    if (!isPro) {
+      setIsPremiumModalOpen(true)
+      return
+    }
+    setIsUploadModalOpen(true)
+  }
+
   const filteredBeats = beats
     .filter((b) => {
-      // Tab Filter
       if (activeTab === 'mine') {
-        // User's uploaded beats
         return b.uploaderId && b.uploaderId === session?.user?.id
-        // Or favorites? Usually "My Tracks" implies uploads or favorites.
-        // Assuming "My Tracks" means uploaded beats for now based on context,
-        // OR we could show favorites too. Let's stick to Uploaded + maybe Favorites if requested.
-        // But traditionally "My Tracks" = Uploads. Favorited is separate or marked.
       } else {
-        // Public beats (no uploader or not current user? Or just all public?)
-        // Assuming Public = All beats? Or just system beats?
-        // Let's assume Public = All except potentially private user beats if any.
-        // For now, let's show ALL beats in Public, or just System beats.
-        // Re-reading fetch: merge user + public.
-        // If "My Tracks" exists, "Public" should probably exclude my private uploads or just be the main catalog.
-        // Let's default Public to: System beats (uploaderId null) OR beats that are public.
         return !b.uploaderId // System beats
       }
     })
@@ -166,7 +178,7 @@ export default function TracksPage() {
           {/* Tabs */}
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button
-              onClick={() => setActiveTab('public')}
+              onClick={() => handleTabChange('public')}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'public'
                   ? 'bg-accent-purple text-white shadow-sm'
@@ -176,23 +188,24 @@ export default function TracksPage() {
               Public Tracks
             </button>
             <button
-              onClick={() => setActiveTab('mine')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              onClick={() => handleTabChange('mine')}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'mine'
                   ? 'bg-accent-purple text-white shadow-sm'
                   : 'text-text-tertiary hover:text-white'
               }`}
             >
               My Tracks
+              {!isPro && <Lock size={12} className="opacity-70" />}
             </button>
           </div>
 
           {/* Action Button */}
           <button
-            onClick={() => setIsUploadModalOpen(true)}
+            onClick={handleNewBeatClick}
             className="flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg font-medium text-sm hover:scale-105 transition-transform"
           >
-            <Plus size={16} />
+            {isPro ? <Plus size={16} /> : <Lock size={16} />}
             <span>New Beat</span>
           </button>
         </div>
@@ -211,7 +224,6 @@ export default function TracksPage() {
               className="w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-white placeholder:text-text-tertiary focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 transition-all"
             />
           </div>
-          {/* Removed non-functional filter button */}
         </div>
 
         {isLoading ? (
@@ -222,7 +234,7 @@ export default function TracksPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {activeTab === 'mine' && <AddBeatCard onClick={() => setIsUploadModalOpen(true)} />}
+            {/* Removed AddBeatCard from grid as per extensive UI refactor */}
             {filteredBeats.map((beat) => (
               <BeatGridCard
                 key={beat.id}
@@ -253,15 +265,34 @@ export default function TracksPage() {
               <p>No beats found looking for &quot;{searchQuery}&quot;</p>
             </div>
           )}
+
+        {/* Empty State for My Tracks if Pro but no beats */}
+        {filteredBeats.length === 0 &&
+          !isLoading &&
+          activeTab === 'mine' &&
+          searchQuery.length === 0 && (
+            <div className="py-20 text-center space-y-4 opacity-50">
+              <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                <Music size={32} />
+              </div>
+              <p>You haven&apos;t uploaded any beats yet.</p>
+            </div>
+          )}
       </div>
       <UserBeatUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
-        isPro={true} // Improve: Check actual subscription if needed, but for now assuming access or handling inside
+        isPro={!!isPro}
         onSuccess={() => {
           fetchBeats()
         }}
       />
+      <PremiumModal
+        isOpen={isPremiumModalOpen}
+        onClose={() => setIsPremiumModalOpen(false)}
+        trigger="beat"
+      />
+      <audio id="preview-audio" className="hidden" />
     </div>
   )
 }
