@@ -1,7 +1,7 @@
 # FreeStyla - Application Overview & Feature Guide
 
-**Date**: December 19, 2025  
-**Version**: 1.3.0 (Universal Gateway)
+**Date**: December 21, 2025  
+**Version**: 1.3.1 (Universal Gateway + User Beats)
 
 ---
 
@@ -58,13 +58,27 @@ The heart of the application, designed for zero-latency performance and maximum 
   - **Performance Stats**: "Total Recordings", "Minutes Practiced", and "Battle Wins".
   - **Badge Showcase**: Visual recognition for practice milestones.
 
-### 4. Social Ecosystem & Sharing
+### 3. User Beat Management (Pro)
+- **Upload System**: Direct MP3/WAV uploads to secure private cloud storage.
+- **Calibration Tools**: Set custom "Start Points" and offsets to ensure uploaded beats loop perfectly with prompts.
+- **Beat Deletion**: Full control to remove uploaded tracks from the library.
+- **"My Beats" Tab**: Dedicated section in the Beat Dropdown for personal uploads.
 
-- **Stat Card Sharing**:
-  - **Dynamic PNG Generation**: Shareable images with session scores and beat metadata.
-  - **Session Recaps**: Substantial recap modal summarizing performance and configuration.
-- **The Feed**: Community-driven stream with Likes and Comments.
+### 4. Progression & Gamification
+- **XP Battle Pass Bar**: Dynamic progress bar in the Leaderboard header visualizing level progression (1 sec flow = 1 XP).
+- **Badges**: Unlockable achievements (e.g., "Night Shift", "Consistency", "Machine Gun").
+- **Flow Density**: Proprietary metric calculating rhyme density and syllable usage.
+- **History Graph**: Visual representation of practice habits over time (Pro).
+
+### 5. Social Ecosystem & Sharing
+- **Share Functionality**: Native share sheet integration for recordings (Mobile/Desktop).
+- **Cypher Mode**: Multiplayer lobbies with real-time turn-based visuals.
 - **Duel Mode**: Competitive challenges on the same seed.
+- **Feed**: Community-driven stream with Likes and Comments.
+
+### 6. Monetization (Stripe)
+- **Pro Subscription**: $4.99/mo tier unlocking Uploads, Unlimited Recording, and Advanced Stats.
+- **Calculated Limitations**: Free tier capped at 60s recordings with ads; Pro is unlimited and ad-free.
 
 ---
 

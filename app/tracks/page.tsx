@@ -7,6 +7,7 @@ import { Beat } from '@/types/database'
 import { Disc3, Search, SlidersHorizontal, Music } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -15,15 +16,23 @@ export default function TracksPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
   const router = useRouter()
+  const { data: session } = useSession()
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [beatsRes, favs] = await Promise.all([
+        const [beatsRes, userBeatsRes, favs] = await Promise.all([
           fetch('/api/beats').then((res) => res.json()),
+          fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
           getFavoriteBeatIds(),
         ])
-        setBeats(beatsRes.beats || [])
+
+        const publicBeats = beatsRes.beats || []
+        const userBeats = userBeatsRes.beats || []
+
+        // Merge beats, potentially removing duplicates if logic requires, but usually IDs are unique.
+        // User beats designated by uploaderId, but Beat interface should handle it.
+        setBeats([...userBeats, ...publicBeats])
         setFavoriteIds(new Set(favs))
       } catch (e) {
         console.error(e)
@@ -64,6 +73,22 @@ export default function TracksPage() {
     setFavoriteIds(newFavs)
 
     await toggleBeatFavorite(beatId)
+  }
+
+  const handleDeleteBeat = async (beatId: string) => {
+    if (!confirm('Are you sure you want to delete this beat?')) return
+
+    try {
+      const res = await fetch(`/api/user/beats/${beatId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
+
+      setBeats((prev) => prev.filter((b) => b.id !== beatId))
+      // toast.success('Beat deleted') // Toast usage requires toaster but basic alert/log is fine if toast component isn't readily available in this scope, but usually it is.
+      // Assuming layout provider handles toasts or simple console for now if imports missing.
+    } catch (e) {
+      console.error(e)
+      alert('Failed to delete beat')
+    }
   }
 
   const filteredBeats = beats.filter(
@@ -125,6 +150,11 @@ export default function TracksPage() {
                 onPlay={() => handlePlay(beat)}
                 onSelect={() => router.push(`/practice?beat=${beat.id}`)}
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
+                onDelete={
+                  beat.uploaderId && beat.uploaderId === session?.user?.id
+                    ? () => handleDeleteBeat(beat.id)
+                    : undefined
+                }
               />
             ))}
           </div>

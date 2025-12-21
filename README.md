@@ -1,14 +1,14 @@
 ## FreeStyla 🎤
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
-**Last Updated**: December 18, 2025  
-**Version**: v1.1.3 (UI/UX Polish)
+**Last Updated**: December 21, 2025  
+**Version**: v1.3.1 (Polish & Power Update)
 **Status**: 🟢 Production Ready
 **Live URL**: [flowforge-freestyle.vercel.app](https://flowforge-freestyle.vercel.app)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
-> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline has been fully restored (v1.1.1). Recent updates include **Advanced Badge Tracking** (Perfectionist/Machine Gun), **Word Bag System** (Zero repeats), **Stat Card Sharing (PNG)**, and **Word Vault Analytics**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
+> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline is stable. Recent updates include **User Beat Uploads**, **Beat Deletion**, **XP Battle Pass System**, and **Stripe Monetization Fixes**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
 
 ## 1) TL;DR
 

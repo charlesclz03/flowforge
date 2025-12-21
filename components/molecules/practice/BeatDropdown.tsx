@@ -212,6 +212,25 @@ export function BeatDropdown({
     }
   }
 
+  const handleDeleteCloud = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!confirm('Delete this beat permanently?')) return
+
+    try {
+      const res = await fetch(`/api/user/beats/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
+
+      setMyBeats((prev) => prev.filter((b) => b.id !== id))
+      toast.success('Beat deleted from cloud')
+      if (selectedBeat?.id === id) {
+        // maybe select default?
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to delete')
+    }
+  }
+
   // Filter Logic
   // Extract genres/tags
   const allTags = Array.from(
@@ -510,6 +529,13 @@ export function BeatDropdown({
                                 </span>
                               )}
                             </div>
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteCloud(beat.id, e)}
+                            className="p-2 text-text-tertiary hover:text-red-400 transition-colors"
+                            title="Delete cloud beat"
+                          >
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       )

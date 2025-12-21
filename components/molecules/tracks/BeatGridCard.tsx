@@ -1,7 +1,7 @@
 'use client'
 
 import { Beat } from '@/types/database'
-import { Play, Square, Heart, Crown, Music, Lock } from 'lucide-react'
+import { Play, Square, Heart, Crown, Music, Lock, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -14,6 +14,7 @@ interface BeatGridCardProps {
   onPlay: () => void
   onSelect: () => void
   onToggleFavorite: (e: React.MouseEvent) => void
+  onDelete?: (e: React.MouseEvent) => void
 }
 
 export function BeatGridCard({
@@ -25,6 +26,7 @@ export function BeatGridCard({
   onPlay,
   onSelect,
   onToggleFavorite,
+  onDelete,
 }: BeatGridCardProps) {
   // Placeholder gradients based on genre or random
   const gradients = [
@@ -131,17 +133,30 @@ export function BeatGridCard({
             </p>
           </div>
 
-          <button
-            onClick={onToggleFavorite}
-            disabled={isLocked}
-            className={cn(
-              'group/fav p-1 transition-colors',
-              isFavorited ? 'text-accent-pink' : 'text-text-tertiary hover:text-accent-pink',
-              isLocked && 'pointer-events-none opacity-0'
+          <div className="flex items-center gap-1">
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete(e)
+                }}
+                className="group/del p-1 text-text-tertiary hover:text-red-400 transition-colors"
+              >
+                <Trash2 size={16} />
+              </button>
             )}
-          >
-            <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} />
-          </button>
+            <button
+              onClick={onToggleFavorite}
+              disabled={isLocked}
+              className={cn(
+                'group/fav p-1 transition-colors',
+                isFavorited ? 'text-accent-pink' : 'text-text-tertiary hover:text-accent-pink',
+                isLocked && 'pointer-events-none opacity-0'
+              )}
+            >
+              <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} />
+            </button>
+          </div>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-1.5">
