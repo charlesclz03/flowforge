@@ -14,7 +14,7 @@ interface SessionSummaryData {
   duration: number
   audioUrl?: string
   newBadges?: string[]
-  difficulty: number
+  difficulty: string
   bpm: number
   frequency: number
 }
@@ -70,13 +70,13 @@ export default function SessionSummaryModal({ data, onClose }: SessionSummaryMod
         {/* Session Details Recap (New) */}
         <div className="flex items-center justify-center gap-2 text-xs font-bold text-text-tertiary uppercase tracking-widest opacity-60">
           <span>
-            {data.difficulty === 1
+            {data.difficulty === 'Easy'
               ? 'Beginner'
-              : data.difficulty === 2
+              : data.difficulty === 'Medium'
                 ? 'Medium'
-                : data.difficulty === 3
+                : data.difficulty === 'Hard'
                   ? 'Hard'
-                  : 'Random'}
+                  : data.difficulty}
           </span>
           <span className="w-1 h-1 rounded-full bg-white/20" />
           <span>{data.bpm} BPM</span>

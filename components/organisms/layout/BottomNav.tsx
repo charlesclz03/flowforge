@@ -26,9 +26,9 @@ export function BottomNav() {
     },
     {
       name: 'Trophy',
-      href: '/leaderboard',
+      href: '/achievements',
       icon: Trophy,
-      match: (path: string) => path.startsWith('/leaderboard'),
+      match: (path: string) => path.startsWith('/achievements') || path.startsWith('/leaderboard'),
     },
     {
       name: 'Record',

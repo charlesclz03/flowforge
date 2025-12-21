@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
-import { Disc3, Search, SlidersHorizontal, Music } from 'lucide-react'
+import { Search, Music } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -91,12 +91,35 @@ export default function TracksPage() {
     }
   }
 
-  const filteredBeats = beats.filter(
-    (b) =>
-      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const [activeTab, setActiveTab] = useState<'public' | 'mine'>('public')
+
+  const filteredBeats = beats
+    .filter((b) => {
+      // Tab Filter
+      if (activeTab === 'mine') {
+        // User's uploaded beats
+        return b.uploaderId && b.uploaderId === session?.user?.id
+        // Or favorites? Usually "My Tracks" implies uploads or favorites.
+        // Assuming "My Tracks" means uploaded beats for now based on context,
+        // OR we could show favorites too. Let's stick to Uploaded + maybe Favorites if requested.
+        // But traditionally "My Tracks" = Uploads. Favorited is separate or marked.
+      } else {
+        // Public beats (no uploader or not current user? Or just all public?)
+        // Assuming Public = All beats? Or just system beats?
+        // Let's assume Public = All except potentially private user beats if any.
+        // For now, let's show ALL beats in Public, or just System beats.
+        // Re-reading fetch: merge user + public.
+        // If "My Tracks" exists, "Public" should probably exclude my private uploads or just be the main catalog.
+        // Let's default Public to: System beats (uploaderId null) OR beats that are public.
+        return !b.uploaderId // System beats
+      }
+    })
+    .filter(
+      (b) =>
+        b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -108,9 +131,30 @@ export default function TracksPage() {
             title="Vinyl Collection"
             description="Discover beats for your next session."
           />
-          <div className="h-12 w-12 rounded-full bg-accent-purple/10 flex items-center justify-center border border-accent-purple/20">
-            <Disc3 className="text-accent-purple animate-spin-slow" size={24} />
-          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex p-1 bg-surface-elevated/50 rounded-xl mb-6 w-fit">
+          <button
+            onClick={() => setActiveTab('public')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              activeTab === 'public'
+                ? 'bg-accent-purple text-white shadow-sm'
+                : 'text-text-tertiary hover:text-white'
+            }`}
+          >
+            Public Tracks
+          </button>
+          <button
+            onClick={() => setActiveTab('mine')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              activeTab === 'mine'
+                ? 'bg-accent-purple text-white shadow-sm'
+                : 'text-text-tertiary hover:text-white'
+            }`}
+          >
+            My Tracks
+          </button>
         </div>
 
         <div className="flex gap-3">
@@ -127,9 +171,7 @@ export default function TracksPage() {
               className="w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-white placeholder:text-text-tertiary focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 transition-all"
             />
           </div>
-          <button className="h-12 w-12 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 transition-colors">
-            <SlidersHorizontal size={20} />
-          </button>
+          {/* Removed non-functional filter button */}
         </div>
 
         {isLoading ? (

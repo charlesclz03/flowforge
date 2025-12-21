@@ -7,23 +7,26 @@
     /* Removed invalid Tailwind class 'border-border' */
   }
 
-  body {
-    @apply bg-background text-text-primary antialiased;
-    font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
-    /* App-like feel: prevent rubber-band on mobile body */
-    overscroll-behavior-y: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
     /* Prevent selection generally for app feel, re-enable on text inputs if needed */
     user-select: none;
     -webkit-user-select: none;
-    overscroll-behavior-y: none;
+    overscroll-behavior: none;
+    height: 100dvh;
+  }
+
+  body {
+    @apply bg-background text-text-primary antialiased;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+    /* App-like feel: prevent rubber-band on mobile body */
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 100dvh;
+    touch-action: pan-x pan-y;
   }
 
   /* Custom scrollbar for webkit browsers */
@@ -158,6 +161,14 @@
 
   .safe-right {
     padding-right: env(safe-area-inset-right);
+  }
+
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Flame } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 
@@ -24,7 +24,7 @@ export function AppHeader({
   hide = false,
 }: AppHeaderProps) {
   const router = useRouter()
-  const { status } = useSession()
+  const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
 
   // Link to howitworks for logged-in users, landing for guests
@@ -61,7 +61,19 @@ export function AppHeader({
 
           {/* Account section - top right */}
           {showSettings && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-3">
+              {/* Streak Counter */}
+              {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20">
+                  <Flame
+                    size={16}
+                    className="text-accent-orange fill-accent-orange animate-pulse"
+                  />
+                  <span className="text-sm font-bold text-accent-orange tabular-nums">
+                    {session?.user?.currentStreak}
+                  </span>
+                </div>
+              )}
               <SettingsDropdown />
             </div>
           )}

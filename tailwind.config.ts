@@ -31,6 +31,13 @@ const config: Config = {
           violet: '#7D7AFF', // Same as purple
           aqua: '#32D3FF',
           teal: '#64D2FF',
+          // Audit Semantic Colors
+          success: '#30D158', // Green
+          warning: '#FF9F0A', // Amber/Orange
+          error: '#FF453A',   // Red
+        },
+        surface: {
+          subtle: '#121212', // Off-black (Audit 4.2)
         },
         timer: {
           ring: '#7D7AFF', // Purple instead of orange
@@ -43,18 +50,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: [
-          '"SF Pro Display"',
-          'Inter',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica',
-          'Arial',
-          'sans-serif',
-        ],
-        mono: ['SF Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+        sans: ['var(--font-inter)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
         display: ['4rem', { lineHeight: '1', fontWeight: '300', letterSpacing: '-0.02em' }],

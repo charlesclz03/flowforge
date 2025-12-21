@@ -95,7 +95,7 @@ async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardU
   })
 }
 
-export default async function LeaderboardPage({
+export default async function AchievementsPage({
   searchParams,
 }: {
   searchParams: { period?: string }
@@ -140,7 +140,7 @@ export default async function LeaderboardPage({
               {/* Leaderboard Filters */}
               <div className="flex gap-4 mb-6 border-b border-white/10 pb-2">
                 <Link
-                  href="/leaderboard?period=all_time"
+                  href="/achievements?period=all_time"
                   className={`px-4 py-2 font-medium transition-colors border-b-2 ${
                     period === 'all_time'
                       ? 'text-white border-accent-purple'
@@ -150,7 +150,7 @@ export default async function LeaderboardPage({
                   All Time
                 </Link>
                 <Link
-                  href="/leaderboard?period=weekly"
+                  href="/achievements?period=weekly"
                   className={`px-4 py-2 font-medium transition-colors border-b-2 ${
                     period === 'weekly'
                       ? 'text-white border-accent-purple'

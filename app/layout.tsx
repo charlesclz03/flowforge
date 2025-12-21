@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout'
 import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from '@/components/auth/SessionProvider'
 import { PracticeSessionProvider } from '@/contexts/SessionContext'
 import { BottomNav } from '@/components/organisms/layout/BottomNav'
 import { AudioContextUnlock } from '@/components/utils/AudioContextUnlock'
+import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -98,6 +100,20 @@ export const viewport: Viewport = {
   ],
 }
 
+import { Inter, JetBrains_Mono } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+})
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -107,16 +123,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-background text-text-primary antialiased min-h-[100dvh]">
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-text-primary antialiased min-h-[100dvh] overflow-hidden`}
+      >
         <SessionProvider session={session}>
           <PracticeSessionProvider>
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent-orange text-black px-4 py-2 rounded"
-            >
-              Skip to main content
-            </a>
-            {children}
+            <SafeAreaWrapper>
+              <ResponsiveLayout>
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent-orange text-black px-4 py-2 rounded z-50"
+                >
+                  Skip to main content
+                </a>
+                {children}
+              </ResponsiveLayout>
+            </SafeAreaWrapper>
             {process.env.NEXT_PUBLIC_GA_ID ? (
               <>
                 <script

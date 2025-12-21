@@ -5,6 +5,7 @@ import { Upload, Music, Play, Square, Settings, Lock } from 'lucide-react'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { Spinner } from '@/components/atoms/Spinner'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
+import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
 
 interface UserBeatUploadProps {
   isPro: boolean
@@ -220,9 +221,14 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
                     )}
                   </button>
 
-                  <div className="flex-1 h-8 bg-black/40 rounded overflow-hidden relative">
-                    {/* Simple visualizer placeholder */}
-                    <div className="absolute inset-y-0 left-0 bg-accent-purple/20 w-1/2 animate-pulse" />
+                  <div className="flex-1 rounded overflow-hidden relative">
+                    <WaveformScrubber
+                      file={file}
+                      initialOffset={offset}
+                      onChange={(newOffset) => setOffset(newOffset)}
+                      height={60}
+                      color="#c084fc"
+                    />
                   </div>
                 </div>
 

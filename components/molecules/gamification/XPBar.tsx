@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { cn } from '@/lib/utils'
 
 export function XPBar() {
   const [progress, setProgress] = useState(0)
@@ -48,55 +49,64 @@ export function XPBar() {
   if (isLoading) return <div className="h-16 w-full animate-pulse bg-white/5 rounded-xl" />
 
   return (
-    <div className="w-full bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 rounded-xl p-4 border border-white/10 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/20 blur-3xl -translate-y-1/2 translate-x-1/2" />
-
-      <div className="relative z-10 flex items-center justify-between mb-2">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-accent-purple flex items-center justify-center font-black text-xl text-white shadow-lg shadow-accent-purple/20 transform rotate-3">
-            {level}
-          </div>
-          <div>
-            <div className="text-xs font-bold text-accent-purple uppercase tracking-wider">
-              Battle Pass
-            </div>
-            <div className="text-sm font-bold text-white">Season 1: Origins</div>
-          </div>
+    <div className="w-full space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-2">
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-accent-purple text-white uppercase tracking-wider">
+            Season 1
+          </span>
+          <span className="text-xs font-bold text-white uppercase tracking-widest">Origins</span>
         </div>
-        <div className="text-right">
-          <div className="text-xs text-text-tertiary uppercase tracking-wider mb-0.5">Total XP</div>
-          <div className="font-mono font-bold text-accent-cyan">{totalPoints} PTS</div>
+        <div className="text-xs font-mono text-accent-cyan">
+          {totalPoints} / {level * 500} XP
         </div>
       </div>
 
-      {/* Progress Bar Container */}
-      <div className="h-4 w-full bg-black/40 rounded-full overflow-hidden relative border border-white/5">
-        {/* Fill */}
+      <div className="relative h-16 w-full bg-black/40 border border-white/10 rounded-xl overflow-hidden flex items-center px-4">
+        {/* Progress Track */}
+        <div className="absolute top-1/2 left-0 right-0 h-1 bg-white/10 -translate-y-1/2" />
+
+        {/* Progress Fill */}
         <motion.div
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-accent-purple to-accent-cyan"
+          className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-accent-purple to-accent-cyan -translate-y-1/2"
           initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          animate={{ width: `${Math.min(progress, 100)}%` }}
         />
 
-        {/* Stripe Pattern Overlay */}
-        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(45deg,rgba(255,255,255,0.1)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.1)_50%,rgba(255,255,255,0.1)_75%,transparent_75%,transparent)] bg-[length:20px_20px]" />
+        {/* Nodes */}
+        <div className="relative z-10 w-full flex justify-between items-center">
+          {/* Previous Level Node */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-4 w-4 rounded-full bg-accent-purple border-2 border-black shadow-[0_0_10px_rgba(125,122,255,0.5)]" />
+            <div className="text-[10px] font-bold text-text-secondary">Lvl {level}</div>
+          </div>
 
-        {/* Glow effect at tip */}
-        <motion.div
-          className="absolute top-0 bottom-0 w-2 bg-white/50 blur-sm"
-          initial={{ left: 0 }}
-          animate={{ left: `${progress}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-        />
-      </div>
+          {/* Mid-way Ticks */}
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className={cn(
+                'h-2 w-2 rounded-full',
+                progress > i * 25 ? 'bg-accent-cyan' : 'bg-white/10'
+              )}
+            />
+          ))}
 
-      <div className="flex justify-between mt-1.5 text-[10px] font-medium text-text-tertiary uppercase">
-        <span>Level {level}</span>
-        <span>
-          {Math.round(totalPoints % 500)} / 500 XP to Level {level + 1}
-        </span>
+          {/* Next Points Reward Node */}
+          <div className="flex flex-col items-center gap-2">
+            <div
+              className={cn(
+                'h-8 w-8 rounded-lg flex items-center justify-center border-2 transition-colors',
+                progress >= 100
+                  ? 'bg-accent-orange border-accent-orange animate-pulse'
+                  : 'bg-white/5 border-white/20'
+              )}
+            >
+              <span className="text-xs">🎁</span>
+            </div>
+            <div className="text-[10px] font-bold text-text-secondary">Lvl {level + 1}</div>
+          </div>
+        </div>
       </div>
     </div>
   )

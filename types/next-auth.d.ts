@@ -9,6 +9,7 @@ declare module 'next-auth' {
       socials?: unknown
       username?: string | null
       bio?: string | null
+      currentStreak?: number
     } & DefaultSession['user']
   }
 }

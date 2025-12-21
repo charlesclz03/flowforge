@@ -21,6 +21,59 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.4.0',
+    title: 'The Platinum Polish',
+    codename: 'Diamond Cutter',
+    date: 'December 21, 2025',
+    description:
+      'The final layer of sheen. We heard your feedback and have refined the core experience. This update brings user beat uploads, a completely revamped layout, and critical stability fixes.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'User Beat Uploads: Pro users can now upload, calibrate, and manage their own instrumental tracks.',
+          'Vinyl Collection: Added tabs for "Public Tracks" and "My Tracks" for easier library management.',
+          'Achievements System: The "Leaderboard" is now "Achievements", featuring 100+ Overwatch 2 style medals.',
+          'Classic Mode: Restored the beloved central-player layout for the Practice Studio.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Windows Support: Resolved all file-system encoding issues for a smoother dev experience.',
+          'Search & Filters: Fixed all filtering logic on the Tracks page.',
+          'Performance: Optimized asset loading for instant playback.',
+          'Visuals: Standardized font usage (Inter/JetBrains Mono) and removed visual clutter.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.3.0',
+    title: 'The Gamification Update',
+    codename: 'Level Up',
+    date: 'December 20, 2025',
+    description:
+      'Turn your practice into a game. We have introduced a robust streak system, XP progression, and a battle-pass style rewards track to keep you motivated.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Streak System: Track your daily consistency with fire and ice visual indicators.',
+          'XP Battle Pass: Earn XP for every minute you flow and unlock tier rewards.',
+          'Zen Mode: Toggle off all gamification elements when you just need to focus.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          'Offline Support: Optimistic UI updates ensure your progress counts even if the connection drops.',
+          'Safe Area Wrapper: Optimized layout for modern mobile devices (Notches/Dynamic Islands).',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.0',
     title: 'The Perfectionist',
     codename: 'Infinite Loop',

@@ -1,21 +1,24 @@
 import { NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
     const session = await getServerSessionWithUserId()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    let userAchievements: Prisma.UserAchievementGetPayload<{
+      include: { achievement: true }
+    }>[] = []
 
-    const userAchievements = await prisma.userAchievement.findMany({
-      where: { userId: session.user.id },
-      include: { achievement: true },
-      orderBy: { unlockedAt: 'desc' },
-    })
+    if (session?.user?.id) {
+      userAchievements = await prisma.userAchievement.findMany({
+        where: { userId: session.user.id },
+        include: { achievement: true },
+        orderBy: { unlockedAt: 'desc' },
+      })
+    }
 
     const allAchievements = await prisma.achievement.findMany({
       orderBy: { points: 'asc' },
