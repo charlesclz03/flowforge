@@ -14,7 +14,7 @@ const beats = [
   {
     title: '2 Naughty',
     bpm: 99,
-    storageUrl: '/beats/2 Naughty.mp3',
+    storageUrl: '/beats/2-Naughty.mp3',
     isPremium: false,
     genre: null,
     duration: 264,
@@ -23,7 +23,7 @@ const beats = [
   {
     title: 'Bam Beater',
     bpm: 95,
-    storageUrl: '/beats/Bam Beater.mp3',
+    storageUrl: '/beats/Bam-Beater.mp3',
     isPremium: false,
     genre: null,
     duration: 240,
@@ -32,7 +32,7 @@ const beats = [
   {
     title: 'Bass Beats Battle',
     bpm: 89,
-    storageUrl: '/beats/Bass Beats Battle.mp3',
+    storageUrl: '/beats/Bass-Beats-Battle.mp3',
     isPremium: false,
     genre: null,
     duration: 240,
@@ -41,7 +41,7 @@ const beats = [
   {
     title: 'Battle',
     bpm: 90,
-    storageUrl: '/beats/Battle .mp3',
+    storageUrl: '/beats/Battle-.mp3',
     isPremium: false,
     genre: null,
     duration: 300,
@@ -50,7 +50,7 @@ const beats = [
   {
     title: 'Battle Baby',
     bpm: 89,
-    storageUrl: '/beats/Battle Baby.mp3',
+    storageUrl: '/beats/Battle-Baby.mp3',
     isPremium: false,
     genre: null,
     duration: 40,
@@ -59,7 +59,7 @@ const beats = [
   {
     title: 'Battle Cracker',
     bpm: 96,
-    storageUrl: '/beats/Battle Cracker.mp3',
+    storageUrl: '/beats/Battle-Cracker.mp3',
     isPremium: false,
     genre: null,
     duration: 204,
@@ -68,7 +68,7 @@ const beats = [
   {
     title: 'Battle Made',
     bpm: 89,
-    storageUrl: '/beats/Battle Made.mp3',
+    storageUrl: '/beats/Battle-Made.mp3',
     isPremium: false,
     genre: null,
     duration: 45,
@@ -77,7 +77,7 @@ const beats = [
   {
     title: 'Battle Yo',
     bpm: 90,
-    storageUrl: '/beats/Battle Yo.mp3',
+    storageUrl: '/beats/Battle-Yo.mp3',
     isPremium: false,
     genre: null,
     duration: 120,
@@ -86,7 +86,7 @@ const beats = [
   {
     title: 'Be Battle Be',
     bpm: 145,
-    storageUrl: '/beats/Be Battle Be.mp3',
+    storageUrl: '/beats/Be-Battle-Be.mp3',
     isPremium: true,
     genre: null,
     duration: 219,
@@ -95,7 +95,7 @@ const beats = [
   {
     title: 'Beat Down',
     bpm: 92,
-    storageUrl: '/beats/Beat Down.mp3',
+    storageUrl: '/beats/Beat-Down.mp3',
     isPremium: true,
     genre: null,
     duration: 240,
@@ -104,7 +104,7 @@ const beats = [
   {
     title: 'Big Battle Drops',
     bpm: 96,
-    storageUrl: '/beats/Big Battle Drops.mp3',
+    storageUrl: '/beats/Big-Battle-Drops.mp3',
     isPremium: true,
     genre: null,
     duration: 240,
@@ -122,7 +122,7 @@ const beats = [
   {
     title: 'FRB 4',
     bpm: 90,
-    storageUrl: '/beats/FRB 4.mp3',
+    storageUrl: '/beats/FRB-4.mp3',
     isPremium: true,
     genre: null,
     duration: 215,
@@ -131,7 +131,7 @@ const beats = [
   {
     title: 'FRB 5',
     bpm: 90,
-    storageUrl: '/beats/FRB 5.mp3',
+    storageUrl: '/beats/FRB-5.mp3',
     isPremium: true,
     genre: null,
     duration: 81,
@@ -140,7 +140,7 @@ const beats = [
   {
     title: 'FreeStyle Boom',
     bpm: 92,
-    storageUrl: '/beats/FreeStyle Boom.mp3',
+    storageUrl: '/beats/FreeStyle-Boom.mp3',
     isPremium: true,
     genre: null,
     duration: 101,
@@ -149,7 +149,7 @@ const beats = [
   {
     title: 'Freestyle Battle Beats 01',
     bpm: 93,
-    storageUrl: '/beats/Freestyle Battle Beats 01.mp3',
+    storageUrl: '/beats/Freestyle-Battle-Beats-01.mp3',
     isPremium: true,
     genre: null,
     duration: 176,
@@ -158,7 +158,7 @@ const beats = [
   {
     title: 'Rap Freestyle Underground',
     bpm: 89,
-    storageUrl: '/beats/Rap Freestyle Underground .mp3',
+    storageUrl: '/beats/Rap-Freestyle-Underground-.mp3',
     isPremium: false,
     genre: null,
     duration: 218,
@@ -167,7 +167,7 @@ const beats = [
   {
     title: 'Shotgun Boom',
     bpm: 95,
-    storageUrl: '/beats/Shotgun Boom.mp3',
+    storageUrl: '/beats/Shotgun-Boom.mp3',
     isPremium: false,
     genre: null,
     duration: 84,

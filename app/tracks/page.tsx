@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
-import { Search, Music } from 'lucide-react'
+import { Search, Music, Plus } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -161,27 +161,39 @@ export default function TracksPage() {
           />
         </div>
 
-        {/* Tabs */}
-        <div className="flex p-1 bg-surface-elevated/50 rounded-xl mb-6 w-fit">
+        {/* Controls Row */}
+        <div className="flex items-center justify-between mb-6">
+          {/* Tabs */}
+          <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
+            <button
+              onClick={() => setActiveTab('public')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeTab === 'public'
+                  ? 'bg-accent-purple text-white shadow-sm'
+                  : 'text-text-tertiary hover:text-white'
+              }`}
+            >
+              Public Tracks
+            </button>
+            <button
+              onClick={() => setActiveTab('mine')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeTab === 'mine'
+                  ? 'bg-accent-purple text-white shadow-sm'
+                  : 'text-text-tertiary hover:text-white'
+              }`}
+            >
+              My Tracks
+            </button>
+          </div>
+
+          {/* Action Button */}
           <button
-            onClick={() => setActiveTab('public')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-              activeTab === 'public'
-                ? 'bg-accent-purple text-white shadow-sm'
-                : 'text-text-tertiary hover:text-white'
-            }`}
+            onClick={() => setIsUploadModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg font-medium text-sm hover:scale-105 transition-transform"
           >
-            Public Tracks
-          </button>
-          <button
-            onClick={() => setActiveTab('mine')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-              activeTab === 'mine'
-                ? 'bg-accent-purple text-white shadow-sm'
-                : 'text-text-tertiary hover:text-white'
-            }`}
-          >
-            My Tracks
+            <Plus size={16} />
+            <span>New Beat</span>
           </button>
         </div>
 

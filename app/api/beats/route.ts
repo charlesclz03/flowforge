@@ -14,9 +14,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: result.error || 'Failed to fetch beats' }, { status: 500 })
     }
 
+    // Runtime fix for legacy data: ensure storageUrls align with disk filenames (replace spaces with hyphens)
+    const sanitizedBeats = result.data?.map((beat) => ({
+      ...beat,
+      storageUrl: beat.storageUrl ? beat.storageUrl.replace(/\s+/g, '-') : beat.storageUrl,
+    }))
+
     return NextResponse.json({
-      beats: result.data,
-      count: result.data?.length || 0,
+      beats: sanitizedBeats,
+      count: sanitizedBeats?.length || 0,
     })
   } catch (error) {
     console.error('API Error:', error)
