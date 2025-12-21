@@ -6,7 +6,7 @@ import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
 import { Search, Music, Plus, Lock } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
-import { useRouter } from 'next/navigation'
+
 import { useSession } from 'next-auth/react'
 import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
