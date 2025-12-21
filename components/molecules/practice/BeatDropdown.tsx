@@ -311,7 +311,10 @@ export function BeatDropdown({
               </div>
 
               {/* Library Tab */}
-              <TabsContent value="library" className="flex-1 overflow-y-auto mt-0">
+              <TabsContent
+                value="library"
+                className="flex-1 overflow-y-auto mt-0 h-[300px] min-h-[300px]"
+              >
                 {/* Genre Filter Strip */}
                 {/* Filter strip removed as requested */}
 
@@ -485,7 +488,10 @@ export function BeatDropdown({
 
               {/* Local Tab */}
               {isPro && (
-                <TabsContent value="local" className="flex-1 overflow-y-auto mt-0">
+                <TabsContent
+                  value="local"
+                  className="flex-1 overflow-y-auto mt-0 h-[300px] min-h-[300px]"
+                >
                   <div className="p-4 border-b border-white/5">
                     <label className="flex items-center justify-center w-full gap-2 p-3 text-sm font-medium text-white transition-colors border border-dashed rounded-xl cursor-pointer bg-white/5 border-white/20 hover:bg-white/10 hover:border-accent-purple/50 hover:text-accent-purple">
                       <input

@@ -17,7 +17,7 @@ export default function TracksPage() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
-  const router = useRouter()
+  // const router = useRouter() // Unused
   const { data: session } = useSession()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
@@ -243,7 +243,7 @@ export default function TracksPage() {
                 isPlaying={playingBeatId === beat.id}
                 isFavorited={favoriteIds.has(beat.id)}
                 onPlay={() => handlePlay(beat)}
-                onSelect={() => router.push(`/practice?beat=${beat.id}`)}
+                onSelect={() => {}}
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
                 onDelete={
                   beat.uploaderId && beat.uploaderId === session?.user?.id
