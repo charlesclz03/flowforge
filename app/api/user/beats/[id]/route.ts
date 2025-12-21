@@ -9,7 +9,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
   const supabase = createClient(supabaseUrl, supabaseKey)
-  
+
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {

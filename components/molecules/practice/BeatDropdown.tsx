@@ -42,9 +42,6 @@ export function BeatDropdown({
   const [localBeats, setLocalBeats] = useState<Beat[]>([])
   const [myBeats, setMyBeats] = useState<Beat[]>([])
 
-  // Filter State
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
-
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
