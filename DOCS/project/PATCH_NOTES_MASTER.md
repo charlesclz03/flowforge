@@ -12,7 +12,9 @@ _System logs, balance changes, and the constant evolution of the grind._
 The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
 
 ### 🐛 QA Audit Log (Dec 19, 2025)
+
 A comprehensive "Pro" audit of v1.3.0 revealed critical areas for the next patch:
+
 - **CRITICAL**: Stripe Portal (`/api/stripe/portal`) is returning 404.
 - **CRITICAL**: Cypher/Duel modes (`/cypher`) are inaccessible (404).
 - **Major**: Missing "Share" functionality for viral loops.
@@ -20,16 +22,19 @@ A comprehensive "Pro" audit of v1.3.0 revealed critical areas for the next patch
 - **Minor**: Toast notifications missing on settings save.
 
 ### ✨ The Universal Gateway
+
 - **Zero-Friction Practice**: Guests can now reach the practice floor without a login wall. Redirects from `/` now lead straight to the gym.
 - **Strategic Auth**: Login prompts are now focused only where they matter—on **Recordings**, **Profile**, and the **Record** button for guests.
 - **Universal Bottom Nav**: A refined, consistent docking experience for every visitor.
 
 ### 👥 Cypher Mode Expansion
+
 - **Blue Indicator UI**: A high-visibility blue highlight for the mode selector.
 - **Dynamic Player Selection**: Choose between 2, 3, or 4 players instantly when entering Cypher mode.
 - **Practice Recap**: Your session settings (Difficulty, BPM, Bars) are now visible at all times above the "READY" state.
 
 ### 🎨 Visual & Technical Polish
+
 - **Frozen Visualizer**: The visualizer now maintains its state when the beat stops—no more flat lines.
 - **Session Recaps**: Complete summary of your session parameters (Difficulty, BPM, Frequency) in the final recap modal.
 - **Lint Cleanup**: Fixed persistent serialization warnings by optimizing component boundaries.
@@ -45,7 +50,7 @@ FreeStyla gets its official branding treatment. New transparent icon, proper cap
 
 ### 🎨 Branding Updates
 
-- **FreeStyla**:  Proper capitalization applied everywhere (manifest, metadata, components).
+- **FreeStyla**: Proper capitalization applied everywhere (manifest, metadata, components).
 - **Transparent Icon**: New app icon with no background—looks clean on any device.
 - **Icon Files Updated**: logo.png, icon.png, icon-192x192.png, icon-512x512.png, apple-touch-icon.png, og-image.png.
 
@@ -244,20 +249,23 @@ In the beginning, there was code. The infrastructure was forged from the void.
 We have pivoted! Freestyla is no longer about social noise; it's about **you vs. the beat**. The platform has been reimagined as a personal practice gym with deep gamification.
 
 ### 🏆 Achievements
+
 - **Unlockable Badges**: Earn recognition for streaks, session milestones, and exploring new genres.
 - **Points System**: Every achievement contributes to your global Flow Score.
 - **Instant Feedback**: Get notified immediately when you level up your skills.
 
 ### 📊 Leaderboard 2.0
+
 - **Skill-Based Ranking**: The leaderboard now ranks by **Achievement Points**, not just activity.
 - **Weekly Cycles**: Ranks reset every Wednesday. Can you claim the crown this week?
 
 ### 🧭 Navigation & Core Experience
+
 - **Vinyl Home**: The new home screen is a dedicated **Beat Catalog**. Find your sound faster with search and filters.
 - **Simplified Nav**: Removed Feed and Messages to focus purely on **Practice** and **Progress**.
 - **Recorder Library**: A dedicated tab for your personal recordings.
 
 ### 🧹 Deprecated Features
+
 - **Social Feed**: Removed to reduce distraction.
 - **Direct Messaging**: Removed to focus on solo practice.
-

@@ -403,9 +403,9 @@ async function main() {
     // Beats don't have a unique constraint other than ID, so we might duplicate if we just create.
     // For seeding, checking existing by title/artist might be better.
     const existing = await prisma.beat.findFirst({
-      where: { title: beat.title, artistName: beat.artistName }
+      where: { title: beat.title, artistName: beat.artistName },
     })
-    
+
     if (!existing) {
       await prisma.beat.create({ data: beat })
     }

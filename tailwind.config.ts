@@ -34,7 +34,7 @@ const config: Config = {
           // Audit Semantic Colors
           success: '#30D158', // Green
           warning: '#FF9F0A', // Amber/Orange
-          error: '#FF453A',   // Red
+          error: '#FF453A', // Red
         },
         surface: {
           subtle: '#121212', // Off-black (Audit 4.2)

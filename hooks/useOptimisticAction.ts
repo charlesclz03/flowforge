@@ -18,7 +18,7 @@ export function useOptimisticAction<T, R = unknown>(
     async (variables: T) => {
       setIsPending(true)
       setError(null)
-      
+
       // 1. Optimistic Update
       if (options.onOptimistic) {
         try {
@@ -31,7 +31,7 @@ export function useOptimisticAction<T, R = unknown>(
       try {
         // 2. Perform Action
         const result = await action(variables)
-        
+
         // 3. Success Handler
         if (options.onSuccess) {
           options.onSuccess(result, variables)
@@ -40,7 +40,7 @@ export function useOptimisticAction<T, R = unknown>(
       } catch (e) {
         const err = e instanceof Error ? e : new Error(String(e))
         setError(err)
-        
+
         // 4. Error Handler (Rollback logic should happen here by consumer)
         if (options.onError) {
           options.onError(err, variables)

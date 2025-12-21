@@ -22,8 +22,10 @@ export function XPBar() {
 
           let points = 0
           if (data.userAchievements && data.allAchievements) {
-            const unlockedMap = new Set(data.userAchievements.map((ua: any) => ua.achievementId))
-            data.allAchievements.forEach((ach: any) => {
+            const unlockedMap = new Set(
+              data.userAchievements.map((ua: { achievementId: string }) => ua.achievementId)
+            )
+            data.allAchievements.forEach((ach: { id: string; points: number }) => {
               if (unlockedMap.has(ach.id)) points += ach.points
             })
           }

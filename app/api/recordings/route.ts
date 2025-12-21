@@ -132,7 +132,7 @@ export async function POST(request: Request) {
         await AchievementSystem.checkAndUnlock(session.user.id, {
           type: 'RECORDING_SAVED',
         })
-        
+
         // Update Streak
         const { StreakSystem } = await import('@/lib/gamification/streak')
         await StreakSystem.checkAndUpdate(session.user.id)

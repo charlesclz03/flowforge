@@ -15,7 +15,7 @@ export function useSound() {
 
   const play = useCallback((type: SoundType) => {
     if (!audioContextRef.current) return
-    
+
     // Resume context if suspended
     if (audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume()
@@ -73,27 +73,27 @@ export function useSound() {
         osc.start(now)
         osc.stop(now + 0.3)
         break
-        
+
       case 'success':
-         // Major triad arpeggio
-         const playNote = (freq: number, startTime: number) => {
-           const o = ctx.createOscillator()
-           const g = ctx.createGain()
-           o.type = 'sine'
-           o.connect(g)
-           g.connect(ctx.destination)
-           
-           o.frequency.value = freq
-           g.gain.setValueAtTime(0.2, startTime)
-           g.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4)
-           
-           o.start(startTime)
-           o.stop(startTime + 0.4)
-         }
-         playNote(523.25, now) // C5
-         playNote(659.25, now + 0.1) // E5
-         playNote(783.99, now + 0.2) // G5
-         playNote(1046.50, now + 0.3) // C6
+        // Major triad arpeggio
+        const playNote = (freq: number, startTime: number) => {
+          const o = ctx.createOscillator()
+          const g = ctx.createGain()
+          o.type = 'sine'
+          o.connect(g)
+          g.connect(ctx.destination)
+
+          o.frequency.value = freq
+          g.gain.setValueAtTime(0.2, startTime)
+          g.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4)
+
+          o.start(startTime)
+          o.stop(startTime + 0.4)
+        }
+        playNote(523.25, now) // C5
+        playNote(659.25, now + 0.1) // E5
+        playNote(783.99, now + 0.2) // G5
+        playNote(1046.5, now + 0.3) // C6
         break
     }
   }, [])

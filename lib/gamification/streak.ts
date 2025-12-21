@@ -27,7 +27,12 @@ export class StreakSystem {
           where: { id: userId },
           data: { lastPracticeDate: now },
         })
-        return { currentStreak: newStreak, longestStreak: user.longestStreak, isNewRecord: false, kept: true }
+        return {
+          currentStreak: newStreak,
+          longestStreak: user.longestStreak,
+          isNewRecord: false,
+          kept: true,
+        }
       }
 
       const yesterday = subDays(today, 1)
@@ -55,7 +60,7 @@ export class StreakSystem {
       currentStreak: newStreak,
       longestStreak: newLongest,
       isNewRecord: newStreak > user.longestStreak,
-      kept: false
+      kept: false,
     }
   }
 }

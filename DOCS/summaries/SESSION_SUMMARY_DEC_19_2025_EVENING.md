@@ -7,6 +7,7 @@ This session focused on branding updates, icon replacement, and fixing various U
 ## Changes Made
 
 ### 1. Branding Updates
+
 - **App Name**: Changed from "Freestyla" to "FreeStyla" (capital S) across all files:
   - `public/manifest.json`
   - `app/layout.tsx` (metadata)
@@ -19,6 +20,7 @@ This session focused on branding updates, icon replacement, and fixing various U
   - `components/organisms/landing/LandingHowItWorks.tsx`
 
 ### 2. Icon Updates
+
 - User provided new transparent icon: `Freestyla Icon NO BACKGROUND.png`
 - Copied to all required icon files:
   - `logo.png`
@@ -29,9 +31,10 @@ This session focused on branding updates, icon replacement, and fixing various U
   - `og-image.png`
 
 ### 3. Technical Fixes
+
 - **AppHeader**: Replaced `<img>` with `next/image` `<Image>` component for better LCP performance
 - **BeatGridCard**: Fixed CRLF line endings (converted to LF)
-- **PracticeControls**: 
+- **PracticeControls**:
   - Non-Pro users see gray mic (clicking opens premium modal)
   - Pro users see red mic (can record)
   - Fixed button styling for locked state
@@ -39,15 +42,18 @@ This session focused on branding updates, icon replacement, and fixing various U
 - **DifficultySelection**: Removed footer text "X free beats • Y premium beats" that was overlapping bottom nav
 
 ### 4. Documentation
+
 - Updated `PATCH_NOTES_MASTER.md` with v1.2.1 entry
 - Updated README title to FreeStyla
 - Created this session summary
 
 ## Commits
+
 1. `7aa00df` - fix: mic redirect to difficultyselection, gray mic for non-Pro with premium modal, remove footer text overlap
 2. `2a072a7` - fix: FreeStyla branding, next/image in AppHeader, new transparent icons, CRLF fixes
 
 ## Files Modified (Key)
+
 - `public/manifest.json`
 - `app/layout.tsx`
 - `app/page.tsx`
@@ -59,4 +65,5 @@ This session focused on branding updates, icon replacement, and fixing various U
 - Multiple icon files in `/public/`
 
 ## Status
+
 ✅ All changes committed and pushed to Vercel

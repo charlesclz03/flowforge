@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## [v1.1.7] - 2025-12-19
 
 ### Added
@@ -24,7 +23,6 @@
 
 - **Streak Freeze**: Removed all UI and logic.
 - **Safe Mode**: Removed all UI and logic.
-
 
 ## [v1.1.5] - 2025-12-18
 
