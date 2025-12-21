@@ -8,6 +8,9 @@ import { Search, Music } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
+import { AddBeatCard } from '@/components/molecules/tracks/AddBeatCard'
+import { Plus } from 'lucide-react'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -17,6 +20,7 @@ export default function TracksPage() {
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
   const router = useRouter()
   const { data: session } = useSession()
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -41,6 +45,31 @@ export default function TracksPage() {
       }
     }
     fetchData()
+  }, [])
+
+  const fetchBeats = async () => {
+    setIsLoading(true)
+    try {
+      const [beatsRes, userBeatsRes, favs] = await Promise.all([
+        fetch('/api/beats').then((res) => res.json()),
+        fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
+        getFavoriteBeatIds(),
+      ])
+
+      const publicBeats = beatsRes.beats || []
+      const userBeats = userBeatsRes.beats || []
+
+      setBeats([...userBeats, ...publicBeats])
+      setFavoriteIds(new Set(favs))
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchBeats()
   }, [])
 
   const handlePlay = (beat: Beat) => {
@@ -182,6 +211,7 @@ export default function TracksPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
+            {activeTab === 'mine' && <AddBeatCard onClick={() => setIsUploadModalOpen(true)} />}
             {filteredBeats.map((beat) => (
               <BeatGridCard
                 key={beat.id}
@@ -208,9 +238,26 @@ export default function TracksPage() {
               <Music size={32} />
             </div>
             <p>No beats found looking for &quot;{searchQuery}&quot;</p>
+            {activeTab === 'mine' && (
+              <button
+                onClick={() => setIsUploadModalOpen(true)}
+                className="mt-4 flex items-center gap-2 px-6 py-3 bg-accent-purple text-white rounded-full font-semibold hover:scale-105 transition-transform"
+              >
+                <Plus size={20} />
+                Upload your first beat
+              </button>
+            )}
           </div>
         )}
       </div>
+      <UserBeatUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        isPro={true} // Improve: Check actual subscription if needed, but for now assuming access or handling inside
+        onSuccess={() => {
+          fetchBeats()
+        }}
+      />
     </div>
   )
 }

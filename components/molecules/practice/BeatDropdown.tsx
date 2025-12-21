@@ -9,11 +9,11 @@ import { toast } from 'react-hot-toast'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
 import { addLocalBeat, getLocalBeats, deleteLocalBeat } from '@/lib/beats/localBeats'
-import { UserBeatUploadModal } from './UserBeatUploadModal'
 
 interface BeatDropdownProps {
   beats: Beat[]
   selectedBeat: Beat | null
+
   onSelect: (beat: Beat) => void
   onLockedSelect?: () => void
   disabled?: boolean
@@ -41,7 +41,6 @@ export function BeatDropdown({
   // Local Beats State
   const [localBeats, setLocalBeats] = useState<Beat[]>([])
   const [myBeats, setMyBeats] = useState<Beat[]>([])
-  const [showUploadModal, setShowUploadModal] = useState(false)
 
   // Filter State
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
@@ -468,18 +467,7 @@ export function BeatDropdown({
 
               {/* My Beats Tab (Cloud) */}
               <TabsContent value="my-beats" className="flex-1 overflow-y-auto mt-0">
-                <div className="p-4 border-b border-white/5">
-                  <button
-                    onClick={() => setShowUploadModal(true)}
-                    className="flex items-center justify-center w-full gap-2 p-3 text-sm font-medium text-white transition-colors border border-dashed rounded-xl cursor-pointer bg-white/5 border-white/20 hover:bg-white/10 hover:border-accent-purple/50 hover:text-accent-purple"
-                  >
-                    <Upload size={16} />
-                    <span>Upload New Beat</span>
-                  </button>
-                  <p className="mt-2 text-[10px] text-center text-text-tertiary">
-                    Synced to your account. Calibrate start points for perfect timing.
-                  </p>
-                </div>
+                <div className="p-4 border-b border-white/5"></div>
                 <div className="p-2 space-y-1">
                   {myBeats.length === 0 ? (
                     <div className="p-8 text-center text-sm text-text-secondary">
@@ -515,7 +503,6 @@ export function BeatDropdown({
                           <button
                             onClick={() => {
                               onSelect(beat)
-                              setIsOpen(false)
                               stopPreview()
                             }}
                             className="flex-1 text-left"
@@ -623,16 +610,6 @@ export function BeatDropdown({
           </div>
         )}
       </div>
-
-      <UserBeatUploadModal
-        isOpen={showUploadModal}
-        onClose={() => setShowUploadModal(false)}
-        isPro={isPro}
-        onSuccess={() => {
-          fetchMyBeats() // Refresh list
-          toast.success('Library updated')
-        }}
-      />
     </div>
   )
 }
