@@ -40,7 +40,7 @@ export const SafeAreaWrapper = ({
         after safe areas are applied, enforcing the "Compressible Layout" logic 
         from the Audit.
       */}
-      <div className="flex-1 w-full h-full relative overflow-hidden flex flex-col">{children}</div>
+      <div className="flex-1 w-full h-full relative flex flex-col">{children}</div>
     </div>
   )
 }
