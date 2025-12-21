@@ -69,10 +69,16 @@ export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Be
 
     // Runtime fix: legacy beats from seed might have spaces in storageUrl
     // but the actual files have hyphens.
-    const sanitized = beats.map((b) => ({
-      ...b,
-      storageUrl: b.storageUrl?.replace(/\s+/g, '-') ?? b.storageUrl,
-    }))
+    const sanitized = beats.map((b) => {
+      let url = b.storageUrl
+      if (url && !url.startsWith('/') && !url.startsWith('http')) {
+        url = '/' + url
+      }
+      return {
+        ...b,
+        storageUrl: url?.replace(/\s+/g, '-') ?? url,
+      }
+    })
 
     return {
       success: true,

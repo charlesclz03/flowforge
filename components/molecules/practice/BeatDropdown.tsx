@@ -230,27 +230,8 @@ export function BeatDropdown({
     }
   }
 
-  // Filter Logic
   // Extract genres/tags
-  const allTags = Array.from(
-    new Set(
-      beats.flatMap((b) => {
-        const tags = b.tags || []
-        if (b.genre) tags.push(b.genre)
-        return tags
-      })
-    )
-  )
-    .filter(Boolean)
-    .sort()
-
-  const displayedBeats = selectedGenre
-    ? beats.filter((b) => {
-        const tags = b.tags || []
-        if (b.genre) tags.push(b.genre)
-        return tags.includes(selectedGenre)
-      })
-    : beats
+  const displayedBeats = beats
 
   if (isLoading) {
     return (
@@ -335,38 +316,12 @@ export function BeatDropdown({
               {/* Library Tab */}
               <TabsContent value="library" className="flex-1 overflow-y-auto mt-0">
                 {/* Genre Filter Strip */}
-                <div className="px-3 py-2 flex gap-2 overflow-x-auto no-scrollbar mask-gradient-x border-b border-white/5">
-                  <button
-                    onClick={() => setSelectedGenre(null)}
-                    className={cn(
-                      'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium transition-colors border',
-                      !selectedGenre
-                        ? 'bg-accent-purple text-white border-accent-purple'
-                        : 'bg-white/5 text-text-secondary border-white/10 hover:bg-white/10'
-                    )}
-                  >
-                    All
-                  </button>
-                  {allTags.map((genre) => (
-                    <button
-                      key={genre}
-                      onClick={() => setSelectedGenre(genre)}
-                      className={cn(
-                        'whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium transition-colors border',
-                        selectedGenre === genre
-                          ? 'bg-accent-purple text-white border-accent-purple'
-                          : 'bg-white/5 text-text-secondary border-white/10 hover:bg-white/10'
-                      )}
-                    >
-                      #{genre}
-                    </button>
-                  ))}
-                </div>
+                {/* Filter strip removed as requested */}
 
                 <div className="p-2 space-y-1">
                   {displayedBeats.length === 0 ? (
                     <div className="p-8 text-center text-sm text-text-secondary">
-                      {selectedGenre ? 'No beats found with this tag.' : 'No beats available.'}
+                      No beats available.
                     </div>
                   ) : (
                     displayedBeats.map((beat) => {
