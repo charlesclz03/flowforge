@@ -5,13 +5,15 @@ import { prisma } from '@/lib/prisma'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase Client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY! // Use Service Role Key for Admin Uploads!
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  // Initialize Supabase Client (Lazy Load)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const supabase = createClient(supabaseUrl, supabaseKey)
+
   try {
     const session = await getServerSession(authOptions)
 
