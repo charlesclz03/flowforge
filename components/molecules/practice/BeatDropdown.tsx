@@ -281,8 +281,8 @@ export function BeatDropdown({
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[400px] overflow-hidden rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
-            <Tabs defaultValue="library" className="flex flex-col h-full">
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
+            <Tabs defaultValue="library" className="flex flex-col h-full overflow-hidden">
               <div className="px-3 pt-3 pb-2 border-b border-white/5">
                 <TabsList className="w-full bg-white/5">
                   <TabsTrigger value="library" className="flex-1">
