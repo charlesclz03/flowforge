@@ -632,6 +632,11 @@ export default function PracticePage() {
                 isRecording={isRecording}
                 recordingDuration={duration} // from useRecording hook
                 isPro={isPro}
+                isAuthenticated={!!session?.user || true} // Allow all users to start practice (guests can practice, just not save)
+                onUpgrade={() => {
+                  setPremiumTrigger('recording')
+                  setShowPremiumModal(true)
+                }}
                 onDifficultyChange={setDifficulty}
                 onFrequencyChange={setFrequency}
                 error={error ? error.message : undefined}
