@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
-import {
-  RefreshCcw,
-  Zap,
-  Gauge,
-  Infinity as InfinityIcon,
-  User,
-} from 'lucide-react'
+import { RefreshCcw, Zap, Gauge, Infinity as InfinityIcon, User } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { Beat } from '@/types/database'
@@ -17,13 +12,16 @@ import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
 type PracticeControlsProps = {
   selectedBeat: Beat
+  beats: Beat[] // Added for Dropdown
   isPlaying: boolean
   isLoading: boolean
   currentTime: number
   sessionDuration: number
   currentWord: string
+  countdownValue: number | 'GO' | null // Added for Countdown
   onToggle: () => void
   onRestart?: () => void
+  onBeatSelect: (beat: Beat) => void // Added for Dropdown
   difficulty: number
   frequency: number
   isGolden?: boolean
@@ -41,13 +39,16 @@ type PracticeControlsProps = {
 
 export default function PracticeControls({
   selectedBeat,
+  beats,
   isPlaying,
   isLoading,
   currentTime,
   sessionDuration,
   currentWord,
+  countdownValue,
   onToggle,
   onRestart,
+  onBeatSelect,
   difficulty,
   frequency,
   isGolden = false,
@@ -89,8 +90,7 @@ export default function PracticeControls({
     if (difficulty === 3) {
       return {
         label: 'Hard',
-        classes:
-          'bg-accent-red/10 text-accent-red border-accent-red/20 hover:bg-accent-red/20',
+        classes: 'bg-accent-red/10 text-accent-red border-accent-red/20 hover:bg-accent-red/20',
       }
     }
     return {
@@ -101,20 +101,13 @@ export default function PracticeControls({
   }
 
   const difficultyMeta = getDifficultyMeta()
-  const intervalProgress = getIntervalProgress(
-    currentTime || 0,
-    selectedBeat.bpm,
-    frequency
-  )
+  const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
 
   // PWA Prompt State
   const [showPWAInstall, setShowPWAInstall] = useState(false)
 
   const handleRecordClick = () => {
-    if (
-      typeof window !== 'undefined' &&
-      !localStorage.getItem('hasWarnedPWA')
-    ) {
+    if (typeof window !== 'undefined' && !localStorage.getItem('hasWarnedPWA')) {
       setShowPWAInstall(true)
       localStorage.setItem('hasWarnedPWA', 'true')
       return
@@ -141,13 +134,7 @@ export default function PracticeControls({
   }
 
   // Custom Studio Mic Icon
-  const StudioMicIcon = ({
-    className,
-    size = 48,
-  }: {
-    className?: string
-    size?: number
-  }) => (
+  const StudioMicIcon = ({ className, size = 48 }: { className?: string; size?: number }) => (
     <svg
       width={size}
       height={size}
@@ -166,13 +153,19 @@ export default function PracticeControls({
   )
 
   return (
-    <Card
-      padding="lg"
-      className={cn(
-        'transition-opacity duration-500 bg-transparent border-none'
-      )}
-    >
+    <Card padding="lg" className={cn('transition-opacity duration-500 bg-transparent border-none')}>
       <div className="flex flex-col items-center gap-4 sm:gap-6">
+        {/* Beat Selection Dropdown */}
+        <div className="w-full max-w-xs z-20">
+          <BeatDropdown
+            beats={beats}
+            selectedBeat={selectedBeat}
+            onSelect={onBeatSelect}
+            isPro={isPro}
+            disabled={isPlaying || isRecording}
+          />
+        </div>
+
         {/* Info Tags (Standardized) */}
         <div className="flex flex-col items-center gap-3">
           <div className="flex items-center justify-center gap-2">
@@ -198,9 +191,7 @@ export default function PracticeControls({
               <span>{difficultyMeta.label}</span>
             </button>
 
-            <span className="text-xs font-bold text-white/20">
-              {selectedBeat.bpm} BPM
-            </span>
+            <span className="text-xs font-bold text-white/20">{selectedBeat.bpm} BPM</span>
 
             <button
               onClick={cycleFrequency}
@@ -226,10 +217,7 @@ export default function PracticeControls({
         </div>
 
         {/* Word Prompt */}
-        <div
-          id="tour-word-prompt"
-          className="flex w-full items-center justify-center h-20"
-        >
+        <div id="tour-word-prompt" className="flex w-full items-center justify-center h-20">
           <WordPrompt
             word={currentWord || null}
             show={isPlaying && !!currentWord}
@@ -322,49 +310,57 @@ export default function PracticeControls({
             <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full">
               {isPlaying ? (
                 <div className="flex flex-col items-center justify-center space-y-2">
-                  <div className="flex items-center gap-2">
-                    {isRecording && !isInfiniteMode && (
-                      <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                      </span>
-                    )}
-                    <span
-                      className={cn(
-                        'text-[10px] font-bold uppercase tracking-[0.3em]',
-                        isRecording && !isInfiniteMode
-                          ? 'text-red-400'
-                          : 'text-accent-purple'
-                      )}
+                  {/* Countdown Overlay */}
+                  {countdownValue ? (
+                    <motion.div
+                      key={countdownValue}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1.2 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      className="flex flex-col items-center justify-center"
                     >
-                      {isInfiniteMode
-                        ? 'Free Flow'
-                        : isRecording
-                          ? 'Recording'
-                          : 'Playing'}
-                    </span>
-                  </div>
+                      <span className="text-7xl sm:text-8xl font-black text-white drop-shadow-neon">
+                        {countdownValue}
+                      </span>
+                      <span className="text-xl font-bold text-accent-purple tracking-widest uppercase mt-2">
+                        Get Ready
+                      </span>
+                    </motion.div>
+                  ) : (
+                    /* Normal Player State */
+                    <>
+                      <div className="flex items-center gap-2">
+                        {isRecording && !isInfiniteMode && (
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                          </span>
+                        )}
+                        <span
+                          className={cn(
+                            'text-[10px] font-bold uppercase tracking-[0.3em]',
+                            isRecording && !isInfiniteMode ? 'text-red-400' : 'text-accent-purple'
+                          )}
+                        >
+                          {isInfiniteMode ? 'Free Flow' : isRecording ? 'Recording' : 'Playing'}
+                        </span>
+                      </div>
 
-                  <span className="text-6xl sm:text-7xl font-light text-white tabular-nums tracking-tighter leading-none">
-                    {isInfiniteMode ? (
-                      <InfinityIcon
-                        size={64}
-                        className="text-white/80 animate-pulse-slow"
-                      />
-                    ) : isRecording ? (
-                      formatTime(
-                        Math.max(0, (isPro ? 600 : 120) - recordingDuration)
-                      )
-                    ) : (
-                      formatTime(
-                        Math.max(0, sessionDuration - (currentTime || 0))
-                      )
-                    )}
-                  </span>
+                      <span className="text-6xl sm:text-7xl font-light text-white tabular-nums tracking-tighter leading-none">
+                        {isInfiniteMode ? (
+                          <InfinityIcon size={64} className="text-white/80 animate-pulse-slow" />
+                        ) : isRecording ? (
+                          formatTime(Math.max(0, (isPro ? 600 : 120) - recordingDuration))
+                        ) : (
+                          formatTime(Math.max(0, sessionDuration - (currentTime || 0)))
+                        )}
+                      </span>
 
-                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] mt-4">
-                    Tap to Stop
-                  </span>
+                      <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] mt-4">
+                        Tap to Stop
+                      </span>
+                    </>
+                  )}
                 </div>
               ) : isLoading ? (
                 <div className="flex flex-col items-center justify-center space-y-4">
@@ -416,9 +412,7 @@ export default function PracticeControls({
                 )}
               />
               {/* Text */}
-              <span className="text-3xl font-black tracking-tighter text-black">
-                REC
-              </span>
+              <span className="text-3xl font-black tracking-tighter text-black">REC</span>
             </div>
 
             {/* Right Bracket */}

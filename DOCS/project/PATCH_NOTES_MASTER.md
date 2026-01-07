@@ -11,6 +11,15 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
 
+### 🩹 Patch 1.3.1: The Sonic Fix (Jan 07, 2026)
+
+**Focus:** Audio Stability & Practice Regressions
+
+- **Practice Page**: The countdown is back! "3... 2... 1... GO" now correctly syncs with audio start.
+- **Beat Previews**: Fixed silent start issues in the Dropdown and Tracks page (CORS/Ref updates).
+- **Favorites**: Restored the missing beat selection dropdown in the Practice studio.
+- **Cleanup**: Deleted legacy audio components to prevent conflicts.
+
 ### 🐛 QA Audit Log (Dec 19, 2025)
 
 A comprehensive "Pro" audit of v1.3.0 revealed critical areas for the next patch:

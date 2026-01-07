@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
@@ -29,20 +29,18 @@ export default function TracksPage() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
 
+  const audioRef = useRef<HTMLAudioElement>(null)
+
   // Safe cast for user extended properties
   const user = session?.user
-  const isPro =
-    user?.subscriptionStatus === 'active' ||
-    user?.subscriptionStatus === 'trialing'
+  const isPro = user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [beatsRes, userBeatsRes, favs] = await Promise.all([
           fetch('/api/beats').then((res) => res.json()),
-          fetch('/api/user/beats').then((res) =>
-            res.ok ? res.json() : { beats: [] }
-          ),
+          fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
           getFavoriteBeatIds(),
         ])
 
@@ -65,9 +63,7 @@ export default function TracksPage() {
     try {
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
         fetch('/api/beats').then((res) => res.json()),
-        fetch('/api/user/beats').then((res) =>
-          res.ok ? res.json() : { beats: [] }
-        ),
+        fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
         getFavoriteBeatIds(),
       ])
 
@@ -86,8 +82,8 @@ export default function TracksPage() {
   useEffect(() => {
     fetchBeats()
 
+    const audio = audioRef.current
     return () => {
-      const audio = document.getElementById('preview-audio') as HTMLAudioElement
       if (audio) {
         audio.pause()
         audio.currentTime = 0
@@ -96,20 +92,32 @@ export default function TracksPage() {
   }, [])
 
   const handlePlay = (beat: Beat) => {
+    const audio = audioRef.current
+    if (!audio) return
+
     if (playingBeatId === beat.id) {
       setPlayingBeatId(null)
-      const audio = document.getElementById('preview-audio') as HTMLAudioElement
-      if (audio) {
-        audio.pause()
-        audio.currentTime = 0
-      }
+      audio.pause()
+      audio.currentTime = 0
     } else {
       setPlayingBeatId(beat.id)
-      const audio = document.getElementById('preview-audio') as HTMLAudioElement
-      if (audio) {
-        audio.src = beat.storageUrl
-        audio.play()
-        audio.onended = () => setPlayingBeatId(null)
+      audio.src = beat.storageUrl
+      // audio.crossOrigin = 'anonymous' // Avoid if not needed for simple playback
+      console.log('Playing preview:', beat.storageUrl)
+
+      const playPromise = audio.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.error('Playback failed:', err)
+          setPlayingBeatId(null)
+          // toast.error('Check console for playback error')
+        })
+      }
+
+      audio.onended = () => setPlayingBeatId(null)
+      audio.onerror = (e) => {
+        console.error('Audio element error:', e)
+        setPlayingBeatId(null)
       }
     }
   }
@@ -173,14 +181,12 @@ export default function TracksPage() {
       (b) =>
         b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.tags.some((t: string) =>
-          t.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        b.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
     )
 
   return (
     <div className="min-h-screen bg-background pb-32">
-      <audio id="preview-audio" className="hidden" />
+      <audio ref={audioRef} className="hidden" />
 
       <div className="px-6 pt-12 pb-6 space-y-6">
         <div className="flex items-center justify-between">
@@ -246,10 +252,7 @@ export default function TracksPage() {
         {isLoading ? (
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="aspect-square rounded-2xl bg-white/5 animate-pulse"
-              />
+              <div key={i} className="aspect-square rounded-2xl bg-white/5 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -314,7 +317,6 @@ export default function TracksPage() {
         onClose={() => setIsPremiumModalOpen(false)}
         trigger="beat"
       />
-      <audio id="preview-audio" className="hidden" />
     </div>
   )
 }

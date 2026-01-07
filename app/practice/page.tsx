@@ -39,6 +39,7 @@ interface SessionSummary {
   isOptimistic: boolean
 }
 
+import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 
@@ -55,6 +56,7 @@ export default function PracticePage() {
   // Session State
   const {
     selectedBeat,
+    setBeat,
     frequency,
     difficulty,
     setFrequency,
@@ -75,14 +77,10 @@ export default function PracticePage() {
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
-  const [premiumTrigger, setPremiumTrigger] = useState<
-    'recording' | 'beat' | 'history'
-  >('beat')
+  const [premiumTrigger, setPremiumTrigger] = useState<'recording' | 'beat' | 'history'>('beat')
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(
-    null
-  )
+  const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(null)
 
   // Derived state
   const usedWords = wordList.slice(0, wordIndex + 1)
@@ -96,8 +94,26 @@ export default function PracticePage() {
   const { requestLock, releaseLock } = useWakeLock()
   const beatPlayer = useBeatPlayer()
 
-  // Beats Loading State (Legacy but kept for compatibility logic if needed)
-  const [_isLoadingBeats, setIsLoadingBeats] = useState(true)
+  // Beats Loading State
+  const [beats, setBeats] = useState<Beat[]>([]) // Local state for dropdown
+  const [isLoadingBeats, setIsLoadingBeats] = useState(true)
+
+  // Fetch Beats Effect
+  useEffect(() => {
+    async function fetchBeats() {
+      try {
+        const response = await fetch('/api/beats')
+        const data = await response.json()
+        setBeats(data.beats || [])
+      } catch (err) {
+        console.error('Failed to fetch beats', err)
+        // Ensure dropdown isn't empty if API fails? maybe rely on placeholder logic if needed
+      } finally {
+        setIsLoadingBeats(false)
+      }
+    }
+    fetchBeats()
+  }, [])
 
   // Playback Control (Detached from hook to resolve circular deps)
   const stopPlayback = useCallback(() => {
@@ -115,8 +131,7 @@ export default function PracticePage() {
         body: formData,
       })
       const data = await response.json()
-      if (!response.ok)
-        throw new Error(data.error || 'Failed to save recording')
+      if (!response.ok) throw new Error(data.error || 'Failed to save recording')
       return data
     },
     {
@@ -205,8 +220,7 @@ export default function PracticePage() {
         if (session?.user) {
           try {
             const measuredDuration = Math.round(recordedDuration)
-            const fallbackDuration =
-              blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
+            const fallbackDuration = blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
             const actualDuration = Math.max(
               1,
               measuredDuration > 0 ? measuredDuration : fallbackDuration
@@ -218,10 +232,7 @@ export default function PracticePage() {
             const formData = new FormData()
             formData.append('audio', blob, 'recording.webm')
             formData.append('beatId', selectedBeat.id)
-            formData.append(
-              'title',
-              `${selectedBeat.title} - ${new Date().toLocaleDateString()}`
-            )
+            formData.append('title', `${selectedBeat.title} - ${new Date().toLocaleDateString()}`)
             formData.append('durationSeconds', actualDuration.toString())
             formData.append('frequency', frequency.toString())
             formData.append('difficulty', difficulty.toString())
@@ -307,9 +318,7 @@ export default function PracticePage() {
         const [wordsData] = await Promise.all([wordsRes.json()])
 
         if (wordsData.words) {
-          const words = wordsData.words.map(
-            (w: { wordText: string }) => w.wordText
-          )
+          const words = wordsData.words.map((w: { wordText: string }) => w.wordText)
           setWordList(words)
           if (!currentWord && words.length > 0) setCurrentWord(words[0])
         }
@@ -375,9 +384,7 @@ export default function PracticePage() {
     [isTTSEnabled, ttsVolume, voice]
   )
 
-  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
-    null
-  )
+  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
 
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
@@ -554,27 +561,18 @@ export default function PracticePage() {
       const elapsed = beatPlayer.getPreciseTime()
 
       // Stop condition
-      if (
-        elapsed >=
-        params.sessionDuration + (params.selectedBeat.offset || 0)
-      ) {
+      if (elapsed >= params.sessionDuration + (params.selectedBeat.offset || 0)) {
         // Extend duration by offset if needed? No, duration is usually flow time.
         // Actually Session Duration should probably start counting from "GO"
         // If elapsed is audio time, and we start at offset...
         // "Session Time" = elapsed - offset.
-        if (
-          elapsed - (params.selectedBeat.offset || 0) >=
-          params.sessionDuration
-        ) {
+        if (elapsed - (params.selectedBeat.offset || 0) >= params.sessionDuration) {
           handleStop()
           return
         }
       }
 
-      const sessionTime = Math.max(
-        0,
-        elapsed - (params.selectedBeat.offset || 0)
-      )
+      const sessionTime = Math.max(0, elapsed - (params.selectedBeat.offset || 0))
 
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
       const secondsPerPrompt = secondsPerBar * params.frequency
@@ -603,35 +601,23 @@ export default function PracticePage() {
   // Shortcuts & Events
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-        return
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       if (e.code === 'Space') {
         e.preventDefault()
         handlePlayPause()
       }
-      if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying)
-        startRecording(!isPro)
+      if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying) startRecording(!isPro)
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [
-    handlePlayPause,
-    isRecording,
-    beatPlayer.isPlaying,
-    startRecording,
-    isPro,
-  ])
+  }, [handlePlayPause, isRecording, beatPlayer.isPlaying, startRecording, isPro])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden && beatPlayer.isPlaying) handlePlayPause()
     }
     window.addEventListener('visibilitychange', handleVisibilityChange)
-    return () =>
-      window.removeEventListener('visibilitychange', handleVisibilityChange)
+    return () => window.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [beatPlayer.isPlaying, handlePlayPause])
 
   useEffect(() => {
@@ -690,11 +676,14 @@ export default function PracticePage() {
             {selectedBeat ? (
               <PracticeControls
                 selectedBeat={selectedBeat}
+                beats={beats}
+                onBeatSelect={setBeat}
                 isPlaying={beatPlayer.isPlaying}
                 isLoading={!isLoaded && !selectedBeat}
                 currentTime={beatPlayer.currentTime}
                 sessionDuration={sessionDuration}
                 currentWord={currentWord}
+                countdownValue={_countdownValue}
                 onToggle={handlePlayPause}
                 onRestart={() => {
                   play('click')
@@ -729,10 +718,7 @@ export default function PracticePage() {
         {/* Global Overlays & Modals */}
         <AnimatePresence>
           {sessionSummary && (
-            <SessionSummaryModal
-              data={sessionSummary}
-              onClose={() => setSessionSummary(null)}
-            />
+            <SessionSummaryModal data={sessionSummary} onClose={() => setSessionSummary(null)} />
           )}
 
           {showPremiumModal && (
@@ -761,10 +747,7 @@ export default function PracticePage() {
 
         {/* Guest Modal */}
         {showGuestModal && (
-          <GuestLoginModal
-            isOpen={showGuestModal}
-            onClose={() => setShowGuestModal(false)}
-          />
+          <GuestLoginModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} />
         )}
       </div>
     </OnboardingLayout>

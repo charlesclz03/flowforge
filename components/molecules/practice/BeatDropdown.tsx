@@ -2,32 +2,13 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Beat } from '@/types/database'
-import {
-  Crown,
-  Check,
-  ChevronDown,
-  Music,
-  Play,
-  Square,
-  Heart,
-  Upload,
-  Trash2,
-} from 'lucide-react'
+import { Crown, Check, ChevronDown, Music, Play, Square, Heart, Upload, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/atoms/Skeleton'
 import { toast } from 'react-hot-toast'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/atoms/Tabs'
-import {
-  addLocalBeat,
-  getLocalBeats,
-  deleteLocalBeat,
-} from '@/lib/beats/localBeats'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
+import { addLocalBeat, getLocalBeats, deleteLocalBeat } from '@/lib/beats/localBeats'
 
 interface BeatDropdownProps {
   beats: Beat[]
@@ -109,10 +90,7 @@ export function BeatDropdown({
   // Close when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false)
         stopPreview()
       }
@@ -131,41 +109,35 @@ export function BeatDropdown({
     }
   }, [])
 
-  const handleToggleFavorite = useCallback(
-    async (beatId: string, e: React.MouseEvent) => {
-      e.stopPropagation()
+  const handleToggleFavorite = useCallback(async (beatId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
 
-      setFavoriteBeatIds((prev) => {
-        const next = new Set(prev)
-        if (next.has(beatId)) next.delete(beatId)
-        else next.add(beatId)
-        return next
-      })
+    setFavoriteBeatIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(beatId)) next.delete(beatId)
+      else next.add(beatId)
+      return next
+    })
 
-      try {
-        const result = await toggleBeatFavorite(beatId)
-        if (result.favorited !== undefined) {
-          setFavoriteBeatIds((prev) => {
-            const next = new Set(prev)
-            if (result.favorited) next.add(beatId)
-            else next.delete(beatId)
-            return next
-          })
-          toast.success(
-            result.favorited ? 'Added to favorites' : 'Removed from favorites',
-            {
-              icon: result.favorited ? '❤️' : '💔',
-              position: 'bottom-center',
-            }
-          )
-        }
-      } catch (error) {
-        console.error(error)
-        toast.error('Failed to update favorite')
+    try {
+      const result = await toggleBeatFavorite(beatId)
+      if (result.favorited !== undefined) {
+        setFavoriteBeatIds((prev) => {
+          const next = new Set(prev)
+          if (result.favorited) next.add(beatId)
+          else next.delete(beatId)
+          return next
+        })
+        toast.success(result.favorited ? 'Added to favorites' : 'Removed from favorites', {
+          icon: result.favorited ? '❤️' : '💔',
+          position: 'bottom-center',
+        })
       }
-    },
-    []
-  )
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to update favorite')
+    }
+  }, [])
 
   const handlePreview = useCallback(
     (beat: Beat, e: React.MouseEvent) => {
@@ -180,7 +152,7 @@ export function BeatDropdown({
 
       const audio = new Audio(beat.storageUrl)
       audio.volume = 0.5
-      audio.crossOrigin = 'anonymous'
+      // audio.crossOrigin = 'anonymous' // Removed to prevent CORS errors during simple preview
       console.log('Preview request:', beat.storageUrl)
 
       audio.onended = () => setPreviewingBeatId(null)
@@ -191,10 +163,7 @@ export function BeatDropdown({
           console.error('Failed to preview beat:', err)
           if (err.name === 'NotAllowedError') {
             toast.error('Playback blocked by browser. Click again to play.')
-          } else if (
-            err.name === 'NotSupportedError' ||
-            beat.storageUrl.includes('pixabay')
-          ) {
+          } else if (err.name === 'NotSupportedError' || beat.storageUrl.includes('pixabay')) {
             toast.error('External beat source unavailable. Try another beat.', {
               icon: '⚠️',
             })
@@ -269,9 +238,7 @@ export function BeatDropdown({
   }
 
   // Extract genres/tags
-  const displayedBeats = showFavoritesOnly
-    ? beats.filter((b) => favoriteBeatIds.has(b.id))
-    : beats
+  const displayedBeats = showFavoritesOnly ? beats.filter((b) => favoriteBeatIds.has(b.id)) : beats
 
   if (isLoading) {
     return (
@@ -305,12 +272,9 @@ export function BeatDropdown({
                 <Music size={14} className="text-accent-purple" />
               </div>
               <div>
-                <div className="font-medium text-white text-sm">
-                  {selectedBeat.title}
-                </div>
+                <div className="font-medium text-white text-sm">{selectedBeat.title}</div>
                 <div className="text-xs text-text-secondary">
-                  {selectedBeat.bpm} BPM •{' '}
-                  {selectedBeat.artistName || 'FlowForge'}
+                  {selectedBeat.bpm} BPM • {selectedBeat.artistName || 'FlowForge'}
                 </div>
               </div>
             </div>
@@ -328,10 +292,7 @@ export function BeatDropdown({
 
         {isOpen && (
           <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
-            <Tabs
-              defaultValue="library"
-              className="flex flex-col h-full overflow-hidden"
-            >
+            <Tabs defaultValue="library" className="flex flex-col h-full overflow-hidden">
               <div className="px-3 pt-3 pb-2 border-b border-white/5 space-y-2">
                 <TabsList className="w-full bg-white/5">
                   <TabsTrigger value="library" className="flex-1">
@@ -339,8 +300,7 @@ export function BeatDropdown({
                   </TabsTrigger>
                   {isPro && (
                     <TabsTrigger value="my-beats" className="flex-1 gap-2">
-                      My Beats{' '}
-                      <Crown size={10} className="text-accent-orange" />
+                      My Beats <Crown size={10} className="text-accent-orange" />
                     </TabsTrigger>
                   )}
                   {!hideLocalTab && (
@@ -354,8 +314,7 @@ export function BeatDropdown({
                         }
                       }}
                     >
-                      Local{' '}
-                      <span className="text-[10px] opacity-50">(Browser)</span>
+                      Local <span className="text-[10px] opacity-50">(Browser)</span>
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -371,10 +330,7 @@ export function BeatDropdown({
                         : 'text-text-secondary hover:text-white'
                     )}
                   >
-                    <Heart
-                      size={12}
-                      fill={showFavoritesOnly ? 'currentColor' : 'none'}
-                    />
+                    <Heart size={12} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
                     <span>Favorites Only</span>
                   </button>
                   <span className="text-[10px] text-text-tertiary">
@@ -408,9 +364,7 @@ export function BeatDropdown({
                           key={beat.id}
                           className={cn(
                             'flex items-center rounded-lg p-3 transition-colors',
-                            isSelected
-                              ? 'bg-accent-purple/20'
-                              : 'hover:bg-white/5',
+                            isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5',
                             isLocked && 'opacity-70 hover:bg-accent-purple/5'
                           )}
                         >
@@ -435,20 +389,14 @@ export function BeatDropdown({
                           <button
                             onClick={() => {
                               if (isLocked) {
-                                if (
-                                  typeof navigator !== 'undefined' &&
-                                  navigator.vibrate
-                                )
+                                if (typeof navigator !== 'undefined' && navigator.vibrate)
                                   navigator.vibrate(50)
                                 onLockedSelect?.()
                                 setIsOpen(false)
                                 stopPreview()
                                 return
                               }
-                              if (
-                                typeof navigator !== 'undefined' &&
-                                navigator.vibrate
-                              )
+                              if (typeof navigator !== 'undefined' && navigator.vibrate)
                                 navigator.vibrate(10)
                               onSelect(beat)
                               setIsOpen(false)
@@ -466,18 +414,12 @@ export function BeatDropdown({
                             </div>
                             <div className="text-xs text-text-secondary flex items-center gap-2">
                               <span>{beat.bpm} BPM</span>
-                              {(beat.tags || [])
-                                .slice(0, 2)
-                                .map((t: string) => (
-                                  <span key={t} className="opacity-70">
-                                    #{t}
-                                  </span>
-                                )) ||
-                                (beat.genre && (
-                                  <span className="opacity-70">
-                                    #{beat.genre}
-                                  </span>
-                                ))}
+                              {(beat.tags || []).slice(0, 2).map((t: string) => (
+                                <span key={t} className="opacity-70">
+                                  #{t}
+                                </span>
+                              )) ||
+                                (beat.genre && <span className="opacity-70">#{beat.genre}</span>)}
                             </div>
                           </button>
 
@@ -491,22 +433,14 @@ export function BeatDropdown({
                                   : 'text-text-tertiary hover:text-accent-pink'
                               )}
                             >
-                              <Heart
-                                size={14}
-                                fill={isFavorited ? 'currentColor' : 'none'}
-                              />
+                              <Heart size={14} fill={isFavorited ? 'currentColor' : 'none'} />
                             </button>
                             {beat.isPremium && (
                               <div className="flex items-center gap-1 rounded-full bg-accent-orange/10 px-2 py-0.5 border border-accent-orange/20">
-                                <Crown
-                                  size={10}
-                                  className="text-accent-orange"
-                                />
+                                <Crown size={10} className="text-accent-orange" />
                               </div>
                             )}
-                            {isSelected && (
-                              <Check size={16} className="text-accent-purple" />
-                            )}
+                            {isSelected && <Check size={16} className="text-accent-purple" />}
                           </div>
                         </div>
                       )
@@ -535,9 +469,7 @@ export function BeatDropdown({
                           key={beat.id}
                           className={cn(
                             'flex items-center rounded-lg p-3 transition-colors',
-                            isSelected
-                              ? 'bg-accent-purple/20'
-                              : 'hover:bg-white/5'
+                            isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5'
                           )}
                         >
                           <button
@@ -562,9 +494,7 @@ export function BeatDropdown({
                             }}
                             className="flex-1 text-left"
                           >
-                            <div className="font-medium text-white text-sm">
-                              {beat.title}
-                            </div>
+                            <div className="font-medium text-white text-sm">{beat.title}</div>
                             <div className="text-xs text-text-secondary flex gap-2">
                               <span>{beat.bpm} BPM</span>
                               {beat.offset > 0 && (
@@ -623,9 +553,7 @@ export function BeatDropdown({
                             key={beat.id}
                             className={cn(
                               'flex items-center rounded-lg p-3 transition-colors',
-                              isSelected
-                                ? 'bg-accent-purple/20'
-                                : 'hover:bg-white/5'
+                              isSelected ? 'bg-accent-purple/20' : 'hover:bg-white/5'
                             )}
                           >
                             <button
@@ -651,12 +579,8 @@ export function BeatDropdown({
                               }}
                               className="flex-1 text-left"
                             >
-                              <div className="font-medium text-white text-sm">
-                                {beat.title}
-                              </div>
-                              <div className="text-xs text-text-secondary">
-                                Local Storage
-                              </div>
+                              <div className="font-medium text-white text-sm">{beat.title}</div>
+                              <div className="text-xs text-text-secondary">Local Storage</div>
                             </button>
                             <button
                               onClick={(e) => handleDeleteLocal(beat.id, e)}

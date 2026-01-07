@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.1.8] - 2026-01-07
+
+### Fixed
+
+- **Practice Page Regressions**: Restored "3-2-1 GO" countdown and fixed audio playback not starting.
+- **Beat Dropdown**: Fixed missing favorites dropdown in Practice mode and resolved execution order issues.
+- **Audio Playback**: Fixed CORS issues preventing beat previews in Difficulty Selection and My Tracks.
+- **Stability**: Removed duplicate `SessionPlayer` component causing conflicts.
+- **My Tracks**: Refactored audio handling to use React Refs for better stability and error handling.
+
 ## [v1.1.7] - 2025-12-19
 
 ### Added
