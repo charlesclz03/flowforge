@@ -96,7 +96,6 @@ export default function PracticePage() {
 
   // Beats Loading State
   const [beats, setBeats] = useState<Beat[]>([]) // Local state for dropdown
-  const [isLoadingBeats, setIsLoadingBeats] = useState(true)
 
   // Fetch Beats Effect
   useEffect(() => {
@@ -107,9 +106,6 @@ export default function PracticePage() {
         setBeats(data.beats || [])
       } catch (err) {
         console.error('Failed to fetch beats', err)
-        // Ensure dropdown isn't empty if API fails? maybe rely on placeholder logic if needed
-      } finally {
-        setIsLoadingBeats(false)
       }
     }
     fetchBeats()
@@ -308,7 +304,6 @@ export default function PracticePage() {
   // Initialization Effect
   useEffect(() => {
     const initSession = async () => {
-      setIsLoadingBeats(true)
       try {
         const [wordsRes] = await Promise.all([
           fetch(
@@ -325,8 +320,6 @@ export default function PracticePage() {
       } catch (err) {
         console.error('Init error', err)
         handleError(err, ErrorCodes.BEAT_LOAD_FAILED)
-      } finally {
-        setIsLoadingBeats(false)
       }
     }
     initSession()
