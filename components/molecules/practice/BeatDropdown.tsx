@@ -180,22 +180,31 @@ export function BeatDropdown({
 
       const audio = new Audio(beat.storageUrl)
       audio.volume = 0.5
+      audio.crossOrigin = 'anonymous'
+      console.log('Preview request:', beat.storageUrl)
+
       audio.onended = () => setPreviewingBeatId(null)
-      audio.play().catch((err) => {
-        console.error('Failed to preview beat:', err)
-        if (err.name === 'NotAllowedError') {
-          toast.error('Playback blocked by browser. Click again to play.')
-        } else if (
-          err.name === 'NotSupportedError' ||
-          beat.storageUrl.includes('pixabay')
-        ) {
-          toast.error('External beat source unavailable. Try another beat.', {
-            icon: '⚠️',
-          })
-        } else {
-          toast.error('Could not preview beat')
-        }
-      })
+
+      const playPromise = audio.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.error('Failed to preview beat:', err)
+          if (err.name === 'NotAllowedError') {
+            toast.error('Playback blocked by browser. Click again to play.')
+          } else if (
+            err.name === 'NotSupportedError' ||
+            beat.storageUrl.includes('pixabay')
+          ) {
+            toast.error('External beat source unavailable. Try another beat.', {
+              icon: '⚠️',
+            })
+          } else {
+            // Check if 404 by fetching head? No, just generic error.
+            toast.error('Could not preview beat (check console)')
+          }
+          setPreviewingBeatId(null)
+        })
+      }
 
       previewAudioRef.current = audio
       setPreviewingBeatId(beat.id)
@@ -318,7 +327,7 @@ export function BeatDropdown({
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
             <Tabs
               defaultValue="library"
               className="flex flex-col h-full overflow-hidden"

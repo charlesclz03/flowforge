@@ -72,7 +72,9 @@ export class AudioRecorder {
     if (!this.audioContext || this.audioContext.state === 'closed') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.audioContext = new (
-        window.AudioContext || (window as any).webkitAudioContext
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext
       )()
       this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
     }

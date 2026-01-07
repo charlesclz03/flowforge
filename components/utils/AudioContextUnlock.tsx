@@ -9,12 +9,13 @@ import { useEffect, useCallback } from 'react'
 export function AudioContextUnlock() {
   const unlock = useCallback(() => {
     // 1. Create a dummy context
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContext =
-      window.AudioContext || (window as any).webkitAudioContext
-    if (!AudioContext) return
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
+    if (!AudioContextClass) return
 
-    const ctx = new AudioContext()
+    const ctx = new AudioContextClass()
 
     // 2. Resume if suspended (common in iOS)
     if (ctx.state === 'suspended') {

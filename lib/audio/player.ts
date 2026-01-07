@@ -11,6 +11,7 @@ export class AudioPlayer {
   constructor() {
     if (typeof window !== 'undefined') {
       this.audio = new Audio()
+      this.audio.crossOrigin = 'anonymous'
       this.setupEventListeners()
     }
   }

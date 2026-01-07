@@ -56,7 +56,7 @@ export async function getSessions(
           id: s.beatId,
           title: 'Local Beat',
           bpm: 90,
-          storageUrl: '/beats/placeholder.mp3',
+          storageUrl: '/beats/2-Naughty.mp3',
           coverImage: null,
           isPremium: false,
           genre: null,
@@ -258,9 +258,8 @@ export async function getSessionStats(userId?: string): Promise<
     ])
 
     const totalSessions = sessions.length
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const totalDuration = sessions.reduce(
-      (sum: number, s: any) => sum + s.durationSeconds,
+      (sum: number, s) => sum + s.durationSeconds,
       0
     )
     const averageDuration =

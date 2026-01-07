@@ -40,10 +40,11 @@ export function VideoGenerator({
     audioRef.current = audio
 
     // Setup Audio Context for Visualizer
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContext =
-      window.AudioContext || (window as any).webkitAudioContext
-    const ctx = new AudioContext()
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
+    const ctx = new AudioContextClass()
     const source = ctx.createMediaElementSource(audio)
     const dest = ctx.createMediaStreamDestination()
     source.connect(dest)

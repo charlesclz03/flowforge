@@ -23,10 +23,11 @@ export default function CalibrationPage() {
 
   useEffect(() => {
     // Initialize AudioContext
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    audioContextRef.current = new (
-      window.AudioContext || (window as any).webkitAudioContext
-    )()
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
+    audioContextRef.current = new AudioContextClass()
 
     return () => {
       if (audioContextRef.current?.state !== 'closed') {

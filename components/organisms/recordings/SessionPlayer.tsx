@@ -111,10 +111,11 @@ export function SessionPlayer({
     // Initialize Web Audio Context for Studio FX
     const initAudioContext = () => {
       if (!contextRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const AudioContext =
-          window.AudioContext || (window as any).webkitAudioContext
-        contextRef.current = new AudioContext()
+        const AudioContextClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext
+        contextRef.current = new AudioContextClass()
       }
     }
 

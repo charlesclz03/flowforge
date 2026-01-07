@@ -37,9 +37,11 @@ export function AudioVisualizer({
     if (mode === 'stream' && stream && isPlaying && !audioCtxRef.current) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const AudioContext =
-          window.AudioContext || (window as any).webkitAudioContext
-        audioCtxRef.current = new AudioContext()
+        const AudioContextClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext
+        audioCtxRef.current = new AudioContextClass()
         analyzerRef.current = audioCtxRef.current.createAnalyser()
         analyzerRef.current.fftSize = 64
 

@@ -36,9 +36,10 @@ export function PostProcessingModal({
   useEffect(() => {
     if (!audioRef.current) return
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const AudioContextClass =
-      (window as any).AudioContext || (window as any).webkitAudioContext
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
     const ctx = new AudioContextClass() as AudioContext
     audioCtxRef.current = ctx
 

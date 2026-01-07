@@ -37,9 +37,10 @@ export default function LatencyWizard() {
   }, [])
 
   const startCalibration = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const AudioContextClass =
-      (window as any).AudioContext || (window as any).webkitAudioContext
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
     audioCtxRef.current = new AudioContextClass()
     setStep('calibrating')
     isCalibratingRef.current = true

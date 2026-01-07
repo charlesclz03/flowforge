@@ -109,7 +109,7 @@ export async function getBeats(
         id: 'fallback-' + b.title,
         title: b.title,
         bpm: b.bpm,
-        storageUrl: '/beats/placeholder.mp3',
+        storageUrl: '/beats/2-Naughty.mp3',
         isPremium: Boolean(b.isPremium),
         genre: b.genre ?? null,
         tags: [],
