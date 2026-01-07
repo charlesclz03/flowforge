@@ -6,9 +6,7 @@ import { BeatFilters, DatabaseResult } from '@/types/database'
 /**
  * Get all beats with optional filtering
  */
-export async function getBeats(
-  filters?: BeatFilters
-): Promise<DatabaseResult<Beat[]>> {
+export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Beat[]>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
       const all = (
@@ -38,8 +36,7 @@ export async function getBeats(
       let filtered = all
       if (filters?.isPremium !== undefined)
         filtered = filtered.filter((b) => b.isPremium === filters.isPremium)
-      if (filters?.genre)
-        filtered = filtered.filter((b) => b.genre === filters.genre)
+      if (filters?.genre) filtered = filtered.filter((b) => b.genre === filters.genre)
       if (filters?.minBpm || filters?.maxBpm) {
         filtered = filtered.filter((b) => {
           return (
@@ -79,8 +76,12 @@ export async function getBeats(
     // but the actual files have hyphens.
     const sanitized = beats.map((b) => {
       let url = b.storageUrl
-      if (url && !url.startsWith('/') && !url.startsWith('http')) {
-        url = '/' + url
+      if (url) {
+        if (!url.startsWith('/') && !url.startsWith('http')) {
+          url = '/' + url
+        }
+        // Legacy fix: physical files have hyphens, DB entries might have spaces
+        url = url.trim().replace(/ /g, '-')
       }
       return {
         ...b,
@@ -168,18 +169,14 @@ export async function getFreeBeats(): Promise<DatabaseResult<Beat[]>> {
 /**
  * Get beats by genre
  */
-export async function getBeatsByGenre(
-  genre: string
-): Promise<DatabaseResult<Beat[]>> {
+export async function getBeatsByGenre(genre: string): Promise<DatabaseResult<Beat[]>> {
   return getBeats({ genre })
 }
 
 /**
  * Search beats by title
  */
-export async function searchBeats(
-  query: string
-): Promise<DatabaseResult<Beat[]>> {
+export async function searchBeats(query: string): Promise<DatabaseResult<Beat[]>> {
   try {
     const beats = await prisma.beat.findMany({
       where: {
@@ -242,9 +239,7 @@ export async function getAllGenres(): Promise<DatabaseResult<string[]>> {
       },
     })
 
-    const genreList = genres
-      .map((b) => b.genre)
-      .filter((g): g is string => g !== null)
+    const genreList = genres.map((b) => b.genre).filter((g): g is string => g !== null)
 
     return {
       success: true,
