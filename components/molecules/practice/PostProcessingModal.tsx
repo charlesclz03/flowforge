@@ -13,7 +13,11 @@ interface PostProcessingProps {
   onSave: (processedBlob: Blob) => void
 }
 
-export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessingProps) {
+export function PostProcessingModal({
+  audioUrl,
+  onClose,
+  onSave,
+}: PostProcessingProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(1.0)
   const [nudge, setNudge] = useState(0) // ms
@@ -33,7 +37,8 @@ export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessin
     if (!audioRef.current) return
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext
+    const AudioContextClass =
+      (window as any).AudioContext || (window as any).webkitAudioContext
     const ctx = new AudioContextClass() as AudioContext
     audioCtxRef.current = ctx
 
@@ -98,11 +103,23 @@ export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessin
   useEffect(() => {
     if (wetGainRef.current && dryGainRef.current) {
       if (reverb) {
-        wetGainRef.current.gain.linearRampToValueAtTime(0.4, audioCtxRef.current!.currentTime + 0.1)
-        dryGainRef.current.gain.linearRampToValueAtTime(0.8, audioCtxRef.current!.currentTime + 0.1)
+        wetGainRef.current.gain.linearRampToValueAtTime(
+          0.4,
+          audioCtxRef.current!.currentTime + 0.1
+        )
+        dryGainRef.current.gain.linearRampToValueAtTime(
+          0.8,
+          audioCtxRef.current!.currentTime + 0.1
+        )
       } else {
-        wetGainRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current!.currentTime + 0.1)
-        dryGainRef.current.gain.linearRampToValueAtTime(1, audioCtxRef.current!.currentTime + 0.1)
+        wetGainRef.current.gain.linearRampToValueAtTime(
+          0,
+          audioCtxRef.current!.currentTime + 0.1
+        )
+        dryGainRef.current.gain.linearRampToValueAtTime(
+          1,
+          audioCtxRef.current!.currentTime + 0.1
+        )
       }
     }
   }, [reverb])
@@ -157,7 +174,11 @@ export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessin
             className="rounded-full w-20 h-20 p-0 bg-accent-purple text-white shadow-purple-glow"
             onClick={togglePlay}
           >
-            {isPlaying ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
+            {isPlaying ? (
+              <Pause size={32} />
+            ) : (
+              <Play size={32} className="ml-1" />
+            )}
           </Button>
         </div>
 
@@ -172,7 +193,11 @@ export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessin
                     <Timer size={14} />
                     <span>Manual Nudge</span>
                   </div>
-                  <span className={nudge === 0 ? 'text-text-tertiary' : 'text-accent-purple'}>
+                  <span
+                    className={
+                      nudge === 0 ? 'text-text-tertiary' : 'text-accent-purple'
+                    }
+                  >
                     {nudge > 0 ? `+${nudge}` : nudge}ms
                   </span>
                 </div>
@@ -231,7 +256,9 @@ export function PostProcessingModal({ audioUrl, onClose, onSave }: PostProcessin
               >
                 <div className="flex items-center gap-3">
                   <Wand2 size={18} />
-                  <span className="text-sm font-bold uppercase tracking-wider">Studio Reverb</span>
+                  <span className="text-sm font-bold uppercase tracking-wider">
+                    Studio Reverb
+                  </span>
                 </div>
                 <div
                   className={`w-10 h-6 rounded-full relative transition-colors ${reverb ? 'bg-accent-orange' : 'bg-white/20'}`}

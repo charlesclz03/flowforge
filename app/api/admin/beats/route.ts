@@ -16,7 +16,10 @@ export async function POST(req: NextRequest) {
     // 2. Admin Check
     const adminEmail = process.env.ADMIN_EMAIL
     if (session.user.email !== adminEmail) {
-      return NextResponse.json({ error: 'Forbidden: Admin access only' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Forbidden: Admin access only' },
+        { status: 403 }
+      )
     }
 
     // 3. Parse Form Data
@@ -31,7 +34,10 @@ export async function POST(req: NextRequest) {
     const duration = parseInt(formData.get('duration') as string) || 0
 
     if (!file || !title || !artistName || !bpm) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
 
     // 4. Upload to Supabase Storage
@@ -46,10 +52,12 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    const { error: uploadError } = await supabase.storage.from('beats').upload(fileName, buffer, {
-      contentType: file.type,
-      upsert: false,
-    })
+    const { error: uploadError } = await supabase.storage
+      .from('beats')
+      .upload(fileName, buffer, {
+        contentType: file.type,
+        upsert: false,
+      })
 
     if (uploadError) {
       console.error('Supabase Upload Error:', uploadError)
@@ -78,6 +86,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, beat })
   } catch (error: unknown) {
     console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

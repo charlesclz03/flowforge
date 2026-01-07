@@ -1,178 +1,172 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { PageHeader } from "@/components/organisms/common";
-import { BeatGridCard } from "@/components/molecules/tracks/BeatGridCard";
-import { Beat } from "@/types/database";
-import { Search, Music, Plus, Lock } from "lucide-react";
-import { getFavoriteBeatIds, toggleBeatFavorite } from "@/app/actions/beats";
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { PageHeader } from '@/components/organisms/common'
+import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
+import { Beat } from '@/types/database'
+import { Search, Music, Plus, Lock } from 'lucide-react'
+import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 
-import { useSession } from "next-auth/react";
-import { UserBeatUploadModal } from "@/components/molecules/practice/UserBeatUploadModal";
-import { PremiumModal } from "@/components/molecules/monetization/PremiumModal";
+import { useSession } from 'next-auth/react'
+import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
+import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 
 export default function TracksPage() {
-  const [beats, setBeats] = useState<Beat[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [playingBeatId, setPlayingBeatId] = useState<string | null>(null);
+  const [beats, setBeats] = useState<Beat[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
+  const [searchQuery, setSearchQuery] = useState('')
+  const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
   const handleUseTrack = (beat: Beat) => {
     // Navigate to practice setup with this beat selected
-    router.push(`/difficultyselection?beatId=${beat.id}`);
-  };
+    router.push(`/difficultyselection?beatId=${beat.id}`)
+  }
 
   // --- Render Helpers ---
-  const { data: session } = useSession();
-  const router = useRouter();
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const { data: session } = useSession()
+  const router = useRouter()
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
 
   // Safe cast for user extended properties
-  const user = session?.user;
+  const user = session?.user
   const isPro =
-    user?.subscriptionStatus === "active" ||
-    user?.subscriptionStatus === "trialing";
+    user?.subscriptionStatus === 'active' ||
+    user?.subscriptionStatus === 'trialing'
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [beatsRes, userBeatsRes, favs] = await Promise.all([
-          fetch("/api/beats").then((res) => res.json()),
-          fetch("/api/user/beats").then((res) =>
-            res.ok ? res.json() : { beats: [] },
+          fetch('/api/beats').then((res) => res.json()),
+          fetch('/api/user/beats').then((res) =>
+            res.ok ? res.json() : { beats: [] }
           ),
           getFavoriteBeatIds(),
-        ]);
+        ])
 
-        const publicBeats = beatsRes.beats || [];
-        const userBeats = userBeatsRes.beats || [];
+        const publicBeats = beatsRes.beats || []
+        const userBeats = userBeatsRes.beats || []
 
-        setBeats([...userBeats, ...publicBeats]);
-        setFavoriteIds(new Set(favs));
+        setBeats([...userBeats, ...publicBeats])
+        setFavoriteIds(new Set(favs))
       } catch (e) {
-        console.error(e);
+        console.error(e)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const fetchBeats = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
-        fetch("/api/beats").then((res) => res.json()),
-        fetch("/api/user/beats").then((res) =>
-          res.ok ? res.json() : { beats: [] },
+        fetch('/api/beats').then((res) => res.json()),
+        fetch('/api/user/beats').then((res) =>
+          res.ok ? res.json() : { beats: [] }
         ),
         getFavoriteBeatIds(),
-      ]);
+      ])
 
-      const publicBeats = beatsRes.beats || [];
-      const userBeats = userBeatsRes.beats || [];
+      const publicBeats = beatsRes.beats || []
+      const userBeats = userBeatsRes.beats || []
 
-      setBeats([...userBeats, ...publicBeats]);
-      setFavoriteIds(new Set(favs));
+      setBeats([...userBeats, ...publicBeats])
+      setFavoriteIds(new Set(favs))
     } catch (e) {
-      console.error(e);
+      console.error(e)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchBeats();
+    fetchBeats()
 
     return () => {
-      const audio = document.getElementById(
-        "preview-audio",
-      ) as HTMLAudioElement;
+      const audio = document.getElementById('preview-audio') as HTMLAudioElement
       if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
+        audio.pause()
+        audio.currentTime = 0
       }
-    };
-  }, []);
+    }
+  }, [])
 
   const handlePlay = (beat: Beat) => {
     if (playingBeatId === beat.id) {
-      setPlayingBeatId(null);
-      const audio = document.getElementById(
-        "preview-audio",
-      ) as HTMLAudioElement;
+      setPlayingBeatId(null)
+      const audio = document.getElementById('preview-audio') as HTMLAudioElement
       if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
+        audio.pause()
+        audio.currentTime = 0
       }
     } else {
-      setPlayingBeatId(beat.id);
-      const audio = document.getElementById(
-        "preview-audio",
-      ) as HTMLAudioElement;
+      setPlayingBeatId(beat.id)
+      const audio = document.getElementById('preview-audio') as HTMLAudioElement
       if (audio) {
-        audio.src = beat.storageUrl;
-        audio.play();
-        audio.onended = () => setPlayingBeatId(null);
+        audio.src = beat.storageUrl
+        audio.play()
+        audio.onended = () => setPlayingBeatId(null)
       }
     }
-  };
+  }
 
   const handleToggleFavorite = async (beatId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const newFavs = new Set(favoriteIds);
+    e.stopPropagation()
+    const newFavs = new Set(favoriteIds)
     if (newFavs.has(beatId)) {
-      newFavs.delete(beatId);
+      newFavs.delete(beatId)
     } else {
-      newFavs.add(beatId);
+      newFavs.add(beatId)
     }
-    setFavoriteIds(newFavs);
+    setFavoriteIds(newFavs)
 
-    await toggleBeatFavorite(beatId);
-  };
+    await toggleBeatFavorite(beatId)
+  }
 
   const handleDeleteBeat = async (beatId: string) => {
-    if (!confirm("Are you sure you want to delete this beat?")) return;
+    if (!confirm('Are you sure you want to delete this beat?')) return
 
     try {
       const res = await fetch(`/api/user/beats/${beatId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete");
+        method: 'DELETE',
+      })
+      if (!res.ok) throw new Error('Failed to delete')
 
-      setBeats((prev) => prev.filter((b) => b.id !== beatId));
+      setBeats((prev) => prev.filter((b) => b.id !== beatId))
     } catch (e) {
-      console.error(e);
-      alert("Failed to delete beat");
+      console.error(e)
+      alert('Failed to delete beat')
     }
-  };
+  }
 
-  const [activeTab, setActiveTab] = useState<"public" | "mine">("public");
+  const [activeTab, setActiveTab] = useState<'public' | 'mine'>('public')
 
-  const handleTabChange = (tab: "public" | "mine") => {
-    if (tab === "mine" && !isPro) {
-      setIsPremiumModalOpen(true);
-      return;
+  const handleTabChange = (tab: 'public' | 'mine') => {
+    if (tab === 'mine' && !isPro) {
+      setIsPremiumModalOpen(true)
+      return
     }
-    setActiveTab(tab);
-  };
+    setActiveTab(tab)
+  }
 
   const handleNewBeatClick = () => {
     if (!isPro) {
-      setIsPremiumModalOpen(true);
-      return;
+      setIsPremiumModalOpen(true)
+      return
     }
-    setIsUploadModalOpen(true);
-  };
+    setIsUploadModalOpen(true)
+  }
 
   const filteredBeats = beats
     .filter((b) => {
-      if (activeTab === "mine") {
-        return b.uploaderId && b.uploaderId === session?.user?.id;
+      if (activeTab === 'mine') {
+        return b.uploaderId && b.uploaderId === session?.user?.id
       } else {
-        return !b.uploaderId; // System beats
+        return !b.uploaderId // System beats
       }
     })
     .filter(
@@ -180,9 +174,9 @@ export default function TracksPage() {
         b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.tags.some((t: string) =>
-          t.toLowerCase().includes(searchQuery.toLowerCase()),
-        ),
-    );
+          t.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    )
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -201,21 +195,21 @@ export default function TracksPage() {
           {/* Tabs */}
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button
-              onClick={() => handleTabChange("public")}
+              onClick={() => handleTabChange('public')}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                activeTab === "public"
-                  ? "bg-accent-purple text-white shadow-sm"
-                  : "text-text-tertiary hover:text-white"
+                activeTab === 'public'
+                  ? 'bg-accent-purple text-white shadow-sm'
+                  : 'text-text-tertiary hover:text-white'
               }`}
             >
               Public Tracks
             </button>
             <button
-              onClick={() => handleTabChange("mine")}
+              onClick={() => handleTabChange('mine')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                activeTab === "mine"
-                  ? "bg-accent-purple text-white shadow-sm"
-                  : "text-text-tertiary hover:text-white"
+                activeTab === 'mine'
+                  ? 'bg-accent-purple text-white shadow-sm'
+                  : 'text-text-tertiary hover:text-white'
               }`}
             >
               My Tracks
@@ -285,7 +279,7 @@ export default function TracksPage() {
 
         {filteredBeats.length === 0 &&
           !isLoading &&
-          (activeTab !== "mine" || searchQuery.length > 0) && (
+          (activeTab !== 'mine' || searchQuery.length > 0) && (
             <div className="py-20 text-center space-y-4 opacity-50">
               <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
                 <Music size={32} />
@@ -297,7 +291,7 @@ export default function TracksPage() {
         {/* Empty State for My Tracks if Pro but no beats */}
         {filteredBeats.length === 0 &&
           !isLoading &&
-          activeTab === "mine" &&
+          activeTab === 'mine' &&
           searchQuery.length === 0 && (
             <div className="py-20 text-center space-y-4 opacity-50">
               <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
@@ -312,7 +306,7 @@ export default function TracksPage() {
         onClose={() => setIsUploadModalOpen(false)}
         isPro={!!isPro}
         onSuccess={() => {
-          fetchBeats();
+          fetchBeats()
         }}
       />
       <PremiumModal
@@ -322,5 +316,5 @@ export default function TracksPage() {
       />
       <audio id="preview-audio" className="hidden" />
     </div>
-  );
+  )
 }

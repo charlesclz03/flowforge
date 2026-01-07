@@ -49,7 +49,8 @@ export function HistoryGraph({ recordings }: HistoryGraphProps) {
       <div className="flex items-end justify-between h-40 gap-2 px-2 pt-4">
         {activityData.data.map((count, i) => {
           // Calculate height percentage (min 10% for visibility)
-          const height = count === 0 ? 5 : Math.max(15, (count / activityData.max) * 100)
+          const height =
+            count === 0 ? 5 : Math.max(15, (count / activityData.max) * 100)
 
           return (
             <div

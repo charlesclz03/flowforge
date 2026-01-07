@@ -29,7 +29,9 @@ export default function ProfilePage() {
   const [recordings, setRecordings] = useState<Recording[]>([])
   const [wordVaultCount, setWordVaultCount] = useState(0)
   const [isLoadingRecordings, setIsLoadingRecordings] = useState(true)
-  const [restorationMessage, setRestorationMessage] = useState<string | null>(null)
+  const [restorationMessage, setRestorationMessage] = useState<string | null>(
+    null
+  )
 
   // Edit Profile State
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false)
@@ -89,10 +91,19 @@ export default function ProfilePage() {
         const formData = new FormData()
         formData.append('audio', guestSession.blob, 'guest_recording.webm')
         formData.append('beatId', guestSession.metadata.beatId)
-        formData.append('title', `${guestSession.metadata.beatTitle} - Guest Session`)
-        formData.append('durationSeconds', guestSession.metadata.duration.toString())
+        formData.append(
+          'title',
+          `${guestSession.metadata.beatTitle} - Guest Session`
+        )
+        formData.append(
+          'durationSeconds',
+          guestSession.metadata.duration.toString()
+        )
         formData.append('frequency', guestSession.metadata.frequency.toString())
-        formData.append('difficulty', guestSession.metadata.difficulty.toString())
+        formData.append(
+          'difficulty',
+          guestSession.metadata.difficulty.toString()
+        )
 
         const response = await fetch('/api/recordings', {
           method: 'POST',
@@ -128,7 +139,11 @@ export default function ProfilePage() {
   if (!session?.user) return null
 
   return (
-    <OnboardingLayout showBackButton={false} showSettings={false} className="bg-background pb-32">
+    <OnboardingLayout
+      showBackButton={false}
+      showSettings={false}
+      className="bg-background pb-32"
+    >
       {restorationMessage && (
         <div className="mx-auto max-w-md p-4">
           <SuccessAlert
@@ -141,7 +156,10 @@ export default function ProfilePage() {
       <ProfileTemplate
         pageHeader={
           <div className="px-6 pt-8 pb-4">
-            <PageHeader title="Profile" description="Your stats and settings." />
+            <PageHeader
+              title="Profile"
+              description="Your stats and settings."
+            />
           </div>
         }
         accountInfo={
@@ -170,7 +188,9 @@ export default function ProfilePage() {
         }
         adminSection={
           session?.user?.id &&
-          (process.env.NEXT_PUBLIC_ADMIN_EMAILS?.includes(session.user.email || '') ||
+          (process.env.NEXT_PUBLIC_ADMIN_EMAILS?.includes(
+            session.user.email || ''
+          ) ||
             session.user.email === 'admin@flowforge.com') ? (
             <AdminUploadSection />
           ) : undefined

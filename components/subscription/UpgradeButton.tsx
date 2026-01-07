@@ -9,7 +9,10 @@ interface UpgradeButtonProps {
   className?: string
 }
 
-export function UpgradeButton({ plan = 'monthly', className }: UpgradeButtonProps) {
+export function UpgradeButton({
+  plan = 'monthly',
+  className,
+}: UpgradeButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const handleUpgrade = async () => {
@@ -47,7 +50,11 @@ export function UpgradeButton({ plan = 'monthly', className }: UpgradeButtonProp
         className
       )}
     >
-      {loading ? 'Processing...' : plan === 'yearly' ? 'Upgrade Yearly' : 'Upgrade Monthly'}
+      {loading
+        ? 'Processing...'
+        : plan === 'yearly'
+          ? 'Upgrade Yearly'
+          : 'Upgrade Monthly'}
     </button>
   )
 }

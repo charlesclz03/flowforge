@@ -232,7 +232,11 @@ interface MyComponentProps {
   isActive?: boolean
 }
 
-export function MyComponent({ title, onAction, isActive = false }: MyComponentProps) {
+export function MyComponent({
+  title,
+  onAction,
+  isActive = false,
+}: MyComponentProps) {
   // Component implementation
 }
 ```

@@ -70,11 +70,16 @@ export async function POST(req: Request) {
     if (aggressiveCount > positiveCount && aggressiveCount > reflectiveCount) {
       vibe = 'Aggressive Spitfire'
       score = 80 + Math.min(aggressiveCount * 2, 20)
-      description = 'You came with the heat! High energy and battle-ready bars detected.'
-    } else if (reflectiveCount > positiveCount && reflectiveCount > aggressiveCount) {
+      description =
+        'You came with the heat! High energy and battle-ready bars detected.'
+    } else if (
+      reflectiveCount > positiveCount &&
+      reflectiveCount > aggressiveCount
+    ) {
       vibe = 'Conscious Lyrical'
       score = 85 + Math.min(reflectiveCount * 2, 15)
-      description = 'Deep thoughts detected. You are telling a story and painting a picture.'
+      description =
+        'Deep thoughts detected. You are telling a story and painting a picture.'
     } else if (positiveCount > 0) {
       vibe = 'Feel-Good Flow'
       score = 90

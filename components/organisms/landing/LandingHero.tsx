@@ -24,7 +24,12 @@ interface LandingHeroProps {
   isAuthenticated: boolean
 }
 
-export function LandingHero({ stats, badges, progress, isAuthenticated }: LandingHeroProps) {
+export function LandingHero({
+  stats,
+  badges,
+  progress,
+  isAuthenticated,
+}: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden rounded-[2.5rem] border border-stroke-subtle/60 bg-background-glow/80 p-[1px] shadow-soft">
       <div className="pointer-events-none absolute inset-0 opacity-70 blur-3xl">
@@ -39,9 +44,16 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
                 key={badge.label}
                 className="inline-flex items-center gap-2 rounded-full border border-stroke-glow/30 bg-background-card/70 px-4 py-2 text-sm text-text-secondary backdrop-blur-light"
               >
-                <span className={`h-2 w-2 rounded-full ${badge.accentClass}`} aria-hidden />
-                <span className="text-text-tertiary uppercase tracking-[0.2em]">{badge.label}</span>
-                <span className="font-medium text-text-primary">{badge.value}</span>
+                <span
+                  className={`h-2 w-2 rounded-full ${badge.accentClass}`}
+                  aria-hidden
+                />
+                <span className="text-text-tertiary uppercase tracking-[0.2em]">
+                  {badge.label}
+                </span>
+                <span className="font-medium text-text-primary">
+                  {badge.value}
+                </span>
               </span>
             ))}
           </div>
@@ -102,7 +114,9 @@ export function LandingHero({ stats, badges, progress, isAuthenticated }: Landin
                 Recording
               </span>
               <span className="mt-2 text-numeral text-white">01:24</span>
-              <span className="mt-1 text-sm text-text-tertiary">On-beat guidance active</span>
+              <span className="mt-1 text-sm text-text-tertiary">
+                On-beat guidance active
+              </span>
             </div>
           </div>
         </div>

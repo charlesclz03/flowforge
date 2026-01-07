@@ -171,7 +171,9 @@ All templates are structured for easy code splitting:
 
 ```tsx
 // Future optimization example
-const PracticeTemplate = lazy(() => import('@/components/templates/PracticeTemplate'))
+const PracticeTemplate = lazy(
+  () => import('@/components/templates/PracticeTemplate')
+)
 ```
 
 **Benefits:**

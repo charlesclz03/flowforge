@@ -63,7 +63,11 @@ gsutil cors set cors.json gs://flowforge-audio
 ```json
 [
   {
-    "origin": ["http://localhost:3000", "https://flowforge.app", "https://*.vercel.app"],
+    "origin": [
+      "http://localhost:3000",
+      "https://flowforge.app",
+      "https://*.vercel.app"
+    ],
     "method": ["GET", "PUT", "POST"],
     "responseHeader": ["Content-Type"],
     "maxAgeSeconds": 3600
@@ -167,7 +171,10 @@ export async function POST(request: Request) {
     const { beatId, title, durationSeconds, filename } = body
 
     if (!beatId || !title || !durationSeconds || !filename) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
 
     // Generate pre-signed upload URL
@@ -183,7 +190,10 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Upload URL generation error:', error)
-    return NextResponse.json({ error: 'Failed to generate upload URL' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to generate upload URL' },
+      { status: 500 }
+    )
   }
 }
 ```

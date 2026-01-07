@@ -40,7 +40,13 @@ export function BentoGrid({ children, className }: BentoGridProps) {
   )
 }
 
-export function BentoCard({ children, className, title, icon, action }: BentoCardProps) {
+export function BentoCard({
+  children,
+  className,
+  title,
+  icon,
+  action,
+}: BentoCardProps) {
   return (
     <motion.div
       variants={{
@@ -66,7 +72,11 @@ export function BentoCard({ children, className, title, icon, action }: BentoCar
         <div className="flex items-center justify-between mb-4 z-10 relative">
           <div className="flex items-center gap-2 text-text-secondary group-hover:text-white transition-colors">
             {icon}
-            {title && <span className="text-sm font-medium uppercase tracking-wider">{title}</span>}
+            {title && (
+              <span className="text-sm font-medium uppercase tracking-wider">
+                {title}
+              </span>
+            )}
           </div>
           {action}
         </div>

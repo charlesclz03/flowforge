@@ -30,7 +30,9 @@ export const EmptyState = memo(function EmptyState({
         <>
           {icon && <div className="mb-4 flex justify-center">{icon}</div>}
           {title && <p className="text-lg text-white">{title}</p>}
-          {description && <p className="mt-2 text-text-secondary">{description}</p>}
+          {description && (
+            <p className="mt-2 text-text-secondary">{description}</p>
+          )}
           {action && <div className="mt-6">{action}</div>}
         </>
       )}

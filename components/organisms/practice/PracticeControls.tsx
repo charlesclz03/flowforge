@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
-import { RefreshCcw, Zap, Gauge, Infinity as InfinityIcon, User } from 'lucide-react'
+import {
+  RefreshCcw,
+  Zap,
+  Gauge,
+  Infinity as InfinityIcon,
+  User,
+} from 'lucide-react'
 import { motion } from 'framer-motion'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
@@ -83,7 +89,8 @@ export default function PracticeControls({
     if (difficulty === 3) {
       return {
         label: 'Hard',
-        classes: 'bg-accent-red/10 text-accent-red border-accent-red/20 hover:bg-accent-red/20',
+        classes:
+          'bg-accent-red/10 text-accent-red border-accent-red/20 hover:bg-accent-red/20',
       }
     }
     return {
@@ -94,13 +101,20 @@ export default function PracticeControls({
   }
 
   const difficultyMeta = getDifficultyMeta()
-  const intervalProgress = getIntervalProgress(currentTime || 0, selectedBeat.bpm, frequency)
+  const intervalProgress = getIntervalProgress(
+    currentTime || 0,
+    selectedBeat.bpm,
+    frequency
+  )
 
   // PWA Prompt State
   const [showPWAInstall, setShowPWAInstall] = useState(false)
 
   const handleRecordClick = () => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('hasWarnedPWA')) {
+    if (
+      typeof window !== 'undefined' &&
+      !localStorage.getItem('hasWarnedPWA')
+    ) {
       setShowPWAInstall(true)
       localStorage.setItem('hasWarnedPWA', 'true')
       return
@@ -127,7 +141,13 @@ export default function PracticeControls({
   }
 
   // Custom Studio Mic Icon
-  const StudioMicIcon = ({ className, size = 48 }: { className?: string; size?: number }) => (
+  const StudioMicIcon = ({
+    className,
+    size = 48,
+  }: {
+    className?: string
+    size?: number
+  }) => (
     <svg
       width={size}
       height={size}
@@ -146,7 +166,12 @@ export default function PracticeControls({
   )
 
   return (
-    <Card padding="lg" className={cn('transition-opacity duration-500 bg-transparent border-none')}>
+    <Card
+      padding="lg"
+      className={cn(
+        'transition-opacity duration-500 bg-transparent border-none'
+      )}
+    >
       <div className="flex flex-col items-center gap-4 sm:gap-6">
         {/* Info Tags (Standardized) */}
         <div className="flex flex-col items-center gap-3">
@@ -173,7 +198,9 @@ export default function PracticeControls({
               <span>{difficultyMeta.label}</span>
             </button>
 
-            <span className="text-xs font-bold text-white/20">{selectedBeat.bpm} BPM</span>
+            <span className="text-xs font-bold text-white/20">
+              {selectedBeat.bpm} BPM
+            </span>
 
             <button
               onClick={cycleFrequency}
@@ -199,7 +226,10 @@ export default function PracticeControls({
         </div>
 
         {/* Word Prompt */}
-        <div id="tour-word-prompt" className="flex w-full items-center justify-center h-20">
+        <div
+          id="tour-word-prompt"
+          className="flex w-full items-center justify-center h-20"
+        >
           <WordPrompt
             word={currentWord || null}
             show={isPlaying && !!currentWord}
@@ -237,9 +267,15 @@ export default function PracticeControls({
             animate={
               isPlaying
                 ? isRecording && !isInfiniteMode
-                  ? { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 1.5 } }
+                  ? {
+                      scale: [1, 1.02, 1],
+                      transition: { repeat: Infinity, duration: 1.5 },
+                    }
                   : { scale: 1 }
-                : { scale: [1, 1.02, 1], transition: { repeat: Infinity, duration: 3 } }
+                : {
+                    scale: [1, 1.02, 1],
+                    transition: { repeat: Infinity, duration: 3 },
+                  }
             }
             onClick={() => {
               if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -296,20 +332,33 @@ export default function PracticeControls({
                     <span
                       className={cn(
                         'text-[10px] font-bold uppercase tracking-[0.3em]',
-                        isRecording && !isInfiniteMode ? 'text-red-400' : 'text-accent-purple'
+                        isRecording && !isInfiniteMode
+                          ? 'text-red-400'
+                          : 'text-accent-purple'
                       )}
                     >
-                      {isInfiniteMode ? 'Free Flow' : isRecording ? 'Recording' : 'Playing'}
+                      {isInfiniteMode
+                        ? 'Free Flow'
+                        : isRecording
+                          ? 'Recording'
+                          : 'Playing'}
                     </span>
                   </div>
 
                   <span className="text-6xl sm:text-7xl font-light text-white tabular-nums tracking-tighter leading-none">
                     {isInfiniteMode ? (
-                      <InfinityIcon size={64} className="text-white/80 animate-pulse-slow" />
+                      <InfinityIcon
+                        size={64}
+                        className="text-white/80 animate-pulse-slow"
+                      />
                     ) : isRecording ? (
-                      formatTime(Math.max(0, (isPro ? 600 : 120) - recordingDuration))
+                      formatTime(
+                        Math.max(0, (isPro ? 600 : 120) - recordingDuration)
+                      )
                     ) : (
-                      formatTime(Math.max(0, sessionDuration - (currentTime || 0)))
+                      formatTime(
+                        Math.max(0, sessionDuration - (currentTime || 0))
+                      )
                     )}
                   </span>
 
@@ -367,7 +416,9 @@ export default function PracticeControls({
                 )}
               />
               {/* Text */}
-              <span className="text-3xl font-black tracking-tighter text-black">REC</span>
+              <span className="text-3xl font-black tracking-tighter text-black">
+                REC
+              </span>
             </div>
 
             {/* Right Bracket */}

@@ -1,7 +1,15 @@
 import React from 'react'
 import { useMusicPlayer } from './MusicPlayerContext'
 import { Button } from './ui/button'
-import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Volume2 } from 'lucide-react'
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Repeat,
+  Shuffle,
+  Volume2,
+} from 'lucide-react'
 import { Slider } from './ui/slider'
 
 export function PlayerControls() {
@@ -107,7 +115,11 @@ export function PlayerControls() {
             color: 'white',
           }}
         >
-          {isPlaying ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 ml-0.5" />}
+          {isPlaying ? (
+            <Pause className="w-7 h-7" />
+          ) : (
+            <Play className="w-7 h-7 ml-0.5" />
+          )}
         </Button>
 
         <Button

@@ -13,7 +13,9 @@ export function LandingFAQ({ items }: LandingFAQProps) {
   return (
     <>
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-light text-white">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-light text-white">
+          Frequently Asked Questions
+        </h2>
         <p className="mt-2 text-text-secondary">Everything you need to know</p>
       </div>
       <div className="max-w-3xl mx-auto space-y-4">

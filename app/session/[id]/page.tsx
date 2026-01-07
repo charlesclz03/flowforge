@@ -15,13 +15,18 @@ async function getSession(id: string) {
   })
 }
 
-export default async function SessionPage({ params }: { params: { id: string } }) {
+export default async function SessionPage({
+  params,
+}: {
+  params: { id: string }
+}) {
   const sessionData = await getSession(params.id)
 
   if (!sessionData) return notFound()
 
   // Sign URLs
-  const { createServerClient, RECORDINGS_BUCKET } = await import('@/lib/supabase/server')
+  const { createServerClient, RECORDINGS_BUCKET } =
+    await import('@/lib/supabase/server')
   const supabase = createServerClient()
   const SIGNED_URL_TTL_SECONDS = 60 * 60
 
@@ -53,12 +58,15 @@ export default async function SessionPage({ params }: { params: { id: string } }
               {sessionData.title}
             </h1>
             <p className="text-sm text-text-secondary">
-              by {sessionData.user.name || 'Anonymous'} • {sessionData.beat.title}
+              by {sessionData.user.name || 'Anonymous'} •{' '}
+              {sessionData.beat.title}
             </p>
           </div>
         </div>
 
-        {storageUrl && <audio controls className="w-full mt-2" src={storageUrl} />}
+        {storageUrl && (
+          <audio controls className="w-full mt-2" src={storageUrl} />
+        )}
 
         <div className="mt-4 text-xs text-text-tertiary flex items-center gap-4">
           <span>{new Date(sessionData.createdAt).toLocaleDateString()}</span>

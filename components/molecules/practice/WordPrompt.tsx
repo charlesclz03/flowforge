@@ -10,7 +10,12 @@ interface WordPromptProps {
   isGolden?: boolean
 }
 
-export function WordPrompt({ word, show, className, isGolden }: WordPromptProps) {
+export function WordPrompt({
+  word,
+  show,
+  className,
+  isGolden,
+}: WordPromptProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [displayWord, setDisplayWord] = useState<string | null>(null)
 
@@ -28,11 +33,18 @@ export function WordPrompt({ word, show, className, isGolden }: WordPromptProps)
   }
 
   return (
-    <div className={cn('flex items-center justify-center min-h-[120px]', className)}>
+    <div
+      className={cn(
+        'flex items-center justify-center min-h-[120px]',
+        className
+      )}
+    >
       <div
         className={cn(
           'transition-all duration-300',
-          isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'
+          isVisible
+            ? 'opacity-100 scale-100 translate-y-0'
+            : 'opacity-0 scale-95 translate-y-4'
         )}
       >
         <h2

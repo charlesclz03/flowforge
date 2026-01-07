@@ -6,7 +6,9 @@ import { ChevronDownIcon } from 'lucide-react@0.487.0'
 
 import { cn } from './utils'
 
-function Accordion({ ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
+function Accordion({
+  ...props
+}: React.ComponentProps<typeof AccordionPrimitive.Root>) {
   return <AccordionPrimitive.Root data-slot="accordion" {...props} />
 }
 

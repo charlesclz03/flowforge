@@ -70,7 +70,8 @@ export class AudioPlayer {
         this.audio?.removeEventListener('error', handleError)
         reject(
           new Error(
-            'Failed to load audio: ' + (e instanceof ErrorEvent ? e.message : 'Network error')
+            'Failed to load audio: ' +
+              (e instanceof ErrorEvent ? e.message : 'Network error')
           )
         )
       }

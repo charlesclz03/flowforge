@@ -24,7 +24,10 @@ export async function GET() {
     return NextResponse.json({ sessions: result.data })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }
 
@@ -45,7 +48,10 @@ export async function POST(request: Request) {
       storageUrl = null,
     } = body || {}
     if (!beatId || !title || !durationSeconds) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
     const result = await createSession({
       beatId: beatId as string,
@@ -71,6 +77,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ session: result.data })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

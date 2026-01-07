@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from 'react'
 
 interface Song {
   id: string
@@ -42,7 +48,9 @@ interface MusicPlayerContextType extends MusicPlayerState {
   extractColors: (imageUrl: string) => void
 }
 
-const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined)
+const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(
+  undefined
+)
 
 // Mock song data with Material U colors
 const mockSongs: Song[] = [
@@ -113,7 +121,11 @@ const mockSongs: Song[] = [
   },
 ]
 
-export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
+export function MusicPlayerProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [state, setState] = useState<MusicPlayerState>({
     currentSong: mockSongs[0],
     playlist: mockSongs,
@@ -135,7 +147,10 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       if (state.isPlaying && state.currentSong) {
         setState((prev) => ({
           ...prev,
-          currentTime: Math.min(prev.currentTime + 1, state.currentSong?.duration || 0),
+          currentTime: Math.min(
+            prev.currentTime + 1,
+            state.currentSong?.duration || 0
+          ),
         }))
 
         if (state.currentTime >= (state.currentSong?.duration || 0)) {
@@ -149,7 +164,12 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [state.isPlaying, state.currentTime, state.currentSong?.duration, state.isLooping])
+  }, [
+    state.isPlaying,
+    state.currentTime,
+    state.currentSong?.duration,
+    state.isLooping,
+  ])
 
   const extractColors = (imageUrl: string) => {
     // In a real app, this would use a color extraction library
@@ -196,7 +216,8 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   }
 
   const previousSong = () => {
-    const prevIndex = currentSongIndex === 0 ? state.playlist.length - 1 : currentSongIndex - 1
+    const prevIndex =
+      currentSongIndex === 0 ? state.playlist.length - 1 : currentSongIndex - 1
     setCurrentSongIndex(prevIndex)
     const prevSong = state.playlist[prevIndex]
     setState((prev) => ({
@@ -265,7 +286,11 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     extractColors,
   }
 
-  return <MusicPlayerContext.Provider value={contextValue}>{children}</MusicPlayerContext.Provider>
+  return (
+    <MusicPlayerContext.Provider value={contextValue}>
+      {children}
+    </MusicPlayerContext.Provider>
+  )
 }
 
 export function useMusicPlayer() {

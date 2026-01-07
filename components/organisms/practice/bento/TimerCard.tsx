@@ -11,7 +11,12 @@ interface TimerCardProps {
   className?: string
 }
 
-export function TimerCard({ duration, isRecording, countdown, className }: TimerCardProps) {
+export function TimerCard({
+  duration,
+  isRecording,
+  countdown,
+  className,
+}: TimerCardProps) {
   const minutes = Math.floor(duration / 60)
   const seconds = Math.round(duration % 60)
 
@@ -21,7 +26,11 @@ export function TimerCard({ duration, isRecording, countdown, className }: Timer
       icon={
         <Clock
           size={16}
-          className={cn(isRecording ? 'text-accent-red animate-pulse' : 'text-text-secondary')}
+          className={cn(
+            isRecording
+              ? 'text-accent-red animate-pulse'
+              : 'text-text-secondary'
+          )}
         />
       }
       className={cn('col-span-1 md:col-span-2 lg:col-span-3', className)}
@@ -39,7 +48,8 @@ export function TimerCard({ duration, isRecording, countdown, className }: Timer
                 isRecording ? 'text-accent-red' : 'text-white'
               )}
             >
-              {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+              {minutes.toString().padStart(2, '0')}:
+              {seconds.toString().padStart(2, '0')}
             </div>
             {isRecording && (
               <div className="flex items-center gap-1.5 mt-2">

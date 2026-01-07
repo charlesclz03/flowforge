@@ -38,7 +38,10 @@ export async function POST(request: Request) {
     // Validate required fields
     if (!audioFile || !beatId || !title || !durationSeconds) {
       return NextResponse.json(
-        { error: 'Missing required fields: audio, beatId, title, durationSeconds' },
+        {
+          error:
+            'Missing required fields: audio, beatId, title, durationSeconds',
+        },
         { status: 400 }
       )
     }
@@ -65,9 +68,10 @@ export async function POST(request: Request) {
     }
 
     // Generate a signed URL for temporary access
-    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
-      .from(RECORDINGS_BUCKET)
-      .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS)
+    const { data: signedUrlData, error: signedUrlError } =
+      await supabase.storage
+        .from(RECORDINGS_BUCKET)
+        .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS)
 
     if (signedUrlError) {
       console.error('Signed URL error:', signedUrlError)
@@ -113,9 +117,9 @@ export async function POST(request: Request) {
         const words = JSON.parse(wordsUsedRaw) as string[]
         if (Array.isArray(words) && words.length > 0) {
           // Deduplicate and sanitize
-          const uniqueWords = [...new Set(words.map((w) => w.toLowerCase().trim()))].filter(
-            (w) => w.length > 0
-          )
+          const uniqueWords = [
+            ...new Set(words.map((w) => w.toLowerCase().trim())),
+          ].filter((w) => w.length > 0)
 
           if (uniqueWords.length > 0) {
             await prisma.collectedWord.createMany({
@@ -150,7 +154,9 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
+      {
+        error: error instanceof Error ? error.message : 'Internal server error',
+      },
       { status: 500 }
     )
   }
@@ -205,7 +211,9 @@ export async function GET() {
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
+      {
+        error: error instanceof Error ? error.message : 'Internal server error',
+      },
       { status: 500 }
     )
   }

@@ -188,7 +188,8 @@ export function cleanupOldSessions(keepCount: number = 10): number {
 
     // Sort by date (newest first)
     const sorted = sessions.sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
 
     // Keep only the newest ones

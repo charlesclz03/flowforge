@@ -67,7 +67,10 @@ export function useWordPrompt({
       return
     }
 
-    const triggered = schedulerRef.current.checkAndTrigger(currentTime, nextWordRef.current)
+    const triggered = schedulerRef.current.checkAndTrigger(
+      currentTime,
+      nextWordRef.current
+    )
 
     if (triggered) {
       // Show the current word

@@ -19,7 +19,9 @@ import { ErrorCodes } from '@/lib/errors'
 export default function ReviewPage({ params }: { params: { id: string } }) {
   const { status } = useSession()
   const router = useRouter()
-  const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(null)
+  const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
+    null
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
@@ -47,11 +49,18 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
   }, [status, fetchRecording])
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this recording? This cannot be undone.')) return
+    if (
+      !confirm(
+        'Are you sure you want to delete this recording? This cannot be undone.'
+      )
+    )
+      return
 
     setIsDeleting(true)
     try {
-      const response = await fetch(`/api/recordings/${params.id}`, { method: 'DELETE' })
+      const response = await fetch(`/api/recordings/${params.id}`, {
+        method: 'DELETE',
+      })
       if (!response.ok) throw new Error('Failed to delete')
       router.push('/recordings')
     } catch (err) {
@@ -117,17 +126,27 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
           >
             Back to Library
           </Button>
-          <PageHeader title={recording.title} description="Listen back and analyze your flow" />
+          <PageHeader
+            title={recording.title}
+            description="Listen back and analyze your flow"
+          />
         </div>
       }
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
-        <SessionPlayer audioUrl={recording.storageUrl} beatUrl={recording.beat?.storageUrl} />
+        <SessionPlayer
+          audioUrl={recording.storageUrl}
+          beatUrl={recording.beat?.storageUrl}
+        />
       }
       metadata={<SessionMetadata recording={recording} />}
       actions={
         <div className="flex gap-4">
-          <Button variant="secondary" onClick={handleDownload} leftIcon={<Download size={18} />}>
+          <Button
+            variant="secondary"
+            onClick={handleDownload}
+            leftIcon={<Download size={18} />}
+          >
             Download Audio
           </Button>
           <Button

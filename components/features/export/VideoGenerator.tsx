@@ -12,8 +12,15 @@ interface VideoGeneratorProps {
   onClose: () => void
 }
 
-export function VideoGenerator({ audioUrl, title, artist, onClose }: VideoGeneratorProps) {
-  const [status, setStatus] = useState<'idle' | 'recording' | 'processing' | 'done'>('idle')
+export function VideoGenerator({
+  audioUrl,
+  title,
+  artist,
+  onClose,
+}: VideoGeneratorProps) {
+  const [status, setStatus] = useState<
+    'idle' | 'recording' | 'processing' | 'done'
+  >('idle')
   const [progress, setProgress] = useState(0)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
 
@@ -34,7 +41,8 @@ export function VideoGenerator({ audioUrl, title, artist, onClose }: VideoGenera
 
     // Setup Audio Context for Visualizer
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+    const AudioContext =
+      window.AudioContext || (window as any).webkitAudioContext
     const ctx = new AudioContext()
     const source = ctx.createMediaElementSource(audio)
     const dest = ctx.createMediaStreamDestination()
@@ -107,7 +115,11 @@ export function VideoGenerator({ audioUrl, title, artist, onClose }: VideoGenera
 
       canvasCtx.font = '40px Inter, sans-serif'
       canvasCtx.fillStyle = '#a1a1aa'
-      canvasCtx.fillText(`By ${artist}`, canvas.width / 2, canvas.height / 3 + 70)
+      canvasCtx.fillText(
+        `By ${artist}`,
+        canvas.width / 2,
+        canvas.height / 3 + 70
+      )
 
       // Visualizer (Circle)
       const centerX = canvas.width / 2
@@ -187,13 +199,20 @@ export function VideoGenerator({ audioUrl, title, artist, onClose }: VideoGenera
 
             {status === 'recording' && (
               <div className="space-y-2 text-center">
-                <Loader2 className="animate-spin mx-auto text-accent-purple" size={32} />
+                <Loader2
+                  className="animate-spin mx-auto text-accent-purple"
+                  size={32}
+                />
                 <p>Recording... {Math.round(progress)}%</p>
               </div>
             )}
 
             {status === 'done' && videoUrl && (
-              <a href={videoUrl} download={`flowforge-${title}.webm`} className="block">
+              <a
+                href={videoUrl}
+                download={`flowforge-${title}.webm`}
+                className="block"
+              >
                 <Button className="w-full bg-accent-green hover:bg-accent-green/80 text-black">
                   <Download size={20} className="mr-2" />
                   Download Video

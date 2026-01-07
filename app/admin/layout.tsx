@@ -3,7 +3,11 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const session = await getServerSession(authOptions)
   const adminEmail = process.env.ADMIN_EMAIL
 
@@ -19,7 +23,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-purple to-accent-cyan bg-clip-text text-transparent">
             Admin Dashboard
           </h1>
-          <p className="text-text-secondary">Super Admin Context: {session.user.email}</p>
+          <p className="text-text-secondary">
+            Super Admin Context: {session.user.email}
+          </p>
         </div>
         {children}
       </main>

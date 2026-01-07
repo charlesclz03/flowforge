@@ -3,7 +3,10 @@ import { calculateBeatTiming } from '@/lib/beats/utils'
 /**
  * Calculate the time interval between word prompts
  */
-export function calculatePromptInterval(bpm: number, frequencyInBars: number): number {
+export function calculatePromptInterval(
+  bpm: number,
+  frequencyInBars: number
+): number {
   const timing = calculateBeatTiming(bpm)
   return timing.secondsPerBar * frequencyInBars
 }

@@ -32,7 +32,11 @@ export function Avatar({
         className
       )}
     >
-      {src ? <Image src={src} alt={alt} fill className="object-cover" /> : <span>{fallback}</span>}
+      {src ? (
+        <Image src={src} alt={alt} fill className="object-cover" />
+      ) : (
+        <span>{fallback}</span>
+      )}
     </div>
   )
 }

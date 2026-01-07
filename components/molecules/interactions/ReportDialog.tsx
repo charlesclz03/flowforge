@@ -22,7 +22,12 @@ interface ReportDialogProps {
   contentType: 'session' | 'user' | 'comment'
 }
 
-export function ReportDialog({ isOpen, onClose, contentId, contentType }: ReportDialogProps) {
+export function ReportDialog({
+  isOpen,
+  onClose,
+  contentId,
+  contentType,
+}: ReportDialogProps) {
   const [reason, setReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -33,7 +38,9 @@ export function ReportDialog({ isOpen, onClose, contentId, contentType }: Report
       console.log('Reporting', contentId, contentType, reason)
       await new Promise((resolve) => setTimeout(resolve, 1000))
       // In real app: POST /api/report { contentId, contentType, reason }
-      toast.success('Report submitted. Thank you for keeping the community safe.')
+      toast.success(
+        'Report submitted. Thank you for keeping the community safe.'
+      )
       onClose()
     } catch (e) {
       toast.error('Failed to submit report')
@@ -53,7 +60,10 @@ export function ReportDialog({ isOpen, onClose, contentId, contentType }: Report
               <Flag className="text-red-500" size={24} />
               Report Content
             </HeadlessDialog.Title>
-            <button onClick={onClose} className="text-text-tertiary hover:text-white">
+            <button
+              onClick={onClose}
+              className="text-text-tertiary hover:text-white"
+            >
               <X size={20} />
             </button>
           </div>
@@ -63,7 +73,12 @@ export function ReportDialog({ isOpen, onClose, contentId, contentType }: Report
           </HeadlessDialog.Description>
 
           <div className="space-y-3 mb-6">
-            {['Inappropriate Content', 'Harassment', 'Spam', 'Copyright Violation'].map((r) => (
+            {[
+              'Inappropriate Content',
+              'Harassment',
+              'Spam',
+              'Copyright Violation',
+            ].map((r) => (
               <label
                 key={r}
                 className="flex items-center gap-3 p-3 rounded-lg border border-white/5 hover:bg-white/5 cursor-pointer transition-colors"

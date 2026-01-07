@@ -23,18 +23,23 @@ export function XPBar() {
           let points = 0
           if (data.userAchievements && data.allAchievements) {
             const unlockedMap = new Set(
-              data.userAchievements.map((ua: { achievementId: string }) => ua.achievementId)
+              data.userAchievements.map(
+                (ua: { achievementId: string }) => ua.achievementId
+              )
             )
-            data.allAchievements.forEach((ach: { id: string; points: number }) => {
-              if (unlockedMap.has(ach.id)) points += ach.points
-            })
+            data.allAchievements.forEach(
+              (ach: { id: string; points: number }) => {
+                if (unlockedMap.has(ach.id)) points += ach.points
+              }
+            )
           }
 
           setTotalPoints(points)
 
           const pointsPerLevel = 500
           const currentLevel = Math.floor(points / pointsPerLevel) + 1
-          const levelProgress = ((points % pointsPerLevel) / pointsPerLevel) * 100
+          const levelProgress =
+            ((points % pointsPerLevel) / pointsPerLevel) * 100
 
           setLevel(currentLevel)
           setProgress(levelProgress)
@@ -48,7 +53,8 @@ export function XPBar() {
     fetchXP()
   }, [])
 
-  if (isLoading) return <div className="h-16 w-full animate-pulse bg-white/5 rounded-xl" />
+  if (isLoading)
+    return <div className="h-16 w-full animate-pulse bg-white/5 rounded-xl" />
 
   return (
     <div className="w-full space-y-2">
@@ -57,7 +63,9 @@ export function XPBar() {
           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-accent-purple text-white uppercase tracking-wider">
             Season 1
           </span>
-          <span className="text-xs font-bold text-white uppercase tracking-widest">Origins</span>
+          <span className="text-xs font-bold text-white uppercase tracking-widest">
+            Origins
+          </span>
         </div>
         <div className="text-xs font-mono text-accent-cyan">
           {totalPoints} / {level * 500} XP
@@ -80,7 +88,9 @@ export function XPBar() {
           {/* Previous Level Node */}
           <div className="flex flex-col items-center gap-2">
             <div className="h-4 w-4 rounded-full bg-accent-purple border-2 border-black shadow-[0_0_10px_rgba(125,122,255,0.5)]" />
-            <div className="text-[10px] font-bold text-text-secondary">Lvl {level}</div>
+            <div className="text-[10px] font-bold text-text-secondary">
+              Lvl {level}
+            </div>
           </div>
 
           {/* Mid-way Ticks */}
@@ -106,7 +116,9 @@ export function XPBar() {
             >
               <span className="text-xs">🎁</span>
             </div>
-            <div className="text-[10px] font-bold text-text-secondary">Lvl {level + 1}</div>
+            <div className="text-[10px] font-bold text-text-secondary">
+              Lvl {level + 1}
+            </div>
           </div>
         </div>
       </div>

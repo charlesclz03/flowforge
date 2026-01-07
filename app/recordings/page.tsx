@@ -4,7 +4,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { PageHeader } from '@/components/organisms/common'
-import { RecordingsList, RecordingsStats } from '@/components/organisms/recordings'
+import {
+  RecordingsList,
+  RecordingsStats,
+} from '@/components/organisms/recordings'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
@@ -116,7 +119,11 @@ export default function RecordingsPage() {
 
   // If free user, show list but with blocked access modal
   return (
-    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+    <OnboardingLayout
+      showBackButton={false}
+      showSettings={true}
+      className="bg-background"
+    >
       <div className="pt-8 pb-32">
         <PageHeader
           title="My Recordings"
@@ -126,7 +133,11 @@ export default function RecordingsPage() {
 
         <div className="mt-8 space-y-8 relative">
           {/* Blur content if not pro */}
-          <div className={!isPro ? 'blur-sm pointer-events-none select-none opacity-50' : ''}>
+          <div
+            className={
+              !isPro ? 'blur-sm pointer-events-none select-none opacity-50' : ''
+            }
+          >
             <RecordingsStats recordings={recordings} />
             <RecordingsList
               recordings={recordings}

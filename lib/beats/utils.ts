@@ -42,7 +42,11 @@ export function calculateNextPromptTime(
 /**
  * Check if we're on a beat boundary (for visual feedback)
  */
-export function isOnBeat(currentTime: number, bpm: number, tolerance: number = 0.05): boolean {
+export function isOnBeat(
+  currentTime: number,
+  bpm: number,
+  tolerance: number = 0.05
+): boolean {
   const timing = calculateBeatTiming(bpm)
   const currentBeat = currentTime / timing.secondsPerBeat
   const nearestBeat = Math.round(currentBeat)

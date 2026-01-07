@@ -14,7 +14,8 @@ export default function AdminPage() {
             <h2 className="text-xl font-bold">Upload Beat</h2>
           </div>
           <p className="text-text-secondary">
-            Add new instrumentals to the library. Auto-transcodes and sets up metadata.
+            Add new instrumentals to the library. Auto-transcodes and sets up
+            metadata.
           </p>
         </Card>
       </Link>
@@ -27,7 +28,9 @@ export default function AdminPage() {
             </div>
             <h2 className="text-xl font-bold">Manage Library</h2>
           </div>
-          <p className="text-text-secondary">Edit, delete, or feature existing beats.</p>
+          <p className="text-text-secondary">
+            Edit, delete, or feature existing beats.
+          </p>
         </Card>
       </Link>
 

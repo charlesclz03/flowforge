@@ -38,7 +38,8 @@ export default function LatencyWizard() {
 
   const startCalibration = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext
+    const AudioContextClass =
+      (window as any).AudioContext || (window as any).webkitAudioContext
     audioCtxRef.current = new AudioContextClass()
     setStep('calibrating')
     isCalibratingRef.current = true
@@ -66,7 +67,8 @@ export default function LatencyWizard() {
     // Find the closest beep time (either passed or upcoming)
     const interval = 1.0
     const relativeTime = (tapTime - 0.5) % interval
-    const diff = relativeTime > interval / 2 ? relativeTime - interval : relativeTime
+    const diff =
+      relativeTime > interval / 2 ? relativeTime - interval : relativeTime
 
     const diffMs = Math.round(diff * 1000)
     setTaps((prev) => {
@@ -112,8 +114,9 @@ export default function LatencyWizard() {
               <div className="space-y-2">
                 <h3 className="font-bold text-lg">How it works</h3>
                 <p className="text-text-secondary text-sm">
-                  You'll hear a series of beeps. Tap the button exactly when you hear the beep.
-                  We'll measure the difference and auto-adjust your recordings.
+                  You'll hear a series of beeps. Tap the button exactly when you
+                  hear the beep. We'll measure the difference and auto-adjust
+                  your recordings.
                 </p>
               </div>
               <Button onClick={startCalibration} className="w-full">
@@ -126,7 +129,9 @@ export default function LatencyWizard() {
             <div className="space-y-8 text-center">
               <div className="relative h-32 flex items-center justify-center">
                 <div className="absolute inset-0 bg-accent-purple/10 rounded-full blur-3xl animate-pulse" />
-                <div className="text-4xl font-black text-white">{10 - taps.length}</div>
+                <div className="text-4xl font-black text-white">
+                  {10 - taps.length}
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -167,7 +172,10 @@ export default function LatencyWizard() {
                 <Button onClick={() => setStep('intro')} variant="ghost">
                   Recalibrate
                 </Button>
-                <Button onClick={() => router.back()} className="bg-white text-black">
+                <Button
+                  onClick={() => router.back()}
+                  className="bg-white text-black"
+                >
                   Done
                 </Button>
               </div>
@@ -181,9 +189,12 @@ export default function LatencyWizard() {
               <ChevronRight size={16} />
             </div>
             <div className="space-y-1">
-              <p className="text-xs font-bold uppercase text-accent-purple">Pro Tip</p>
+              <p className="text-xs font-bold uppercase text-accent-purple">
+                Pro Tip
+              </p>
               <p className="text-sm text-text-secondary">
-                Use wired headphones for the lowest possible latency and best calibration results.
+                Use wired headphones for the lowest possible latency and best
+                calibration results.
               </p>
             </div>
           </div>

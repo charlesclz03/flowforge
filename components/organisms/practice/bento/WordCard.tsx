@@ -18,7 +18,10 @@ export function WordCard({ currentWord, onSkip, className }: WordCardProps) {
     <BentoCard
       title="Current Prompt"
       icon={<Sparkles size={16} className="text-accent-orange" />}
-      className={cn('col-span-1 md:col-span-4 lg:col-span-6 min-h-[250px]', className)}
+      className={cn(
+        'col-span-1 md:col-span-4 lg:col-span-6 min-h-[250px]',
+        className
+      )}
       action={
         onSkip && (
           <button

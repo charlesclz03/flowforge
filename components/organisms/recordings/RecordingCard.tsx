@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
-import Link from "next/link";
-import { Download, Trash2, Play, Pause, Music, Video } from "lucide-react";
-import { Card } from "@/components/atoms/Card";
-import { Button } from "@/components/atoms/Button";
-import { ErrorAlert } from "@/components/molecules/feedback/ErrorAlert";
-import { VideoGenerator } from "@/components/features/export/VideoGenerator";
-import { useErrorHandler } from "@/hooks/useErrorHandler";
-import { ErrorCodes } from "@/lib/errors";
-import { FreestyleSessionWithBeat } from "@/types/database";
-import { formatDuration, formatRelativeTime } from "@/lib/utils";
-import { cn } from "@/lib/utils";
-import { ShareButton } from "@/components/molecules/sharing/ShareButton";
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
+import Link from 'next/link'
+import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
+import { Card } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
+import { VideoGenerator } from '@/components/features/export/VideoGenerator'
+import { useErrorHandler } from '@/hooks/useErrorHandler'
+import { ErrorCodes } from '@/lib/errors'
+import { FreestyleSessionWithBeat } from '@/types/database'
+import { formatDuration, formatRelativeTime } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface RecordingCardProps {
-  recording: FreestyleSessionWithBeat;
-  onDelete: (id: string) => Promise<void>;
-  onDownload: (recording: FreestyleSessionWithBeat) => Promise<void>;
-  className?: string;
+  recording: FreestyleSessionWithBeat
+  onDelete: (id: string) => Promise<void>
+  onDownload: (recording: FreestyleSessionWithBeat) => Promise<void>
+  className?: string
 }
 
 export const RecordingCard = memo(function RecordingCard({
@@ -27,106 +27,106 @@ export const RecordingCard = memo(function RecordingCard({
   onDownload,
   className,
 }: RecordingCardProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showVideoExport, setShowVideoExport] = useState(false);
-  const { error, handleError, clearError } = useErrorHandler();
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [showVideoExport, setShowVideoExport] = useState(false)
+  const { error, handleError, clearError } = useErrorHandler()
 
   // Memoize difficulty labels to avoid recreating on every render
   const difficultyLabels = useMemo(
     () => ({
-      1: "Easy",
-      2: "Medium",
-      3: "Hard",
+      1: 'Easy',
+      2: 'Medium',
+      3: 'Hard',
     }),
-    [],
-  );
+    []
+  )
 
   const difficultyColors = useMemo(
     () => ({
-      1: "text-accent-green",
-      2: "text-accent-orange",
-      3: "text-accent-red",
+      1: 'text-accent-green',
+      2: 'text-accent-orange',
+      3: 'text-accent-red',
     }),
-    [],
-  );
+    []
+  )
 
   const handleDelete = useCallback(async () => {
-    if (!confirm("Are you sure you want to delete this recording?")) {
-      return;
+    if (!confirm('Are you sure you want to delete this recording?')) {
+      return
     }
 
-    setIsDeleting(true);
-    clearError();
+    setIsDeleting(true)
+    clearError()
 
     try {
-      await onDelete(recording.id);
+      await onDelete(recording.id)
     } catch (err) {
-      handleError(err, ErrorCodes.SESSION_DELETE_FAILED);
+      handleError(err, ErrorCodes.SESSION_DELETE_FAILED)
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  }, [recording.id, onDelete, handleError, clearError]);
+  }, [recording.id, onDelete, handleError, clearError])
 
   const handleDownload = useCallback(async () => {
-    setIsDownloading(true);
-    clearError();
+    setIsDownloading(true)
+    clearError()
 
     try {
-      await onDownload(recording);
+      await onDownload(recording)
     } catch (err) {
-      handleError(err, ErrorCodes.RECORDING_DOWNLOAD_FAILED);
+      handleError(err, ErrorCodes.RECORDING_DOWNLOAD_FAILED)
     } finally {
-      setIsDownloading(false);
+      setIsDownloading(false)
     }
-  }, [recording, onDownload, handleError, clearError]);
+  }, [recording, onDownload, handleError, clearError])
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    let createdAudio: HTMLAudioElement | null = null;
+    let createdAudio: HTMLAudioElement | null = null
 
     if (recording.storageUrl) {
       if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
+        audioRef.current.pause()
+        audioRef.current.src = ''
       }
 
-      createdAudio = new Audio(recording.storageUrl);
-      audioRef.current = createdAudio;
+      createdAudio = new Audio(recording.storageUrl)
+      audioRef.current = createdAudio
 
-      createdAudio.onended = () => setIsPlaying(false);
-      createdAudio.onpause = () => setIsPlaying(false);
-      createdAudio.onplay = () => setIsPlaying(true);
+      createdAudio.onended = () => setIsPlaying(false)
+      createdAudio.onpause = () => setIsPlaying(false)
+      createdAudio.onplay = () => setIsPlaying(true)
     }
 
     return () => {
       if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-        audioRef.current = null;
+        audioRef.current.pause()
+        audioRef.current.src = ''
+        audioRef.current = null
       }
 
       if (createdAudio) {
-        createdAudio.pause();
-        createdAudio.src = "";
+        createdAudio.pause()
+        createdAudio.src = ''
       }
-    };
-  }, [recording.storageUrl]);
+    }
+  }, [recording.storageUrl])
 
   const handlePlay = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current) return
 
     if (isPlaying) {
-      audioRef.current.pause();
+      audioRef.current.pause()
     } else {
       audioRef.current.play().catch((err) => {
-        console.error("Error playing audio:", err);
-        setIsPlaying(false);
-      });
+        console.error('Error playing audio:', err)
+        setIsPlaying(false)
+      })
     }
-  }, [isPlaying]);
+  }, [isPlaying])
 
   const normalizedDifficulty = (
     recording.difficulty === 1 ||
@@ -134,10 +134,10 @@ export const RecordingCard = memo(function RecordingCard({
     recording.difficulty === 3
       ? recording.difficulty
       : 2
-  ) as 1 | 2 | 3;
+  ) as 1 | 2 | 3
 
   return (
-    <Card className={cn("relative", className)}>
+    <Card className={cn('relative', className)}>
       {error && (
         <ErrorAlert error={error} onDismiss={clearError} className="mb-4" />
       )}
@@ -182,7 +182,7 @@ export const RecordingCard = memo(function RecordingCard({
               onClick={handlePlay}
               leftIcon={isPlaying ? <Pause size={16} /> : <Play size={16} />}
             >
-              {isPlaying ? "Pause" : "Play"}
+              {isPlaying ? 'Pause' : 'Play'}
             </Button>
           )}
           <Button
@@ -232,10 +232,10 @@ export const RecordingCard = memo(function RecordingCard({
         <VideoGenerator
           audioUrl={recording.storageUrl}
           title={recording.title}
-          artist={recording.userId || "User"} // We might need name if available or fetch it
+          artist={recording.userId || 'User'} // We might need name if available or fetch it
           onClose={() => setShowVideoExport(false)}
         />
       )}
     </Card>
-  );
-});
+  )
+})

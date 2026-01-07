@@ -43,7 +43,9 @@ export function Card({
       {(title || subtitle) && (
         <div className="mb-6 flex items-center justify-between">
           <div>
-            {title && <h2 className="text-xl font-medium text-white">{title}</h2>}
+            {title && (
+              <h2 className="text-xl font-medium text-white">{title}</h2>
+            )}
             {subtitle && <p className="mt-2 text-text-secondary">{subtitle}</p>}
           </div>
           {action && <div>{action}</div>}

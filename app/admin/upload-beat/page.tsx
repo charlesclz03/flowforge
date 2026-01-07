@@ -19,8 +19,14 @@ export default function AdminUploadPage() {
     return (
       <Container size="sm" className="py-20 text-center">
         <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>
-        <p className="mt-4 text-text-secondary">You are not authorized to view this page.</p>
-        <Button onClick={() => router.push('/')} className="mt-6" variant="secondary">
+        <p className="mt-4 text-text-secondary">
+          You are not authorized to view this page.
+        </p>
+        <Button
+          onClick={() => router.push('/')}
+          className="mt-6"
+          variant="secondary"
+        >
           Go Home
         </Button>
       </Container>
@@ -47,7 +53,9 @@ export default function AdminUploadPage() {
           <CheckCircle2 className="text-accent-green" />
           <div>
             <p className="font-bold text-white">Beat Uploaded!</p>
-            <p className="text-sm text-text-secondary">It's now live on FlowForge.</p>
+            <p className="text-sm text-text-secondary">
+              It's now live on FlowForge.
+            </p>
           </div>
         </div>
       ))
@@ -71,7 +79,9 @@ export default function AdminUploadPage() {
           <Music className="text-accent-purple" />
           Admin Beat Upload
         </h1>
-        <p className="text-text-secondary mt-2">Add fresh heat to the library.</p>
+        <p className="text-text-secondary mt-2">
+          Add fresh heat to the library.
+        </p>
       </div>
 
       <form
@@ -79,7 +89,9 @@ export default function AdminUploadPage() {
         className="space-y-6 bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm"
       >
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Cover Image (Optional)</label>
+          <label className="text-sm font-medium text-text-primary">
+            Cover Image (Optional)
+          </label>
           <input
             type="file"
             name="cover"
@@ -89,7 +101,9 @@ export default function AdminUploadPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Audio File (MP3/WAV)</label>
+          <label className="text-sm font-medium text-text-primary">
+            Audio File (MP3/WAV)
+          </label>
           <input
             required
             type="file"
@@ -101,7 +115,9 @@ export default function AdminUploadPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Title</label>
+            <label className="text-sm font-medium text-text-primary">
+              Title
+            </label>
             <input
               required
               name="title"
@@ -110,7 +126,9 @@ export default function AdminUploadPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Producer</label>
+            <label className="text-sm font-medium text-text-primary">
+              Producer
+            </label>
             <input
               required
               name="producer"
@@ -132,7 +150,9 @@ export default function AdminUploadPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Genre</label>
+            <label className="text-sm font-medium text-text-primary">
+              Genre
+            </label>
             <select
               name="genre"
               className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-accent-purple outline-none"
@@ -145,7 +165,9 @@ export default function AdminUploadPage() {
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Difficulty</label>
+            <label className="text-sm font-medium text-text-primary">
+              Difficulty
+            </label>
             <select
               name="difficulty"
               className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-accent-purple outline-none"
@@ -158,7 +180,9 @@ export default function AdminUploadPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary">Vibe / Tags</label>
+          <label className="text-sm font-medium text-text-primary">
+            Vibe / Tags
+          </label>
           <input
             name="mood"
             placeholder="Aggressive, Dark, Hype"

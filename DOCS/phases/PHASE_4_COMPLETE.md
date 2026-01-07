@@ -167,7 +167,11 @@ middleware.ts              # Already protected /recordings
 ### **RecordingCard Molecule**
 
 ```tsx
-<RecordingCard recording={recording} onDelete={handleDelete} onDownload={handleDownload} />
+<RecordingCard
+  recording={recording}
+  onDelete={handleDelete}
+  onDownload={handleDownload}
+/>
 ```
 
 **Features**:
@@ -183,7 +187,10 @@ middleware.ts              # Already protected /recordings
 ### **SuccessAlert Molecule**
 
 ```tsx
-<SuccessAlert message="Recording saved successfully!" onDismiss={() => setSuccess(false)} />
+<SuccessAlert
+  message="Recording saved successfully!"
+  onDismiss={() => setSuccess(false)}
+/>
 ```
 
 **Features**:

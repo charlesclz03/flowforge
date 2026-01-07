@@ -18,11 +18,18 @@ interface EditProfileDialogProps {
   onSuccess: () => void
 }
 
-export function EditProfileDialog({ isOpen, onClose, user, onSuccess }: EditProfileDialogProps) {
+export function EditProfileDialog({
+  isOpen,
+  onClose,
+  user,
+  onSuccess,
+}: EditProfileDialogProps) {
   const [username, setUsername] = useState(user.username || '')
   const [bio, setBio] = useState(user.bio || '')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(user.image || null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    user.image || null
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -107,7 +114,9 @@ export function EditProfileDialog({ isOpen, onClose, user, onSuccess }: EditProf
         {/* Fields */}
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-secondary">Username</label>
+            <label className="text-sm font-medium text-text-secondary">
+              Username
+            </label>
             <input
               type="text"
               value={username}
@@ -118,7 +127,9 @@ export function EditProfileDialog({ isOpen, onClose, user, onSuccess }: EditProf
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-secondary">Bio</label>
+            <label className="text-sm font-medium text-text-secondary">
+              Bio
+            </label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
@@ -135,7 +146,12 @@ export function EditProfileDialog({ isOpen, onClose, user, onSuccess }: EditProf
         )}
 
         <div className="pt-2">
-          <Button type="submit" variant="primary" className="w-full py-3" disabled={isLoading}>
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full py-3"
+            disabled={isLoading}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

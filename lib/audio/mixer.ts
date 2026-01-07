@@ -17,7 +17,9 @@ export async function mixAudioBlobs(
   // For MVP, we just return the vocal blob
   // The beat plays in the background during recording
   // V2 will implement proper mixing
-  console.warn('Audio mixing not implemented in MVP - returning vocal track only')
+  console.warn(
+    'Audio mixing not implemented in MVP - returning vocal track only'
+  )
   return vocalBlob
 }
 

@@ -13,7 +13,13 @@ interface ModalProps {
   className?: string
 }
 
-export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className,
+}: ModalProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -54,7 +60,9 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
         </button>
 
         <div className="p-6">
-          {title && <h3 className="text-2xl font-bold text-white mb-6 pr-8">{title}</h3>}
+          {title && (
+            <h3 className="text-2xl font-bold text-white mb-6 pr-8">{title}</h3>
+          )}
           {children}
         </div>
       </div>

@@ -119,7 +119,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
     console.error('Stripe checkout error:', error)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to create checkout session' },
+      { status: 500 }
+    )
   }
 }
 ```
@@ -140,7 +143,11 @@ export async function POST(request: Request) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    )
   } catch (error) {
     console.error('Webhook signature verification failed:', error)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
@@ -204,7 +211,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error('Webhook handler error:', error)
-    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Webhook handler failed' },
+      { status: 500 }
+    )
   }
 }
 ```
@@ -232,7 +242,10 @@ export async function POST() {
     })
 
     if (!user?.customerId) {
-      return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'No subscription found' },
+        { status: 404 }
+      )
     }
 
     const portalSession = await stripe.billingPortal.sessions.create({
@@ -243,7 +256,10 @@ export async function POST() {
     return NextResponse.json({ url: portalSession.url })
   } catch (error) {
     console.error('Portal session error:', error)
-    return NextResponse.json({ error: 'Failed to create portal session' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to create portal session' },
+      { status: 500 }
+    )
   }
 }
 ```
@@ -387,7 +403,10 @@ export async function checkSubscription(userId: string): Promise<boolean> {
     select: { subscriptionStatus: true },
   })
 
-  return user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
+  return (
+    user?.subscriptionStatus === 'active' ||
+    user?.subscriptionStatus === 'trialing'
+  )
 }
 
 export async function requirePro(userId: string) {
@@ -415,7 +434,10 @@ export async function POST(request: Request) {
   try {
     await requirePro(session.user.id)
   } catch {
-    return NextResponse.json({ error: 'Pro subscription required' }, { status: 403 })
+    return NextResponse.json(
+      { error: 'Pro subscription required' },
+      { status: 403 }
+    )
   }
 
   // Pro-only feature logic...

@@ -4,7 +4,10 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@supabase/supabase-js'
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   // Lazy init
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -41,7 +44,9 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
       // URL format: https://[project].supabase.co/storage/v1/object/public/audio/users/[userId]/[filename]
       const path = beat.storageUrl.split('/audio/')[1]
       if (path) {
-        const { error: storageError } = await supabase.storage.from('audio').remove([path])
+        const { error: storageError } = await supabase.storage
+          .from('audio')
+          .remove([path])
         if (storageError) {
           console.error('Storage Delete Error:', storageError)
           // We continue to delete from DB even if storage fails, to avoid orphaned DB records (better to have orphaned files than broken DB links)
@@ -57,6 +62,9 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Delete Beat Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

@@ -3,7 +3,9 @@ export function LandingPricing() {
     <section id="pricing" className="scroll-mt-20">
       <div className="mb-12 text-center">
         <h2 className="text-3xl font-light text-white">Pricing</h2>
-        <p className="mt-2 text-text-secondary">Choose the plan that fits your flow</p>
+        <p className="mt-2 text-text-secondary">
+          Choose the plan that fits your flow
+        </p>
       </div>
 
       <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
@@ -13,26 +15,31 @@ export function LandingPricing() {
             $0<span className="text-lg text-text-secondary">/month</span>
           </p>
           <ul className="mt-6 space-y-3">
-            {['2-minute practice sessions', 'Access to free beats', 'Session history'].map(
-              (feature) => (
-                <li key={feature} className="flex items-center gap-2 text-text-secondary">
-                  <svg
-                    className="h-5 w-5 text-accent-green"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span>{feature}</span>
-                </li>
-              )
-            )}
+            {[
+              '2-minute practice sessions',
+              'Access to free beats',
+              'Session history',
+            ].map((feature) => (
+              <li
+                key={feature}
+                className="flex items-center gap-2 text-text-secondary"
+              >
+                <svg
+                  className="h-5 w-5 text-accent-green"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span>{feature}</span>
+              </li>
+            ))}
           </ul>
           <button className="mt-8 w-full rounded-lg border border-stroke-subtle/40 bg-background-card py-3 text-text-primary transition-colors hover:border-accent-blue/40">
             Current Plan
@@ -54,7 +61,10 @@ export function LandingPricing() {
               'Download recordings',
               'Advanced analytics',
             ].map((feature) => (
-              <li key={feature} className="flex items-center gap-2 text-text-secondary">
+              <li
+                key={feature}
+                className="flex items-center gap-2 text-text-secondary"
+              >
                 <svg
                   className="h-5 w-5 text-accent-purple"
                   fill="none"

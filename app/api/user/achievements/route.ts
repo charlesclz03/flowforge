@@ -30,6 +30,9 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Failed to fetch achievements', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

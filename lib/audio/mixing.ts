@@ -39,7 +39,11 @@ export async function mixAudio(
 
   const sampleRate = beatBuffer.sampleRate
   const duration = Math.max(vocalBuffer.duration, beatBuffer.duration)
-  const offlineCtx = new OfflineAudioContext(2, duration * sampleRate, sampleRate)
+  const offlineCtx = new OfflineAudioContext(
+    2,
+    duration * sampleRate,
+    sampleRate
+  )
 
   // Vocal Source
   const vocalSource = offlineCtx.createBufferSource()
@@ -64,7 +68,8 @@ export async function mixAudio(
     for (let i = 0; i < 2; i++) {
       const channel = impulse.getChannelData(i)
       for (let j = 0; j < impulseLength; j++) {
-        channel[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / impulseLength, 2)
+        channel[j] =
+          (Math.random() * 2 - 1) * Math.pow(1 - j / impulseLength, 2)
       }
     }
     convolver.buffer = impulse

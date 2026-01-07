@@ -31,10 +31,13 @@ export function GuestLoginModal({ isOpen, onClose }: GuestLoginModalProps) {
             <span className="text-3xl">🔥</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-white">Don't Lose Your Flow</h2>
+          <h2 className="text-2xl font-bold text-white">
+            Don't Lose Your Flow
+          </h2>
 
           <p className="text-[#8E8E93]">
-            That was fire! Sign in now to save this recording to your profile forever.
+            That was fire! Sign in now to save this recording to your profile
+            forever.
           </p>
 
           <div className="pt-4 space-y-3">

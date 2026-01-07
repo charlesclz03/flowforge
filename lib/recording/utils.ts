@@ -16,7 +16,10 @@ export async function blobToBase64(blob: Blob): Promise<string> {
 /**
  * Convert base64 to blob
  */
-export function base64ToBlob(base64: string, mimeType: string = 'audio/webm'): Blob {
+export function base64ToBlob(
+  base64: string,
+  mimeType: string = 'audio/webm'
+): Blob {
   const byteString = atob(base64.split(',')[1])
   const arrayBuffer = new ArrayBuffer(byteString.length)
   const uint8Array = new Uint8Array(arrayBuffer)
@@ -62,7 +65,10 @@ export function createAudioFromBlob(blob: Blob): HTMLAudioElement {
 /**
  * Format recording filename
  */
-export function formatRecordingFilename(title?: string, timestamp?: Date): string {
+export function formatRecordingFilename(
+  title?: string,
+  timestamp?: Date
+): string {
   const date = timestamp || new Date()
   const dateStr = date.toISOString().split('T')[0]
   const timeStr = date.toTimeString().split(' ')[0].replace(/:/g, '-')
@@ -74,7 +80,10 @@ export function formatRecordingFilename(title?: string, timestamp?: Date): strin
 /**
  * Estimate file size based on duration and bitrate
  */
-export function estimateFileSize(durationSeconds: number, bitrate: number = 128000): number {
+export function estimateFileSize(
+  durationSeconds: number,
+  bitrate: number = 128000
+): number {
   // bitrate is in bits per second, convert to bytes
   return (durationSeconds * bitrate) / 8
 }

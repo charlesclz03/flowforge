@@ -24,7 +24,9 @@ interface AccountInfoProps {
 }
 
 export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
-  const isPro = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing'
+  const isPro =
+    user.subscriptionStatus === 'active' ||
+    user.subscriptionStatus === 'trialing'
 
   return (
     <Card
@@ -57,11 +59,15 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
             </div>
           ) : (
             <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 text-2xl font-semibold text-white">
-              {user.username?.[0]?.toUpperCase() || user.name?.[0]?.toUpperCase() || 'U'}
+              {user.username?.[0]?.toUpperCase() ||
+                user.name?.[0]?.toUpperCase() ||
+                'U'}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <h3 className="text-xl font-bold text-white truncate">{user.username || user.name}</h3>
+            <h3 className="text-xl font-bold text-white truncate">
+              {user.username || user.name}
+            </h3>
             <p className="text-text-secondary text-sm truncate">{user.email}</p>
             {rank && (
               <div
@@ -71,7 +77,9 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
               </div>
             )}
             {user.bio && (
-              <p className="text-text-tertiary text-sm mt-2 line-clamp-2 italic">"{user.bio}"</p>
+              <p className="text-text-tertiary text-sm mt-2 line-clamp-2 italic">
+                "{user.bio}"
+              </p>
             )}
           </div>
         </div>
@@ -85,7 +93,11 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
           <div className="rounded-xl border border-stroke-subtle/20 bg-background-elevated/50 p-4">
             <p className="text-sm text-text-tertiary">Account Type</p>
             <p className="mt-1 text-white">
-              {isPro ? <span className="text-accent-purple font-bold">Pro Plan</span> : 'Free Tier'}
+              {isPro ? (
+                <span className="text-accent-purple font-bold">Pro Plan</span>
+              ) : (
+                'Free Tier'
+              )}
             </p>
           </div>
         </div>

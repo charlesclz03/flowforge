@@ -46,12 +46,14 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
       case 'history':
         return {
           title: 'View Full History',
-          description: 'Save and review all your past sessions with FreeStyla Premium.',
+          description:
+            'Save and review all your past sessions with FreeStyla Premium.',
         }
       default:
         return {
           title: 'Upgrade to FreeStyla Pro',
-          description: 'Take your freestyle skills to the next level with professional tools.',
+          description:
+            'Take your freestyle skills to the next level with professional tools.',
         }
     }
   }
@@ -95,12 +97,19 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
             <Check size={24} strokeWidth={3} />
           </div>
 
-          <h3 className="text-2xl font-bold text-white mb-2">{content.title}</h3>
-          <p className="text-text-secondary mb-6 leading-relaxed">{content.description}</p>
+          <h3 className="text-2xl font-bold text-white mb-2">
+            {content.title}
+          </h3>
+          <p className="text-text-secondary mb-6 leading-relaxed">
+            {content.description}
+          </p>
 
           <div className="space-y-3 mb-8">
             {benefits.map((benefit, i) => (
-              <div key={i} className="flex items-center gap-3 text-sm text-text-primary/90">
+              <div
+                key={i}
+                className="flex items-center gap-3 text-sm text-text-primary/90"
+              >
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent-purple/20 flex items-center justify-center text-accent-purple">
                   <Check size={12} strokeWidth={3} />
                 </div>

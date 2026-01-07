@@ -40,7 +40,12 @@ export function DifficultySelector({
     <div className={cn('space-y-4', className)}>
       <div className="flex items-center justify-between">
         <label className="text-base text-text-primary">Difficulty</label>
-        <span className={cn('px-3 py-1 rounded-full text-sm font-medium', badgeClasses)}>
+        <span
+          className={cn(
+            'px-3 py-1 rounded-full text-sm font-medium',
+            badgeClasses
+          )}
+        >
           {SESSION_CONFIG.DIFFICULTY_LABELS[value as 1 | 2 | 3 | 4]}
         </span>
       </div>
@@ -69,7 +74,9 @@ export function DifficultySelector({
         }}
       />
 
-      <p className="text-xs text-text-tertiary">{difficultyDescriptions[value]}</p>
+      <p className="text-xs text-text-tertiary">
+        {difficultyDescriptions[value]}
+      </p>
     </div>
   )
 }

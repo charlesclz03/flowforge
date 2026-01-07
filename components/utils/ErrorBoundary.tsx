@@ -45,7 +45,9 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="p-6 rounded-lg border border-red-500/20 bg-red-500/10 flex flex-col items-center justify-center text-center space-y-4 min-h-[200px]">
           <AlertTriangle className="w-10 h-10 text-red-500" />
           <div className="space-y-1">
-            <h3 className="font-bold text-white text-lg">Something went wrong</h3>
+            <h3 className="font-bold text-white text-lg">
+              Something went wrong
+            </h3>
             <p className="text-text-secondary text-sm max-w-xs mx-auto">
               {this.props.name
                 ? `Error in ${this.props.name}`

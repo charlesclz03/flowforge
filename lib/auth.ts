@@ -21,8 +21,14 @@ export const authOptions: NextAuthOptions = {
         session.user.id = user.id
 
         // Superadmin Override
-        const SUPERADMIN_EMAILS = ['charles.cluzeaud@gmail.com', 'triplyricist@gmail.com']
-        if (session.user.email && SUPERADMIN_EMAILS.includes(session.user.email)) {
+        const SUPERADMIN_EMAILS = [
+          'charles.cluzeaud@gmail.com',
+          'triplyricist@gmail.com',
+        ]
+        if (
+          session.user.email &&
+          SUPERADMIN_EMAILS.includes(session.user.email)
+        ) {
           // Force active subscription for superadmin
           session.user.subscriptionStatus = 'active'
           session.user.role = 'SUPERADMIN'

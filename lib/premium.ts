@@ -7,7 +7,10 @@ export function isUserPremium(user?: User | null) {
   return validStatuses.includes(user.subscriptionStatus || '')
 }
 
-export function canAccessBeat(user: User | null | undefined, beatIsPremium: boolean) {
+export function canAccessBeat(
+  user: User | null | undefined,
+  beatIsPremium: boolean
+) {
   if (!beatIsPremium) return true
   return isUserPremium(user)
 }

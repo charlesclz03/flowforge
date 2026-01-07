@@ -35,7 +35,10 @@ export async function PATCH(request: Request) {
 
       if (uploadError) {
         console.error('Avatar upload error:', uploadError)
-        return NextResponse.json({ error: 'Failed to upload avatar' }, { status: 500 })
+        return NextResponse.json(
+          { error: 'Failed to upload avatar' },
+          { status: 500 }
+        )
       }
 
       // We store the PROXY URL, not Supabase URL, to keep it private-read
@@ -52,6 +55,9 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ user: updatedUser })
   } catch (error) {
     console.error('Profile update error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

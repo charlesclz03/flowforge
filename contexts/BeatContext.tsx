@@ -26,7 +26,9 @@ const BeatContext = createContext<BeatContextValue | undefined>(undefined)
 export function BeatProvider({ children }: { children: ReactNode }) {
   const beatPlayer = useBeatPlayer()
 
-  return <BeatContext.Provider value={beatPlayer}>{children}</BeatContext.Provider>
+  return (
+    <BeatContext.Provider value={beatPlayer}>{children}</BeatContext.Provider>
+  )
 }
 
 export function useBeat() {

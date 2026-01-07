@@ -10,7 +10,8 @@ interface SessionMetadataProps {
 }
 
 export function SessionMetadata({ recording }: SessionMetadataProps) {
-  const difficultyLabel = ['Easy', 'Medium', 'Hard'][recording.difficulty - 1] || 'Unknown'
+  const difficultyLabel =
+    ['Easy', 'Medium', 'Hard'][recording.difficulty - 1] || 'Unknown'
   const difficultyColor =
     {
       1: 'text-accent-green',
@@ -29,7 +30,9 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
         <div className="space-y-4">
           <div className="flex justify-between items-center border-b border-white/5 pb-2">
             <span className="text-text-secondary">Title</span>
-            <span className="text-white font-medium">{recording.beat.title}</span>
+            <span className="text-white font-medium">
+              {recording.beat.title}
+            </span>
           </div>
           <div className="flex justify-between items-center border-b border-white/5 pb-2">
             <span className="text-text-secondary">Artist</span>
@@ -43,7 +46,9 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
           </div>
           <div className="flex justify-between items-center">
             <span className="text-text-secondary">Genre</span>
-            <span className="text-white font-medium">{recording.beat.genre || 'Hip Hop'}</span>
+            <span className="text-white font-medium">
+              {recording.beat.genre || 'Hip Hop'}
+            </span>
           </div>
         </div>
       </Card>
@@ -71,7 +76,9 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
           </div>
           <div className="flex justify-between items-center border-b border-white/5 pb-2">
             <span className="text-text-secondary">Difficulty</span>
-            <span className={`font-medium ${difficultyColor} flex items-center gap-2`}>
+            <span
+              className={`font-medium ${difficultyColor} flex items-center gap-2`}
+            >
               <BarChart size={14} />
               {difficultyLabel}
             </span>

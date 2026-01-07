@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { Twitter, Facebook, Link as LinkIcon, Download } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Twitter, Facebook, Link as LinkIcon, Download } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ShareMenuProps {
-  title: string;
-  text?: string;
-  url?: string;
-  audioBlob?: Blob;
-  onClose: () => void;
-  className?: string;
+  title: string
+  text?: string
+  url?: string
+  audioBlob?: Blob
+  onClose: () => void
+  className?: string
 }
 
 /**
@@ -25,35 +25,35 @@ export function ShareMenu({
   className,
 }: ShareMenuProps) {
   const handleShare = (platform: string) => {
-    const shareText = text ? encodeURIComponent(text) : "";
-    const shareUrl = url ? encodeURIComponent(url) : "";
+    const shareText = text ? encodeURIComponent(text) : ''
+    const shareUrl = url ? encodeURIComponent(url) : ''
     // const shareTitle = title ? encodeURIComponent(title) : '' // unused
 
-    let shareLink = "";
+    let shareLink = ''
 
     switch (platform) {
-      case "twitter":
-        shareLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
-        break;
-      case "facebook":
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-        break;
-      case "linkedin":
-        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`;
-        break;
+      case 'twitter':
+        shareLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`
+        break
+      case 'facebook':
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`
+        break
+      case 'linkedin':
+        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`
+        break
       // Add more as needed
     }
 
     if (shareLink) {
-      window.open(shareLink, "_blank", "noopener,noreferrer");
+      window.open(shareLink, '_blank', 'noopener,noreferrer')
     }
-    onClose();
-  };
+    onClose()
+  }
 
   const handleCopyLink = async () => {
     if (url) {
       try {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(url)
         // We'd ideally show a toast here, but ShareMenu doesn't import toast.
         // We can either add it or assume the parent handles feedback,
         // but for a menu component, self-contained feedback is better.
@@ -61,23 +61,23 @@ export function ShareMenu({
         // No, let's use toast if possible, or just silent copy.
         // Actually, importing toast is safe here as it's a client component.
       } catch (err) {
-        console.error("Failed to copy", err);
+        console.error('Failed to copy', err)
       }
     }
-    onClose();
-  };
+    onClose()
+  }
 
   const handleDownload = () => {
     if (audioBlob) {
-      const url = URL.createObjectURL(audioBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${title}.webm`;
-      a.click();
-      URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(audioBlob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${title}.webm`
+      a.click()
+      URL.revokeObjectURL(url)
     }
-    onClose();
-  };
+    onClose()
+  }
 
   return (
     <>
@@ -87,16 +87,16 @@ export function ShareMenu({
       {/* Menu */}
       <div
         className={cn(
-          "absolute right-0 top-full mt-2 z-50",
-          "w-64 rounded-xl border border-text-tertiary/20",
-          "bg-background-card backdrop-blur-xl shadow-lg",
-          "p-2",
-          className,
+          'absolute right-0 top-full mt-2 z-50',
+          'w-64 rounded-xl border border-text-tertiary/20',
+          'bg-background-card backdrop-blur-xl shadow-lg',
+          'p-2',
+          className
         )}
       >
         <div className="space-y-1">
           <button
-            onClick={() => handleShare("twitter")}
+            onClick={() => handleShare('twitter')}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-background-elevated transition-colors text-left"
           >
             <Twitter size={18} className="text-[#1DA1F2]" />
@@ -104,7 +104,7 @@ export function ShareMenu({
           </button>
 
           <button
-            onClick={() => handleShare("facebook")}
+            onClick={() => handleShare('facebook')}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-background-elevated transition-colors text-left"
           >
             <Facebook size={18} className="text-[#4267B2]" />
@@ -140,7 +140,7 @@ export function ShareMenu({
         </div>
       </div>
     </>
-  );
+  )
 }
 
 /**

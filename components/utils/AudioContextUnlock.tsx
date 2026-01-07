@@ -10,7 +10,8 @@ export function AudioContextUnlock() {
   const unlock = useCallback(() => {
     // 1. Create a dummy context
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+    const AudioContext =
+      window.AudioContext || (window as any).webkitAudioContext
     if (!AudioContext) return
 
     const ctx = new AudioContext()

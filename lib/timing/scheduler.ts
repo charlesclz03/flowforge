@@ -47,7 +47,8 @@ export class WordPromptScheduler {
     const intervalStartTime = currentInterval * interval
 
     // Check if we've crossed into a new interval
-    const hasNewInterval = currentInterval > Math.floor(this.lastPromptTime / interval)
+    const hasNewInterval =
+      currentInterval > Math.floor(this.lastPromptTime / interval)
 
     if (hasNewInterval && intervalStartTime > 0) {
       this.lastPromptTime = currentTime

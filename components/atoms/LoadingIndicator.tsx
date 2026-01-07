@@ -18,9 +18,18 @@ const strokeClasses = {
   lg: 'border-4',
 }
 
-export function LoadingIndicator({ size = 'md', text, className }: LoadingIndicatorProps) {
+export function LoadingIndicator({
+  size = 'md',
+  text,
+  className,
+}: LoadingIndicatorProps) {
   return (
-    <div className={cn('flex flex-col items-center justify-center space-y-4', className)}>
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center space-y-4',
+        className
+      )}
+    >
       <div className={cn('relative', sizeClasses[size])}>
         <div
           className={cn(

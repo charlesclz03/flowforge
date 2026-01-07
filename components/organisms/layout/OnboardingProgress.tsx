@@ -17,7 +17,9 @@ export function OnboardingProgress({ className }: { className?: string }) {
   // Only render on onboarding-related pages
   if (activeStep === undefined) return null
 
-  const steps = Array.from(new Set(STEP_PATHS.map((s) => s.index))).sort((a, b) => a - b)
+  const steps = Array.from(new Set(STEP_PATHS.map((s) => s.index))).sort(
+    (a, b) => a - b
+  )
 
   return (
     <div

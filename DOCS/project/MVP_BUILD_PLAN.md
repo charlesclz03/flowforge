@@ -836,7 +836,12 @@ async function requestMicrophone() {
 
 ```typescript
 function getSupportedMimeType() {
-  const types = ['audio/webm', 'audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4']
+  const types = [
+    'audio/webm',
+    'audio/webm;codecs=opus',
+    'audio/ogg;codecs=opus',
+    'audio/mp4',
+  ]
 
   for (const type of types) {
     if (MediaRecorder.isTypeSupported(type)) {

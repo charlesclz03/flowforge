@@ -1,69 +1,69 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
-import { Toaster } from "react-hot-toast";
-import { SessionProvider } from "@/components/auth/SessionProvider";
-import { PracticeSessionProvider } from "@/contexts/SessionContext";
-import { BottomNav } from "@/components/organisms/layout/BottomNav";
-import { AudioContextUnlock } from "@/components/utils/AudioContextUnlock";
-import { SafeAreaWrapper } from "@/components/layout/SafeAreaWrapper";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import type { Metadata, Viewport } from 'next'
+import './globals.css'
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout'
+import { Toaster } from 'react-hot-toast'
+import { SessionProvider } from '@/components/auth/SessionProvider'
+import { PracticeSessionProvider } from '@/contexts/SessionContext'
+import { BottomNav } from '@/components/organisms/layout/BottomNav'
+import { AudioContextUnlock } from '@/components/utils/AudioContextUnlock'
+import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
   title: {
-    default: "FreeStyla - AI-Powered Freestyle Rap Practice",
-    template: "%s | FreeStyla",
+    default: 'FreeStyla - AI-Powered Freestyle Rap Practice',
+    template: '%s | FreeStyla',
   },
   description:
-    "Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity with FreeStyla.",
+    'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity with FreeStyla.',
   keywords: [
-    "freestyle rap",
-    "rap practice",
-    "hip hop practice",
-    "beats",
-    "freestyle beats",
-    "AI music",
-    "rap generator",
-    "freestyle partner",
-    "rap training",
-    "music practice",
+    'freestyle rap',
+    'rap practice',
+    'hip hop practice',
+    'beats',
+    'freestyle beats',
+    'AI music',
+    'rap generator',
+    'freestyle partner',
+    'rap training',
+    'music practice',
   ],
-  authors: [{ name: "FreeStyla Team" }],
-  creator: "FreeStyla",
-  publisher: "FreeStyla",
+  authors: [{ name: 'FreeStyla Team' }],
+  creator: 'FreeStyla',
+  publisher: 'FreeStyla',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    siteName: "FreeStyla",
-    title: "FreeStyla - AI-Powered Freestyle Rap Practice",
+    type: 'website',
+    locale: 'en_US',
+    url: '/',
+    siteName: 'FreeStyla',
+    title: 'FreeStyla - AI-Powered Freestyle Rap Practice',
     description:
-      "Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.",
+      'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
     images: [
       {
-        url: "/og-image.png",
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: "FreeStyla - AI-Powered Freestyle Rap Practice",
+        alt: 'FreeStyla - AI-Powered Freestyle Rap Practice',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "FreeStyla - AI-Powered Freestyle Rap Practice",
+    card: 'summary_large_image',
+    title: 'FreeStyla - AI-Powered Freestyle Rap Practice',
     description:
-      "Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.",
-    images: ["/og-image.png"],
-    creator: "@freestyla",
+      'Your AI-powered freestyle rap practice partner. Master your flow, sharpen your skills, and unleash your creativity.',
+    images: ['/og-image.png'],
+    creator: '@freestyla',
   },
   robots: {
     index: true,
@@ -71,59 +71,59 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
-  manifest: "/manifest.json",
+  manifest: '/manifest.json',
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
-  category: "music",
-};
+  category: 'music',
+}
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#000000" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: '(prefers-color-scheme: light)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
   ],
-};
+}
 
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from 'next/font/google'
 
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-mono",
-});
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+})
 
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
 
   return (
     <html lang="en">
@@ -175,5 +175,5 @@ export default async function RootLayout({
         </SessionProvider>
       </body>
     </html>
-  );
+  )
 }

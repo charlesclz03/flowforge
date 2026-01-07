@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { Beat } from "@/types/database";
+import { Beat } from '@/types/database'
 import {
   Play,
   Square,
@@ -10,21 +10,21 @@ import {
   Lock,
   Trash2,
   ArrowRight,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 interface BeatGridCardProps {
-  beat: Beat;
-  isSelected?: boolean;
-  isPlaying?: boolean;
-  isFavorited?: boolean;
-  isLocked?: boolean;
-  onPlay: () => void;
-  onSelect: () => void;
-  onToggleFavorite: (e: React.MouseEvent) => void;
-  onDelete?: (e: React.MouseEvent) => void;
-  onUseTrack?: (e: React.MouseEvent) => void;
+  beat: Beat
+  isSelected?: boolean
+  isPlaying?: boolean
+  isFavorited?: boolean
+  isLocked?: boolean
+  onPlay: () => void
+  onSelect: () => void
+  onToggleFavorite: (e: React.MouseEvent) => void
+  onDelete?: (e: React.MouseEvent) => void
+  onUseTrack?: (e: React.MouseEvent) => void
 }
 
 export function BeatGridCard({
@@ -41,30 +41,30 @@ export function BeatGridCard({
 }: BeatGridCardProps) {
   // Placeholder gradients based on genre or random
   const gradients = [
-    "from-purple-500 to-indigo-600",
-    "from-pink-500 to-rose-500",
-    "from-blue-400 to-cyan-500",
-    "from-emerald-400 to-teal-500",
-    "from-amber-400 to-orange-500",
-  ];
-  const randomGradient = gradients[beat.title.length % gradients.length];
+    'from-purple-500 to-indigo-600',
+    'from-pink-500 to-rose-500',
+    'from-blue-400 to-cyan-500',
+    'from-emerald-400 to-teal-500',
+    'from-amber-400 to-orange-500',
+  ]
+  const randomGradient = gradients[beat.title.length % gradients.length]
 
   return (
     <div
       onClick={isLocked ? undefined : onSelect}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer",
+        'group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer',
         isSelected
-          ? "border-accent-purple bg-accent-purple/10 ring-1 ring-accent-purple/50"
-          : "border-white/10 bg-[#121216] hover:border-white/20 hover:bg-[#18181E] hover:-translate-y-1",
-        isLocked && "cursor-not-allowed opacity-80",
+          ? 'border-accent-purple bg-accent-purple/10 ring-1 ring-accent-purple/50'
+          : 'border-white/10 bg-[#121216] hover:border-white/20 hover:bg-[#18181E] hover:-translate-y-1',
+        isLocked && 'cursor-not-allowed opacity-80'
       )}
     >
       {/* Cover Art Area */}
       <div
         className={cn(
-          "relative aspect-square w-full overflow-hidden bg-gradient-to-br",
-          randomGradient,
+          'relative aspect-square w-full overflow-hidden bg-gradient-to-br',
+          randomGradient
         )}
       >
         {beat.coverImage ? (
@@ -73,8 +73,8 @@ export function BeatGridCard({
             alt={beat.title}
             fill
             className={cn(
-              "object-cover transition-transform duration-500",
-              !isLocked && "group-hover:scale-110",
+              'object-cover transition-transform duration-500',
+              !isLocked && 'group-hover:scale-110'
             )}
           />
         ) : (
@@ -86,11 +86,11 @@ export function BeatGridCard({
         {/* Overlay on hover/playing/locked */}
         <div
           className={cn(
-            "absolute inset-0 flex items-center justify-center gap-6 transition-all duration-300",
+            'absolute inset-0 flex items-center justify-center gap-6 transition-all duration-300',
             (isPlaying || isSelected) && !isLocked
-              ? "bg-black/40 backdrop-blur-sm"
-              : "bg-black/0 opacity-0 group-hover:opacity-100 group-hover:bg-black/30",
-            isLocked && "bg-black/60 opacity-100",
+              ? 'bg-black/40 backdrop-blur-sm'
+              : 'bg-black/0 opacity-0 group-hover:opacity-100 group-hover:bg-black/30',
+            isLocked && 'bg-black/60 opacity-100'
           )}
         >
           {isLocked ? (
@@ -105,33 +105,33 @@ export function BeatGridCard({
               {/* Favorite Button (Left) */}
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite(e);
+                  e.stopPropagation()
+                  onToggleFavorite(e)
                 }}
                 className={cn(
-                  "flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 backdrop-blur-md",
+                  'flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 backdrop-blur-md',
                   isFavorited
-                    ? "bg-accent-pink text-white"
-                    : "bg-white/10 text-white hover:bg-white/20",
+                    ? 'bg-accent-pink text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
                 )}
                 title={
-                  isFavorited ? "Remove from favorites" : "Add to favorites"
+                  isFavorited ? 'Remove from favorites' : 'Add to favorites'
                 }
               >
-                <Heart size={24} fill={isFavorited ? "currentColor" : "none"} />
+                <Heart size={24} fill={isFavorited ? 'currentColor' : 'none'} />
               </button>
 
               {/* Play Button (Center - Biggest) */}
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onPlay();
+                  e.stopPropagation()
+                  onPlay()
                 }}
                 className={cn(
-                  "flex h-20 w-20 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95",
+                  'flex h-20 w-20 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95',
                   isPlaying
-                    ? "bg-accent-purple text-white"
-                    : "bg-white text-black",
+                    ? 'bg-accent-purple text-white'
+                    : 'bg-white text-black'
                 )}
               >
                 {isPlaying ? (
@@ -145,8 +145,8 @@ export function BeatGridCard({
               {onUseTrack && (
                 <button
                   onClick={(e) => {
-                    e.stopPropagation();
-                    onUseTrack(e);
+                    e.stopPropagation()
+                    onUseTrack(e)
                   }}
                   className="flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 bg-accent-blue text-white hover:bg-accent-blue/80 backdrop-blur-md"
                   title="Use this track"
@@ -168,19 +168,19 @@ export function BeatGridCard({
       </div>
 
       {/* Info Area */}
-      <div className={cn("flex flex-col p-4", isLocked && "opacity-50")}>
+      <div className={cn('flex flex-col p-4', isLocked && 'opacity-50')}>
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <h3
               className={cn(
-                "truncate font-semibold",
-                isSelected ? "text-accent-purple" : "text-white",
+                'truncate font-semibold',
+                isSelected ? 'text-accent-purple' : 'text-white'
               )}
             >
               {beat.title}
             </h3>
             <p className="truncate text-xs text-text-secondary">
-              {beat.artistName || "FreeStyla Originals"}
+              {beat.artistName || 'FreeStyla Originals'}
             </p>
           </div>
 
@@ -188,8 +188,8 @@ export function BeatGridCard({
             {onDelete && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(e);
+                  e.stopPropagation()
+                  onDelete(e)
                 }}
                 className="group/del p-2 text-text-tertiary hover:text-red-400 transition-colors"
                 title="Delete Beat"
@@ -214,5 +214,5 @@ export function BeatGridCard({
         </div>
       </div>
     </div>
-  );
+  )
 }

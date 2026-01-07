@@ -212,7 +212,8 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'Genesis',
     codename: 'The Foundation',
     date: 'November 10, 2025',
-    description: 'In the beginning, there was code. The infrastructure was forged from the void.',
+    description:
+      'In the beginning, there was code. The infrastructure was forged from the void.',
     changes: [
       {
         category: 'System Updates',

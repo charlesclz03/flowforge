@@ -124,7 +124,11 @@ export function BeatSelectorPage({
       <div className="max-w-4xl w-full space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Button onClick={onBack} variant="ghost" className="text-gray-400 hover:text-white">
+          <Button
+            onClick={onBack}
+            variant="ghost"
+            className="text-gray-400 hover:text-white"
+          >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
@@ -140,7 +144,9 @@ export function BeatSelectorPage({
         {/* Title */}
         <div className="text-center space-y-3">
           <h1 className="text-5xl">Setup Your Session</h1>
-          <p className="text-lg text-gray-400">Configure settings and choose your beat</p>
+          <p className="text-lg text-gray-400">
+            Configure settings and choose your beat
+          </p>
         </div>
 
         {/* Configuration Sliders */}
@@ -173,7 +179,9 @@ export function BeatSelectorPage({
             />
             <p className="text-xs text-gray-500">
               {difficulty < 33 && '2-3 syllable words, perfect for beginners'}
-              {difficulty >= 33 && difficulty < 67 && '3-4 syllable words, moderate challenge'}
+              {difficulty >= 33 &&
+                difficulty < 67 &&
+                '3-4 syllable words, moderate challenge'}
               {difficulty >= 67 && '4-6 syllable words, advanced vocabulary'}
             </p>
           </div>
@@ -195,7 +203,9 @@ export function BeatSelectorPage({
             />
             <p className="text-xs text-gray-500">
               {frequency < 33 && 'New word every 4 bars - fast paced'}
-              {frequency >= 33 && frequency < 67 && 'New word every 8 bars - balanced'}
+              {frequency >= 33 &&
+                frequency < 67 &&
+                'New word every 8 bars - balanced'}
               {frequency >= 67 && 'New word every 16 bars - plenty of time'}
             </p>
           </div>
@@ -253,7 +263,9 @@ export function BeatSelectorPage({
                 <div className="flex items-center space-x-4 pt-2">
                   <div className="flex items-center space-x-2">
                     <div className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
-                    <span className="text-sm text-gray-400">{beat.bpm} BPM</span>
+                    <span className="text-sm text-gray-400">
+                      {beat.bpm} BPM
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-1.5 h-1.5 bg-violet-500 rounded-full" />

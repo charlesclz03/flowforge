@@ -35,7 +35,8 @@ export const Button = memo(
 
     const variants = {
       primary: 'bg-gradient-pulse text-black shadow-neon hover:shadow-glow',
-      secondary: 'bg-background-elevated text-text-primary hover:bg-opacity-80 hover:shadow-soft',
+      secondary:
+        'bg-background-elevated text-text-primary hover:bg-opacity-80 hover:shadow-soft',
       ghost: 'text-text-primary hover:bg-background-elevated',
       danger: 'bg-accent-red text-white hover:bg-accent-red/90',
       outline:

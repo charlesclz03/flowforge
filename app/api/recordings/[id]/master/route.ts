@@ -3,7 +3,10 @@ import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSessionWithUserId()
     if (!session?.user?.id) {
@@ -25,7 +28,10 @@ export async function POST(request: Request, { params }: { params: { id: string 
     })
 
     if (!dbSession || dbSession.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'Not found or unauthorized' },
+        { status: 404 }
+      )
     }
 
     // 2. Upload to Supabase
@@ -52,6 +58,9 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ success: true, storageUrl: filePath })
   } catch (err) {
     console.error('Master upload error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

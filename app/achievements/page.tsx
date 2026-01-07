@@ -9,7 +9,12 @@ import { Trophy } from 'lucide-react'
 import Link from 'next/link'
 import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/atoms/Tabs'
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@/components/atoms/Tabs'
 import { XPBar } from '@/components/molecules/gamification/XPBar'
 
 // Cache for 60 seconds
@@ -25,7 +30,9 @@ interface LeaderboardUser {
   flowPoints: number
 }
 
-async function getLeaderboard(period: Period = 'all_time'): Promise<LeaderboardUser[]> {
+async function getLeaderboard(
+  period: Period = 'all_time'
+): Promise<LeaderboardUser[]> {
   const where: Prisma.UserAchievementWhereInput = {}
 
   if (period === 'weekly') {
@@ -103,11 +110,17 @@ export default async function AchievementsPage({
   const session = await getServerSession(authOptions)
   const currentUserId = session?.user?.id
 
-  const period = (searchParams?.period === 'weekly' ? 'weekly' : 'all_time') as Period
+  const period = (
+    searchParams?.period === 'weekly' ? 'weekly' : 'all_time'
+  ) as Period
   const users = await getLeaderboard(period)
 
   return (
-    <OnboardingLayout showBackButton={false} showSettings={true} className="bg-background">
+    <OnboardingLayout
+      showBackButton={false}
+      showSettings={true}
+      className="bg-background"
+    >
       <Container className="pt-8 pb-32">
         <div className="mb-4">
           <XPBar />
@@ -119,7 +132,9 @@ export default async function AchievementsPage({
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Enter the Cypher</h3>
-                  <p className="text-xs text-text-secondary">Join live multiplayer sessions</p>
+                  <p className="text-xs text-text-secondary">
+                    Join live multiplayer sessions
+                  </p>
                 </div>
               </div>
               <div className="px-3 py-1 rounded-full bg-white/10 text-xs font-medium text-white group-hover:bg-white/20 transition-colors">

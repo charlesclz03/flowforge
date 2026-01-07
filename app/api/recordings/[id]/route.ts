@@ -7,7 +7,10 @@ import { supabase } from '@/lib/supabase'
 export const dynamic = 'force-dynamic'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -18,7 +21,10 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     const { id } = params
 
     if (!id) {
-      return NextResponse.json({ error: 'Recording ID is required' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Recording ID is required' },
+        { status: 400 }
+      )
     }
 
     const recording = await prisma.freestyleSession.findUnique({
@@ -31,7 +37,10 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     })
 
     if (!recording) {
-      return NextResponse.json({ error: 'Recording not found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'Recording not found' },
+        { status: 404 }
+      )
     }
 
     // specific check: Does this recording belong to the user?
@@ -48,12 +57,18 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ recording })
   } catch (error) {
     console.error('Error fetching recording:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -68,14 +83,18 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
       where: { email: session.user.email },
     })
 
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    if (!user)
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
 
     const recording = await prisma.freestyleSession.findUnique({
       where: { id },
     })
 
     if (!recording) {
-      return NextResponse.json({ error: 'Recording not found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'Recording not found' },
+        { status: 404 }
+      )
     }
 
     if (recording.userId !== user.id) {
@@ -91,7 +110,9 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
       const parts = recording.storageUrl.split('/recordings/')
       if (parts.length === 2) {
         const filePath = parts[1]
-        const { error: storageError } = await supabase.storage.from('recordings').remove([filePath])
+        const { error: storageError } = await supabase.storage
+          .from('recordings')
+          .remove([filePath])
 
         if (storageError) {
           console.error('Error deleting file from Supabase:', storageError)
@@ -109,6 +130,9 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting recording:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

@@ -1,6 +1,13 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react'
 import { Beat } from '@/types/database'
 
 export interface PracticeSessionState {
@@ -31,7 +38,9 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   resetSession: () => void
 }
 
-const PracticeSessionContext = createContext<PracticeSessionContextValue | undefined>(undefined)
+const PracticeSessionContext = createContext<
+  PracticeSessionContextValue | undefined
+>(undefined)
 
 export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<PracticeSessionState>({
@@ -185,7 +194,9 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
 export function usePracticeSession() {
   const context = useContext(PracticeSessionContext)
   if (!context) {
-    throw new Error('usePracticeSession must be used within a PracticeSessionProvider')
+    throw new Error(
+      'usePracticeSession must be used within a PracticeSessionProvider'
+    )
   }
   return context
 }

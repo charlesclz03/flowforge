@@ -7,7 +7,10 @@ interface SignOutButtonProps {
   children?: React.ReactNode
 }
 
-export function SignOutButton({ className = '', children }: SignOutButtonProps) {
+export function SignOutButton({
+  className = '',
+  children,
+}: SignOutButtonProps) {
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }

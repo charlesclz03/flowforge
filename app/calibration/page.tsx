@@ -24,7 +24,9 @@ export default function CalibrationPage() {
   useEffect(() => {
     // Initialize AudioContext
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+    audioContextRef.current = new (
+      window.AudioContext || (window as any).webkitAudioContext
+    )()
 
     return () => {
       if (audioContextRef.current?.state !== 'closed') {
@@ -152,10 +154,12 @@ export default function CalibrationPage() {
         {step === 'intro' && (
           <div className="text-center max-w-md space-y-6">
             <Volume2 className="w-16 h-16 text-accent-purple mx-auto animate-pulse" />
-            <h1 className="text-3xl font-bold font-header tracking-tighter">Audio Calibration</h1>
+            <h1 className="text-3xl font-bold font-header tracking-tighter">
+              Audio Calibration
+            </h1>
             <p className="text-text-secondary">
-              We'll play 5 beeps. Tap the button exactly when you hear the sound to measure your
-              device's latency.
+              We'll play 5 beeps. Tap the button exactly when you hear the sound
+              to measure your device's latency.
             </p>
             <Button size="lg" onClick={handleStart} leftIcon={<Check />}>
               Start Calibration
@@ -179,7 +183,9 @@ export default function CalibrationPage() {
               <h2 className="text-2xl font-bold">
                 {round} / {TOTAL_ROUNDS}
               </h2>
-              <p className="text-text-secondary">Tap anywhere when you hear the beep!</p>
+              <p className="text-text-secondary">
+                Tap anywhere when you hear the beep!
+              </p>
 
               <div className="w-32 h-32 rounded-full bg-accent-purple/20 flex items-center justify-center mx-auto">
                 <div
@@ -201,14 +207,23 @@ export default function CalibrationPage() {
               <div className="text-text-secondary uppercase text-xs tracking-wider">
                 Estimated Latency
               </div>
-              <div className="text-5xl font-numeral text-white">{getAverage()}ms</div>
+              <div className="text-5xl font-numeral text-white">
+                {getAverage()}ms
+              </div>
             </div>
 
             <div className="flex flex-col gap-3 w-full">
-              <Button onClick={() => router.push('/practice')} variant="primary">
+              <Button
+                onClick={() => router.push('/practice')}
+                variant="primary"
+              >
                 Go to Practice
               </Button>
-              <Button onClick={() => setStep('intro')} variant="ghost" leftIcon={<RefreshCw />}>
+              <Button
+                onClick={() => setStep('intro')}
+                variant="ghost"
+                leftIcon={<RefreshCw />}
+              >
                 Retest
               </Button>
             </div>

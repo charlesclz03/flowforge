@@ -28,16 +28,26 @@ export function PracticeTemplate({
       {alerts && <div className="flex-shrink-0 mt-4">{alerts}</div>}
 
       {/* Beat Selector - Desktop only, mobile uses the player info bar -> Fixed: Now visible on all devices */}
-      <div className="flex-shrink-0 mt-4 px-4 sm:px-0 w-full max-w-2xl mx-auto">{beatSelector}</div>
+      <div className="flex-shrink-0 mt-4 px-4 sm:px-0 w-full max-w-2xl mx-auto">
+        {beatSelector}
+      </div>
 
       {/* Session Configuration - Desktop only */}
-      {sessionConfig && <div className="flex-shrink-0 hidden lg:block mt-4">{sessionConfig}</div>}
+      {sessionConfig && (
+        <div className="flex-shrink-0 hidden lg:block mt-4">
+          {sessionConfig}
+        </div>
+      )}
 
       {/* Practice Controls - Takes remaining space, centered */}
-      <div className="flex-1 flex items-center justify-center py-4">{practiceControls}</div>
+      <div className="flex-1 flex items-center justify-center py-4">
+        {practiceControls}
+      </div>
 
       {/* Help Section - Hidden on mobile */}
-      {helpSection && <div className="flex-shrink-0 hidden lg:block">{helpSection}</div>}
+      {helpSection && (
+        <div className="flex-shrink-0 hidden lg:block">{helpSection}</div>
+      )}
     </div>
   )
 }

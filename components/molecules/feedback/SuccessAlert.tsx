@@ -17,11 +17,17 @@ export const SuccessAlert = memo(function SuccessAlert({
 }: SuccessAlertProps) {
   return (
     <div
-      className={cn('rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-3', className)}
+      className={cn(
+        'rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-3',
+        className
+      )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1">
-          <CheckCircle size={20} className="text-green-400 flex-shrink-0 mt-0.5" />
+          <CheckCircle
+            size={20}
+            className="text-green-400 flex-shrink-0 mt-0.5"
+          />
           <p className="text-sm font-medium text-green-400">{message}</p>
         </div>
         <button

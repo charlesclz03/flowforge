@@ -19,7 +19,10 @@ export default function CypherPage() {
       <div className="max-w-4xl mx-auto relative z-10 font-sans">
         {/* Header */}
         <header className="flex items-center gap-4 mb-12">
-          <Link href="/" className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <Link
+            href="/"
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
@@ -82,8 +85,12 @@ export default function CypherPage() {
         <div className="mt-12 opacity-50 pointer-events-none grayscale">
           <div className="flex items-center gap-3 mb-6">
             <Globe className="w-5 h-5 text-gray-400" />
-            <h3 className="text-lg font-semibold text-gray-300">Public Lobbies</h3>
-            <span className="text-xs bg-white/10 px-2 py-1 rounded text-gray-400">Coming Soon</span>
+            <h3 className="text-lg font-semibold text-gray-300">
+              Public Lobbies
+            </h3>
+            <span className="text-xs bg-white/10 px-2 py-1 rounded text-gray-400">
+              Coming Soon
+            </span>
           </div>
 
           <div className="border border-white/5 rounded-2xl p-4 bg-white/[0.02]">

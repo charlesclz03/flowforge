@@ -189,7 +189,11 @@ export function RecordingCard({ recording, onDelete, onDownload }) {
       {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
       <div className="flex items-center justify-between">
-        <StatCard label="Duration" value={`${recording.duration}s`} variant="compact" />
+        <StatCard
+          label="Duration"
+          value={`${recording.duration}s`}
+          variant="compact"
+        />
 
         <div className="flex gap-2">
           <Button variant="ghost" size="sm" onClick={onDownload}>

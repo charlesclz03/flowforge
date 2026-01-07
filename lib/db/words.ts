@@ -57,7 +57,8 @@ export async function getRandomWords(
       let pool = fallback
       if (filters?.difficultyLevel)
         pool = pool.filter((w) => w.difficultyLevel === filters.difficultyLevel)
-      if (filters?.category) pool = pool.filter((w) => w.category === filters.category)
+      if (filters?.category)
+        pool = pool.filter((w) => w.category === filters.category)
 
       const shuffled = pool.sort(() => Math.random() - 0.5)
       const selected = shuffled.slice(0, count)
@@ -94,8 +95,13 @@ export async function getRandomWords(
       data: selected,
     }
   } catch (error) {
-    if (error instanceof Error && error.message.includes('Timed out fetching a new connection')) {
-      console.warn('DB connection pool exhausted when fetching words, using fallback list instead.')
+    if (
+      error instanceof Error &&
+      error.message.includes('Timed out fetching a new connection')
+    ) {
+      console.warn(
+        'DB connection pool exhausted when fetching words, using fallback list instead.'
+      )
     } else {
       console.error('Error fetching random words:', error)
     }
@@ -183,7 +189,9 @@ export async function getAllWords(): Promise<DatabaseResult<Word[]>> {
 /**
  * Get word count by difficulty
  */
-export async function getWordCountByDifficulty(): Promise<DatabaseResult<Record<number, number>>> {
+export async function getWordCountByDifficulty(): Promise<
+  DatabaseResult<Record<number, number>>
+> {
   try {
     const counts = await prisma.word.groupBy({
       by: ['difficultyLevel'],
@@ -205,7 +213,8 @@ export async function getWordCountByDifficulty(): Promise<DatabaseResult<Record<
     console.error('Error getting word counts:', error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to get word counts',
+      error:
+        error instanceof Error ? error.message : 'Failed to get word counts',
     }
   }
 }
@@ -213,7 +222,9 @@ export async function getWordCountByDifficulty(): Promise<DatabaseResult<Record<
 /**
  * Search words
  */
-export async function searchWords(query: string): Promise<DatabaseResult<Word[]>> {
+export async function searchWords(
+  query: string
+): Promise<DatabaseResult<Word[]>> {
   try {
     const words = await prisma.word.findMany({
       where: {

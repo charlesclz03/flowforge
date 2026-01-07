@@ -4,7 +4,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials not found. Storage features will be disabled.')
+  console.warn(
+    'Supabase credentials not found. Storage features will be disabled.'
+  )
 }
 
 // Fallback for build time or missing credentials

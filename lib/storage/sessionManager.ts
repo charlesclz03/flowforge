@@ -43,7 +43,8 @@ export function sortSessions(
   switch (sortBy) {
     case 'date':
       return sorted.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
     case 'duration':
       return sorted.sort((a, b) => b.durationSeconds - a.durationSeconds)
@@ -72,17 +73,23 @@ export function getSessionStatistics(sessions?: StoredSession[]) {
     }
   }
 
-  const totalDuration = allSessions.reduce((sum, s) => sum + s.durationSeconds, 0)
+  const totalDuration = allSessions.reduce(
+    (sum, s) => sum + s.durationSeconds,
+    0
+  )
   const averageDuration = totalDuration / allSessions.length
 
-  const sorted = [...allSessions].sort((a, b) => b.durationSeconds - a.durationSeconds)
+  const sorted = [...allSessions].sort(
+    (a, b) => b.durationSeconds - a.durationSeconds
+  )
   const longestSession = sorted[0]
   const shortestSession = sorted[sorted.length - 1]
 
   // Count sessions by difficulty
   const sessionsByDifficulty: Record<number, number> = {}
   allSessions.forEach((s) => {
-    sessionsByDifficulty[s.difficulty] = (sessionsByDifficulty[s.difficulty] || 0) + 1
+    sessionsByDifficulty[s.difficulty] =
+      (sessionsByDifficulty[s.difficulty] || 0) + 1
   })
 
   return {

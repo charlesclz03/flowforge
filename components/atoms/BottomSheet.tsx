@@ -12,12 +12,19 @@ interface BottomSheetProps {
   className?: string
 }
 
-export function BottomSheet({ isOpen, onClose, children, title, className }: BottomSheetProps) {
+export function BottomSheet({
+  isOpen,
+  onClose,
+  children,
+  title,
+  className,
+}: BottomSheetProps) {
   const controls = useAnimation()
 
   // Drag logic
   const onDragEnd = async (_: unknown, info: PanInfo) => {
-    const shouldClose = info.velocity.y > 20 || (info.velocity.y >= 0 && info.point.y > 45)
+    const shouldClose =
+      info.velocity.y > 20 || (info.velocity.y >= 0 && info.point.y > 45)
     if (shouldClose) {
       await controls.start('hidden')
       onClose()

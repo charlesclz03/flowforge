@@ -9,7 +9,9 @@ export default function HowItWorksPage() {
 
   return (
     <OnboardingLayout>
-      <HowItWorksContent onStartPractice={() => router.push('/difficultyselection')} />
+      <HowItWorksContent
+        onStartPractice={() => router.push('/difficultyselection')}
+      />
     </OnboardingLayout>
   )
 }

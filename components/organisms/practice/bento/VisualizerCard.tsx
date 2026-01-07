@@ -26,7 +26,10 @@ export function VisualizerCard({
     <BentoCard
       title="Voice Input"
       icon={<Activity size={16} className="text-accent-green" />}
-      className={cn('col-span-1 md:col-span-2 lg:col-span-3 min-h-[180px]', className)}
+      className={cn(
+        'col-span-1 md:col-span-2 lg:col-span-3 min-h-[180px]',
+        className
+      )}
     >
       <div className="absolute inset-0 pt-12 px-2 pb-2">
         <div className="w-full h-full bg-black/20 rounded-xl overflow-hidden border border-white/5 relative group">

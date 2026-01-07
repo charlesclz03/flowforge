@@ -47,7 +47,9 @@ export function FrequencySelector({
     onChange(SESSION_CONFIG.FREQUENCY_OPTIONS[index])
   }
 
-  const currentIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(value as 2 | 4 | 8)
+  const currentIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(
+    value as 2 | 4 | 8
+  )
 
   return (
     <div className={cn('space-y-4', className)}>
@@ -82,7 +84,9 @@ export function FrequencySelector({
         }}
       />
 
-      <p className="text-xs text-text-tertiary">{frequencyDescriptions[value]}</p>
+      <p className="text-xs text-text-tertiary">
+        {frequencyDescriptions[value]}
+      </p>
     </div>
   )
 }

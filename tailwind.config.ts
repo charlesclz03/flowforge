@@ -54,9 +54,18 @@ const config: Config = {
         mono: ['var(--font-mono)', 'monospace'],
       },
       fontSize: {
-        display: ['4rem', { lineHeight: '1', fontWeight: '300', letterSpacing: '-0.02em' }],
-        'display-sm': ['3rem', { lineHeight: '1', fontWeight: '300', letterSpacing: '-0.015em' }],
-        numeral: ['4.5rem', { lineHeight: '1', fontWeight: '200', letterSpacing: '-0.03em' }],
+        display: [
+          '4rem',
+          { lineHeight: '1', fontWeight: '300', letterSpacing: '-0.02em' },
+        ],
+        'display-sm': [
+          '3rem',
+          { lineHeight: '1', fontWeight: '300', letterSpacing: '-0.015em' },
+        ],
+        numeral: [
+          '4.5rem',
+          { lineHeight: '1', fontWeight: '200', letterSpacing: '-0.03em' },
+        ],
       },
       animation: {
         'timer-ring': 'spin 1s linear infinite',
@@ -75,7 +84,8 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        'gradient-pulse': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)',
+        'gradient-pulse':
+          'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 50%, #BD7AFF 100%)',
         'gradient-aurora':
           'linear-gradient(120deg, rgba(125,122,255,0.6) 0%, rgba(157,122,255,0.4) 50%, rgba(189,122,255,0.3) 100%)',
         'gradient-midnight':

@@ -20,7 +20,12 @@ export function Switch({
   return (
     <div className={cn('flex items-center gap-3', className)}>
       {label && (
-        <span className={cn('text-sm font-medium text-text-secondary', disabled && 'opacity-50')}>
+        <span
+          className={cn(
+            'text-sm font-medium text-text-secondary',
+            disabled && 'opacity-50'
+          )}
+        >
           {label}
         </span>
       )}

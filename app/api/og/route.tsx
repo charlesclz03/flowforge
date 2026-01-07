@@ -23,7 +23,8 @@ export async function GET(req: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#000',
-          backgroundImage: 'radial-gradient(circle at center, #1a1a1a 0%, #000 100%)',
+          backgroundImage:
+            'radial-gradient(circle at center, #1a1a1a 0%, #000 100%)',
           color: '#fff',
           fontFamily: 'sans-serif',
           padding: '40px',
@@ -44,7 +45,9 @@ export async function GET(req: NextRequest) {
         </div>
 
         {/* User Info */}
-        <div style={{ display: 'flex', fontSize: 48, marginBottom: 10 }}>{username}</div>
+        <div style={{ display: 'flex', fontSize: 48, marginBottom: 10 }}>
+          {username}
+        </div>
         <div
           style={{
             display: 'flex',
@@ -75,13 +78,33 @@ export async function GET(req: NextRequest) {
               marginRight: 60,
             }}
           >
-            <div style={{ fontSize: 18, color: '#a1a1aa', textTransform: 'uppercase' }}>
+            <div
+              style={{
+                fontSize: 18,
+                color: '#a1a1aa',
+                textTransform: 'uppercase',
+              }}
+            >
               Flow Points
             </div>
-            <div style={{ fontSize: 64, fontWeight: 'bold', color: '#f97316' }}>{score}</div>
+            <div style={{ fontSize: 64, fontWeight: 'bold', color: '#f97316' }}>
+              {score}
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: 18, color: '#a1a1aa', textTransform: 'uppercase' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <div
+              style={{
+                fontSize: 18,
+                color: '#a1a1aa',
+                textTransform: 'uppercase',
+              }}
+            >
               Mastered Beat
             </div>
             <div style={{ fontSize: 32, fontWeight: 'bold' }}>{beat}</div>
@@ -89,7 +112,14 @@ export async function GET(req: NextRequest) {
         </div>
 
         {/* Footer */}
-        <div style={{ display: 'flex', marginTop: 40, fontSize: 18, color: '#71717a' }}>
+        <div
+          style={{
+            display: 'flex',
+            marginTop: 40,
+            fontSize: 18,
+            color: '#71717a',
+          }}
+        >
           Unleash your flow at flowforge.app
         </div>
       </div>,

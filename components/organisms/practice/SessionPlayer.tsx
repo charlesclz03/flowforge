@@ -13,7 +13,11 @@ interface SessionPlayerProps {
   className?: string
 }
 
-export function SessionPlayer({ session, onClose, className }: SessionPlayerProps) {
+export function SessionPlayer({
+  session,
+  onClose,
+  className,
+}: SessionPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
 
@@ -48,7 +52,9 @@ export function SessionPlayer({ session, onClose, className }: SessionPlayerProp
     <div className={cn('card p-4 space-y-4', className)}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-text-primary truncate">{session.title}</h3>
+          <h3 className="font-medium text-text-primary truncate">
+            {session.title}
+          </h3>
           <p className="text-text-secondary text-sm">{session.beatTitle}</p>
         </div>
         <button
@@ -66,7 +72,11 @@ export function SessionPlayer({ session, onClose, className }: SessionPlayerProp
           className="flex items-center justify-center w-12 h-12 rounded-full bg-accent-orange text-black transition-all hover:scale-105 active:scale-95"
           aria-label={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? <Pause size={20} /> : <Play size={20} fill="currentColor" />}
+          {isPlaying ? (
+            <Pause size={20} />
+          ) : (
+            <Play size={20} fill="currentColor" />
+          )}
         </button>
 
         <DurationDisplay duration={session.durationSeconds} label="" />

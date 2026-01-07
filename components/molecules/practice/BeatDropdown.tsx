@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Beat } from "@/types/database";
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { Beat } from '@/types/database'
 import {
   Crown,
   Check,
@@ -12,33 +12,33 @@ import {
   Heart,
   Upload,
   Trash2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/atoms/Skeleton";
-import { toast } from "react-hot-toast";
-import { getFavoriteBeatIds, toggleBeatFavorite } from "@/app/actions/beats";
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/atoms/Skeleton'
+import { toast } from 'react-hot-toast'
+import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/atoms/Tabs";
+} from '@/components/atoms/Tabs'
 import {
   addLocalBeat,
   getLocalBeats,
   deleteLocalBeat,
-} from "@/lib/beats/localBeats";
+} from '@/lib/beats/localBeats'
 
 interface BeatDropdownProps {
-  beats: Beat[];
-  selectedBeat: Beat | null;
+  beats: Beat[]
+  selectedBeat: Beat | null
 
-  onSelect: (beat: Beat) => void;
-  onLockedSelect?: () => void;
-  disabled?: boolean;
-  isPro?: boolean;
-  isLoading?: boolean;
-  hideLocalTab?: boolean;
+  onSelect: (beat: Beat) => void
+  onLockedSelect?: () => void
+  disabled?: boolean
+  isPro?: boolean
+  isLoading?: boolean
+  hideLocalTab?: boolean
 }
 
 // Beat type now includes tags
@@ -53,60 +53,58 @@ export function BeatDropdown({
   isLoading = false,
   hideLocalTab = false,
 }: BeatDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(
-    new Set(),
-  );
-  const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null);
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
+  const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null)
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
 
   // Local Beats State
-  const [localBeats, setLocalBeats] = useState<Beat[]>([]);
-  const [myBeats, setMyBeats] = useState<Beat[]>([]);
+  const [localBeats, setLocalBeats] = useState<Beat[]>([])
+  const [myBeats, setMyBeats] = useState<Beat[]>([])
 
-  const previewAudioRef = useRef<HTMLAudioElement | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchMyBeats = useCallback(async () => {
-    if (!isPro) return;
+    if (!isPro) return
     try {
-      const res = await fetch("/api/user/beats");
+      const res = await fetch('/api/user/beats')
       if (res.ok) {
-        const data = await res.json();
-        setMyBeats(data.beats || []);
+        const data = await res.json()
+        setMyBeats(data.beats || [])
       }
     } catch (e) {
-      console.error("Failed to fetch my beats", e);
+      console.error('Failed to fetch my beats', e)
     }
-  }, [isPro]);
+  }, [isPro])
 
   useEffect(() => {
-    if (isOpen && isPro) fetchMyBeats();
-  }, [isOpen, isPro, fetchMyBeats]);
+    if (isOpen && isPro) fetchMyBeats()
+  }, [isOpen, isPro, fetchMyBeats])
 
   // Load favorites
   useEffect(() => {
     getFavoriteBeatIds()
       .then((ids) => {
-        setFavoriteBeatIds(new Set(ids));
+        setFavoriteBeatIds(new Set(ids))
       })
-      .catch((err) => console.error("Failed to load favorites", err));
-  }, []);
+      .catch((err) => console.error('Failed to load favorites', err))
+  }, [])
 
   // Load local beats when Pro
   useEffect(() => {
     if (isPro && isOpen) {
-      getLocalBeats().then(setLocalBeats).catch(console.error);
+      getLocalBeats().then(setLocalBeats).catch(console.error)
     }
-  }, [isPro, isOpen]);
+  }, [isPro, isOpen])
 
   const stopPreview = useCallback(() => {
     if (previewAudioRef.current) {
-      previewAudioRef.current.pause();
-      previewAudioRef.current.currentTime = 0;
+      previewAudioRef.current.pause()
+      previewAudioRef.current.currentTime = 0
     }
-    setPreviewingBeatId(null);
-  }, []);
+    setPreviewingBeatId(null)
+  }, [])
 
   // Close when clicking outside
   useEffect(() => {
@@ -115,156 +113,156 @@ export function BeatDropdown({
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
-        stopPreview();
+        setIsOpen(false)
+        stopPreview()
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [stopPreview]);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [stopPreview])
 
   // Cleanup audio on unmount
   useEffect(() => {
     return () => {
       if (previewAudioRef.current) {
-        previewAudioRef.current.pause();
-        previewAudioRef.current = null;
+        previewAudioRef.current.pause()
+        previewAudioRef.current = null
       }
-    };
-  }, []);
+    }
+  }, [])
 
   const handleToggleFavorite = useCallback(
     async (beatId: string, e: React.MouseEvent) => {
-      e.stopPropagation();
+      e.stopPropagation()
 
       setFavoriteBeatIds((prev) => {
-        const next = new Set(prev);
-        if (next.has(beatId)) next.delete(beatId);
-        else next.add(beatId);
-        return next;
-      });
+        const next = new Set(prev)
+        if (next.has(beatId)) next.delete(beatId)
+        else next.add(beatId)
+        return next
+      })
 
       try {
-        const result = await toggleBeatFavorite(beatId);
+        const result = await toggleBeatFavorite(beatId)
         if (result.favorited !== undefined) {
           setFavoriteBeatIds((prev) => {
-            const next = new Set(prev);
-            if (result.favorited) next.add(beatId);
-            else next.delete(beatId);
-            return next;
-          });
+            const next = new Set(prev)
+            if (result.favorited) next.add(beatId)
+            else next.delete(beatId)
+            return next
+          })
           toast.success(
-            result.favorited ? "Added to favorites" : "Removed from favorites",
+            result.favorited ? 'Added to favorites' : 'Removed from favorites',
             {
-              icon: result.favorited ? "❤️" : "💔",
-              position: "bottom-center",
-            },
-          );
+              icon: result.favorited ? '❤️' : '💔',
+              position: 'bottom-center',
+            }
+          )
         }
       } catch (error) {
-        console.error(error);
-        toast.error("Failed to update favorite");
+        console.error(error)
+        toast.error('Failed to update favorite')
       }
     },
-    [],
-  );
+    []
+  )
 
   const handlePreview = useCallback(
     (beat: Beat, e: React.MouseEvent) => {
-      e.stopPropagation();
+      e.stopPropagation()
 
       if (previewingBeatId === beat.id) {
-        stopPreview();
-        return;
+        stopPreview()
+        return
       }
 
-      stopPreview();
+      stopPreview()
 
-      const audio = new Audio(beat.storageUrl);
-      audio.volume = 0.5;
-      audio.onended = () => setPreviewingBeatId(null);
+      const audio = new Audio(beat.storageUrl)
+      audio.volume = 0.5
+      audio.onended = () => setPreviewingBeatId(null)
       audio.play().catch((err) => {
-        console.error("Failed to preview beat:", err);
-        if (err.name === "NotAllowedError") {
-          toast.error("Playback blocked by browser. Click again to play.");
+        console.error('Failed to preview beat:', err)
+        if (err.name === 'NotAllowedError') {
+          toast.error('Playback blocked by browser. Click again to play.')
         } else if (
-          err.name === "NotSupportedError" ||
-          beat.storageUrl.includes("pixabay")
+          err.name === 'NotSupportedError' ||
+          beat.storageUrl.includes('pixabay')
         ) {
-          toast.error("External beat source unavailable. Try another beat.", {
-            icon: "⚠️",
-          });
+          toast.error('External beat source unavailable. Try another beat.', {
+            icon: '⚠️',
+          })
         } else {
-          toast.error("Could not preview beat");
+          toast.error('Could not preview beat')
         }
-      });
+      })
 
-      previewAudioRef.current = audio;
-      setPreviewingBeatId(beat.id);
+      previewAudioRef.current = audio
+      setPreviewingBeatId(beat.id)
     },
-    [previewingBeatId, stopPreview],
-  );
+    [previewingBeatId, stopPreview]
+  )
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const file = e.target.files?.[0]
+    if (!file) return
 
     // Validate type
-    if (!file.type.startsWith("audio/")) {
-      toast.error("Please upload an audio file");
-      return;
+    if (!file.type.startsWith('audio/')) {
+      toast.error('Please upload an audio file')
+      return
     }
 
     try {
-      const newBeat = await addLocalBeat(file);
-      setLocalBeats((prev) => [newBeat, ...prev]);
-      toast.success("Beat uploaded locally!");
+      const newBeat = await addLocalBeat(file)
+      setLocalBeats((prev) => [newBeat, ...prev])
+      toast.success('Beat uploaded locally!')
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to save local beat");
+      console.error(err)
+      toast.error('Failed to save local beat')
     }
-  };
+  }
 
   const handleDeleteLocal = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Delete this local beat?")) return;
+    e.stopPropagation()
+    if (!confirm('Delete this local beat?')) return
 
     try {
-      await deleteLocalBeat(id);
-      setLocalBeats((prev) => prev.filter((b) => b.id !== id));
-      toast.success("Beat deleted");
+      await deleteLocalBeat(id)
+      setLocalBeats((prev) => prev.filter((b) => b.id !== id))
+      toast.success('Beat deleted')
       if (selectedBeat?.id === id) {
         // maybe select default?
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete");
+      console.error(err)
+      toast.error('Failed to delete')
     }
-  };
+  }
 
   const handleDeleteCloud = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Delete this beat permanently?")) return;
+    e.stopPropagation()
+    if (!confirm('Delete this beat permanently?')) return
 
     try {
-      const res = await fetch(`/api/user/beats/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete");
+      const res = await fetch(`/api/user/beats/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
 
-      setMyBeats((prev) => prev.filter((b) => b.id !== id));
-      toast.success("Beat deleted from cloud");
+      setMyBeats((prev) => prev.filter((b) => b.id !== id))
+      toast.success('Beat deleted from cloud')
       if (selectedBeat?.id === id) {
         // maybe select default?
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete");
+      console.error(err)
+      toast.error('Failed to delete')
     }
-  };
+  }
 
   // Extract genres/tags
   const displayedBeats = showFavoritesOnly
     ? beats.filter((b) => favoriteBeatIds.has(b.id))
-    : beats;
+    : beats
 
   if (isLoading) {
     return (
@@ -272,7 +270,7 @@ export function BeatDropdown({
         <div className="h-7 w-12 bg-white/10 rounded animate-pulse" />
         <Skeleton className="h-[50px] w-full rounded-xl bg-white/5 border border-white/5" />
       </div>
-    );
+    )
   }
 
   return (
@@ -286,10 +284,10 @@ export function BeatDropdown({
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           className={cn(
-            "w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-all duration-200",
-            "border border-white/10 bg-white/5 hover:bg-white/10",
-            isOpen && "border-accent-purple/50 ring-2 ring-accent-purple/20",
-            disabled && "opacity-50 cursor-not-allowed",
+            'w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-all duration-200',
+            'border border-white/10 bg-white/5 hover:bg-white/10',
+            isOpen && 'border-accent-purple/50 ring-2 ring-accent-purple/20',
+            disabled && 'opacity-50 cursor-not-allowed'
           )}
         >
           {selectedBeat ? (
@@ -302,8 +300,8 @@ export function BeatDropdown({
                   {selectedBeat.title}
                 </div>
                 <div className="text-xs text-text-secondary">
-                  {selectedBeat.bpm} BPM •{" "}
-                  {selectedBeat.artistName || "FlowForge"}
+                  {selectedBeat.bpm} BPM •{' '}
+                  {selectedBeat.artistName || 'FlowForge'}
                 </div>
               </div>
             </div>
@@ -313,8 +311,8 @@ export function BeatDropdown({
           <ChevronDown
             size={20}
             className={cn(
-              "text-text-secondary transition-transform duration-200",
-              isOpen && "rotate-180",
+              'text-text-secondary transition-transform duration-200',
+              isOpen && 'rotate-180'
             )}
           />
         </button>
@@ -332,7 +330,7 @@ export function BeatDropdown({
                   </TabsTrigger>
                   {isPro && (
                     <TabsTrigger value="my-beats" className="flex-1 gap-2">
-                      My Beats{" "}
+                      My Beats{' '}
                       <Crown size={10} className="text-accent-orange" />
                     </TabsTrigger>
                   )}
@@ -342,12 +340,12 @@ export function BeatDropdown({
                       className="flex-1 gap-2"
                       onClick={(e) => {
                         if (!isPro) {
-                          e.preventDefault();
-                          onLockedSelect?.();
+                          e.preventDefault()
+                          onLockedSelect?.()
                         }
                       }}
                     >
-                      Local{" "}
+                      Local{' '}
                       <span className="text-[10px] opacity-50">(Browser)</span>
                     </TabsTrigger>
                   )}
@@ -358,15 +356,15 @@ export function BeatDropdown({
                   <button
                     onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                     className={cn(
-                      "text-xs font-medium flex items-center gap-1.5 transition-colors px-2 py-1 rounded-md",
+                      'text-xs font-medium flex items-center gap-1.5 transition-colors px-2 py-1 rounded-md',
                       showFavoritesOnly
-                        ? "text-accent-pink bg-accent-pink/10"
-                        : "text-text-secondary hover:text-white",
+                        ? 'text-accent-pink bg-accent-pink/10'
+                        : 'text-text-secondary hover:text-white'
                     )}
                   >
                     <Heart
                       size={12}
-                      fill={showFavoritesOnly ? "currentColor" : "none"}
+                      fill={showFavoritesOnly ? 'currentColor' : 'none'}
                     />
                     <span>Favorites Only</span>
                   </button>
@@ -391,31 +389,31 @@ export function BeatDropdown({
                     </div>
                   ) : (
                     displayedBeats.map((beat) => {
-                      const isSelected = selectedBeat?.id === beat.id;
-                      const isLocked = beat.isPremium && !isPro;
-                      const isFavorited = favoriteBeatIds.has(beat.id);
-                      const isPreviewing = previewingBeatId === beat.id;
+                      const isSelected = selectedBeat?.id === beat.id
+                      const isLocked = beat.isPremium && !isPro
+                      const isFavorited = favoriteBeatIds.has(beat.id)
+                      const isPreviewing = previewingBeatId === beat.id
 
                       return (
                         <div
                           key={beat.id}
                           className={cn(
-                            "flex items-center rounded-lg p-3 transition-colors",
+                            'flex items-center rounded-lg p-3 transition-colors',
                             isSelected
-                              ? "bg-accent-purple/20"
-                              : "hover:bg-white/5",
-                            isLocked && "opacity-70 hover:bg-accent-purple/5",
+                              ? 'bg-accent-purple/20'
+                              : 'hover:bg-white/5',
+                            isLocked && 'opacity-70 hover:bg-accent-purple/5'
                           )}
                         >
                           <button
                             onClick={(e) => handlePreview(beat, e)}
                             className={cn(
-                              "flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all",
+                              'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
                               isPreviewing
-                                ? "border-accent-green/50 bg-accent-green/20 text-accent-green"
+                                ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
                                 : isSelected
-                                  ? "border-accent-purple/30 bg-accent-purple/20 text-accent-purple"
-                                  : "border-white/10 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10",
+                                  ? 'border-accent-purple/30 bg-accent-purple/20 text-accent-purple'
+                                  : 'border-white/10 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10'
                             )}
                           >
                             {isPreviewing ? (
@@ -429,32 +427,30 @@ export function BeatDropdown({
                             onClick={() => {
                               if (isLocked) {
                                 if (
-                                  typeof navigator !== "undefined" &&
+                                  typeof navigator !== 'undefined' &&
                                   navigator.vibrate
                                 )
-                                  navigator.vibrate(50);
-                                onLockedSelect?.();
-                                setIsOpen(false);
-                                stopPreview();
-                                return;
+                                  navigator.vibrate(50)
+                                onLockedSelect?.()
+                                setIsOpen(false)
+                                stopPreview()
+                                return
                               }
                               if (
-                                typeof navigator !== "undefined" &&
+                                typeof navigator !== 'undefined' &&
                                 navigator.vibrate
                               )
-                                navigator.vibrate(10);
-                              onSelect(beat);
-                              setIsOpen(false);
-                              stopPreview();
+                                navigator.vibrate(10)
+                              onSelect(beat)
+                              setIsOpen(false)
+                              stopPreview()
                             }}
                             className="flex-1 text-left"
                           >
                             <div
                               className={cn(
-                                "font-medium text-sm",
-                                isSelected
-                                  ? "text-accent-purple"
-                                  : "text-white",
+                                'font-medium text-sm',
+                                isSelected ? 'text-accent-purple' : 'text-white'
                               )}
                             >
                               {beat.title}
@@ -480,15 +476,15 @@ export function BeatDropdown({
                             <button
                               onClick={(e) => handleToggleFavorite(beat.id, e)}
                               className={cn(
-                                "p-1.5 rounded-full transition-colors",
+                                'p-1.5 rounded-full transition-colors',
                                 isFavorited
-                                  ? "text-accent-pink"
-                                  : "text-text-tertiary hover:text-accent-pink",
+                                  ? 'text-accent-pink'
+                                  : 'text-text-tertiary hover:text-accent-pink'
                               )}
                             >
                               <Heart
                                 size={14}
-                                fill={isFavorited ? "currentColor" : "none"}
+                                fill={isFavorited ? 'currentColor' : 'none'}
                               />
                             </button>
                             {beat.isPremium && (
@@ -504,7 +500,7 @@ export function BeatDropdown({
                             )}
                           </div>
                         </div>
-                      );
+                      )
                     })
                   )}
                 </div>
@@ -523,25 +519,25 @@ export function BeatDropdown({
                     </div>
                   ) : (
                     myBeats.map((beat) => {
-                      const isSelected = selectedBeat?.id === beat.id;
-                      const isPreviewing = previewingBeatId === beat.id;
+                      const isSelected = selectedBeat?.id === beat.id
+                      const isPreviewing = previewingBeatId === beat.id
                       return (
                         <div
                           key={beat.id}
                           className={cn(
-                            "flex items-center rounded-lg p-3 transition-colors",
+                            'flex items-center rounded-lg p-3 transition-colors',
                             isSelected
-                              ? "bg-accent-purple/20"
-                              : "hover:bg-white/5",
+                              ? 'bg-accent-purple/20'
+                              : 'hover:bg-white/5'
                           )}
                         >
                           <button
                             onClick={(e) => handlePreview(beat, e)}
                             className={cn(
-                              "flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all",
+                              'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
                               isPreviewing
-                                ? "border-accent-green/50 bg-accent-green/20 text-accent-green"
-                                : "border-white/10 bg-white/5 text-text-secondary hover:text-white",
+                                ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
+                                : 'border-white/10 bg-white/5 text-text-secondary hover:text-white'
                             )}
                           >
                             {isPreviewing ? (
@@ -552,8 +548,8 @@ export function BeatDropdown({
                           </button>
                           <button
                             onClick={() => {
-                              onSelect(beat);
-                              stopPreview();
+                              onSelect(beat)
+                              stopPreview()
                             }}
                             className="flex-1 text-left"
                           >
@@ -577,7 +573,7 @@ export function BeatDropdown({
                             <Trash2 size={14} />
                           </button>
                         </div>
-                      );
+                      )
                     })
                   )}
                 </div>
@@ -611,25 +607,25 @@ export function BeatDropdown({
                       </div>
                     ) : (
                       localBeats.map((beat) => {
-                        const isSelected = selectedBeat?.id === beat.id;
-                        const isPreviewing = previewingBeatId === beat.id;
+                        const isSelected = selectedBeat?.id === beat.id
+                        const isPreviewing = previewingBeatId === beat.id
                         return (
                           <div
                             key={beat.id}
                             className={cn(
-                              "flex items-center rounded-lg p-3 transition-colors",
+                              'flex items-center rounded-lg p-3 transition-colors',
                               isSelected
-                                ? "bg-accent-purple/20"
-                                : "hover:bg-white/5",
+                                ? 'bg-accent-purple/20'
+                                : 'hover:bg-white/5'
                             )}
                           >
                             <button
                               onClick={(e) => handlePreview(beat, e)}
                               className={cn(
-                                "flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all",
+                                'flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-lg border mr-3 transition-all',
                                 isPreviewing
-                                  ? "border-accent-green/50 bg-accent-green/20 text-accent-green"
-                                  : "border-white/10 bg-white/5 text-text-secondary hover:text-white",
+                                  ? 'border-accent-green/50 bg-accent-green/20 text-accent-green'
+                                  : 'border-white/10 bg-white/5 text-text-secondary hover:text-white'
                               )}
                             >
                               {isPreviewing ? (
@@ -640,9 +636,9 @@ export function BeatDropdown({
                             </button>
                             <button
                               onClick={() => {
-                                onSelect(beat);
-                                setIsOpen(false);
-                                stopPreview();
+                                onSelect(beat)
+                                setIsOpen(false)
+                                stopPreview()
                               }}
                               className="flex-1 text-left"
                             >
@@ -661,7 +657,7 @@ export function BeatDropdown({
                               <Trash2 size={14} />
                             </button>
                           </div>
-                        );
+                        )
                       })
                     )}
                   </div>
@@ -672,5 +668,5 @@ export function BeatDropdown({
         )}
       </div>
     </div>
-  );
+  )
 }

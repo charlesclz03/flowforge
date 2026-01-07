@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Swords, Globe, Zap } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
+import { useState } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, Swords, Globe, Zap } from 'lucide-react'
+import { Button } from '@/components/atoms/Button'
 
 export default function DuelPage() {
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false)
 
   return (
     <main className="min-h-[100dvh] bg-black text-white p-4 md:p-8 relative overflow-hidden">
@@ -54,7 +54,7 @@ export default function DuelPage() {
               onClick={() => setIsCreating(true)}
               disabled={isCreating}
             >
-              {isCreating ? "Setting up Arena..." : "Create Duel"}
+              {isCreating ? 'Setting up Arena...' : 'Create Duel'}
             </Button>
           </div>
 
@@ -104,5 +104,5 @@ export default function DuelPage() {
         </div>
       </div>
     </main>
-  );
+  )
 }

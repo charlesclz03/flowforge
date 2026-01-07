@@ -19,12 +19,17 @@ interface StatsSectionProps {
   wordVaultCount?: number
 }
 
-export function StatsSection({ recordings, isLoading, wordVaultCount = 0 }: StatsSectionProps) {
+export function StatsSection({
+  recordings,
+  isLoading,
+  wordVaultCount = 0,
+}: StatsSectionProps) {
   const totalMinutes = Math.floor(
     recordings.reduce((total, r) => total + (r.durationSeconds || 0), 0) / 60
   )
 
-  const flowDensity = totalMinutes > 0 ? Math.round(wordVaultCount / totalMinutes) : 0
+  const flowDensity =
+    totalMinutes > 0 ? Math.round(wordVaultCount / totalMinutes) : 0
 
   if (!isLoading && recordings.length === 0) {
     return (
@@ -34,8 +39,12 @@ export function StatsSection({ recordings, isLoading, wordVaultCount = 0 }: Stat
             <Trophy size={32} />
           </div>
           <div className="space-y-1">
-            <h3 className="text-xl font-bold text-white italic">"Your legacy starts today."</h3>
-            <p className="text-text-secondary">Record your first track to see your stats grow.</p>
+            <h3 className="text-xl font-bold text-white italic">
+              "Your legacy starts today."
+            </h3>
+            <p className="text-text-secondary">
+              Record your first track to see your stats grow.
+            </p>
           </div>
         </div>
       </Card>
@@ -50,15 +59,27 @@ export function StatsSection({ recordings, isLoading, wordVaultCount = 0 }: Stat
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Total Recordings" value={recordings.length} variant="compact" />
-          <StatCard label="Minutes Practiced" value={totalMinutes} variant="compact" />
+          <StatCard
+            label="Total Recordings"
+            value={recordings.length}
+            variant="compact"
+          />
+          <StatCard
+            label="Minutes Practiced"
+            value={totalMinutes}
+            variant="compact"
+          />
           <StatCard
             label="Flow Density"
             value={`${flowDensity} wpm`}
             variant="compact"
             className="text-accent-cyan"
           />
-          <StatCard label="Word Vault" value={`${wordVaultCount} / 2000`} variant="compact" />
+          <StatCard
+            label="Word Vault"
+            value={`${wordVaultCount} / 2000`}
+            variant="compact"
+          />
         </div>
       )}
 

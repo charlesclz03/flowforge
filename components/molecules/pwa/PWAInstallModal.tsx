@@ -62,7 +62,8 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
 
                 <div className="mt-2 text-center">
                   <p className="text-text-secondary mb-6">
-                    Install FreeStyla for the best experience, lower latency, and fullscreen mode.
+                    Install FreeStyla for the best experience, lower latency,
+                    and fullscreen mode.
                   </p>
 
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/5 space-y-4 text-left">
@@ -74,7 +75,8 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                           </div>
                           <div>
                             <p className="text-white text-sm">
-                              Tap the <Share className="inline w-4 h-4 mx-1" /> Share button
+                              Tap the <Share className="inline w-4 h-4 mx-1" />{' '}
+                              Share button
                             </p>
                           </div>
                         </div>
@@ -85,7 +87,9 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                           <div>
                             <p className="text-white text-sm">
                               Scroll down and tap{' '}
-                              <span className="font-bold text-white">Add to Home Screen</span>
+                              <span className="font-bold text-white">
+                                Add to Home Screen
+                              </span>
                             </p>
                           </div>
                         </div>
@@ -98,7 +102,8 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                           </div>
                           <div>
                             <p className="text-white text-sm">
-                              Tap the <span className="font-bold">Menu</span> (three dots)
+                              Tap the <span className="font-bold">Menu</span>{' '}
+                              (three dots)
                             </p>
                           </div>
                         </div>
@@ -108,8 +113,14 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                           </div>
                           <div>
                             <p className="text-white text-sm">
-                              Select <span className="font-bold text-white">Install App</span> or{' '}
-                              <span className="font-bold text-white">Add to Home Screen</span>
+                              Select{' '}
+                              <span className="font-bold text-white">
+                                Install App
+                              </span>{' '}
+                              or{' '}
+                              <span className="font-bold text-white">
+                                Add to Home Screen
+                              </span>
                             </p>
                           </div>
                         </div>

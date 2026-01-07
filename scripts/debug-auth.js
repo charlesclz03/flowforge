@@ -30,7 +30,9 @@ console.log(
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
 
 if (process.env.NEXTAUTH_URL !== 'http://localhost:3000') {
-  console.warn('WARNING: NEXTAUTH_URL should be http://localhost:3000 for local development.')
+  console.warn(
+    'WARNING: NEXTAUTH_URL should be http://localhost:3000 for local development.'
+  )
 }
 
 if (!process.env.GOOGLE_CLIENT_ID) {

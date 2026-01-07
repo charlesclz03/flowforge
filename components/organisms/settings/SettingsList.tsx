@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Settings,
@@ -10,21 +10,21 @@ import {
   User,
   Scale,
   LogOut,
-} from "lucide-react";
-import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
-import { usePracticeSession } from "@/contexts/SessionContext";
-import { cn } from "@/lib/utils";
-import { toast } from "react-hot-toast";
+} from 'lucide-react'
+import Link from 'next/link'
+import { useSession, signOut } from 'next-auth/react'
+import { usePracticeSession } from '@/contexts/SessionContext'
+import { cn } from '@/lib/utils'
+import { toast } from 'react-hot-toast'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
   const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } =
-    usePracticeSession();
+    usePracticeSession()
 
   const handleLinkClick = () => {
-    if (onItemClick) onItemClick();
-  };
+    if (onItemClick) onItemClick()
+  }
 
   return (
     <div className="w-full">
@@ -36,7 +36,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </div>
           <div>
             <p className="text-sm font-medium text-white truncate max-w-[150px]">
-              {session?.user?.name || "Practitioner"}
+              {session?.user?.name || 'Practitioner'}
             </p>
             <div className="flex items-center gap-2">
               <p className="text-xs text-text-secondary">Lyricist</p>
@@ -55,37 +55,37 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </div>
           <button
             onClick={(e) => {
-              e.preventDefault();
-              const newValue = !isTTSEnabled;
-              setTTSEnabled(newValue);
+              e.preventDefault()
+              const newValue = !isTTSEnabled
+              setTTSEnabled(newValue)
               toast.success(
                 newValue
-                  ? "Voice Assistant Enabled"
-                  : "Voice Assistant Disabled",
-              );
+                  ? 'Voice Assistant Enabled'
+                  : 'Voice Assistant Disabled'
+              )
             }}
             className={cn(
-              "w-9 h-5 rounded-full transition-colors relative",
-              isTTSEnabled ? "bg-accent-orange" : "bg-white/20",
+              'w-9 h-5 rounded-full transition-colors relative',
+              isTTSEnabled ? 'bg-accent-orange' : 'bg-white/20'
             )}
           >
             <div
               className={cn(
-                "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm",
-                isTTSEnabled ? "left-4.5" : "left-0.5",
+                'absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform shadow-sm',
+                isTTSEnabled ? 'left-4.5' : 'left-0.5'
               )}
             />
           </button>
         </div>
 
         {/* Admin Only: Test Voice */}
-        {["triplyricist@gmail.com", "charles.cluzeaud@gmail.com"].includes(
-          session?.user?.email || "",
+        {['triplyricist@gmail.com', 'charles.cluzeaud@gmail.com'].includes(
+          session?.user?.email || ''
         ) && (
           <button
             onClick={(e) => {
-              e.preventDefault();
-              testVoice();
+              e.preventDefault()
+              testVoice()
             }}
             className="flex w-full items-center px-4 py-2 text-xs font-medium text-accent-purple transition-colors hover:bg-white/5"
           >
@@ -106,8 +106,8 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 step="0.1"
                 value={ttsVolume}
                 onChange={(e) => {
-                  e.preventDefault();
-                  setTTSVolume(parseFloat(e.target.value));
+                  e.preventDefault()
+                  setTTSVolume(parseFloat(e.target.value))
                 }}
                 className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white hover:[&::-webkit-slider-thumb]:bg-accent-orange transition-colors"
               />
@@ -164,7 +164,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
         {session && (
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() => signOut({ callbackUrl: '/' })}
             className="flex w-full items-center px-4 py-3 text-sm text-text-primary transition-colors hover:bg-white/5"
           >
             <LogOut size={16} className="mr-3 text-text-secondary" />
@@ -173,5 +173,5 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         )}
       </div>
     </div>
-  );
+  )
 }

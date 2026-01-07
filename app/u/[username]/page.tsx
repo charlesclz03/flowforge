@@ -3,7 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/atoms/Container'
 import { Avatar } from '@/components/atoms/Avatar'
 import { Card } from '@/components/atoms/Card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/Tabs'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/atoms/Tabs'
 import { FreestyleSession, Beat } from '@prisma/client'
 
 interface SocialLinks {
@@ -94,7 +99,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           />
 
           <div className="flex-1 text-center md:text-left space-y-2">
-            <h1 className="text-3xl font-bold text-white">{user.name || 'Anonymous User'}</h1>
+            <h1 className="text-3xl font-bold text-white">
+              {user.name || 'Anonymous User'}
+            </h1>
             {/* We display the ID/slug in the URL as the "username" for now */}
             {/* <p className="text-text-secondary">@{params.username}</p> */}
 
@@ -183,15 +190,23 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </TabsList>
         <TabsContent value="flows" className="mt-6 space-y-4">
           {user.freestyleSessions.length === 0 ? (
-            <div className="text-center py-12 text-text-tertiary">No flows recorded yet.</div>
+            <div className="text-center py-12 text-text-tertiary">
+              No flows recorded yet.
+            </div>
           ) : (
             user.freestyleSessions.map((session: ProfileSession) => (
-              <Card key={session.id} className="p-4 flex items-center justify-between">
+              <Card
+                key={session.id}
+                className="p-4 flex items-center justify-between"
+              >
                 <div>
                   <h3 className="font-bold text-white">{session.title}</h3>
                   <p className="text-sm text-text-secondary">
                     {session.beat.title} •{' '}
-                    {session.durationSeconds ? Math.floor(session.durationSeconds) : 0}s
+                    {session.durationSeconds
+                      ? Math.floor(session.durationSeconds)
+                      : 0}
+                    s
                   </p>
                 </div>
                 <div className="text-xs text-text-tertiary">

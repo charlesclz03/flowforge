@@ -72,7 +72,9 @@ export function AdBanner({
           data-full-width-responsive={responsive.toString()}
         />
       ) : (
-        <div className="text-[10px] uppercase tracking-widest text-white/20">Advertisement</div>
+        <div className="text-[10px] uppercase tracking-widest text-white/20">
+          Advertisement
+        </div>
       )}
     </div>
   )

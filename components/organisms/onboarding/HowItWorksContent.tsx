@@ -13,7 +13,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
       {/* Header */}
       <div className="space-y-6 text-center">
         <p className="mx-auto max-w-2xl text-base text-text-secondary sm:text-xl">
-          Master your freestyle flow with precision timing and intelligent word prompts.
+          Master your freestyle flow with precision timing and intelligent word
+          prompts.
         </p>
       </div>
 
@@ -30,8 +31,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
               <h3 className="text-lg sm:text-xl">Choose your beat</h3>
             </div>
             <p className="text-sm text-text-secondary">
-              Select from a curated library of hip-hop instrumentals. Each beat is tagged with BPM
-              and genre for the perfect vibe.
+              Select from a curated library of hip-hop instrumentals. Each beat
+              is tagged with BPM and genre for the perfect vibe.
             </p>
           </div>
         </div>
@@ -47,8 +48,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
               <h3 className="text-lg sm:text-xl">Configure session</h3>
             </div>
             <p className="text-sm text-text-secondary">
-              Set your difficulty level and word frequency. Start easy with 2-3 syllable words, or
-              challenge yourself with complex vocabulary.
+              Set your difficulty level and word frequency. Start easy with 2-3
+              syllable words, or challenge yourself with complex vocabulary.
             </p>
           </div>
         </div>
@@ -64,8 +65,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
               <h3 className="text-lg sm:text-xl">Record & flow</h3>
             </div>
             <p className="text-sm text-text-secondary">
-              Hit play and start freestyling. Words appear in sync with the beat. Your session is
-              automatically recorded for review.
+              Hit play and start freestyling. Words appear in sync with the
+              beat. Your session is automatically recorded for review.
             </p>
           </div>
         </div>
@@ -79,7 +80,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Precision timing</h4>
               <p className="text-sm text-text-secondary">
-                your session. Standard sessions run for 2 minutes, perfect for daily practice.
+                your session. Standard sessions run for 2 minutes, perfect for
+                daily practice.
               </p>
             </div>
           </div>
@@ -91,8 +93,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Smart word bank</h4>
               <p className="text-sm text-text-secondary">
-                A curated bank of words designed for freestyling, filtered by syllable count to
-                match your skill level.
+                A curated bank of words designed for freestyling, filtered by
+                syllable count to match your skill level.
               </p>
             </div>
           </div>
@@ -104,8 +106,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Beat synchronization</h4>
               <p className="text-sm text-text-secondary">
-                Words appear precisely timed to musical bars. Choose between 2, 4, or 8 bar
-                intervals.
+                Words appear precisely timed to musical bars. Choose between 2,
+                4, or 8 bar intervals.
               </p>
             </div>
           </div>
@@ -117,8 +119,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <div>
               <h4 className="mb-2 text-lg">Auto-recording</h4>
               <p className="text-sm text-text-secondary">
-                Every session is captured automatically. Review your performances and track your
-                progress over time.
+                Every session is captured automatically. Review your
+                performances and track your progress over time.
               </p>
             </div>
           </div>
@@ -145,12 +147,16 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
         </div>
         <div className="h-12 w-px bg-white/10" />
         <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">1,000+</div>
+          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
+            1,000+
+          </div>
           <div>Word vault</div>
         </div>
         <div className="h-12 w-px bg-white/10" />
         <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">2 min+</div>
+          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
+            2 min+
+          </div>
           <div>Session time</div>
         </div>
       </div>

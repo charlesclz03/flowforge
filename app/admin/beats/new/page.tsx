@@ -3,7 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/atoms/Button'
-import { UploadCloud, Music, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
+import {
+  UploadCloud,
+  Music,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+} from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 
 import React from 'react'
@@ -196,7 +202,10 @@ const UploadBeatPage = (): React.JSX.Element => {
                 onChange={(e) => setIsPremium(e.target.checked)}
                 className="w-5 h-5 rounded border-white/10 bg-background-elevated text-accent-gold focus:ring-accent-gold"
               />
-              <label htmlFor="premium" className="text-sm font-medium cursor-pointer">
+              <label
+                htmlFor="premium"
+                className="text-sm font-medium cursor-pointer"
+              >
                 Premium Only (Gold)
               </label>
             </div>

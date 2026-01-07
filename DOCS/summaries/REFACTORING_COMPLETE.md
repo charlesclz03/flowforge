@@ -176,7 +176,9 @@ catch (err) {
 
 ```tsx
 <div className="rounded-xl border border-stroke-subtle/20 bg-background-elevated/50 p-4 text-center">
-  <p className="text-xs uppercase tracking-[0.3em] text-text-tertiary">Total Sessions</p>
+  <p className="text-xs uppercase tracking-[0.3em] text-text-tertiary">
+    Total Sessions
+  </p>
   <p className="text-3xl font-light text-white">{sessions.length}</p>
 </div>
 ```

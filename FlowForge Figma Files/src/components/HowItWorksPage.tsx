@@ -1,5 +1,13 @@
 import React from 'react'
-import { Music, Timer, Mic, ArrowRight, Sparkles, Zap, Target } from 'lucide-react'
+import {
+  Music,
+  Timer,
+  Mic,
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Target,
+} from 'lucide-react'
 import { Button } from './ui/button'
 
 interface HowItWorksPageProps {
@@ -22,7 +30,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
           </div>
 
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Master your freestyle flow with precision timing and intelligent word prompts
+            Master your freestyle flow with precision timing and intelligent
+            word prompts
           </p>
 
           <div className="flex items-center justify-center space-x-4">
@@ -46,8 +55,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
                 <h3 className="text-xl">Choose Your Beat</h3>
               </div>
               <p className="text-gray-400">
-                Select from a curated library of hip-hop instrumentals. Each beat is tagged with BPM
-                and genre for the perfect vibe.
+                Select from a curated library of hip-hop instrumentals. Each
+                beat is tagged with BPM and genre for the perfect vibe.
               </p>
             </div>
           </div>
@@ -63,8 +72,9 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
                 <h3 className="text-xl">Configure Session</h3>
               </div>
               <p className="text-gray-400">
-                Set your difficulty level and word frequency. Start easy with 2-3 syllable words, or
-                challenge yourself with complex vocabulary.
+                Set your difficulty level and word frequency. Start easy with
+                2-3 syllable words, or challenge yourself with complex
+                vocabulary.
               </p>
             </div>
           </div>
@@ -80,8 +90,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
                 <h3 className="text-xl">Record & Flow</h3>
               </div>
               <p className="text-gray-400">
-                Hit play and start freestyling. Words appear in sync with the beat. Your session is
-                automatically recorded for review.
+                Hit play and start freestyling. Words appear in sync with the
+                beat. Your session is automatically recorded for review.
               </p>
             </div>
           </div>
@@ -95,8 +105,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
               <div>
                 <h4 className="text-lg mb-2">Precision Timing</h4>
                 <p className="text-sm text-gray-400">
-                  iOS Clock-inspired timer with visual progress ring. Know exactly where you are in
-                  your 2-minute session.
+                  iOS Clock-inspired timer with visual progress ring. Know
+                  exactly where you are in your 2-minute session.
                 </p>
               </div>
             </div>
@@ -108,8 +118,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
               <div>
                 <h4 className="text-lg mb-2">Smart Word Bank</h4>
                 <p className="text-sm text-gray-400">
-                  Over 1,000 curated words designed for freestyling. Filtered by syllable count to
-                  match your skill level.
+                  Over 1,000 curated words designed for freestyling. Filtered by
+                  syllable count to match your skill level.
                 </p>
               </div>
             </div>
@@ -121,8 +131,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
               <div>
                 <h4 className="text-lg mb-2">Beat Synchronization</h4>
                 <p className="text-sm text-gray-400">
-                  Words appear precisely timed to musical bars. Choose between 4, 8, or 16 bar
-                  intervals.
+                  Words appear precisely timed to musical bars. Choose between
+                  4, 8, or 16 bar intervals.
                 </p>
               </div>
             </div>
@@ -134,8 +144,8 @@ export function HowItWorksPage({ onStartPractice }: HowItWorksPageProps) {
               <div>
                 <h4 className="text-lg mb-2">Auto-Recording</h4>
                 <p className="text-sm text-gray-400">
-                  Every session is captured automatically. Review your performances and track your
-                  progress over time.
+                  Every session is captured automatically. Review your
+                  performances and track your progress over time.
                 </p>
               </div>
             </div>

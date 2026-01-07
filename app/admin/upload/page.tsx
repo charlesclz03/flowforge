@@ -87,7 +87,9 @@ export default function AdminUploadPage() {
             <Upload className="text-accent-pink" />
             Admin Beat Upload
           </h1>
-          <p className="text-text-secondary">Add new instrumentals to the FlowForge library.</p>
+          <p className="text-text-secondary">
+            Add new instrumentals to the FlowForge library.
+          </p>
         </div>
 
         <form
@@ -112,8 +114,12 @@ export default function AdminUploadPage() {
               </div>
             ) : (
               <>
-                <div className="text-white font-medium">Click to upload audio</div>
-                <div className="text-xs text-text-tertiary">MP3 or WAV supported</div>
+                <div className="text-white font-medium">
+                  Click to upload audio
+                </div>
+                <div className="text-xs text-text-tertiary">
+                  MP3 or WAV supported
+                </div>
               </>
             )}
           </div>
@@ -121,7 +127,9 @@ export default function AdminUploadPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Title */}
             <div className="space-y-2">
-              <label className="text-xs text-text-secondary uppercase">Title</label>
+              <label className="text-xs text-text-secondary uppercase">
+                Title
+              </label>
               <div className="relative">
                 <Type className="absolute left-3 top-3 text-text-tertiary w-4 h-4" />
                 <input
@@ -129,7 +137,9 @@ export default function AdminUploadPage() {
                   type="text"
                   placeholder="e.g. Midnight City"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full bg-black/40 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-white focus:outline-none focus:border-accent-purple"
                 />
               </div>
@@ -137,7 +147,9 @@ export default function AdminUploadPage() {
 
             {/* Artist */}
             <div className="space-y-2">
-              <label className="text-xs text-text-secondary uppercase">Producer</label>
+              <label className="text-xs text-text-secondary uppercase">
+                Producer
+              </label>
               <div className="relative">
                 <Disc className="absolute left-3 top-3 text-text-tertiary w-4 h-4" />
                 <input
@@ -145,7 +157,9 @@ export default function AdminUploadPage() {
                   type="text"
                   placeholder="e.g. Metro Boomin"
                   value={formData.artistName}
-                  onChange={(e) => setFormData({ ...formData, artistName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, artistName: e.target.value })
+                  }
                   className="w-full bg-black/40 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-white focus:outline-none focus:border-accent-purple"
                 />
               </div>
@@ -153,7 +167,9 @@ export default function AdminUploadPage() {
 
             {/* BPM */}
             <div className="space-y-2">
-              <label className="text-xs text-text-secondary uppercase">BPM</label>
+              <label className="text-xs text-text-secondary uppercase">
+                BPM
+              </label>
               <div className="relative">
                 <Clock className="absolute left-3 top-3 text-text-tertiary w-4 h-4" />
                 <input
@@ -161,7 +177,9 @@ export default function AdminUploadPage() {
                   type="number"
                   placeholder="e.g. 140"
                   value={formData.bpm}
-                  onChange={(e) => setFormData({ ...formData, bpm: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bpm: e.target.value })
+                  }
                   className="w-full bg-black/40 border border-white/10 rounded-lg py-2 pl-10 pr-4 text-white focus:outline-none focus:border-accent-purple"
                 />
               </div>
@@ -169,10 +187,14 @@ export default function AdminUploadPage() {
 
             {/* Genre */}
             <div className="space-y-2">
-              <label className="text-xs text-text-secondary uppercase">Genre</label>
+              <label className="text-xs text-text-secondary uppercase">
+                Genre
+              </label>
               <select
                 value={formData.genre}
-                onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, genre: e.target.value })
+                }
                 className="w-full bg-black/40 border border-white/10 rounded-lg py-2 px-4 text-white focus:outline-none focus:border-accent-purple appearance-none"
               >
                 <option value="Trap">Trap</option>
@@ -185,10 +207,14 @@ export default function AdminUploadPage() {
 
             {/* Difficulty */}
             <div className="space-y-2">
-              <label className="text-xs text-text-secondary uppercase">Difficulty</label>
+              <label className="text-xs text-text-secondary uppercase">
+                Difficulty
+              </label>
               <select
                 value={formData.difficulty}
-                onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, difficulty: e.target.value })
+                }
                 className="w-full bg-black/40 border border-white/10 rounded-lg py-2 px-4 text-white focus:outline-none focus:border-accent-purple appearance-none"
               >
                 <option value="Easy">Easy</option>
@@ -199,10 +225,14 @@ export default function AdminUploadPage() {
 
             {/* isPremium Toggle */}
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5">
-              <div className="text-sm font-medium text-white">Premium Content</div>
+              <div className="text-sm font-medium text-white">
+                Premium Content
+              </div>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, isPremium: !formData.isPremium })}
+                onClick={() =>
+                  setFormData({ ...formData, isPremium: !formData.isPremium })
+                }
                 className={`w-12 h-6 rounded-full relative transition-colors ${formData.isPremium ? 'bg-accent-pink' : 'bg-white/20'}`}
               >
                 <div
@@ -212,7 +242,12 @@ export default function AdminUploadPage() {
             </div>
           </div>
 
-          <Button type="submit" isLoading={isLoading} className="w-full" size="lg">
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            className="w-full"
+            size="lg"
+          >
             Upload Beat
           </Button>
         </form>

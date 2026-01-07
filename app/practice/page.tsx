@@ -1,54 +1,54 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { toast } from "react-hot-toast";
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { AnimatePresence, motion } from 'framer-motion'
+import { toast } from 'react-hot-toast'
 
-import { useBeatPlayer } from "@/hooks/useBeatPlayer";
-import { useRecording } from "@/hooks/useRecording";
-import { useErrorHandler } from "@/hooks/useErrorHandler";
-import { useForceUpdate } from "@/hooks/useForceUpdate";
-import { useWakeLock } from "@/hooks/useWakeLock";
-import { useSound } from "@/hooks/useSound";
-import { useOptimisticAction } from "@/hooks/useOptimisticAction";
-import { usePracticeSession } from "@/contexts/SessionContext";
-import { GuestStorage } from "@/lib/guest-storage";
+import { useBeatPlayer } from '@/hooks/useBeatPlayer'
+import { useRecording } from '@/hooks/useRecording'
+import { useErrorHandler } from '@/hooks/useErrorHandler'
+import { useForceUpdate } from '@/hooks/useForceUpdate'
+import { useWakeLock } from '@/hooks/useWakeLock'
+import { useSound } from '@/hooks/useSound'
+import { useOptimisticAction } from '@/hooks/useOptimisticAction'
+import { usePracticeSession } from '@/contexts/SessionContext'
+import { GuestStorage } from '@/lib/guest-storage'
 
-import { OnboardingLayout } from "@/components/organisms/layout/OnboardingLayout";
-import { ErrorAlert } from "@/components/molecules/feedback/ErrorAlert";
-import { GuestLoginModal } from "@/components/auth/GuestLoginModal";
-import { PremiumModal } from "@/components/molecules/monetization/PremiumModal";
-import SessionSummaryModal from "@/components/molecules/practice/SessionSummaryModal";
+import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
+import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
+import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
+import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
+import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
 
-import PracticeControls from "@/components/organisms/practice/PracticeControls";
-import { AudioVisualizer } from "@/components/molecules/visuals/AudioVisualizer";
+import PracticeControls from '@/components/organisms/practice/PracticeControls'
+import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 
 interface SessionSummary {
-  score: number;
-  vibe: string;
-  description: string;
-  wordCount: number;
-  duration: number;
-  audioUrl: string;
-  newBadges: string[];
-  difficulty: string;
-  bpm: number;
-  frequency: number;
-  isOptimistic: boolean;
+  score: number
+  vibe: string
+  description: string
+  wordCount: number
+  duration: number
+  audioUrl: string
+  newBadges: string[]
+  difficulty: string
+  bpm: number
+  frequency: number
+  isOptimistic: boolean
 }
 
-import { SESSION_CONFIG } from "@/lib/constants/design";
-import { ErrorCodes } from "@/lib/errors";
+import { SESSION_CONFIG } from '@/lib/constants/design'
+import { ErrorCodes } from '@/lib/errors'
 
 export default function PracticePage() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const [isInfiniteMode] = useState(false);
+  const router = useRouter()
+  const { data: session } = useSession()
+  const [isInfiniteMode] = useState(false)
 
   // Audio Feedback
-  const { play } = useSound();
+  const { play } = useSound()
 
   // Accessibility
 
@@ -63,94 +63,92 @@ export default function PracticePage() {
     ttsVolume,
     isLoaded,
     wordCategory,
-  } = usePracticeSession();
+  } = usePracticeSession()
 
   // Local State
-  const [currentWord, setCurrentWord] = useState<string>("");
-  const [wordList, setWordList] = useState<string[]>([]);
-  const [wordIndex, setWordIndex] = useState(0);
-  const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS);
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [currentWord, setCurrentWord] = useState<string>('')
+  const [wordList, setWordList] = useState<string[]>([])
+  const [wordIndex, setWordIndex] = useState(0)
+  const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
+  const [saveMessage, setSaveMessage] = useState<string | null>(null)
 
   // Modals
-  const [showGuestModal, setShowGuestModal] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showGuestModal, setShowGuestModal] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [premiumTrigger, setPremiumTrigger] = useState<
-    "recording" | "beat" | "history"
-  >("beat");
+    'recording' | 'beat' | 'history'
+  >('beat')
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(
-    null,
-  );
+    null
+  )
 
   // Derived state
-  const usedWords = wordList.slice(0, wordIndex + 1);
+  const usedWords = wordList.slice(0, wordIndex + 1)
   const isPro =
-    session?.user?.subscriptionStatus === "active" ||
-    session?.user?.subscriptionStatus === "trialing";
+    session?.user?.subscriptionStatus === 'active' ||
+    session?.user?.subscriptionStatus === 'trialing'
 
   // Hooks
-  const { error, handleError, clearError } = useErrorHandler();
-  const forceUpdate = useForceUpdate();
-  const { requestLock, releaseLock } = useWakeLock();
-  const beatPlayer = useBeatPlayer();
+  const { error, handleError, clearError } = useErrorHandler()
+  const forceUpdate = useForceUpdate()
+  const { requestLock, releaseLock } = useWakeLock()
+  const beatPlayer = useBeatPlayer()
 
   // Beats Loading State (Legacy but kept for compatibility logic if needed)
-  const [_isLoadingBeats, setIsLoadingBeats] = useState(true);
+  const [_isLoadingBeats, setIsLoadingBeats] = useState(true)
 
   // Playback Control (Detached from hook to resolve circular deps)
   const stopPlayback = useCallback(() => {
-    beatPlayer.stop();
-    releaseLock();
-    setCurrentWord(wordList[0] || "");
-    forceUpdate(); // Ensure UI updates
-  }, [beatPlayer, wordList, forceUpdate, releaseLock]);
+    beatPlayer.stop()
+    releaseLock()
+    setCurrentWord(wordList[0] || '')
+    forceUpdate() // Ensure UI updates
+  }, [beatPlayer, wordList, forceUpdate, releaseLock])
 
   // Optimistic Action Hook
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
     async (formData: FormData) => {
-      const response = await fetch("/api/recordings", {
-        method: "POST",
+      const response = await fetch('/api/recordings', {
+        method: 'POST',
         body: formData,
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
       if (!response.ok)
-        throw new Error(data.error || "Failed to save recording");
-      return data;
+        throw new Error(data.error || 'Failed to save recording')
+      return data
     },
     {
       onOptimistic: (formData: FormData) => {
         // 1. Immediate Feedback: Play Success Sound
-        play("success");
+        play('success')
 
         // 2. Predict Session Summary
         // Parse basic values back from FormData for immediate display
-        const difficulty = formData.get("difficulty") as string;
-        const frequency = parseFloat(formData.get("frequency") as string);
-        const duration = parseFloat(formData.get("durationSeconds") as string);
-        const wordCount = JSON.parse(
-          formData.get("wordsUsed") as string,
-        ).length;
-        const beatBpm = selectedBeat?.bpm || 0;
+        const difficulty = formData.get('difficulty') as string
+        const frequency = parseFloat(formData.get('frequency') as string)
+        const duration = parseFloat(formData.get('durationSeconds') as string)
+        const wordCount = JSON.parse(formData.get('wordsUsed') as string).length
+        const beatBpm = selectedBeat?.bpm || 0
 
         // Optimistic Score Calculation (Simple Client-Side Estimate)
         // This visual feedback is instant; server validation happens in background.
-        const predictedScore = Math.round(duration * 10 * (1 + wordCount / 10));
+        const predictedScore = Math.round(duration * 10 * (1 + wordCount / 10))
 
         setSessionSummary({
           score: predictedScore,
-          vibe: "Freestyle Flow",
-          description: "Nice session!",
+          vibe: 'Freestyle Flow',
+          description: 'Nice session!',
           wordCount: wordCount,
           duration: duration,
-          audioUrl: URL.createObjectURL(formData.get("audio") as Blob), // Instant playback
+          audioUrl: URL.createObjectURL(formData.get('audio') as Blob), // Instant playback
           newBadges: [], // Can't predict without server logic, leave empty
           difficulty: difficulty,
           bpm: beatBpm,
           frequency: frequency,
           isOptimistic: true, // UI can show a spinner for specific fields if needed
-        });
+        })
       },
       onSuccess: (data) => {
         // 3. Reconcile with Server Data
@@ -160,86 +158,86 @@ export default function PracticePage() {
             score: data.session.score, // Correct score from server
             newBadges: data.session.newBadges,
             isOptimistic: false,
-          }));
+          }))
 
           // Toast Badges
           if (data.session.newBadges && Array.isArray(data.session.newBadges)) {
             data.session.newBadges.forEach((badge: string) => {
-              toast.success(`Achievement Unlocked: ${badge}!`, { icon: "🏆" });
-            });
+              toast.success(`Achievement Unlocked: ${badge}!`, { icon: '🏆' })
+            })
           }
         }
       },
       onError: (err) => {
-        handleError(err, ErrorCodes.SESSION_SAVE_FAILED);
-        setSessionSummary(null); // Revert UI on failure
+        handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
+        setSessionSummary(null) // Revert UI on failure
       },
-    },
-  );
+    }
+  )
 
   // Recording Complete Handler
   const handleRecordingComplete = useCallback(
     async (blob: Blob, recordedDuration: number) => {
       // Infinite Mode Check
       if (isInfiniteMode) {
-        toast("Session Completed (Practice Mode)", {
-          icon: "♾️",
+        toast('Session Completed (Practice Mode)', {
+          icon: '♾️',
           style: {
-            background: "linear-gradient(to right, #6b21a8, #c026d3)",
-            color: "#fff",
+            background: 'linear-gradient(to right, #6b21a8, #c026d3)',
+            color: '#fff',
           },
-        });
-        return;
+        })
+        return
       }
 
       if (blob.size < 1000) {
-        console.warn("Recording too small", blob.size);
+        console.warn('Recording too small', blob.size)
         // toast.error('No audio detected.', { icon: '🎤' }) // Reduced noise for "silent" tests
-        return;
+        return
       }
 
       if (recordedDuration < 2) {
-        toast.error("Recording too short.", { icon: "too-short" });
-        return;
+        toast.error('Recording too short.', { icon: 'too-short' })
+        return
       }
 
       if (selectedBeat) {
         if (session?.user) {
           try {
-            const measuredDuration = Math.round(recordedDuration);
+            const measuredDuration = Math.round(recordedDuration)
             const fallbackDuration =
-              blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1;
+              blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
             const actualDuration = Math.max(
               1,
-              measuredDuration > 0 ? measuredDuration : fallbackDuration,
-            );
+              measuredDuration > 0 ? measuredDuration : fallbackDuration
+            )
 
-            const vibe = "Freestyle Flow";
-            const finalScore = 0; // Server calculates real score
+            const vibe = 'Freestyle Flow'
+            const finalScore = 0 // Server calculates real score
 
-            const formData = new FormData();
-            formData.append("audio", blob, "recording.webm");
-            formData.append("beatId", selectedBeat.id);
+            const formData = new FormData()
+            formData.append('audio', blob, 'recording.webm')
+            formData.append('beatId', selectedBeat.id)
             formData.append(
-              "title",
-              `${selectedBeat.title} - ${new Date().toLocaleDateString()}`,
-            );
-            formData.append("durationSeconds", actualDuration.toString());
-            formData.append("frequency", frequency.toString());
-            formData.append("difficulty", difficulty.toString());
-            formData.append("score", finalScore.toString());
-            formData.append("vibe", vibe);
-            formData.append("wordsUsed", JSON.stringify(usedWords));
+              'title',
+              `${selectedBeat.title} - ${new Date().toLocaleDateString()}`
+            )
+            formData.append('durationSeconds', actualDuration.toString())
+            formData.append('frequency', frequency.toString())
+            formData.append('difficulty', difficulty.toString())
+            formData.append('score', finalScore.toString())
+            formData.append('vibe', vibe)
+            formData.append('wordsUsed', JSON.stringify(usedWords))
 
             // EXECUTE OPTIMISTIC SAVE
-            await saveSessionOptimistic(formData);
+            await saveSessionOptimistic(formData)
           } catch (err) {
-            handleError(err, ErrorCodes.SESSION_SAVE_FAILED);
+            handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
           }
         } else {
           // Guest Mode (unchanged)
           try {
-            const actualDuration = Math.max(1, Math.round(recordedDuration));
+            const actualDuration = Math.max(1, Math.round(recordedDuration))
             const metadata = {
               beatId: selectedBeat.id,
               beatTitle: selectedBeat.title,
@@ -247,12 +245,12 @@ export default function PracticePage() {
               difficulty: difficulty,
               duration: actualDuration,
               createdAt: Date.now(),
-            };
-            await GuestStorage.saveSession(blob, metadata);
-            setShowGuestModal(true);
+            }
+            await GuestStorage.saveSession(blob, metadata)
+            setShowGuestModal(true)
           } catch (err) {
-            console.error("Guest save failed", err);
-            setSaveMessage("Could not save temp recording. Please sign in.");
+            console.error('Guest save failed', err)
+            setSaveMessage('Could not save temp recording. Please sign in.')
           }
         }
       }
@@ -266,8 +264,8 @@ export default function PracticePage() {
       usedWords,
       isInfiniteMode,
       saveSessionOptimistic, // Added dep
-    ],
-  );
+    ]
+  )
 
   // Recording Hook
   const {
@@ -280,118 +278,118 @@ export default function PracticePage() {
     maxDuration: isPro ? null : 120,
     onComplete: handleRecordingComplete,
     onMaxDurationReached: () => {
-      stopPlayback();
+      stopPlayback()
       if (!isPro) {
-        setPremiumTrigger("recording");
-        setShowPremiumModal(true);
+        setPremiumTrigger('recording')
+        setShowPremiumModal(true)
       }
     },
-  });
+  })
 
   // Handlers
 
   const handleStop = useCallback(() => {
-    play("stop");
-    stopRecording();
-    stopPlayback();
-  }, [play, stopRecording, stopPlayback]);
+    play('stop')
+    stopRecording()
+    stopPlayback()
+  }, [play, stopRecording, stopPlayback])
 
   // Initialization Effect
   useEffect(() => {
     const initSession = async () => {
-      setIsLoadingBeats(true);
+      setIsLoadingBeats(true)
       try {
         const [wordsRes] = await Promise.all([
           fetch(
-            `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ""}`,
+            `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ''}`
           ),
-        ]);
-        const [wordsData] = await Promise.all([wordsRes.json()]);
+        ])
+        const [wordsData] = await Promise.all([wordsRes.json()])
 
         if (wordsData.words) {
           const words = wordsData.words.map(
-            (w: { wordText: string }) => w.wordText,
-          );
-          setWordList(words);
-          if (!currentWord && words.length > 0) setCurrentWord(words[0]);
+            (w: { wordText: string }) => w.wordText
+          )
+          setWordList(words)
+          if (!currentWord && words.length > 0) setCurrentWord(words[0])
         }
       } catch (err) {
-        console.error("Init error", err);
-        handleError(err, ErrorCodes.BEAT_LOAD_FAILED);
+        console.error('Init error', err)
+        handleError(err, ErrorCodes.BEAT_LOAD_FAILED)
       } finally {
-        setIsLoadingBeats(false);
+        setIsLoadingBeats(false)
       }
-    };
-    initSession();
+    }
+    initSession()
     // TTS Warmup
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      const u = new SpeechSynthesisUtterance("");
-      u.volume = 0;
-      window.speechSynthesis.speak(u);
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      const u = new SpeechSynthesisUtterance('')
+      u.volume = 0
+      window.speechSynthesis.speak(u)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   // TTS Voice
-  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
   useEffect(() => {
     const getBestVoice = () => {
-      if (typeof window === "undefined" || !window.speechSynthesis) return null;
-      const voices = window.speechSynthesis.getVoices();
+      if (typeof window === 'undefined' || !window.speechSynthesis) return null
+      const voices = window.speechSynthesis.getVoices()
       return (
-        voices.find((v) => v.name === "Google US English") ||
-        voices.find((v) => v.name === "Samantha") ||
-        voices.find((v) => v.lang.startsWith("en-US")) ||
+        voices.find((v) => v.name === 'Google US English') ||
+        voices.find((v) => v.name === 'Samantha') ||
+        voices.find((v) => v.lang.startsWith('en-US')) ||
         voices[0] ||
         null
-      );
-    };
+      )
+    }
     const setBest = () => {
-      const v = getBestVoice();
-      if (v) setVoice(v);
-    };
-    setBest();
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = setBest;
+      const v = getBestVoice()
+      if (v) setVoice(v)
+    }
+    setBest()
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = setBest
     }
     return () => {
-      if (typeof window !== "undefined" && window.speechSynthesis)
-        window.speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
+      if (typeof window !== 'undefined' && window.speechSynthesis)
+        window.speechSynthesis.onvoiceschanged = null
+    }
+  }, [])
 
   const speak = useCallback(
     (text: string, force = false) => {
-      if (typeof window === "undefined" || !window.speechSynthesis) return;
-      if (!isTTSEnabled && !force) return;
+      if (typeof window === 'undefined' || !window.speechSynthesis) return
+      if (!isTTSEnabled && !force) return
       try {
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = 1.1;
-        u.volume = ttsVolume;
-        if (voice) u.voice = voice;
-        window.speechSynthesis.speak(u);
+        const u = new SpeechSynthesisUtterance(text)
+        u.rate = 1.1
+        u.volume = ttsVolume
+        if (voice) u.voice = voice
+        window.speechSynthesis.speak(u)
       } catch (err) {
-        console.error("TTS Error", err);
+        console.error('TTS Error', err)
       }
     },
-    [isTTSEnabled, ttsVolume, voice],
-  );
+    [isTTSEnabled, ttsVolume, voice]
+  )
 
-  const [_countdownValue, setCountdownValue] = useState<number | "GO" | null>(
-    null,
-  );
+  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
+    null
+  )
 
   const startCountdown = useCallback(async () => {
-    if (!selectedBeat) return;
-    const msPerBeat = (60 / selectedBeat.bpm) * 1000;
-    const offsetMs = (selectedBeat.offset || 0) * 1000;
-    const totalCountdownMs = 4 * msPerBeat; // 3, 2, 1, GO
+    if (!selectedBeat) return
+    const msPerBeat = (60 / selectedBeat.bpm) * 1000
+    const offsetMs = (selectedBeat.offset || 0) * 1000
+    const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
 
     // Calculate when to start/seek audio so drop hits at "GO"
     // Time to Start Audio = (Start of Countdown) + (Total Countdown Duration) - (Time to Drop in Audio)
     // If positive: We wait that long, then play from 0.
     // If negative: We seek into the audio and play immediately.
-    const timeToStartAudio = totalCountdownMs - offsetMs;
+    const timeToStartAudio = totalCountdownMs - offsetMs
 
     const playBeep = (freq: number, type: OscillatorType) => {
       // Inline beep logic or reuse hook if complex. useSound is for UI sounds, this is rhythmic.
@@ -399,25 +397,25 @@ export default function PracticePage() {
         window.AudioContext ||
         (
           window as unknown as {
-            webkitAudioContext: typeof window.AudioContext;
+            webkitAudioContext: typeof window.AudioContext
           }
-        ).webkitAudioContext;
-      if (!AudioContext) return;
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(0.1, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.5);
-    };
+        ).webkitAudioContext
+      if (!AudioContext) return
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = type
+      osc.frequency.setValueAtTime(freq, ctx.currentTime)
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+    }
 
     // Schedule Audio Start
-    let audioStartTimer: NodeJS.Timeout | null = null;
+    let audioStartTimer: NodeJS.Timeout | null = null
 
     // We need to ensure we don't start recording until "GO" usually,
     // but if we seek deep into audio, we might want to start?
@@ -428,54 +426,54 @@ export default function PracticePage() {
         if (timeToStartAudio < 0) {
           // Offset is larger than countdown (long intro)
           // Seek to where we need to be
-          const seekTime = Math.abs(timeToStartAudio) / 1000;
-          beatPlayer.seek(seekTime);
-          await beatPlayer.play();
+          const seekTime = Math.abs(timeToStartAudio) / 1000
+          beatPlayer.seek(seekTime)
+          await beatPlayer.play()
         } else {
           // Offset is small (short intro), play from 0
-          await beatPlayer.play();
+          await beatPlayer.play()
         }
       } catch (err) {
-        handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED);
+        handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
       }
-    };
+    }
 
     if (timeToStartAudio > 0) {
-      audioStartTimer = setTimeout(triggerAudio, timeToStartAudio);
+      audioStartTimer = setTimeout(triggerAudio, timeToStartAudio)
     } else {
-      triggerAudio();
+      triggerAudio()
     }
 
     // Run Countdown Visuals
-    const sequence = [3, 2, 1, "GO"];
+    const sequence = [3, 2, 1, 'GO']
     for (const val of sequence) {
-      setCountdownValue(val as number | "GO" | null);
-      if (val === "GO") playBeep(880, "square");
-      else playBeep(440, "sine");
-      await new Promise((r) => setTimeout(r, msPerBeat));
+      setCountdownValue(val as number | 'GO' | null)
+      if (val === 'GO') playBeep(880, 'square')
+      else playBeep(440, 'sine')
+      await new Promise((r) => setTimeout(r, msPerBeat))
     }
 
     // THE DROP (GO) logic
-    clearError();
-    if (wordList.length > 0 && !currentWord) setCurrentWord(wordList[0]);
+    clearError()
+    if (wordList.length > 0 && !currentWord) setCurrentWord(wordList[0])
 
     // Start Recorder
     try {
       if (!isRecording) {
-        await requestLock();
-        if (isPro) startRecording(true).catch(console.error);
+        await requestLock()
+        if (isPro) startRecording(true).catch(console.error)
       } else {
-        resumeRecording();
+        resumeRecording()
       }
     } catch (err) {
-      console.error("Recording start failed", err);
+      console.error('Recording start failed', err)
     }
 
-    setTimeout(() => setCountdownValue(null), 1000);
+    setTimeout(() => setCountdownValue(null), 1000)
 
     return () => {
-      if (audioStartTimer) clearTimeout(audioStartTimer);
-    };
+      if (audioStartTimer) clearTimeout(audioStartTimer)
+    }
   }, [
     selectedBeat,
     beatPlayer,
@@ -488,17 +486,17 @@ export default function PracticePage() {
     resumeRecording,
     handleError,
     clearError,
-  ]);
+  ])
 
   const handlePlayPause = useCallback(async () => {
-    play("start");
-    if (!selectedBeat) return;
+    play('start')
+    if (!selectedBeat) return
 
     if (beatPlayer.isPlaying) {
       if (isRecording) {
-        handleStop();
+        handleStop()
       } else {
-        beatPlayer.pause();
+        beatPlayer.pause()
         if (isRecording) {
           // pause recording logic via hook if needed, but current flow stops explicit recording
           // If we just pause beat, recorder keeps going usually.
@@ -509,25 +507,25 @@ export default function PracticePage() {
       // Check mic permission or audio context state
       if (beatPlayer.currentTime > 0) {
         // Resume
-        await beatPlayer.play();
+        await beatPlayer.play()
         if (isRecording) {
           // resume recorder
         }
       } else {
-        startCountdown();
+        startCountdown()
       }
     }
-  }, [play, selectedBeat, beatPlayer, isRecording, handleStop, startCountdown]);
+  }, [play, selectedBeat, beatPlayer, isRecording, handleStop, startCountdown])
 
   // Sync Logic
-  const sessionStateRef = useRef({ lastWordIndex: -1, isActive: false });
+  const sessionStateRef = useRef({ lastWordIndex: -1, isActive: false })
   const paramsRef = useRef({
     frequency,
     wordList,
     selectedBeat,
     sessionDuration,
     isTTSEnabled,
-  });
+  })
 
   useEffect(() => {
     paramsRef.current = {
@@ -536,24 +534,24 @@ export default function PracticePage() {
       selectedBeat,
       sessionDuration,
       isTTSEnabled,
-    };
-  }, [frequency, wordList, selectedBeat, sessionDuration, isTTSEnabled]);
+    }
+  }, [frequency, wordList, selectedBeat, sessionDuration, isTTSEnabled])
 
   useEffect(() => {
     if (!beatPlayer.isPlaying) {
-      sessionStateRef.current.isActive = false;
-      return;
+      sessionStateRef.current.isActive = false
+      return
     }
-    const state = sessionStateRef.current;
-    state.isActive = true;
-    state.lastWordIndex = -1;
+    const state = sessionStateRef.current
+    state.isActive = true
+    state.lastWordIndex = -1
 
     const updateLoop = () => {
-      if (!state.isActive) return;
-      const params = paramsRef.current;
-      if (!params.selectedBeat || params.wordList.length === 0) return;
+      if (!state.isActive) return
+      const params = paramsRef.current
+      if (!params.selectedBeat || params.wordList.length === 0) return
 
-      const elapsed = beatPlayer.getPreciseTime();
+      const elapsed = beatPlayer.getPreciseTime()
 
       // Stop condition
       if (
@@ -568,39 +566,39 @@ export default function PracticePage() {
           elapsed - (params.selectedBeat.offset || 0) >=
           params.sessionDuration
         ) {
-          handleStop();
-          return;
+          handleStop()
+          return
         }
       }
 
       const sessionTime = Math.max(
         0,
-        elapsed - (params.selectedBeat.offset || 0),
-      );
+        elapsed - (params.selectedBeat.offset || 0)
+      )
 
-      const secondsPerBar = (60 / params.selectedBeat.bpm) * 4;
-      const secondsPerPrompt = secondsPerBar * params.frequency;
-      const wordIdx = Math.floor(sessionTime / secondsPerPrompt);
-      const actualIndex = wordIdx % params.wordList.length;
+      const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
+      const secondsPerPrompt = secondsPerBar * params.frequency
+      const wordIdx = Math.floor(sessionTime / secondsPerPrompt)
+      const actualIndex = wordIdx % params.wordList.length
 
       if (wordIdx !== state.lastWordIndex) {
-        state.lastWordIndex = wordIdx;
-        const newWord = params.wordList[actualIndex];
+        state.lastWordIndex = wordIdx
+        const newWord = params.wordList[actualIndex]
         if (newWord) {
-          setCurrentWord(newWord);
-          setWordIndex(wordIdx);
-          if (params.isTTSEnabled) speak(newWord);
+          setCurrentWord(newWord)
+          setWordIndex(wordIdx)
+          if (params.isTTSEnabled) speak(newWord)
         }
       }
-      forceUpdate();
-      requestAnimationFrame(updateLoop);
-    };
-    const frameId = requestAnimationFrame(updateLoop);
+      forceUpdate()
+      requestAnimationFrame(updateLoop)
+    }
+    const frameId = requestAnimationFrame(updateLoop)
     return () => {
-      state.isActive = false;
-      cancelAnimationFrame(frameId);
-    };
-  }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate]); // Added deps to satisfy lint
+      state.isActive = false
+      cancelAnimationFrame(frameId)
+    }
+  }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate]) // Added deps to satisfy lint
 
   // Shortcuts & Events
   useEffect(() => {
@@ -609,36 +607,36 @@ export default function PracticePage() {
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
       )
-        return;
-      if (e.code === "Space") {
-        e.preventDefault();
-        handlePlayPause();
+        return
+      if (e.code === 'Space') {
+        e.preventDefault()
+        handlePlayPause()
       }
-      if (e.code === "KeyR" && !isRecording && beatPlayer.isPlaying)
-        startRecording(!isPro);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+      if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying)
+        startRecording(!isPro)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [
     handlePlayPause,
     isRecording,
     beatPlayer.isPlaying,
     startRecording,
     isPro,
-  ]);
+  ])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.hidden && beatPlayer.isPlaying) handlePlayPause();
-    };
-    window.addEventListener("visibilitychange", handleVisibilityChange);
+      if (document.hidden && beatPlayer.isPlaying) handlePlayPause()
+    }
+    window.addEventListener('visibilitychange', handleVisibilityChange)
     return () =>
-      window.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [beatPlayer.isPlaying, handlePlayPause]);
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [beatPlayer.isPlaying, handlePlayPause])
 
   useEffect(() => {
-    if (isLoaded && !selectedBeat) router.push("/difficultyselection");
-  }, [isLoaded, selectedBeat, router]);
+    if (isLoaded && !selectedBeat) router.push('/difficultyselection')
+  }, [isLoaded, selectedBeat, router])
 
   useEffect(() => {
     if (selectedBeat) {
@@ -646,11 +644,11 @@ export default function PracticePage() {
         ...selectedBeat,
         storageUrl: selectedBeat.storageUrl,
         isPremium: selectedBeat.isPremium ?? false,
-        artistName: selectedBeat.artistName ?? "Unknown Artist",
+        artistName: selectedBeat.artistName ?? 'Unknown Artist',
         duration: selectedBeat.duration ?? 0,
-      });
+      })
     }
-  }, [selectedBeat, beatPlayer]);
+  }, [selectedBeat, beatPlayer])
 
   // Bento Grid Render
   return (
@@ -659,13 +657,13 @@ export default function PracticePage() {
       showHeader={true}
       showSettings={true}
       showProgress={true}
-      onBack={() => router.push("/difficultyselection")}
+      onBack={() => router.push('/difficultyselection')}
     >
       <div className="min-h-screen pt-20 pb-8 px-4 md:px-8 max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex justify-center items-center">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-            {selectedBeat ? selectedBeat.title : "Practice Session"}
+            {selectedBeat ? selectedBeat.title : 'Practice Session'}
           </h1>
         </div>
 
@@ -699,9 +697,9 @@ export default function PracticePage() {
                 currentWord={currentWord}
                 onToggle={handlePlayPause}
                 onRestart={() => {
-                  play("click");
+                  play('click')
                   // logic to restart
-                  handlePlayPause();
+                  handlePlayPause()
                 }}
                 difficulty={difficulty}
                 frequency={frequency}
@@ -710,8 +708,8 @@ export default function PracticePage() {
                 isPro={isPro}
                 isAuthenticated={!!session?.user || true} // Allow all users to start practice (guests can practice, just not save)
                 onUpgrade={() => {
-                  setPremiumTrigger("recording");
-                  setShowPremiumModal(true);
+                  setPremiumTrigger('recording')
+                  setShowPremiumModal(true)
                 }}
                 onDifficultyChange={setDifficulty}
                 onFrequencyChange={setFrequency}
@@ -770,5 +768,5 @@ export default function PracticePage() {
         )}
       </div>
     </OnboardingLayout>
-  );
+  )
 }

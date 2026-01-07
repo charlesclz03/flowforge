@@ -71,7 +71,10 @@ export function DialogHeader({ children }: { children: React.ReactNode }) {
 
 export function DialogTitle({ children }: { children: React.ReactNode }) {
   return (
-    <HeadlessDialog.Title as="h3" className="text-lg font-semibold leading-6 text-white">
+    <HeadlessDialog.Title
+      as="h3"
+      className="text-lg font-semibold leading-6 text-white"
+    >
       {children}
     </HeadlessDialog.Title>
   )

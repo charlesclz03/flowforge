@@ -19,7 +19,11 @@ export function SettingsDropdown() {
         >
           <Settings size={20} />
         </button>
-        <BottomSheet isOpen={showSheet} onClose={() => setShowSheet(false)} title="Settings">
+        <BottomSheet
+          isOpen={showSheet}
+          onClose={() => setShowSheet(false)}
+          title="Settings"
+        >
           <SettingsList onItemClick={() => setShowSheet(false)} />
         </BottomSheet>
       </div>

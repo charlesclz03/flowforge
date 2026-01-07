@@ -12,7 +12,11 @@ interface SubscriptionModalProps {
  * Subscription modal placeholder component
  * TODO: Implement real Stripe checkout in production
  */
-export function SubscriptionModal({ isOpen, onClose, onSubscribe }: SubscriptionModalProps) {
+export function SubscriptionModal({
+  isOpen,
+  onClose,
+  onSubscribe,
+}: SubscriptionModalProps) {
   if (!isOpen) return null
 
   const handleSubscribe = (plan: 'monthly' | 'annual') => {
@@ -24,7 +28,10 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       {/* Modal */}
       <div className="relative w-full max-w-lg card p-6 space-y-6">
@@ -38,7 +45,9 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
 
         <div className="space-y-2">
           <h2 className="text-2xl font-light">Upgrade to Pro</h2>
-          <p className="text-text-secondary">Choose the plan that works for you</p>
+          <p className="text-text-secondary">
+            Choose the plan that works for you
+          </p>
         </div>
 
         {/* Monthly Plan */}
@@ -72,7 +81,9 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
               <p className="text-text-secondary text-sm">Best value</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-light text-text-primary">$49.99</div>
+              <div className="text-2xl font-light text-text-primary">
+                $49.99
+              </div>
               <div className="text-text-tertiary text-xs">/year</div>
             </div>
           </div>
@@ -86,7 +97,9 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
 
         {/* Features */}
         <div className="space-y-2 pt-4 border-t border-text-tertiary/10">
-          <p className="text-text-secondary text-sm font-medium">What's included:</p>
+          <p className="text-text-secondary text-sm font-medium">
+            What's included:
+          </p>
           {[
             'Unlimited recording time',
             'Access to 100+ premium beats',
@@ -94,7 +107,10 @@ export function SubscriptionModal({ isOpen, onClose, onSubscribe }: Subscription
             'Upload your own beats',
             'AI-powered features (V2)',
           ].map((feature, index) => (
-            <div key={index} className="flex items-center space-x-2 text-text-secondary text-sm">
+            <div
+              key={index}
+              className="flex items-center space-x-2 text-text-secondary text-sm"
+            >
               <Check size={16} className="text-accent-green" />
               <span>{feature}</span>
             </div>

@@ -1,6 +1,11 @@
 'use client'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/atoms/Dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/atoms/Dialog'
 import { UserBeatUpload } from '@/components/organisms/upload/UserBeatUpload'
 
 interface UserBeatUploadModalProps {

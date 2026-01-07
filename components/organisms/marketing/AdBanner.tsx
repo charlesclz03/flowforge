@@ -55,14 +55,22 @@ export function AdBanner({
       >
         <div className="text-center space-y-1">
           <p className="text-text-tertiary text-xs font-mono">Ad Space</p>
-          <p className="text-text-tertiary text-[10px]">Google AdSense will appear here</p>
+          <p className="text-text-tertiary text-[10px]">
+            Google AdSense will appear here
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className={cn('ad-container w-full flex justify-center', sizeClasses[size], className)}>
+    <div
+      className={cn(
+        'ad-container w-full flex justify-center',
+        sizeClasses[size],
+        className
+      )}
+    >
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}

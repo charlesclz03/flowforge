@@ -13,11 +13,22 @@ interface SessionCardProps {
   className?: string
 }
 
-export function SessionCard({ session, onPlay, onDelete, className }: SessionCardProps) {
-  const difficultyLabel = SESSION_CONFIG.DIFFICULTY_LABELS[session.difficulty as 1 | 2 | 3]
+export function SessionCard({
+  session,
+  onPlay,
+  onDelete,
+  className,
+}: SessionCardProps) {
+  const difficultyLabel =
+    SESSION_CONFIG.DIFFICULTY_LABELS[session.difficulty as 1 | 2 | 3]
 
   return (
-    <div className={cn('card hover:border-text-tertiary/40 transition-all', className)}>
+    <div
+      className={cn(
+        'card hover:border-text-tertiary/40 transition-all',
+        className
+      )}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1 min-w-0">
           <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-background-elevated text-text-secondary flex-shrink-0">
@@ -25,7 +36,9 @@ export function SessionCard({ session, onPlay, onDelete, className }: SessionCar
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-text-primary truncate">{session.title}</h3>
+            <h3 className="font-medium text-text-primary truncate">
+              {session.title}
+            </h3>
             <p className="text-text-secondary text-sm">{session.beatTitle}</p>
             <div className="flex items-center space-x-2 mt-1 text-text-tertiary text-xs">
               <span>{formatDuration(session.durationSeconds)}</span>

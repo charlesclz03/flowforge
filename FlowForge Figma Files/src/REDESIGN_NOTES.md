@@ -80,8 +80,9 @@ Redesigned from single-page to **3-page onboarding flow**:
 ### Colors
 
 ```css
---purple-500: #a855f7 --purple-600: #9333ea --violet-500: #7d7aff --violet-600: #6366f1
-  --red-500: #ef4444 (recording indicator) --green-500: #22c55e (easy difficulty);
+--purple-500: #a855f7 --purple-600: #9333ea --violet-500: #7d7aff
+  --violet-600: #6366f1 --red-500: #ef4444 (recording indicator)
+  --green-500: #22c55e (easy difficulty);
 ```
 
 ### Gradients

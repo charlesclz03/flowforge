@@ -2,15 +2,27 @@ import React from 'react'
 import { useMusicPlayer } from './MusicPlayerContext'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from './ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { Badge } from './ui/badge'
 import { Music, Smartphone, HardDrive, Play, Pause } from 'lucide-react'
 import { ImageWithFallback } from './figma/ImageWithFallback'
 
 export function MusicLibrary() {
-  const { playlist, currentSong, isPlaying, dominantColor, accentColor, selectSong } =
-    useMusicPlayer()
+  const {
+    playlist,
+    currentSong,
+    isPlaying,
+    dominantColor,
+    accentColor,
+    selectSong,
+  } = useMusicPlayer()
 
   const internalSongs = playlist.filter((song) => song.source === 'internal')
   const sdCardSongs = playlist.filter((song) => song.source === 'sdcard')
@@ -49,8 +61,12 @@ export function MusicLibrary() {
 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-medium truncate">{song.title}</h4>
-                  <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
-                  <p className="text-xs text-muted-foreground/80 truncate">{song.album}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {song.artist}
+                  </p>
+                  <p className="text-xs text-muted-foreground/80 truncate">
+                    {song.album}
+                  </p>
                 </div>
 
                 <div className="flex items-center space-x-2 flex-shrink-0">

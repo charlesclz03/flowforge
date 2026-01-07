@@ -29,7 +29,10 @@ export function useSessionStorage() {
   }, [])
 
   const save = useCallback(
-    async (session: Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>, audioBlob: Blob) => {
+    async (
+      session: Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>,
+      audioBlob: Blob
+    ) => {
       try {
         const saved = await saveSession(session, audioBlob)
         setSessions((prev) => [saved, ...prev])
@@ -43,7 +46,10 @@ export function useSessionStorage() {
   )
 
   const update = useCallback(
-    (id: string, updates: Partial<Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>>) => {
+    (
+      id: string,
+      updates: Partial<Omit<StoredSession, 'id' | 'createdAt' | 'audioData'>>
+    ) => {
       const updated = updateSession(id, updates)
       if (updated) {
         setSessions((prev) => prev.map((s) => (s.id === id ? updated : s)))

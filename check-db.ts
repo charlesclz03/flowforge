@@ -8,7 +8,9 @@ async function main() {
   allAchievements.forEach((a) => console.log(` - ${a.code}: ${a.name}`))
 
   const userAchievements = await prisma.userAchievement.findMany()
-  console.log(`Total User Achievements in DB (all users): ${userAchievements.length}`)
+  console.log(
+    `Total User Achievements in DB (all users): ${userAchievements.length}`
+  )
 }
 
 main()

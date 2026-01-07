@@ -3,7 +3,8 @@ import { useMusicPlayer } from './MusicPlayerContext'
 import { ImageWithFallback } from './figma/ImageWithFallback'
 
 export function Gramophone() {
-  const { currentSong, isPlaying, dominantColor, accentColor } = useMusicPlayer()
+  const { currentSong, isPlaying, dominantColor, accentColor } =
+    useMusicPlayer()
 
   return (
     <div className="relative flex items-center justify-center">
@@ -32,7 +33,8 @@ export function Gramophone() {
             style={{
               background:
                 'conic-gradient(from 0deg, #1a1a1a 0%, #2d2d2d 25%, #1a1a1a 50%, #2d2d2d 75%, #1a1a1a 100%)',
-              boxShadow: 'inset 0 0 60px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.4)',
+              boxShadow:
+                'inset 0 0 60px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.4)',
               animationDuration: '3s',
               animationTimingFunction: 'linear',
             }}
@@ -81,7 +83,8 @@ export function Gramophone() {
             <div
               className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none"
               style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
+                background:
+                  'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
               }}
             />
           </div>

@@ -8,8 +8,12 @@ interface FlowForgeWordmarkProps {
   className?: string
 }
 
-export function FlowForgeWordmark({ size = 'lg', className }: FlowForgeWordmarkProps) {
-  const textClasses = size === 'lg' ? 'text-4xl sm:text-6xl' : 'text-2xl sm:text-3xl'
+export function FlowForgeWordmark({
+  size = 'lg',
+  className,
+}: FlowForgeWordmarkProps) {
+  const textClasses =
+    size === 'lg' ? 'text-4xl sm:text-6xl' : 'text-2xl sm:text-3xl'
   const iconClasses = size === 'lg' ? 'h-12 w-12' : 'h-8 w-8'
 
   return (

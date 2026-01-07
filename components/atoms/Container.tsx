@@ -16,7 +16,12 @@ const sizeClasses = {
   full: 'max-w-full',
 }
 
-export function Container({ children, className, size = 'md', center = true }: ContainerProps) {
+export function Container({
+  children,
+  className,
+  size = 'md',
+  center = true,
+}: ContainerProps) {
   return (
     <div
       className={cn(

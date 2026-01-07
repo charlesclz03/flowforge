@@ -34,7 +34,8 @@ export default function PatchNotesPage() {
               transition={{ delay: 0.1 }}
               className="text-zinc-400 max-w-2xl mx-auto text-lg"
             >
-              System logs, balance changes, and the constant evolution of the grind.
+              System logs, balance changes, and the constant evolution of the
+              grind.
             </motion.p>
           </div>
 
@@ -60,11 +61,15 @@ export default function PatchNotesPage() {
                     <div className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 font-mono mb-2">
                       v{note.version} • {note.date}
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-1 group">{note.title}</h2>
+                    <h2 className="text-2xl font-bold text-white mb-1 group">
+                      {note.title}
+                    </h2>
                     <div className="text-purple-400 font-medium text-sm tracking-wide uppercase mb-3">
                       Codename: {note.codename}
                     </div>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{note.description}</p>
+                    <p className="text-zinc-400 text-sm leading-relaxed">
+                      {note.description}
+                    </p>
                   </div>
 
                   {/* Content (Right on desktop, Bottom on mobile) */}
@@ -81,8 +86,13 @@ export default function PatchNotesPage() {
                           </h4>
                           <ul className="space-y-1.5">
                             {category.items.map((item, i) => (
-                              <li key={i} className="text-sm text-zinc-400 flex items-start gap-2">
-                                <span className="text-purple-500 mt-1.5 text-[6px]">●</span>
+                              <li
+                                key={i}
+                                className="text-sm text-zinc-400 flex items-start gap-2"
+                              >
+                                <span className="text-purple-500 mt-1.5 text-[6px]">
+                                  ●
+                                </span>
                                 <span>{item}</span>
                               </li>
                             ))}

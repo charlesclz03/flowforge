@@ -14,7 +14,12 @@ interface UpgradePromptProps {
  * Upgrade prompt placeholder component
  * TODO: Implement real Stripe integration in production
  */
-export function UpgradePrompt({ feature, onUpgrade, onDismiss, className }: UpgradePromptProps) {
+export function UpgradePrompt({
+  feature,
+  onUpgrade,
+  onDismiss,
+  className,
+}: UpgradePromptProps) {
   const handleUpgrade = () => {
     // Placeholder - will integrate Stripe in V2
     alert('Stripe checkout will be implemented in V2')
@@ -22,7 +27,9 @@ export function UpgradePrompt({ feature, onUpgrade, onDismiss, className }: Upgr
   }
 
   return (
-    <div className={cn('card p-6 border-accent-orange/20 space-y-4', className)}>
+    <div
+      className={cn('card p-6 border-accent-orange/20 space-y-4', className)}
+    >
       <div className="flex items-start space-x-3">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent-orange/10 text-accent-orange flex-shrink-0">
           <Zap size={20} />
@@ -71,7 +78,9 @@ export function UpgradePrompt({ feature, onUpgrade, onDismiss, className }: Upgr
         )}
       </div>
 
-      <p className="text-text-tertiary text-xs text-center">Stripe checkout coming in V2</p>
+      <p className="text-text-tertiary text-xs text-center">
+        Stripe checkout coming in V2
+      </p>
     </div>
   )
 }

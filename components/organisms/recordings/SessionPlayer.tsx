@@ -18,7 +18,11 @@ import { formatDuration } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
 // Impulse response for reverb (simple noise burst fallback or load file)
-const createReverb = (ctx: AudioContext, duration: number = 2, decay: number = 2) => {
+const createReverb = (
+  ctx: AudioContext,
+  duration: number = 2,
+  decay: number = 2
+) => {
   const sampleRate = ctx.sampleRate
   const length = sampleRate * duration
   const impulse = ctx.createBuffer(2, length, sampleRate)
@@ -39,7 +43,11 @@ interface SessionPlayerProps {
   className?: string
 }
 
-export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerProps) {
+export function SessionPlayer({
+  audioUrl,
+  beatUrl,
+  className,
+}: SessionPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
@@ -104,7 +112,8 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
     const initAudioContext = () => {
       if (!contextRef.current) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext
+        const AudioContext =
+          window.AudioContext || (window as any).webkitAudioContext
         contextRef.current = new AudioContext()
       }
     }
@@ -193,7 +202,8 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
 
   // Reset/Bypass FX when disabled
   useEffect(() => {
-    if (!contextRef.current || !dryGainRef.current || !wetGainRef.current) return
+    if (!contextRef.current || !dryGainRef.current || !wetGainRef.current)
+      return
 
     if (isStudioMode) {
       dryGainRef.current.gain.value = 0.8
@@ -249,7 +259,10 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
 
   const skipForward = () => {
     if (!audioRef.current) return
-    const newTime = Math.min(audioRef.current.duration, audioRef.current.currentTime + 10)
+    const newTime = Math.min(
+      audioRef.current.duration,
+      audioRef.current.currentTime + 10
+    )
     audioRef.current.currentTime = newTime
     if (beatRef.current) beatRef.current.currentTime = newTime
   }
@@ -275,7 +288,11 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if typing in input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return
 
       if (e.code === 'Space') {
         e.preventDefault()
@@ -322,7 +339,9 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
           <div className="text-6xl font-light font-numeral text-white tracking-widest tabular-nums">
             {formatDuration(Math.round(currentTime))}
           </div>
-          <div className="text-sm text-text-secondary tracking-[0.2em] uppercase">Now Playing</div>
+          <div className="text-sm text-text-secondary tracking-[0.2em] uppercase">
+            Now Playing
+          </div>
         </div>
 
         <div className="relative z-10 flex gap-6">
@@ -434,10 +453,19 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
       <div className="flex flex-col gap-4">
         {/* Main Volume (Vocals) */}
         <div className="flex justify-between items-center gap-4">
-          <span className="text-xs text-text-secondary uppercase tracking-wider w-16">Vocals</span>
+          <span className="text-xs text-text-secondary uppercase tracking-wider w-16">
+            Vocals
+          </span>
           <div className="flex items-center gap-2 flex-1">
-            <button onClick={toggleMute} className="text-text-secondary hover:text-white">
-              {isMuted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            <button
+              onClick={toggleMute}
+              className="text-text-secondary hover:text-white"
+            >
+              {isMuted || volume === 0 ? (
+                <VolumeX size={18} />
+              ) : (
+                <Volume2 size={18} />
+              )}
             </button>
             <input
               type="range"
@@ -454,7 +482,9 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
         {/* Beat Volume (Mixer) */}
         {beatUrl && (
           <div className="flex justify-between items-center gap-4">
-            <span className="text-xs text-text-secondary uppercase tracking-wider w-16">Beat</span>
+            <span className="text-xs text-text-secondary uppercase tracking-wider w-16">
+              Beat
+            </span>
             <div className="flex items-center gap-2 flex-1">
               <Volume2 size={18} className="text-text-secondary" />
               <input
@@ -492,8 +522,12 @@ export function SessionPlayer({ audioUrl, beatUrl, className }: SessionPlayerPro
                   )}
                 />
                 <div>
-                  <div className="text-sm text-white font-medium">Studio FX</div>
-                  <div className="text-xs text-text-tertiary">Add Reverb & Polish</div>
+                  <div className="text-sm text-white font-medium">
+                    Studio FX
+                  </div>
+                  <div className="text-xs text-text-tertiary">
+                    Add Reverb & Polish
+                  </div>
                 </div>
               </div>
               <button

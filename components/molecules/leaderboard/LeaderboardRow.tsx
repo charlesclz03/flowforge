@@ -66,12 +66,18 @@ export function LeaderboardRow({
         >
           {username}
         </div>
-        {isCurrentUser && <div className="text-[10px] text-accent-purple/70">That&apos;s you!</div>}
+        {isCurrentUser && (
+          <div className="text-[10px] text-accent-purple/70">
+            That&apos;s you!
+          </div>
+        )}
       </div>
 
       {/* Score */}
       <div className="text-right">
-        <div className="font-bold text-accent-purple font-mono">{score.toLocaleString()}</div>
+        <div className="font-bold text-accent-purple font-mono">
+          {score.toLocaleString()}
+        </div>
         <div className="text-[10px] text-text-tertiary">PTS</div>
       </div>
     </Link>

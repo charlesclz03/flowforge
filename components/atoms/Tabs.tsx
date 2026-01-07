@@ -38,7 +38,9 @@ export function Tabs({
   )
 
   return (
-    <TabsContext.Provider value={{ value: currentValue || '', onValueChange: handleValueChange }}>
+    <TabsContext.Provider
+      value={{ value: currentValue || '', onValueChange: handleValueChange }}
+    >
       <div className={className}>{children}</div>
     </TabsContext.Provider>
   )

@@ -54,7 +54,9 @@ export function PageHeader({
         )}
       </div>
 
-      {rightAction && <div className="flex justify-center mt-4">{rightAction}</div>}
+      {rightAction && (
+        <div className="flex justify-center mt-4">{rightAction}</div>
+      )}
     </div>
   )
 }

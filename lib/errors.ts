@@ -51,27 +51,40 @@ export const ErrorCodes = {
  * User-friendly error messages
  */
 export const ErrorMessages: Record<string, string> = {
-  [ErrorCodes.BEAT_LOAD_FAILED]: 'Failed to load the selected beat. Please try another one.',
+  [ErrorCodes.BEAT_LOAD_FAILED]:
+    'Failed to load the selected beat. Please try another one.',
   [ErrorCodes.AUDIO_PLAYBACK_FAILED]:
     'Failed to start audio playback. Please check your device settings.',
   [ErrorCodes.MIC_PERMISSION_DENIED]:
     'Microphone access denied. Please enable microphone permissions in your browser settings.',
-  [ErrorCodes.RECORDING_FAILED]: 'Recording failed. Please check your microphone connection.',
+  [ErrorCodes.RECORDING_FAILED]:
+    'Recording failed. Please check your microphone connection.',
   [ErrorCodes.RECORDING_INIT_FAILED]:
     'Failed to initialize recording. Please refresh the page and try again.',
-  [ErrorCodes.FETCH_BEATS_FAILED]: 'Failed to load beats. Please refresh the page.',
-  [ErrorCodes.FETCH_WORDS_FAILED]: 'Failed to load word prompts. Please refresh the page.',
-  [ErrorCodes.FETCH_SESSIONS_FAILED]: 'Failed to load your sessions. Please try again.',
-  [ErrorCodes.FETCH_RECORDINGS_FAILED]: 'Failed to load your recordings. Please try again.',
-  [ErrorCodes.SESSION_CREATE_FAILED]: 'Failed to create session. Please try again.',
-  [ErrorCodes.SESSION_SAVE_FAILED]: 'Failed to save your session. Please try again.',
-  [ErrorCodes.SESSION_DELETE_FAILED]: 'Failed to delete recording. Please try again.',
-  [ErrorCodes.RECORDING_UPLOAD_FAILED]: 'Failed to upload recording. Please try again.',
-  [ErrorCodes.RECORDING_DOWNLOAD_FAILED]: 'Failed to download recording. Please try again.',
-  [ErrorCodes.AUTH_FAILED]: 'Authentication failed. Please try signing in again.',
+  [ErrorCodes.FETCH_BEATS_FAILED]:
+    'Failed to load beats. Please refresh the page.',
+  [ErrorCodes.FETCH_WORDS_FAILED]:
+    'Failed to load word prompts. Please refresh the page.',
+  [ErrorCodes.FETCH_SESSIONS_FAILED]:
+    'Failed to load your sessions. Please try again.',
+  [ErrorCodes.FETCH_RECORDINGS_FAILED]:
+    'Failed to load your recordings. Please try again.',
+  [ErrorCodes.SESSION_CREATE_FAILED]:
+    'Failed to create session. Please try again.',
+  [ErrorCodes.SESSION_SAVE_FAILED]:
+    'Failed to save your session. Please try again.',
+  [ErrorCodes.SESSION_DELETE_FAILED]:
+    'Failed to delete recording. Please try again.',
+  [ErrorCodes.RECORDING_UPLOAD_FAILED]:
+    'Failed to upload recording. Please try again.',
+  [ErrorCodes.RECORDING_DOWNLOAD_FAILED]:
+    'Failed to download recording. Please try again.',
+  [ErrorCodes.AUTH_FAILED]:
+    'Authentication failed. Please try signing in again.',
   [ErrorCodes.UNAUTHORIZED]: 'You must be signed in to access this feature.',
   [ErrorCodes.UNKNOWN_ERROR]: 'An unexpected error occurred. Please try again.',
-  [ErrorCodes.NETWORK_ERROR]: 'Network error. Please check your internet connection.',
+  [ErrorCodes.NETWORK_ERROR]:
+    'Network error. Please check your internet connection.',
 }
 
 /**

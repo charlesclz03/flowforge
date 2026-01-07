@@ -2,13 +2,15 @@ import { Quote } from 'lucide-react'
 
 const TESTIMONIALS = [
   {
-    quote: 'Finally, a practice tool that actually understands flow. The beat matching is insane.',
+    quote:
+      'Finally, a practice tool that actually understands flow. The beat matching is insane.',
     author: 'MC Rhyth',
     role: 'Freestyle Artist',
     image: null,
   },
   {
-    quote: 'I used to struggle with beat block. The prompt engine keeps me locked in for hours.',
+    quote:
+      'I used to struggle with beat block. The prompt engine keeps me locked in for hours.',
     author: 'Sarah J.',
     role: 'Bedroom Producer',
     image: null,
@@ -35,7 +37,8 @@ export function LandingTestimonials() {
             Trusted by artists in motion.
           </h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-            Join thousands of creators using FlowForge to sharpen their lyrical skills.
+            Join thousands of creators using FlowForge to sharpen their lyrical
+            skills.
           </p>
         </div>
 
@@ -48,7 +51,9 @@ export function LandingTestimonials() {
               <Quote className="absolute top-8 right-8 text-white/5 w-12 h-12 group-hover:text-white/10 transition-colors" />
 
               <div className="min-h-[120px] mb-8">
-                <p className="text-lg text-text-secondary leading-relaxed">"{t.quote}"</p>
+                <p className="text-lg text-text-secondary leading-relaxed">
+                  "{t.quote}"
+                </p>
               </div>
 
               <div className="flex items-center gap-4">

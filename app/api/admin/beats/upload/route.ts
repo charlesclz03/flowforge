@@ -34,7 +34,10 @@ export async function POST(req: NextRequest) {
     const tagsRaw = formData.get('tags') as string
 
     if (!audioFile || !title || !bpm) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
     }
 
     // 2. Upload to Supabase Storage
@@ -54,7 +57,10 @@ export async function POST(req: NextRequest) {
 
     if (uploadError) {
       console.error('Supabase Upload Error:', uploadError)
-      return NextResponse.json({ error: 'Failed to upload audio file' }, { status: 500 })
+      return NextResponse.json(
+        { error: 'Failed to upload audio file' },
+        { status: 500 }
+      )
     }
 
     // 3. Get Public URL
@@ -87,6 +93,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, beat })
   } catch (error) {
     console.error('Admin Beat Upload Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

@@ -17,7 +17,10 @@ export async function GET(request: Request) {
     })
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error || 'Failed to fetch words' }, { status: 500 })
+      return NextResponse.json(
+        { error: result.error || 'Failed to fetch words' },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({
@@ -26,6 +29,9 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

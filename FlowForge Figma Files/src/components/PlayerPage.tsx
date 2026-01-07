@@ -58,7 +58,12 @@ const WORD_BANK = {
   ],
 }
 
-export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPageProps) {
+export function PlayerPage({
+  beat,
+  onBack,
+  difficulty,
+  frequency,
+}: PlayerPageProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(120) // 2 minutes in seconds
@@ -224,7 +229,9 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-5xl mb-2">{formatTime(timeRemaining)}</div>
-                {isPlaying && <div className="text-sm text-gray-400">Bar {barCount}</div>}
+                {isPlaying && (
+                  <div className="text-sm text-gray-400">Bar {barCount}</div>
+                )}
               </div>
             </div>
 
@@ -282,7 +289,8 @@ export function PlayerPage({ beat, onBack, difficulty, frequency }: PlayerPagePr
         {/* Session Info */}
         {isPlaying && (
           <div className="text-center text-sm text-gray-500">
-            {getDifficultyLabel()} difficulty • New word every {getFrequencyBars()} bars
+            {getDifficultyLabel()} difficulty • New word every{' '}
+            {getFrequencyBars()} bars
           </div>
         )}
       </div>

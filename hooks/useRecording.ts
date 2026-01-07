@@ -140,7 +140,9 @@ export function useRecording({
         setIsRecording(true)
         setIsInitializing(false)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to start recording')
+        setError(
+          err instanceof Error ? err.message : 'Failed to start recording'
+        )
         setIsInitializing(false)
 
         if (

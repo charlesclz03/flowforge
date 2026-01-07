@@ -14,9 +14,9 @@ export type Beat = {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'howItWorks' | 'beatSelector' | 'player'>(
-    'howItWorks'
-  )
+  const [currentPage, setCurrentPage] = useState<
+    'howItWorks' | 'beatSelector' | 'player'
+  >('howItWorks')
   const [selectedBeat, setSelectedBeat] = useState<Beat | null>(null)
   const [difficulty, setDifficulty] = useState(50) // 0-100 scale
   const [frequency, setFrequency] = useState(50) // 0-100 scale
@@ -54,7 +54,9 @@ export default function App() {
 
       {/* Content with fade transition */}
       <div className="relative z-10 animate-fade-in" key={currentPage}>
-        {currentPage === 'howItWorks' && <HowItWorksPage onStartPractice={handleStartPractice} />}
+        {currentPage === 'howItWorks' && (
+          <HowItWorksPage onStartPractice={handleStartPractice} />
+        )}
 
         {currentPage === 'beatSelector' && (
           <BeatSelectorPage

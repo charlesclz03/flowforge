@@ -170,6 +170,9 @@ export async function GET() {
     })
   } catch (error) {
     const e = error as Error
-    return NextResponse.json({ error: e?.message || 'Unknown error' }, { status: 500 })
+    return NextResponse.json(
+      { error: e?.message || 'Unknown error' },
+      { status: 500 }
+    )
   }
 }

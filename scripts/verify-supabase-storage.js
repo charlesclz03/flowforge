@@ -93,7 +93,8 @@ async function verifySetup() {
     })
 
     // Test storage bucket access
-    const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
+    const { data: buckets, error: bucketsError } =
+      await supabase.storage.listBuckets()
 
     if (bucketsError) {
       console.error('❌ Error connecting to Supabase:', bucketsError.message)
@@ -104,11 +105,16 @@ async function verifySetup() {
 
     // Check if recordings bucket exists
     console.log('\n4. Checking for recordings bucket...')
-    const recordingsBucket = buckets.find((bucket) => bucket.name === 'recordings')
+    const recordingsBucket = buckets.find(
+      (bucket) => bucket.name === 'recordings'
+    )
 
     if (!recordingsBucket) {
       console.error('❌ Recordings bucket not found')
-      console.log('💡 Available buckets:', buckets.map((b) => b.name).join(', ') || 'None')
+      console.log(
+        '💡 Available buckets:',
+        buckets.map((b) => b.name).join(', ') || 'None'
+      )
       return false
     }
 
@@ -119,15 +125,19 @@ async function verifySetup() {
     if (recordingsBucket.public) {
       console.log('✅ Bucket is public')
     } else {
-      console.warn('⚠️  Bucket is private (this is OK, but public is recommended for MVP)')
+      console.warn(
+        '⚠️  Bucket is private (this is OK, but public is recommended for MVP)'
+      )
     }
 
     // Test file listing
     console.log('\n6. Testing storage access...')
-    const { data: files, error: filesError } = await supabase.storage.from('recordings').list('', {
-      limit: 1,
-      sortBy: { column: 'created_at', order: 'desc' },
-    })
+    const { data: files, error: filesError } = await supabase.storage
+      .from('recordings')
+      .list('', {
+        limit: 1,
+        sortBy: { column: 'created_at', order: 'desc' },
+      })
 
     if (filesError) {
       console.error('❌ Error accessing storage:', filesError.message)
@@ -141,7 +151,9 @@ async function verifySetup() {
       console.log('   Bucket is empty (this is expected for a new setup)')
     }
 
-    console.log('\n🎉 All checks passed! Supabase Storage is configured correctly.')
+    console.log(
+      '\n🎉 All checks passed! Supabase Storage is configured correctly.'
+    )
     return true
   } catch (error) {
     console.error('❌ Error:', error.message)
@@ -153,7 +165,9 @@ async function verifySetup() {
 verifySetup()
   .then((success) => {
     if (!success) {
-      console.log('\n❌ Setup verification failed. Please check the errors above.')
+      console.log(
+        '\n❌ Setup verification failed. Please check the errors above.'
+      )
       process.exit(1)
     }
   })

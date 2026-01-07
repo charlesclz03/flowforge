@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import { Spinner } from "@/components/atoms/Spinner";
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { Spinner } from '@/components/atoms/Spinner'
 
 interface WaveformScrubberProps {
-  file: File;
-  initialOffset?: number;
-  onChange: (offset: number) => void;
-  width?: number;
-  height?: number;
-  color?: string;
+  file: File
+  initialOffset?: number
+  onChange: (offset: number) => void
+  width?: number
+  height?: number
+  color?: string
 }
 
 export function WaveformScrubber({
@@ -18,138 +18,138 @@ export function WaveformScrubber({
   onChange,
   width = 600,
   height = 100,
-  color = "#a855f7", // accent-purple
+  color = '#a855f7', // accent-purple
 }: WaveformScrubberProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // State for view
   // We map pixels to time.
   // Zoom level: how many pixels per second?
-  const [pixelsPerSecond] = useState(100);
-  const [scrollX, setScrollX] = useState(0); // Scroll offset in pixels
-  const [isDragging, setIsDragging] = useState(false);
-  const [lastClientX, setLastClientX] = useState(0);
+  const [pixelsPerSecond] = useState(100)
+  const [scrollX, setScrollX] = useState(0) // Scroll offset in pixels
+  const [isDragging, setIsDragging] = useState(false)
+  const [lastClientX, setLastClientX] = useState(0)
 
   // 1. Decode Audio
   useEffect(() => {
-    if (!file) return;
+    if (!file) return
 
     const decode = async () => {
-      setIsLoading(true);
-      setError(null);
+      setIsLoading(true)
+      setError(null)
       try {
-        const arrayBuffer = await file.arrayBuffer();
+        const arrayBuffer = await file.arrayBuffer()
         const audioContext = new (
           window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext })
             .webkitAudioContext
-        )();
-        const decoded = await audioContext.decodeAudioData(arrayBuffer);
-        setAudioBuffer(decoded);
+        )()
+        const decoded = await audioContext.decodeAudioData(arrayBuffer)
+        setAudioBuffer(decoded)
 
         // Set initial scroll relative to offset
-        setScrollX(initialOffset * pixelsPerSecond);
+        setScrollX(initialOffset * pixelsPerSecond)
       } catch (err) {
-        console.error("Waveform decode failed", err);
-        setError("Could not load audio waveform");
+        console.error('Waveform decode failed', err)
+        setError('Could not load audio waveform')
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
-    decode();
-  }, [file, initialOffset, pixelsPerSecond]);
+    }
+    decode()
+  }, [file, initialOffset, pixelsPerSecond])
 
   // 2. Draw Waveform
   const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !audioBuffer) return;
+    const canvas = canvasRef.current
+    if (!canvas || !audioBuffer) return
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = (containerRef.current?.clientWidth || width) * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = (containerRef.current?.clientWidth || width) * dpr
+    canvas.height = height * dpr
+    ctx.scale(dpr, dpr)
 
     // Clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // Aesthetic: Center Line
-    const centerY = height / 2;
-    ctx.beginPath();
-    ctx.strokeStyle = "rgba(255,255,255,0.1)";
-    ctx.moveTo(0, centerY);
-    ctx.lineTo(canvas.width / dpr, centerY);
-    ctx.stroke();
+    const centerY = height / 2
+    ctx.beginPath()
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)'
+    ctx.moveTo(0, centerY)
+    ctx.lineTo(canvas.width / dpr, centerY)
+    ctx.stroke()
 
     // Draw Data
     // We only draw the visible window to optimize
-    const viewWidth = canvas.width / dpr;
-    const leftTime = scrollX / pixelsPerSecond;
+    const viewWidth = canvas.width / dpr
+    const leftTime = scrollX / pixelsPerSecond
 
-    const rawData = audioBuffer.getChannelData(0); // Mono visualization
+    const rawData = audioBuffer.getChannelData(0) // Mono visualization
 
     // Draw Peaks
-    ctx.fillStyle = color;
-    ctx.beginPath();
+    ctx.fillStyle = color
+    ctx.beginPath()
 
     // Draw loop
     for (let i = 0; i < viewWidth; i++) {
       // Map pixel i to data index
-      const timeAtPixel = leftTime + i / pixelsPerSecond;
-      const dataIndex = Math.floor(timeAtPixel * audioBuffer.sampleRate);
+      const timeAtPixel = leftTime + i / pixelsPerSecond
+      const dataIndex = Math.floor(timeAtPixel * audioBuffer.sampleRate)
 
-      if (dataIndex >= rawData.length) break;
+      if (dataIndex >= rawData.length) break
 
       // Find max in chunk (downsampling)
       // Optimization: Just take a sample or max of small window
-      let max = 0;
-      const windowSize = Math.floor(audioBuffer.sampleRate / pixelsPerSecond);
+      let max = 0
+      const windowSize = Math.floor(audioBuffer.sampleRate / pixelsPerSecond)
       // Check local window max
       for (let j = 0; j < windowSize; j += 100) {
         // skip some samples for speed
         if (dataIndex + j < rawData.length) {
-          const v = Math.abs(rawData[dataIndex + j]);
-          if (v > max) max = v;
+          const v = Math.abs(rawData[dataIndex + j])
+          if (v > max) max = v
         }
       }
 
-      const barHeight = max * height * 0.9;
+      const barHeight = max * height * 0.9
       // Draw centered bar
-      ctx.fillRect(i, centerY - barHeight / 2, 2, barHeight);
+      ctx.fillRect(i, centerY - barHeight / 2, 2, barHeight)
     }
 
     // Draw Time Ticks
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.font = "10px Inter, sans-serif";
-    ctx.textAlign = "center";
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+    ctx.font = '10px Inter, sans-serif'
+    ctx.textAlign = 'center'
 
     // Determine tick interval (e.g., every 1 second)
-    const tickInterval = 1; // second
-    const startTick = Math.floor(leftTime / tickInterval) * tickInterval;
+    const tickInterval = 1 // second
+    const startTick = Math.floor(leftTime / tickInterval) * tickInterval
     const endTick =
       Math.ceil((leftTime + viewWidth / pixelsPerSecond) / tickInterval) *
-      tickInterval;
+      tickInterval
 
     for (let t = startTick; t <= endTick; t += tickInterval) {
-      const x = (t - leftTime) * pixelsPerSecond;
+      const x = (t - leftTime) * pixelsPerSecond
       // Draw tick line
-      ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-      ctx.fillRect(x, height - 10, 1, 5);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
+      ctx.fillRect(x, height - 10, 1, 5)
 
       // Draw label every 5 seconds
       if (t % 5 === 0) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-        const minutes = Math.floor(t / 60);
-        const seconds = Math.floor(t % 60);
-        const label = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-        ctx.fillText(label, x, height - 15);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+        const minutes = Math.floor(t / 60)
+        const seconds = Math.floor(t % 60)
+        const label = `${minutes}:${seconds.toString().padStart(2, '0')}`
+        ctx.fillText(label, x, height - 15)
       }
     }
 
@@ -157,19 +157,19 @@ export function WaveformScrubber({
     // Actually, user wants to "scroll on wave to pick queuepoint".
     // Usually that means a fixed center line represents the selection.
     // Let's draw a red line at center of Viewport
-    const selectionX = viewWidth / 2;
+    const selectionX = viewWidth / 2
 
-    ctx.strokeStyle = "#F43F5E"; // Red (Rose)
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(selectionX, 0);
-    ctx.lineTo(selectionX, height);
-    ctx.stroke();
+    ctx.strokeStyle = '#F43F5E' // Red (Rose)
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.moveTo(selectionX, 0)
+    ctx.lineTo(selectionX, height)
+    ctx.stroke()
 
     // "DROP" Label
-    ctx.fillStyle = "#F43F5E";
-    ctx.font = "bold 10px sans-serif";
-    ctx.fillText("DROP", selectionX, 10);
+    ctx.fillStyle = '#F43F5E'
+    ctx.font = 'bold 10px sans-serif'
+    ctx.fillText('DROP', selectionX, 10)
 
     // Draw Overlay Time
     // We debounce this or do it on drag end?
@@ -177,50 +177,50 @@ export function WaveformScrubber({
     // But we shouldn't spam it.
     // We'll update a Ref or check difference?
     // For now, let's just assume parent handles updates well.
-  }, [audioBuffer, scrollX, pixelsPerSecond, height, width, color]);
+  }, [audioBuffer, scrollX, pixelsPerSecond, height, width, color])
 
   // Animation Loop for Smoothness
   useEffect(() => {
-    requestAnimationFrame(draw);
-  }, [draw]);
+    requestAnimationFrame(draw)
+  }, [draw])
 
   // 3. Interactions
   const handleStart = (clientX: number) => {
-    setIsDragging(true);
-    setLastClientX(clientX);
-  };
+    setIsDragging(true)
+    setLastClientX(clientX)
+  }
 
   const handleMove = (clientX: number) => {
-    if (!isDragging) return;
-    const delta = lastClientX - clientX;
-    setScrollX((prev) => Math.max(0, prev + delta)); // Prevent negative time
-    setLastClientX(clientX);
+    if (!isDragging) return
+    const delta = lastClientX - clientX
+    setScrollX((prev) => Math.max(0, prev + delta)) // Prevent negative time
+    setLastClientX(clientX)
 
     // Calculate new time and fire event
-    const containerWidth = containerRef.current?.clientWidth || width;
-    const centerOffset = containerWidth / 2;
+    const containerWidth = containerRef.current?.clientWidth || width
+    const centerOffset = containerWidth / 2
     const newTime = Math.max(
       0,
-      (scrollX + delta + centerOffset) / pixelsPerSecond,
-    );
-    onChange(newTime);
-  };
+      (scrollX + delta + centerOffset) / pixelsPerSecond
+    )
+    onChange(newTime)
+  }
 
   const handleEnd = () => {
-    setIsDragging(false);
-  };
+    setIsDragging(false)
+  }
 
   // Mouse Listeners
-  const onMouseDown = (e: React.MouseEvent) => handleStart(e.clientX);
-  const onMouseMove = (e: React.MouseEvent) => handleMove(e.clientX);
-  const onMouseUp = () => handleEnd();
-  const onMouseLeave = () => handleEnd();
+  const onMouseDown = (e: React.MouseEvent) => handleStart(e.clientX)
+  const onMouseMove = (e: React.MouseEvent) => handleMove(e.clientX)
+  const onMouseUp = () => handleEnd()
+  const onMouseLeave = () => handleEnd()
 
   // Touch Listeners
   const onTouchStart = (e: React.TouchEvent) =>
-    handleStart(e.touches[0].clientX);
-  const onTouchMove = (e: React.TouchEvent) => handleMove(e.touches[0].clientX);
-  const onTouchEnd = () => handleEnd();
+    handleStart(e.touches[0].clientX)
+  const onTouchMove = (e: React.TouchEvent) => handleMove(e.touches[0].clientX)
+  const onTouchEnd = () => handleEnd()
 
   return (
     <div
@@ -236,13 +236,13 @@ export function WaveformScrubber({
       onTouchEnd={onTouchEnd}
       onClick={(e) => {
         // Tap to Seek Logic
-        if (isDragging) return; // Ignore if it was a drag
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (!rect) return;
+        if (isDragging) return // Ignore if it was a drag
+        const rect = containerRef.current?.getBoundingClientRect()
+        if (!rect) return
 
-        const clickX = e.clientX - rect.left;
-        const containerWidth = rect.width;
-        const centerOffset = containerWidth / 2;
+        const clickX = e.clientX - rect.left
+        const containerWidth = rect.width
+        const centerOffset = containerWidth / 2
 
         // Current Time at Center = scrollX / pixelsPerSecond
         // We want the time at ClickX to become the new Center
@@ -253,15 +253,15 @@ export function WaveformScrubber({
         // That pixel represents a specific time relative to current scroll.
         // We want to shift scroll so that specific time moves to center.
 
-        const shiftAmount = clickX - centerOffset;
-        const newScrollX = Math.max(0, scrollX + shiftAmount);
+        const shiftAmount = clickX - centerOffset
+        const newScrollX = Math.max(0, scrollX + shiftAmount)
 
-        setScrollX(newScrollX);
+        setScrollX(newScrollX)
         const newTime = Math.max(
           0,
-          (newScrollX + centerOffset) / pixelsPerSecond,
-        );
-        onChange(newTime);
+          (newScrollX + centerOffset) / pixelsPerSecond
+        )
+        onChange(newTime)
       }}
     >
       {isLoading && (
@@ -276,5 +276,5 @@ export function WaveformScrubber({
       )}
       <canvas ref={canvasRef} className="block" />
     </div>
-  );
+  )
 }

@@ -1,39 +1,39 @@
-"use client";
+'use client'
 
-import { Modal } from "@/components/atoms/Modal";
-import { Button } from "@/components/atoms/Button";
-import { useRouter } from "next/navigation";
-import { Sparkles, Wand2, Share2, Crown } from "lucide-react";
-import { PostProcessingModal } from "./PostProcessingModal";
-import { useState } from "react";
-import { ShareButton } from "@/components/molecules/sharing/ShareButton";
+import { Modal } from '@/components/atoms/Modal'
+import { Button } from '@/components/atoms/Button'
+import { useRouter } from 'next/navigation'
+import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
+import { PostProcessingModal } from './PostProcessingModal'
+import { useState } from 'react'
+import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface SessionSummaryData {
-  score: number;
-  vibe: string;
-  description: string;
-  wordCount: number;
-  duration: number;
-  audioUrl?: string;
-  newBadges?: string[];
-  difficulty: string;
-  bpm: number;
-  frequency: number;
+  score: number
+  vibe: string
+  description: string
+  wordCount: number
+  duration: number
+  audioUrl?: string
+  newBadges?: string[]
+  difficulty: string
+  bpm: number
+  frequency: number
 }
 
 type SessionSummaryModalProps = {
-  data: SessionSummaryData | null;
-  onClose: () => void;
-};
+  data: SessionSummaryData | null
+  onClose: () => void
+}
 
 export default function SessionSummaryModal({
   data,
   onClose,
 }: SessionSummaryModalProps) {
-  const router = useRouter();
-  const [showStudio, setShowStudio] = useState(false);
+  const router = useRouter()
+  const [showStudio, setShowStudio] = useState(false)
 
-  if (!data) return null;
+  if (!data) return null
 
   if (showStudio && data.audioUrl) {
     return (
@@ -41,10 +41,10 @@ export default function SessionSummaryModal({
         audioUrl={data.audioUrl}
         onClose={() => setShowStudio(false)}
         onSave={(blob) => {
-          console.log("Processed blob ready for upload:", blob);
+          console.log('Processed blob ready for upload:', blob)
         }}
       />
-    );
+    )
   }
 
   return (
@@ -53,12 +53,12 @@ export default function SessionSummaryModal({
         {/* Session Details Recap (New) */}
         <div className="flex items-center justify-center gap-2 text-xs font-bold text-text-tertiary uppercase tracking-widest opacity-60">
           <span>
-            {data.difficulty === "Easy"
-              ? "Beginner"
-              : data.difficulty === "Medium"
-                ? "Medium"
-                : data.difficulty === "Hard"
-                  ? "Hard"
+            {data.difficulty === 'Easy'
+              ? 'Beginner'
+              : data.difficulty === 'Medium'
+                ? 'Medium'
+                : data.difficulty === 'Hard'
+                  ? 'Hard'
                   : data.difficulty}
           </span>
           <span className="w-1 h-1 rounded-full bg-white/20" />
@@ -130,8 +130,8 @@ export default function SessionSummaryModal({
             <div className="grid grid-cols-2 gap-3">
               <Button
                 onClick={() => {
-                  const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split("on ")[1] || "FlowForge"}`;
-                  window.open(url, "_blank");
+                  const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split('on ')[1] || 'FlowForge'}`
+                  window.open(url, '_blank')
                 }}
                 variant="outline"
                 className="border-white/10 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2"
@@ -148,7 +148,7 @@ export default function SessionSummaryModal({
             </div>
           )}
           <Button
-            onClick={() => router.push("/recordings")}
+            onClick={() => router.push('/recordings')}
             className="w-full bg-white text-black hover:bg-white/90"
           >
             View in Recordings
@@ -159,5 +159,5 @@ export default function SessionSummaryModal({
         </div>
       </div>
     </Modal>
-  );
+  )
 }

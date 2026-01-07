@@ -72,9 +72,13 @@ export function VoteHistory() {
             <div>
               <p className="font-medium text-sm">
                 Voted for{' '}
-                <span className="text-accent-gold">{vote.winner.user.name || 'Unknown'}</span>
+                <span className="text-accent-gold">
+                  {vote.winner.user.name || 'Unknown'}
+                </span>
               </p>
-              <p className="text-xs text-text-secondary">in duel "{vote.duel.title}"</p>
+              <p className="text-xs text-text-secondary">
+                in duel "{vote.duel.title}"
+              </p>
             </div>
           </div>
           <span className="text-xs text-text-tertiary">

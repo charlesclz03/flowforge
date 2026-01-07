@@ -1,11 +1,15 @@
 /**
  * Analyze audio buffer to calculate Flow Score and Vibe
  */
-export async function analyzeAudio(blob: Blob): Promise<{ score: number; vibe: string }> {
+export async function analyzeAudio(
+  blob: Blob
+): Promise<{ score: number; vibe: string }> {
   try {
     const arrayBuffer = await blob.arrayBuffer()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const audioContext = new (
+      window.AudioContext || (window as any).webkitAudioContext
+    )()
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
 
     const rawData = audioBuffer.getChannelData(0) // Use left channel

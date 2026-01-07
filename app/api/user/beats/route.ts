@@ -17,18 +17,30 @@ export async function POST(req: NextRequest) {
     }
 
     // Pro Check
-    const user = await prisma.user.findUnique({ where: { id: session.user.id } })
-    const isPro = user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    })
+    const isPro =
+      user?.subscriptionStatus === 'active' ||
+      user?.subscriptionStatus === 'trialing'
 
     // Strict Pro Gate on Backend
     if (!isPro && user?.role !== 'SUPERADMIN') {
-      return NextResponse.json({ error: 'Pro subscription required for uploads' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Pro subscription required for uploads' },
+        { status: 403 }
+      )
     }
 
     // Quota Check (Optional - prevent abuse)
-    const count = await prisma.beat.count({ where: { uploaderId: session.user.id } })
+    const count = await prisma.beat.count({
+      where: { uploaderId: session.user.id },
+    })
     if (count >= 50 && user?.role !== 'SUPERADMIN') {
-      return NextResponse.json({ error: 'Beat storage limit reached (50 beats)' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Beat storage limit reached (50 beats)' },
+        { status: 403 }
+      )
     }
 
     const formData = await req.formData()
@@ -49,13 +61,18 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    const { error: uploadError } = await supabase.storage.from('audio').upload(fileName, buffer, {
-      contentType: file.type,
-    })
+    const { error: uploadError } = await supabase.storage
+      .from('audio')
+      .upload(fileName, buffer, {
+        contentType: file.type,
+      })
 
     if (uploadError) {
       console.error('Supabase Upload Error:', uploadError)
-      return NextResponse.json({ error: 'Failed to upload audio' }, { status: 500 })
+      return NextResponse.json(
+        { error: 'Failed to upload audio' },
+        { status: 500 }
+      )
     }
 
     const {
@@ -81,7 +98,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, beat })
   } catch (error) {
     console.error('User Upload Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
@@ -106,6 +126,9 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ beats })
   } catch (error) {
     console.error('Fetch User Beats Error:', error)
-    return NextResponse.json({ error: 'Failed to fetch beats' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch beats' },
+      { status: 500 }
+    )
   }
 }

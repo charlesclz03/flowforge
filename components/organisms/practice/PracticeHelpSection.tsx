@@ -12,8 +12,8 @@ export function PracticeHelpSection() {
           </div>
           <h4 className="font-medium text-white">Choose Your Beat</h4>
           <p className="text-sm text-text-secondary">
-            Select from our library of professionally curated beats across multiple genres and
-            tempos.
+            Select from our library of professionally curated beats across
+            multiple genres and tempos.
           </p>
         </div>
         <div className="space-y-2">
@@ -22,7 +22,8 @@ export function PracticeHelpSection() {
           </div>
           <h4 className="font-medium text-white">Configure Session</h4>
           <p className="text-sm text-text-secondary">
-            Set word frequency (how often prompts appear) and difficulty level to match your skill.
+            Set word frequency (how often prompts appear) and difficulty level
+            to match your skill.
           </p>
         </div>
         <div className="space-y-2">
@@ -31,8 +32,8 @@ export function PracticeHelpSection() {
           </div>
           <h4 className="font-medium text-white">Practice & Record</h4>
           <p className="text-sm text-text-secondary">
-            Hit play to start! Words will appear on-beat. Freestyle for 2 minutes and review your
-            session.
+            Hit play to start! Words will appear on-beat. Freestyle for 2
+            minutes and review your session.
           </p>
         </div>
       </div>

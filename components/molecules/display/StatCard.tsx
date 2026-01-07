@@ -27,7 +27,9 @@ export const StatCard = memo(function StatCard({
       )}
     >
       {icon && <div className="mb-2">{icon}</div>}
-      <dt className="text-xs uppercase tracking-[0.3em] text-text-tertiary">{label}</dt>
+      <dt className="text-xs uppercase tracking-[0.3em] text-text-tertiary">
+        {label}
+      </dt>
       <dd className="mt-2 text-3xl font-light text-white">{value}</dd>
       {caption && <p className="mt-1 text-xs text-text-secondary">{caption}</p>}
     </div>

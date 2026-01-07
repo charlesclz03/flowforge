@@ -69,10 +69,13 @@ export function AdminUploadSection() {
       setTags('')
       setFile(null)
       // Reset file input manually if needed
-      const fileInput = document.getElementById('beat-upload') as HTMLInputElement
+      const fileInput = document.getElementById(
+        'beat-upload'
+      ) as HTMLInputElement
       if (fileInput) fileInput.value = ''
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to upload beat'
+      const message =
+        err instanceof Error ? err.message : 'Failed to upload beat'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -83,10 +86,12 @@ export function AdminUploadSection() {
     <Card title="Admin Zone: Upload Beats" className="border-accent-purple/30">
       <div className="space-y-6">
         <p className="text-sm text-text-secondary">
-          Upload new instrumental tracks to the public library. These will be available to all users
-          immediately.
+          Upload new instrumental tracks to the public library. These will be
+          available to all users immediately.
         </p>
-        {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+        {success && (
+          <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />
+        )}
         {error && (
           <ErrorAlert
             error={new AppError(error, ErrorCodes.UNKNOWN_ERROR)}
@@ -115,8 +120,12 @@ export function AdminUploadSection() {
               ) : (
                 <>
                   <Upload className="text-accent-purple" size={32} />
-                  <p className="text-white font-medium">Click or Drag to Upload Beat</p>
-                  <p className="text-xs text-text-tertiary">MP3, WAV, OGG supported</p>
+                  <p className="text-white font-medium">
+                    Click or Drag to Upload Beat
+                  </p>
+                  <p className="text-xs text-text-tertiary">
+                    MP3, WAV, OGG supported
+                  </p>
                 </>
               )}
             </div>
@@ -125,7 +134,9 @@ export function AdminUploadSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Title */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">Track Title *</label>
+              <label className="text-sm font-medium text-text-secondary">
+                Track Title *
+              </label>
               <input
                 type="text"
                 value={title}
@@ -138,7 +149,9 @@ export function AdminUploadSection() {
 
             {/* BPM */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">BPM *</label>
+              <label className="text-sm font-medium text-text-secondary">
+                BPM *
+              </label>
               <input
                 type="number"
                 value={bpm}
@@ -151,7 +164,9 @@ export function AdminUploadSection() {
 
             {/* Producer */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">Producer Name</label>
+              <label className="text-sm font-medium text-text-secondary">
+                Producer Name
+              </label>
               <input
                 type="text"
                 value={producer}
@@ -163,7 +178,9 @@ export function AdminUploadSection() {
 
             {/* Style / Genre */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">Genre</label>
+              <label className="text-sm font-medium text-text-secondary">
+                Genre
+              </label>
               <select
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
@@ -179,7 +196,9 @@ export function AdminUploadSection() {
 
             {/* Difficulty */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">Difficulty</label>
+              <label className="text-sm font-medium text-text-secondary">
+                Difficulty
+              </label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}

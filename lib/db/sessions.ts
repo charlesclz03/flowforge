@@ -1,6 +1,10 @@
 import { prisma } from '@/lib/prisma'
 import { FreestyleSession, Prisma } from '@prisma/client'
-import { SessionFilters, DatabaseResult, FreestyleSessionWithBeat } from '@/types/database'
+import {
+  SessionFilters,
+  DatabaseResult,
+  FreestyleSessionWithBeat,
+} from '@/types/database'
 
 /**
  * Create a new freestyle session (stub for MVP - mainly client-side)
@@ -32,7 +36,8 @@ export async function createSession(
     console.error('Error creating session:', error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create session',
+      error:
+        error instanceof Error ? error.message : 'Failed to create session',
     }
   }
 }
@@ -106,7 +111,8 @@ export async function getSessions(
     console.error('Error fetching sessions:', error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch sessions',
+      error:
+        error instanceof Error ? error.message : 'Failed to fetch sessions',
     }
   }
 }
@@ -191,7 +197,8 @@ export async function deleteSession(id: string): Promise<DatabaseResult<void>> {
     console.error('Error deleting session:', error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to delete session',
+      error:
+        error instanceof Error ? error.message : 'Failed to delete session',
     }
   }
 }
@@ -210,8 +217,12 @@ export async function getSessionStats(userId?: string): Promise<
   try {
     if (process.env.DISABLE_DB === 'true') {
       const totalSessions = inMemorySessions.length
-      const totalDuration = inMemorySessions.reduce((sum, s) => sum + s.durationSeconds, 0)
-      const averageDuration = totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0
+      const totalDuration = inMemorySessions.reduce(
+        (sum, s) => sum + s.durationSeconds,
+        0
+      )
+      const averageDuration =
+        totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0
       return {
         success: true,
         data: {
@@ -248,8 +259,12 @@ export async function getSessionStats(userId?: string): Promise<
 
     const totalSessions = sessions.length
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const totalDuration = sessions.reduce((sum: number, s: any) => sum + s.durationSeconds, 0)
-    const averageDuration = totalSessions > 0 ? totalDuration / totalSessions : 0
+    const totalDuration = sessions.reduce(
+      (sum: number, s: any) => sum + s.durationSeconds,
+      0
+    )
+    const averageDuration =
+      totalSessions > 0 ? totalDuration / totalSessions : 0
 
     let favoriteGenre: string | null = null
     if (genreStats.length > 0) {
@@ -273,7 +288,10 @@ export async function getSessionStats(userId?: string): Promise<
     console.error('Error fetching session stats:', error)
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch session stats',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch session stats',
     }
   }
 }

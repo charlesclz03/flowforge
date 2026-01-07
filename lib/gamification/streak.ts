@@ -5,7 +5,11 @@ export class StreakSystem {
   static async checkAndUpdate(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { currentStreak: true, longestStreak: true, lastPracticeDate: true },
+      select: {
+        currentStreak: true,
+        longestStreak: true,
+        lastPracticeDate: true,
+      },
     })
 
     if (!user) return null

@@ -27,7 +27,9 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
 
   // Status State
   const [isLoading, setIsLoading] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<
+    'idle' | 'uploading' | 'success' | 'error'
+  >('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -177,9 +179,14 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
                 </>
               ) : (
                 <>
-                  <Upload className={isPro ? 'text-accent-purple' : 'text-white/20'} size={32} />
+                  <Upload
+                    className={isPro ? 'text-accent-purple' : 'text-white/20'}
+                    size={32}
+                  />
                   <p className="text-white font-medium">Click to Upload Beat</p>
-                  <p className="text-xs text-text-tertiary">MP3, WAV supported</p>
+                  <p className="text-xs text-text-tertiary">
+                    MP3, WAV supported
+                  </p>
                 </>
               )}
             </div>
@@ -249,8 +256,8 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
                   </button>
                 </div>
                 <p className="text-[10px] text-text-tertiary">
-                  Play the beat and click "Set Start Point" exactly when the first bar drops. This
-                  syncs your lyrics.
+                  Play the beat and click "Set Start Point" exactly when the
+                  first bar drops. This syncs your lyrics.
                 </p>
               </div>
 
@@ -291,7 +298,11 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
         </form>
       </div>
 
-      <PremiumModal isOpen={showPremium} onClose={() => setShowPremium(false)} trigger="beat" />
+      <PremiumModal
+        isOpen={showPremium}
+        onClose={() => setShowPremium(false)}
+        trigger="beat"
+      />
     </>
   )
 }

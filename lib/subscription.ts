@@ -7,7 +7,10 @@ export async function checkSubscription(userId: string): Promise<boolean> {
   })
 
   // Check for active or trialing status
-  return user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
+  return (
+    user?.subscriptionStatus === 'active' ||
+    user?.subscriptionStatus === 'trialing'
+  )
 }
 
 export async function requirePro(userId: string) {

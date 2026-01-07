@@ -35,7 +35,9 @@ export async function uploadRecording(
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage.from(RECORDINGS_BUCKET).getPublicUrl(filePath)
+    const { data: urlData } = supabase.storage
+      .from(RECORDINGS_BUCKET)
+      .getPublicUrl(filePath)
 
     return {
       storageUrl: urlData.publicUrl,
@@ -52,7 +54,9 @@ export async function uploadRecording(
  */
 export async function deleteRecording(filePath: string): Promise<void> {
   try {
-    const { error } = await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
+    const { error } = await supabase.storage
+      .from(RECORDINGS_BUCKET)
+      .remove([filePath])
 
     if (error) {
       throw new Error(`Failed to delete recording: ${error.message}`)

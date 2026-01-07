@@ -39,7 +39,10 @@ export class WordGenerator {
     if (this.safeMode) {
       const explicitWords = ['fuck', 'shit', 'bitch', 'damn']
       difficultyWords = difficultyWords.filter(
-        (w) => !explicitWords.some((explicit) => w.wordText.toLowerCase().includes(explicit))
+        (w) =>
+          !explicitWords.some((explicit) =>
+            w.wordText.toLowerCase().includes(explicit)
+          )
       )
     }
 
@@ -102,7 +105,10 @@ export class WordGenerator {
    * Get statistics
    */
   getStats() {
-    const difficultyWords = filterByDifficulty(this.words, this.currentDifficulty)
+    const difficultyWords = filterByDifficulty(
+      this.words,
+      this.currentDifficulty
+    )
 
     return {
       totalWords: this.words.length,

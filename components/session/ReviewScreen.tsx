@@ -22,7 +22,9 @@ export function ReviewScreen({
   onDiscard,
   className,
 }: ReviewScreenProps) {
-  const [title, setTitle] = useState(`${beatTitle} - ${new Date().toLocaleDateString()}`)
+  const [title, setTitle] = useState(
+    `${beatTitle} - ${new Date().toLocaleDateString()}`
+  )
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)

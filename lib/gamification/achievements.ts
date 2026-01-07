@@ -12,7 +12,9 @@ export class AchievementSystem {
     const newlyUnlocked: string[] = []
 
     // Fetch user stats for checks
-    const sessionCount = await prisma.freestyleSession.count({ where: { userId } })
+    const sessionCount = await prisma.freestyleSession.count({
+      where: { userId },
+    })
     const recordingCount = await prisma.freestyleSession.count({
       where: { userId, storageUrl: { not: null } },
     })
@@ -30,7 +32,9 @@ export class AchievementSystem {
       select: { achievementId: true, achievement: { select: { code: true } } },
     })
     const unlockedCodes = new Set(
-      userAchievements.map((ua: { achievement: { code: string } }) => ua.achievement.code)
+      userAchievements.map(
+        (ua: { achievement: { code: string } }) => ua.achievement.code
+      )
     )
 
     // Define Checks
@@ -54,11 +58,13 @@ export class AchievementSystem {
       // Time (Context specific)
       {
         code: 'EARLY_BIRD',
-        condition: context.type === 'SESSION_COMPLETE' && new Date().getHours() < 8,
+        condition:
+          context.type === 'SESSION_COMPLETE' && new Date().getHours() < 8,
       },
       {
         code: 'NIGHT_OWL',
-        condition: context.type === 'SESSION_COMPLETE' && new Date().getHours() >= 23,
+        condition:
+          context.type === 'SESSION_COMPLETE' && new Date().getHours() >= 23,
       },
       {
         code: 'WEEKEND_WARRIOR',
@@ -116,10 +122,12 @@ export class AchievementSystem {
 
     // Aggregate in memory
     const scores: Record<string, number> = {}
-    entries.forEach((entry: { userId: string; achievement: { points: number } }) => {
-      const pts = entry.achievement.points
-      scores[entry.userId] = (scores[entry.userId] || 0) + pts
-    })
+    entries.forEach(
+      (entry: { userId: string; achievement: { points: number } }) => {
+        const pts = entry.achievement.points
+        scores[entry.userId] = (scores[entry.userId] || 0) + pts
+      }
+    )
 
     // Sort
     const sorted = Object.entries(scores)

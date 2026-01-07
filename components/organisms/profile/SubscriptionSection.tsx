@@ -8,7 +8,9 @@ import { ManageSubscriptionButton } from '@/components/subscription/ManageSubscr
 
 export function SubscriptionSection() {
   const { data: session } = useSession()
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly')
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>(
+    'monthly'
+  )
 
   const isPro =
     session?.user?.subscriptionStatus === 'active' ||
@@ -50,7 +52,8 @@ export function SubscriptionSection() {
                       : 'text-text-secondary hover:text-white'
                   }`}
                 >
-                  Yearly <span className="text-xs text-accent-green ml-1">-17%</span>
+                  Yearly{' '}
+                  <span className="text-xs text-accent-green ml-1">-17%</span>
                 </button>
               </div>
             </div>
@@ -60,7 +63,10 @@ export function SubscriptionSection() {
               <div className="rounded-2xl border border-stroke-subtle/40 bg-background-card/40 p-6 backdrop-blur-light">
                 <h3 className="text-lg font-medium text-white">Free</h3>
                 <p className="mt-1 text-3xl font-light text-white">
-                  €0<span className="text-base text-text-secondary">/forever</span>
+                  €0
+                  <span className="text-base text-text-secondary">
+                    /forever
+                  </span>
                 </p>
 
                 <ul className="mt-5 space-y-3">

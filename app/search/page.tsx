@@ -37,7 +37,11 @@ async function search(query: string) {
   return { beats, users }
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: { q?: string }
+}) {
   const query = searchParams.q || ''
   const { beats, users } = await search(query)
 
@@ -80,7 +84,9 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                   ))}
                 </div>
               ) : (
-                <p className="text-text-tertiary italic">No beats found matching "{query}".</p>
+                <p className="text-text-tertiary italic">
+                  No beats found matching "{query}".
+                </p>
               )}
             </section>
 
@@ -93,19 +99,26 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                     <Link key={user.id} href={`/u/${user.id}`}>
                       {/* Using ID for now as per Profile Page logic */}
                       <div className="group bg-background-elevated hover:bg-white/5 border border-white/5 rounded-xl p-4 flex items-center gap-4 transition-colors">
-                        <Avatar src={user.image} fallback={user.name?.[0] || 'U'} />
+                        <Avatar
+                          src={user.image}
+                          fallback={user.name?.[0] || 'U'}
+                        />
                         <div>
                           <h3 className="font-bold text-white group-hover:text-accent-purple transition-colors">
                             {user.name || 'Anonymous'}
                           </h3>
-                          <p className="text-xs text-text-tertiary">@{user.username || 'user'}</p>
+                          <p className="text-xs text-text-tertiary">
+                            @{user.username || 'user'}
+                          </p>
                         </div>
                       </div>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <p className="text-text-tertiary italic">No users found matching "{query}".</p>
+                <p className="text-text-tertiary italic">
+                  No users found matching "{query}".
+                </p>
               )}
             </section>
           </div>

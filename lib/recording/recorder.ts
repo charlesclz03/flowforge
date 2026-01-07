@@ -71,13 +71,18 @@ export class AudioRecorder {
     // Initialize Web Audio Context if needed
     if (!this.audioContext || this.audioContext.state === 'closed') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      this.audioContext = new (
+        window.AudioContext || (window as any).webkitAudioContext
+      )()
       this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
     }
 
     // Set up Audio Graph: Mic -> Destination
-    this.mediaStreamSource = this.audioContext.createMediaStreamSource(this.stream)
-    this.mediaStreamDestination = this.audioContext.createMediaStreamDestination()
+    this.mediaStreamSource = this.audioContext.createMediaStreamSource(
+      this.stream
+    )
+    this.mediaStreamDestination =
+      this.audioContext.createMediaStreamDestination()
     this.mediaStreamSource.connect(this.mediaStreamDestination)
 
     const finalStream = this.mediaStreamDestination.stream
@@ -173,7 +178,10 @@ export class AudioRecorder {
       return null
     }
 
-    console.log('Stopping MediaRecorder, current state:', this.mediaRecorder.state)
+    console.log(
+      'Stopping MediaRecorder, current state:',
+      this.mediaRecorder.state
+    )
     console.log('Audio chunks collected so far:', this.audioChunks.length)
 
     // Stop the MediaRecorder - this will trigger onstop event

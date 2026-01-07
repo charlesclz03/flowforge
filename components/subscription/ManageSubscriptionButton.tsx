@@ -24,7 +24,9 @@ export function ManageSubscriptionButton() {
       }
     } catch (error) {
       console.error('Portal error:', error)
-      alert(error instanceof Error ? error.message : 'Failed to open billing portal')
+      alert(
+        error instanceof Error ? error.message : 'Failed to open billing portal'
+      )
     } finally {
       setLoading(false)
     }

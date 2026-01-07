@@ -13,7 +13,13 @@ interface ShareButtonProps {
   className?: string
 }
 
-export function ShareButton({ title, text, url, audioBlob, className }: ShareButtonProps) {
+export function ShareButton({
+  title,
+  text,
+  url,
+  audioBlob,
+  className,
+}: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
