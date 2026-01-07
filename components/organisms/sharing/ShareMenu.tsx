@@ -2,7 +2,6 @@
 
 import { Twitter, Facebook, Link as LinkIcon, Download } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { toast } from 'react-hot-toast'
 
 interface ShareMenuProps {
   title: string
@@ -21,7 +20,7 @@ export function ShareMenu({ title, text, url, audioBlob, onClose, className }: S
   const handleShare = (platform: string) => {
     const shareText = text ? encodeURIComponent(text) : ''
     const shareUrl = url ? encodeURIComponent(url) : ''
-    const shareTitle = title ? encodeURIComponent(title) : ''
+    // const shareTitle = title ? encodeURIComponent(title) : '' // unused
 
     let shareLink = ''
 

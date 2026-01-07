@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Swords, Mic, Globe, Zap } from 'lucide-react'
+import { ArrowLeft, Swords, Globe, Zap } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 
 export default function DuelPage() {
@@ -61,9 +61,7 @@ export default function DuelPage() {
               <Zap className="w-10 h-10 text-gray-300" />
             </div>
             <h2 className="text-2xl font-bold mb-2">Accept Challenge</h2>
-            <p className="text-gray-400 mb-8">
-              Enter the battle code to join an existing duel.
-            </p>
+            <p className="text-gray-400 mb-8">Enter the battle code to join an existing duel.</p>
             <div className="w-full flex gap-2">
               <input
                 type="text"
@@ -71,7 +69,10 @@ export default function DuelPage() {
                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 text-center tracking-widest uppercase placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-accent-orange/50 transition-colors"
                 maxLength={4}
               />
-              <Button variant="outline" className="px-6 hover:text-accent-orange hover:border-accent-orange">
+              <Button
+                variant="outline"
+                className="px-6 hover:text-accent-orange hover:border-accent-orange"
+              >
                 Fight
               </Button>
             </div>

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
 import { PostProcessingModal } from './PostProcessingModal'
 import { useState } from 'react'
-import { toast } from 'react-hot-toast'
+
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface SessionSummaryData {
