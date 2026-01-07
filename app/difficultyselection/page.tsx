@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { DifficultySelector } from '@/components/molecules/practice/DifficultySelector'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -25,6 +25,7 @@ import { useSession } from 'next-auth/react'
 
 export default function DifficultySelectionPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { data: session } = useSession()
   const { error, handleError, clearError } = useErrorHandler()
   const {
@@ -52,6 +53,17 @@ export default function DifficultySelectionPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoadingBeats, setIsLoadingBeats] = useState(true)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+
+  // Handle Pre-selection from Tracks Page
+  useEffect(() => {
+    const beatId = searchParams.get('beatId')
+    if (beatId && beats.length > 0) {
+      const beat = beats.find((b) => b.id === beatId)
+      if (beat) {
+        setBeat(beat)
+      }
+    }
+  }, [searchParams, beats, setBeat])
 
   // Fetch beats for selection
   useEffect(() => {

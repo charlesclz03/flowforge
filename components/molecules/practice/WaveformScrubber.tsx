@@ -124,6 +124,33 @@ export function WaveformScrubber({
       ctx.fillRect(i, centerY - barHeight / 2, 2, barHeight)
     }
 
+    // Draw Time Ticks
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+    ctx.font = '10px Inter, sans-serif'
+    ctx.textAlign = 'center'
+
+    // Determine tick interval (e.g., every 1 second)
+    const tickInterval = 1 // second
+    const startTick = Math.floor(leftTime / tickInterval) * tickInterval
+    const endTick =
+      Math.ceil((leftTime + viewWidth / pixelsPerSecond) / tickInterval) * tickInterval
+
+    for (let t = startTick; t <= endTick; t += tickInterval) {
+      const x = (t - leftTime) * pixelsPerSecond
+      // Draw tick line
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
+      ctx.fillRect(x, height - 10, 1, 5)
+
+      // Draw label every 5 seconds
+      if (t % 5 === 0) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+        const minutes = Math.floor(t / 60)
+        const seconds = Math.floor(t % 60)
+        const label = `${minutes}:${seconds.toString().padStart(2, '0')}`
+        ctx.fillText(label, x, height - 15)
+      }
+    }
+
     // Draw Center Indicator (The Cue Point)
     // Actually, user wants to "scroll on wave to pick queuepoint".
     // Usually that means a fixed center line represents the selection.
@@ -137,9 +164,12 @@ export function WaveformScrubber({
     ctx.lineTo(selectionX, height)
     ctx.stroke()
 
-    // Draw Overlay Time
+    // "DROP" Label
+    ctx.fillStyle = '#F43F5E'
+    ctx.font = 'bold 10px sans-serif'
+    ctx.fillText('DROP', selectionX, 10)
 
-    // Notify Parent
+    // Draw Overlay Time
     // We debounce this or do it on drag end?
     // Doing it on drag ensures "Touch the wave... it will select"
     // But we shouldn't spam it.
@@ -198,6 +228,32 @@ export function WaveformScrubber({
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      onClick={(e) => {
+        // Tap to Seek Logic
+        if (isDragging) return // Ignore if it was a drag
+        const rect = containerRef.current?.getBoundingClientRect()
+        if (!rect) return
+
+        const clickX = e.clientX - rect.left
+        const containerWidth = rect.width
+        const centerOffset = containerWidth / 2
+
+        // Current Time at Center = scrollX / pixelsPerSecond
+        // We want the time at ClickX to become the new Center
+        // Time at ClickX = (scrollX + clickX) / pixelsPerSecond
+
+        // Actually, simpler logic:
+        // The user clicked at pixel X.
+        // That pixel represents a specific time relative to current scroll.
+        // We want to shift scroll so that specific time moves to center.
+
+        const shiftAmount = clickX - centerOffset
+        const newScrollX = Math.max(0, scrollX + shiftAmount)
+
+        setScrollX(newScrollX)
+        const newTime = Math.max(0, (newScrollX + centerOffset) / pixelsPerSecond)
+        onChange(newTime)
+      }}
     >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center z-10">

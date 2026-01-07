@@ -147,7 +147,7 @@ export function BottomNav() {
               Create an account to save your sessions, track progress, and unlock all features.
             </p>
             <button
-              onClick={() => signIn('google')}
+              onClick={() => signIn('google', { callbackUrl: '/difficultyselection' })}
               className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">

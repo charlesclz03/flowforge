@@ -5,6 +5,7 @@ import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
 import { PostProcessingModal } from './PostProcessingModal'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface SessionSummaryData {
   score: number
@@ -40,28 +41,6 @@ export default function SessionSummaryModal({ data, onClose }: SessionSummaryMod
         }}
       />
     )
-  }
-
-  const handleNativeShare = async () => {
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My FreeStyla Session',
-          text: `Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`,
-          url: window.location.origin,
-        })
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          console.error('Share failed:', err)
-        }
-      }
-    } else {
-      // Fallback: Copy to clipboard
-      navigator.clipboard.writeText(
-        `I just flowed on FreeStyla! Vibe score: ${data.score}. Join me at ${window.location.origin}`
-      )
-      toast.success('Share link copied to clipboard!')
-    }
   }
 
   return (
@@ -154,13 +133,12 @@ export default function SessionSummaryModal({ data, onClose }: SessionSummaryMod
                 <Share2 size={16} />
                 PNG Record
               </Button>
-              <Button
-                onClick={handleNativeShare}
-                className="bg-accent-blue text-white hover:bg-accent-blue/90 flex items-center justify-center gap-2"
-              >
-                <Share2 size={16} />
-                Share
-              </Button>
+              <ShareButton
+                title="My FreeStyla Session"
+                text={`Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`}
+                url={window?.location?.origin}
+                className="bg-accent-blue text-white hover:bg-accent-blue/90 w-full justify-center"
+              />
             </div>
           )}
           <Button

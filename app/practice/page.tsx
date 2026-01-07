@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
 
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
@@ -52,13 +51,6 @@ export default function PracticePage() {
   const { play } = useSound()
 
   // Accessibility
-
-  // Zen Mode State
-  const [isZen, setIsZen] = useState(false)
-  const toggleZen = () => {
-    play('click')
-    setIsZen(!isZen)
-  }
 
   // Session State
   const {
@@ -374,6 +366,14 @@ export default function PracticePage() {
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
+    const offsetMs = (selectedBeat.offset || 0) * 1000
+    const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
+
+    // Calculate when to start/seek audio so drop hits at "GO"
+    // Time to Start Audio = (Start of Countdown) + (Total Countdown Duration) - (Time to Drop in Audio)
+    // If positive: We wait that long, then play from 0.
+    // If negative: We seek into the audio and play immediately.
+    const timeToStartAudio = totalCountdownMs - offsetMs
 
     const playBeep = (freq: number, type: OscillatorType) => {
       // Inline beep logic or reuse hook if complex. useSound is for UI sounds, this is rhythmic.
@@ -394,6 +394,37 @@ export default function PracticePage() {
       osc.stop(ctx.currentTime + 0.5)
     }
 
+    // Schedule Audio Start
+    let audioStartTimer: NodeJS.Timeout | null = null
+
+    // We need to ensure we don't start recording until "GO" usually,
+    // but if we seek deep into audio, we might want to start?
+    // No, "Practice" starts at "GO". Audio helps you prep.
+
+    const triggerAudio = async () => {
+      try {
+        if (timeToStartAudio < 0) {
+          // Offset is larger than countdown (long intro)
+          // Seek to where we need to be
+          const seekTime = Math.abs(timeToStartAudio) / 1000
+          beatPlayer.seek(seekTime)
+          await beatPlayer.play()
+        } else {
+          // Offset is small (short intro), play from 0
+          await beatPlayer.play()
+        }
+      } catch (err) {
+        handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+      }
+    }
+
+    if (timeToStartAudio > 0) {
+      audioStartTimer = setTimeout(triggerAudio, timeToStartAudio)
+    } else {
+      triggerAudio()
+    }
+
+    // Run Countdown Visuals
     const sequence = [3, 2, 1, 'GO']
     for (const val of sequence) {
       setCountdownValue(val as number | 'GO' | null)
@@ -402,11 +433,12 @@ export default function PracticePage() {
       await new Promise((r) => setTimeout(r, msPerBeat))
     }
 
-    // THE DROP
+    // THE DROP (GO) logic
     clearError()
     if (wordList.length > 0 && !currentWord) setCurrentWord(wordList[0])
+
+    // Start Recorder
     try {
-      beatPlayer.play()
       if (!isRecording) {
         await requestLock()
         if (isPro) startRecording(true).catch(console.error)
@@ -414,10 +446,14 @@ export default function PracticePage() {
         resumeRecording()
       }
     } catch (err) {
-      handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+      console.error('Recording start failed', err)
     }
 
     setTimeout(() => setCountdownValue(null), 1000)
+
+    return () => {
+      if (audioStartTimer) clearTimeout(audioStartTimer)
+    }
   }, [
     selectedBeat,
     beatPlayer,
@@ -484,14 +520,24 @@ export default function PracticePage() {
       if (!params.selectedBeat || params.wordList.length === 0) return
 
       const elapsed = beatPlayer.getPreciseTime()
-      if (elapsed >= params.sessionDuration) {
-        handleStop()
-        return
+
+      // Stop condition
+      if (elapsed >= params.sessionDuration + (params.selectedBeat.offset || 0)) {
+        // Extend duration by offset if needed? No, duration is usually flow time.
+        // Actually Session Duration should probably start counting from "GO"
+        // If elapsed is audio time, and we start at offset...
+        // "Session Time" = elapsed - offset.
+        if (elapsed - (params.selectedBeat.offset || 0) >= params.sessionDuration) {
+          handleStop()
+          return
+        }
       }
+
+      const sessionTime = Math.max(0, elapsed - (params.selectedBeat.offset || 0))
 
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
       const secondsPerPrompt = secondsPerBar * params.frequency
-      const wordIdx = Math.floor(elapsed / secondsPerPrompt)
+      const wordIdx = Math.floor(sessionTime / secondsPerPrompt)
       const actualIndex = wordIdx % params.wordList.length
 
       if (wordIdx !== state.lastWordIndex) {
@@ -561,36 +607,11 @@ export default function PracticePage() {
       onBack={() => router.push('/difficultyselection')}
     >
       <div className="min-h-screen pt-20 pb-8 px-4 md:px-8 max-w-7xl mx-auto space-y-6">
-        {/* Header & Zen Toggle */}
-        <div
-          className={cn(
-            'flex justify-between items-center transition-all duration-500',
-            isZen && !isRecording ? 'opacity-30 hover:opacity-100' : 'opacity-100'
-          )}
-        >
+        {/* Header */}
+        <div className="flex justify-center items-center">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
             {selectedBeat ? selectedBeat.title : 'Practice Session'}
           </h1>
-
-          <button
-            onClick={toggleZen}
-            className={cn(
-              'px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border flex items-center gap-2 touch-target',
-              isZen
-                ? 'bg-accent-purple/20 border-accent-purple text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]'
-                : 'bg-white/5 border-white/10 text-text-secondary hover:bg-white/10'
-            )}
-          >
-            {isZen ? (
-              <>
-                <span>🌸</span> Zen Active
-              </>
-            ) : (
-              <>
-                <span>🧘</span> Zen Mode
-              </>
-            )}
-          </button>
         </div>
 
         {/* Classic Centralized Layout */}

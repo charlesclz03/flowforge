@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
@@ -17,8 +18,14 @@ export default function TracksPage() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
-  // const router = useRouter() // Unused
+  const handleUseTrack = (beat: Beat) => {
+    // Navigate to practice setup with this beat selected
+    router.push(`/difficultyselection?beatId=${beat.id}`)
+  }
+
+  // --- Render Helpers ---
   const { data: session } = useSession()
+  const router = useRouter()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
 
@@ -239,12 +246,14 @@ export default function TracksPage() {
               <BeatGridCard
                 key={beat.id}
                 beat={beat}
-                isSelected={false}
+                isSelected={playingBeatId === beat.id}
                 isPlaying={playingBeatId === beat.id}
                 isFavorited={favoriteIds.has(beat.id)}
+                isLocked={!isPro && beat.isPremium}
                 onPlay={() => handlePlay(beat)}
                 onSelect={() => {}}
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
+                onUseTrack={() => handleUseTrack(beat)}
                 onDelete={
                   beat.uploaderId && beat.uploaderId === session?.user?.id
                     ? () => handleDeleteBeat(beat.id)

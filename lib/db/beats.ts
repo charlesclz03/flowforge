@@ -76,7 +76,7 @@ export async function getBeats(filters?: BeatFilters): Promise<DatabaseResult<Be
       }
       return {
         ...b,
-        storageUrl: url?.replace(/\s+/g, '-') ?? url,
+        storageUrl: url,
       }
     })
 

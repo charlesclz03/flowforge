@@ -13,6 +13,7 @@ import { ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
+import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface RecordingCardProps {
   recording: FreestyleSessionWithBeat
@@ -202,32 +203,12 @@ export const RecordingCard = memo(function RecordingCard({
 
           {/* Share Button */}
           {recording.storageUrl && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={async () => {
-                const shareUrl = `${window.location.origin}/review/${recording.id}`
-                const shareData = {
-                  title: recording.title,
-                  text: `Check out my freestyle flow on FlowForge!`,
-                  url: shareUrl,
-                }
-
-                if (typeof navigator !== 'undefined' && navigator.share) {
-                  try {
-                    await navigator.share(shareData)
-                  } catch (err) {
-                    // Ignore abort
-                  }
-                } else {
-                  navigator.clipboard.writeText(shareUrl)
-                  toast.success('Link copied to clipboard!')
-                }
-              }}
-              leftIcon={<Share2 size={16} />}
-            >
-              Share
-            </Button>
+            <ShareButton
+              title={recording.title}
+              text="Check out my freestyle flow on FlowForge!"
+              url={`${window.location.origin}/review/${recording.id}`}
+              className="border-none bg-transparent hover:bg-white/10 px-2 w-auto" // Styling to match existing ghost buttons
+            />
           )}
 
           {/* Export Button */}

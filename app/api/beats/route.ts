@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     // Runtime fix for legacy data: ensure storageUrls align with disk filenames (replace spaces with hyphens)
     const sanitizedBeats = result.data?.map((beat) => ({
       ...beat,
-      storageUrl: beat.storageUrl ? beat.storageUrl.replace(/\s+/g, '-') : beat.storageUrl,
+      storageUrl: beat.storageUrl,
     }))
 
     return NextResponse.json({

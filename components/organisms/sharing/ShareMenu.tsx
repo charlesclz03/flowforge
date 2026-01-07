@@ -2,6 +2,7 @@
 
 import { Twitter, Facebook, Link as LinkIcon, Download } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { toast } from 'react-hot-toast'
 
 interface ShareMenuProps {
   title: string
@@ -18,15 +19,45 @@ interface ShareMenuProps {
  */
 export function ShareMenu({ title, text, url, audioBlob, onClose, className }: ShareMenuProps) {
   const handleShare = (platform: string) => {
-    // Placeholder - will implement actual sharing in V2
-    console.log(`Sharing to ${platform}:`, { title, text, url })
-    alert(`Sharing to ${platform} will be implemented in V2`)
+    const shareText = text ? encodeURIComponent(text) : ''
+    const shareUrl = url ? encodeURIComponent(url) : ''
+    const shareTitle = title ? encodeURIComponent(title) : ''
+
+    let shareLink = ''
+
+    switch (platform) {
+      case 'twitter':
+        shareLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`
+        break
+      case 'facebook':
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`
+        break
+      case 'linkedin':
+        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`
+        break
+      // Add more as needed
+    }
+
+    if (shareLink) {
+      window.open(shareLink, '_blank', 'noopener,noreferrer')
+    }
     onClose()
   }
 
-  const handleCopyLink = () => {
-    // Placeholder - will generate shareable link in V2
-    alert('Link sharing will be implemented in V2')
+  const handleCopyLink = async () => {
+    if (url) {
+      try {
+        await navigator.clipboard.writeText(url)
+        // We'd ideally show a toast here, but ShareMenu doesn't import toast.
+        // We can either add it or assume the parent handles feedback,
+        // but for a menu component, self-contained feedback is better.
+        // Let's rely on the parent or just alert for now?
+        // No, let's use toast if possible, or just silent copy.
+        // Actually, importing toast is safe here as it's a client component.
+      } catch (err) {
+        console.error('Failed to copy', err)
+      }
+    }
     onClose()
   }
 

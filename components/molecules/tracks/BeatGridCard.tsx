@@ -15,6 +15,7 @@ interface BeatGridCardProps {
   onSelect: () => void
   onToggleFavorite: (e: React.MouseEvent) => void
   onDelete?: (e: React.MouseEvent) => void
+  onUseTrack?: (e: React.MouseEvent) => void
 }
 
 export function BeatGridCard({
@@ -27,6 +28,7 @@ export function BeatGridCard({
   onSelect,
   onToggleFavorite,
   onDelete,
+  onUseTrack,
 }: BeatGridCardProps) {
   // Placeholder gradients based on genre or random
   const gradients = [
@@ -140,21 +142,41 @@ export function BeatGridCard({
                   e.stopPropagation()
                   onDelete(e)
                 }}
-                className="group/del p-1 text-text-tertiary hover:text-red-400 transition-colors"
+                className="group/del p-2 text-text-tertiary hover:text-red-400 transition-colors"
+                title="Delete Beat"
               >
                 <Trash2 size={16} />
               </button>
             )}
+
+            {/* Use Track Button (New) */}
+            {onUseTrack && !isLocked && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onUseTrack(e)
+                }}
+                className="p-2 text-text-secondary hover:text-accent-purple transition-colors bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-1"
+                title="Use this track"
+              >
+                <span className="text-[10px] uppercase font-bold hidden group-hover:block">
+                  Use
+                </span>
+                <Play size={16} className="fill-current" />
+              </button>
+            )}
+
             <button
               onClick={onToggleFavorite}
               disabled={isLocked}
               className={cn(
-                'group/fav p-1 transition-colors',
+                'group/fav p-2 transition-colors hover:bg-white/5 rounded-lg',
                 isFavorited ? 'text-accent-pink' : 'text-text-tertiary hover:text-accent-pink',
                 isLocked && 'pointer-events-none opacity-0'
               )}
+              title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
             >
-              <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} />
+              <Heart size={22} fill={isFavorited ? 'currentColor' : 'none'} />
             </button>
           </div>
         </div>

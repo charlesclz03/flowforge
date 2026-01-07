@@ -37,6 +37,7 @@ export function BeatDropdown({
   const [isOpen, setIsOpen] = useState(false)
   const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
   const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null)
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
 
   // Local Beats State
   const [localBeats, setLocalBeats] = useState<Beat[]>([])
@@ -228,7 +229,7 @@ export function BeatDropdown({
   }
 
   // Extract genres/tags
-  const displayedBeats = beats
+  const displayedBeats = showFavoritesOnly ? beats.filter((b) => favoriteBeatIds.has(b.id)) : beats
 
   if (isLoading) {
     return (
@@ -283,7 +284,7 @@ export function BeatDropdown({
         {isOpen && (
           <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
             <Tabs defaultValue="library" className="flex flex-col h-full overflow-hidden">
-              <div className="px-3 pt-3 pb-2 border-b border-white/5">
+              <div className="px-3 pt-3 pb-2 border-b border-white/5 space-y-2">
                 <TabsList className="w-full bg-white/5">
                   <TabsTrigger value="library" className="flex-1">
                     Library
@@ -308,10 +309,32 @@ export function BeatDropdown({
                     </TabsTrigger>
                   )}
                 </TabsList>
+
+                {/* Filters */}
+                <div className="flex items-center justify-between px-1 shrink-0">
+                  <button
+                    onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                    className={cn(
+                      'text-xs font-medium flex items-center gap-1.5 transition-colors px-2 py-1 rounded-md',
+                      showFavoritesOnly
+                        ? 'text-accent-pink bg-accent-pink/10'
+                        : 'text-text-secondary hover:text-white'
+                    )}
+                  >
+                    <Heart size={12} fill={showFavoritesOnly ? 'currentColor' : 'none'} />
+                    <span>Favorites Only</span>
+                  </button>
+                  <span className="text-[10px] text-text-tertiary">
+                    {displayedBeats.length} beats
+                  </span>
+                </div>
               </div>
 
               {/* Library Tab */}
-              <TabsContent value="library" className="flex-1 min-h-0 overflow-y-auto mt-0">
+              <TabsContent
+                value="library"
+                className="flex-1 min-h-0 overflow-y-auto mt-0 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+              >
                 {/* Genre Filter Strip */}
                 {/* Filter strip removed as requested */}
 
@@ -418,7 +441,10 @@ export function BeatDropdown({
               </TabsContent>
 
               {/* My Beats Tab (Cloud) */}
-              <TabsContent value="my-beats" className="flex-1 min-h-0 overflow-y-auto mt-0">
+              <TabsContent
+                value="my-beats"
+                className="flex-1 min-h-0 overflow-y-auto mt-0 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+              >
                 <div className="p-4 border-b border-white/5"></div>
                 <div className="p-2 space-y-1">
                   {myBeats.length === 0 ? (
@@ -485,7 +511,10 @@ export function BeatDropdown({
 
               {/* Local Tab */}
               {isPro && (
-                <TabsContent value="local" className="flex-1 min-h-0 overflow-y-auto mt-0">
+                <TabsContent
+                  value="local"
+                  className="flex-1 min-h-0 overflow-y-auto mt-0 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+                >
                   <div className="p-4 border-b border-white/5">
                     <label className="flex items-center justify-center w-full gap-2 p-3 text-sm font-medium text-white transition-colors border border-dashed rounded-xl cursor-pointer bg-white/5 border-white/20 hover:bg-white/10 hover:border-accent-purple/50 hover:text-accent-purple">
                       <input

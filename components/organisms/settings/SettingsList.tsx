@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
+import { toast } from 'react-hot-toast'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
@@ -44,7 +45,9 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           <button
             onClick={(e) => {
               e.preventDefault()
-              setTTSEnabled(!isTTSEnabled)
+              const newValue = !isTTSEnabled
+              setTTSEnabled(newValue)
+              toast.success(newValue ? 'Voice Assistant Enabled' : 'Voice Assistant Disabled')
             }}
             className={cn(
               'w-9 h-5 rounded-full transition-colors relative',

@@ -21,12 +21,31 @@ export async function POST() {
       select: { customerId: true },
     })
 
-    if (!user?.customerId) {
-      return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
+    let customerId = user?.customerId
+
+    if (!customerId) {
+      // Fix for Superadmins who don't have a subscription but need access
+      const SUPERADMIN_EMAILS = ['charles.cluzeaud@gmail.com', 'triplyricist@gmail.com']
+      const userEmail = session.user.email
+
+      if (userEmail && SUPERADMIN_EMAILS.includes(userEmail)) {
+        const newCustomer = await stripe.customers.create({
+          email: userEmail,
+          name: session.user.name || undefined,
+        })
+
+        await prisma.user.update({
+          where: { id: session.user.id },
+          data: { customerId: newCustomer.id },
+        })
+        customerId = newCustomer.id
+      } else {
+        return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
+      }
     }
 
     const portalSession = await stripe.billingPortal.sessions.create({
-      customer: user.customerId,
+      customer: customerId!,
       return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
     })
 
