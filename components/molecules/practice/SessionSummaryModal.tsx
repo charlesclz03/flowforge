@@ -1,10 +1,11 @@
+'use client'
+
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
 import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
 import { PostProcessingModal } from './PostProcessingModal'
 import { useState } from 'react'
-
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 interface SessionSummaryData {

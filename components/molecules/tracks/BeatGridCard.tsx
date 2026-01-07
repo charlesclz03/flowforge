@@ -1,7 +1,7 @@
 'use client'
 
 import { Beat } from '@/types/database'
-import { Play, Square, Heart, Crown, Music, Lock, Trash2 } from 'lucide-react'
+import { Play, Square, Heart, Crown, Music, Lock, Trash2, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -77,7 +77,7 @@ export function BeatGridCard({
         {/* Overlay on hover/playing/locked */}
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-center transition-all duration-300',
+            'absolute inset-0 flex items-center justify-center gap-6 transition-all duration-300',
             (isPlaying || isSelected) && !isLocked
               ? 'bg-black/40 backdrop-blur-sm'
               : 'bg-black/0 opacity-0 group-hover:opacity-100 group-hover:bg-black/30',
@@ -90,22 +90,56 @@ export function BeatGridCard({
               <span className="text-[10px] font-medium uppercase tracking-wider">Locked</span>
             </div>
           ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onPlay()
-              }}
-              className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-full shadow-xl transition-transform hover:scale-110 active:scale-95',
-                isPlaying ? 'bg-accent-purple text-white' : 'bg-white text-black'
+            <>
+              {/* Favorite Button (Left) */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onToggleFavorite(e)
+                }}
+                className={cn(
+                  'flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 backdrop-blur-md',
+                  isFavorited
+                    ? 'bg-accent-pink text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                )}
+                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart size={24} fill={isFavorited ? 'currentColor' : 'none'} />
+              </button>
+
+              {/* Play Button (Center - Biggest) */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onPlay()
+                }}
+                className={cn(
+                  'flex h-20 w-20 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95',
+                  isPlaying ? 'bg-accent-purple text-white' : 'bg-white text-black'
+                )}
+              >
+                {isPlaying ? (
+                  <Square size={32} fill="currentColor" />
+                ) : (
+                  <Play size={32} fill="currentColor" className="ml-1" />
+                )}
+              </button>
+
+              {/* Use/Select Button (Right) */}
+              {onUseTrack && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onUseTrack(e)
+                  }}
+                  className="flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 bg-accent-blue text-white hover:bg-accent-blue/80 backdrop-blur-md"
+                  title="Use this track"
+                >
+                  <ArrowRight size={28} strokeWidth={3} />
+                </button>
               )}
-            >
-              {isPlaying ? (
-                <Square size={20} fill="currentColor" />
-              ) : (
-                <Play size={20} fill="currentColor" className="ml-1" />
-              )}
-            </button>
+            </>
           )}
         </div>
 
@@ -149,35 +183,7 @@ export function BeatGridCard({
               </button>
             )}
 
-            {/* Use Track Button (New) */}
-            {onUseTrack && !isLocked && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onUseTrack(e)
-                }}
-                className="p-2 text-text-secondary hover:text-accent-purple transition-colors bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-1"
-                title="Use this track"
-              >
-                <span className="text-[10px] uppercase font-bold hidden group-hover:block">
-                  Use
-                </span>
-                <Play size={16} className="fill-current" />
-              </button>
-            )}
-
-            <button
-              onClick={onToggleFavorite}
-              disabled={isLocked}
-              className={cn(
-                'group/fav p-2 transition-colors hover:bg-white/5 rounded-lg',
-                isFavorited ? 'text-accent-pink' : 'text-text-tertiary hover:text-accent-pink',
-                isLocked && 'pointer-events-none opacity-0'
-              )}
-              title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <Heart size={22} fill={isFavorited ? 'currentColor' : 'none'} />
-            </button>
+            {/* Note: Use and Favorite buttons moved to overlay */}
           </div>
         </div>
 
