@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 /**
  * DELETE /api/admin/cleanup-beats
@@ -11,23 +11,23 @@ export async function DELETE() {
     const externalBeats = await prisma.beat.findMany({
       where: {
         OR: [
-          { storageUrl: { contains: 'pixabay' } },
-          { storageUrl: { contains: 'example.com' } },
-          { storageUrl: { startsWith: 'http' } },
+          { storageUrl: { contains: "pixabay" } },
+          { storageUrl: { contains: "example.com" } },
+          { storageUrl: { startsWith: "http" } },
         ],
         // Only delete beats that don't have a local storageUrl
         NOT: {
-          storageUrl: { startsWith: '/beats/' },
+          storageUrl: { startsWith: "/beats/" },
         },
       },
-    })
+    });
 
     if (externalBeats.length === 0) {
       return NextResponse.json({
         success: true,
-        message: 'No external beats found to clean up',
+        message: "No external beats found to clean up",
         deleted: 0,
-      })
+      });
     }
 
     // Delete sessions associated with these beats first (foreign key constraint)
@@ -35,23 +35,26 @@ export async function DELETE() {
       where: {
         beatId: { in: externalBeats.map((b) => b.id) },
       },
-    })
+    });
 
     // Delete the beats
     const result = await prisma.beat.deleteMany({
       where: {
         id: { in: externalBeats.map((b) => b.id) },
       },
-    })
+    });
 
     return NextResponse.json({
       success: true,
       message: `Cleaned up ${result.count} beats with invalid URLs`,
       deleted: result.count,
       beatTitles: externalBeats.map((b) => b.title),
-    })
+    });
   } catch (error) {
-    console.error('Cleanup error:', error)
-    return NextResponse.json({ success: false, error: 'Failed to clean up beats' }, { status: 500 })
+    console.error("Cleanup error:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to clean up beats" },
+      { status: 500 },
+    );
   }
 }

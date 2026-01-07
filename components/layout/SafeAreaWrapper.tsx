@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { cn } from '@/lib/utils'
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SafeAreaWrapperProps {
-  children: React.ReactNode
-  className?: string
-  top?: boolean
-  bottom?: boolean
-  left?: boolean
-  right?: boolean
+  children: React.ReactNode;
+  className?: string;
+  top?: boolean;
+  bottom?: boolean;
+  left?: boolean;
+  right?: boolean;
 }
 
 /**
@@ -27,12 +27,12 @@ export const SafeAreaWrapper = ({
   return (
     <div
       className={cn(
-        'relative flex flex-col w-full h-full',
-        top && 'pt-[env(safe-area-inset-top)]',
-        bottom && 'pb-[env(safe-area-inset-bottom)]',
-        left && 'pl-[env(safe-area-inset-left)]',
-        right && 'pr-[env(safe-area-inset-right)]',
-        className
+        "relative flex flex-col w-full h-full",
+        top && "pt-[env(safe-area-inset-top)]",
+        bottom && "pb-[env(safe-area-inset-bottom)]",
+        left && "pl-[env(safe-area-inset-left)]",
+        right && "pr-[env(safe-area-inset-right)]",
+        className,
       )}
     >
       {/* 
@@ -40,7 +40,9 @@ export const SafeAreaWrapper = ({
         after safe areas are applied, enforcing the "Compressible Layout" logic 
         from the Audit.
       */}
-      <div className="flex-1 w-full h-full relative flex flex-col">{children}</div>
+      <div className="flex-1 w-full h-full relative flex flex-col">
+        {children}
+      </div>
     </div>
-  )
-}
+  );
+};

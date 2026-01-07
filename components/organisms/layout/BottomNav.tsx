@@ -1,71 +1,75 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Disc3, Mic, Trophy, User, CassetteTape } from 'lucide-react'
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { useSession, signIn } from 'next-auth/react'
-import { useHaptics } from '@/hooks/useHaptics'
+import { useState } from "react";
+import { Disc3, Mic, Trophy, User, CassetteTape } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { useSession, signIn } from "next-auth/react";
+import { useHaptics } from "@/hooks/useHaptics";
 
 export function BottomNav() {
-  const pathname = usePathname()
-  const { status } = useSession()
-  const isAuthenticated = status === 'authenticated'
-  const { bump } = useHaptics()
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const pathname = usePathname();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  const { bump } = useHaptics();
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   // Define tabs
   // Order: Vinyl (Home), Rankings, PRACTICE (Center), Recordings, Profile
   const tabs = [
     {
-      name: 'Vinyl',
-      href: '/tracks',
+      name: "Vinyl",
+      href: "/tracks",
       icon: Disc3,
-      match: (path: string) => path === '/tracks',
+      match: (path: string) => path === "/tracks",
     },
     {
-      name: 'Trophy',
-      href: '/achievements',
+      name: "Trophy",
+      href: "/achievements",
       icon: Trophy,
-      match: (path: string) => path.startsWith('/achievements') || path.startsWith('/leaderboard'),
+      match: (path: string) =>
+        path.startsWith("/achievements") || path.startsWith("/leaderboard"),
     },
     {
-      name: 'Record',
-      href: '/difficultyselection',
+      name: "Record",
+      href: "/difficultyselection",
       icon: Mic,
       match: (path: string) =>
-        path === '/practice' || path === '/difficultyselection' || path === '/howitworks',
+        path === "/practice" ||
+        path === "/difficultyselection" ||
+        path === "/howitworks",
       isPrimary: true,
     },
     {
-      name: 'Recordings',
-      href: '/recordings',
+      name: "Recordings",
+      href: "/recordings",
       icon: CassetteTape,
-      match: (path: string) => path.startsWith('/recordings'),
+      match: (path: string) => path.startsWith("/recordings"),
       requiresAuth: true,
     },
     {
-      name: 'Profile',
-      href: '/profile',
+      name: "Profile",
+      href: "/profile",
       icon: User,
-      match: (path: string) => path.startsWith('/profile') || path.startsWith('/u/'),
+      match: (path: string) =>
+        path.startsWith("/profile") || path.startsWith("/u/"),
       requiresAuth: true,
     },
-  ]
+  ];
 
   const handleTabClick = (e: React.MouseEvent, tab: (typeof tabs)[0]) => {
-    bump()
+    bump();
 
     // Check if this tab requires auth and user is not authenticated
     if (tab.requiresAuth && !isAuthenticated) {
-      e.preventDefault()
-      setShowLoginPrompt(true)
-      return
+      e.preventDefault();
+      setShowLoginPrompt(true);
+      return;
     }
 
     // Default navigation handled by Link
-  }
+  };
 
   return (
     <>
@@ -73,8 +77,10 @@ export function BottomNav() {
         {/* iOS-style Glass Dock */}
         <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5">
           {tabs.map((tab) => {
-            const isActive = tab.match ? tab.match(pathname) : pathname === tab.href
-            const isPrimary = 'isPrimary' in tab ? tab.isPrimary : false
+            const isActive = tab.match
+              ? tab.match(pathname)
+              : pathname === tab.href;
+            const isPrimary = "isPrimary" in tab ? tab.isPrimary : false;
 
             return (
               <Link
@@ -83,8 +89,8 @@ export function BottomNav() {
                 onClick={(e) => handleTabClick(e, tab)}
                 aria-label={tab.name}
                 className={cn(
-                  'relative flex flex-col items-center justify-center transition-all duration-300 group',
-                  isPrimary ? '-mt-8' : 'h-full'
+                  "relative flex flex-col items-center justify-center transition-all duration-300 group",
+                  isPrimary ? "-mt-8" : "h-full",
                 )}
               >
                 {/* Spotlight Effect for Non-Primary */}
@@ -98,34 +104,36 @@ export function BottomNav() {
                 {/* Icon Container */}
                 <div
                   className={cn(
-                    'relative flex items-center justify-center transition-all duration-300',
+                    "relative flex items-center justify-center transition-all duration-300",
                     isPrimary
                       ? cn(
-                          'w-16 h-16 rounded-full shadow-2xl shadow-purple-900/50',
+                          "w-16 h-16 rounded-full shadow-2xl shadow-purple-900/50",
                           isActive
-                            ? 'bg-accent-purple text-white scale-110'
-                            : 'bg-accent-purple text-white/90 hover:scale-105'
+                            ? "bg-accent-purple text-white scale-110"
+                            : "bg-accent-purple text-white/90 hover:scale-105",
                         )
                       : cn(
-                          'w-12 h-12 rounded-full',
-                          isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                        )
+                          "w-12 h-12 rounded-full",
+                          isActive
+                            ? "text-white"
+                            : "text-zinc-500 hover:text-zinc-300",
+                        ),
                   )}
                 >
                   <tab.icon
                     size={isPrimary ? 28 : 24}
                     className={cn(
-                      'transition-transform duration-300',
+                      "transition-transform duration-300",
                       isActive && !isPrimary
-                        ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]'
-                        : '',
-                      !isActive && !isPrimary ? 'group-hover:scale-110' : ''
+                        ? "scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]"
+                        : "",
+                      !isActive && !isPrimary ? "group-hover:scale-110" : "",
                     )}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
                 </div>
               </Link>
-            )
+            );
           })}
         </div>
       </nav>
@@ -144,10 +152,13 @@ export function BottomNav() {
               Sign in to access your profile
             </h2>
             <p className="text-text-secondary text-center text-sm">
-              Create an account to save your sessions, track progress, and unlock all features.
+              Create an account to save your sessions, track progress, and
+              unlock all features.
             </p>
             <button
-              onClick={() => signIn('google', { callbackUrl: '/difficultyselection' })}
+              onClick={() =>
+                signIn("google", { callbackUrl: "/difficultyselection" })
+              }
               className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -180,5 +191,5 @@ export function BottomNav() {
         </div>
       )}
     </>
-  )
+  );
 }

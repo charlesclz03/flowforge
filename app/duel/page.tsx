@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { ArrowLeft, Swords, Globe, Zap } from 'lucide-react'
-import { Button } from '@/components/atoms/Button'
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, Swords, Globe, Zap } from "lucide-react";
+import { Button } from "@/components/atoms/Button";
 
 export default function DuelPage() {
-  const [isCreating, setIsCreating] = useState(false)
+  const [isCreating, setIsCreating] = useState(false);
 
   return (
     <main className="min-h-[100dvh] bg-black text-white p-4 md:p-8 relative overflow-hidden">
@@ -19,7 +19,10 @@ export default function DuelPage() {
       <div className="max-w-4xl mx-auto relative z-10 font-sans">
         {/* Header */}
         <header className="flex items-center gap-4 mb-12">
-          <Link href="/" className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <Link
+            href="/"
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-orange to-red-500 bg-clip-text text-transparent">
@@ -51,7 +54,7 @@ export default function DuelPage() {
               onClick={() => setIsCreating(true)}
               disabled={isCreating}
             >
-              {isCreating ? 'Setting up Arena...' : 'Create Duel'}
+              {isCreating ? "Setting up Arena..." : "Create Duel"}
             </Button>
           </div>
 
@@ -61,7 +64,9 @@ export default function DuelPage() {
               <Zap className="w-10 h-10 text-gray-300" />
             </div>
             <h2 className="text-2xl font-bold mb-2">Accept Challenge</h2>
-            <p className="text-gray-400 mb-8">Enter the battle code to join an existing duel.</p>
+            <p className="text-gray-400 mb-8">
+              Enter the battle code to join an existing duel.
+            </p>
             <div className="w-full flex gap-2">
               <input
                 type="text"
@@ -83,8 +88,12 @@ export default function DuelPage() {
         <div className="mt-12 opacity-50 pointer-events-none grayscale">
           <div className="flex items-center gap-3 mb-6">
             <Globe className="w-5 h-5 text-gray-400" />
-            <h3 className="text-lg font-semibold text-gray-300">Ranked Matchmaking</h3>
-            <span className="text-xs bg-white/10 px-2 py-1 rounded text-gray-400">Coming Soon</span>
+            <h3 className="text-lg font-semibold text-gray-300">
+              Ranked Matchmaking
+            </h3>
+            <span className="text-xs bg-white/10 px-2 py-1 rounded text-gray-400">
+              Coming Soon
+            </span>
           </div>
 
           <div className="border border-white/5 rounded-2xl p-4 bg-white/[0.02]">
@@ -95,5 +104,5 @@ export default function DuelPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
