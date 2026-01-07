@@ -33,14 +33,18 @@ export default function TracksPage() {
 
   // Safe cast for user extended properties
   const user = session?.user
-  const isPro = user?.subscriptionStatus === 'active' || user?.subscriptionStatus === 'trialing'
+  const isPro =
+    user?.subscriptionStatus === 'active' ||
+    user?.subscriptionStatus === 'trialing'
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [beatsRes, userBeatsRes, favs] = await Promise.all([
           fetch('/api/beats').then((res) => res.json()),
-          fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
+          fetch('/api/user/beats').then((res) =>
+            res.ok ? res.json() : { beats: [] }
+          ),
           getFavoriteBeatIds(),
         ])
 
@@ -63,7 +67,9 @@ export default function TracksPage() {
     try {
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
         fetch('/api/beats').then((res) => res.json()),
-        fetch('/api/user/beats').then((res) => (res.ok ? res.json() : { beats: [] })),
+        fetch('/api/user/beats').then((res) =>
+          res.ok ? res.json() : { beats: [] }
+        ),
         getFavoriteBeatIds(),
       ])
 
@@ -181,7 +187,9 @@ export default function TracksPage() {
       (b) =>
         b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.tags.some((t: string) => t.toLowerCase().includes(searchQuery.toLowerCase()))
+        b.tags.some((t: string) =>
+          t.toLowerCase().includes(searchQuery.toLowerCase())
+        )
     )
 
   return (
@@ -252,7 +260,10 @@ export default function TracksPage() {
         {isLoading ? (
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square rounded-2xl bg-white/5 animate-pulse" />
+              <div
+                key={i}
+                className="aspect-square rounded-2xl bg-white/5 animate-pulse"
+              />
             ))}
           </div>
         ) : (
