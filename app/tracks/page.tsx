@@ -11,6 +11,7 @@ import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 import { useSession } from 'next-auth/react'
 import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -194,6 +195,7 @@ export default function TracksPage() {
 
   return (
     <div className="min-h-screen bg-background pb-32">
+      <AppHeader />
       <audio ref={audioRef} className="hidden" />
 
       <div className="px-6 pt-12 pb-6 space-y-6">
