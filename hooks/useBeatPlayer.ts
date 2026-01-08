@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import { AudioPlayer } from '@/lib/audio/player'
 import { BeatMetadata } from '@/lib/beats/types'
 
@@ -134,24 +134,41 @@ export function useBeatPlayer() {
     playerRef.current.setLoop(loop)
   }, [])
 
-  return {
-    // State
-    isPlaying,
-    currentTime: timeRef.current, // Caution: This won't trigger re-renders when it changes!
-    getPreciseTime: () => timeRef.current, // Expose direct getter for loop
-    duration,
-    isLoading,
-    error,
-    currentBeat: currentBeatRef.current,
+  // Memoize the return object to prevent unnecessary re-renders in consumers
+  return useMemo(
+    () => ({
+      // State
+      isPlaying,
+      currentTime: timeRef.current, // Keep ref access cheap
+      getPreciseTime: () => timeRef.current,
+      duration,
+      isLoading,
+      error,
+      currentBeat: currentBeatRef.current,
 
-    // Actions
-    loadBeat,
-    play,
-    pause,
-    stop,
-    toggle,
-    seek,
-    setVolume,
-    setLoop,
-  }
+      // Actions
+      loadBeat,
+      play,
+      pause,
+      stop,
+      toggle,
+      seek,
+      setVolume,
+      setLoop,
+    }),
+    [
+      isPlaying,
+      duration,
+      isLoading,
+      error,
+      loadBeat,
+      play,
+      pause,
+      stop,
+      toggle,
+      seek,
+      setVolume,
+      setLoop,
+    ]
+  )
 }

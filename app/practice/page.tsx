@@ -556,8 +556,15 @@ export default function PracticePage() {
       return
     }
     const state = sessionStateRef.current
-    state.isActive = true
-    state.lastWordIndex = -1
+
+    // Only reset state if we are just starting (isActive was false)
+    if (!state.isActive) {
+      state.isActive = true
+      // Only reset index if we are at the very beginning
+      if (beatPlayer.currentTime < 0.5) {
+        state.lastWordIndex = -1
+      }
+    }
 
     const updateLoop = () => {
       if (!state.isActive) return
@@ -571,10 +578,6 @@ export default function PracticePage() {
         elapsed >=
         params.sessionDuration + (params.selectedBeat.offset || 0)
       ) {
-        // Extend duration by offset if needed? No, duration is usually flow time.
-        // Actually Session Duration should probably start counting from "GO"
-        // If elapsed is audio time, and we start at offset...
-        // "Session Time" = elapsed - offset.
         if (
           elapsed - (params.selectedBeat.offset || 0) >=
           params.sessionDuration
@@ -608,7 +611,7 @@ export default function PracticePage() {
     }
     const frameId = requestAnimationFrame(updateLoop)
     return () => {
-      state.isActive = false
+      // logic to clean up text loop validation
       cancelAnimationFrame(frameId)
     }
   }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate]) // Added deps to satisfy lint

@@ -187,7 +187,7 @@ export default function PracticeControls({
             selectedBeat={selectedBeat}
             onSelect={onBeatSelect}
             isPro={isPro}
-            disabled={isPlaying || isRecording}
+            disabled={false}
           />
         </div>
 
