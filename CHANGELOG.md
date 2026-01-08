@@ -1,5 +1,27 @@
 # Changelog
 
+## [v1.1.9] - 2026-01-08
+
+### Fixed
+
+- **Practice Page (Critical)**:
+  - Fixed infinite TTS loop where words would repeat excessively.
+  - Stabilized audio playback by preventing unnecessary re-renders of the `useBeatPlayer` hook.
+  - Restored "3, 2, 1, GO" countdown visualization.
+  - Enabled beat switching mid-session (removed disabled state).
+- **Audio System**:
+  - Restored URL sanitization (spaces to hyphens) to fix 404 errors for seeded beats.
+  - Fixed `AudioContext` type errors (`any` casting) for better TypeScript compliance.
+- **Tracks Page**:
+  - Added missing `AppHeader` for consistent navigation.
+- **Linting**:
+  - Resolved persistent CRLF line ending warnings.
+  - Fixed "props must be serializable" errors in modal components.
+
+### Changed
+
+- **Code Quality**: Enforced project-wide Prettier formatting and linting rules.
+
 ## [v1.1.8] - 2026-01-07
 
 ### Fixed

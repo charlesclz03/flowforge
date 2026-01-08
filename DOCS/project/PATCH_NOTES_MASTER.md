@@ -11,6 +11,15 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
 
+### 🛡️ Patch 1.1.9: The Guardian Update (Jan 08, 2026)
+
+**Focus:** Critical Stability & Navigation
+
+- **Practice Stability**: Fixed the infinite TTS loop and stabilized the audio engine. Interaction during sessions (changing beats) is now fully unlocked.
+- **Audio Repair**: Fixed seeded beats failing to play (404s) by restoring URL sanitization.
+- **Navigation**: Added global navigation header to the Tracks page to match the rest of the application.
+- **Code Health**: Enforced strict linting and formatting standards across critical files.
+
 ### 🩹 Patch 1.3.1: The Sonic Fix (Jan 07, 2026)
 
 **Focus:** Audio Stability & Practice Regressions
