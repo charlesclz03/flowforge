@@ -123,7 +123,7 @@ export default async function AchievementsPage({
     >
       <Container className="pt-8 pb-32">
         <div className="mb-4">
-          <XPBar />
+          <XPBar current={1200} max={2000} level={5} />
           <Link href="/cypher">
             <div className="mt-4 w-full p-4 rounded-xl bg-gradient-to-r from-accent-purple/20 to-accent-cyan/20 border border-white/10 flex items-center justify-between hover:border-accent-purple/50 transition-all group cursor-pointer">
               <div className="flex items-center gap-3">
