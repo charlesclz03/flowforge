@@ -1,12 +1,15 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { PageHeader } from '@/components/organisms/common'
-import { SessionPlayer } from '@/components/organisms/recordings/SessionPlayer'
+import {
+  SessionPlayer,
+  SessionPlayerHandles,
+} from '@/components/organisms/recordings/SessionPlayer'
 import { SessionMetadata } from '@/components/organisms/recordings/SessionMetadata'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
@@ -27,6 +30,9 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
+
+  // Ref to get volume/fx settings from player
+  const playerRef = useRef<SessionPlayerHandles>(null)
 
   const fetchRecording = useCallback(async () => {
     try {
@@ -77,15 +83,21 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
     const toastId = toast.loading('Rendering Studio Quality...')
 
     try {
-      // Use Mixer to apply Studio FX (Reverb/Compression) even for acapellas
+      // Get current settings from player (mix what you hear)
+      const settings = playerRef.current?.getSettings() || {
+        voiceVolume: 1.0,
+        beatVolume: 0.8,
+        isStudioMode: true,
+      }
+
       const mixer = new AudioMixer()
       const blob = await mixer.mix(
         recording.storageUrl,
         recording.beat?.storageUrl || null,
         {
-          voiceVolume: 1.0,
-          beatVolume: 0.8,
-          isStudioMode: true,
+          voiceVolume: settings.voiceVolume,
+          beatVolume: settings.beatVolume,
+          isStudioMode: settings.isStudioMode,
         }
       )
 
@@ -144,6 +156,7 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
         <SessionPlayer
+          ref={playerRef}
           audioUrl={recording.storageUrl}
           beatUrl={recording.beat?.storageUrl}
         />
