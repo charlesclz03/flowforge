@@ -412,31 +412,32 @@ export default function PracticeControls({
             if (isRecordingEnabled) onUpgrade?.()
           }}
           className={cn(
-            'mt-4 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95',
+            'mt-8 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 pb-4 z-20 relative',
             !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
           )}
         >
           <div className="flex items-center gap-2 px-6 py-2">
             {/* Left Bracket */}
-            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-black" />
+            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
 
             <div className="flex items-center gap-3 mx-1">
               {/* Dot */}
               <div
                 className={cn(
-                  'h-6 w-6 rounded-full transition-colors',
-                  isPro && isRecordingEnabled ? 'bg-red-600' : 'bg-[#D1D1D1]',
-                  isRecording && 'animate-pulse'
+                  'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
+                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-red-900/50',
+                  isRecording &&
+                    'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
                 )}
               />
               {/* Text */}
-              <span className="text-3xl font-black tracking-tighter text-black">
+              <span className="text-3xl font-black tracking-tighter text-white/90 drop-shadow-lg">
                 REC
               </span>
             </div>
 
             {/* Right Bracket */}
-            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-black" />
+            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
           </div>
         </button>
       </div>

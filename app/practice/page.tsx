@@ -684,7 +684,7 @@ export default function PracticePage() {
         </div>
 
         {/* Classic Centralized Layout */}
-        <div className="relative min-h-[80vh] flex flex-col items-center justify-center">
+        <div className="relative flex flex-col items-center justify-center py-4 min-h-[60vh]">
           {/* Side Visualizers */}
           <div className="absolute inset-y-0 left-0 w-1/4 md:w-1/6 hidden md:block opacity-50 pointer-events-none">
             <AudioVisualizer
