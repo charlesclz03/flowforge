@@ -58,8 +58,8 @@ export function SessionPlayer({
 
   // Advanced Features
   const [nudge, setNudge] = useState(0)
-  const [isStudioMode, setIsStudioMode] = useState(false)
-  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [isStudioMode, setIsStudioMode] = useState(true)
+  const [showAdvanced, setShowAdvanced] = useState(true)
 
   // Clean View / Cinema Mode
   const [isCleanView, setIsCleanView] = useState(false)
@@ -231,6 +231,7 @@ export function SessionPlayer({
         beatRef.current.src = ''
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioUrl, beatUrl, nudge])
 
   const togglePlay = useCallback(() => {
