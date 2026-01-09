@@ -217,6 +217,36 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 
 - **Code Quality**: Enforced project-wide Prettier formatting and linting rules.
 
+## [v1.4.0] - 2025-12-21
+
+### 💎 The Platinum Polish ("Diamond Cutter")
+
+**Focus:** User uploads, layout revamp, and critical stability.
+
+### Added
+- **User Beat Uploads**: Pro users can now upload, calibrate, and manage their own instrumental tracks (`UserBeatUpload.tsx`).
+- **Beat Vault Tabs**: Split "Tracks" page into "Public Tracks" and "My Tracks" for easier library management.
+- **Classic Layout**: Restored the central-player layout for the Practice Studio by popular demand.
+
+### Changed
+- **Search & Filter**: Rewrote filtering logic on Tracks page (search by BPM, Tag, Title).
+- **Typography**: Standardized font usage (Inter/JetBrains Mono).
+
+## [v1.3.0] - 2025-12-20
+
+### 🎮 The Gamification Update ("Level Up")
+
+**Focus:** Streak system, XP progression, and Battle Pass rewards.
+
+### Added
+- **Streak System**: Logic to track daily consistency (`FireIcon`, `IceIcon` states).
+- **XP Battle Pass**: Earn XP per minute of flow. Unlocks tier rewards (visual badges).
+- **Zen Mode**: Option to toggle off gamification elements in settings.
+
+### Changed
+- **Mobile Safe Area**: Added `SafeAreaWrapper` to handle notches and Dynamic Islands on iOS.
+- **Optimistic UI**: Progress updates locally before server confirmation for instant feedback.
+
 ## [v1.1.8] - 2026-01-07
 
 ### Fixed
@@ -331,3 +361,37 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - Initial "Bible Complete" Release.
 - Advanced Badge Tracking.
 - Word Vault Analytics.
+
+## [v0.8.0] - 2025-12-14
+### 🌍 The Social Awakening ("Arena of Voices")
+- **Global Feed**: Live stream of community recording drops.
+- **Duels**: Asynchronous rap battle system (Challenge friends).
+- **Public Profiles**: Showcase stats, tracks, and duel history.
+
+## [v0.7.0] - 2025-12-14
+### 💎 Crystal Clarity
+- **Mobile Responsiveness**: Overhauled CSS grid for small screens.
+- **Performance**: Reduced audio latency.
+
+## [v0.5.0] - 2025-12-11
+### 👑 The Purple Void ("Royal Ascension")
+- **Design System**: Migrated from Orange to "FreeStyla Purple" (#7D7AFF).
+- **Dark Mode**: Tuned contrast for late-night sessions.
+- **Premium**: Added "Pro" badge infrastructure.
+
+## [v0.4.0] - 2025-11-11
+### ☁️ The Vault ("Memory Keepers")
+- **Cloud Storage**: Integrated Supabase Storage for recording persistence.
+- **Library**: Manage/Rename/Delete tracks.
+- **Auto-Save**: Sessions save automatically on completion.
+
+## [v0.3.0] - 2025-11-11
+### 🔊 Echoes of the Beat ("Sonic Boom")
+- **Practice Studio**: Core audio player implementation.
+- **Timer Ring**: SVG stroke-dasharray animation synced to BPM.
+- **Audio Recorder**: Browser `MediaRecorder` API integration.
+
+## [v0.1.0] - 2025-11-10
+### 🏗️ Genesis ("The Foundation")
+- **Stack**: Next.js 14, Supabase (Postgres), Prisma, Tailwind.
+- **Auth**: Google OAuth via NextAuth.js.
