@@ -418,21 +418,6 @@ export default function PracticePage() {
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
 
-    // Wait for beat to fully load before attempting playback
-    if (beatPlayer.isLoading) {
-      console.log('[Practice] Waiting for beat to load...')
-      // Simple polling wait - max 5 seconds
-      for (let i = 0; i < 50; i++) {
-        await new Promise((r) => setTimeout(r, 100))
-        if (!beatPlayer.isLoading) break
-        // Check for load error during wait
-        if (beatPlayer.error) {
-          toast.error('Beat failed to load. Try another track.')
-          return
-        }
-      }
-    }
-
     // Final check for loading errors
     if (beatPlayer.error) {
       toast.error(`Cannot start: ${beatPlayer.error}`)
@@ -441,14 +426,6 @@ export default function PracticePage() {
 
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
     const offsetMs = (selectedBeat.offset || 0) * 1000
-
-    // Mobile/Safari: Play immediately (muted) to capture user gesture
-    try {
-      beatPlayer.setVolume(0)
-      await beatPlayer.play()
-    } catch (e) {
-      console.warn('Pre-play failed', e)
-    }
 
     const playBeep = (freq: number, type: OscillatorType) => {
       const AudioContext =
@@ -482,20 +459,19 @@ export default function PracticePage() {
 
     // THE DROP (GO) logic
     try {
-      // Reset to start and unmute
+      // Unmute and seek to start
       const seekTime = offsetMs < 0 ? Math.abs(offsetMs) / 1000 : 0
-
+      beatPlayer.setVolume(1)
       beatPlayer.seek(seekTime)
-      beatPlayer.setVolume(1) // Restore volume
 
-      if (!beatPlayer.isPlaying) await beatPlayer.play()
+      // Single authoritative play call
+      await beatPlayer.play()
     } catch (e) {
       handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
     }
 
     // THE DROP (GO) logic
     clearError()
-    if (wordList.length > 0 && !currentWord) setCurrentWord(wordList[0])
 
     // Start Recorder
     try {
@@ -519,8 +495,6 @@ export default function PracticePage() {
   }, [
     selectedBeat,
     beatPlayer,
-    wordList,
-    currentWord,
     isRecording,
     isRecordingEnabled,
     requestLock,
@@ -707,17 +681,18 @@ export default function PracticePage() {
       // Ensure clean slate
       beatPlayer.stop()
 
-      // Load the beat asynchronously
-      beatPlayer.loadBeat({
-        ...selectedBeat,
-        storageUrl: selectedBeat.storageUrl,
-        isPremium: selectedBeat.isPremium ?? false,
-        artistName: selectedBeat.artistName ?? 'Unknown Artist',
-        duration: selectedBeat.duration ?? 0,
-      }).catch((err) => {
-        console.error('[Practice] Failed to load beat:', err)
-        toast.error('Failed to load beat. The audio file may be missing.')
-      })
+      beatPlayer
+        .loadBeat({
+          ...selectedBeat,
+          storageUrl: selectedBeat.storageUrl,
+          isPremium: selectedBeat.isPremium ?? false,
+          artistName: selectedBeat.artistName ?? 'Unknown Artist',
+          duration: selectedBeat.duration ?? 0,
+        })
+        .catch((err) => {
+          console.error('[Practice] Failed to load beat:', err)
+          toast.error('Failed to load beat. The audio file may be missing.')
+        })
     }
   }, [selectedBeat, beatPlayer])
 

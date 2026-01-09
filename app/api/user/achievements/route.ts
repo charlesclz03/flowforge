@@ -20,9 +20,25 @@ export async function GET() {
       })
     }
 
-    const allAchievements = await prisma.achievement.findMany({
+    let allAchievements = await prisma.achievement.findMany({
       orderBy: { points: 'asc' },
     })
+
+    // Auto-seed if empty
+    if (allAchievements.length === 0) {
+      console.log('Achievements table empty, auto-seeding...')
+      const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
+      for (const ach of ACHIEVEMENTS) {
+        await prisma.achievement.upsert({
+          where: { code: ach.code },
+          update: ach,
+          create: ach,
+        })
+      }
+      allAchievements = await prisma.achievement.findMany({
+        orderBy: { points: 'asc' },
+      })
+    }
 
     return NextResponse.json({
       userAchievements,

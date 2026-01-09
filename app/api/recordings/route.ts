@@ -113,7 +113,7 @@ export async function POST(request: Request) {
     // Word Vault: Ingest used words
     const wordsUsedRaw = formData.get('wordsUsed') as string
     let wordCount = 0
-    
+
     if (wordsUsedRaw) {
       try {
         const words = JSON.parse(wordsUsedRaw) as string[]
@@ -144,23 +144,21 @@ export async function POST(request: Request) {
     // SERVER-SIDE SCORE CALCULATION (Anti-Cheat)
     // Formula: Duration * 10 * (1 + WordCount / 10)
     // Example: 60s * 10 * (1 + 20/10) = 600 * 3 = 1800
-    const serverScore = Math.round(
-      durationSeconds * 10 * (1 + wordCount / 10)
-    )
+    const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
 
     // Update the session score in the DB since we created it with 0 initially (or update the createSession call above)
     // Wait, createSession was called ABOVE. We need to update it.
     // Actually, optimal flow is: Calculate score -> Create Session.
     // Refactoring flow to calculate score BEFORE DB call.
-    
-    // ... ignoring previous logic for now, let's fix the order in the next tool call if needed, 
+
+    // ... ignoring previous logic for now, let's fix the order in the next tool call if needed,
     // but here I can only replace this block.
     // I will use update to set the score if I can't move the createSession call easily in a single block replacement without touching too much.
-    // Actually, createSession is line 88. This block is line 113. 
+    // Actually, createSession is line 88. This block is line 113.
     // I'll update the session with the new score.
     await prisma.freestyleSession.update({
       where: { id: sessionResult.data!.id },
-      data: { score: serverScore }
+      data: { score: serverScore },
     })
     sessionResult.data!.score = serverScore // Update local reference for response
 
@@ -180,7 +178,11 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       session: sessionResult.data
-        ? { ...sessionResult.data, storageUrl: signedUrlData.signedUrl, newBadges }
+        ? {
+            ...sessionResult.data,
+            storageUrl: signedUrlData.signedUrl,
+            newBadges,
+          }
         : null,
       storageUrl: signedUrlData.signedUrl,
     })

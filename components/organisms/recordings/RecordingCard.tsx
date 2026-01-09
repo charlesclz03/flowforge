@@ -151,7 +151,9 @@ export const RecordingCard = memo(function RecordingCard({
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-white truncate hover:text-accent-purple transition-colors">
-                <Link href={`/review/${recording.id}`} className="block">{recording.title}</Link>
+                <Link href={`/review/${recording.id}`} className="block">
+                  {recording.title}
+                </Link>
               </h3>
               <p className="text-sm font-medium text-text-secondary flex items-center gap-2">
                 <span>{recording.beat.title}</span>
@@ -164,17 +166,24 @@ export const RecordingCard = memo(function RecordingCard({
           {/* Metadata */}
           <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-medium text-text-tertiary uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
-               <span className="w-2 h-2 rounded-full bg-white/10" />
-               {formatDuration(recording.durationSeconds)}
+              <span className="w-2 h-2 rounded-full bg-white/10" />
+              {formatDuration(recording.durationSeconds)}
             </span>
             <span className="flex items-center gap-1.5">
-               <span className="w-2 h-2 rounded-full bg-white/10" />
-               {recording.frequency} bars
+              <span className="w-2 h-2 rounded-full bg-white/10" />
+              {recording.frequency} bars
             </span>
-            <span className={cn("px-2 py-0.5 rounded-full bg-white/5 border border-white/10", difficultyColors[normalizedDifficulty])}>
+            <span
+              className={cn(
+                'px-2 py-0.5 rounded-full bg-white/5 border border-white/10',
+                difficultyColors[normalizedDifficulty]
+              )}
+            >
               {difficultyLabels[normalizedDifficulty]}
             </span>
-            <span className="text-white/20">{formatRelativeTime(recording.createdAt)}</span>
+            <span className="text-white/20">
+              {formatRelativeTime(recording.createdAt)}
+            </span>
           </div>
         </div>
 
@@ -200,8 +209,8 @@ export const RecordingCard = memo(function RecordingCard({
           >
             <Download size={20} className="text-text-secondary" />
           </Button>
-          
-           {recording.storageUrl && (
+
+          {recording.storageUrl && (
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FlowForge!"
@@ -209,15 +218,15 @@ export const RecordingCard = memo(function RecordingCard({
               className="flex-1 md:flex-none justify-center w-auto border-none bg-transparent hover:bg-white/10 px-2"
             />
           )}
-          
+
           <Button
-             variant="ghost"
-             size="sm"
-             onClick={() => setShowVideoExport(true)}
-             className="flex-1 md:flex-none justify-center px-2"
-           >
-              <Video size={20} className="text-text-secondary" />
-           </Button>
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowVideoExport(true)}
+            className="flex-1 md:flex-none justify-center px-2"
+          >
+            <Video size={20} className="text-text-secondary" />
+          </Button>
 
           <Button
             variant="ghost"

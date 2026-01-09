@@ -17,7 +17,7 @@ export class AudioPlayer {
     }
   }
 
-  private log(message: string, ...args: any[]) {
+  private log(message: string, ...args: unknown[]) {
     if (this.debug) console.log(`[AudioPlayer] ${message}`, ...args)
   }
 

@@ -124,7 +124,6 @@ export class AudioRecorder {
 
       const blob = new Blob(this.audioChunks, { type: mimeType })
 
-
       if (this.onStopCallback) {
         this.onStopCallback(blob)
       } else {
@@ -172,7 +171,6 @@ export class AudioRecorder {
       // console.warn('MediaRecorder already inactive, cannot stop')
       return null
     }
-
 
     // Stop the MediaRecorder - this will trigger onstop event
     this.mediaRecorder.stop()

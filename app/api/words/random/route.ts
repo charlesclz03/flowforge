@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { getRandomWords } = await import('@/lib/db/words')
-      
+
       const result = await getRandomWords(count, {
         difficultyLevel: difficulty,
         category: category,
@@ -67,4 +67,3 @@ export async function GET(request: Request) {
     })
   }
 }
-

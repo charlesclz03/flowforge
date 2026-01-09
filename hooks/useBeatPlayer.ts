@@ -106,6 +106,7 @@ export function useBeatPlayer() {
 
     playerRef.current.stop()
     setIsPlaying(false)
+    setError(null)
     timeRef.current = 0
   }, [])
 
