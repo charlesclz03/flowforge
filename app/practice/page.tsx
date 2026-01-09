@@ -219,6 +219,7 @@ export default function PracticePage() {
               ...prev,
               score: data.session.score, // Correct score from server
               newBadges: data.session.newBadges,
+              xp: data.session.xp, // Crucial: Update XP data from server
               isOptimistic: false,
             }
           })

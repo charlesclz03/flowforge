@@ -195,7 +195,8 @@ export async function POST(request: Request) {
         }
       }
     } catch (err) {
-      console.error('XP update failed:', err)
+      console.error('XP update failed. Possible causes: DB Schema mismatch, missing User record, or connection issue.', err)
+      if (err instanceof Error) console.error(err.stack)
     }
 
     return NextResponse.json({
