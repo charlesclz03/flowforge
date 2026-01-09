@@ -73,6 +73,54 @@ A major consolidation release that rolls up the audio engine overhaul, visual in
 - **Navigation**: removed "Text Links" in favor of standard Header Arrows.
 - **Crash Safety**: Modal confirmations added for session exit.
 
+## v1.5.9 - "The Final Polish"
+**Date**: 2026-01-09
+**Focus**: Friction points in practice session (Uploads, Timing, Exits).
+
+## v1.5.8 - "Sirens & Intensity"
+**Date**: 2026-01-09
+**Focus**: Visual urgency (Siren effects, Shake animations).
+
+## v1.5.7 - "The Direct Flow"
+**Date**: 2026-01-09
+**Focus**: Session termination and Victory screen streamlining.
+
+## v1.5.6 - "The Stable Circle"
+**Date**: 2026-01-09
+**Focus**: Restored Classic Circular UI and fixed serializability bugs.
+
+## v1.5.5 - "The Zero Warning"
+**Date**: 2026-01-09
+**Focus**: Critical audio sync fixes and 0-warning build state.
+
+## v1.5.3 - "The Resurrection"
+**Date**: 2026-01-09
+**Focus**: Major Audio Engine overhaul (Mute-Prime strategies).
+
+## v1.4.0 - "The Platinum Polish"
+**Date**: 2025-12-21
+**Focus**: User Beat Uploads and Library Management Tabs.
+
+## v1.3.0 - "The Gamification Update"
+**Date**: 2025-12-20
+**Focus**: XP System, Streaks, Battle Pass.
+
+## v1.2.0 - "The Social Awakening"
+**Date**: 2025-12-14
+**Focus**: Global Feeds, Public Profiles, Duels.
+
+## v1.1.0 - "The Perfectionist"
+**Date**: 2025-12-18
+**Focus**: Word Bag System, Stat Sharing.
+
+## v0.5.0 - "The Purple Void"
+**Date**: 2025-12-11
+**Focus**: Design System migration to Purple (#7D7AFF).
+
+## v0.1.0 - "Genesis"
+**Date**: 2025-11-10
+**Focus**: Initial Infrastructure (Next.js, Supabase, Prisma).
+
 ---
 ## 🚀 Update 1.5.6: The Stable Circle
 
