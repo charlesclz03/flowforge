@@ -39,14 +39,18 @@ interface SessionSummary {
   difficulty: string
   bpm: number
   frequency: number
-  frequency: number
   isOptimistic: boolean
   xp?: {
     gained: number
     newLevel: number
     currentXP: number
     maxXP: number
-    breakdown: any
+    breakdown: {
+      base: number
+      duration: number
+      words: number
+      achievements: number
+    }
   }
 }
 

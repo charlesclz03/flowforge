@@ -151,7 +151,12 @@ export async function POST(request: Request) {
       newLevel: 1,
       currentXP: 0,
       maxXP: 1000,
-      breakdown: {} as any,
+      breakdown: {
+        base: 0,
+        duration: 0,
+        words: 0,
+        achievements: 0,
+      },
     }
 
     try {
@@ -165,12 +170,10 @@ export async function POST(request: Request) {
       // Fetch current user XP
       const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
-        // @ts-expect-error XP/Level added manually
         select: { xp: true, level: true },
       })
 
       if (currentUser) {
-        // @ts-expect-error XP/Level added manually
         const totalXP = (currentUser.xp || 0) + xpResult.total
         const levelInfo = getLevelInfo(totalXP)
 
@@ -178,7 +181,6 @@ export async function POST(request: Request) {
         await prisma.user.update({
           where: { id: session.user.id },
           data: {
-            // @ts-expect-error XP/Level added manually
             xp: totalXP,
             level: levelInfo.level,
           },

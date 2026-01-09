@@ -13,10 +13,9 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ChevronDown, Sparkles, User, Users, Music, Mic } from 'lucide-react'
+import { ChevronDown, Sparkles, User, Users, Mic } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
-import { toast } from 'react-hot-toast'
 
 type Frequency = 4 | 8 | 16
 
@@ -48,7 +47,6 @@ export default function DifficultySelectionPage() {
   } = usePracticeSession()
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
-  const [showLocalTracks, setShowLocalTracks] = useState(false)
 
   const isPro =
     session?.user?.subscriptionStatus === 'active' ||
@@ -170,7 +168,6 @@ export default function DifficultySelectionPage() {
             disabled={isLoadingBeats}
             handleLockedSelect={() => setShowPremiumModal(true)}
             isPro={isPro}
-            hideLocalTab={!showLocalTracks}
             embedded={true}
             defaultCollapsed={!!searchParams.get('beatId')}
           />
@@ -305,35 +302,6 @@ export default function DifficultySelectionPage() {
                       </option>
                     ))}
                   </select>
-                </div>
-
-                {/* Local Uploads Toggle/Quick Access */}
-                <div className="p-4 rounded-2xl bg-accent-purple/5 border border-accent-purple/10 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-accent-purple/20 flex items-center justify-center text-accent-purple">
-                      <Music size={20} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-white">
-                        Enable Local Tracks
-                      </p>
-                      <p className="text-xs text-text-tertiary">
-                        Select files from your device
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={showLocalTracks}
-                    onCheckedChange={(checked) => {
-                      if (!isPro && checked) {
-                        setShowPremiumModal(true)
-                        return
-                      }
-                      setShowLocalTracks(checked)
-                      if (checked)
-                        toast.success('Upload tab enabled in Beat selection')
-                    }}
-                  />
                 </div>
               </div>
             )}

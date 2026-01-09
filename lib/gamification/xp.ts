@@ -12,16 +12,12 @@ export const XP_CONFIG = {
 export function getLevelInfo(totalXP: number) {
   let level = 1
   let xpForNextLevel = XP_CONFIG.LEVEL_base_XP
-  let currentLevelXP = 0
   let remainingXP = totalXP
-
-  // Simple geometric progression for levels
   // Level 1: 0 - 1000
   // Level 2: 1000 - 2200 (1000 + 1200)
   // Level 3: 2200 - 3640 (2200 + 1440)
   while (remainingXP >= xpForNextLevel) {
     remainingXP -= xpForNextLevel
-    currentLevelXP += xpForNextLevel // Keep track of total XP required to reach this level
     level++
     xpForNextLevel = Math.floor(xpForNextLevel * XP_CONFIG.LEVEL_MULTIPLIER)
   }

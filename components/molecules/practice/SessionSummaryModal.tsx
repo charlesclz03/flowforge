@@ -26,7 +26,12 @@ interface SessionSummaryData {
     newLevel: number
     currentXP: number
     maxXP: number
-    breakdown: any
+    breakdown: {
+      base: number
+      duration: number
+      words: number
+      achievements: number
+    }
   }
 }
 
@@ -35,9 +40,10 @@ type SessionSummaryModalProps = {
   onClose: () => void
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function SessionSummaryModal(props: any) {
-  const { data, onClose } = props as SessionSummaryModalProps
+export default function SessionSummaryModal({
+  data,
+  onClose,
+}: SessionSummaryModalProps) {
   const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
   const [showPWA, setShowPWA] = useState(false)
@@ -134,8 +140,15 @@ export default function SessionSummaryModal(props: any) {
           </div>
           <div className="h-4 bg-black/40 rounded-full overflow-hidden relative">
             <motion.div
-              initial={{ width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%` }}
-              animate={{ width: step >= 1 ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%` : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%` }}
+              initial={{
+                width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+              }}
+              animate={{
+                width:
+                  step >= 1
+                    ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
+                    : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+              }}
               transition={{ duration: 1.5, ease: 'easeOut' }}
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
             />
@@ -146,8 +159,8 @@ export default function SessionSummaryModal(props: any) {
                 animate={{ opacity: 1, x: 0 }}
                 className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
                 style={{
-                   left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-                   width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`
+                  left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                  width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`,
                 }}
               />
             )}
