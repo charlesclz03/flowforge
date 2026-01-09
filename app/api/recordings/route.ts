@@ -4,16 +4,16 @@ import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
 import { createSession } from '@/lib/db/sessions'
 import { randomUUID } from 'crypto'
 import { AchievementSystem } from '@/lib/gamification/achievements'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
 const SIGNED_URL_TTL_SECONDS = 60 * 60
 
 /**
  * POST /api/recordings
  * Upload a recording and create a session
  */
-import { prisma } from '@/lib/prisma'
-
 export async function POST(request: Request) {
   try {
     // Check authentication
@@ -30,8 +30,6 @@ export async function POST(request: Request) {
     const durationSeconds = parseInt(formData.get('durationSeconds') as string)
     const frequency = parseInt(formData.get('frequency') as string) || 8
     const difficulty = parseInt(formData.get('difficulty') as string) || 2
-    const score = parseInt(formData.get('score') as string) || 0
-    const vibe = (formData.get('vibe') as string) || null
     const restarts = parseInt(formData.get('restarts') as string) || 0
     const playbacks = parseInt(formData.get('playbacks') as string) || 0
 
@@ -46,13 +44,24 @@ export async function POST(request: Request) {
       )
     }
 
+    // PRE-CALCULATE SCORE & PREP DATA
+    const wordsUsedRaw = formData.get('wordsUsed') as string
+    let words: string[] = []
+    try {
+      words = wordsUsedRaw ? (JSON.parse(wordsUsedRaw) as string[]) : []
+    } catch {
+      words = []
+    }
+    const wordCount = Array.isArray(words) ? words.length : 0
+    const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
+
     // Generate recording ID
     const recordingId = randomUUID()
     const filePath = `${session.user.id}/${recordingId}.webm`
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage (Blocking)
     const supabase = createServerClient()
-    const { data: _uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(RECORDINGS_BUCKET)
       .upload(filePath, audioFile, {
         contentType: audioFile.type,
@@ -67,124 +76,81 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generate a signed URL for temporary access
-    const { data: signedUrlData, error: signedUrlError } =
-      await supabase.storage
+    // PARALLEL OPERATIONS: DB Creation + Signed URL
+    const [sessRes, signedUrlRes] = await Promise.all([
+      createSession({
+        userId: session.user.id,
+        beatId,
+        title,
+        storageUrl: filePath,
+        durationSeconds,
+        frequency,
+        difficulty,
+        score: serverScore,
+        vibe: null,
+        mode: 'solo',
+        restarts,
+        playbacks,
+      }),
+      supabase.storage
         .from(RECORDINGS_BUCKET)
-        .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS)
+        .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS),
+    ])
 
-    if (signedUrlError) {
-      console.error('Signed URL error:', signedUrlError)
-      // Clean up uploaded file if we can't issue a signed URL
+    if (!sessRes.success) {
+      // Cleanup storage if DB fails
       await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
       return NextResponse.json(
-        { error: 'Failed to generate download URL for recording' },
+        { error: sessRes.error || 'Failed to save session' },
         { status: 500 }
       )
     }
 
-    // Create session record
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sessionResult = await createSession({
-      userId: session.user.id,
-      beatId,
-      title,
-      storageUrl: filePath,
-      durationSeconds,
-      frequency,
-      difficulty,
-      score,
-      vibe: vibe || null,
-      mode: 'solo',
-      restarts,
-      playbacks,
-    })
+    const signedUrl = signedUrlRes.data?.signedUrl || filePath
 
-    if (!sessionResult.success) {
-      // Rollback storage if DB fails
-      const supabase = createServerClient()
-      await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
-      return NextResponse.json(
-        { error: sessionResult.error || 'Failed to save session' },
-        { status: 500 }
-      )
-    }
-
-    // Word Vault: Ingest used words
-    const wordsUsedRaw = formData.get('wordsUsed') as string
-    let wordCount = 0
-
-    if (wordsUsedRaw) {
-      try {
-        const words = JSON.parse(wordsUsedRaw) as string[]
-        if (Array.isArray(words)) {
-          wordCount = words.length
-          if (wordCount > 0) {
-            // Deduplicate and sanitize
-            const uniqueWords = [
-              ...new Set(words.map((w) => w.toLowerCase().trim())),
-            ].filter((w) => w.length > 0)
-
-            if (uniqueWords.length > 0) {
-              await prisma.collectedWord.createMany({
-                data: uniqueWords.map((word) => ({
-                  userId: session.user.id,
-                  wordText: word,
-                })),
-                skipDuplicates: true,
-              })
-            }
-          }
-        }
-      } catch (e) {
-        console.error('Word Vault ingestion failed', e)
-      }
-    }
-
-    // SERVER-SIDE SCORE CALCULATION (Anti-Cheat)
-    // Formula: Duration * 10 * (1 + WordCount / 10)
-    // Example: 60s * 10 * (1 + 20/10) = 600 * 3 = 1800
-    const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
-
-    // Update the session score in the DB since we created it with 0 initially (or update the createSession call above)
-    // Wait, createSession was called ABOVE. We need to update it.
-    // Actually, optimal flow is: Calculate score -> Create Session.
-    // Refactoring flow to calculate score BEFORE DB call.
-
-    // ... ignoring previous logic for now, let's fix the order in the next tool call if needed,
-    // but here I can only replace this block.
-    // I will use update to set the score if I can't move the createSession call easily in a single block replacement without touching too much.
-    // Actually, createSession is line 88. This block is line 113.
-    // I'll update the session with the new score.
-    await prisma.freestyleSession.update({
-      where: { id: sessionResult.data!.id },
-      data: { score: serverScore },
-    })
-    sessionResult.data!.score = serverScore // Update local reference for response
-
-    // Check for Achievements & Capture Result
+    // NON-BLOCKING (ish) / PARALLEL FEEDBACK: Achievements & Words
     let newBadges: string[] = []
     try {
-      newBadges = await AchievementSystem.checkAndUnlock(session.user.id, {
-        type: 'RECORDING_SAVED',
-      })
+      const uniqueWords = [
+        ...new Set(words.map((w) => w.toLowerCase().trim())),
+      ].filter((w) => w.length > 0)
 
-      // Update Streak
-      const { StreakSystem } = await import('@/lib/gamification/streak')
-      await StreakSystem.checkAndUpdate(session.user.id)
+      // Use explicit any for tasks to avoid complex type intersection issues in Promise.all
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tasks: Promise<any>[] = [
+        AchievementSystem.checkAndUnlock(session.user.id, {
+          type: 'RECORDING_SAVED',
+        }),
+        import('@/lib/gamification/streak').then(({ StreakSystem }) =>
+          StreakSystem.checkAndUpdate(session.user.id)
+        ),
+      ]
+
+      if (uniqueWords.length > 0) {
+        tasks.push(
+          prisma.collectedWord.createMany({
+            data: uniqueWords.map((word) => ({
+              userId: session.user.id,
+              wordText: word,
+            })),
+            skipDuplicates: true,
+          })
+        )
+      }
+
+      const results = await Promise.all(tasks)
+      newBadges = (results[0] as string[]) || []
     } catch (e) {
-      console.error('Achievement/Streak system failed', e)
+      console.error('Secondary ingestion/gamification failed:', e)
     }
 
     return NextResponse.json({
-      session: sessionResult.data
-        ? {
-            ...sessionResult.data,
-            storageUrl: signedUrlData.signedUrl,
-            newBadges,
-          }
-        : null,
-      storageUrl: signedUrlData.signedUrl,
+      session: {
+        ...sessRes.data,
+        storageUrl: signedUrl,
+        newBadges,
+      },
+      storageUrl: signedUrl,
     })
   } catch (error) {
     console.error('API Error:', error)

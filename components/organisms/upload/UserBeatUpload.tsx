@@ -12,7 +12,9 @@ interface UserBeatUploadProps {
   onSuccess: () => void
 }
 
-export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
+export function UserBeatUpload(props: UserBeatUploadProps) {
+  const { isPro, onSuccess } = props
+
   const [file, setFile] = useState<File | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
 
@@ -123,13 +125,15 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
         method: 'PUT',
         headers: {
           'Content-Type': file.type,
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: file,
       })
 
       if (!uploadRes.ok) {
-        throw new Error('Direct upload failed. File may be too large or storage is full.')
+        throw new Error(
+          'Direct upload failed. File may be too large or storage is full.'
+        )
       }
 
       // Step 3: Send metadata to our API to create the DB record

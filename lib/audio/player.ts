@@ -8,6 +8,7 @@ export class AudioPlayer {
   private onTimeUpdateCallback: ((time: number) => void) | null = null
   private onEndedCallback: (() => void) | null = null
   private debug: boolean = true
+  private isDestroyed: boolean = false
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -18,13 +19,15 @@ export class AudioPlayer {
   }
 
   private log(message: string, ...args: unknown[]) {
-    if (this.debug) console.log(`[AudioPlayer] ${message}`, ...args)
+    if (this.debug && !this.isDestroyed)
+      console.log(`[AudioPlayer] ${message}`, ...args)
   }
 
   private setupEventListeners() {
     if (!this.audio) return
 
     this.audio.addEventListener('timeupdate', () => {
+      if (this.isDestroyed) return
       if (this.onTimeUpdateCallback && this.audio) {
         this.onTimeUpdateCallback(this.audio.currentTime)
       }
@@ -47,6 +50,7 @@ export class AudioPlayer {
     })
 
     this.audio.addEventListener('error', (e) => {
+      if (this.isDestroyed) return
       console.error('[AudioPlayer] HTMLAudioElement Error:', e)
       const error = this.audio?.error
       if (error) {
@@ -81,6 +85,10 @@ export class AudioPlayer {
       }
 
       const handleError = (e: ErrorEvent | Event) => {
+        if (this.isDestroyed) {
+          cleanup()
+          return
+        }
         console.error('[AudioPlayer] Load failed', e)
         cleanup()
         reject(
@@ -221,10 +229,16 @@ export class AudioPlayer {
    * Clean up resources
    */
   destroy(): void {
+    this.isDestroyed = true
     this.log('Destroying player instance')
     if (this.audio) {
-      this.audio.pause()
-      this.audio.src = ''
+      try {
+        this.audio.pause()
+        this.audio.src = ''
+        this.audio.load() // help browser release resources
+      } catch (e) {
+        // ignore errors during cleanup
+      }
       this.audio = null
     }
     this.onTimeUpdateCallback = null

@@ -11,30 +11,26 @@ export class AchievementSystem {
   ) {
     const newlyUnlocked: string[] = []
 
-    // Fetch user stats for checks
-    const sessionCount = await prisma.freestyleSession.count({
-      where: { userId },
-    })
-    const recordingCount = await prisma.freestyleSession.count({
-      where: { userId, storageUrl: { not: null } },
-    })
+    // PARALLEL STATS FETCHING
+    const [sessionCount, recordingCount, distinctBeats, userAchievements] =
+      await Promise.all([
+        prisma.freestyleSession.count({ where: { userId } }),
+        prisma.freestyleSession.count({
+          where: { userId, storageUrl: { not: null } },
+        }),
+        prisma.freestyleSession.groupBy({
+          by: ['beatId'],
+          where: { userId },
+        }),
+        prisma.userAchievement.findMany({
+          where: { userId },
+          select: { achievement: { select: { code: true } } },
+        }),
+      ])
 
-    // Fetch distinct beats used
-    const distinctBeats = await prisma.freestyleSession.groupBy({
-      by: ['beatId'],
-      where: { userId },
-    })
     const distinctBeatCount = distinctBeats.length
-
-    // Fetch user's current achievements to avoid re-unlocking
-    const userAchievements = await prisma.userAchievement.findMany({
-      where: { userId },
-      select: { achievementId: true, achievement: { select: { code: true } } },
-    })
     const unlockedCodes = new Set(
-      userAchievements.map(
-        (ua: { achievement: { code: string } }) => ua.achievement.code
-      )
+      userAchievements.map((ua) => ua.achievement.code)
     )
 
     // Define Checks
@@ -74,28 +70,40 @@ export class AchievementSystem {
       },
     ]
 
-    // Execute Checks
-    for (const check of checks) {
-      if (!unlockedCodes.has(check.code) && check.condition) {
-        await this.unlock(userId, check.code)
-        newlyUnlocked.push(check.code)
-      }
+    const codesToUnlock = checks
+      .filter((c) => !unlockedCodes.has(c.code) && c.condition)
+      .map((c) => c.code)
+
+    if (codesToUnlock.length > 0) {
+      // Fetch all required achievement IDs in one go
+      const achievements = await prisma.achievement.findMany({
+        where: { code: { in: codesToUnlock } },
+        select: { id: true, code: true },
+      })
+
+      // Create user achievement records in parallel or batch
+      await Promise.all(
+        achievements.map((a) =>
+          prisma.userAchievement
+            .create({
+              data: {
+                userId,
+                achievementId: a.id,
+              },
+            })
+            .catch((err) =>
+              console.warn(`Silent failure unlocking ${a.code}:`, err)
+            )
+        )
+      )
+
+      newlyUnlocked.push(...achievements.map((a) => a.code))
     }
 
     return newlyUnlocked
   }
 
-  private static async unlock(userId: string, code: string) {
-    const achievement = await prisma.achievement.findUnique({ where: { code } })
-    if (!achievement) return
-
-    await prisma.userAchievement.create({
-      data: {
-        userId,
-        achievementId: achievement.id,
-      },
-    })
-  }
+  // unlock method deprecated in favor of batch logic above
 
   static async getLeaderboard(period: 'all_time' | 'weekly' = 'all_time') {
     let whereClause = {}

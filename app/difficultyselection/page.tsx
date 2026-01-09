@@ -166,9 +166,9 @@ export default function DifficultySelectionPage() {
           <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
-            onSelect={setBeat}
+            handleSelect={setBeat}
             disabled={isLoadingBeats}
-            onLockedSelect={() => setShowPremiumModal(true)}
+            handleLockedSelect={() => setShowPremiumModal(true)}
             isPro={isPro}
             hideLocalTab={!showLocalTracks}
             embedded={true}

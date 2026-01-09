@@ -61,13 +61,28 @@ export default function ProfilePage() {
           fetch('/api/user/stats'),
         ])
 
-        if (recRes.ok) {
+        if (
+          recRes.ok &&
+          recRes.headers.get('content-type')?.includes('application/json')
+        ) {
           const data = await recRes.json()
           setRecordings(data.recordings || [])
+        } else {
+          console.warn('Recordings fetch failed or non-JSON', {
+            status: recRes.status,
+          })
         }
-        if (statsRes.ok) {
+
+        if (
+          statsRes.ok &&
+          statsRes.headers.get('content-type')?.includes('application/json')
+        ) {
           const data = await statsRes.json()
           setWordVaultCount(data.wordVaultCount || 0)
+        } else {
+          console.warn('Stats fetch failed or non-JSON', {
+            status: statsRes.status,
+          })
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error)

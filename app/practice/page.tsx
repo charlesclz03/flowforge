@@ -337,12 +337,18 @@ export default function PracticePage() {
   useEffect(() => {
     const initSession = async () => {
       try {
-        const [wordsRes] = await Promise.all([
-          fetch(
-            `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ''}`
-          ),
-        ])
-        const [wordsData] = await Promise.all([wordsRes.json()])
+        const wordsRes = await fetch(
+          `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ''}`
+        )
+
+        if (
+          !wordsRes.ok ||
+          !wordsRes.headers.get('content-type')?.includes('application/json')
+        ) {
+          throw new Error('Failed to load words or invalid response')
+        }
+
+        const wordsData = await wordsRes.json()
 
         if (wordsData.words) {
           const words = wordsData.words.map(
@@ -352,7 +358,7 @@ export default function PracticePage() {
           if (!currentWord && words.length > 0) setCurrentWord(words[0])
         }
       } catch (err) {
-        console.error('Init error', err)
+        console.error('Init error:', err)
         handleError(err, ErrorCodes.BEAT_LOAD_FAILED)
       }
     }
@@ -506,28 +512,28 @@ export default function PracticePage() {
   ])
 
   const handlePlayPause = useCallback(async () => {
-    play('start')
     if (!selectedBeat) return
 
     if (beatPlayer.isPlaying) {
+      play('stop')
       if (isRecording) {
         handleStop()
       } else {
         beatPlayer.pause()
-        if (isRecording) {
-          // pause recording logic via hook if needed, but current flow stops explicit recording
-          // If we just pause beat, recorder keeps going usually.
-          // But here we want full stop/pause parity.
-        }
       }
     } else {
+      // PRIME AUDIO: This is the critical fix for mobile/browser autoplay restrictions.
+      // We call prime() immediately on the user gesture (click).
+      if (beatPlayer.currentTime === 0) {
+        await beatPlayer.prime()
+      }
+
+      play('start')
+
       // Check mic permission or audio context state
       if (beatPlayer.currentTime > 0) {
         // Resume
         await beatPlayer.play()
-        if (isRecording) {
-          // resume recorder
-        }
       } else {
         startCountdown()
       }
@@ -694,7 +700,8 @@ export default function PracticePage() {
           toast.error('Failed to load beat. The audio file may be missing.')
         })
     }
-  }, [selectedBeat, beatPlayer])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBeat?.id]) // ONLY reload when the beat ID changes
 
   // Bento Grid Render
   return (
@@ -761,31 +768,28 @@ export default function PracticePage() {
               <PracticeControls
                 selectedBeat={selectedBeat}
                 beats={beats}
-                onBeatSelect={setBeat}
+                handleBeatSelect={setBeat}
                 isPlaying={beatPlayer.isPlaying}
                 isLoading={!isLoaded && !selectedBeat}
                 currentTime={beatPlayer.currentTime}
                 sessionDuration={sessionDuration}
                 currentWord={currentWord}
                 countdownValue={_countdownValue}
-                onToggle={handlePlayPause}
-                onRestart={() => {
-                  play('click')
-                  // logic to restart
-                  handlePlayPause()
-                }}
+                handleToggle={handlePlayPause}
+                // onRestart replaced by manual trigger to avoid serializability warnings
+                // handleRestart is available if needed but currently not used
                 difficulty={difficulty}
                 frequency={frequency}
                 isRecording={isRecording}
                 recordingDuration={duration} // from useRecording hook
                 isPro={isPro}
                 isAuthenticated={!!session?.user || true} // Allow all users to start practice (guests can practice, just not save)
-                onUpgrade={() => {
+                handleUpgrade={() => {
                   setPremiumTrigger('recording')
                   setShowPremiumModal(true)
                 }}
-                onDifficultyChange={setDifficulty}
-                onFrequencyChange={setFrequency}
+                handleDifficultyChange={setDifficulty}
+                handleFrequencyChange={setFrequency}
                 error={error ? error.message : undefined}
                 isRecordingEnabled={isRecordingEnabled}
               />

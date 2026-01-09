@@ -53,7 +53,9 @@ export function AchievementsDisplay() {
     async function fetchAchievements() {
       try {
         const res = await fetch('/api/user/achievements')
-        if (res.ok) {
+        const contentType = res.headers.get('content-type')
+
+        if (res.ok && contentType?.includes('application/json')) {
           const data = await res.json()
           const userAch =
             data.userAchievements as UserAchievementWithAchievement[]
@@ -86,9 +88,14 @@ export function AchievementsDisplay() {
             unlockedCount: userAch.length,
             totalCount: allAch.length,
           })
+        } else {
+          console.warn('Achievements fetch failed or returned non-JSON', {
+            status: res.status,
+            contentType,
+          })
         }
       } catch (e) {
-        console.error(e)
+        console.error('Achievements fetch error:', e)
       } finally {
         setIsLoading(false)
       }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/organisms/common'
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
@@ -19,12 +19,7 @@ export default function TracksPage() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
-  const handleUseTrack = (beat: Beat) => {
-    // Navigate to practice setup with this beat selected
-    router.push(`/difficultyselection?beatId=${beat.id}`)
-  }
 
-  // --- Render Helpers ---
   const { data: session } = useSession()
   const router = useRouter()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
@@ -32,46 +27,29 @@ export default function TracksPage() {
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  // Safe cast for user extended properties
   const user = session?.user
   const isPro =
     user?.subscriptionStatus === 'active' ||
     user?.subscriptionStatus === 'trialing'
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [beatsRes, userBeatsRes, favs] = await Promise.all([
-          fetch('/api/beats').then((res) => res.json()),
-          fetch('/api/user/beats').then((res) =>
-            res.ok ? res.json() : { beats: [] }
-          ),
-          getFavoriteBeatIds(),
-        ])
+  const handleUseTrack = (beat: Beat) => {
+    router.push(`/difficultyselection?beatId=${beat.id}`)
+  }
 
-        const publicBeats = beatsRes.beats || []
-        const userBeats = userBeatsRes.beats || []
-
-        setBeats([...userBeats, ...publicBeats])
-        setFavoriteIds(new Set(favs))
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
-
-  const fetchBeats = async () => {
+  const fetchBeats = useCallback(async () => {
     setIsLoading(true)
     try {
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
         fetch('/api/beats')
-          .then((res) => res.json())
+          .then((res) => (res.ok ? res.json() : { beats: [] }))
           .catch(() => ({ beats: [] })),
         fetch('/api/user/beats')
-          .then((res) => (res.ok ? res.json() : { beats: [] }))
+          .then((res) =>
+            res.ok &&
+            res.headers.get('content-type')?.includes('application/json')
+              ? res.json()
+              : { beats: [] }
+          )
           .catch(() => ({ beats: [] })),
         getFavoriteBeatIds().catch(() => []),
       ])
@@ -79,9 +57,8 @@ export default function TracksPage() {
       let publicBeats = beatsRes.beats || []
       const userBeats = userBeatsRes.beats || []
 
-      // Client-side Fallback if API fails hard
+      // Client-side Fallback
       if (publicBeats.length === 0) {
-        console.warn('TracksPage: No beats from API, using client fallback.')
         publicBeats = [
           {
             id: 'fallback-1',
@@ -89,7 +66,7 @@ export default function TracksPage() {
             bpm: 90,
             storageUrl: '/beats/2-Naughty.mp3',
             isPremium: false,
-            artistName: 'FlowForge Default',
+            artistName: 'FreeStyla Default',
             genre: 'Boom Bap',
             duration: 180,
             tags: ['offline', 'fallback'],
@@ -100,7 +77,7 @@ export default function TracksPage() {
             bpm: 140,
             storageUrl: '/beats/2-Naughty.mp3',
             isPremium: false,
-            artistName: 'FlowForge Default',
+            artistName: 'FreeStyla Default',
             genre: 'Trap',
             duration: 180,
             tags: ['offline', 'fallback'],
@@ -115,7 +92,7 @@ export default function TracksPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchBeats()
@@ -127,7 +104,7 @@ export default function TracksPage() {
         audio.currentTime = 0
       }
     }
-  }, [])
+  }, [fetchBeats])
 
   const handlePlay = (beat: Beat) => {
     const audio = audioRef.current
@@ -140,15 +117,12 @@ export default function TracksPage() {
     } else {
       setPlayingBeatId(beat.id)
       audio.src = beat.storageUrl
-      // audio.crossOrigin = 'anonymous' // Avoid if not needed for simple playback
-      console.log('Playing preview:', beat.storageUrl)
 
       const playPromise = audio.play()
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.error('Playback failed:', err)
           setPlayingBeatId(null)
-          // toast.error('Check console for playback error')
         })
       }
 
@@ -237,9 +211,7 @@ export default function TracksPage() {
           />
         </div>
 
-        {/* Controls Row */}
         <div className="flex items-center justify-between mb-6">
-          {/* Tabs */}
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button
               onClick={() => handleTabChange('public')}
@@ -264,7 +236,6 @@ export default function TracksPage() {
             </button>
           </div>
 
-          {/* Action Button */}
           <button
             onClick={handleNewBeatClick}
             className="flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg font-medium text-sm hover:scale-105 transition-transform"
@@ -301,7 +272,6 @@ export default function TracksPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {/* Removed AddBeatCard from grid as per extensive UI refactor */}
             {filteredBeats.map((beat) => (
               <BeatGridCard
                 key={beat.id}
@@ -333,7 +303,6 @@ export default function TracksPage() {
           </div>
         )}
 
-        {/* Loading fallback - shows centered spinner if loading takes too long */}
         {filteredBeats.length === 0 &&
           !isLoading &&
           searchQuery.length === 0 &&
@@ -346,7 +315,6 @@ export default function TracksPage() {
             </div>
           )}
 
-        {/* Empty State for My Tracks if Pro but no beats */}
         {filteredBeats.length === 0 &&
           !isLoading &&
           activeTab === 'mine' &&
