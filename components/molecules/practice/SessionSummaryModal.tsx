@@ -40,9 +40,7 @@ export default function SessionSummaryModal({
       <PostProcessingModal
         audioUrl={data.audioUrl}
         onClose={() => setShowStudio(false)}
-        onSave={(blob) => {
-          console.log('Processed blob ready for upload:', blob)
-        }}
+        onSave={(_blob) => {}}
       />
     )
   }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { supabase } from '@/lib/supabase'
+import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
@@ -110,8 +110,9 @@ export async function DELETE(
       const parts = recording.storageUrl.split('/recordings/')
       if (parts.length === 2) {
         const filePath = parts[1]
+        const supabase = createServerClient()
         const { error: storageError } = await supabase.storage
-          .from('recordings')
+          .from(RECORDINGS_BUCKET)
           .remove([filePath])
 
         if (storageError) {

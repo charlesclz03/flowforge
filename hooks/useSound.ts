@@ -8,7 +8,7 @@ export function useSound() {
   useEffect(() => {
     // Initialize AudioContext on mount (lazy load)
     const AudioContext =
-      window.AudioContext || (window as any).webkitAudioContext
+      window.AudioContext || window.webkitAudioContext
     if (AudioContext) {
       audioContextRef.current = new AudioContext()
     }

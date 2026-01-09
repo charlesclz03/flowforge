@@ -18,7 +18,7 @@ import { GuestStorage } from '@/lib/guest-storage'
 
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
-import { GuestLoginModal } from '@/components/auth/GuestLoginModal'
+import { GuestLoginModal } from '@/components/molecules/auth/GuestLoginModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
 

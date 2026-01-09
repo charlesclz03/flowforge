@@ -181,7 +181,7 @@ export function BeatDropdown({
       const audio = new Audio(beat.storageUrl)
       audio.volume = 0.5
       // audio.crossOrigin = 'anonymous' // Removed to prevent CORS errors during simple preview
-      console.log('Preview request:', beat.storageUrl)
+
 
       audio.onended = () => setPreviewingBeatId(null)
 

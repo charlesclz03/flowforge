@@ -9,7 +9,7 @@ export function useWakeLock() {
     if ('wakeLock' in navigator) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        wakeLock.current = await (navigator as any).wakeLock.request('screen')
+        wakeLock.current = await navigator.wakeLock.request('screen')
         setIsLocked(true)
 
         wakeLock.current.addEventListener('release', () => {

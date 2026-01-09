@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { Card } from '@/components/atoms/Card'
-import { UpgradeButton } from '@/components/subscription/UpgradeButton'
-import { ManageSubscriptionButton } from '@/components/subscription/ManageSubscriptionButton'
+import { UpgradeButton } from '@/components/molecules/subscription/UpgradeButton'
+import { ManageSubscriptionButton } from '@/components/molecules/subscription/ManageSubscriptionButton'
 
 export function SubscriptionSection() {
   const { data: session } = useSession()

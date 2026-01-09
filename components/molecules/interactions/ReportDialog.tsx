@@ -25,8 +25,8 @@ interface ReportDialogProps {
 export function ReportDialog({
   isOpen,
   onClose,
-  contentId,
-  contentType,
+  contentId: _contentId,
+  contentType: _contentType,
 }: ReportDialogProps) {
   const [reason, setReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -35,7 +35,7 @@ export function ReportDialog({
     setIsSubmitting(true)
     try {
       // Mock API call
-      console.log('Reporting', contentId, contentType, reason)
+
       await new Promise((resolve) => setTimeout(resolve, 1000))
       // In real app: POST /api/report { contentId, contentType, reason }
       toast.success(
@@ -69,7 +69,7 @@ export function ReportDialog({
           </div>
 
           <HeadlessDialog.Description className="text-text-secondary mb-6">
-            Please select a reason for reporting this {contentType}.
+            Please select a reason for reporting this {_contentType}.
           </HeadlessDialog.Description>
 
           <div className="space-y-3 mb-6">

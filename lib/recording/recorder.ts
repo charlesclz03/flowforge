@@ -117,25 +117,18 @@ export class AudioRecorder {
     }
 
     this.mediaRecorder.onstop = () => {
-      console.log(
-        'MediaRecorder stopped, audioChunks:',
-        this.audioChunks.length,
-        'total size:',
-        this.audioChunks.reduce((sum, chunk) => sum + chunk.size, 0)
-      )
-
       // Ensure we have at least one chunk
       if (this.audioChunks.length === 0) {
-        console.warn('No audio chunks collected, creating empty blob')
+        // console.warn('No audio chunks collected, creating empty blob')
       }
 
       const blob = new Blob(this.audioChunks, { type: mimeType })
-      console.log('Blob created:', { size: blob.size, type: blob.type })
+
 
       if (this.onStopCallback) {
         this.onStopCallback(blob)
       } else {
-        console.warn('No onStop callback registered')
+        // console.warn('No onStop callback registered')
       }
     }
 
@@ -171,20 +164,15 @@ export class AudioRecorder {
    */
   stop(): Blob | null {
     if (!this.mediaRecorder) {
-      console.warn('MediaRecorder not initialized, cannot stop')
+      // console.warn('MediaRecorder not initialized, cannot stop')
       return null
     }
 
     if (this.mediaRecorder.state === 'inactive') {
-      console.warn('MediaRecorder already inactive, cannot stop')
+      // console.warn('MediaRecorder already inactive, cannot stop')
       return null
     }
 
-    console.log(
-      'Stopping MediaRecorder, current state:',
-      this.mediaRecorder.state
-    )
-    console.log('Audio chunks collected so far:', this.audioChunks.length)
 
     // Stop the MediaRecorder - this will trigger onstop event
     this.mediaRecorder.stop()
@@ -193,7 +181,7 @@ export class AudioRecorder {
     if (this.stream) {
       this.stream.getTracks().forEach((track) => {
         track.stop()
-        console.log('Stopped track:', track.kind)
+        // console.log('Stopped track:', track.kind)
       })
       this.stream = null
     }

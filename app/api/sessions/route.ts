@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server'
 import { createSession, getSessions } from '@/lib/db/sessions'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
+import { z } from 'zod'
+
 export const dynamic = 'force-dynamic'
+
+const createSessionSchema = z.object({
+  beatId: z.string().min(1),
+  title: z.string().min(1),
+  durationSeconds: z.number().int().positive(),
+  frequency: z.number().int().positive().default(8),
+  difficulty: z.number().int().min(1).max(3).default(2),
+  storageUrl: z.string().nullable().optional(),
+})
 
 /**
  * Get sessions endpoint (stub for MVP)
@@ -39,35 +50,39 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
+    const parseResult = createSessionSchema.safeParse(body)
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: parseResult.error.format() },
+        { status: 400 }
+      )
+    }
+
     const {
       beatId,
       title,
       durationSeconds,
-      frequency = 8,
-      difficulty = 2,
-      storageUrl = null,
-    } = body || {}
-    if (!beatId || !title || !durationSeconds) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
+      frequency,
+      difficulty,
+      storageUrl,
+    } = parseResult.data
+
     const result = await createSession({
-      beatId: beatId as string,
-      title: title as string,
-      durationSeconds: durationSeconds as number,
-      frequency: frequency as number,
-      difficulty: difficulty as number,
+      beatId,
+      title,
+      durationSeconds,
+      frequency,
+      difficulty,
       userId: session.user.id,
-      storageUrl: (storageUrl as string) || null,
+      storageUrl: storageUrl || null,
       score: 0,
       vibe: null,
-      parentId: null,
+      mode: 'solo',
       restarts: 0,
       playbacks: 0,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any)
+    })
+
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || 'Failed to create session' },
