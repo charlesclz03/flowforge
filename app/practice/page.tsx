@@ -719,6 +719,7 @@ export default function PracticePage() {
       }
 
       // Siren Logic: 4 seconds before the NEXT change
+      const timeUntilNext = state.nextWordChangeTime - sessionTime
       const sirenActive = timeUntilNext <= 4 && timeUntilNext > 0
 
       setIsSirenActive(sirenActive)
