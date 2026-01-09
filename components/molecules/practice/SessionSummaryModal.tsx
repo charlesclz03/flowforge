@@ -216,7 +216,7 @@ export default function SessionSummaryModal({
                   size={32}
                 />
                 <h3 className="font-bold text-xl text-white">
-                  Legacy Milestone Unlocked:
+                  Achievement Unlocked!
                 </h3>
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
                   {data.newBadges.map((badge) => (

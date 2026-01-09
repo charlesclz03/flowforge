@@ -54,6 +54,7 @@ export function SessionPlayer({
   const [volume, setVolume] = useState(1)
   const [beatVolume, setBeatVolume] = useState(0.8)
   const [isMuted, setIsMuted] = useState(false)
+  const [audioError, setAudioError] = useState<string | null>(null)
 
   // Advanced Features
   const [nudge, setNudge] = useState(0)
@@ -77,12 +78,6 @@ export function SessionPlayer({
   useEffect(() => {
     const saved = localStorage.getItem('flowforge_latency')
     if (saved) {
-      // If latency is 50ms, it means I RECORD LATE.
-      // So I need to pull vocals BACK (negative nudge relative to beat).
-      // Or delay beat by 50ms.
-      // Nudge here effectively delays the BEAT track.
-      // If I am late (recorded after beat), I want to delay the BEAT to match my vocal.
-      // So Latency = Positive Nudge.
       setNudge(parseInt(saved))
     }
   }, [])
@@ -131,10 +126,6 @@ export function SessionPlayer({
       dryGainRef.current = ctx.createGain()
       wetGainRef.current = ctx.createGain() // Reverb level
 
-      // Routing:
-      // Source -> DryGain -> Destination
-      // Source -> Reverb -> WetGain -> Destination
-
       if (sourceRef.current) {
         sourceRef.current.connect(dryGainRef.current)
         dryGainRef.current.connect(ctx.destination)
@@ -179,8 +170,34 @@ export function SessionPlayer({
       beatRef.current = beat
     }
 
+    const handleError = (e: Event) => {
+      console.error('Audio playback error:', e)
+      const target = e.target as HTMLAudioElement
+      let message = 'Playback failed'
+      if (target.error) {
+        switch (target.error.code) {
+          case target.error.MEDIA_ERR_ABORTED:
+            message = 'Playback aborted'
+            break
+          case target.error.MEDIA_ERR_NETWORK:
+            message = 'Network error - check connection'
+            break
+          case target.error.MEDIA_ERR_DECODE:
+            message = 'Audio decoding failed - file may be corrupted'
+            break
+          case target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            message = 'Audio format not supported or file not found'
+            break
+        }
+      }
+      setAudioError(message)
+      setIsPlaying(false)
+    }
+
+    audio.addEventListener('error', handleError)
     audio.addEventListener('loadedmetadata', () => {
       setDuration(audio.duration)
+      setAudioError(null)
     })
 
     audio.addEventListener('timeupdate', () => {
@@ -206,6 +223,7 @@ export function SessionPlayer({
     })
 
     return () => {
+      audio.removeEventListener('error', handleError)
       audio.pause()
       audio.src = ''
       if (beatRef.current) {
@@ -377,6 +395,13 @@ export function SessionPlayer({
         className
       )}
     >
+      {/* Error Message */}
+      {audioError && (
+        <div className="absolute top-4 left-4 right-12 z-20 bg-red-500/20 text-red-200 text-xs px-3 py-2 rounded-lg border border-red-500/50 flex items-center gap-2">
+          <span>⚠️ {audioError}</span>
+        </div>
+      )}
+
       {/* Clean View Toggle */}
       <button
         onClick={() => setIsCleanView(true)}

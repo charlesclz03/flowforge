@@ -81,6 +81,8 @@ export default function PracticePage() {
     isLoaded,
     wordCategory,
     isRecordingEnabled,
+    mode,
+    cypherPlayers,
   } = usePracticeSession()
 
   // Local State
@@ -603,8 +605,30 @@ export default function PracticePage() {
     }
   }, [play, selectedBeat, beatPlayer, isRecording, handleStop, startCountdown])
 
+  const handleBeatSelection = useCallback(
+    (beat: Beat) => {
+      if (isRecording) {
+        if (
+          confirm(
+            'Recording in progress. Do you want to stop this session and change tracks?'
+          )
+        ) {
+          handleStop()
+          setBeat(beat)
+        }
+      } else {
+        setBeat(beat)
+      }
+    },
+    [isRecording, handleStop, setBeat]
+  )
+
   // Sync Logic
-  const sessionStateRef = useRef({ lastWordIndex: -1, isActive: false })
+  const sessionStateRef = useRef({
+    lastWordIndex: -1,
+    isActive: false,
+    nextWordChangeTime: 0, // New accumulator tracker
+  })
   const paramsRef = useRef({
     frequency,
     wordList,
@@ -638,6 +662,7 @@ export default function PracticePage() {
       if (beatPlayer.currentTime < 0.5) {
         state.lastWordIndex = -1
         sessionTimeRef.current = 0
+        state.nextWordChangeTime = 0 // Force immediate first word
       }
     }
 
@@ -664,15 +689,38 @@ export default function PracticePage() {
         }
       }
 
+      // Timing Logic
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
-      const secondsPerPrompt = secondsPerBar * params.frequency
-      const wordIdx = Math.floor(sessionTime / secondsPerPrompt)
-      const actualIndex = wordIdx % params.wordList.length
 
-      // Siren Logic: 4 seconds before every other word (next word index is even)
-      const timeUntilNext = secondsPerPrompt - (sessionTime % secondsPerPrompt)
-      const isApproachingNextEvenWord = (wordIdx + 1) % 2 === 0
-      const sirenActive = isApproachingNextEvenWord && timeUntilNext <= 4
+      // Word Change Logic
+      if (sessionTime >= state.nextWordChangeTime) {
+        // Trigger Word Change
+        // Calculate the NEXT target based on CURRENT settings
+        state.nextWordChangeTime += secondsPerBar * params.frequency
+
+        // Ensure we don't get stuck in the past if lag happens (catch up)
+        if (state.nextWordChangeTime < sessionTime) {
+          state.nextWordChangeTime =
+            sessionTime + secondsPerBar * params.frequency
+        }
+
+        // Update Index
+        const newIndex = state.lastWordIndex + 1
+        state.lastWordIndex = newIndex
+
+        const actualIndex = newIndex % params.wordList.length
+        const newWord = params.wordList[actualIndex]
+
+        if (newWord) {
+          setCurrentWord(newWord)
+          setWordIndex(newIndex) // This drives the UI shake effect via key
+          if (params.isTTSEnabled) speak(newWord)
+        }
+      }
+
+      // Siren Logic: 4 seconds before the NEXT change
+      const sirenActive = timeUntilNext <= 4 && timeUntilNext > 0
+
       setIsSirenActive(sirenActive)
 
       // sirenPhase toggles every 150ms during siren
@@ -680,15 +728,6 @@ export default function PracticePage() {
         setSirenPhase(Math.floor(sessionTime / 0.15) % 2)
       }
 
-      if (wordIdx !== state.lastWordIndex) {
-        state.lastWordIndex = wordIdx
-        const newWord = params.wordList[actualIndex]
-        if (newWord) {
-          setCurrentWord(newWord)
-          setWordIndex(wordIdx)
-          if (params.isTTSEnabled) speak(newWord)
-        }
-      }
       forceUpdate()
       requestAnimationFrame(updateLoop)
     }
@@ -772,6 +811,13 @@ export default function PracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBeat?.id]) // ONLY reload when the beat ID changes
 
+  // Calculate Active Player for Cypher Mode
+  const beatsElapsed = (monotonicTime * (selectedBeat?.bpm || 0)) / 60
+  const barsElapsed = beatsElapsed / 4
+  const safeFrequency = frequency > 0 ? frequency : 8
+  const currentTurn = Math.floor(barsElapsed / safeFrequency)
+  const activePlayer = (currentTurn % (cypherPlayers || 1)) + 1
+
   // Bento Grid Render
   return (
     <OnboardingLayout
@@ -842,10 +888,13 @@ export default function PracticePage() {
                 currentTime={monotonicTime}
                 sessionDuration={sessionDuration}
                 handleToggle={handlePlayPause}
-                handleBeatSelect={setBeat}
+                handleBeatSelect={handleBeatSelection}
                 difficulty={difficulty}
                 frequency={frequency}
                 isRecording={isRecording}
+                mode={mode}
+                activePlayer={activePlayer}
+                cypherPlayers={cypherPlayers}
                 isSirenActive={isSirenActive}
                 sirenPhase={sirenPhase}
                 recordingDuration={duration}

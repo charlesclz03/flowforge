@@ -54,7 +54,25 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    return NextResponse.json({ recording })
+    // 3. Generate Signed URL if needed
+    let signedUrl = recording.storageUrl
+    if (recording.storageUrl && !recording.storageUrl.startsWith('http')) {
+      const supabase = createServerClient()
+      const { data } = await supabase.storage
+        .from(RECORDINGS_BUCKET)
+        .createSignedUrl(recording.storageUrl, 60 * 60) // 1 hour
+
+      if (data?.signedUrl) {
+        signedUrl = data.signedUrl
+      }
+    }
+
+    return NextResponse.json({
+      recording: {
+        ...recording,
+        storageUrl: signedUrl,
+      },
+    })
   } catch (error) {
     console.error('Error fetching recording:', error)
     return NextResponse.json(

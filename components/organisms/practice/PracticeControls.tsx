@@ -7,6 +7,7 @@ import {
   Gauge,
   Infinity as InfinityIcon,
   User,
+  Users,
   Mic,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -45,6 +46,8 @@ interface PracticeControlsProps {
   countdownValue?: number | 'GO' | null
   isSirenActive?: boolean
   sirenPhase?: number
+  activePlayer?: number
+  cypherPlayers?: number
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -76,6 +79,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
     countdownValue,
     isSirenActive = false,
     sirenPhase = 0,
+    activePlayer = 1,
+    cypherPlayers = 1,
   } = props
 
   const formatTime = (seconds: number) => {
@@ -249,7 +254,32 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </div>
         )}
 
-        {/* Hero Player */}
+        {/* Cypher Mode Indicator */}
+        {mode === 'cypher' && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center">
+            <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-6 py-2 flex items-center gap-3 shadow-xl">
+              <Users className="text-accent-blue" size={20} />
+              <div className="flex gap-1">
+                {Array.from({ length: cypherPlayers }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      'w-3 h-3 rounded-full transition-all duration-300',
+                      activePlayer === i + 1
+                        ? 'bg-accent-blue scale-125 shadow-glow-blue'
+                        : 'bg-white/10'
+                    )}
+                  />
+                ))}
+              </div>
+              <span className="text-white font-bold font-mono tracking-wider">
+                PLAYER {activePlayer}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
           <motion.button
             id="tour-record-btn"

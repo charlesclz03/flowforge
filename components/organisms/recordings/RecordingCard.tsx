@@ -8,7 +8,7 @@ import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { VideoGenerator } from '@/components/features/export/VideoGenerator'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ErrorCodes } from '@/lib/errors'
+import { createAppError, ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -31,6 +31,7 @@ export const RecordingCard = memo(function RecordingCard({
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showVideoExport, setShowVideoExport] = useState(false)
+  const [playbackError, setPlaybackError] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
 
   // Memoize difficulty labels to avoid recreating on every render
@@ -99,6 +100,13 @@ export const RecordingCard = memo(function RecordingCard({
       createdAudio.onended = () => setIsPlaying(false)
       createdAudio.onpause = () => setIsPlaying(false)
       createdAudio.onplay = () => setIsPlaying(true)
+      createdAudio.onerror = (e) => {
+        console.error('Playback error:', e)
+        setPlaybackError(
+          'Failed to play recording. The file may be missing or corrupted.'
+        )
+        setIsPlaying(false)
+      }
     }
 
     return () => {
@@ -138,8 +146,18 @@ export const RecordingCard = memo(function RecordingCard({
 
   return (
     <Card className={cn('relative', className)}>
-      {error && (
-        <ErrorAlert error={error} onDismiss={clearError} className="mb-4" />
+      {(error || playbackError) && (
+        <ErrorAlert
+          error={
+            error ||
+            createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+          }
+          onDismiss={() => {
+            clearError()
+            setPlaybackError(null)
+          }}
+          className="mb-4"
+        />
       )}
 
       <div className="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-6 p-4">
