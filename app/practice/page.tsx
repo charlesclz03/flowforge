@@ -401,7 +401,6 @@ export default function PracticePage() {
     if (!selectedBeat) return
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
     const offsetMs = (selectedBeat.offset || 0) * 1000
-    const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
 
     // Mobile/Safari: Play immediately (muted) to capture user gesture
     try {
