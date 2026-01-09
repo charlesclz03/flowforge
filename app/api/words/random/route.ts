@@ -49,6 +49,9 @@ export async function GET(request: Request) {
       )
       // If filtering resulted in empty, just use all safety words
       if (wordsData.length === 0) wordsData = FALLBACK_WORDS
+
+      // Shuffle fallback words
+      wordsData = wordsData.sort(() => Math.random() - 0.5)
     }
 
     // Ensure we respect the count

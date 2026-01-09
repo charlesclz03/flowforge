@@ -24,6 +24,7 @@ export const PATCH_NOTES: PatchNote[] = [
     version: '1.5.8',
     date: '2026-01-09',
     title: 'Sirens & Intensity',
+    codename: 'High Intensity',
     description: 'Added high-intensity visual warnings before word changes.',
     changes: [
       {
@@ -35,7 +36,6 @@ export const PATCH_NOTES: PatchNote[] = [
         ],
       },
     ],
-    type: 'feature',
   },
   {
     version: '1.5.7',

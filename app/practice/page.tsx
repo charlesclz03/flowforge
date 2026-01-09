@@ -147,9 +147,9 @@ export default function PracticePage() {
     releaseLock()
     sessionTimeRef.current = 0
     setMonotonicTime(0)
-    setCurrentWord(wordList[0] || '')
+    setCurrentWord('')
     forceUpdate() // Ensure UI updates
-  }, [beatPlayer, wordList, forceUpdate, releaseLock])
+  }, [beatPlayer, forceUpdate, releaseLock])
 
   // Optimistic Action Hook
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
@@ -358,11 +358,14 @@ export default function PracticePage() {
         const wordsData = await wordsRes.json()
 
         if (wordsData.words) {
-          const words = wordsData.words.map(
+          let words = wordsData.words.map(
             (w: { wordText: string }) => w.wordText
           )
+          // Shuffle initially to be sure
+          words = words.sort(() => Math.random() - 0.5)
           setWordList(words)
-          if (!currentWord && words.length > 0) setCurrentWord(words[0])
+          // Don't show word initially - wait for GO
+          setCurrentWord('')
         }
       } catch (err) {
         console.error('Init error:', err)
@@ -430,6 +433,9 @@ export default function PracticePage() {
 
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
+
+    // Shuffle words for a fresh start every time we begin
+    setWordList((prev) => [...prev].sort(() => Math.random() - 0.5))
 
     // Final check for loading errors
     if (beatPlayer.error) {

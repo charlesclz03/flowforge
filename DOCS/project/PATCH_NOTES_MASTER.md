@@ -4,20 +4,21 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
-## 🚀 Update 1.5.7: The Direct Flow
+## 🚀 Update 1.5.8: Sirens & Intensity
 
 **Release Date:** January 09, 2026
-**Codename:** _Direct Flow_
+**Codename:** _High Intensity_
 
-This update refines the session handoff, ensuring that when the timer hits zero, the beat stops and your results are presented without friction.
+This update introduces critical visual feedback mechanisms to heighten the intensity of practice sessions.
 
-### 🔊 Precision Termination
-- **Hard Stop**: Fixed the "Infinite Loop" bug where beats would occasionally keep playing after the session ended.
-- **Auto-Summary**: Guaranteed trigger for the Session Summary modal the moment the countdown finishes.
+### 🚨 Visual Warnings
+- **Cop Sirens**: Added alternating Red/Blue ring flash 4 seconds before word changes.
+- **Urgency Pulse**: Background now pulses with high intensity to signal the transition.
+- **Word Shake**: The current word shakes to visually prompt the incoming switch.
 
-### v1.5.8 - Sirens & Intensity
-- **Visual Warnings**: Added "cop sirens" (Red/Blue flash) 4s before word changes.
-- **Word Shake**: Current words now shake with urgency during the siren phase.
+---
+
+## 🚀 Update 1.5.7: The Direct Flow
 - **Timing Precision**: Siren triggers on every other word to maintain flow.
 
 ### Update 1.5.7: Precision Flow
