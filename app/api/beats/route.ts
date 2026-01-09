@@ -49,10 +49,11 @@ export async function GET(request: Request) {
       // Get beats based on query
       const result = freeOnly ? await getFreeBeats() : await getBeats()
 
-      if (result.success && result.data) {
+      if (result.success && result.data && result.data.length > 0) {
         beatsData = result.data
       } else {
-        throw new Error(result.error || 'No beats found')
+        console.warn('DB returned success but 0 beats. Triggering fallback.')
+        throw new Error(result.error || 'No beats found in DB')
       }
     } catch (dbError) {
       console.warn('Database beat fetch failed, using fallback:', dbError)
