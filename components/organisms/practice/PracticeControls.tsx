@@ -412,8 +412,8 @@ export default function PracticeControls({
             if (isRecordingEnabled) onUpgrade?.()
           }}
           className={cn(
-            "mt-4 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95",
-             !isRecordingEnabled && "opacity-30 grayscale cursor-default"
+            'mt-4 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95',
+            !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
           )}
         >
           <div className="flex items-center gap-2 px-6 py-2">
@@ -441,6 +441,5 @@ export default function PracticeControls({
         </button>
       </div>
     </Card>
-  )
   )
 }

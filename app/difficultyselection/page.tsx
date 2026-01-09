@@ -96,12 +96,7 @@ export default function DifficultySelectionPage() {
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
         {/* Title */}
-        <div className="space-y-3 text-center">
-          <h1 className="text-4xl sm:text-5xl">Setup your session</h1>
-          <p className="text-base text-text-secondary sm:text-lg">
-            Choose your difficulty, word frequency, and beat.
-          </p>
-        {/* Title */}
+
         <div className="space-y-3 text-center">
           <h1 className="text-4xl sm:text-5xl">Setup your session</h1>
           <p className="text-base text-text-secondary sm:text-lg">
