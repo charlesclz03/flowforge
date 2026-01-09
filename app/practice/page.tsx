@@ -403,22 +403,15 @@ export default function PracticePage() {
     const offsetMs = (selectedBeat.offset || 0) * 1000
     const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
 
-    // Mobile/Safari Audio Verify: Prime the audio element immediately to unlock autoplay policies
-    beatPlayer.prime?.()
-
-    // Clear any stuck TTS
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
+    // Mobile/Safari: Play immediately (muted) to capture user gesture
+    try {
+      beatPlayer.setVolume(0)
+      await beatPlayer.play()
+    } catch (e) {
+      console.warn('Pre-play failed', e)
     }
 
-    // Calculate when to start/seek audio so drop hits at "GO"
-    // Time to Start Audio = (Start of Countdown) + (Total Countdown Duration) - (Time to Drop in Audio)
-    // If positive: We wait that long, then play from 0.
-    // If negative: We seek into the audio and play immediately.
-    const timeToStartAudio = totalCountdownMs - offsetMs
-
     const playBeep = (freq: number, type: OscillatorType) => {
-      // Inline beep logic or reuse hook if complex. useSound is for UI sounds, this is rhythmic.
       const AudioContext =
         window.AudioContext ||
         (
@@ -440,44 +433,25 @@ export default function PracticePage() {
       osc.stop(ctx.currentTime + 0.5)
     }
 
-    // Schedule Audio Start
-    let audioStartTimer: NodeJS.Timeout | null = null
-
-    // We need to ensure we don't start recording until "GO" usually,
-    // but if we seek deep into audio, we might want to start?
-    // No, "Practice" starts at "GO". Audio helps you prep.
-
-    const triggerAudio = async () => {
-      try {
-        // Ensure audio is ready
-        if (timeToStartAudio < 0) {
-          // Offset is larger than countdown (long intro)
-          const seekTime = Math.abs(timeToStartAudio) / 1000
-          beatPlayer.seek(seekTime)
-          await beatPlayer.play()
-        } else {
-          // Offset is small (short intro), play from 0
-          beatPlayer.seek(0)
-          await beatPlayer.play()
-        }
-      } catch (err) {
-        handleError(err, ErrorCodes.AUDIO_PLAYBACK_FAILED)
-      }
-    }
-
-    if (timeToStartAudio > 0) {
-      audioStartTimer = setTimeout(triggerAudio, timeToStartAudio)
-    } else {
-      triggerAudio()
-    }
-
-    // Run Countdown Visuals
     const sequence = [3, 2, 1, 'GO']
     for (const val of sequence) {
       setCountdownValue(val as number | 'GO' | null)
       if (val === 'GO') playBeep(880, 'square')
       else playBeep(440, 'sine')
       await new Promise((r) => setTimeout(r, msPerBeat))
+    }
+
+    // THE DROP (GO) logic
+    try {
+      // Reset to start and unmute
+      const seekTime = offsetMs < 0 ? Math.abs(offsetMs) / 1000 : 0
+
+      beatPlayer.seek(seekTime)
+      beatPlayer.setVolume(1) // Restore volume
+
+      if (!beatPlayer.isPlaying) await beatPlayer.play()
+    } catch (e) {
+      handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
     }
 
     // THE DROP (GO) logic
@@ -501,7 +475,7 @@ export default function PracticePage() {
     setTimeout(() => setCountdownValue(null), 1000)
 
     return () => {
-      if (audioStartTimer) clearTimeout(audioStartTimer)
+      // No timer to clear
     }
   }, [
     selectedBeat,
