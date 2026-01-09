@@ -78,24 +78,14 @@ export default function RecordingsPage() {
       throw new Error('Recording URL not available')
     }
 
-    try {
-      const response = await fetch(recording.storageUrl)
-      if (!response.ok) {
-        throw new Error('Failed to download recording')
-      }
-
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${recording.title}.webm`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (err) {
-      throw err
-    }
+    // Direct download using the signed URL (which now has content-disposition set)
+    const a = document.createElement('a')
+    a.href = recording.storageUrl
+    a.download = `${recording.title}.webm` // Backup attribute
+    a.target = '_blank'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 
   // Show loading state while session is being checked

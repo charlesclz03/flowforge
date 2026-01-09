@@ -24,6 +24,8 @@ import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryM
 
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
+import { Button } from '@/components/atoms/Button'
+import { Modal } from '@/components/atoms/Modal'
 import { FlowComboOverlay } from '@/components/molecules/gamification/FlowComboOverlay'
 
 interface SessionSummary {
@@ -37,7 +39,15 @@ interface SessionSummary {
   difficulty: string
   bpm: number
   frequency: number
+  frequency: number
   isOptimistic: boolean
+  xp?: {
+    gained: number
+    newLevel: number
+    currentXP: number
+    maxXP: number
+    breakdown: any
+  }
 }
 
 import { Beat } from '@/types/database'
@@ -80,6 +90,7 @@ export default function PracticePage() {
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false)
   const [premiumTrigger, setPremiumTrigger] = useState<
     'recording' | 'beat' | 'history'
   >('beat')
@@ -340,6 +351,37 @@ export default function PracticePage() {
     stopPlayback()
   }, [play, stopRecording, stopPlayback])
 
+  const handleBackNavigation = useCallback(() => {
+    if (isRecording || beatPlayer.isPlaying) {
+      // Pause playback while deciding
+      if (beatPlayer.isPlaying) beatPlayer.pause()
+      setShowExitConfirmation(true)
+    } else {
+      router.push('/difficultyselection')
+    }
+  }, [isRecording, beatPlayer, router])
+
+  const confirmExit = useCallback(() => {
+    handleStop()
+    // Explicitly cancel TTS to prevent it from continuing on the next page
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+    setShowExitConfirmation(false)
+    router.push('/difficultyselection')
+  }, [handleStop, router])
+
+  // Warn on browser refresh/close if recording
+  useEffect(() => {
+    if (!isRecording) return
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isRecording])
+
   // Initialization Effect
   useEffect(() => {
     const initSession = async () => {
@@ -405,8 +447,11 @@ export default function PracticePage() {
       window.speechSynthesis.onvoiceschanged = setBest
     }
     return () => {
-      if (typeof window !== 'undefined' && window.speechSynthesis)
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.onvoiceschanged = null
+        // Cleanup TTS on unmount to prevent double speech on re-entry
+        window.speechSynthesis.cancel()
+      }
     }
   }, [])
 
@@ -730,7 +775,7 @@ export default function PracticePage() {
       showHeader={true}
       showSettings={true}
       showProgress={true}
-      onBack={() => router.push('/difficultyselection')}
+      onBack={handleBackNavigation}
     >
       <script
         type="application/ld+json"
@@ -860,6 +905,37 @@ export default function PracticePage() {
             onClose={() => setShowGuestModal(false)}
           />
         )}
+
+        {/* Exit Confirmation Modal */}
+        <Modal
+          isOpen={showExitConfirmation}
+          onClose={() => setShowExitConfirmation(false)}
+          title="Leave Session?"
+          className="max-w-sm"
+        >
+          <div className="space-y-6">
+            <p className="text-text-secondary text-center">
+              Are you sure you want to leave? Your current session will be
+              discarded and not recorded.
+            </p>
+            <div className="flex gap-3">
+              <Button
+                variant="secondary"
+                className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 text-text-secondary"
+                onClick={() => setShowExitConfirmation(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                className="flex-1 bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20"
+                onClick={confirmExit}
+              >
+                Leave & Discard
+              </Button>
+            </div>
+          </div>
+        </Modal>
 
         {/* Combo Overlay */}
         <FlowComboOverlay combo={combo} />

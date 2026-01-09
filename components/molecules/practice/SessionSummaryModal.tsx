@@ -21,6 +21,13 @@ interface SessionSummaryData {
   difficulty: string
   bpm: number
   frequency: number
+  xp?: {
+    gained: number
+    newLevel: number
+    currentXP: number
+    maxXP: number
+    breakdown: any
+  }
 }
 
 type SessionSummaryModalProps = {
@@ -120,13 +127,15 @@ export default function SessionSummaryModal(props: any) {
         {/* XP Bar Animation */}
         <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
           <div className="flex justify-between text-sm font-bold text-text-secondary mb-2">
-            <span>Level 5</span>
-            <span>1200 / 2000 XP</span>
+            <span>Level {data.xp?.newLevel || 1}</span>
+            <span>
+              {data.xp?.currentXP || 0} / {data.xp?.maxXP || 1000} XP
+            </span>
           </div>
           <div className="h-4 bg-black/40 rounded-full overflow-hidden relative">
             <motion.div
-              initial={{ width: '60%' }}
-              animate={{ width: step >= 1 ? '75%' : '60%' }}
+              initial={{ width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%` }}
+              animate={{ width: step >= 1 ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%` : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%` }}
               transition={{ duration: 1.5, ease: 'easeOut' }}
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
             />
@@ -135,13 +144,17 @@ export default function SessionSummaryModal(props: any) {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="absolute inset-y-0 left-[60%] w-[15%] bg-white/50 animate-pulse"
+                className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
+                style={{
+                   left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                   width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`
+                }}
               />
             )}
           </div>
           <div className="mt-2 text-right">
             <span className="text-green-400 font-bold text-sm">
-              +300 XP Gained
+              +{data.xp?.gained || 0} XP Gained
             </span>
           </div>
         </div>

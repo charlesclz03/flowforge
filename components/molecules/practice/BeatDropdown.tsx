@@ -10,6 +10,7 @@ import {
   Play,
   Upload,
   Trash2,
+  Heart,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
@@ -270,13 +271,13 @@ export function BeatDropdown(props: BeatDropdownProps) {
                               'p-1.5 rounded-lg transition-colors cursor-pointer',
                               favoriteIds.has(beat.id)
                                 ? 'text-accent-red bg-accent-red/10'
-                                : 'text-text-tertiary hover:bg-white/10'
+                                : 'text-text-tertiary hover:bg-white/10 hover:text-white'
                             )}
                           >
-                            <Check
-                              size={14}
+                            <Heart
+                              size={16}
                               className={cn(
-                                !favoriteIds.has(beat.id) && 'opacity-0'
+                                favoriteIds.has(beat.id) && 'fill-current'
                               )}
                             />
                           </div>

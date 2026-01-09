@@ -79,6 +79,11 @@ export class AudioRecorder {
       this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
     }
 
+    // Resume AudioContext if suspended (browser policy)
+    if (this.audioContext.state === 'suspended') {
+      await this.audioContext.resume()
+    }
+
     // Set up Audio Graph: Mic -> Destination
     this.mediaStreamSource = this.audioContext.createMediaStreamSource(
       this.stream

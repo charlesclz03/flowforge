@@ -5,6 +5,7 @@ import { createSession } from '@/lib/db/sessions'
 import { randomUUID } from 'crypto'
 import { AchievementSystem } from '@/lib/gamification/achievements'
 import { prisma } from '@/lib/prisma'
+import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
@@ -144,11 +145,63 @@ export async function POST(request: Request) {
       console.error('Secondary ingestion/gamification failed:', e)
     }
 
+    // --- XP CALCULATION & LEVEL UPDATE ---
+    let xpData = {
+      gained: 0,
+      newLevel: 1,
+      currentXP: 0,
+      maxXP: 1000,
+      breakdown: {} as any,
+    }
+
+    try {
+      // Calculate XP
+      const xpResult = calculateSessionXP({
+        durationSeconds,
+        wordCount,
+        achievementsUnlocked: newBadges.length,
+      })
+
+      // Fetch current user XP
+      const currentUser = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        // @ts-expect-error XP/Level added manually
+        select: { xp: true, level: true },
+      })
+
+      if (currentUser) {
+        // @ts-expect-error XP/Level added manually
+        const totalXP = (currentUser.xp || 0) + xpResult.total
+        const levelInfo = getLevelInfo(totalXP)
+
+        // Update User
+        await prisma.user.update({
+          where: { id: session.user.id },
+          data: {
+            // @ts-expect-error XP/Level added manually
+            xp: totalXP,
+            level: levelInfo.level,
+          },
+        })
+
+        xpData = {
+          gained: xpResult.total,
+          newLevel: levelInfo.level,
+          currentXP: levelInfo.currentXP,
+          maxXP: levelInfo.maxXP,
+          breakdown: xpResult.breakdown,
+        }
+      }
+    } catch (err) {
+      console.error('XP update failed:', err)
+    }
+
     return NextResponse.json({
       session: {
         ...sessRes.data,
         storageUrl: signedUrl,
         newBadges,
+        xp: xpData, // Return XP data to client
       },
       storageUrl: signedUrl,
     })
@@ -196,7 +249,9 @@ export async function GET() {
 
         const { data: signedUrlData } = await supabase.storage
           .from(RECORDINGS_BUCKET)
-          .createSignedUrl(recording.storageUrl, SIGNED_URL_TTL_SECONDS)
+          .createSignedUrl(recording.storageUrl, SIGNED_URL_TTL_SECONDS, {
+            download: `${recording.title}.webm`,
+          })
 
         return {
           ...recording,
