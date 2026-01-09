@@ -231,7 +231,7 @@ export function SessionPlayer({
         beatRef.current.src = ''
       }
     }
-  }, [audioUrl, beatUrl, nudge, beatVolume])
+  }, [audioUrl, beatUrl, nudge])
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current) return

@@ -15,6 +15,7 @@ import { Spinner } from '@/components/atoms/Spinner'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
+import { AudioMixer } from '@/lib/audio/mixer'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -78,14 +79,34 @@ export default function RecordingsPage() {
       throw new Error('Recording URL not available')
     }
 
-    // Direct download using the signed URL (which now has content-disposition set)
-    const a = document.createElement('a')
-    a.href = recording.storageUrl
-    a.download = `${recording.title}.webm` // Backup attribute
-    a.target = '_blank'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    // If beat exists, mix them (Client-side mix)
+    if (recording.beat?.storageUrl) {
+      const mixer = new AudioMixer()
+      // Mix with default volumes (Voice 1.0, Beat 0.8)
+      // Note: This returns a WAV blob
+      const blob = await mixer.mix(
+        recording.storageUrl,
+        recording.beat.storageUrl
+      )
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      // Use .wav extension as the mixer produces WAV
+      a.download = `${recording.title}-mix.wav`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } else {
+      // Direct download using the signed URL
+      const a = document.createElement('a')
+      a.href = recording.storageUrl
+      a.download = `${recording.title}.webm` // Backup attribute
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
   }
 
   // Show loading state while session is being checked

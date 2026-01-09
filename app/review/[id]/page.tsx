@@ -114,18 +114,9 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
 
   return (
     <ReviewTemplate
-      header={<AppHeader />}
+      header={<AppHeader showBackButton={true} onBack={handleBack} />}
       pageHeader={
         <div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleBack}
-            leftIcon={<ArrowLeft size={16} />}
-            className="mb-4 text-text-secondary"
-          >
-            Back to Library
-          </Button>
           <PageHeader
             title={recording.title}
             description="Listen back and analyze your flow"

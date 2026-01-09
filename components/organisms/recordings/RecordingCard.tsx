@@ -84,22 +84,54 @@ export const RecordingCard = memo(function RecordingCard({
   }, [recording, onDownload, handleError, clearError])
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const beatRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     let createdAudio: HTMLAudioElement | null = null
+    let createdBeat: HTMLAudioElement | null = null
 
     if (recording.storageUrl) {
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.src = ''
       }
+      if (beatRef.current) {
+        beatRef.current.pause()
+        beatRef.current.src = ''
+      }
 
       createdAudio = new Audio(recording.storageUrl)
       audioRef.current = createdAudio
 
-      createdAudio.onended = () => setIsPlaying(false)
-      createdAudio.onpause = () => setIsPlaying(false)
-      createdAudio.onplay = () => setIsPlaying(true)
+      // Initialize beat audio if available
+      if (recording.beat?.storageUrl) {
+        createdBeat = new Audio(recording.beat.storageUrl)
+        createdBeat.volume = 0.8 // Default mix volume
+        beatRef.current = createdBeat
+      }
+
+      createdAudio.onended = () => {
+        setIsPlaying(false)
+        if (beatRef.current) {
+          beatRef.current.pause()
+          beatRef.current.currentTime = 0
+        }
+      }
+
+      createdAudio.onpause = () => {
+        setIsPlaying(false)
+        if (beatRef.current) beatRef.current.pause()
+      }
+
+      createdAudio.onplay = () => {
+        setIsPlaying(true)
+        if (beatRef.current) {
+          beatRef.current
+            .play()
+            .catch((e) => console.error('Beat playback error:', e))
+        }
+      }
+
       createdAudio.onerror = (e) => {
         console.error('Playback error:', e)
         setPlaybackError(
@@ -115,16 +147,32 @@ export const RecordingCard = memo(function RecordingCard({
         audioRef.current.src = ''
         audioRef.current = null
       }
+      if (beatRef.current) {
+        beatRef.current.pause()
+        beatRef.current.src = ''
+        beatRef.current = null
+      }
 
       if (createdAudio) {
         createdAudio.pause()
         createdAudio.src = ''
       }
+      if (createdBeat) {
+        createdBeat.pause()
+        createdBeat.src = ''
+      }
     }
-  }, [recording.storageUrl])
+  }, [recording.storageUrl, recording.beat])
 
   const handlePlay = useCallback(() => {
     if (!audioRef.current) return
+
+    // If play is triggered, we start audio. The onplay listener handles the beat.
+    // If pause is triggered, we pause audio. The onpause listener handles the beat.
+    // However, for play, we need to handle potential promise rejection logic which is done in onplay.
+    // Syncing: Reset beat if starting from 0?
+    // Since we don't have seek, play always continues.
+    // The onended resets beat to 0.
 
     if (isPlaying) {
       audioRef.current.pause()
