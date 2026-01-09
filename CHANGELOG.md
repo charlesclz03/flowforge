@@ -1,5 +1,25 @@
 # Changelog
 
+## [v1.5.4] - 2026-01-09
+
+### 🎛️ UX Improvements & Bug Fixes ("The Polish")
+
+**Focus:** Quality-of-life improvements for beat selection, icon rendering, and profile display.
+
+### Fixed
+- **Mic Icon Rendering**: The Mic icon on the record button had `fill="currentColor"` causing a broken/weird appearance. Lucide icons are stroke-based, so removed fill and added proper `strokeWidth`.
+- **Profile Picture**: Gmail profile pictures were not displaying in the Profile section. Added `session.user.image = user.image` to the NextAuth session callback to pass OAuth images to the client.
+
+### Changed
+- **Collapsible Beat Dropdown**: The BeatDropdown in embedded mode is now **collapsible** instead of always expanded:
+  - Collapsed by default (or when a beat is pre-selected via URL)
+  - Click header to expand, auto-collapses after selection
+  - Smooth 300ms slide animation
+  - Always shows chevron indicator
+- **Tracks → Practice Flow**: When selecting "Use this track" from Vinyl Collection, the user lands on Difficulty Selection with the beat pre-selected and dropdown collapsed, providing immediate visual confirmation.
+
+---
+
 ## [v1.5.3] - 2026-01-09
 
 ### 🔧 Critical Bug Fixes & Audio Engine Overhaul ("The Resurrection")

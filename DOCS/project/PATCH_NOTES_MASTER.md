@@ -4,6 +4,24 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🎛️ Update 1.5.4: The Polish
+
+**Release Date:** January 09, 2026
+**Codename:** _Smooth Operator_
+
+Quality-of-life improvements that make the app feel more responsive and polished.
+
+### 🎧 Beat Selection Overhaul
+- **Collapsible Dropdown**: The Beat selector in difficulty selection is now fully **collapsible**. No more taking up 50% of the screen when you've already made your choice.
+- **Smart Pre-Selection**: Coming from the Vinyl Collection? Your track is already locked in, dropdown collapsed, ready to hit "Practice".
+- **Buttery Animation**: Smooth 300ms slide animation when expanding/collapsing. Feels premium.
+
+### 🎤 Visual Fixes
+- **Mic Icon Fixed**: The record button's microphone icon was rendering weirdly due to incorrect fill settings. Now crisp and clean as intended.
+- **Profile Portraits**: Your Gmail profile picture now displays correctly in the Profile section. No more placeholder initials if you've signed in with Google.
+
+---
+
 ## 🔧 Update 1.5.3: The Resurrection
 
 **Release Date:** January 09, 2026

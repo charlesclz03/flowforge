@@ -172,6 +172,7 @@ export default function DifficultySelectionPage() {
             isPro={isPro}
             hideLocalTab={!showLocalTracks}
             embedded={true}
+            defaultCollapsed={!!searchParams.get('beatId')}
           />
 
           {/* Advanced Section */}

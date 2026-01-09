@@ -391,7 +391,7 @@ export default function PracticeControls({
                     )}
                     <Mic
                       size={48}
-                      fill="currentColor"
+                      strokeWidth={1.5}
                       className="text-white/90 drop-shadow-lg"
                     />
                   </div>

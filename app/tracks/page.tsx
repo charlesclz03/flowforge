@@ -232,7 +232,7 @@ export default function TracksPage() {
       <div className="px-6 pt-12 pb-6 space-y-6">
         <div className="flex items-center justify-between">
           <PageHeader
-            title="Vinyl Collection"
+            title="Beat Vault"
             description="Discover beats for your next session."
           />
         </div>

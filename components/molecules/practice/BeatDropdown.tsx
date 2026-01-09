@@ -40,6 +40,7 @@ interface BeatDropdownProps {
   isLoading?: boolean
   hideLocalTab?: boolean
   embedded?: boolean
+  defaultCollapsed?: boolean
 }
 
 // Beat type now includes tags
@@ -54,8 +55,15 @@ export function BeatDropdown({
   isLoading = false,
   hideLocalTab = false,
   embedded = false,
+  defaultCollapsed = false,
 }: BeatDropdownProps) {
-  const [isOpen, setIsOpen] = useState(embedded) // Default open if embedded
+  // For embedded mode: start collapsed if defaultCollapsed is true or if a beat is already selected
+  const [isOpen, setIsOpen] = useState(() => {
+    if (embedded) {
+      return defaultCollapsed ? false : !selectedBeat
+    }
+    return false
+  })
   const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
   const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null)
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
@@ -298,15 +306,14 @@ export function BeatDropdown({
         <button
           id="tour-beat-select"
           type="button"
-          onClick={() => !disabled && !embedded && setIsOpen(!isOpen)}
-          disabled={disabled || embedded}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          disabled={disabled}
           className={cn(
             'w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-all duration-200',
             'border border-white/10 bg-white/5 hover:bg-white/10',
             isOpen && 'border-accent-purple/50 ring-2 ring-accent-purple/20',
             disabled && 'opacity-50 cursor-not-allowed',
-            embedded &&
-              'rounded-b-none border-b-0 cursor-default hover:bg-white/5'
+            embedded && isOpen && 'rounded-b-none border-b-0'
           )}
         >
           {selectedBeat ? (
@@ -320,30 +327,33 @@ export function BeatDropdown({
                 </div>
                 <div className="text-xs text-text-secondary">
                   {selectedBeat.bpm} BPM •{' '}
-                  {selectedBeat.artistName || 'FlowForge'}
+                  {selectedBeat.artistName || 'FreeStyla'}
                 </div>
               </div>
             </div>
           ) : (
             <span className="text-text-secondary">Select a beat...</span>
           )}
-          {!embedded && (
-            <ChevronDown
-              size={20}
-              className={cn(
-                'text-text-secondary transition-transform duration-200',
-                isOpen && 'rotate-180'
-              )}
-            />
-          )}
+          <ChevronDown
+            size={20}
+            className={cn(
+              'text-text-secondary transition-transform duration-200',
+              isOpen && 'rotate-180'
+            )}
+          />
         </button>
 
-        {isOpen && (
+        <div
+          className={cn(
+            'overflow-hidden transition-all duration-300 ease-in-out',
+            isOpen ? 'max-h-[450px] opacity-100' : 'max-h-0 opacity-0'
+          )}
+        >
           <div
             className={cn(
               embedded
-                ? 'static w-full rounded-b-xl rounded-t-none border border-t-0 border-white/10 bg-[#121216] shadow-none ring-0 flex flex-col h-[400px]'
-                : 'absolute left-0 right-0 top-full z-50 mt-2 h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col'
+                ? 'w-full rounded-b-xl rounded-t-none border border-t-0 border-white/10 bg-[#121216] shadow-none ring-0 flex flex-col h-[400px]'
+                : 'h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col mt-2'
             )}
           >
             <Tabs
@@ -469,7 +479,7 @@ export function BeatDropdown({
                               )
                                 navigator.vibrate(10)
                               onSelect(beat)
-                              if (!embedded) setIsOpen(false)
+                              setIsOpen(false)
                               stopPreview()
                             }}
                             className="flex-1 text-left"
@@ -576,6 +586,7 @@ export function BeatDropdown({
                           <button
                             onClick={() => {
                               onSelect(beat)
+                              setIsOpen(false)
                               stopPreview()
                             }}
                             className="flex-1 text-left"
@@ -692,7 +703,7 @@ export function BeatDropdown({
               )}
             </Tabs>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

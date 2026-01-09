@@ -19,6 +19,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id
+        // Ensure profile image from OAuth is passed to session
+        session.user.image = user.image
 
         // Superadmin Override
         const SUPERADMIN_EMAILS = [

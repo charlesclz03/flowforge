@@ -61,7 +61,7 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'New Features',
         items: [
           'User Beat Uploads: Pro users can now upload, calibrate, and manage their own instrumental tracks directly from the Tracks page.',
-          'Vinyl Collection: Added tabs for "Public Tracks" and "My Tracks" for easier library management.',
+          'Beat Vault: Added tabs for "Public Tracks" and "My Tracks" for easier library management.',
           'Achievements System: The "Leaderboard" is now "Achievements", featuring 100+ Overwatch 2 style medals.',
           'Classic Mode: Restored the beloved central-player layout for the Practice Studio.',
         ],

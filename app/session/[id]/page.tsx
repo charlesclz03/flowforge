@@ -45,7 +45,7 @@ export default async function SessionPage({
         className="inline-flex items-center gap-2 text-text-tertiary hover:text-white mb-6 transition-colors"
       >
         <ArrowLeft size={20} />
-        Back to Vinyl
+        Back to Beat Vault
       </Link>
 
       <Card className="p-6">

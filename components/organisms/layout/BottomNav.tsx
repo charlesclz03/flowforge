@@ -16,10 +16,10 @@ export function BottomNav() {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
   // Define tabs
-  // Order: Vinyl (Home), Rankings, PRACTICE (Center), Recordings, Profile
+  // Order: Beats (Home), Rankings, PRACTICE (Center), Recordings, Profile
   const tabs = [
     {
-      name: 'Vinyl',
+      name: 'Beats',
       href: '/tracks',
       icon: Disc3,
       match: (path: string) => path === '/tracks',
