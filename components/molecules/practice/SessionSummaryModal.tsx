@@ -65,16 +65,21 @@ export default function SessionSummaryModal({
   // Intelligent PWA Prompt
   useEffect(() => {
     if (!data) return
+
+    let timer: NodeJS.Timeout
     const isGoodSession =
       data.score > 1000 || (data.newBadges && data.newBadges.length > 0)
     const hasWarned = localStorage.getItem('hasWarnedPWA')
 
     if (isGoodSession && !hasWarned) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setShowPWA(true)
         localStorage.setItem('hasWarnedPWA', 'true')
       }, 4000) // Longer delay for animation
-      return () => clearTimeout(timer)
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
     }
   }, [data])
 
