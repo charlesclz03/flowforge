@@ -24,6 +24,7 @@ export function useBeatPlayer() {
     })
 
     playerRef.current.onEnded(() => {
+      console.log('Hook received onEnded')
       setIsPlaying(false)
     })
 
@@ -43,6 +44,7 @@ export function useBeatPlayer() {
     setIsLoading(true)
     setError(null)
     timeRef.current = 0
+    setIsPlaying(false) // Reset playing state on load
 
     try {
       await playerRef.current.load(beat.storageUrl)
@@ -65,12 +67,24 @@ export function useBeatPlayer() {
     if (!playerRef.current) return
 
     try {
-      await playerRef.current.play()
+      // Optimistic update
       setIsPlaying(true)
       setError(null)
+
+      await playerRef.current.play()
+
+      // Verification after await
+      const state = playerRef.current.getState()
+      if (!state.isPlaying) {
+        console.warn(
+          'Play resolved but player is not playing (likely ended immediately or failed silently)'
+        )
+        setIsPlaying(false)
+      }
     } catch (err) {
       console.error('Error playing beat:', err)
       setError('Failed to play beat')
+      setIsPlaying(false)
     }
   }, [])
 

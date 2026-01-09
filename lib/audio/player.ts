@@ -7,13 +7,18 @@ export class AudioPlayer {
   private audio: HTMLAudioElement | null = null
   private onTimeUpdateCallback: ((time: number) => void) | null = null
   private onEndedCallback: (() => void) | null = null
+  private debug: boolean = true
 
   constructor() {
     if (typeof window !== 'undefined') {
       this.audio = new Audio()
-      this.audio.crossOrigin = 'anonymous'
+      // this.audio.crossOrigin = 'anonymous' // Removed to prevents CORS errors with local/external assets
       this.setupEventListeners()
     }
+  }
+
+  private log(message: string, ...args: any[]) {
+    if (this.debug) console.log(`[AudioPlayer] ${message}`, ...args)
   }
 
   private setupEventListeners() {
@@ -26,6 +31,7 @@ export class AudioPlayer {
     })
 
     this.audio.addEventListener('ended', () => {
+      this.log('Playback ended')
       if (this.onEndedCallback) {
         this.onEndedCallback()
       }
@@ -33,16 +39,23 @@ export class AudioPlayer {
 
     // Handle buffering/loading issues
     this.audio.addEventListener('waiting', () => {
-      console.warn('Audio is buffering...')
+      this.log('Buffering...')
     })
 
     this.audio.addEventListener('stalled', () => {
-      console.warn('Audio playback stalled')
+      console.warn('[AudioPlayer] Playback stalled')
     })
 
     this.audio.addEventListener('error', (e) => {
-      console.error('HTMLAudioElement Error:', e)
+      console.error('[AudioPlayer] HTMLAudioElement Error:', e)
+      const error = this.audio?.error
+      if (error) {
+        console.error('[AudioPlayer] MediaError:', error.code, error.message)
+      }
     })
+
+    this.audio.addEventListener('play', () => this.log('Event: play'))
+    this.audio.addEventListener('pause', () => this.log('Event: pause'))
   }
 
   /**
@@ -51,8 +64,11 @@ export class AudioPlayer {
   async load(url: string): Promise<void> {
     if (!this.audio) throw new Error('Audio not initialized')
 
+    this.log('Loading beat:', url)
+
     // Stop current playback before loading new
     this.audio.pause()
+    this.audio.currentTime = 0
 
     return new Promise((resolve, reject) => {
       if (!this.audio) return reject(new Error('Audio not initialized'))
@@ -61,20 +77,25 @@ export class AudioPlayer {
 
       // Setup temporary load handlers
       const handleCanPlayThrough = () => {
-        this.audio?.removeEventListener('canplaythrough', handleCanPlayThrough)
-        this.audio?.removeEventListener('error', handleError)
+        this.log('Asset loaded and ready to play')
+        cleanup()
         resolve()
       }
 
       const handleError = (e: ErrorEvent | Event) => {
-        this.audio?.removeEventListener('canplaythrough', handleCanPlayThrough)
-        this.audio?.removeEventListener('error', handleError)
+        console.error('[AudioPlayer] Load failed', e)
+        cleanup()
         reject(
           new Error(
             'Failed to load audio: ' +
               (e instanceof ErrorEvent ? e.message : 'Network error')
           )
         )
+      }
+
+      const cleanup = () => {
+        this.audio?.removeEventListener('canplaythrough', handleCanPlayThrough)
+        this.audio?.removeEventListener('error', handleError)
       }
 
       this.audio.addEventListener('canplaythrough', handleCanPlayThrough)
@@ -90,7 +111,14 @@ export class AudioPlayer {
    */
   async play(): Promise<void> {
     if (!this.audio) throw new Error('Audio not initialized')
-    await this.audio.play()
+    this.log('Play requested')
+    try {
+      await this.audio.play()
+      this.log('Play started successfully')
+    } catch (err) {
+      console.error('[AudioPlayer] Play failed', err)
+      throw err
+    }
   }
 
   /**
@@ -98,14 +126,16 @@ export class AudioPlayer {
    */
   async prime(): Promise<void> {
     if (!this.audio) return
+    this.log('Priming audio')
     const originalVolume = this.audio.volume
     this.audio.volume = 0
     try {
       await this.audio.play()
       this.audio.pause()
       this.audio.currentTime = 0
+      this.log('Audio primed')
     } catch (e) {
-      console.warn('Audio prime failed', e)
+      console.warn('[AudioPlayer] Prime failed', e)
     } finally {
       this.audio.volume = originalVolume
     }
@@ -116,6 +146,7 @@ export class AudioPlayer {
    */
   pause(): void {
     if (!this.audio) throw new Error('Audio not initialized')
+    this.log('Pause requested')
     this.audio.pause()
   }
 
@@ -124,6 +155,7 @@ export class AudioPlayer {
    */
   stop(): void {
     if (!this.audio) throw new Error('Audio not initialized')
+    this.log('Stop requested')
     this.audio.pause()
     this.audio.currentTime = 0
   }
@@ -191,6 +223,7 @@ export class AudioPlayer {
    * Clean up resources
    */
   destroy(): void {
+    this.log('Destroying player instance')
     if (this.audio) {
       this.audio.pause()
       this.audio.src = ''

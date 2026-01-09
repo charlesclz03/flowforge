@@ -205,6 +205,17 @@ export default function PracticeControls({
               <span>{frequency} Bars</span>
             </button>
           </div>
+          {onRestart && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onRestart}
+              className="mt-1 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 text-text-tertiary hover:text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5"
+            >
+              <RefreshCcw size={10} />
+              <span>Restart</span>
+            </motion.button>
+          )}
         </div>
 
         {/* Word Prompt */}
@@ -214,24 +225,9 @@ export default function PracticeControls({
         >
           <WordPrompt
             word={currentWord || null}
-            show={isPlaying && !!currentWord}
+            show={!!currentWord} // Always show if we have a word (PracticePage handles clearing it on stop)
             isGolden={isGolden}
           />
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3">
-          {onRestart && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onRestart}
-              className="px-6 py-2 rounded-full border border-white/10 bg-white/5 text-text-secondary hover:text-white hover:bg-white/10 text-[0.7rem] font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
-            >
-              <RefreshCcw size={14} />
-              <span>Restart</span>
-            </motion.button>
-          )}
         </div>
 
         {error && (

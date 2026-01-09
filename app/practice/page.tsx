@@ -562,25 +562,28 @@ export default function PracticePage() {
       if (!params.selectedBeat || params.wordList.length === 0) return
 
       const elapsed = beatPlayer.getPreciseTime()
-
-      // Stop condition
-      if (
-        elapsed >=
-        params.sessionDuration + (params.selectedBeat.offset || 0)
-      ) {
-        if (
-          elapsed - (params.selectedBeat.offset || 0) >=
-          params.sessionDuration
-        ) {
-          handleStop()
-          return
-        }
-      }
-
       const sessionTime = Math.max(
         0,
         elapsed - (params.selectedBeat.offset || 0)
       )
+
+      // GRACE PERIOD: Ignore stop conditions for the first 1.5 seconds to prevent "instant death"
+      // sessions due to audio glitches or slight play/pause race conditions
+      if (sessionTime > 1.5) {
+        // Stop condition
+        if (
+          elapsed >=
+          params.sessionDuration + (params.selectedBeat.offset || 0)
+        ) {
+          if (
+            elapsed - (params.selectedBeat.offset || 0) >=
+            params.sessionDuration
+          ) {
+            handleStop()
+            return
+          }
+        }
+      }
 
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
       const secondsPerPrompt = secondsPerBar * params.frequency
@@ -604,7 +607,15 @@ export default function PracticePage() {
       // logic to clean up text loop validation
       cancelAnimationFrame(frameId)
     }
-  }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate]) // Added deps to satisfy lint
+  }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate])
+
+  // Watch for audio errors
+  useEffect(() => {
+    if (beatPlayer.error) {
+      toast.error(`Audio Error: ${beatPlayer.error}`)
+      handleStop()
+    }
+  }, [beatPlayer.error, handleStop])
 
   // Shortcuts & Events
   useEffect(() => {
@@ -675,16 +686,16 @@ export default function PracticePage() {
       showProgress={true}
       onBack={() => router.push('/difficultyselection')}
     >
-      <div className="min-h-screen pt-20 pb-8 px-4 md:px-8 max-w-7xl mx-auto space-y-6">
+      <div className="min-h-screen pt-4 pb-4 px-4 md:px-8 max-w-7xl mx-auto space-y-4">
         {/* Header */}
         <div className="flex justify-center items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
             {selectedBeat ? selectedBeat.title : 'Practice Session'}
           </h1>
         </div>
 
         {/* Classic Centralized Layout */}
-        <div className="relative flex flex-col items-center justify-center py-4 min-h-[60vh]">
+        <div className="relative flex flex-col items-center justify-center py-2 min-h-[50vh]">
           {/* Side Visualizers */}
           <div className="absolute inset-y-0 left-0 w-1/4 md:w-1/6 hidden md:block opacity-50 pointer-events-none">
             <AudioVisualizer
