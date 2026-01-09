@@ -21,6 +21,35 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.5.3',
+    title: 'The Resurrection',
+    codename: 'Second Wind',
+    date: 'January 09, 2026',
+    description:
+      'Critical fixes for audio playback, authentication loops, and UI visibility. The app was broken; now it works.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Audio Engine: Implemented "Mute-Play-Unmute" strategy for guaranteed playback on Safari/Mobile.',
+          'Auth Redirect Loop: Removed edge middleware protection for Profile/Recordings routes.',
+          'Record Button: Fixed invisible "REC" button by changing black-on-black styling to white.',
+          'Layout Overlap: Reduced min-height on Practice page to prevent bottom nav overlap.',
+          'Cypher Mode: Created mock room creation API and lobby page.',
+          'Tracks Fallback: Added client-side fallback beats if API fails.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          'Audio Player Debugging: Added comprehensive lifecycle logging.',
+          'Grace Period: Session won\'t stop before 1.5s to prevent instant-death glitches.',
+          'Optimistic UI: Play state updates immediately for faster feedback.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.4.0',
     title: 'The Platinum Polish',
     codename: 'Diamond Cutter',

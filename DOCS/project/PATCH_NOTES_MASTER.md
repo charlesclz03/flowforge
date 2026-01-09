@@ -4,12 +4,35 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
-## 📱 Update 1.5.2: Studio Flow & Mobile Polish
+## 🔧 Update 1.5.3: The Resurrection
 
 **Release Date:** January 09, 2026
-**Codename:** _Liquid Touch_
+**Codename:** _Second Wind_
 
-We've smoothed out the edges for our mobile emcees and hardened the audio engine. The studio now feels responsive, premium, and reliable on any device.
+The app was critically broken. Users couldn't record, couldn't see their profiles, and the audio engine was fighting browser security policies. This patch brings it all back to life.
+
+### 🔊 Audio Engine V2
+- **Guaranteed Playback**: Implemented a robust "Mute-Play-Unmute" strategy. The moment you tap "Start", the audio begins playing (silently). When the countdown hits "GO", we seek to the correct position and restore volume. This bypasses all browser autoplay restrictions.
+- **Deep Logging**: New debug mode in `AudioPlayer` class logs every lifecycle event (`load`, `play`, `pause`, `ended`, `error`). Easier to diagnose issues in production.
+- **Grace Period**: Session won't auto-stop before 1.5 seconds have passed, preventing race conditions from ending your flow prematurely.
+
+### 🔒 Auth & Navigation
+- **Redirect Loop Fix**: The Edge Middleware was clashing with client-side session checks, creating an infinite redirect. Removed `/profile` and `/recordings` from middleware; client handles auth.
+- **Cypher Mode Unblocked**: Created a mock Room Creation API (`/api/cypher/create`) and a lobby page so users can actually proceed after hitting "Create Room".
+
+### 🎨 UI & Visibility
+- **Record Button Visibility**: The "REC" indicator was black-on-black. Now uses white borders and text with a red glow for the Pro state.
+- **Layout Overlap**: Reduced the practice studio's `min-height` and padding so the player doesn't overlap with the bottom navigation on mobile.
+- **Mobile Header Streak**: Adjusted icon size and padding for smaller screens.
+
+### ✨ UX Polish (User Contributions)
+- **Immersive Loading**: Loading screen now cycles through dynamic messages ("Syncing AI Word Bank...", "Dropping the Beat...").
+- **Session Summary**: Updated copy for streaks ("Consistency Streak") and achievements ("Legacy Milestone Unlocked").
+- **Difficulty Selection**: New hero title and improved "Capture the Audio" toggle text.
+
+---
+
+## 📱 Update 1.5.2: Studio Flow & Mobile Polish
 
 ### 🎧 Audio Engine Repair
 - **Persistent FX**: Fixed a complex issue where Studio FX (Reverb, EQ) would drop out when toggling modes or replaying tracks. The audio graph now initializes robustly every time.

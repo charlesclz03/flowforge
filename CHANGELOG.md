@@ -1,5 +1,37 @@
 # Changelog
 
+## [v1.5.3] - 2026-01-09
+
+### 🔧 Critical Bug Fixes & Audio Engine Overhaul ("The Resurrection")
+
+**Focus:** Resolved multiple critical bugs preventing core app usage, overhauled audio engine stability, and refined mobile UX.
+
+### Fixed
+- **Auth Redirect Loop (Critical)**: Removed `/profile` and `/recordings` from Edge Middleware protection. Client-side auth now handles these routes correctly, preventing infinite loading loops for logged-in users.
+- **Practice Audio (Critical)**: Implemented "Mute-Play-Unmute" strategy. Audio now starts immediately (muted) on user gesture, then seeks/unmutes at "GO". This guarantees playback on Safari/Mobile where delayed `play()` calls are blocked.
+- **Invisible Record Button (Critical)**: The "REC" button was styled with black-on-black colors. Changed to `border-white/40` and `text-white` for visibility in dark mode.
+- **Cypher Room Creation**: Added a mock `/api/cypher/create` endpoint and a placeholder Lobby page (`/cypher/[id]`) so "Create Room" actually redirects.
+- **Tracks Page Fallback**: Added client-side fallback beats so the page is never empty, even if the API fails.
+- **Profile Page Loading**: Initialized `isLoadingRecordings` to `false` to prevent getting stuck in an infinite loading state on component mount.
+- **Mobile Header Icon**: Added responsive CSS for the streak fire icon to render correctly on smaller screens.
+
+### Added
+- **Audio Player Debugging**: Added comprehensive `console.log` statements to `lib/audio/player.ts` for tracing playback lifecycle (`load`, `play`, `pause`, `ended`, `error`).
+- **Optimistic Play State**: `useBeatPlayer.play()` now sets `isPlaying(true)` optimistically before `await`, with a verification check after.
+- **Grace Period**: Session stop logic now ignores the first 1.5 seconds to prevent "instant death" sessions from audio glitches.
+- **Loading Text Carousel**: Practice page now cycles through fun loading messages ("Syncing AI Word Bank...", "Dropping the Beat...").
+- **Schema.org Metadata**: Added structured data to the Practice page for SEO.
+
+### Changed
+- **Practice Layout**: Relaxed `min-h-[80vh]` to `min-h-[50vh]` and reduced padding to prevent overlap with bottom nav on small screens.
+- **Word Prompt Logic**: `WordPrompt` component now shows whenever `currentWord` is set, regardless of `isPlaying` state.
+- **Restart Button**: Made smaller and moved closer to controls for a cleaner look.
+- **"My Tracks" Empty State**: Added encouraging copy ("Capture your own sound...") instead of a simple "No beats" message.
+- **Session Summary Text**: Updated "Day Streak" to "Consistency Streak" and "Achievement Unlocked" to "Legacy Milestone Unlocked".
+- **Difficulty Selection Title**: Updated to "Ready to spit bars? Start your session now."
+
+---
+
 ## [v1.5.2] - 2026-01-09
 
 ### 📱 Mobile Polish & Studio FX ("Studio Flow")
