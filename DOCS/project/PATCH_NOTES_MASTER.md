@@ -49,6 +49,31 @@ A focused update resolving core session timing issues and streamlining the victo
 
 ---
 
+# Patch Notes Master Record
+
+## v1.6.0 - "The Studio Update"
+**Codename**: Platinum Record
+**Date**: 2026-01-09
+
+**Summary**:
+A major consolidation release that rolls up the audio engine overhaul, visual intensity updates, and the new Production Export feature into a standard-setting build.
+
+### 🌟 New Features
+- **Production Export**: Users can now download `.wav` files with the app's signature "Studio Reverb" and "Polish" effects using offline rendering.
+- **Visual Intensity**: "Cop Siren" rings and screen shake animations trigger 4s before word changes to heighten flow pressure.
+- **Guest Restoration**: "Don't lose your flow" - guest recordings are effectively cached and restored to the account upon registration.
+
+### 🔧 System Overhaul (Audio Engine 2.0)
+- **Zero Latency**: Removed race conditions and laggy polling loops.
+- **Safari Compatibility**: Implemented "Mute-Prime" strategy to retain audio context on locked iOS devices.
+- **Security Integrity**: Added deeper checks to `mixer.ts` to prevent vocal-muting exploits.
+
+### 🐛 Key Fixes
+- **XP Gain**: Fixed logic where level-up data wasn't propagating to the UI immediately.
+- **Navigation**: removed "Text Links" in favor of standard Header Arrows.
+- **Crash Safety**: Modal confirmations added for session exit.
+
+---
 ## 🚀 Update 1.5.6: The Stable Circle
 
 **Release Date:** January 09, 2026

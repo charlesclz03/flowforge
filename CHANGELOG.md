@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.6.0] - 2026-01-09
+
+### 🎙️ The Studio Update ("Platinum Record")
+
+**Focus:** Major feature release consolidating Audio Engine 2.0, Studio Export, and Visual Intensity systems.
+
+### Added
+- **Production Export**: Implemented `OfflineAudioContext` rendering in `mixer.ts`. Users can now download "Studio" versions of their tracks with Reverb and Compression applied.
+- **Visual Intensity**: Added `TimerRing` "Siren" state (Red/Blue alternating) and `WordPrompt` shake animation.
+- **Security**: Added vocal integrity check (`voiceVolume > 0.1`) to `mixer.ts` to protect instrumental assets.
+
+### Fixed
+- **XP System**: Resolved critical bug in `PracticePage` where `saveSessionOptimistic` failed to merge server-side XP data, resulting in "0 XP" displays.
+- **Navigation**: Replaced non-standard back link in `ReviewPage` with `AppHeader` arrow.
+- **Audio Engine**: Finalized "Zero Latency" startup logic and mobile compatibility fixes.
+
+---
+
 ## [v1.5.9] - 2026-01-09
 
 ### 🔧 The Final Polish

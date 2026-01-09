@@ -6,7 +6,6 @@ import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
-import { VideoGenerator } from '@/components/features/export/VideoGenerator'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { createAppError, ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
@@ -30,7 +29,6 @@ export const RecordingCard = memo(function RecordingCard({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [showVideoExport, setShowVideoExport] = useState(false)
   const [playbackError, setPlaybackError] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
 
@@ -286,14 +284,18 @@ export const RecordingCard = memo(function RecordingCard({
             />
           )}
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowVideoExport(true)}
-            className="flex-1 md:flex-none justify-center px-2"
+          <Link
+            href={`/recordings/${recording.id}/video`}
+            className="flex-1 md:flex-none"
           >
-            <Video size={20} className="text-text-secondary" />
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-center px-2"
+            >
+              <Video size={20} className="text-text-secondary" />
+            </Button>
+          </Link>
 
           <Button
             variant="ghost"
@@ -306,15 +308,6 @@ export const RecordingCard = memo(function RecordingCard({
           </Button>
         </div>
       </div>
-
-      {showVideoExport && recording.storageUrl && (
-        <VideoGenerator
-          audioUrl={recording.storageUrl}
-          title={recording.title}
-          artist={recording.userId || 'User'} // We might need name if available or fetch it
-          onClose={() => setShowVideoExport(false)}
-        />
-      )}
     </Card>
   )
 })

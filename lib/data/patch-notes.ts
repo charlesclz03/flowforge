@@ -21,6 +21,40 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.6.0',
+    date: '2026-01-09',
+    title: 'The Studio Update',
+    codename: 'Platinum Record',
+    description:
+      'Major release consolidating our audio engine overhaul, visual intensity updates, and the highly requested Studio Quality Export.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Production Export: Download sessions with "Studio FX" (Reverb & Polish) baked in.',
+          'Visual Intensity: Dynamic "Cop Siren" and Shake effects warn you of upcoming word changes.',
+          'Guest Restoration: Unsaved guest sessions are now automatically restored after login.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          'Audio Engine 2.0: Complete rewrite aiming for zero-latency start times on all devices.',
+          'Security Lock: Integrity checks now prevent beat ripping by enforcing vocal volume rules.',
+          'Safari Support: "Mute-Prime-Play" strategy guarantees playback reliability on iOS.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'XP System: Fixed issue where XP/Levels would sometimes display as 0 after a session.',
+          'Navigation: Standardized "Back" gestures across Review and Recording pages.',
+          'Safety Nets: Added exit confirmations to prevent accidental data loss during practice.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.5.9',
     date: '2026-01-09',
     title: 'The Final Polish',

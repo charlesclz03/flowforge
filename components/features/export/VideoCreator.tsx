@@ -1,23 +1,22 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/atoms/Button'
-import { Card } from '@/components/atoms/Card'
-import { Loader2, Download, X } from 'lucide-react'
+import { Loader2, Download, ArrowLeft } from 'lucide-react'
 
-interface VideoGeneratorProps {
+interface VideoCreatorProps {
   audioUrl: string
   title: string
   artist: string
-  onClose: () => void
+  onBack?: () => void
 }
 
-export function VideoGenerator({
+export function VideoCreator({
   audioUrl,
   title,
   artist,
-  onClose,
-}: VideoGeneratorProps) {
+  onBack,
+}: VideoCreatorProps) {
   const [status, setStatus] = useState<
     'idle' | 'recording' | 'processing' | 'done'
   >('idle')
@@ -29,10 +28,25 @@ export function VideoGenerator({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const paramChunks = useRef<Blob[]>([])
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (videoUrl) {
+        URL.revokeObjectURL(videoUrl)
+      }
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+      }
+    }
+  }, [videoUrl])
+
   const startExport = async () => {
     if (!canvasRef.current) return
 
     setStatus('recording')
+    setVideoUrl(null)
+    paramChunks.current = []
 
     // Setup Audio
     const audio = new Audio(audioUrl)
@@ -81,7 +95,7 @@ export function VideoGenerator({
     mediaRecorderRef.current = recorder
 
     // Start playback and recording
-    audio.play()
+    await audio.play()
     recorder.start()
 
     // DRAWING LOOP
@@ -170,59 +184,100 @@ export function VideoGenerator({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <Card className="max-w-md w-full relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-text-secondary hover:text-white"
-        >
-          <X size={24} />
-        </button>
+    <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
+      {/* Visualizer Preview */}
+      <div className="w-full max-w-lg mx-auto bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10 relative aspect-square">
+        <canvas
+          ref={canvasRef}
+          width={1080}
+          height={1080}
+          className="w-full h-full object-cover"
+        />
 
-        <div className="p-6 space-y-6">
-          <h2 className="text-2xl font-bold text-center">Export Video</h2>
-
-          <div className="aspect-square bg-slate-900 rounded-xl overflow-hidden relative shadow-2xl border border-white/10">
-            <canvas
-              ref={canvasRef}
-              width={1080}
-              height={1080}
-              className="w-full h-full object-cover"
-            />
+        {/* Play Overlay if idle */}
+        {status === 'idle' && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+            <p className="text-white font-medium bg-black/50 px-4 py-2 rounded-full border border-white/10">
+              Preview
+            </p>
           </div>
+        )}
+      </div>
 
-          <div className="space-y-4">
-            {status === 'idle' && (
-              <Button onClick={startExport} className="w-full" size="lg">
-                Start Video Creation
-              </Button>
-            )}
+      {/* Controls */}
+      <div className="w-full max-w-md mx-auto space-y-6 lg:pt-8">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Create Social Content</h2>
+          <p className="text-text-secondary">
+            Generate a high-quality visualization video for sharing on TikTok,
+            Instagram Reels, or YouTube Shorts.
+          </p>
+        </div>
 
-            {status === 'recording' && (
-              <div className="space-y-2 text-center">
-                <Loader2
-                  className="animate-spin mx-auto text-accent-purple"
-                  size={32}
-                />
-                <p>Recording... {Math.round(progress)}%</p>
+        <div className="space-y-4">
+          {status === 'idle' && (
+            <Button onClick={startExport} className="w-full" size="lg">
+              Start Video Generation
+            </Button>
+          )}
+
+          {status === 'recording' && (
+            <div className="bg-white/5 rounded-xl p-6 text-center space-y-4 border border-white/10">
+              <Loader2
+                className="animate-spin mx-auto text-accent-purple"
+                size={40}
+              />
+              <div>
+                <h3 className="text-lg font-bold">Rendering Video...</h3>
+                <p className="text-text-secondary text-sm">
+                  This plays your audio to capture the visualization.
+                </p>
               </div>
-            )}
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-accent-purple transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <p className="text-xs font-mono">{Math.round(progress)}%</p>
+            </div>
+          )}
 
-            {status === 'done' && videoUrl && (
+          {status === 'done' && videoUrl && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
+              <div className="bg-accent-green/10 text-accent-green p-4 rounded-xl border border-accent-green/20 text-center">
+                Review your video below or click download.
+              </div>
+
               <a
                 href={videoUrl}
                 download={`flowforge-${title}.webm`}
                 className="block"
               >
-                <Button className="w-full bg-accent-green hover:bg-accent-green/80 text-black">
-                  <Download size={20} className="mr-2" />
+                <Button className="w-full bg-accent-green hover:bg-accent-green/80 text-black h-12 text-lg">
+                  <Download size={22} className="mr-2" />
                   Download Video
                 </Button>
               </a>
-            )}
-          </div>
+
+              <Button
+                variant="ghost"
+                onClick={() => setStatus('idle')}
+                className="w-full"
+              >
+                Create Another
+              </Button>
+            </div>
+          )}
+
+          {onBack && (
+            <Button variant="ghost" className="w-full" onClick={onBack}>
+              <ArrowLeft size={18} className="mr-2" />
+              Back to Recording
+            </Button>
+          )}
         </div>
-      </Card>
+      </div>
     </div>
   )
 }
