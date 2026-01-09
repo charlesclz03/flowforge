@@ -43,7 +43,7 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'System Updates',
         items: [
           'Audio Player Debugging: Added comprehensive lifecycle logging.',
-          'Grace Period: Session won\'t stop before 1.5s to prevent instant-death glitches.',
+          "Grace Period: Session won't stop before 1.5s to prevent instant-death glitches.",
           'Optimistic UI: Play state updates immediately for faster feedback.',
         ],
       },

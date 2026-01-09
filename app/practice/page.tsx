@@ -417,6 +417,17 @@ export default function PracticePage() {
 
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
+
+    // Wait for beat to fully load before attempting playback
+    if (beatPlayer.isLoading) {
+      console.log('[Practice] Waiting for beat to load...')
+      // Simple polling wait - max 5 seconds
+      for (let i = 0; i < 50; i++) {
+        await new Promise((r) => setTimeout(r, 100))
+        if (!beatPlayer.isLoading) break
+      }
+    }
+
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
     const offsetMs = (selectedBeat.offset || 0) * 1000
 
