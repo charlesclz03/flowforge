@@ -40,6 +40,7 @@ type PracticeControlsProps = {
   isAuthenticated?: boolean
   onUpgrade?: () => void
   mode?: 'solo' | 'cypher'
+  isRecordingEnabled?: boolean
 }
 
 export default function PracticeControls({
@@ -67,6 +68,7 @@ export default function PracticeControls({
   isAuthenticated = false,
   onUpgrade,
   mode = 'solo',
+  isRecordingEnabled = true,
 }: PracticeControlsProps) {
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -258,7 +260,11 @@ export default function PracticeControls({
                   }
             }
             onClick={() => {
-              if (typeof navigator !== 'undefined' && navigator.vibrate) {
+              if (
+                isRecordingEnabled &&
+                typeof navigator !== 'undefined' &&
+                navigator.vibrate
+              ) {
                 navigator.vibrate(10)
               }
               handleRecordClick()
@@ -379,12 +385,12 @@ export default function PracticeControls({
                   <div
                     className={cn(
                       'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
-                      !isPro
+                      !isPro || !isRecordingEnabled
                         ? 'bg-white/5 border border-white/10 text-white/20'
                         : 'bg-red-500 text-white shadow-red-500/20'
                     )}
                   >
-                    {isPro && (
+                    {isPro && isRecordingEnabled && (
                       <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
                     )}
                     <Mic
@@ -400,47 +406,41 @@ export default function PracticeControls({
         </div>
 
         {/* Record Notifier */}
-        {/* Record Notifier - Now hidden when not recording to remove "REC" word as requested, or stays as indicator */}
         <button
           onClick={(e) => {
             e.stopPropagation()
-            handleRecordClick()
+            if (isRecordingEnabled) onUpgrade?.()
           }}
           className={cn(
-            'mt-4 flex items-center justify-center group/rec outline-none transition-transform hover:scale-105 active:scale-95',
-            !isRecording && 'opacity-50 hover:opacity-100' // Dim when not recording
+            "mt-4 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95",
+             !isRecordingEnabled && "opacity-30 grayscale cursor-default"
           )}
         >
           <div className="flex items-center gap-2 px-6 py-2">
             {/* Left Bracket */}
-            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-black/20 group-hover/rec:border-black/40 transition-colors" />
+            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-black" />
 
             <div className="flex items-center gap-3 mx-1">
               {/* Dot */}
               <div
                 className={cn(
-                  'h-6 w-6 rounded-full transition-colors shadow-inner',
-                  isRecording
-                    ? 'bg-red-500 animate-pulse shadow-red-500/50'
-                    : 'bg-red-900/20'
+                  'h-6 w-6 rounded-full transition-colors',
+                  isPro && isRecordingEnabled ? 'bg-red-600' : 'bg-[#D1D1D1]',
+                  isRecording && 'animate-pulse'
                 )}
               />
               {/* Text */}
-              <span
-                className={cn(
-                  'text-3xl font-black tracking-tighter transition-colors',
-                  isRecording ? 'text-red-500' : 'text-black/20'
-                )}
-              >
+              <span className="text-3xl font-black tracking-tighter text-black">
                 REC
               </span>
             </div>
 
             {/* Right Bracket */}
-            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-black/20 group-hover/rec:border-black/40 transition-colors" />
+            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-black" />
           </div>
         </button>
       </div>
     </Card>
+  )
   )
 }

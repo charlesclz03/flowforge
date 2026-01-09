@@ -114,7 +114,7 @@
 
   /* Glassmorphism effect */
   .glass {
-    @apply bg-background-card/60 backdrop-blur-medium border border-stroke-subtle/50 shadow-soft;
+    @apply bg-background-card/70 backdrop-blur-xl border border-white/10 shadow-soft;
   }
 
   .glass-aurora {

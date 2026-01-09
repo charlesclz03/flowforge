@@ -24,6 +24,9 @@ const config: Config = {
         },
         accent: {
           purple: '#7D7AFF', // Primary accent color
+          gold: '#FFD60A', // Duolingo/Gamification Gold
+          platinum: '#E5E5EA', // Silver/Platinum
+          bronze: '#CD7F32',
           orange: '#FF9500', // Premium badges only
           blue: '#0A84FF',
           green: '#30D158',
@@ -72,6 +75,10 @@ const config: Config = {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'orbital-glow': 'orbital 16s linear infinite',
         'ambient-shift': 'ambientShift 8s ease-in-out infinite',
+        'bounce-in':
+          'bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+        'scale-in': 'scaleIn 0.2s ease-out forwards',
+        float: 'float 3s ease-in-out infinite',
       },
       keyframes: {
         orbital: {
@@ -81,6 +88,20 @@ const config: Config = {
         ambientShift: {
           '0%, 100%': { opacity: '0.35', filter: 'hue-rotate(0deg)' },
           '50%': { opacity: '0.6', filter: 'hue-rotate(45deg)' },
+        },
+        bounceIn: {
+          '0%': { transform: 'scale(0.3)', opacity: '0' },
+          '50%': { transform: 'scale(1.05)' },
+          '70%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
       },
       backgroundImage: {

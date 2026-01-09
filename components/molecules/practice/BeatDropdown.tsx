@@ -39,6 +39,7 @@ interface BeatDropdownProps {
   isPro?: boolean
   isLoading?: boolean
   hideLocalTab?: boolean
+  embedded?: boolean
 }
 
 // Beat type now includes tags
@@ -52,8 +53,9 @@ export function BeatDropdown({
   isPro = false,
   isLoading = false,
   hideLocalTab = false,
+  embedded = false,
 }: BeatDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(embedded) // Default open if embedded
   const [favoriteBeatIds, setFavoriteBeatIds] = useState<Set<string>>(new Set())
   const [previewingBeatId, setPreviewingBeatId] = useState<string | null>(null)
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
@@ -110,6 +112,7 @@ export function BeatDropdown({
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
+        !embedded &&
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
@@ -181,7 +184,6 @@ export function BeatDropdown({
       const audio = new Audio(beat.storageUrl)
       audio.volume = 0.5
       // audio.crossOrigin = 'anonymous' // Removed to prevent CORS errors during simple preview
-
 
       audio.onended = () => setPreviewingBeatId(null)
 
@@ -287,16 +289,24 @@ export function BeatDropdown({
       <label className="text-lg font-medium text-white">Beat</label>
 
       <div className="relative">
+        {/* Main Toggle Button - Hidden in embedded mode if we want just the list, 
+              but usually we want the header too. Let's keep header but make it not toggle if embedded? 
+              Actually user wants "embedded in order to not overlap". 
+              So if embedded, we render the list below static relative, OR we just always show the list.
+           */}
+
         <button
           id="tour-beat-select"
           type="button"
-          onClick={() => !disabled && setIsOpen(!isOpen)}
-          disabled={disabled}
+          onClick={() => !disabled && !embedded && setIsOpen(!isOpen)}
+          disabled={disabled || embedded}
           className={cn(
             'w-full flex items-center justify-between rounded-xl px-4 py-3 text-left transition-all duration-200',
             'border border-white/10 bg-white/5 hover:bg-white/10',
             isOpen && 'border-accent-purple/50 ring-2 ring-accent-purple/20',
-            disabled && 'opacity-50 cursor-not-allowed'
+            disabled && 'opacity-50 cursor-not-allowed',
+            embedded &&
+              'rounded-b-none border-b-0 cursor-default hover:bg-white/5'
           )}
         >
           {selectedBeat ? (
@@ -317,17 +327,25 @@ export function BeatDropdown({
           ) : (
             <span className="text-text-secondary">Select a beat...</span>
           )}
-          <ChevronDown
-            size={20}
-            className={cn(
-              'text-text-secondary transition-transform duration-200',
-              isOpen && 'rotate-180'
-            )}
-          />
+          {!embedded && (
+            <ChevronDown
+              size={20}
+              className={cn(
+                'text-text-secondary transition-transform duration-200',
+                isOpen && 'rotate-180'
+              )}
+            />
+          )}
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col">
+          <div
+            className={cn(
+              embedded
+                ? 'static w-full rounded-b-xl rounded-t-none border border-t-0 border-white/10 bg-[#121216] shadow-none ring-0 flex flex-col h-[400px]'
+                : 'absolute left-0 right-0 top-full z-50 mt-2 h-[400px] max-h-[50vh] rounded-xl border border-white/10 bg-[#121216] shadow-2xl ring-1 ring-black/5 flex flex-col'
+            )}
+          >
             <Tabs
               defaultValue="library"
               className="flex flex-col h-full overflow-hidden"
@@ -451,7 +469,7 @@ export function BeatDropdown({
                               )
                                 navigator.vibrate(10)
                               onSelect(beat)
-                              setIsOpen(false)
+                              if (!embedded) setIsOpen(false)
                               stopPreview()
                             }}
                             className="flex-1 text-left"

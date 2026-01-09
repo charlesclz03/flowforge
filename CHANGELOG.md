@@ -1,28 +1,62 @@
 # Changelog
 
-## [v1.2.0] - 2026-01-09
+## [v1.5.2] - 2026-01-09
 
-### 🚀 Enterprise Launch Audit ("Pitch Perfect")
+### 📱 Mobile Polish & Studio FX ("Studio Flow")
 
-The entire codebase has undergone a "Scorched Earth" audit to ensure maximum stability, security, and performance for production launch.
+**Focus:** Comprehensive mobile optimization for Settings and Recordings, plus critical fixes for the Studio FX audio engine.
 
-### Security & Integrity
-- **API Validation**: Implemented **Zod** schema validation for all critical API routes (specifically `metrics` and `sessions`) to preventing invalid data injection.
-- **Type Safety**: Eliminated explicit `any` casts in `useWakeLock`, `useSound`, and API routes. Added `types/global.d.ts` for experimental web APIs.
-- **Strict Compliance**: Codebase now passes `npm run lint` with zero functional errors.
-
-### Performance
-- **Bundle Optimization**: verified build output and optimized heavy imports.
-- **Render Cycle**: Audited `useBeatPlayer` and `useRecording` for render loops; verified 100% stability.
-
-### UX & Polish
-- **Error Boundaries**: Implemented `app/error.tsx` and `app/global-error.tsx` for graceful failure states.
-- **Console Cleanup**: Removed all development `console.log` noise from production builds.
+### Added
+- **Mobile Settings**: Completely redesigned `SettingsList` with a gamified, card-based UI optimized for touch targets on mobile devices.
+- **Recording Card**: New responsive layout for `RecordingCard` that stacks content vertically on mobile for better readability.
+- **Record Button Logic**: clearer state visualization for the Record button (grayed/disabled state) and removed upgrade popups for authenticated users.
 
 ### Fixed
-- **Critical API Resilience**: Implemented robust fallbacks for `/api/words` and `/api/beats`. The app now degrades gracefully to offline mode instead of crashing if the database connection fails, preventing "Unexpected token" errors and ensuring audio playback always works.
+- **Studio FX**: Fixed `SessionPlayer` audio graph initialization to ensure Reverb and Nudge settings persist correctly even after toggling FX modes or restarting playback.
+- **UI Cleanup**: Removed the "PNG Record" button from summary modal and the "Vibe Score" metric as requested.
+- **Linting**: Cleaned up unused imports and component definitions in `PracticeControls`.
 
-## [v1.1.9] - 2026-01-08
+## [v1.5.1] - 2026-01-09
+
+### 🎛️ Feature & UI Polish ("Studio Focus")
+
+**Focus:** Refined the Practice experience by removing gamification distractions and adding precise session controls.
+
+### Added
+- **Recording Toggle**: New slider on Difficulty Selection page allows users to explicitly enable/disable global recording.
+- **Visual Feedback**: "REC" button and icon in Practice Mode now visually reflect disabled state (grayed out).
+
+### Changed
+- **Vibe Score Removal**: Completely removed "Vibe Score" and all associated text from the `SessionSummaryModal` to focus purely on flow metrics.
+- **Embedded Beat List**: The Beat Dropdown now supports an `embedded` mode for static integration on the Difficulty Selection page, preventing UI overlap.
+
+### Fixed
+- **Audio Transition**: Changing tracks during a live session now correctly stops the previous beat before loading the new one.
+- **Linting**: Resolved multiple TypeScript errors in `PracticeControls` and `SessionContext`.
+
+## [v1.5.0] - 2026-01-09
+
+### 🚀 Enterprise Launch Release ("Pitch Perfect")
+
+The comprehensive "Deep Scan Audit" is complete. The application stability, security, and user experience have been verified for production launch.
+
+### Security & Integrity
+- **Middleware Guard**: Fixed a critical vulnerability where `middleware.ts` had an empty matcher; explicitly protected `/profile` and `/recordings` routes.
+- **Race Condition Fix**: Patched a crash risk in `PracticePage` where closing the summary modal too early would crash the app logic.
+- **Data Safety**: Verified server-side storage, anti-cheat scoring, and database fallback logic.
+
+### UX & Polish
+- **Guest Experience**: Guests are now redirected back to `/practice` after signing in, preventing lost "flow" state.
+- **Beat Selection**: Refined `BeatDropdown` to support an "embedded" mode for cleaner UI integration in non-modal contexts.
+- **Session Flow**: Updated `SessionSummaryModal` to be more focused (removed duplicate score grid) and provide clearer "Word Count" feedback for social sharing.
+- **Performance**: Memoized `AudioVisualizer` to stabilize the 60fps render loop during recording.
+
+### Fixed
+- **Audio Resources**: Optimized `BeatDropdown` to better manage audio instances during rapid previews.
+- **Layout Consistency**: Unified header usage across `Tracks` and `Difficulty` selection pages.
+
+## [v1.4.1] - 2026-01-09
+
 
 ### Fixed
 

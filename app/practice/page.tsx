@@ -24,6 +24,7 @@ import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryM
 
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
+import { FlowComboOverlay } from '@/components/molecules/gamification/FlowComboOverlay'
 
 interface SessionSummary {
   score: number
@@ -65,6 +66,7 @@ export default function PracticePage() {
     ttsVolume,
     isLoaded,
     wordCategory,
+    isRecordingEnabled,
   } = usePracticeSession()
 
   // Local State
@@ -73,6 +75,7 @@ export default function PracticePage() {
   const [wordIndex, setWordIndex] = useState(0)
   const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
+  const [combo, setCombo] = useState(0)
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -148,12 +151,11 @@ export default function PracticePage() {
         const wordCount = JSON.parse(formData.get('wordsUsed') as string).length
         const beatBpm = selectedBeat?.bpm || 0
 
-        // Optimistic Score Calculation (Simple Client-Side Estimate)
-        // This visual feedback is instant; server validation happens in background.
-        const predictedScore = Math.round(duration * 10 * (1 + wordCount / 10))
+        // Optimistic Score - REMOVED as per user request
+        // const predictedScore = Math.round(duration * 10 * (1 + wordCount / 10))
 
         setSessionSummary({
-          score: predictedScore,
+          score: 0, // Removed
           vibe: 'Freestyle Flow',
           description: 'Nice session!',
           wordCount: wordCount,
@@ -168,7 +170,7 @@ export default function PracticePage() {
       },
       onSuccess: (data) => {
         // 3. Reconcile with Server Data
-          if (data.session) {
+        if (data.session) {
           setSessionSummary((prev: SessionSummary | null) => {
             if (!prev) return null // Guard against closed modal
             return {
@@ -475,11 +477,13 @@ export default function PracticePage() {
 
     // Start Recorder
     try {
-      if (!isRecording) {
-        await requestLock()
-        if (isPro) startRecording(true).catch(console.error)
-      } else {
-        resumeRecording()
+      if (isRecordingEnabled) {
+        if (!isRecording) {
+          await requestLock()
+          if (isPro) startRecording(true).catch(console.error)
+        } else {
+          resumeRecording()
+        }
       }
     } catch (err) {
       console.error('Recording start failed', err)
@@ -496,6 +500,7 @@ export default function PracticePage() {
     wordList,
     currentWord,
     isRecording,
+    isRecordingEnabled,
     requestLock,
     startRecording,
     isPro,
@@ -633,6 +638,12 @@ export default function PracticePage() {
       }
       if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying)
         startRecording(!isPro)
+
+      // Mock Combo Trigger for Testing
+      if (e.code === 'KeyC') {
+        setCombo((p) => p + 1)
+        play('click')
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -659,6 +670,9 @@ export default function PracticePage() {
 
   useEffect(() => {
     if (selectedBeat) {
+      // Ensure clean slate
+      beatPlayer.stop()
+
       beatPlayer.loadBeat({
         ...selectedBeat,
         storageUrl: selectedBeat.storageUrl,
@@ -736,6 +750,7 @@ export default function PracticePage() {
                 onDifficultyChange={setDifficulty}
                 onFrequencyChange={setFrequency}
                 error={error ? error.message : undefined}
+                isRecordingEnabled={isRecordingEnabled}
               />
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4">
@@ -788,6 +803,9 @@ export default function PracticePage() {
             onClose={() => setShowGuestModal(false)}
           />
         )}
+
+        {/* Combo Overlay */}
+        <FlowComboOverlay combo={combo} />
       </div>
     </OnboardingLayout>
   )

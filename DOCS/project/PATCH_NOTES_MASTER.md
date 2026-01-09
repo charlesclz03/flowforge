@@ -4,29 +4,67 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
-## 🛡️ Update 1.4.0: The Enterprise Standard
+## 📱 Update 1.5.2: Studio Flow & Mobile Polish
 
 **Release Date:** January 09, 2026
-**Codename:** _Pitch Perfect_
+**Codename:** _Liquid Touch_
 
-The foundation has been reinforced with steel. We conducted a "scorched earth" audit of the entire platform, eliminating every shaky line of code, every unsecured endpoint, and every potential bottleneck. FreeStyla is now Enterprise Grade.
+We've smoothed out the edges for our mobile emcees and hardened the audio engine. The studio now feels responsive, premium, and reliable on any device.
 
-### 🔒 Security & Logic
-- **Zod Validation**: Input sanitization is now strict and automatic across the core API surface area.
-- **Type Perfection**: We hunted down every `any` type and replaced it with strict definitions. The codebase is now compliant with the strictest linting standards.
-- **Error Handling**: New global error boundaries ensure that if the app trips, it catches itself gracefully.
+### 🎧 Audio Engine Repair
+- **Persistent FX**: Fixed a complex issue where Studio FX (Reverb, EQ) would drop out when toggling modes or replaying tracks. The audio graph now initializes robustly every time.
+- **Seamless Playback**: Removing unstable dependencies ensures your beat doesn't stutter when you tweak settings.
+
+### 📱 Mobile-First Redesign
+- **Settings Gamification**: The settings menu has been reimagined (`SettingsList`). No more boring lists—enjoy a card-based, touch-optimized experience that feels like a game inventory.
+- **Responsive Recordings**: Your "My Recordings" list (`RecordingCard`) now adapts intelligently to small screens, stacking information for maximum clarity.
+
+### 🧹 UI Refinement
+- **Focused Summary**: We've removed the "PNG Record" export and the confusing "Vibe Score". Your post-session summary is now clean and focused on your word count and flow.
+- **Smart Record Button**: The main recording control now respects your "Pro" status and recording preferences without pestering you with upgrade popups when you're already in the zone.
+
+---
+
+## 🎛️ Update 1.5.1: The Focused Studio
+
+**Release Date:** January 09, 2026
+**Codename:** _Silent Mode_
+
+We've refined the studio experience to cut out the noise. Users now have total control over recording behaviors, and we've stripped away experimental metrics to focus on what matters: the flow.
+
+### ✨ Studio Controls
+- **Recording Logic**: Added a dedicated **Record Session** toggle. Toggle it off for practice runs without saving to disk. The interface updates instantly to reflect your choice.
+- **Vibe Check**: Removed the "Vibe Score" calculation. The post-session summary now highlights your raw **Word Count**—no arbitrary numbers attached.
+
+### 🐛 Visual & Audio Fixes
+- **Overlap Fix**: The Beat list on difficulty selection is now embedded, preventing it from floating over other controls.
+- **Clean Transitions**: Changing the beat mid-session now properly halts the previous track before starting the new one for a seamless audio swap.
+
+---
+
+## 🛡️ Update 1.5.0: Pitch Perfect & Production Ready
+
+**Release Date:** January 09, 2026
+**Codename:** _Diamond State_
+
+The "Deep Scan Audit" has concluded. We went line-by-line through the critical systems of FreeStyla (Session Engine, Data Integrity, Gamification, Auth, and UX) to verify enterprise-grade stability.
+
+### 🔒 Ironclad Security
+- **Route Protection**: Patched a critical hole in the middleware layer. Private routes (`/profile`, `/recordings`) are now strictly gated.
+- **Fail-Safe Sessions**: Added crash guards to the session summary modal. Even if you close the modal early, your data is safe.
+
+### 🎨 Refined Flow
+- **Guest Recovery**: If you sign in after a guest session, we now redirect you straight back to the Practice studio—maximizing the chance to save your "lost" masterpiece.
+- **Embedded Beats**: The Beat Selector has a new "Embedded Mode" for seamless integration into page layouts, removing visual clutter.
+- **Social Props**: The "Session Complete" summary now highlights your **Word Count** prominently, making it easier to share your achievements with the crew.
 
 ### ⚡ Performance
-- **Optimized Builds**: Production builds are leaner, cleaner, and faster.
-- **Console Silence**: Dev logs have been silenced to keep the console clean for what matters.
+- **Visualizer Optimization**: The audio visualizer is now smarter—it doesn't waste CPU cycles re-rendering when the beat isn't changing.
 
-### 🩹 Patch 1.4.1: The Safety Net (Jan 09, 2026)
+---
 
-**Focus:** API Resilience & Offline Reliability
+## 🛡️ Update 1.4.0: The Enterprise Standard
 
-- **Crash-Proof APIs**: Implemented a robust fallback system for the Words and Beats APIs. If the database ("Prisma") fails to connect, the app now automatically switches to a built-in backup library.
-- **Bye-Bye JSON Errors**: Fixed the infamous "Unexpected token" error caused by database crashes returning HTML error pages.
-- **Always-On Audio**: Ensured that the music player always has a valid beat to play, even in worst-case server outage scenarios.
 
 
 ---

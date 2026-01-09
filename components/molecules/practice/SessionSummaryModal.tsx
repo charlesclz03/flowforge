@@ -3,10 +3,10 @@
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
-import { Sparkles, Wand2, Crown } from 'lucide-react'
+import { Sparkles, Crown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { PostProcessingModal } from './PostProcessingModal'
 import { useState, useEffect } from 'react'
-import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import confetti from 'canvas-confetti'
 import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
@@ -35,33 +35,45 @@ export default function SessionSummaryModal({
   const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
   const [showPWA, setShowPWA] = useState(false)
+  const [step, setStep] = useState(0) // 0: Init, 1: XP Fill, 2: Badges
 
   // Confetti Effect for New Badges
   useEffect(() => {
     if (data?.newBadges && data.newBadges.length > 0) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#7D7AFF', '#FFD700', '#FF00FF'],
-      })
+      setTimeout(() => {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#7D7AFF', '#FFD700', '#FF00FF'],
+        })
+      }, 1500) // Delay confetti for badge reveal
     }
   }, [data?.newBadges])
+
+  // Sequence Timer
+  useEffect(() => {
+    if (!data) return
+    const t1 = setTimeout(() => setStep(1), 500) // Start XP fill
+    const t2 = setTimeout(() => setStep(2), 2500) // Show Badges
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+    }
+  }, [data])
 
   // Intelligent PWA Prompt
   useEffect(() => {
     if (!data) return
-    // If user just had a "good" session (score > 1000 or new badge), prompts them
     const isGoodSession =
       data.score > 1000 || (data.newBadges && data.newBadges.length > 0)
     const hasWarned = localStorage.getItem('hasWarnedPWA')
 
     if (isGoodSession && !hasWarned) {
-      // Small delay to let them appreciate the summary first
       const timer = setTimeout(() => {
         setShowPWA(true)
         localStorage.setItem('hasWarnedPWA', 'true')
-      }, 2000)
+      }, 4000) // Longer delay for animation
       return () => clearTimeout(timer)
     }
   }, [data])
@@ -79,100 +91,128 @@ export default function SessionSummaryModal({
   }
 
   return (
-    <Modal isOpen={!!data} onClose={onClose} title="Session Complete">
-      <div className="space-y-6">
-        {/* Session Details Recap (New) */}
-        <div className="flex items-center justify-center gap-2 text-xs font-bold text-text-tertiary uppercase tracking-widest opacity-60">
-          <span>
-            {data.difficulty === 'Easy'
-              ? 'Beginner'
-              : data.difficulty === 'Medium'
-                ? 'Medium'
-                : data.difficulty === 'Hard'
-                  ? 'Hard'
-                  : data.difficulty}
-          </span>
-          <span className="w-1 h-1 rounded-full bg-white/20" />
-          <span>{data.bpm} BPM</span>
-          <span className="w-1 h-1 rounded-full bg-white/20" />
-          <span>{data.frequency} Bars</span>
-        </div>
-        {/* Score & Vibe */}
-        <div className="text-center space-y-2">
-          <div className="inline-block p-4 rounded-full bg-accent-purple/20 border border-accent-purple/50 mb-2">
-            <Sparkles size={32} className="text-accent-purple" />
-          </div>
-          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
-            {data.vibe}
-          </h2>
-          <p className="text-text-secondary text-lg">{data.description}</p>
+    <Modal isOpen={!!data} onClose={onClose} title="VICTORY">
+      <div className="space-y-8 py-4">
+        {/* Animated Header */}
+        <div className="text-center space-y-4">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring' }}
+            className="inline-block p-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-neon-gold mb-2"
+          >
+            <Crown size={48} className="text-white fill-white" />
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 uppercase tracking-tighter"
+          >
+            Session Cleared!
+          </motion.h2>
+          <p className="text-text-secondary font-medium">{data.description}</p>
         </div>
 
-        {/* New Badges Notification */}
-        {data.newBadges && data.newBadges.length > 0 && (
-          <div className="bg-accent-purple/10 border border-accent-purple/30 rounded-2xl p-4 animate-in zoom-in-95 duration-500">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-8 w-8 rounded-full bg-accent-purple/20 flex items-center justify-center">
-                <Crown size={18} className="text-accent-purple" />
-              </div>
-              <h3 className="font-bold text-white">New Achievements!</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {data.newBadges.map((badge) => (
-                <div
-                  key={badge}
-                  className="px-3 py-1.5 rounded-lg bg-accent-purple/20 border border-accent-purple/30 text-xs font-bold text-accent-purple flex items-center gap-2"
-                >
-                  <Sparkles size={12} />
-                  {badge}
-                </div>
-              ))}
-            </div>
+        {/* XP Bar Animation */}
+        <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+          <div className="flex justify-between text-sm font-bold text-text-secondary mb-2">
+            <span>Level 5</span>
+            <span>1200 / 2000 XP</span>
           </div>
-        )}
+          <div className="h-4 bg-black/40 rounded-full overflow-hidden relative">
+            <motion.div
+              initial={{ width: '60%' }}
+              animate={{ width: step >= 1 ? '75%' : '60%' }}
+              transition={{ duration: 1.5, ease: 'easeOut' }}
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
+            />
+            {/* Added XP Chunk */}
+            {step >= 1 && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="absolute inset-y-0 left-[60%] w-[15%] bg-white/50 animate-pulse"
+              />
+            )}
+          </div>
+          <div className="mt-2 text-right">
+            <span className="text-green-400 font-bold text-sm">
+              +300 XP Gained
+            </span>
+          </div>
+        </div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid - Pop In */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white/5 p-4 rounded-xl text-center">
-            <div className="text-2xl font-bold text-white">{data.score}</div>
-            <div className="text-sm text-text-secondary">Vibe Score</div>
-          </div>
-          <div className="bg-white/5 p-4 rounded-xl text-center">
-            <div className="text-2xl font-bold text-white">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/5 p-4 rounded-xl text-center border border-white/5"
+          >
+            <div className="text-3xl font-black text-white">
               {data.wordCount}
             </div>
-            <div className="text-sm text-text-secondary">Words Flowed</div>
-          </div>
+            <div className="text-xs font-bold uppercase tracking-widest text-text-tertiary">
+              Words
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white/5 p-4 rounded-xl text-center border border-white/5"
+          >
+            {/* Mock Streak until real data integrated */}
+            <div className="text-3xl font-black text-orange-400">🔥 7</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-text-tertiary">
+              Day Streak
+            </div>
+          </motion.div>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col gap-3">
-          {data.audioUrl && (
-            <Button
-              onClick={() => setShowStudio(true)}
-              variant="outline"
-              className="w-full border-accent-purple text-accent-purple hover:bg-accent-purple/10 flex items-center justify-center gap-2"
+        {/* New Badges Reveal */}
+        <AnimatePresence>
+          {step >= 2 && data.newBadges && data.newBadges.length > 0 && (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="bg-gradient-to-br from-accent-purple/20 to-accent-pink/20 border border-accent-purple/50 rounded-2xl p-6 text-center"
             >
-              <Wand2 size={18} />
-              Studio FX & Mixer
-            </Button>
+              <div className="flex flex-col items-center gap-2">
+                <Sparkles
+                  className="text-yellow-300 animate-spin-slow"
+                  size={32}
+                />
+                <h3 className="font-bold text-xl text-white">
+                  Achievement Unlocked!
+                </h3>
+                <div className="flex flex-wrap justify-center gap-2 mt-2">
+                  {data.newBadges.map((badge) => (
+                    <span
+                      key={badge}
+                      className="px-4 py-2 rounded-full bg-accent-purple text-white font-bold text-sm shadow-lg"
+                    >
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           )}
-          {data.audioUrl && (
-            <ShareButton
-              title="My FreeStyla Session"
-              text={`Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`}
-              url={window?.location?.origin}
-              className="bg-accent-blue text-white hover:bg-accent-blue/90 w-full justify-center"
-            />
-          )}
+        </AnimatePresence>
+
+        {/* Actions */}
+        <div className="grid grid-cols-2 gap-3 pt-4">
+          <Button variant="ghost" onClick={onClose} className="w-full">
+            Menu
+          </Button>
           <Button
             onClick={() => router.push('/recordings')}
-            className="w-full bg-white text-black hover:bg-white/90"
+            className="w-full bg-white text-black hover:bg-white/90 font-bold"
           >
-            View in Recordings
-          </Button>
-          <Button variant="ghost" onClick={onClose} className="w-full">
-            Close & Keep Practicing
+            Continue
           </Button>
         </div>
       </div>

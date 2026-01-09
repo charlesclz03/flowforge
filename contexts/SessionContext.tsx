@@ -21,6 +21,7 @@ export interface PracticeSessionState {
   mode: 'solo' | 'cypher'
   wordCategory: string | null
   cypherPlayers: number
+  isRecordingEnabled: boolean
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -32,6 +33,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setMode: (mode: 'solo' | 'cypher') => void
   setCypherPlayers: (count: number) => void
   setWordCategory: (category: string | null) => void
+  setIsRecordingEnabled: (enabled: boolean) => void
   testVoice: () => void
   startSession: () => void
   stopSession: () => void
@@ -54,6 +56,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     mode: 'solo',
     cypherPlayers: 2,
     wordCategory: null,
+    isRecordingEnabled: true,
   })
 
   // Load state from localStorage on mount
@@ -92,6 +95,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       mode,
       cypherPlayers,
       wordCategory,
+      isRecordingEnabled,
     } = state
     const toSave = {
       selectedBeat,
@@ -102,6 +106,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       mode,
       cypherPlayers,
       wordCategory,
+      isRecordingEnabled,
     }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
   }, [state])
@@ -138,6 +143,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, wordCategory: category }))
   }, [])
 
+  const setIsRecordingEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, isRecordingEnabled: enabled }))
+  }, [])
+
   const startSession = useCallback(() => {
     setState((prev) => ({ ...prev, isActive: true }))
   }, [])
@@ -171,6 +180,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setMode,
         setCypherPlayers,
         setWordCategory,
+        setIsRecordingEnabled,
         testVoice: useCallback(() => {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
             const u = new SpeechSynthesisUtterance(

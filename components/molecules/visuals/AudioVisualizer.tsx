@@ -69,13 +69,17 @@ export const AudioVisualizer = memo(function AudioVisualizer({
       const barWidth = (width - (bars - 1) * gap) / bars
 
       ctx.clearRect(0, 0, width, height)
-      ctx.fillStyle = color
+
+      // Dynamic color based on "intensity" (simulated or real)
 
       if (mode === 'stream' && analyzerRef.current) {
         if (!isPlaying) {
-          // Flat line logic for stream mode if needed, but for now just freeze/hide
           ctx.globalAlpha = 0.2
-          ctx.fillRect(0, height / 2, width, 2)
+          // Rounded placeholder
+          ctx.fillStyle = color
+          ctx.beginPath()
+          ctx.roundRect(0, height / 2 - 1, width, 2, 1)
+          ctx.fill()
           return
         }
         const bufferLength = analyzerRef.current.frequencyBinCount
@@ -85,13 +89,26 @@ export const AudioVisualizer = memo(function AudioVisualizer({
         for (let i = 0; i < bars; i++) {
           const index = Math.floor(i * (bufferLength / bars))
           const value = dataArray[index] || 0
-          const barHeight = (value / 255) * height
+          const barHeight = Math.max(4, (value / 255) * height) // Min height 4px
           const x = i * (barWidth + gap)
           const y = (height - barHeight) / 2
-          ctx.fillRect(x, y, barWidth, barHeight)
+
+          ctx.fillStyle = color
+          // Add some glow based on intensity
+          ctx.shadowBlur = value > 128 ? 10 : 0
+          ctx.shadowColor = color
+
+          ctx.beginPath()
+          // Use roundRect if supported, else rect
+          if (ctx.roundRect) {
+            ctx.roundRect(x, y, barWidth, barHeight, 4) // Radius 4
+          } else {
+            ctx.rect(x, y, barWidth, barHeight)
+          }
+          ctx.fill()
         }
       } else {
-        // Simulation Mode - Freeze logic
+        // Simulation Mode - "Bouncier"
         const now = Date.now()
         if (isPlaying) {
           const delta = now - lastDrawTimeRef.current
@@ -101,15 +118,29 @@ export const AudioVisualizer = memo(function AudioVisualizer({
 
         const time = lastTimeRef.current
         for (let i = 0; i < bars; i++) {
-          const noise = Math.sin(time + i * 0.5) * 0.5 + 0.5
-          const random = isPlaying ? Math.random() * 0.3 : 0.1
-          const hPercent = noise * 0.7 + random
-          const barHeight = hPercent * height * 0.8 // Max 80% height
+          // More complex wave for "gamified" feel
+          const wave1 = Math.sin(time + i * 0.3)
+          const wave2 = Math.cos(time * 0.5 + i * 0.1)
+          const noise = (wave1 + wave2) / 2 + 0.5
+
+          const random = isPlaying ? Math.random() * 0.2 : 0.05
+          const hPercent = noise * 0.6 + random + 0.1
+          const barHeight = Math.max(4, hPercent * height * 0.8)
 
           const x = i * (barWidth + gap)
-          const y = (height - barHeight) / 2 // Centered vertically
+          const y = (height - barHeight) / 2
 
-          ctx.fillRect(x, y, barWidth, barHeight)
+          // Gradient or color shift
+          ctx.fillStyle = color
+          ctx.shadowBlur = 0
+
+          ctx.beginPath()
+          if (ctx.roundRect) {
+            ctx.roundRect(x, y, barWidth, barHeight, 4)
+          } else {
+            ctx.rect(x, y, barWidth, barHeight)
+          }
+          ctx.fill()
         }
       }
 

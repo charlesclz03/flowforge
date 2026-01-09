@@ -27,6 +27,8 @@ type EnrichedAchievement = Achievement & {
   isUnlocked: boolean
 }
 
+import { motion } from 'framer-motion'
+
 export function AchievementsDisplay() {
   const [achievements, setAchievements] = useState<EnrichedAchievement[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -155,16 +157,20 @@ export function AchievementsDisplay() {
             const strokeColor = ach.isUnlocked ? tierColor : '#333'
 
             return (
-              <div
+              <motion.div
                 key={ach.id}
-                className="flex flex-col items-center gap-2 group cursor-default"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center gap-2 group cursor-pointer relative"
               >
-                <div className="relative w-20 h-20 flex items-center justify-center">
+                <div className="relative w-24 h-24 flex items-center justify-center">
                   {/* Ring SVG */}
                   <svg
                     className="absolute inset-0 w-full h-full rotate-[-90deg]"
                     viewBox="0 0 100 100"
                   >
+                    {/* Track */}
                     <circle
                       cx="50"
                       cy="50"
@@ -173,40 +179,51 @@ export function AchievementsDisplay() {
                       stroke="#1A1A1A"
                       strokeWidth="6"
                     />
-                    <circle
+                    {/* Progress */}
+                    <motion.circle
                       cx="50"
                       cy="50"
                       r="45"
                       fill="none"
                       stroke={strokeColor}
                       strokeWidth="6"
-                      strokeDasharray="283"
-                      strokeDashoffset={ach.isUnlocked ? 0 : 283}
+                      strokeDasharray="283" // 2 * PI * 45
+                      initial={{ strokeDashoffset: 283 }}
+                      animate={{ strokeDashoffset: ach.isUnlocked ? 0 : 283 }}
+                      transition={{
+                        duration: 1.5,
+                        ease: 'easeOut',
+                        delay: 0.2,
+                      }}
                       strokeLinecap="round"
-                      className={cn(
-                        'transition-all duration-1000',
-                        ach.isUnlocked &&
-                          'drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'
-                      )}
                     />
                   </svg>
 
                   {/* Icon */}
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-full flex items-center justify-center z-10 transition-colors bg-[#121212]',
+                      'w-14 h-14 rounded-full flex items-center justify-center z-10 transition-colors bg-[#121212] border-4 border-background',
                       ach.isUnlocked ? 'text-white' : 'text-white/20 grayscale'
                     )}
                   >
                     {ach.isUnlocked ? (
-                      <Trophy size={24} color={tierColor} />
+                      <Trophy
+                        size={24}
+                        color={tierColor}
+                        className="drop-shadow-glow"
+                      />
                     ) : (
                       <Lock size={20} />
                     )}
                   </div>
+
+                  {/* Glow effect for unlocked */}
+                  {ach.isUnlocked && (
+                    <div className="absolute inset-0 rounded-full bg-accent-purple/20 blur-xl -z-10" />
+                  )}
                 </div>
 
-                <div className="text-center">
+                <div className="text-center z-20">
                   <div
                     className={cn(
                       'text-xs font-bold leading-tight',
@@ -215,19 +232,19 @@ export function AchievementsDisplay() {
                   >
                     {ach.name}
                   </div>
-                  <div className="text-[10px] text-text-tertiary mt-0.5">
+                  <div className="text-[10px] text-text-tertiary mt-0.5 font-mono">
                     {ach.points} pts
                   </div>
                 </div>
 
                 {/* Tooltip (Simple Hover) */}
-                <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity bottom-full mb-2 w-32 bg-black/90 text-white text-xs p-2 rounded pointer-events-none z-20 border border-white/10 text-center">
+                <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity top-full mt-2 w-32 bg-black/90 text-white text-xs p-3 rounded-xl pointer-events-none z-50 border border-white/10 text-center shadow-xl backdrop-blur-md">
                   {ach.description}
-                  <div className="text-[9px] text-text-tertiary mt-1">
+                  <div className="text-[9px] text-text-tertiary mt-1 uppercase tracking-widest font-bold">
                     {ach.isUnlocked ? 'Unlocked' : 'Locked'}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )
           })}
         </div>

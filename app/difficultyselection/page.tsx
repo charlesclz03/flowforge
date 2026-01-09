@@ -13,7 +13,7 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ChevronDown, Sparkles, User, Users, Music } from 'lucide-react'
+import { ChevronDown, Sparkles, User, Users, Music, Mic } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
@@ -22,6 +22,8 @@ type Frequency = 4 | 8 | 16
 
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
+import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
+import { DailyGoalWidget } from '@/components/molecules/gamification/DailyGoalWidget'
 
 export default function DifficultySelectionPage() {
   const router = useRouter()
@@ -41,6 +43,8 @@ export default function DifficultySelectionPage() {
     setWordCategory,
     cypherPlayers,
     setCypherPlayers,
+    isRecordingEnabled,
+    setIsRecordingEnabled,
   } = usePracticeSession()
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
@@ -97,6 +101,19 @@ export default function DifficultySelectionPage() {
           <p className="text-base text-text-secondary sm:text-lg">
             Choose your difficulty, word frequency, and beat.
           </p>
+        {/* Title */}
+        <div className="space-y-3 text-center">
+          <h1 className="text-4xl sm:text-5xl">Setup your session</h1>
+          <p className="text-base text-text-secondary sm:text-lg">
+            Choose your difficulty, word frequency, and beat.
+          </p>
+        </div>
+
+        {/* Gamification Hub */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             {/* Mock Data for now - waiting for Integration Phase */}
+             <DailyStreakWidget currentStreak={session?.user ? 3 : 0} hasPracticedToday={false} />
+             <DailyGoalWidget currentXP={120} goalXP={200} />
         </div>
 
         {/* Configuration Sliders */}
@@ -114,6 +131,36 @@ export default function DifficultySelectionPage() {
             onChange={(val) => setFrequency(val)}
             disabled={false}
           />
+
+          {/* Recording Toggle */}
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'h-10 w-10 rounded-xl flex items-center justify-center transition-colors',
+                  isRecordingEnabled
+                    ? 'bg-red-500/20 text-red-500'
+                    : 'bg-white/10 text-text-tertiary'
+                )}
+              >
+                <Mic size={20} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Record Session</p>
+                <p className="text-xs text-text-tertiary">
+                  {isRecordingEnabled
+                    ? 'Audio will be recorded'
+                    : 'Practice mode only'}
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={isRecordingEnabled}
+              onCheckedChange={setIsRecordingEnabled}
+              className="data-[state=checked]:bg-red-500"
+            />
+          </div>
+
           <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
@@ -122,6 +169,7 @@ export default function DifficultySelectionPage() {
             onLockedSelect={() => setShowPremiumModal(true)}
             isPro={isPro}
             hideLocalTab={!showLocalTracks}
+            embedded={true}
           />
 
           {/* Advanced Section */}
