@@ -425,7 +425,18 @@ export default function PracticePage() {
       for (let i = 0; i < 50; i++) {
         await new Promise((r) => setTimeout(r, 100))
         if (!beatPlayer.isLoading) break
+        // Check for load error during wait
+        if (beatPlayer.error) {
+          toast.error('Beat failed to load. Try another track.')
+          return
+        }
       }
+    }
+
+    // Final check for loading errors
+    if (beatPlayer.error) {
+      toast.error(`Cannot start: ${beatPlayer.error}`)
+      return
     }
 
     const msPerBeat = (60 / selectedBeat.bpm) * 1000
@@ -696,12 +707,16 @@ export default function PracticePage() {
       // Ensure clean slate
       beatPlayer.stop()
 
+      // Load the beat asynchronously
       beatPlayer.loadBeat({
         ...selectedBeat,
         storageUrl: selectedBeat.storageUrl,
         isPremium: selectedBeat.isPremium ?? false,
         artistName: selectedBeat.artistName ?? 'Unknown Artist',
         duration: selectedBeat.duration ?? 0,
+      }).catch((err) => {
+        console.error('[Practice] Failed to load beat:', err)
+        toast.error('Failed to load beat. The audio file may be missing.')
       })
     }
   }, [selectedBeat, beatPlayer])
