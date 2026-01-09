@@ -21,6 +21,42 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.5.7',
+    title: 'The Direct Flow',
+    codename: 'Direct Flow',
+    date: 'January 09, 2026',
+    description:
+      'Refined session handoff logic and streamlined Victory screen for a more direct post-session experience.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          "Session Termination: Fixed loop bugs where beats wouldn't stop after session end.",
+          'Auto-Summary: Guaranteed modal trigger on session completion.',
+          'Victory UI: Removed "Menu" button and centered "Continue" for a streamlined flow.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.5.6',
+    title: 'The Stable Circle',
+    codename: 'Back to Basics',
+    date: 'January 09, 2026',
+    description:
+      'Restored core practice UI and hardened architecture against serialization errors.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Props Sanitized: Resolved persistent Next.js warnings about non-serializable props.',
+          'UI Restoration: Reverted Practice Studio to original circular design.',
+          'BeatDropdown: Embedded and retracted by default in practice mode.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.5.5',
     title: 'The Zero Warning',
     codename: 'Perfect Sync',

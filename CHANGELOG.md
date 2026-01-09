@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.5.7] - 2026-01-09
+
+### 🎯 Precision Flow & UI Simplification
+
+**Focus:** Fixed core session termination logic and streamlined the post-session experience.
+
+### Fixed
+- **Session Termination (Critical)**: Resolved issues where the beat track would continue looping indefinitely or the session summary modal would fail to trigger automatically after the timer expired.
+
+### Changed
+- **Victory Screen Simplification**: Removed the "Menu" button from the `SessionSummaryModal` to focus the user flow towards "Continue" (Recordings).
+- **Post-Session Layout**: Updated the Victory screen actions to use a centered single-button layout for better visual balance.
+
+---
+
 ## [v1.5.6] - 2026-01-09
 
 ### 🏗️ Architecture Stabilization & UI Restoration

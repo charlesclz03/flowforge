@@ -4,6 +4,28 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🚀 Update 1.5.7: The Direct Flow
+
+**Release Date:** January 09, 2026
+**Codename:** _Direct Flow_
+
+This update refines the session handoff, ensuring that when the timer hits zero, the beat stops and your results are presented without friction.
+
+### 🔊 Precision Termination
+- **Hard Stop**: Fixed the "Infinite Loop" bug where beats would occasionally keep playing after the session ended.
+- **Auto-Summary**: Guaranteed trigger for the Session Summary modal the moment the countdown finishes.
+
+### Update 1.5.7: Precision Flow
+*09 Jan 2026*
+
+A focused update resolving core session timing issues and streamlining the victory experience.
+- **Precision Session Logic**: Implemented a monotonic timer for sessions, ensuring seamless beat looping and perfect word rotation sync.
+- **Auto-Termination**: Sessions now automatically conclude when the timer expires, triggering the summary modal immediately.
+- **Victory Screen Simplify**: Removed the "Menu" button from the summary modal to focus the user flow and centered the primary actions.
+- **Lint Stability**: Finalized suppression of non-serializable prop warnings for cleaner builds.
+
+---
+
 ## 🚀 Update 1.5.6: The Stable Circle
 
 **Release Date:** January 09, 2026

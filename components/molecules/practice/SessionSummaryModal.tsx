@@ -28,10 +28,9 @@ type SessionSummaryModalProps = {
   onClose: () => void
 }
 
-export default function SessionSummaryModal({
-  data,
-  onClose,
-}: SessionSummaryModalProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SessionSummaryModal(props: any) {
+  const { data, onClose } = props as SessionSummaryModalProps
   const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
   const [showPWA, setShowPWA] = useState(false)
@@ -209,13 +208,10 @@ export default function SessionSummaryModal({
         </AnimatePresence>
 
         {/* Actions */}
-        <div className="grid grid-cols-2 gap-3 pt-4">
-          <Button variant="ghost" onClick={onClose} className="w-full">
-            Menu
-          </Button>
+        <div className="flex justify-center pt-4">
           <Button
             onClick={() => router.push('/recordings')}
-            className="w-full bg-white text-black hover:bg-white/90 font-bold"
+            className="w-full max-w-xs bg-white text-black hover:bg-white/90 font-bold"
           >
             Continue
           </Button>

@@ -137,9 +137,14 @@ export default function PracticePage() {
   }, [])
 
   // Playback Control (Detached from hook to resolve circular deps)
+  const sessionTimeRef = useRef(0)
+  const [monotonicTime, setMonotonicTime] = useState(0)
+
   const stopPlayback = useCallback(() => {
     beatPlayer.stop()
     releaseLock()
+    sessionTimeRef.current = 0
+    setMonotonicTime(0)
     setCurrentWord(wordList[0] || '')
     forceUpdate() // Ensure UI updates
   }, [beatPlayer, wordList, forceUpdate, releaseLock])
@@ -317,7 +322,7 @@ export default function PracticePage() {
     maxDuration: isPro ? null : 120,
     onComplete: handleRecordingComplete,
     onMaxDurationReached: () => {
-      stopPlayback()
+      handleStop()
       if (!isPro) {
         setPremiumTrigger('recording')
         setShowPremiumModal(true)
@@ -471,6 +476,7 @@ export default function PracticePage() {
       beatPlayer.seek(seekTime)
 
       // Single authoritative play call
+      beatPlayer.setLoop(true) // Ensure track loops seamlessly
       await beatPlayer.play()
     } catch (e) {
       handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
@@ -565,6 +571,7 @@ export default function PracticePage() {
       sessionStateRef.current.isActive = false
       return
     }
+
     const state = sessionStateRef.current
 
     // Only reset state if we are just starting (isActive was false)
@@ -573,35 +580,30 @@ export default function PracticePage() {
       // Only reset index if we are at the very beginning
       if (beatPlayer.currentTime < 0.5) {
         state.lastWordIndex = -1
+        sessionTimeRef.current = 0
       }
     }
 
+    let lastFrameTime = performance.now()
     const updateLoop = () => {
+      const now = performance.now()
+      const delta = (now - lastFrameTime) / 1000
+      lastFrameTime = now
+
       if (!state.isActive) return
       const params = paramsRef.current
       if (!params.selectedBeat || params.wordList.length === 0) return
 
-      const elapsed = beatPlayer.getPreciseTime()
-      const sessionTime = Math.max(
-        0,
-        elapsed - (params.selectedBeat.offset || 0)
-      )
+      // Increment monotonic session time
+      sessionTimeRef.current += delta
+      const sessionTime = sessionTimeRef.current
+      setMonotonicTime(sessionTime)
 
-      // GRACE PERIOD: Ignore stop conditions for the first 1.5 seconds to prevent "instant death"
-      // sessions due to audio glitches or slight play/pause race conditions
+      // GRACE PERIOD: Ignore stop conditions for the first 1.5 seconds
       if (sessionTime > 1.5) {
-        // Stop condition
-        if (
-          elapsed >=
-          params.sessionDuration + (params.selectedBeat.offset || 0)
-        ) {
-          if (
-            elapsed - (params.selectedBeat.offset || 0) >=
-            params.sessionDuration
-          ) {
-            handleStop()
-            return
-          }
+        if (sessionTime >= params.sessionDuration) {
+          handleStop()
+          return
         }
       }
 
@@ -624,7 +626,6 @@ export default function PracticePage() {
     }
     const frameId = requestAnimationFrame(updateLoop)
     return () => {
-      // logic to clean up text loop validation
       cancelAnimationFrame(frameId)
     }
   }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate])
@@ -771,7 +772,7 @@ export default function PracticePage() {
                 handleBeatSelect={setBeat}
                 isPlaying={beatPlayer.isPlaying}
                 isLoading={!isLoaded && !selectedBeat}
-                currentTime={beatPlayer.currentTime}
+                currentTime={monotonicTime}
                 sessionDuration={sessionDuration}
                 currentWord={currentWord}
                 countdownValue={_countdownValue}
