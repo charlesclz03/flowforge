@@ -21,6 +21,45 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.5.5',
+    title: 'The Zero Warning',
+    codename: 'Perfect Sync',
+    date: 'January 09, 2026',
+    description:
+      'Critical regressions in audio timing and synchronization resolved. Achieved a perfectly clean build with 0 warnings.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Audio Logic: Removed race conditions and laggy polling loops for absolute precision on start.',
+          'Double TTS: Fixed logic bug causing the first word to repeat twice.',
+          'Error Persistence: useBeatPlayer now clears errors on stop/restart.',
+          'Achievements: Implemented auto-seeding to ensure milestones are always populated.',
+          'Industrial Cleanup: Fixed all remaining 8 build warnings across the codebase.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.5.4',
+    title: 'The Polish',
+    codename: 'Smooth Operator',
+    date: 'January 09, 2026',
+    description:
+      'Quality-of-life improvements that make the app feel more responsive and polished.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Collapsible Dropdown: Practice beat selector is now collapsible with smooth animations.',
+          'Mic Icon Fix: Resolved rendering issues with the record button microphone icon.',
+          'Profile Pictures: Fixed Google profile images not displaying in the sidebar/profile.',
+          'Navigation: Improved transition flow from Vinyl Collection to Practice Studio.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.5.3',
     title: 'The Resurrection',
     codename: 'Second Wind',

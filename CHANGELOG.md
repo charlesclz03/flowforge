@@ -1,5 +1,21 @@
 # Changelog
 
+## [v1.5.5] - 2026-01-09
+
+### 🚀 Critical Fixes & Quality Assurance ("The Zero Warning")
+
+**Focus:** Resolved critical regressions introduced during recent feature adds and reached a clean "0 Warning" build state.
+
+### Fixed
+- **Audio Logic (Critical)**: Removed race conditions and laggy polling loops in `startCountdown`. Beat now starts reliably at "GO" on all devices (mobile/desktop).
+- **Double TTS (Critical)**: Fixed a logic bug where the first word of a session would be announced twice.
+- **Achievements Seeding**: Achievements table now auto-seeds if empty, ensuring the list is always populated for the user.
+- **Error Persistence**: `useBeatPlayer` now correctly clears error states when stopping or restarting, preventing stale toaster warnings.
+- **Build Warnings**: Resolved all 8 remaining build warnings across the codebase, achieving a "Zero Warning" build.
+- **Beat URL Mapping**: Implemented a hardcoded `BEAT_URL_MAP` to guarantee correct file paths regardless of DB inconsistencies (e.g., trailing hyphens).
+
+---
+
 ## [v1.5.4] - 2026-01-09
 
 ### 🎛️ UX Improvements & Bug Fixes ("The Polish")

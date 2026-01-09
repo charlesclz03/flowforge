@@ -4,6 +4,26 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🚀 Update 1.5.5: The Zero Warning
+
+**Release Date:** January 09, 2026
+**Codename:** _Perfect Sync_
+
+This patch resolves critical regressions in audio timing and synchronization, while also reaching a milestone of 0 build warnings for the entire project.
+
+### 🔊 Audio & Sync Perfected
+- **Reliable Drops**: We've removed the laggy polling logic during the countdown. The beat now starts with surgical precision the moment the clock hits "GO", bypassing browser timing inconsistencies.
+- **Double Talk Fixed**: No more hearing the first word twice. We've refined the `SpeechSynthesis` transition logic to speak only when the beat truly drops.
+- **Persistent Errors Patched**: If a beat failed once, it would sometimes show errors forever. Now, every new play attempt resets the state for a clean run.
+
+### 🏆 Achievement Resurrection
+- **Auto-Seeding**: If you found the achievements list empty, it's now fixed. The system now automatically detects an empty database and seeds the 18 baseline milestones so you can start the grind immediately.
+
+### 🧹 Industrial Cleanup
+- **Zero Build Warnings**: We've gone through every single remaining warning in the codebase—from Prettier formatting to hard-to-find type errors. The build is now perfectly clean.
+
+---
+
 ## 🎛️ Update 1.5.4: The Polish
 
 **Release Date:** January 09, 2026
