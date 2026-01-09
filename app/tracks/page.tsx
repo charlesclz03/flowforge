@@ -232,8 +232,8 @@ export default function TracksPage() {
       <div className="px-6 pt-12 pb-6 space-y-6">
         <div className="flex items-center justify-between">
           <PageHeader
-            title="Vinyl Collection"
-            description="Discover beats for your next session."
+            title="AI Beat Vault"
+            description="Discover the secret beats for your next pro session."
           />
         </div>
 
@@ -282,7 +282,7 @@ export default function TracksPage() {
             />
             <input
               type="text"
-              placeholder="Search beats, artists, vibes..."
+              placeholder="Search beats, flow types, and drill vibes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-white placeholder:text-text-tertiary focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 transition-all"
@@ -340,11 +340,14 @@ export default function TracksPage() {
           !isLoading &&
           activeTab === 'mine' &&
           searchQuery.length === 0 && (
-            <div className="py-20 text-center space-y-4 opacity-50">
+            <div className="py-20 text-center space-y-4 px-6 opacity-50">
               <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
                 <Music size={32} />
               </div>
-              <p>You haven&apos;t uploaded any beats yet.</p>
+              <p className="text-lg font-bold text-white">Capture your own sound.</p>
+              <p className="max-w-xs mx-auto text-sm">
+                Upload local tracks to practice rap improvisation offline. Build your personal library and flow to your own instrumentals, anywhere, anytime.
+              </p>
             </div>
           )}
       </div>

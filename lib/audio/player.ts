@@ -73,8 +73,6 @@ export class AudioPlayer {
     return new Promise((resolve, reject) => {
       if (!this.audio) return reject(new Error('Audio not initialized'))
 
-      const encodedUrl = encodeURI(url)
-
       // Setup temporary load handlers
       const handleCanPlayThrough = () => {
         this.log('Asset loaded and ready to play')
@@ -101,7 +99,7 @@ export class AudioPlayer {
       this.audio.addEventListener('canplaythrough', handleCanPlayThrough)
       this.audio.addEventListener('error', handleError)
 
-      this.audio.src = encodedUrl
+      this.audio.src = url // Do not encodeURI - URLs from storage are already encoded
       this.audio.load()
     })
   }

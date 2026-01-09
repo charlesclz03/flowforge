@@ -20,7 +20,7 @@ export function useShare() {
       // Check for native share support
       if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share({
-          title: data.title || 'FlowForge',
+          title: data.title || 'FreeStyla',
           text: data.text || 'Check out this flow!',
           url,
         })

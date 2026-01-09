@@ -7,14 +7,18 @@ interface HowItWorksContentProps {
   onStartPractice?: () => void
 }
 
+import { QASection } from '@/components/organisms/landing/QASection'
+
 export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
   return (
     <div className="space-y-12">
       {/* Header */}
       <div className="space-y-6 text-center">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
+          Dominate the Cypher: The AI Rap Generator
+        </h1>
         <p className="mx-auto max-w-2xl text-base text-text-secondary sm:text-xl">
-          Master your freestyle flow with precision timing and intelligent word
-          prompts.
+          Unleash your potential with instant beat sync and infinite word flows.
         </p>
       </div>
 
@@ -28,7 +32,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <span className="text-2xl sm:text-3xl">1</span>
-              <h3 className="text-lg sm:text-xl">Choose your beat</h3>
+              <h3 className="text-lg sm:text-xl">Secure Your Sound</h3>
             </div>
             <p className="text-sm text-text-secondary">
               Select from a curated library of hip-hop instrumentals. Each beat
@@ -45,7 +49,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <span className="text-2xl sm:text-3xl">2</span>
-              <h3 className="text-lg sm:text-xl">Configure session</h3>
+              <h3 className="text-lg sm:text-xl">Architect Your Flow</h3>
             </div>
             <p className="text-sm text-text-secondary">
               Set your difficulty level and word frequency. Start easy with 2-3
@@ -62,7 +66,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <span className="text-2xl sm:text-3xl">3</span>
-              <h3 className="text-lg sm:text-xl">Record & flow</h3>
+              <h3 className="text-lg sm:text-xl">Immortalize Your Bars</h3>
             </div>
             <p className="text-sm text-text-secondary">
               Hit play and start freestyling. Words appear in sync with the
@@ -91,10 +95,15 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           <div className="flex items-start space-x-4">
             <Sparkles className="mt-1 h-6 w-6 flex-shrink-0 text-violet-400" />
             <div>
-              <h4 className="mb-2 text-lg">Smart word bank</h4>
+              <h4 className="mb-2 text-lg">
+                Freestyle rap word generator with beats
+              </h4>
               <p className="text-sm text-text-secondary">
-                A curated bank of words designed for freestyling, filtered by
-                syllable count to match your skill level.
+                Our AI Vault adapts to your skill level, helping you learn{' '}
+                <strong className="text-white">
+                  how to improve rap flow with AI
+                </strong>{' '}
+                in real-time.
               </p>
             </div>
           </div>
@@ -160,6 +169,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           <div>Session time</div>
         </div>
       </div>
+
+      <QASection />
     </div>
   )
 }

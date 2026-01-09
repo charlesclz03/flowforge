@@ -30,7 +30,7 @@ export async function getBeats(
         tags: [],
         difficulty: 'Medium',
         duration: null,
-        artistName: 'FlowForge Beats',
+        artistName: 'FreeStyla',
         createdAt: new Date(),
         updatedAt: new Date(),
       })) as unknown as Beat[]
@@ -119,7 +119,7 @@ export async function getBeats(
         tags: [],
         difficulty: 'Medium',
         duration: null,
-        artistName: 'FlowForge Beats',
+        artistName: 'FreeStyla',
         createdAt: new Date(),
         updatedAt: new Date(),
       })) as unknown as Beat[]

@@ -170,8 +170,8 @@ export default function SessionSummaryModal({
           >
             {/* Mock Streak until real data integrated */}
             <div className="text-3xl font-black text-orange-400">🔥 7</div>
-            <div className="text-xs font-bold uppercase tracking-widest text-text-tertiary">
-              Day Streak
+            <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
+              Consistency Streak: 7 Days. Keep the fire burning.
             </div>
           </motion.div>
         </div>
@@ -191,7 +191,7 @@ export default function SessionSummaryModal({
                   size={32}
                 />
                 <h3 className="font-bold text-xl text-white">
-                  Achievement Unlocked!
+                  Legacy Milestone Unlocked:
                 </h3>
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
                   {data.newBadges.map((badge) => (

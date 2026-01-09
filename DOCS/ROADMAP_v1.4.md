@@ -36,6 +36,16 @@ These items were in the original "Bible" but not implemented in the v1.3.1 Unive
 - Investigate VTT (Voice-to-Text) for real-time rhyme density scoring.
 - "Smart Prompts": Context-aware words based on previous rhymes.
 
+
 ### Native Mobile Wrappers
 
 - Capacitor/Ionic wrapper for iOS App Store release.
+
+### Native Internationalization (Phase 2)
+
+- **Goal**: European market penetration (France/Spain).
+- **Requirements**:
+  - `next-intl` integration.
+  - Dynamic metadata based on `Accept-Language` headers.
+  - Translated content for "Drill" (FR) and "Trap" (ES) sub-genres.
+

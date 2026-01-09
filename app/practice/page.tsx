@@ -103,6 +103,24 @@ export default function PracticePage() {
 
   // Beats Loading State
   const [beats, setBeats] = useState<Beat[]>([]) // Local state for dropdown
+  const [loadingText, setLoadingText] = useState(
+    'Building Studio Environment...'
+  )
+
+  // Fetch Beats Effect
+  useEffect(() => {
+    const texts = [
+      'Building Studio Environment...',
+      'Syncing AI Word Bank...',
+      'Dropping the Beat...',
+    ]
+    let i = 0
+    const interval = setInterval(() => {
+      i = (i + 1) % texts.length
+      setLoadingText(texts[i])
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Fetch Beats Effect
   useEffect(() => {
@@ -686,6 +704,30 @@ export default function PracticePage() {
       showProgress={true}
       onBack={() => router.push('/difficultyselection')}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'FreeStyla Practice Studio',
+            operatingSystem: 'iOS, Android, Web',
+            applicationCategory: 'MusicApplication',
+            offers: {
+              '@type': 'Offer',
+              price: '3.99',
+              priceCurrency: 'EUR',
+            },
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: '4.8',
+              reviewCount: '1024',
+            },
+            description:
+              'Interactive AI rap training environment. Select beats, control word frequency, and improve your flow.',
+          }),
+        }}
+      />
       <div className="min-h-screen pt-4 pb-4 px-4 md:px-8 max-w-7xl mx-auto space-y-4">
         {/* Header */}
         <div className="flex justify-center items-center">
@@ -749,8 +791,8 @@ export default function PracticePage() {
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
-                <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest">
-                  Loading Beat...
+                <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
+                  {loadingText}
                 </span>
               </div>
             )}

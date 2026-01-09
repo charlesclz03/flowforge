@@ -150,7 +150,7 @@ export const PATCH_NOTES: PatchNote[] = [
     codename: 'Royal Ascension',
     date: 'December 11, 2025',
     description:
-      'A shift in the visual spectrum. The old Orange has faded, replaced by the regal FlowForge Purple (#7D7AFF). This massive design overhaul redefined the aesthetic of the entire platform.',
+      'A shift in the visual spectrum. The old Orange has faded, replaced by the regal FreeStyla Purple (#7D7AFF). This massive design overhaul redefined the aesthetic of the entire platform.',
     changes: [
       {
         category: 'Visual Overhaul',
@@ -199,7 +199,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'New Features',
         items: [
-          'The Practice Studio: The heart of FlowForge. A fully immersive freestyle environment.',
+          'The Practice Studio: The heart of FreeStyla. A fully immersive freestyle environment.',
           'Timer Ring: A visual representation of time, looping perfectly with the beat.',
           'Word Prompts: Dynamic words that challenge your flow in real-time.',
           'Audio Recorder: Browser-based recording with waveform visualization.',

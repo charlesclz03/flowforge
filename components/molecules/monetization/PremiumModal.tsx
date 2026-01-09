@@ -33,25 +33,25 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
     switch (trigger) {
       case 'recording':
         return {
-          title: 'Unlock Unlimited Recording',
+          title: 'Conquer the Studio: Unlimited Access',
           description:
             'Free users are limited to 2-minute sessions. Upgrade to record full studio-length tracks.',
         }
       case 'beat':
         return {
-          title: 'Access Pro Beats',
+          title: 'Unlock the Secret Beat Vault',
           description:
-            'This track is locked. ongoing subscriptions get access to our full library of premium beats.',
+            'This track is locked. Pro members get access to our full library of secret premium beats.',
         }
       case 'history':
         return {
-          title: 'View Full History',
+          title: 'Analyze Your Evolution',
           description:
-            'Save and review all your past sessions with FreeStyla Premium.',
+            'Save and review all your past sessions to track your growth with FreeStyla Pro.',
         }
       default:
         return {
-          title: 'Upgrade to FreeStyla Pro',
+          title: 'Unlock the Secret to Pro Flow',
           description:
             'Take your freestyle skills to the next level with professional tools.',
         }
@@ -61,9 +61,9 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
   const content = getContent()
 
   const benefits = [
-    'Unlimited recording duration',
-    'Access to all premium beats',
-    'Advanced session analytics',
+    'Record full tracks. No limits. Total freedom.',
+    'Unlock the Secret Beat Vault',
+    'Analyze your evolution with advanced stats',
     'Download studio-quality audio',
   ]
 

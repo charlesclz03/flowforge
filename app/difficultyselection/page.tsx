@@ -98,7 +98,9 @@ export default function DifficultySelectionPage() {
         {/* Title */}
 
         <div className="space-y-3 text-center">
-          <h1 className="text-4xl sm:text-5xl">Setup your session</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
+            Ready to spit bars? Start your session now.
+          </h1>
           <p className="text-base text-text-secondary sm:text-lg">
             Choose your difficulty, word frequency, and beat.
           </p>
@@ -106,9 +108,12 @@ export default function DifficultySelectionPage() {
 
         {/* Gamification Hub */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             {/* Mock Data for now - waiting for Integration Phase */}
-             <DailyStreakWidget currentStreak={session?.user ? 3 : 0} hasPracticedToday={false} />
-             <DailyGoalWidget currentXP={120} goalXP={200} />
+          {/* Mock Data for now - waiting for Integration Phase */}
+          <DailyStreakWidget
+            currentStreak={session?.user ? 3 : 0}
+            hasPracticedToday={false}
+          />
+          <DailyGoalWidget currentXP={120} goalXP={200} />
         </div>
 
         {/* Configuration Sliders */}
@@ -141,11 +146,13 @@ export default function DifficultySelectionPage() {
                 <Mic size={20} />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Record Session</p>
+                <p className="text-sm font-bold text-white">
+                  Capture the Audio
+                </p>
                 <p className="text-xs text-text-tertiary">
                   {isRecordingEnabled
                     ? 'Audio will be recorded'
-                    : 'Practice mode only'}
+                    : 'Stealth Mode (No Recording)'}
                 </p>
               </div>
             </div>

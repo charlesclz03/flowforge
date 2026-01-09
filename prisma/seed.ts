@@ -18,7 +18,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 264,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Bam Beater',
@@ -27,7 +27,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 240,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Bass Beats Battle',
@@ -36,7 +36,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 240,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Battle',
@@ -45,7 +45,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 300,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Battle Baby',
@@ -54,7 +54,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 40,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Battle Cracker',
@@ -63,7 +63,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 204,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Battle Made',
@@ -72,7 +72,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 45,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Battle Yo',
@@ -81,7 +81,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 120,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Be Battle Be',
@@ -90,7 +90,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 219,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Beat Down',
@@ -99,7 +99,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 240,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Big Battle Drops',
@@ -108,7 +108,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 240,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Breaks',
@@ -117,7 +117,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 240,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'FRB 4',
@@ -126,7 +126,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 215,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'FRB 5',
@@ -135,7 +135,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 81,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'FreeStyle Boom',
@@ -144,7 +144,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 101,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Freestyle Battle Beats 01',
@@ -153,7 +153,7 @@ const beats = [
     isPremium: true,
     genre: null,
     duration: 176,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Rap Freestyle Underground',
@@ -162,7 +162,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 218,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Shotgun Boom',
@@ -171,7 +171,7 @@ const beats = [
     isPremium: false,
     genre: null,
     duration: 84,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
 ]
 
@@ -184,7 +184,7 @@ const _premiumBeats = [
     isPremium: false,
     genre: 'East Coast',
     duration: 145,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Ambient Dreams',
@@ -193,7 +193,7 @@ const _premiumBeats = [
     isPremium: false,
     genre: 'Ambient',
     duration: 210,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Afro Fusion',
@@ -202,7 +202,7 @@ const _premiumBeats = [
     isPremium: false,
     genre: 'Afrobeat',
     duration: 185,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Latin Heat',
@@ -211,7 +211,7 @@ const _premiumBeats = [
     isPremium: false,
     genre: 'Latin',
     duration: 155,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
   {
     title: 'Experimental Wave',
@@ -220,7 +220,7 @@ const _premiumBeats = [
     isPremium: false,
     genre: 'Experimental',
     duration: 195,
-    artistName: 'FlowForge Beats',
+    artistName: 'FreeStyla',
   },
 ]
 

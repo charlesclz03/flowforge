@@ -125,9 +125,23 @@ export default function RecordingsPage() {
       className="bg-background"
     >
       <div className="pt-8 pb-32">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'My Rap Vault & Session History',
+              operatingSystem: 'iOS, Android, Web',
+              applicationCategory: 'MusicApplication',
+              description:
+                'Listen to your past freestyle sessions, analyze your word usage, and track your improvement over time.',
+            }),
+          }}
+        />
         <PageHeader
-          title="My Recordings"
-          description="View, play, and download your practice sessions"
+          title="My Rap Vault & Session History"
+          description="Listen to your past freestyle sessions, analyze your word usage, and track your improvement over time."
         />
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 

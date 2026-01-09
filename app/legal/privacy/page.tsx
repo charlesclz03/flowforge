@@ -35,16 +35,23 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-xl font-bold text-white mb-4">
-              2. How We Use Data
+              2. How We Use Data & Privacy Assurance
             </h2>
             <p>We use your data to:</p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>Provide and improve the FlowForge service.</li>
+              <li>Provide and improve the FreeStyla service.</li>
               <li>Process payments (via Stripe).</li>
               <li>
                 Analyze app performance (e.g., crash reporting via Sentry).
               </li>
             </ul>
+            <p className="mt-4">
+              <strong>You own your flows.</strong>
+              <br />
+              FreeStyla guarantees that your lyrics and recordings remain 100%
+              your intellectual property. We do not use your voice data to train
+              public models without consent.
+            </p>
             <p className="mt-2">
               We <strong>never</strong> sell your personal data to third
               parties.
@@ -76,7 +83,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold text-white mb-4">5. Contact</h2>
             <p>
-              For privacy concerns, please contact us at support@flowforge.com.
+              For privacy concerns, please contact us at support@freestyla.com.
             </p>
           </section>
         </div>

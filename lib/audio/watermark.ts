@@ -6,7 +6,7 @@ export class WatermarkGenerator {
   }
 
   /**
-   * Plays the FlowForge sonic brand (C Major 7th arpeggio)
+   * Plays the FreeStyla sonic brand (C Major 7th arpeggio)
    * used as an audio watermark for free tier recordings.
    */
   play(destination: AudioNode, time: number = 0) {
