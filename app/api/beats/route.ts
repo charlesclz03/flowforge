@@ -62,14 +62,18 @@ export async function GET(request: Request) {
 
     // Runtime fix for legacy data: ensure storageUrls align with disk filenames (replace spaces with hyphens)
     const sanitizedBeats = beatsData.map((beat) => {
-      // Apply same sanitation logic as original file if needed, or just pass proper data
-      const url = beat.storageUrl
+      let url = beat.storageUrl
       if (url && typeof url === 'string') {
-        // Additional safety check if needed
+        // Ensure leading slash
+        if (!url.startsWith('/') && !url.startsWith('http')) {
+          url = '/' + url
+        }
+        // Legacy fix: physical files have hyphens, DB entries might have spaces
+        url = url.trim().replace(/ /g, '-')
       }
       return {
         ...beat,
-        storageUrl: beat.storageUrl,
+        storageUrl: url,
       }
     })
 
