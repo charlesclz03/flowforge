@@ -232,8 +232,8 @@ export default function TracksPage() {
       <div className="px-6 pt-12 pb-6 space-y-6">
         <div className="flex items-center justify-between">
           <PageHeader
-            title="AI Beat Vault"
-            description="Discover the secret beats for your next pro session."
+            title="Vinyl Collection"
+            description="Discover beats for your next session."
           />
         </div>
 
@@ -324,14 +324,25 @@ export default function TracksPage() {
           </div>
         )}
 
+        {filteredBeats.length === 0 && !isLoading && searchQuery.length > 0 && (
+          <div className="py-20 text-center space-y-4 opacity-50">
+            <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+              <Music size={32} />
+            </div>
+            <p>No beats found looking for &quot;{searchQuery}&quot;</p>
+          </div>
+        )}
+
+        {/* Loading fallback - shows centered spinner if loading takes too long */}
         {filteredBeats.length === 0 &&
           !isLoading &&
-          (activeTab !== 'mine' || searchQuery.length > 0) && (
+          searchQuery.length === 0 &&
+          activeTab === 'public' && (
             <div className="py-20 text-center space-y-4 opacity-50">
               <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
                 <Music size={32} />
               </div>
-              <p>No beats found looking for &quot;{searchQuery}&quot;</p>
+              <p>No beats available. Pull to refresh.</p>
             </div>
           )}
 
@@ -344,9 +355,13 @@ export default function TracksPage() {
               <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
                 <Music size={32} />
               </div>
-              <p className="text-lg font-bold text-white">Capture your own sound.</p>
+              <p className="text-lg font-bold text-white">
+                Capture your own sound.
+              </p>
               <p className="max-w-xs mx-auto text-sm">
-                Upload local tracks to practice rap improvisation offline. Build your personal library and flow to your own instrumentals, anywhere, anytime.
+                Upload local tracks to practice rap improvisation offline. Build
+                your personal library and flow to your own instrumentals,
+                anywhere, anytime.
               </p>
             </div>
           )}

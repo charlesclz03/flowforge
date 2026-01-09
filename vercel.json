@@ -4,6 +4,9 @@
   "framework": "nextjs",
   "regions": ["iad1"],
   "functions": {
+    "app/api/user/beats/route.ts": {
+      "maxDuration": 60
+    },
     "app/api/**/*.ts": {
       "maxDuration": 10
     }

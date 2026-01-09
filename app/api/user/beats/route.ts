@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@supabase/supabase-js'
+
+// Increase body size limit for file uploads (default is 4.5MB, beats can be larger)
+// This requires Vercel Pro plan for limits > 4.5MB. For Hobby, consider direct-to-Supabase upload.
+export const runtime = 'nodejs'
+export const maxDuration = 60 // Allow longer processing time for file uploads
 
 export async function POST(req: NextRequest) {
-  // Lazy init
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user) {
@@ -43,53 +42,27 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const formData = await req.formData()
-    const file = formData.get('file') as File
-    const title = formData.get('title') as string
-    const bpm = parseInt(formData.get('bpm') as string)
-    const genre = formData.get('genre') as string
-    const offset = parseFloat(formData.get('offset') as string) || 0
+    // Now expects JSON body with storageUrl (file already uploaded to Supabase)
+    const { title, bpm, genre, offset, storageUrl } = await req.json()
 
-    if (!file || !title || !bpm) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
-    }
-
-    // Upload to Supabase 'audio' bucket
-    const fileExt = file.name.split('.').pop()
-    const fileName = `users/${session.user.id}/${Date.now()}-${title.replace(/\s+/g, '-').toLowerCase()}.${fileExt}`
-
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    const { error: uploadError } = await supabase.storage
-      .from('audio')
-      .upload(fileName, buffer, {
-        contentType: file.type,
-      })
-
-    if (uploadError) {
-      console.error('Supabase Upload Error:', uploadError)
+    if (!title || !bpm || !storageUrl) {
       return NextResponse.json(
-        { error: 'Failed to upload audio' },
-        { status: 500 }
+        { error: 'Missing required fields (title, bpm, storageUrl)' },
+        { status: 400 }
       )
     }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('audio').getPublicUrl(fileName)
 
     // Create Beat Record
     const beat = await prisma.beat.create({
       data: {
         title,
-        bpm,
+        bpm: parseInt(bpm),
         genre: genre || 'Freestyle',
-        storageUrl: publicUrl,
-        isPremium: false, // User beats are private/free for them? Or just use isPremium false to allow access
+        storageUrl,
+        isPremium: false,
         artistName: session.user.name || 'Me',
         uploaderId: session.user.id,
-        offset: offset,
+        offset: parseFloat(offset) || 0,
         difficulty: 'Medium',
         tags: ['user-upload'],
       },
@@ -97,7 +70,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, beat })
   } catch (error) {
-    console.error('User Upload Error:', error)
+    console.error('User Beat Metadata Error:', error)
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

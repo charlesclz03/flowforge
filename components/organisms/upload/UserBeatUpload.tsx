@@ -101,21 +101,53 @@ export function UserBeatUpload({ isPro, onSuccess }: UserBeatUploadProps) {
     setStatus('uploading')
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('title', title)
-      formData.append('bpm', bpm)
-      formData.append('genre', genre)
-      formData.append('offset', offset.toString())
-
-      const res = await fetch('/api/user/beats', {
+      // Step 1: Get a signed URL from our API
+      const signedUrlRes = await fetch('/api/upload/signed-url', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+        }),
       })
 
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Upload failed')
+      if (!signedUrlRes.ok) {
+        const data = await signedUrlRes.json()
+        throw new Error(data.error || 'Failed to get upload URL')
+      }
+
+      const { signedUrl, token, publicUrl } = await signedUrlRes.json()
+
+      // Step 2: Upload directly to Supabase Storage
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+          'Authorization': `Bearer ${token}`,
+        },
+        body: file,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error('Direct upload failed. File may be too large or storage is full.')
+      }
+
+      // Step 3: Send metadata to our API to create the DB record
+      const metadataRes = await fetch('/api/user/beats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          bpm: parseInt(bpm),
+          genre,
+          offset,
+          storageUrl: publicUrl,
+        }),
+      })
+
+      if (!metadataRes.ok) {
+        const data = await metadataRes.json()
+        throw new Error(data.error || 'Failed to save beat metadata')
       }
 
       setStatus('success')
