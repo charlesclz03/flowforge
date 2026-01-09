@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
 import {
   RefreshCcw,
@@ -6,6 +5,7 @@ import {
   Gauge,
   Infinity as InfinityIcon,
   User,
+  Mic,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -14,7 +14,6 @@ import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
-import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
 type PracticeControlsProps = {
   selectedBeat: Beat
@@ -114,19 +113,7 @@ export default function PracticeControls({
     frequency
   )
 
-  // PWA Prompt State
-  const [showPWAInstall, setShowPWAInstall] = useState(false)
-
   const handleRecordClick = () => {
-    if (
-      typeof window !== 'undefined' &&
-      !localStorage.getItem('hasWarnedPWA')
-    ) {
-      setShowPWAInstall(true)
-      localStorage.setItem('hasWarnedPWA', 'true')
-      return
-    }
-
     if (!isAuthenticated && !isPlaying) {
       onUpgrade?.()
       return
@@ -146,31 +133,6 @@ export default function PracticeControls({
     const nextFreq = frequency === 2 ? 4 : frequency === 4 ? 8 : 2
     onFrequencyChange(nextFreq)
   }
-
-  // Custom Studio Mic Icon
-  const StudioMicIcon = ({
-    className,
-    size = 48,
-  }: {
-    className?: string
-    size?: number
-  }) => (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-      <line x1="12" y1="19" x2="12" y2="22" />
-    </svg>
-  )
 
   return (
     <Card
@@ -425,7 +387,11 @@ export default function PracticeControls({
                     {isPro && (
                       <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
                     )}
-                    <StudioMicIcon size={48} />
+                    <Mic
+                      size={48}
+                      fill="currentColor"
+                      className="text-white/90 drop-shadow-lg"
+                    />
                   </div>
                 </div>
               )}
@@ -434,46 +400,47 @@ export default function PracticeControls({
         </div>
 
         {/* Record Notifier */}
+        {/* Record Notifier - Now hidden when not recording to remove "REC" word as requested, or stays as indicator */}
         <button
           onClick={(e) => {
             e.stopPropagation()
-            onUpgrade?.() // Always trigger upgrade/info modal, never record
+            handleRecordClick()
           }}
-          className="mt-4 flex items-center justify-center group/rec outline-none transition-transform hover:scale-105 active:scale-95"
+          className={cn(
+            'mt-4 flex items-center justify-center group/rec outline-none transition-transform hover:scale-105 active:scale-95',
+            !isRecording && 'opacity-50 hover:opacity-100' // Dim when not recording
+          )}
         >
           <div className="flex items-center gap-2 px-6 py-2">
             {/* Left Bracket */}
-            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-black" />
+            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-black/20 group-hover/rec:border-black/40 transition-colors" />
 
             <div className="flex items-center gap-3 mx-1">
               {/* Dot */}
               <div
                 className={cn(
-                  'h-6 w-6 rounded-full transition-colors',
-                  isPro ? 'bg-red-600' : 'bg-[#D1D1D1]',
-                  isRecording && 'animate-pulse'
+                  'h-6 w-6 rounded-full transition-colors shadow-inner',
+                  isRecording
+                    ? 'bg-red-500 animate-pulse shadow-red-500/50'
+                    : 'bg-red-900/20'
                 )}
               />
               {/* Text */}
-              <span className="text-3xl font-black tracking-tighter text-black">
+              <span
+                className={cn(
+                  'text-3xl font-black tracking-tighter transition-colors',
+                  isRecording ? 'text-red-500' : 'text-black/20'
+                )}
+              >
                 REC
               </span>
             </div>
 
             {/* Right Bracket */}
-            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-black" />
+            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-black/20 group-hover/rec:border-black/40 transition-colors" />
           </div>
         </button>
       </div>
-
-      <PWAInstallModal
-        isOpen={showPWAInstall}
-        onClose={() => {
-          setShowPWAInstall(false)
-          // Optionally auto-start after closing? User said "prompt before", usually implies "read this first".
-          // We'll let them click record again to start.
-        }}
-      />
     </Card>
   )
 }

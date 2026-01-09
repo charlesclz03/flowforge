@@ -94,6 +94,77 @@ export function SessionPlayer({
     }
   }, [beatVolume])
 
+  // Initialize Web Audio Context for Studio FX
+  const initAudioGraph = useCallback(() => {
+    if (!audioRef.current) return
+
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext })
+        .webkitAudioContext
+
+    if (!contextRef.current) {
+      contextRef.current = new AudioContextClass()
+    }
+
+    const ctx = contextRef.current
+
+    // Resume context if suspended (browser policy)
+    if (ctx.state === 'suspended') {
+      ctx.resume()
+    }
+
+    // Create Source Node (Only once per audio element)
+    if (!sourceRef.current) {
+      try {
+        sourceRef.current = ctx.createMediaElementSource(audioRef.current)
+      } catch (e) {
+        // Source might already exist for this element
+      }
+    }
+
+    // Create FX Nodes (Idempotent)
+    if (!reverbRef.current) {
+      reverbRef.current = ctx.createConvolver()
+      reverbRef.current.buffer = createReverb(ctx)
+
+      dryGainRef.current = ctx.createGain()
+      wetGainRef.current = ctx.createGain() // Reverb level
+
+      // Routing:
+      // Source -> DryGain -> Destination
+      // Source -> Reverb -> WetGain -> Destination
+
+      if (sourceRef.current) {
+        sourceRef.current.connect(dryGainRef.current)
+        dryGainRef.current.connect(ctx.destination)
+
+        sourceRef.current.connect(reverbRef.current)
+        reverbRef.current.connect(wetGainRef.current)
+        wetGainRef.current.connect(ctx.destination)
+      }
+    }
+
+    // Update mix based on mode
+    if (dryGainRef.current && wetGainRef.current) {
+      if (isStudioMode) {
+        dryGainRef.current.gain.setTargetAtTime(0.7, ctx.currentTime, 0.1)
+        wetGainRef.current.gain.setTargetAtTime(0.4, ctx.currentTime, 0.1)
+      } else {
+        dryGainRef.current.gain.setTargetAtTime(1.0, ctx.currentTime, 0.1)
+        wetGainRef.current.gain.setTargetAtTime(0, ctx.currentTime, 0.1)
+      }
+    }
+  }, [isStudioMode])
+
+  // Studio FX Trigger
+  useEffect(() => {
+    if (isPlaying || isStudioMode) {
+      initAudioGraph()
+    }
+  }, [isPlaying, isStudioMode, initAudioGraph])
+
+  // Main Audio Setup Effect
   useEffect(() => {
     if (!audioUrl) return
 
@@ -108,37 +179,16 @@ export function SessionPlayer({
       beatRef.current = beat
     }
 
-    // Initialize Web Audio Context for Studio FX
-    const initAudioContext = () => {
-      if (!contextRef.current) {
-        const AudioContextClass =
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext
-        contextRef.current = new AudioContextClass()
-      }
-    }
-
-    audio.addEventListener('play', initAudioContext)
-
     audio.addEventListener('loadedmetadata', () => {
       setDuration(audio.duration)
     })
 
     audio.addEventListener('timeupdate', () => {
       setCurrentTime(audio.currentTime)
-      // Sync beat with Nudge
-      // If nudge is 100ms, beat should be at audio.currentTime - 0.1
-      // Wait, if I recorded LATE, I want the beat to play LATER to match me.
-      // So Beat Time should be BEHIND Audio Time?
-      // No, if Beat is at 10s, and I recorded at 10.1s.
-      // I want Beat to be at 10s when Vocal is at 10.1s.
-      // So Beat = Vocal - Latency.
       if (beatRef.current) {
         const targetTime = audio.currentTime - nudge / 1000
         // Only sync if significant drift
         if (Math.abs(beatRef.current.currentTime - targetTime) > 0.05) {
-          // Handle edge case where target < 0
           if (targetTime >= 0) {
             beatRef.current.currentTime = targetTime
           }
@@ -163,57 +213,7 @@ export function SessionPlayer({
         beatRef.current.src = ''
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioUrl, beatUrl, nudge])
-
-  // Studio FX Effect
-  useEffect(() => {
-    if (!isStudioMode || !audioRef.current || !contextRef.current) return
-
-    const ctx = contextRef.current
-    if (!sourceRef.current) {
-      sourceRef.current = ctx.createMediaElementSource(audioRef.current)
-    }
-
-    // Create nodes if needed
-    if (!reverbRef.current) {
-      reverbRef.current = ctx.createConvolver()
-      reverbRef.current.buffer = createReverb(ctx)
-      dryGainRef.current = ctx.createGain()
-      wetGainRef.current = ctx.createGain()
-
-      // Routing: Source -> Dry -> Dest
-      //          Source -> Convolver -> Wet -> Dest
-      sourceRef.current.connect(dryGainRef.current)
-      dryGainRef.current.connect(ctx.destination)
-
-      sourceRef.current.connect(reverbRef.current)
-      reverbRef.current.connect(wetGainRef.current)
-      wetGainRef.current.connect(ctx.destination)
-    }
-
-    // DRY/WET Mix
-    if (isStudioMode) {
-      dryGainRef.current!.gain.value = 0.8
-      wetGainRef.current!.gain.value = 0.3 // 30% Reverb
-    } else {
-      // Bypass? Actually we might need to disconnect to truly bypass properly or just mute wet
-    }
-  }, [isStudioMode])
-
-  // Reset/Bypass FX when disabled
-  useEffect(() => {
-    if (!contextRef.current || !dryGainRef.current || !wetGainRef.current)
-      return
-
-    if (isStudioMode) {
-      dryGainRef.current.gain.value = 0.8
-      wetGainRef.current.gain.value = 0.3
-    } else {
-      dryGainRef.current.gain.value = 1
-      wetGainRef.current.gain.value = 0
-    }
-  }, [isStudioMode])
+  }, [audioUrl, beatUrl, nudge, beatVolume])
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current) return

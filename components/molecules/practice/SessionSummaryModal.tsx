@@ -3,10 +3,12 @@
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { useRouter } from 'next/navigation'
-import { Sparkles, Wand2, Share2, Crown } from 'lucide-react'
+import { Sparkles, Wand2, Crown } from 'lucide-react'
 import { PostProcessingModal } from './PostProcessingModal'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
+import confetti from 'canvas-confetti'
+import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
 interface SessionSummaryData {
   score: number
@@ -32,6 +34,37 @@ export default function SessionSummaryModal({
 }: SessionSummaryModalProps) {
   const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
+  const [showPWA, setShowPWA] = useState(false)
+
+  // Confetti Effect for New Badges
+  useEffect(() => {
+    if (data?.newBadges && data.newBadges.length > 0) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#7D7AFF', '#FFD700', '#FF00FF'],
+      })
+    }
+  }, [data?.newBadges])
+
+  // Intelligent PWA Prompt
+  useEffect(() => {
+    if (!data) return
+    // If user just had a "good" session (score > 1000 or new badge), prompts them
+    const isGoodSession =
+      data.score > 1000 || (data.newBadges && data.newBadges.length > 0)
+    const hasWarned = localStorage.getItem('hasWarnedPWA')
+
+    if (isGoodSession && !hasWarned) {
+      // Small delay to let them appreciate the summary first
+      const timer = setTimeout(() => {
+        setShowPWA(true)
+        localStorage.setItem('hasWarnedPWA', 'true')
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [data])
 
   if (!data) return null
 
@@ -125,25 +158,12 @@ export default function SessionSummaryModal({
             </Button>
           )}
           {data.audioUrl && (
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                onClick={() => {
-                  const url = `/api/og?score=${data.score}&vibe=${data.vibe}&beat=${data.description.split('on ')[1] || 'FlowForge'}`
-                  window.open(url, '_blank')
-                }}
-                variant="outline"
-                className="border-white/10 bg-white/5 text-white hover:bg-white/10 flex items-center justify-center gap-2"
-              >
-                <Share2 size={16} />
-                PNG Record
-              </Button>
-              <ShareButton
-                title="My FreeStyla Session"
-                text={`Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`}
-                url={window?.location?.origin}
-                className="bg-accent-blue text-white hover:bg-accent-blue/90 w-full justify-center"
-              />
-            </div>
+            <ShareButton
+              title="My FreeStyla Session"
+              text={`Check out my flow! Vibe score: ${data.score} (${data.vibe}). #FreeStyla #Freestyle`}
+              url={window?.location?.origin}
+              className="bg-accent-blue text-white hover:bg-accent-blue/90 w-full justify-center"
+            />
           )}
           <Button
             onClick={() => router.push('/recordings')}
@@ -156,6 +176,7 @@ export default function SessionSummaryModal({
           </Button>
         </div>
       </div>
+      <PWAInstallModal isOpen={showPWA} onClose={() => setShowPWA(false)} />
     </Modal>
   )
 }

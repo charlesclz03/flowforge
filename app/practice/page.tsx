@@ -168,13 +168,16 @@ export default function PracticePage() {
       },
       onSuccess: (data) => {
         // 3. Reconcile with Server Data
-        if (data.session) {
-          setSessionSummary((prev: SessionSummary | null) => ({
-            ...prev!,
-            score: data.session.score, // Correct score from server
-            newBadges: data.session.newBadges,
-            isOptimistic: false,
-          }))
+          if (data.session) {
+          setSessionSummary((prev: SessionSummary | null) => {
+            if (!prev) return null // Guard against closed modal
+            return {
+              ...prev,
+              score: data.session.score, // Correct score from server
+              newBadges: data.session.newBadges,
+              isOptimistic: false,
+            }
+          })
 
           // Toast Badges
           if (data.session.newBadges && Array.isArray(data.session.newBadges)) {

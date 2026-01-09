@@ -13,7 +13,7 @@ export function GuestLoginModal({ isOpen, onClose }: GuestLoginModalProps) {
 
   const handleSignIn = () => {
     // Redirect to difficulty selection after login
-    signIn('google', { callbackUrl: '/difficultyselection' })
+    signIn('google', { callbackUrl: '/practice' })
   }
 
   return (

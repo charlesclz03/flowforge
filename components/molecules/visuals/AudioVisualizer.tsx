@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, memo } from 'react'
 
 interface AudioVisualizerProps {
   isPlaying: boolean
@@ -11,7 +11,7 @@ interface AudioVisualizerProps {
   className?: string
 }
 
-export function AudioVisualizer({
+export const AudioVisualizer = memo(function AudioVisualizer({
   isPlaying,
   mode = 'simulation',
   stream,
@@ -146,4 +146,4 @@ export function AudioVisualizer({
       style={{ width: '100%', height: '100%' }} // Force layout
     />
   )
-}
+})

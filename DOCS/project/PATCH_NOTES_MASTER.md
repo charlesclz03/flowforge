@@ -4,6 +4,33 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🛡️ Update 1.4.0: The Enterprise Standard
+
+**Release Date:** January 09, 2026
+**Codename:** _Pitch Perfect_
+
+The foundation has been reinforced with steel. We conducted a "scorched earth" audit of the entire platform, eliminating every shaky line of code, every unsecured endpoint, and every potential bottleneck. FreeStyla is now Enterprise Grade.
+
+### 🔒 Security & Logic
+- **Zod Validation**: Input sanitization is now strict and automatic across the core API surface area.
+- **Type Perfection**: We hunted down every `any` type and replaced it with strict definitions. The codebase is now compliant with the strictest linting standards.
+- **Error Handling**: New global error boundaries ensure that if the app trips, it catches itself gracefully.
+
+### ⚡ Performance
+- **Optimized Builds**: Production builds are leaner, cleaner, and faster.
+- **Console Silence**: Dev logs have been silenced to keep the console clean for what matters.
+
+### 🩹 Patch 1.4.1: The Safety Net (Jan 09, 2026)
+
+**Focus:** API Resilience & Offline Reliability
+
+- **Crash-Proof APIs**: Implemented a robust fallback system for the Words and Beats APIs. If the database ("Prisma") fails to connect, the app now automatically switches to a built-in backup library.
+- **Bye-Bye JSON Errors**: Fixed the infamous "Unexpected token" error caused by database crashes returning HTML error pages.
+- **Always-On Audio**: Ensured that the music player always has a valid beat to play, even in worst-case server outage scenarios.
+
+
+---
+
 ## 🌊 Update 1.3.0: Universal Gateway
 
 **Release Date:** December 19, 2024

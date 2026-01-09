@@ -142,45 +142,51 @@ export const RecordingCard = memo(function RecordingCard({
         <ErrorAlert error={error} onDismiss={clearError} className="mb-4" />
       )}
 
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-6 p-4">
         {/* Left: Recording Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-orange/10 flex items-center justify-center">
-              <Music size={20} className="text-accent-orange" />
+        <div className="flex-1 w-full min-w-0">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center border border-accent-orange/20">
+              <Music size={24} className="text-accent-orange" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-white truncate hover:text-accent-purple transition-colors">
-                <Link href={`/review/${recording.id}`}>{recording.title}</Link>
+              <h3 className="text-lg font-bold text-white truncate hover:text-accent-purple transition-colors">
+                <Link href={`/review/${recording.id}`} className="block">{recording.title}</Link>
               </h3>
-              <p className="text-sm text-text-secondary">
-                {recording.beat.title} • {recording.beat.bpm} BPM
+              <p className="text-sm font-medium text-text-secondary flex items-center gap-2">
+                <span>{recording.beat.title}</span>
+                <span className="w-1 h-1 rounded-full bg-white/20" />
+                <span>{recording.beat.bpm} BPM</span>
               </p>
             </div>
           </div>
 
           {/* Metadata */}
-          <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-text-secondary">
-            <span>{formatDuration(recording.durationSeconds)}</span>
-            <span>•</span>
-            <span>{recording.frequency} bars</span>
-            <span>•</span>
-            <span className={difficultyColors[normalizedDifficulty]}>
+          <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs font-medium text-text-tertiary uppercase tracking-wider">
+            <span className="flex items-center gap-1.5">
+               <span className="w-2 h-2 rounded-full bg-white/10" />
+               {formatDuration(recording.durationSeconds)}
+            </span>
+            <span className="flex items-center gap-1.5">
+               <span className="w-2 h-2 rounded-full bg-white/10" />
+               {recording.frequency} bars
+            </span>
+            <span className={cn("px-2 py-0.5 rounded-full bg-white/5 border border-white/10", difficultyColors[normalizedDifficulty])}>
               {difficultyLabels[normalizedDifficulty]}
             </span>
-            <span>•</span>
-            <span>{formatRelativeTime(recording.createdAt)}</span>
+            <span className="text-white/20">{formatRelativeTime(recording.createdAt)}</span>
           </div>
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
           {recording.storageUrl && (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={handlePlay}
               leftIcon={isPlaying ? <Pause size={16} /> : <Play size={16} />}
+              className="flex-1 md:flex-none justify-center bg-white/5 hover:bg-white/10 border-white/10"
             >
               {isPlaying ? 'Pause' : 'Play'}
             </Button>
@@ -190,41 +196,38 @@ export const RecordingCard = memo(function RecordingCard({
             size="sm"
             onClick={handleDownload}
             isLoading={isDownloading}
-            leftIcon={<Download size={16} />}
+            className="flex-1 md:flex-none justify-center px-2"
           >
-            Download
+            <Download size={20} className="text-text-secondary" />
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={handleDelete}
-            isLoading={isDeleting}
-            leftIcon={<Trash2 size={16} />}
-          >
-            Delete
-          </Button>
-
-          {/* Share Button */}
-          {recording.storageUrl && (
+          
+           {recording.storageUrl && (
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FlowForge!"
               url={`${window.location.origin}/review/${recording.id}`}
-              className="border-none bg-transparent hover:bg-white/10 px-2 w-auto" // Styling to match existing ghost buttons
+              className="flex-1 md:flex-none justify-center w-auto border-none bg-transparent hover:bg-white/10 px-2"
             />
           )}
+          
+          <Button
+             variant="ghost"
+             size="sm"
+             onClick={() => setShowVideoExport(true)}
+             className="flex-1 md:flex-none justify-center px-2"
+           >
+              <Video size={20} className="text-text-secondary" />
+           </Button>
 
-          {/* Export Button */}
-          {recording.storageUrl && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowVideoExport(true)}
-              leftIcon={<Video size={16} />}
-            >
-              Export
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDelete}
+            isLoading={isDeleting}
+            className="flex-1 md:flex-none justify-center px-2 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+          >
+            <Trash2 size={20} />
+          </Button>
         </div>
       </div>
 

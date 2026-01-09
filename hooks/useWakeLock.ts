@@ -2,13 +2,11 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 
 export function useWakeLock() {
   const [isLocked, setIsLocked] = useState(false)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wakeLock = useRef<any | null>(null)
+  const wakeLock = useRef<WakeLockSentinel | null>(null)
 
   const requestLock = useCallback(async () => {
     if ('wakeLock' in navigator) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         wakeLock.current = await navigator.wakeLock.request('screen')
         setIsLocked(true)
 
