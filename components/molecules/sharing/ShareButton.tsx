@@ -11,6 +11,7 @@ interface ShareButtonProps {
   url?: string
   audioBlob?: Blob
   className?: string
+  embedded?: boolean
 }
 
 export function ShareButton({
@@ -19,6 +20,7 @@ export function ShareButton({
   url,
   audioBlob,
   className,
+  embedded = false,
 }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -45,6 +47,7 @@ export function ShareButton({
           url={url}
           audioBlob={audioBlob}
           onClose={() => setIsOpen(false)}
+          embedded={embedded}
         />
       )}
     </div>

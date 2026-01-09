@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.5.8] - 2026-01-09
+### Added
+- **Sirens Warning**: High-intensity "cop siren" visual effects (alternating red/blue ring and background pulse) that trigger 4 seconds before every other word change.
+- **Dynamic Feedback**: Implemented a "shake" animation for the word prompt during the siren warning phase.
+
 ## [v1.5.7] - 2026-01-09
 
 ### 🎯 Precision Flow & UI Simplification

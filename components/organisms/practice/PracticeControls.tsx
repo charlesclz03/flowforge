@@ -43,6 +43,8 @@ interface PracticeControlsProps {
   isRecordingEnabled?: boolean
   currentWord?: string
   countdownValue?: number | 'GO' | null
+  isSirenActive?: boolean
+  sirenPhase?: number
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -72,6 +74,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
     isRecordingEnabled = true,
     currentWord,
     countdownValue,
+    isSirenActive = false,
+    sirenPhase = 0,
   } = props
 
   const formatTime = (seconds: number) => {
@@ -226,13 +230,17 @@ export default function PracticeControls(props: PracticeControlsProps) {
         {/* Word Prompt */}
         <div
           id="tour-word-prompt"
-          className="flex w-full items-center justify-center h-20"
+          className="flex w-full items-center justify-center"
         >
-          <WordPrompt
-            word={currentWord || null}
-            show={!!currentWord}
-            isGolden={isGolden}
-          />
+          {/* Center Word Prompt */}
+          <div className="mb-4 sm:mb-6">
+            <WordPrompt
+              word={currentWord || ''}
+              show={isPlaying}
+              isGolden={isGolden}
+              isSirenActive={isSirenActive}
+            />
+          </div>
         </div>
 
         {error && (
@@ -282,11 +290,23 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
             )}
           >
-            {/* Ambient Glows */}
+            {/* Ambient Siren Glows */}
+            <div
+              className={cn(
+                'absolute inset-0 rounded-full blur-[80px] opacity-0 transition-all duration-300',
+                isPlaying && 'opacity-20',
+                isSirenActive &&
+                  (sirenPhase === 0
+                    ? 'bg-red-600 opacity-40 scale-125'
+                    : 'bg-blue-600 opacity-40 scale-125')
+              )}
+            />
+
+            {/* Ambient Background Glow (Original) */}
             <div
               className={cn(
                 'absolute inset-0 rounded-full opacity-0 transition-opacity duration-700',
-                isPlaying && 'opacity-100'
+                isPlaying && !isSirenActive && 'opacity-100'
               )}
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-accent-purple/10 to-transparent blur-3xl" />
@@ -296,20 +316,23 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <div className="absolute inset-0 p-6 flex items-center justify-center">
               <TimerRing
                 progress={intervalProgress}
+                isSirenActive={isSirenActive}
+                sirenPhase={sirenPhase}
                 size={340}
                 className={cn(
                   'w-full h-full text-white/5 transition-colors duration-500',
-                  isPlaying && 'text-accent-purple drop-shadow-neon'
+                  isPlaying &&
+                    !isSirenActive &&
+                    'text-accent-purple drop-shadow-neon'
                 )}
                 strokeWidth={3}
               />
             </div>
 
-            {/* Inner Content - Flex Center Column */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full">
+            {/* Inner Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center">
               {isPlaying ? (
                 <div className="flex flex-col items-center justify-center space-y-2">
-                  {/* Countdown Overlay */}
                   {countdownValue ? (
                     <motion.div
                       key={countdownValue}
@@ -326,7 +349,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       </span>
                     </motion.div>
                   ) : (
-                    /* Normal Player State */
                     <>
                       <div className="flex items-center gap-2">
                         {isRecording && !isInfiniteMode && (
@@ -359,7 +381,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           />
                         ) : isRecording ? (
                           formatTime(
-                            Math.max(0, (isPro ? 600 : 120) - recordingDuration)
+                            Math.max(
+                              0,
+                              (isPro ? 600 : 120) - (recordingDuration || 0)
+                            )
                           )
                         ) : (
                           formatTime(
@@ -382,7 +407,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   </span>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center w-full h-full">
+                <div className="flex flex-col items-center justify-center">
                   <div
                     className={cn(
                       'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',

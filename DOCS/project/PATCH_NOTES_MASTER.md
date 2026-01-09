@@ -15,6 +15,11 @@ This update refines the session handoff, ensuring that when the timer hits zero,
 - **Hard Stop**: Fixed the "Infinite Loop" bug where beats would occasionally keep playing after the session ended.
 - **Auto-Summary**: Guaranteed trigger for the Session Summary modal the moment the countdown finishes.
 
+### v1.5.8 - Sirens & Intensity
+- **Visual Warnings**: Added "cop sirens" (Red/Blue flash) 4s before word changes.
+- **Word Shake**: Current words now shake with urgency during the siren phase.
+- **Timing Precision**: Siren triggers on every other word to maintain flow.
+
 ### Update 1.5.7: Precision Flow
 *09 Jan 2026*
 

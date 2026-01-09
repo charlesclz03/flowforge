@@ -10,6 +10,7 @@ interface ShareMenuProps {
   audioBlob?: Blob
   onClose: () => void
   className?: string
+  embedded?: boolean
 }
 
 /**
@@ -23,6 +24,7 @@ export function ShareMenu({
   audioBlob,
   onClose,
   className,
+  embedded = false,
 }: ShareMenuProps) {
   const handleShare = (platform: string) => {
     const shareText = text ? encodeURIComponent(text) : ''
@@ -81,15 +83,18 @@ export function ShareMenu({
 
   return (
     <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-40" onClick={onClose} />
+      {/* Backdrop - Only show if not embedded */}
+      {!embedded && <div className="fixed inset-0 z-40" onClick={onClose} />}
 
       {/* Menu */}
       <div
         className={cn(
-          'absolute right-0 top-full mt-2 z-50',
-          'w-64 rounded-xl border border-text-tertiary/20',
-          'bg-background-card backdrop-blur-xl shadow-lg',
+          'z-50',
+          embedded
+            ? 'relative w-full mt-4 rounded-2xl'
+            : 'absolute right-0 top-full mt-2 w-64 rounded-xl shadow-lg',
+          'border border-text-tertiary/20',
+          'bg-surface-elevated shadow-2xl',
           'p-2',
           className
         )}

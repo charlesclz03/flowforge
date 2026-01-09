@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.5.8',
+    date: '2026-01-09',
+    title: 'Sirens & Intensity',
+    description: 'Added high-intensity visual warnings before word changes.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Implemented "cop siren" alternating red/blue ring effects',
+          'Added background pulsing and word shake animations during warnings',
+          'Configured sirens to trigger 4s before every other word change',
+        ],
+      },
+    ],
+    type: 'feature',
+  },
+  {
     version: '1.5.7',
     title: 'The Direct Flow',
     codename: 'Direct Flow',

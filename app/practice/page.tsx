@@ -139,6 +139,8 @@ export default function PracticePage() {
   // Playback Control (Detached from hook to resolve circular deps)
   const sessionTimeRef = useRef(0)
   const [monotonicTime, setMonotonicTime] = useState(0)
+  const [isSirenActive, setIsSirenActive] = useState(false)
+  const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
 
   const stopPlayback = useCallback(() => {
     beatPlayer.stop()
@@ -612,6 +614,17 @@ export default function PracticePage() {
       const wordIdx = Math.floor(sessionTime / secondsPerPrompt)
       const actualIndex = wordIdx % params.wordList.length
 
+      // Siren Logic: 4 seconds before every other word (next word index is even)
+      const timeUntilNext = secondsPerPrompt - (sessionTime % secondsPerPrompt)
+      const isApproachingNextEvenWord = (wordIdx + 1) % 2 === 0
+      const sirenActive = isApproachingNextEvenWord && timeUntilNext <= 4
+      setIsSirenActive(sirenActive)
+
+      // sirenPhase toggles every 150ms during siren
+      if (sirenActive) {
+        setSirenPhase(Math.floor(sessionTime / 0.15) % 2)
+      }
+
       if (wordIdx !== state.lastWordIndex) {
         state.lastWordIndex = wordIdx
         const newWord = params.wordList[actualIndex]
@@ -769,30 +782,26 @@ export default function PracticePage() {
               <PracticeControls
                 selectedBeat={selectedBeat}
                 beats={beats}
-                handleBeatSelect={setBeat}
                 isPlaying={beatPlayer.isPlaying}
                 isLoading={!isLoaded && !selectedBeat}
                 currentTime={monotonicTime}
                 sessionDuration={sessionDuration}
-                currentWord={currentWord}
-                countdownValue={_countdownValue}
                 handleToggle={handlePlayPause}
-                // onRestart replaced by manual trigger to avoid serializability warnings
-                // handleRestart is available if needed but currently not used
+                handleBeatSelect={setBeat}
                 difficulty={difficulty}
                 frequency={frequency}
                 isRecording={isRecording}
-                recordingDuration={duration} // from useRecording hook
+                isSirenActive={isSirenActive}
+                sirenPhase={sirenPhase}
+                recordingDuration={duration}
                 isPro={isPro}
-                isAuthenticated={!!session?.user || true} // Allow all users to start practice (guests can practice, just not save)
-                handleUpgrade={() => {
-                  setPremiumTrigger('recording')
-                  setShowPremiumModal(true)
-                }}
+                isAuthenticated={!!session?.user || true}
+                currentWord={currentWord}
+                countdownValue={_countdownValue}
+                isRecordingEnabled={isRecordingEnabled}
                 handleDifficultyChange={setDifficulty}
                 handleFrequencyChange={setFrequency}
-                error={error ? error.message : undefined}
-                isRecordingEnabled={isRecordingEnabled}
+                handleUpgrade={() => setPremiumTrigger('recording')}
               />
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4">

@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { UI_CONFIG } from '@/lib/constants/design'
+import { cn } from '@/lib/utils'
 
 interface TimerRingProps {
   progress: number // 0 to 1
   size?: number
   strokeWidth?: number
   className?: string
+  isSirenActive?: boolean
+  sirenPhase?: number
 }
 
 export function TimerRing({
@@ -15,6 +18,8 @@ export function TimerRing({
   size = UI_CONFIG.TIMER_RING_SIZE,
   strokeWidth = UI_CONFIG.TIMER_RING_STROKE_WIDTH,
   className,
+  isSirenActive = false,
+  sirenPhase = 0,
 }: TimerRingProps) {
   const [mounted, setMounted] = useState(false)
 
@@ -75,7 +80,14 @@ export function TimerRing({
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="butt"
-        className="text-timer-ring transition-all duration-300 ease-linear"
+        className={cn(
+          'transition-all duration-300 ease-linear',
+          isSirenActive
+            ? sirenPhase === 0
+              ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]'
+              : 'text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]'
+            : 'text-timer-ring'
+        )}
       />
     </svg>
   )
