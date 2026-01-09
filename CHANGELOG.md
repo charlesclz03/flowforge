@@ -9,6 +9,7 @@
 ### Fixed
 - **Serializability (Critical)**: Eliminated Next.js "Props must be serializable" errors in `PracticeControls.tsx`, `BeatDropdown.tsx`, and `UserBeatUpload.tsx` by refining component boundaries and type definitions.
 - **UI Restoration**: Reverted `PracticeControls.tsx` to the original circular design while maintaining functional improvements and stability.
+- **BeatDropdown Refinement**: Configured dropdown to be embedded and retracted by default in practice mode. Updated styling to use solid backgrounds (removed transparency and backdrop blur) for better readability.
 - **TypeScript & Linting**: Reached 0 errors/warnings build state. Resolved "Not all code paths return a value" in `BeatDropdown.tsx` and fixed invalid destructuring in `PracticeControls.tsx`.
 - **Prettier**: Cleaned up all formatting issues, including unquoted header keys and multi-line prop folding.
 

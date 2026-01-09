@@ -141,7 +141,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
         disabled={disabled}
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          'w-full flex items-center justify-between px-4 py-3 bg-surface-elevated/50 backdrop-blur-md border border-white/10 rounded-2xl transition-all duration-300',
+          'w-full flex items-center justify-between px-4 py-3 bg-surface-elevated border border-white/10 rounded-2xl transition-all duration-300',
           isExpanded &&
             !embedded &&
             'ring-2 ring-accent-purple/50 border-accent-purple/50',
@@ -177,7 +177,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
       {isExpanded && (
         <div
           className={cn(
-            'bg-surface-elevated/95 backdrop-blur-xl border border-white/10 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300',
+            'bg-surface-elevated border border-white/10 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300',
             !embedded
               ? 'absolute left-0 right-0 mt-2 rounded-2xl max-h-[400px]'
               : 'mt-4 rounded-2xl'

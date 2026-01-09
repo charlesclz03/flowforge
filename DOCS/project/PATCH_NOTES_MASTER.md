@@ -15,8 +15,9 @@ This final stabilization patch restores the core practice UI while hardening the
 - **Props Sanitized**: Resolved persistent Next.js warnings about non-serializable props in the practice suite. The app is now fully compliant with Next.js 14 client component standards.
 - **TypeScript Purity**: Achieved a truly clean build. No `@ts-expect-error` hacks remain where they aren't absolutely strictly necessary for serializability bypasses.
 
-### 🎨 UI Restoration
+### 🎨 UI Restoration & Focus
 - **The Circle is Back**: Reverted the Practice Studio to its original circular design. All the familiar feedback loops, timers, and animations are restored to their peak visual state.
+- **Solid Studio Controls**: The BeatDropdown is now **embedded** and **retracted by default** in the practice session. We've also removed background transparency and blur to ensure the menu remains legible over the active visualizer.
 -  **Prettier Perfection**: All remaining formatting nits, including extra whitespace and prop wrapping in `BeatDropdown.tsx`, have been squashed.
 
 ---

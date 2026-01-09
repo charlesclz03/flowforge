@@ -155,6 +155,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
             handleSelect={handleBeatSelect}
             isPro={isPro}
             disabled={false}
+            embedded={true}
+            defaultCollapsed={true}
           />
         </div>
 
