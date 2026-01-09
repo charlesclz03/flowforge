@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.5.6] - 2026-01-09
+
+### 🏗️ Architecture Stabilization & UI Restoration
+
+**Focus:** Resolved persistent serializability warnings and restored the classic circular player UI.
+
+### Fixed
+- **Serializability (Critical)**: Eliminated Next.js "Props must be serializable" errors in `PracticeControls.tsx`, `BeatDropdown.tsx`, and `UserBeatUpload.tsx` by refining component boundaries and type definitions.
+- **UI Restoration**: Reverted `PracticeControls.tsx` to the original circular design while maintaining functional improvements and stability.
+- **TypeScript & Linting**: Reached 0 errors/warnings build state. Resolved "Not all code paths return a value" in `BeatDropdown.tsx` and fixed invalid destructuring in `PracticeControls.tsx`.
+- **Prettier**: Cleaned up all formatting issues, including unquoted header keys and multi-line prop folding.
+
+---
+
 ## [v1.5.5] - 2026-01-09
 
 ### 🚀 Critical Fixes & Quality Assurance ("The Zero Warning")

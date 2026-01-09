@@ -1,10 +1,18 @@
 'use client'
 
 import { Card } from '@/components/atoms/Card'
-import { RefreshCcw, Zap, Gauge, Mic, Play } from 'lucide-react'
+import {
+  RefreshCcw,
+  Zap,
+  Gauge,
+  Infinity as InfinityIcon,
+  User,
+  Mic,
+} from 'lucide-react'
 import { motion } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { TimerRing } from '@/components/atoms/TimerRing'
+import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
@@ -21,18 +29,20 @@ interface PracticeControlsProps {
   handleBeatSelect: (beat: Beat) => void
   difficulty: number
   frequency: number
-  recordingDuration?: number
-  isPro?: boolean
-  isInfiniteMode?: boolean
-  currentWord?: string
-  countdownValue?: number | 'GO' | null
+  isGolden?: boolean
   isRecording?: boolean
-  isAuthenticated?: boolean
-  handleUpgrade?: () => void
+  isInfiniteMode?: boolean
+  recordingDuration?: number
+  error?: string | null
   handleDifficultyChange?: (value: number) => void
   handleFrequencyChange?: (value: number) => void
-  error?: string
+  isPro?: boolean
+  isAuthenticated?: boolean
+  handleUpgrade?: () => void
+  mode?: 'solo' | 'cypher'
   isRecordingEnabled?: boolean
+  currentWord?: string
+  countdownValue?: number | 'GO' | null
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -48,9 +58,20 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleBeatSelect,
     difficulty,
     frequency,
+    isGolden = false,
+    isRecording = false,
     isInfiniteMode = false,
     recordingDuration = 0,
+    error,
+    handleDifficultyChange,
+    handleFrequencyChange,
     isPro = false,
+    isAuthenticated = false,
+    handleUpgrade,
+    mode = 'solo',
+    isRecordingEnabled = true,
+    currentWord,
+    countdownValue,
   } = props
 
   const formatTime = (seconds: number) => {
@@ -85,179 +106,340 @@ export default function PracticeControls(props: PracticeControlsProps) {
       }
     }
     return {
-      label: 'Mixed',
+      label: 'Random',
       classes:
         'bg-accent-purple/10 text-accent-purple border-accent-purple/20 hover:bg-accent-purple/20',
     }
   }
 
   const difficultyMeta = getDifficultyMeta()
-  const progress = (currentTime / sessionDuration) * 100
   const intervalProgress = getIntervalProgress(
-    currentTime,
+    currentTime || 0,
     selectedBeat?.bpm || 90,
     frequency
   )
 
+  const handleRecordClick = () => {
+    if (!isAuthenticated && !isPlaying) {
+      handleUpgrade?.()
+      return
+    }
+    handleToggle()
+  }
+
+  const cycleDifficulty = () => {
+    if (!handleDifficultyChange) return
+    const nextDiff = difficulty >= 4 ? 1 : difficulty + 1
+    handleDifficultyChange(nextDiff)
+  }
+
+  const cycleFrequency = () => {
+    if (!handleFrequencyChange) return
+    const nextFreq = frequency === 2 ? 4 : frequency === 4 ? 8 : 2
+    handleFrequencyChange(nextFreq)
+  }
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-6 z-50">
-      <div className="max-w-screen-xl mx-auto space-y-4">
-        {/* Main Control Card */}
-        <Card className="relative overflow-hidden bg-black/60 backdrop-blur-2xl border-white/10 shadow-2xl rounded-[2.5rem] p-6">
-          {/* Progress Bar (at very top of card) */}
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-white/5">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              className="h-full bg-accent-purple"
-            />
+    <Card
+      padding="lg"
+      className={cn(
+        'transition-opacity duration-500 bg-transparent border-none'
+      )}
+    >
+      <div className="flex flex-col items-center gap-4 sm:gap-6">
+        {/* Beat Selection Dropdown */}
+        <div className="w-full max-w-xs z-20">
+          <BeatDropdown
+            beats={beats}
+            selectedBeat={selectedBeat}
+            handleSelect={handleBeatSelect}
+            isPro={isPro}
+            disabled={false}
+          />
+        </div>
+
+        {/* Info Tags (Standardized) */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex items-center justify-center gap-2">
+            <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
+              <User size={12} className="text-white/40" />
+              <span className="text-xs font-bold uppercase tracking-widest text-white/60">
+                {mode}
+              </span>
+            </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Beat Selection - Simplified for Mobile */}
-            <div className="flex-1 min-w-0 w-full lg:w-auto">
-              <BeatDropdown
-                beats={beats}
-                selectedBeat={selectedBeat}
-                handleSelect={handleBeatSelect}
-                isPro={isPro}
-                isLoading={isLoading}
-                embedded={false}
+          <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
+            <button
+              onClick={cycleDifficulty}
+              disabled={!handleDifficultyChange}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.7rem] font-bold border transition-all',
+                difficultyMeta.classes,
+                !handleDifficultyChange && 'cursor-default'
+              )}
+            >
+              <Gauge size={12} />
+              <span>{difficultyMeta.label}</span>
+            </button>
+
+            <span className="text-xs font-bold text-white/20">
+              {selectedBeat?.bpm || 90} BPM
+            </span>
+
+            <button
+              onClick={cycleFrequency}
+              disabled={!handleFrequencyChange}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.7rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+                !handleFrequencyChange && 'cursor-default opacity-50'
+              )}
+            >
+              <Zap
+                size={12}
+                className={
+                  frequency === 2
+                    ? 'text-accent-red'
+                    : frequency === 4
+                      ? 'text-accent-yellow'
+                      : 'text-accent-blue'
+                }
+              />
+              <span>{frequency} Bars</span>
+            </button>
+          </div>
+          {handleRestart && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleRestart}
+              className="mt-1 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 text-text-tertiary hover:text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5"
+            >
+              <RefreshCcw size={10} />
+              <span>Restart</span>
+            </motion.button>
+          )}
+        </div>
+
+        {/* Word Prompt */}
+        <div
+          id="tour-word-prompt"
+          className="flex w-full items-center justify-center h-20"
+        >
+          <WordPrompt
+            word={currentWord || null}
+            show={!!currentWord}
+            isGolden={isGolden}
+          />
+        </div>
+
+        {error && (
+          <div className="text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+            {error}
+          </div>
+        )}
+
+        {/* Hero Player */}
+        <div className="relative flex items-center justify-center">
+          <motion.button
+            id="tour-record-btn"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            animate={
+              isPlaying
+                ? isRecording && !isInfiniteMode
+                  ? {
+                      scale: [1, 1.02, 1],
+                      transition: { repeat: Infinity, duration: 1.5 },
+                    }
+                  : { scale: 1 }
+                : {
+                    scale: [1, 1.02, 1],
+                    transition: { repeat: Infinity, duration: 3 },
+                  }
+            }
+            onClick={() => {
+              if (
+                isRecordingEnabled &&
+                typeof navigator !== 'undefined' &&
+                navigator.vibrate
+              ) {
+                navigator.vibrate(10)
+              }
+              handleRecordClick()
+            }}
+            disabled={isLoading}
+            className={cn(
+              'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none',
+              'w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[340px] md:h-[340px]',
+              'border backdrop-blur-md shadow-2xl overflow-hidden',
+              isPlaying
+                ? isRecording && !isInfiniteMode
+                  ? 'border-red-500/50 bg-black/40 shadow-red-glow'
+                  : 'border-accent-purple/30 bg-black/40 shadow-purple-glow'
+                : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
+            )}
+          >
+            {/* Ambient Glows */}
+            <div
+              className={cn(
+                'absolute inset-0 rounded-full opacity-0 transition-opacity duration-700',
+                isPlaying && 'opacity-100'
+              )}
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent-purple/10 to-transparent blur-3xl" />
+            </div>
+
+            {/* Timer Ring */}
+            <div className="absolute inset-0 p-6 flex items-center justify-center">
+              <TimerRing
+                progress={intervalProgress}
+                size={340}
+                className={cn(
+                  'w-full h-full text-white/5 transition-colors duration-500',
+                  isPlaying && 'text-accent-purple drop-shadow-neon'
+                )}
+                strokeWidth={3}
               />
             </div>
 
-            {/* Main Action Group */}
-            <div className="flex items-center gap-6 lg:gap-8">
-              {/* Reset/Restart */}
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: -180 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleRestart}
-                className="p-3 rounded-2xl bg-white/5 text-text-tertiary hover:text-white hover:bg-white/10 transition-all border border-white/5"
-              >
-                <RefreshCcw size={22} />
-              </motion.button>
+            {/* Inner Content - Flex Center Column */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full">
+              {isPlaying ? (
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  {/* Countdown Overlay */}
+                  {countdownValue ? (
+                    <motion.div
+                      key={countdownValue}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1.2 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      className="flex flex-col items-center justify-center"
+                    >
+                      <span className="text-7xl sm:text-8xl font-black text-white drop-shadow-neon">
+                        {countdownValue}
+                      </span>
+                      <span className="text-xl font-bold text-accent-purple tracking-widest uppercase mt-2">
+                        Get Ready
+                      </span>
+                    </motion.div>
+                  ) : (
+                    /* Normal Player State */
+                    <>
+                      <div className="flex items-center gap-2">
+                        {isRecording && !isInfiniteMode && (
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                          </span>
+                        )}
+                        <span
+                          className={cn(
+                            'text-[10px] font-bold uppercase tracking-[0.3em]',
+                            isRecording && !isInfiniteMode
+                              ? 'text-red-400'
+                              : 'text-accent-purple'
+                          )}
+                        >
+                          {isInfiniteMode
+                            ? 'Free Flow'
+                            : isRecording
+                              ? 'Recording'
+                              : 'Playing'}
+                        </span>
+                      </div>
 
-              {/* RECORD / PLAY BUTTON */}
-              <motion.button
-                whileHover={!isLoading ? { scale: 1.05 } : {}}
-                whileTap={!isLoading ? { scale: 0.95 } : {}}
-                onClick={handleToggle}
-                disabled={isLoading}
-                className={cn(
-                  'relative group flex items-center justify-center p-0.5 rounded-[2rem] transition-all duration-500',
-                  isPlaying
-                    ? 'bg-gradient-to-br from-accent-red to-orange-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
-                    : 'bg-gradient-to-br from-accent-purple to-accent-blue shadow-[0_0_30px_rgba(125,122,255,0.3)]',
-                  isLoading && 'opacity-50 grayscale cursor-not-allowed'
-                )}
-              >
-                <div className="bg-black/20 backdrop-blur-sm rounded-[1.9rem] px-8 py-4 flex items-center gap-4 border border-white/10 group-hover:bg-transparent transition-colors">
+                      <span className="text-6xl sm:text-7xl font-light text-white tabular-nums tracking-tighter leading-none">
+                        {isInfiniteMode ? (
+                          <InfinityIcon
+                            size={64}
+                            className="text-white/80 animate-pulse-slow"
+                          />
+                        ) : isRecording ? (
+                          formatTime(
+                            Math.max(0, (isPro ? 600 : 120) - recordingDuration)
+                          )
+                        ) : (
+                          formatTime(
+                            Math.max(0, sessionDuration - (currentTime || 0))
+                          )
+                        )}
+                      </span>
+
+                      <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] mt-4">
+                        Tap to Stop
+                      </span>
+                    </>
+                  )}
+                </div>
+              ) : isLoading ? (
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
+                  <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest">
+                    Preparing Studio
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center w-full h-full">
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500',
-                      isPlaying
-                        ? 'bg-white text-accent-red animate-pulse'
-                        : 'bg-white text-accent-purple'
+                      'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
+                      !isPro || !isRecordingEnabled
+                        ? 'bg-white/5 border border-white/10 text-white/20'
+                        : 'bg-red-500 text-white shadow-red-500/20'
                     )}
                   >
-                    {isPlaying ? (
-                      <Mic size={24} className="fill-current" />
-                    ) : (
-                      <Play size={24} className="fill-current ml-1" />
+                    {isPro && isRecordingEnabled && (
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
                     )}
-                  </div>
-                  <div className="flex flex-col items-start pr-2">
-                    <span className="text-sm font-black uppercase tracking-widest text-white/70">
-                      {isLoading
-                        ? 'Loading'
-                        : isPlaying
-                          ? 'Recording'
-                          : 'Start Flow'}
-                    </span>
-                    <span className="text-xl font-black text-white leading-tight">
-                      {isPlaying ? formatTime(recordingDuration) : "LET'S DROP"}
-                    </span>
+                    <Mic
+                      size={48}
+                      strokeWidth={1.5}
+                      className="text-white/90 drop-shadow-lg"
+                    />
                   </div>
                 </div>
-              </motion.button>
+              )}
+            </div>
+          </motion.button>
+        </div>
 
-              {/* Timer/Duration View */}
-              <div className="text-right">
-                <div className="text-2xl font-black text-white flex items-center gap-3 tabular-nums leading-none">
-                  {formatTime(currentTime)}
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-purple animate-pulse" />
-                  <span className="text-xs font-bold text-text-tertiary tracking-widest uppercase">
-                    Session Time
-                  </span>
-                </div>
-              </div>
+        {/* Record Notifier */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            if (isRecordingEnabled) handleUpgrade?.()
+          }}
+          className={cn(
+            'mt-8 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 pb-4 z-20 relative',
+            !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
+          )}
+        >
+          <div className="flex items-center gap-2 px-6 py-2">
+            {/* Left Bracket */}
+            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
+
+            <div className="flex items-center gap-3 mx-1">
+              {/* Dot */}
+              <div
+                className={cn(
+                  'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
+                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-red-900/50',
+                  isRecording &&
+                    'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                )}
+              />
+              {/* Text */}
+              <span className="text-3xl font-black tracking-tighter text-white/90 drop-shadow-lg">
+                REC
+              </span>
             </div>
 
-            {/* Session Stats/Settings (Hidden on mobile maybe?) */}
-            <div className="hidden lg:flex items-center gap-8 pl-8 border-l border-white/10">
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black text-text-tertiary uppercase tracking-[0.2em]">
-                  Words
-                </span>
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-accent-blue/10 rounded-lg text-accent-blue">
-                    <Zap size={14} />
-                  </div>
-                  <span className="text-lg font-black text-white uppercase">
-                    {frequency} Bars
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black text-text-tertiary uppercase tracking-[0.2em]">
-                  Level
-                </span>
-                <div
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-1.5 rounded-xl border border-white/5 transition-all',
-                    difficultyMeta.classes
-                  )}
-                >
-                  <Gauge size={14} />
-                  <span className="text-sm font-black uppercase tracking-wider">
-                    {difficultyMeta.label}
-                  </span>
-                </div>
-              </div>
-            </div>
+            {/* Right Bracket */}
+            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
           </div>
-        </Card>
-
-        {/* WordPrompt Context Row (Floating above main bar) */}
-        {!isInfiniteMode && (
-          <div className="flex justify-center -mb-2">
-            <div className="bg-black/40 backdrop-blur-xl border border-white/5 rounded-2xl px-6 py-2 flex items-center gap-4 shadow-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full border-2 border-white/10 flex items-center justify-center">
-                  <TimerRing
-                    progress={intervalProgress}
-                    size={24}
-                    strokeWidth={3}
-                    className="text-accent-purple"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-text-tertiary uppercase tracking-wider">
-                    Next Word
-                  </span>
-                  <span className="text-xs font-bold text-white uppercase">
-                    {frequency} Bar Interval
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </button>
       </div>
-    </div>
+    </Card>
   )
 }
