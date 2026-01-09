@@ -21,6 +21,26 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.5.9',
+    date: '2026-01-09',
+    title: 'The Final Polish',
+    codename: 'Final Polish',
+    description:
+      'Resolved user-reported friction points in the practice session, including upload errors, exit confirmation, and precise timing logic.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Upload Error: Fixed "Failed to create upload URL" by correcting bucket reference.',
+          'Exit Confirmation: Added modal to prevent accidental session loss.',
+          'Word Randomization: Ensured sessions start with random words every time.',
+          'Display Timing: Word prompt waits for "GO" before appearing.',
+          'TTS Cleanup: Speech stops immediately on navigation.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.5.8',
     date: '2026-01-09',
     title: 'Sirens & Intensity',

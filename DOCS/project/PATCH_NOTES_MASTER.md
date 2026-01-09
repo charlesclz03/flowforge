@@ -4,6 +4,23 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🚀 Update 1.5.9: The Final Polish
+
+**Release Date:** January 09, 2026
+**Codename:** _The Final Polish_
+
+A critical quality-of-life update that resolves user-reported friction points in the practice session, including upload errors, accidental exits, and precise timing logic.
+
+### 🔧 Fixes & Improvements
+- **Upload Error (Critical)**: Fixed "Failed to create upload URL" by correcting the Supabase bucket reference in the API from `audio` to `recordings`.
+- **Exit Confirmation**: Added a "Leave Session?" modal when navigating away (via back button) during an active session to prevent accidental data loss.
+- **Word Randomization**: Fixed logic where practice sessions would always start with the same fallback words ("flow").
+- **Display Timing**: Word prompt is now completely hidden during the "3, 2, 1" countdown and appears exactly at "GO".
+- **TTS Cleanup**: Text-to-speech now stops immediately when navigating away or leaving a session, preventing ghost voices.
+- **Prisma Sync**: Resolved TypeScript errors related to missing `xp` properties by regenerating the client.
+
+---
+
 ## 🚀 Update 1.5.8: Sirens & Intensity
 
 **Release Date:** January 09, 2026

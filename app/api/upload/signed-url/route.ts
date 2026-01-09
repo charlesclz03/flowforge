@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
+import { RECORDINGS_BUCKET } from '@/lib/supabase/server'
 
 /**
  * Generates a signed URL for direct-to-Supabase uploads.
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     // Create a signed URL valid for 5 minutes (300 seconds)
     const { data, error } = await supabase.storage
-      .from('audio')
+      .from(RECORDINGS_BUCKET)
       .createSignedUploadUrl(storagePath)
 
     if (error) {
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     // Also return the public URL for after the upload completes
     const { data: publicData } = supabase.storage
-      .from('audio')
+      .from(RECORDINGS_BUCKET)
       .getPublicUrl(storagePath)
 
     return NextResponse.json({

@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.5.9] - 2026-01-09
+
+### 🔧 The Final Polish
+
+**Focus:** Resolved user-reported friction points in the practice session, including upload errors, exit confirmation, and precise timing logic.
+
+### Fixed
+- **Upload Error (Critical)**: Fixed "Failed to create upload URL" by correcting the Supabase bucket reference in the API.
+- **Word Randomization**: Fixed logic where practice sessions would always start with the same fallback words ("flow").
+- **Display Timing**: Word prompt is now hidden during the "3, 2, 1" countdown and appears exactly at "GO".
+- **TTS Cleanup**: Text-to-speech now stops immediately when navigating away or leaving a session.
+- **Prisma Sync**: Resolved TypeScript errors related to missing `xp` properties by regenerating the client.
+
+### Added
+- **Exit Confirmation**: Added a clear "Leave Session?" modal when navigating away during an active session to prevent accidental data loss.
+
+---
+
 ## [v1.5.8] - 2026-01-09
 ### Added
 - **Sirens Warning**: High-intensity "cop siren" visual effects (alternating red/blue ring and background pulse) that trigger 4 seconds before every other word change.

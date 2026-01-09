@@ -27,13 +27,8 @@ export function WaveformScrubber({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // State for view
-  // We map pixels to time.
-  // Zoom level: how many pixels per second?
-  const [pixelsPerSecond] = useState(100)
-  const [scrollX, setScrollX] = useState(0) // Scroll offset in pixels
+  // State for interaction
   const [isDragging, setIsDragging] = useState(false)
-  const [lastClientX, setLastClientX] = useState(0)
 
   // 1. Decode Audio
   useEffect(() => {
@@ -44,16 +39,11 @@ export function WaveformScrubber({
       setError(null)
       try {
         const arrayBuffer = await file.arrayBuffer()
-        const audioContext = new (
-          window.AudioContext ||
+        const audioContext = new (window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext
-        )()
+            .webkitAudioContext)()
         const decoded = await audioContext.decodeAudioData(arrayBuffer)
         setAudioBuffer(decoded)
-
-        // Set initial scroll relative to offset
-        setScrollX(initialOffset * pixelsPerSecond)
       } catch (err) {
         console.error('Waveform decode failed', err)
         setError('Could not load audio waveform')
@@ -62,7 +52,7 @@ export function WaveformScrubber({
       }
     }
     decode()
-  }, [file, initialOffset, pixelsPerSecond])
+  }, [file])
 
   // 2. Draw Waveform
   const draw = useCallback(() => {
@@ -73,196 +63,136 @@ export function WaveformScrubber({
     if (!ctx) return
 
     const dpr = window.devicePixelRatio || 1
-    canvas.width = (containerRef.current?.clientWidth || width) * dpr
+    const containerWidth = containerRef.current?.clientWidth || width
+    canvas.width = containerWidth * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
 
     // Clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, containerWidth, height)
 
-    // Aesthetic: Center Line
+    // Aesthetic: Center Line (axis)
     const centerY = height / 2
     ctx.beginPath()
     ctx.strokeStyle = 'rgba(255,255,255,0.1)'
     ctx.moveTo(0, centerY)
-    ctx.lineTo(canvas.width / dpr, centerY)
+    ctx.lineTo(containerWidth, centerY)
     ctx.stroke()
 
-    // Draw Data
-    // We only draw the visible window to optimize
-    const viewWidth = canvas.width / dpr
-    const leftTime = scrollX / pixelsPerSecond
+    // --- Draw Data (Fit to Width) ---
+    const rawData = audioBuffer.getChannelData(0) // Mono
+    const totalSamples = rawData.length
+    
+    // We want to map `containerWidth` pixels to `totalSamples`
+    // Step size (samples per pixel)
+    const step = Math.ceil(totalSamples / containerWidth)
 
-    const rawData = audioBuffer.getChannelData(0) // Mono visualization
-
-    // Draw Peaks
     ctx.fillStyle = color
-    ctx.beginPath()
+    ctx.strokeStyle = color
 
-    // Draw loop
-    for (let i = 0; i < viewWidth; i++) {
-      // Map pixel i to data index
-      const timeAtPixel = leftTime + i / pixelsPerSecond
-      const dataIndex = Math.floor(timeAtPixel * audioBuffer.sampleRate)
-
-      if (dataIndex >= rawData.length) break
-
-      // Find max in chunk (downsampling)
-      // Optimization: Just take a sample or max of small window
+    // Draw bars
+    for (let x = 0; x < containerWidth; x++) {
       let max = 0
-      const windowSize = Math.floor(audioBuffer.sampleRate / pixelsPerSecond)
-      // Check local window max
-      for (let j = 0; j < windowSize; j += 100) {
-        // skip some samples for speed
-        if (dataIndex + j < rawData.length) {
-          const v = Math.abs(rawData[dataIndex + j])
-          if (v > max) max = v
+      const startIndex = x * step
+      
+      // Find max in chunk
+      for (let j = 0; j < step; j += 100) { // optimization skippage
+        if (startIndex + j < totalSamples) {
+          const val = Math.abs(rawData[startIndex + j])
+          if (val > max) max = val
         }
       }
 
-      const barHeight = max * height * 0.9
-      // Draw centered bar
-      ctx.fillRect(i, centerY - barHeight / 2, 2, barHeight)
+      const barHeight = Math.max(1, max * height * 0.9)
+      // Centered bar
+      ctx.fillRect(x, centerY - barHeight / 2, 2, barHeight) // width 2 for fuller look
     }
 
-    // Draw Time Ticks
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
-    ctx.font = '10px Inter, sans-serif'
-    ctx.textAlign = 'center'
+    // --- Draw Cursor (The Start Point) ---
+    // initialOffset is in seconds.
+    // Convert to pixels: (offset / duration) * width
+    const duration = audioBuffer.duration
+    const cursorX = (initialOffset / duration) * containerWidth
 
-    // Determine tick interval (e.g., every 1 second)
-    const tickInterval = 1 // second
-    const startTick = Math.floor(leftTime / tickInterval) * tickInterval
-    const endTick =
-      Math.ceil((leftTime + viewWidth / pixelsPerSecond) / tickInterval) *
-      tickInterval
+    // Draw highlighted playback region (optional: overlay before cursor?)
+    // SoundCloud style usually highlights "played" part. 
+    // Here we just mark the start point.
 
-    for (let t = startTick; t <= endTick; t += tickInterval) {
-      const x = (t - leftTime) * pixelsPerSecond
-      // Draw tick line
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
-      ctx.fillRect(x, height - 10, 1, 5)
-
-      // Draw label every 5 seconds
-      if (t % 5 === 0) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
-        const minutes = Math.floor(t / 60)
-        const seconds = Math.floor(t % 60)
-        const label = `${minutes}:${seconds.toString().padStart(2, '0')}`
-        ctx.fillText(label, x, height - 15)
-      }
-    }
-
-    // Draw Center Indicator (The Cue Point)
-    // Actually, user wants to "scroll on wave to pick queuepoint".
-    // Usually that means a fixed center line represents the selection.
-    // Let's draw a red line at center of Viewport
-    const selectionX = viewWidth / 2
-
-    ctx.strokeStyle = '#F43F5E' // Red (Rose)
-    ctx.lineWidth = 2
+    // Cursor Line
     ctx.beginPath()
-    ctx.moveTo(selectionX, 0)
-    ctx.lineTo(selectionX, height)
+    ctx.strokeStyle = '#F43F5E' // accent-red / rose
+    ctx.lineWidth = 2
+    ctx.moveTo(cursorX, 0)
+    ctx.lineTo(cursorX, height)
     ctx.stroke()
 
-    // "DROP" Label
+    // "START" Label
     ctx.fillStyle = '#F43F5E'
     ctx.font = 'bold 10px sans-serif'
-    ctx.fillText('DROP', selectionX, 10)
+    ctx.textAlign = 'center'
+    // Ensure label isn't off-screen
+    const labelX = Math.min(Math.max(cursorX, 20), containerWidth - 20)
+    ctx.fillText('START', labelX, 12)
 
-    // Draw Overlay Time
-    // We debounce this or do it on drag end?
-    // Doing it on drag ensures "Touch the wave... it will select"
-    // But we shouldn't spam it.
-    // We'll update a Ref or check difference?
-    // For now, let's just assume parent handles updates well.
-  }, [audioBuffer, scrollX, pixelsPerSecond, height, width, color])
+    // Draw Start Time Label
+    const minutes = Math.floor(initialOffset / 60)
+    const seconds = (initialOffset % 60).toFixed(2)
+    ctx.fillStyle = '#fff'
+    ctx.fillText(`${minutes}:${seconds.padStart(5, '0')}`, labelX, height - 5)
 
-  // Animation Loop for Smoothness
+  }, [audioBuffer, initialOffset, height, width, color])
+
+  // Animation Loop (though purely reactive here, nice for resize/load)
   useEffect(() => {
     requestAnimationFrame(draw)
   }, [draw])
 
-  // 3. Interactions
+
+  // --- Interactions ---
+
+  const handlePointer = (clientX: number) => {
+    if (!audioBuffer || !containerRef.current) return
+
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const width = rect.width
+    
+    // Clamp
+    const clampedX = Math.max(0, Math.min(x, width))
+    
+    // Convert px -> time
+    // time = (x / width) * duration
+    const newTime = (clampedX / width) * audioBuffer.duration
+    
+    onChange(newTime)
+  }
+
   const handleStart = (clientX: number) => {
     setIsDragging(true)
-    setLastClientX(clientX)
+    handlePointer(clientX)
   }
 
   const handleMove = (clientX: number) => {
     if (!isDragging) return
-    const delta = lastClientX - clientX
-    setScrollX((prev) => Math.max(0, prev + delta)) // Prevent negative time
-    setLastClientX(clientX)
-
-    // Calculate new time and fire event
-    const containerWidth = containerRef.current?.clientWidth || width
-    const centerOffset = containerWidth / 2
-    const newTime = Math.max(
-      0,
-      (scrollX + delta + centerOffset) / pixelsPerSecond
-    )
-    onChange(newTime)
+    handlePointer(clientX)
   }
 
   const handleEnd = () => {
     setIsDragging(false)
   }
 
-  // Mouse Listeners
-  const onMouseDown = (e: React.MouseEvent) => handleStart(e.clientX)
-  const onMouseMove = (e: React.MouseEvent) => handleMove(e.clientX)
-  const onMouseUp = () => handleEnd()
-  const onMouseLeave = () => handleEnd()
-
-  // Touch Listeners
-  const onTouchStart = (e: React.TouchEvent) =>
-    handleStart(e.touches[0].clientX)
-  const onTouchMove = (e: React.TouchEvent) => handleMove(e.touches[0].clientX)
-  const onTouchEnd = () => handleEnd()
-
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-black/20 rounded-lg touch-none select-none cursor-grab active:cursor-grabbing"
+      className="relative w-full overflow-hidden bg-black/20 rounded-lg touch-none select-none cursor-crosshair"
       style={{ height }}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseLeave}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-      onClick={(e) => {
-        // Tap to Seek Logic
-        if (isDragging) return // Ignore if it was a drag
-        const rect = containerRef.current?.getBoundingClientRect()
-        if (!rect) return
-
-        const clickX = e.clientX - rect.left
-        const containerWidth = rect.width
-        const centerOffset = containerWidth / 2
-
-        // Current Time at Center = scrollX / pixelsPerSecond
-        // We want the time at ClickX to become the new Center
-        // Time at ClickX = (scrollX + clickX) / pixelsPerSecond
-
-        // Actually, simpler logic:
-        // The user clicked at pixel X.
-        // That pixel represents a specific time relative to current scroll.
-        // We want to shift scroll so that specific time moves to center.
-
-        const shiftAmount = clickX - centerOffset
-        const newScrollX = Math.max(0, scrollX + shiftAmount)
-
-        setScrollX(newScrollX)
-        const newTime = Math.max(
-          0,
-          (newScrollX + centerOffset) / pixelsPerSecond
-        )
-        onChange(newTime)
-      }}
+      onMouseDown={(e) => handleStart(e.clientX)}
+      onMouseMove={(e) => handleMove(e.clientX)}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+      onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+      onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+      onTouchEnd={handleEnd}
     >
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -274,7 +204,7 @@ export function WaveformScrubber({
           {error}
         </div>
       )}
-      <canvas ref={canvasRef} className="block" />
+      <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   )
 }
