@@ -1,76 +1,143 @@
+// Impulse response for reverb (replicated from SessionPlayer for consistency)
+const createReverb = (
+  ctx: BaseAudioContext,
+  duration: number = 2,
+  decay: number = 2
+) => {
+  const sampleRate = ctx.sampleRate
+  const length = sampleRate * duration
+  const impulse = ctx.createBuffer(2, length, sampleRate)
+  const impulseL = impulse.getChannelData(0)
+  const impulseR = impulse.getChannelData(1)
+
+  for (let i = 0; i < length; i++) {
+    const n = i < length ? Math.pow(1 - i / length, decay) : 0
+    impulseL[i] = (Math.random() * 2 - 1) * n
+    impulseR[i] = (Math.random() * 2 - 1) * n
+  }
+  return impulse
+}
+
+export interface MixOptions {
+  voiceVolume: number
+  beatVolume: number
+  isStudioMode?: boolean
+  reverbLevel?: number // 0 to 1
+  nudge?: number // ms
+}
+
 export class AudioMixer {
   private ctx: OfflineAudioContext | null = null
 
   async mix(
     voiceUrl: string,
-    beatUrl: string,
-    voiceVolume: number = 1.0,
-    beatVolume: number = 0.8
+    beatUrl: string | null, // Beat might be null (acapella export)
+    options: MixOptions = { voiceVolume: 1.0, beatVolume: 0.8, isStudioMode: true }
   ): Promise<Blob> {
     try {
-      // 1. Fetch both audio files
-      const [voiceBuffer, beatBuffer] = await Promise.all([
-        this.fetchAndDecode(voiceUrl),
-        this.fetchAndDecode(beatUrl),
-      ])
+      // SECURITY CHECK: Integrity Protection
+      // prevent exporting silence or near-silence vocal to rip beats
+      if (options.voiceVolume < 0.1) {
+        throw new Error('Vocal volume too low. Integrity protection active.')
+      }
+
+      // 1. Fetch audio files
+      const loadTasks = [this.fetchAndDecode(voiceUrl)]
+      if (beatUrl) loadTasks.push(this.fetchAndDecode(beatUrl) as Promise<AudioBuffer>)
+      
+      const buffers = await Promise.all(loadTasks)
+      const voiceBuffer = buffers[0]
+      const beatBuffer = beatUrl ? buffers[1] : null
 
       // 2. Setup OfflineAudioContext
-      // Duration is the longer of the two, or usually the voice duration wins?
-      // For a session, we usually want the full voice recording. If beat is longer, we might fade out?
-      // Let's use the voice length as the canonical length, or max of both.
-      // Usually beat continues, but we might want to cut it at the end of the voice?
-      // Let's stick to voice duration for the session.
-      const duration = voiceBuffer.duration
+      // Duration is max of voice or beat (if beat exists)
+      const duration = Math.max(
+          voiceBuffer.duration,
+          beatBuffer ? beatBuffer.duration : 0
+      )
+      
+      // Limit max duration to 10 minutes to prevent crash
+      const safeDuration = Math.min(duration, 600)
+      
       const sampleRate = 44100
-      const length = duration * sampleRate
+      const length = safeDuration * sampleRate
 
       this.ctx = new OfflineAudioContext(2, length, sampleRate)
 
-      // 3. Create Sources
+      // 3. Create Voice Graph
       const voiceSource = this.ctx.createBufferSource()
       voiceSource.buffer = voiceBuffer
 
-      const beatSource = this.ctx.createBufferSource()
-      beatSource.buffer = beatBuffer
+      // Voice Gains
+      const voiceMainGain = this.ctx.createGain()
+      voiceMainGain.gain.value = options.voiceVolume
 
-      // 4. Create Gains
-      const voiceGain = this.ctx.createGain()
-      voiceGain.gain.value = voiceVolume
+      // Studio FX Chain
+      const compressor = this.ctx.createDynamicsCompressor()
+      // Polish settings
+      compressor.threshold.value = -24
+      compressor.knee.value = 30
+      compressor.ratio.value = 12
+      compressor.attack.value = 0.003
+      compressor.release.value = 0.25
 
-      const beatGain = this.ctx.createGain()
-      beatGain.gain.value = beatVolume
+      const dryGain = this.ctx.createGain()
+      const wetGain = this.ctx.createGain() // Reverb send
 
-      // 5. Connect Graph
-      voiceSource.connect(voiceGain)
-      voiceGain.connect(this.ctx.destination)
+      if (options.isStudioMode) {
+          // Reverb
+          const convolver = this.ctx.createConvolver()
+          convolver.buffer = createReverb(this.ctx)
 
-      beatSource.connect(beatGain)
-      beatGain.connect(this.ctx.destination)
+          // Routing: Source -> Compressor -> Reverb/Dry Split
+          voiceSource.connect(compressor)
+          
+          compressor.connect(dryGain)
+          compressor.connect(convolver)
+          convolver.connect(wetGain)
 
-      // 6. Start
+          // FX Levels
+          dryGain.gain.value = 0.7  // Adjusted for mix balance
+          wetGain.gain.value = 0.3  // Standard shimmer
+          
+          wetGain.connect(voiceMainGain)
+          dryGain.connect(voiceMainGain)
+      } else {
+          // Direct Dry
+          voiceSource.connect(voiceMainGain)
+      }
+      
+      // Connect Voice Mix to Master
+      voiceMainGain.connect(this.ctx.destination)
       voiceSource.start(0)
-      beatSource.start(0)
 
-      // 7. Render
+      // 4. Create Beat Graph (if exists)
+      if (beatBuffer && beatUrl) {
+        const beatSource = this.ctx.createBufferSource()
+        beatSource.buffer = beatBuffer
+        
+        const beatGain = this.ctx.createGain()
+        beatGain.gain.value = options.beatVolume
+
+        beatSource.connect(beatGain)
+        beatGain.connect(this.ctx.destination)
+        beatSource.start(0)
+      }
+
+      // 5. Render
       const renderedBuffer = await this.ctx.startRendering()
 
-      // 8. Convert to Blob (WAV or WEBM via encoder)
-      // Browsers don't support encoding to WEBM from AudioBuffer natively easily without libraries.
-      // Easiest is to encode to WAV.
+      // 6. Convert to WAV
       return this.bufferToWav(renderedBuffer)
     } catch (err) {
       console.error('Mixing failed:', err)
-      throw new Error('Failed to mix audio tracks')
+      throw new Error(err instanceof Error ? err.message : 'Failed to mix audio tracks')
     }
   }
 
   private async fetchAndDecode(url: string): Promise<AudioBuffer> {
     const response = await fetch(url)
     const arrayBuffer = await response.arrayBuffer()
-    // We need a temp context to decode if we're not inside the mix method's offline context yet?
-    // Actually AudioContext (not offline) is better for decoding usually, but Offline can too.
-    // Spec says OfflineAudioContext can decode.
-    // But we can just use a standard context for decoding logic to be safe.
     const tempCtx = new (
       window.AudioContext ||
       (window as unknown as { webkitAudioContext: typeof AudioContext })

@@ -16,6 +16,7 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { AudioMixer } from '@/lib/audio/mixer'
+import { toast } from 'react-hot-toast'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -79,33 +80,44 @@ export default function RecordingsPage() {
       throw new Error('Recording URL not available')
     }
 
-    // If beat exists, mix them (Client-side mix)
-    if (recording.beat?.storageUrl) {
+    // If beat exists, OR if we want to apply studio FX to acapella, we use the mixer
+    // For now, always use mixer to ensure Studio Reverb/Compression is applied if desired.
+    // However, if no beat, we just mix voice with Studio FX.
+
+    const toastId = toast.loading('Rendering Studio Quality...', {
+      style: {
+        background: '#333',
+        color: '#fff',
+        border: '1px solid rgba(255,255,255,0.1)',
+      },
+    })
+
+    try {
       const mixer = new AudioMixer()
-      // Mix with default volumes (Voice 1.0, Beat 0.8)
-      // Note: This returns a WAV blob
+      // Mix with Studio FX (Reverb/Compression) enabled by default for "Production Ready" downloads
       const blob = await mixer.mix(
         recording.storageUrl,
-        recording.beat.storageUrl
+        recording.beat?.storageUrl || null,
+        {
+          voiceVolume: 1.0,
+          beatVolume: 0.8,
+          isStudioMode: true, // Enable the FX we added to mixer
+        }
       )
+
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      // Use .wav extension as the mixer produces WAV
-      a.download = `${recording.title}-mix.wav`
+      a.download = `${recording.title}-studio.wav`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-    } else {
-      // Direct download using the signed URL
-      const a = document.createElement('a')
-      a.href = recording.storageUrl
-      a.download = `${recording.title}.webm` // Backup attribute
-      a.target = '_blank'
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
+
+      toast.success('Download ready!', { id: toastId })
+    } catch (err) {
+      console.error(err)
+      toast.error('Export failed. Please try again.', { id: toastId })
     }
   }
 

@@ -15,6 +15,8 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
+import { AudioMixer } from '@/lib/audio/mixer'
+import { toast } from 'react-hot-toast'
 
 export default function ReviewPage({ params }: { params: { id: string } }) {
   const { status } = useSession()
@@ -72,18 +74,34 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
   const handleDownload = async () => {
     if (!recording?.storageUrl) return
 
+    const toastId = toast.loading('Rendering Studio Quality...')
+
     try {
-      const response = await fetch(recording.storageUrl)
-      const blob = await response.blob()
+      // Use Mixer to apply Studio FX (Reverb/Compression) even for acapellas
+      const mixer = new AudioMixer()
+      const blob = await mixer.mix(
+        recording.storageUrl,
+        recording.beat?.storageUrl || null,
+        {
+          voiceVolume: 1.0,
+          beatVolume: 0.8,
+          isStudioMode: true,
+        }
+      )
+
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `${recording.title}.webm` // Assuming webm/wav
+      a.download = `${recording.title}-studio.wav`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+
+      toast.success('Download complete!', { id: toastId })
     } catch (err) {
+      console.error(err)
+      toast.error('Download failed', { id: toastId })
       handleError(err, ErrorCodes.RECORDING_DOWNLOAD_FAILED)
     }
   }
