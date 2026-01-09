@@ -30,7 +30,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const freeOnly = searchParams.get('free') === 'true'
 
-    let beatsData: any[] = []
+    let beatsData: {
+      id: string
+      title: string
+      bpm: number
+      storageUrl: string
+      isPremium: boolean
+      artistName: string | null
+      genre?: string | null
+      duration: number | null
+    }[] = []
 
     try {
       // Dynamically import to isolate from DB layer crashes

@@ -122,7 +122,7 @@ export function BeatDropdown({
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [stopPreview])
+  }, [stopPreview, embedded])
 
   // Cleanup audio on unmount
   useEffect(() => {

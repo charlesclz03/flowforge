@@ -441,14 +441,15 @@ export default function PracticePage() {
 
     const triggerAudio = async () => {
       try {
+        // Ensure audio is ready
         if (timeToStartAudio < 0) {
           // Offset is larger than countdown (long intro)
-          // Seek to where we need to be
           const seekTime = Math.abs(timeToStartAudio) / 1000
           beatPlayer.seek(seekTime)
           await beatPlayer.play()
         } else {
           // Offset is small (short intro), play from 0
+          beatPlayer.seek(0)
           await beatPlayer.play()
         }
       } catch (err) {
@@ -653,6 +654,7 @@ export default function PracticePage() {
     beatPlayer.isPlaying,
     startRecording,
     isPro,
+    play,
   ])
 
   useEffect(() => {
