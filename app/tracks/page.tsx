@@ -67,20 +67,51 @@ export default function TracksPage() {
     setIsLoading(true)
     try {
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
-        fetch('/api/beats').then((res) => res.json()),
-        fetch('/api/user/beats').then((res) =>
-          res.ok ? res.json() : { beats: [] }
-        ),
-        getFavoriteBeatIds(),
+        fetch('/api/beats')
+          .then((res) => res.json())
+          .catch(() => ({ beats: [] })),
+        fetch('/api/user/beats')
+          .then((res) => (res.ok ? res.json() : { beats: [] }))
+          .catch(() => ({ beats: [] })),
+        getFavoriteBeatIds().catch(() => []),
       ])
 
-      const publicBeats = beatsRes.beats || []
+      let publicBeats = beatsRes.beats || []
       const userBeats = userBeatsRes.beats || []
+
+      // Client-side Fallback if API fails hard
+      if (publicBeats.length === 0) {
+        console.warn('TracksPage: No beats from API, using client fallback.')
+        publicBeats = [
+          {
+            id: 'fallback-1',
+            title: 'Classic Flow (Offline)',
+            bpm: 90,
+            storageUrl: '/beats/2-Naughty.mp3',
+            isPremium: false,
+            artistName: 'FlowForge Default',
+            genre: 'Boom Bap',
+            duration: 180,
+            tags: ['offline', 'fallback'],
+          },
+          {
+            id: 'fallback-2',
+            title: 'Modern Trap (Offline)',
+            bpm: 140,
+            storageUrl: '/beats/2-Naughty.mp3',
+            isPremium: false,
+            artistName: 'FlowForge Default',
+            genre: 'Trap',
+            duration: 180,
+            tags: ['offline', 'fallback'],
+          },
+        ]
+      }
 
       setBeats([...userBeats, ...publicBeats])
       setFavoriteIds(new Set(favs))
     } catch (e) {
-      console.error(e)
+      console.error('Fetch beats failed completely', e)
     } finally {
       setIsLoading(false)
     }

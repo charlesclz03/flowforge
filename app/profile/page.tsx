@@ -28,7 +28,7 @@ export default function ProfilePage() {
   const router = useRouter()
   const [recordings, setRecordings] = useState<Recording[]>([])
   const [wordVaultCount, setWordVaultCount] = useState(0)
-  const [isLoadingRecordings, setIsLoadingRecordings] = useState(true)
+  const [isLoadingRecordings, setIsLoadingRecordings] = useState(false)
   const [restorationMessage, setRestorationMessage] = useState<string | null>(
     null
   )
@@ -54,6 +54,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchStats() {
+      setIsLoadingRecordings(true)
       try {
         const [recRes, statsRes] = await Promise.all([
           fetch('/api/recordings'),

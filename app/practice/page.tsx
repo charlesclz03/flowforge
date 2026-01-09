@@ -404,10 +404,7 @@ export default function PracticePage() {
     const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
 
     // Mobile/Safari Audio Verify: Prime the audio element immediately to unlock autoplay policies
-    beatPlayer
-      .play()
-      .then(() => beatPlayer.pause())
-      .catch(() => {})
+    beatPlayer.prime?.()
 
     // Clear any stuck TTS
     if (typeof window !== 'undefined' && window.speechSynthesis) {

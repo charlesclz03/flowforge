@@ -94,6 +94,24 @@ export class AudioPlayer {
   }
 
   /**
+   * Prime the audio element to unlock autoplay restrictions
+   */
+  async prime(): Promise<void> {
+    if (!this.audio) return
+    const originalVolume = this.audio.volume
+    this.audio.volume = 0
+    try {
+      await this.audio.play()
+      this.audio.pause()
+      this.audio.currentTime = 0
+    } catch (e) {
+      console.warn('Audio prime failed', e)
+    } finally {
+      this.audio.volume = originalVolume
+    }
+  }
+
+  /**
    * Pause the audio
    */
   pause(): void {

@@ -155,6 +155,7 @@ export function useBeatPlayer() {
       seek,
       setVolume,
       setLoop,
+      prime: () => playerRef.current?.prime(),
     }),
     [
       isPlaying,

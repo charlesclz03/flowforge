@@ -4,9 +4,29 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Users, Mic, Globe } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { useRouter } from 'next/navigation'
 
 export default function CypherPage() {
   const [isCreating, setIsCreating] = useState(false)
+  const router = useRouter()
+
+  const handleCreateRoom = async () => {
+    setIsCreating(true)
+    try {
+      const res = await fetch('/api/cypher/create', { method: 'POST' })
+      const data = await res.json()
+      if (data.success && data.roomId) {
+        router.push(`/cypher/${data.roomId}`)
+      } else {
+        alert('Failed to create room')
+        setIsCreating(false)
+      }
+    } catch (e) {
+      console.error(e)
+      setIsCreating(false)
+      alert('Error creating room')
+    }
+  }
 
   return (
     <main className="min-h-[100dvh] bg-black text-white p-4 md:p-8 relative overflow-hidden">
@@ -51,7 +71,7 @@ export default function CypherPage() {
             <Button
               className="w-full h-12 text-lg"
               variant="primary"
-              onClick={() => setIsCreating(true)}
+              onClick={handleCreateRoom}
               disabled={isCreating}
             >
               {isCreating ? 'Creating Room...' : 'Create Room'}

@@ -64,12 +64,12 @@ export function AppHeader({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-3">
               {/* Streak Counter */}
               {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20">
+                <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20">
                   <Flame
-                    size={16}
-                    className="text-accent-orange fill-accent-orange animate-pulse"
+                    size={14}
+                    className="sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
                   />
-                  <span className="text-sm font-bold text-accent-orange tabular-nums">
+                  <span className="text-xs sm:text-sm font-bold text-accent-orange tabular-nums">
                     {session?.user?.currentStreak}
                   </span>
                 </div>
