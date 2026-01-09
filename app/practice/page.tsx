@@ -403,6 +403,17 @@ export default function PracticePage() {
     const offsetMs = (selectedBeat.offset || 0) * 1000
     const totalCountdownMs = 4 * msPerBeat // 3, 2, 1, GO
 
+    // Mobile/Safari Audio Verify: Prime the audio element immediately to unlock autoplay policies
+    beatPlayer
+      .play()
+      .then(() => beatPlayer.pause())
+      .catch(() => {})
+
+    // Clear any stuck TTS
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+
     // Calculate when to start/seek audio so drop hits at "GO"
     // Time to Start Audio = (Start of Countdown) + (Total Countdown Duration) - (Time to Drop in Audio)
     // If positive: We wait that long, then play from 0.
