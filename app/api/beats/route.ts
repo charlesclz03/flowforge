@@ -60,21 +60,46 @@ export async function GET(request: Request) {
       beatsData = FALLBACK_BEATS
     }
 
-    // Runtime fix for legacy data: ensure storageUrls align with disk filenames (replace spaces with hyphens)
+    // HARDCODED URL MAP - Guarantees correct file paths regardless of DB state
+    // This bypasses all sanitization issues by directly mapping known beats
+    const BEAT_URL_MAP: Record<string, string> = {
+      '2 Naughty': '/beats/2-Naughty.mp3',
+      'Bam Beater': '/beats/Bam-Beater.mp3',
+      'Bass Beats Battle': '/beats/Bass-Beats-Battle.mp3',
+      'Battle': '/beats/Battle-.mp3',
+      'Battle Baby': '/beats/Battle-Baby.mp3',
+      'Battle Cracker': '/beats/Battle-Cracker.mp3',
+      'Battle Made': '/beats/Battle-Made.mp3',
+      'Battle Yo': '/beats/Battle-Yo.mp3',
+      'Be Battle Be': '/beats/Be-Battle-Be.mp3',
+      'Beat Down': '/beats/Beat-Down.mp3',
+      'Big Battle Drops': '/beats/Big-Battle-Drops.mp3',
+      'Breaks': '/beats/Breaks.mp3',
+      'FRB 4': '/beats/FRB-4.mp3',
+      'FRB 5': '/beats/FRB-5.mp3',
+      'FreeStyle Boom': '/beats/FreeStyle-Boom.mp3',
+      'Freestyle Battle Beats 01': '/beats/Freestyle-Battle-Beats-01.mp3',
+      'Rap Freestyle Underground': '/beats/Rap-Freestyle-Underground-.mp3',
+      'Shotgun Boom': '/beats/Shotgun-Boom.mp3',
+    }
+
+    // Apply URL mapping with fallback to sanitization
     const sanitizedBeats = beatsData.map((beat) => {
+      // First check hardcoded map by title
+      const mappedUrl = BEAT_URL_MAP[beat.title]
+      if (mappedUrl) {
+        return { ...beat, storageUrl: mappedUrl }
+      }
+
+      // Fallback: sanitize URL for unknown beats
       let url = beat.storageUrl
       if (url && typeof url === 'string') {
-        // Ensure leading slash
         if (!url.startsWith('/') && !url.startsWith('http')) {
           url = '/' + url
         }
-        // Legacy fix: physical files have hyphens, DB entries might have spaces
         url = url.trim().replace(/ /g, '-')
       }
-      return {
-        ...beat,
-        storageUrl: url,
-      }
+      return { ...beat, storageUrl: url }
     })
 
     return NextResponse.json({
