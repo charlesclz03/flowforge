@@ -10,7 +10,6 @@ import {
   SessionPlayer,
   SessionPlayerHandles,
 } from '@/components/organisms/recordings/SessionPlayer'
-import { SessionMetadata } from '@/components/organisms/recordings/SessionMetadata'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
 import { Download, Trash2 } from 'lucide-react'
@@ -159,25 +158,32 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
           ref={playerRef}
           audioUrl={recording.storageUrl}
           beatUrl={recording.beat?.storageUrl}
+          beatTitle={recording.beat?.title}
+          beatBpm={recording.beat?.bpm}
+          beatArtist={recording.beat?.artistName ?? undefined}
+          sessionDuration={recording.durationSeconds}
+          sessionDifficulty={recording.difficulty}
+          sessionDate={recording.createdAt}
         />
       }
-      metadata={<SessionMetadata recording={recording} />}
       actions={
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <Button
             variant="secondary"
             onClick={handleDownload}
             leftIcon={<Download size={18} />}
+            className="w-full sm:w-auto"
           >
-            Download Audio
+            Download
           </Button>
           <Button
             variant="danger"
             onClick={handleDelete}
             isLoading={isDeleting}
             leftIcon={<Trash2 size={18} />}
+            className="w-full sm:w-auto"
           >
-            Delete Session
+            Delete
           </Button>
         </div>
       }

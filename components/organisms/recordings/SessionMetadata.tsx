@@ -20,10 +20,10 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
     }[recording.difficulty] || 'text-text-secondary'
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
       {/* Beat Details */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+      <Card className="p-4 md:p-6">
+        <h3 className="text-base md:text-lg font-semibold text-white mb-3 md:mb-4 flex items-center gap-2">
           <Disc className="text-accent-purple" size={20} />
           Beat Information
         </h3>
@@ -54,8 +54,8 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
       </Card>
 
       {/* Session Stats */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+      <Card className="p-4 md:p-6">
+        <h3 className="text-base md:text-lg font-semibold text-white mb-3 md:mb-4 flex items-center gap-2">
           <Activity className="text-accent-purple" size={20} />
           Session Stats
         </h3>

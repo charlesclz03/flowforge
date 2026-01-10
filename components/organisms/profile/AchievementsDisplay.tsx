@@ -230,7 +230,7 @@ export function AchievementsDisplay() {
                   )}
                 </div>
 
-                <div className="text-center z-20">
+                <div className="text-center z-20 max-w-[100px]">
                   <div
                     className={cn(
                       'text-xs font-bold leading-tight',
@@ -242,13 +242,12 @@ export function AchievementsDisplay() {
                   <div className="text-[10px] text-text-tertiary mt-0.5 font-mono">
                     {ach.points} pts
                   </div>
-                </div>
-
-                {/* Tooltip (Simple Hover) */}
-                <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity top-full mt-2 w-32 bg-black/90 text-white text-xs p-3 rounded-xl pointer-events-none z-50 border border-white/10 text-center shadow-xl backdrop-blur-md">
-                  {ach.description}
-                  <div className="text-[9px] text-text-tertiary mt-1 uppercase tracking-widest font-bold">
-                    {ach.isUnlocked ? 'Unlocked' : 'Locked'}
+                  {/* Description always visible */}
+                  <div className={cn(
+                    'text-[9px] mt-1 leading-tight line-clamp-2',
+                    ach.isUnlocked ? 'text-text-secondary' : 'text-text-tertiary/70'
+                  )}>
+                    {ach.description}
                   </div>
                 </div>
               </motion.div>

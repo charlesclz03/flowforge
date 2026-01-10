@@ -7,7 +7,7 @@ interface ReviewTemplateProps {
   header: ReactNode
   pageHeader: ReactNode
   player: ReactNode
-  metadata: ReactNode
+  metadata?: ReactNode
   actions?: ReactNode
   alerts?: ReactNode
 }
@@ -21,25 +21,25 @@ export function ReviewTemplate({
   alerts,
 }: ReviewTemplateProps) {
   return (
-    <div className="min-h-screen bg-background text-text-primary pb-24">
+    <div className="min-h-screen bg-background text-text-primary pb-32">
       {header}
 
-      <main className="pt-24 md:pt-32">
+      <main className="pt-20 md:pt-28 px-4">
         <Container>
           {alerts}
 
-          <div className="mb-8">{pageHeader}</div>
+          {/* Centered Page Header */}
+          <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>
 
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-2xl mx-auto space-y-6">
             <section>{player}</section>
 
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <section className="flex-1 w-full">{metadata}</section>
-            </div>
+            {/* Optional Metadata Section */}
+            {metadata && <section className="w-full">{metadata}</section>}
 
-            {/* Actions Footer / Section */}
+            {/* Actions Footer */}
             {actions && (
-              <section className="flex justify-center pt-8 border-t border-white/5">
+              <section className="flex flex-col sm:flex-row justify-center gap-3 pt-6 border-t border-white/5">
                 {actions}
               </section>
             )}
