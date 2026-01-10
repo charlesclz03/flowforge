@@ -78,7 +78,7 @@ export class AchievementSystem {
       // Fetch all required achievement IDs in one go
       const achievements = await prisma.achievement.findMany({
         where: { code: { in: codesToUnlock } },
-        select: { id: true, code: true },
+        select: { id: true, code: true, name: true },
       })
 
       // Create user achievement records in parallel or batch
@@ -97,7 +97,8 @@ export class AchievementSystem {
         )
       )
 
-      newlyUnlocked.push(...achievements.map((a) => a.code))
+      // Return achievement names (not codes) for user-friendly display
+      newlyUnlocked.push(...achievements.map((a) => a.name))
     }
 
     return newlyUnlocked
