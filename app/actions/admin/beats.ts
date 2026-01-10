@@ -11,7 +11,7 @@ export async function getAdminBeats() {
     },
     orderBy: {
       sortOrder: 'asc', // Default sort by custom order
-    } as any,
+    } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
   })
 }
 
@@ -58,11 +58,11 @@ export async function reorderBeat(id: string, direction: 'up' | 'down') {
     await prisma.$transaction([
       prisma.beat.update({
         where: { id: currentBeat.id },
-        data: { sortOrder: adjacentBeat.sortOrder } as any,
+        data: { sortOrder: adjacentBeat.sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       }),
       prisma.beat.update({
         where: { id: adjacentBeat.id },
-        data: { sortOrder: currentBeat.sortOrder } as any,
+        data: { sortOrder: currentBeat.sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       }),
     ])
 

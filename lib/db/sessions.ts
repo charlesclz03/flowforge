@@ -73,8 +73,9 @@ export async function getSessions(
               offset: 0,
               uploaderId: null,
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             wordCount: (s as any).wordCount || 0,
-          }) as any
+          }) as any // eslint-disable-line @typescript-eslint/no-explicit-any
       )
       return { success: true, data: mapped }
     }
@@ -152,7 +153,7 @@ export async function getSessionById(
           offset: 0,
           uploaderId: null,
           sortOrder: 0,
-        } as any,
+        } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       }
       return { success: true, data: withBeat }
     }
