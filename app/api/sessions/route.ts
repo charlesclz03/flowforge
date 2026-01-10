@@ -81,7 +81,8 @@ export async function POST(request: Request) {
       mode: 'solo',
       restarts: 0,
       playbacks: 0,
-    })
+      wordCount: 0,
+    } as any)
 
     if (!result.success) {
       return NextResponse.json(
