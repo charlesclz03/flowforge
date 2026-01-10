@@ -65,8 +65,14 @@ export function DialogContent({
   )
 }
 
-export function DialogHeader({ children }: { children: React.ReactNode }) {
-  return <div className="mb-4">{children}</div>
+export function DialogHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return <div className={cn('mb-4', className)}>{children}</div>
 }
 
 export function DialogTitle({ children }: { children: React.ReactNode }) {
