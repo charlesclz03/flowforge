@@ -14,6 +14,7 @@ interface WaveformScrubberProps {
   color?: string
   playedColor?: string // Color for played portion
   progress?: number // Current playback progress (0-1) for playback mode
+  showCuePoint?: boolean // Whether to always show the red cue point marker
 }
 
 export function WaveformScrubber({
@@ -27,6 +28,7 @@ export function WaveformScrubber({
   color = '#ffffff', // white - unplayed portion
   playedColor = '#a855f7', // purple for played portion
   progress, // Optional: for playback visualization
+  showCuePoint = false,
 }: WaveformScrubberProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -97,19 +99,10 @@ export function WaveformScrubber({
     ctx.lineTo(containerWidth, centerY)
     ctx.stroke()
 
-    // --- Calculate split point ---
-    // If progress is provided, use it for playback visualization
-    // Otherwise, use initialOffset for cue point visualization
+    // --- Calculate split points ---
     const duration = audioBuffer.duration
-    let splitX: number
-
-    if (progress !== undefined) {
-      // Playback mode: progress is 0-1
-      splitX = progress * containerWidth
-    } else {
-      // Cue point mode: convert offset to position
-      splitX = (initialOffset / duration) * containerWidth
-    }
+    const progressX = progress !== undefined ? progress * containerWidth : 0
+    const cuePointX = (initialOffset / duration) * containerWidth
 
     // --- Draw Data (Fit to Width) with two-tone coloring ---
     const rawData = audioBuffer.getChannelData(0) // Mono
@@ -134,14 +127,12 @@ export function WaveformScrubber({
 
       const barHeight = Math.max(1, max * height * 0.9)
 
-      // Two-tone coloring: show white for played portion when progress is provided
-      // This works in both playback mode AND cue mode (to show playback position)
+      // Two-tone coloring: show playedColor for played portion when progress is provided
       if (progress !== undefined && progress > 0) {
-        const progressX = progress * containerWidth
-        // Bars before progress position are white (played), after are purple (unplayed)
+        // Bars before progress position use playedColor (purple), after use color (white)
         ctx.fillStyle = x < progressX ? playedColor : color
       } else {
-        // No playback progress - all bars use the main color
+        // No playback progress - all bars use the main color (white)
         ctx.fillStyle = color
       }
 
@@ -149,9 +140,10 @@ export function WaveformScrubber({
       ctx.fillRect(x, centerY - barHeight / 2, 2, barHeight) // width 2 for fuller look
     }
 
-    // --- Draw Cursor (The Start Point) - only in cue point mode ---
-    if (progress === undefined) {
-      const cursorX = splitX
+    // --- Draw Cursor (The Start Point) ---
+    // Show if progress is NOT provided OR if explicitly requested via showCuePoint
+    if (progress === undefined || showCuePoint) {
+      const cursorX = cuePointX
 
       // Cursor Line
       ctx.beginPath()
@@ -175,7 +167,16 @@ export function WaveformScrubber({
       ctx.fillStyle = '#fff'
       ctx.fillText(`${minutes}:${seconds.padStart(5, '0')}`, labelX, height - 5)
     }
-  }, [audioBuffer, initialOffset, height, width, color, playedColor, progress])
+  }, [
+    audioBuffer,
+    initialOffset,
+    height,
+    width,
+    color,
+    playedColor,
+    progress,
+    showCuePoint,
+  ])
 
   // Animation Loop (though purely reactive here, nice for resize/load)
   useEffect(() => {

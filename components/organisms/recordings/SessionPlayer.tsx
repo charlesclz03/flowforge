@@ -513,8 +513,6 @@ export const SessionPlayer = forwardRef<
               }
             }}
             height={80}
-            color="#ffffff"
-            playedColor="#a855f7"
           />
           <div className="flex justify-between text-xs text-text-tertiary mt-2 font-mono">
             <span>{formatDuration(Math.round(currentTime))}</span>

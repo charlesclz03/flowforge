@@ -284,7 +284,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                         }
                       }}
                       height={60}
-                      color="#c084fc"
+                      showCuePoint={true}
                       progress={
                         duration > 0 ? currentTime / duration : undefined
                       }
