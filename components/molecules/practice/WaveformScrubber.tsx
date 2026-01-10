@@ -18,6 +18,7 @@ interface WaveformScrubberProps {
 
 export function WaveformScrubber({
   file,
+  url,
   initialOffset = 0,
   onChange,
   onSeek,
@@ -54,9 +55,11 @@ export function WaveformScrubber({
           arrayBuffer = await response.arrayBuffer()
         }
 
-        const audioContext = new (window.AudioContext ||
+        const audioContext = new (
+          window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext)()
+            .webkitAudioContext
+        )()
         const decoded = await audioContext.decodeAudioData(arrayBuffer)
         setAudioBuffer(decoded)
       } catch (err) {
