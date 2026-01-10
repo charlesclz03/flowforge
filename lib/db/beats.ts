@@ -51,7 +51,9 @@ export async function getBeats(
 
       return { success: true, data: filtered }
     }
-    const where: Prisma.BeatWhereInput = {}
+    const where: Prisma.BeatWhereInput = {
+      uploaderId: null, // Only return public library beats
+    }
 
     if (filters?.isPremium !== undefined) {
       where.isPremium = filters.isPremium
@@ -187,6 +189,7 @@ export async function searchBeats(
   try {
     const beats = await prisma.beat.findMany({
       where: {
+        uploaderId: null, // Only search public library beats
         OR: [
           {
             title: {
