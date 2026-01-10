@@ -37,7 +37,7 @@ export function LandingTestimonials() {
             Trusted by artists in motion.
           </h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-            Join thousands of creators using FlowForge to sharpen their lyrical
+            Join thousands of creators using FreeStyla to sharpen their lyrical
             skills.
           </p>
         </div>

@@ -78,7 +78,7 @@ export function AppHeader({
             </div>
           )}
 
-          {/* Centered FlowForge title - navigates to howitworks when logged in */}
+          {/* Centered FreeStyla title - navigates to howitworks when logged in */}
           {showTitle && (
             <Link
               href={homeLink}

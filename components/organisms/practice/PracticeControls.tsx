@@ -387,7 +387,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       </h1>
                       {/* Session Timer Below Word */}
                       <span className="text-lg font-light text-white/40 tabular-nums mt-2">
-                        {formatTime(Math.max(0, sessionDuration - (currentTime || 0)))}
+                        {formatTime(
+                          Math.max(0, sessionDuration - (currentTime || 0))
+                        )}
                       </span>
                     </motion.div>
                   ) : countdownValue ? (

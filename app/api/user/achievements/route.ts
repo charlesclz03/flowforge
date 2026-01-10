@@ -25,30 +25,41 @@ export async function GET() {
       const userId = session.user.id
 
       // Fetch achievements and progress counts in parallel
-      const [achievements, sessionCount, recordingCount, distinctBeats] =
-        await Promise.all([
-          prisma.userAchievement.findMany({
-            where: { userId },
-            include: { achievement: true },
-            orderBy: { unlockedAt: 'desc' },
-          }),
-          prisma.freestyleSession.count({ where: { userId } }),
-          prisma.freestyleSession.count({
-            where: { userId, storageUrl: { not: null } },
-          }),
-          prisma.freestyleSession.groupBy({
-            by: ['beatId'],
-            where: { userId },
-          }),
-        ])
+      const [
+        achievements,
+        sessionCount,
+        recordingCount,
+        distinctBeats,
+        userStats,
+        collectedWordsCount,
+      ] = await Promise.all([
+        prisma.userAchievement.findMany({
+          where: { userId },
+          include: { achievement: true },
+          orderBy: { unlockedAt: 'desc' },
+        }),
+        prisma.freestyleSession.count({ where: { userId } }),
+        prisma.freestyleSession.count({
+          where: { userId, storageUrl: { not: null } },
+        }),
+        prisma.freestyleSession.groupBy({
+          by: ['beatId'],
+          where: { userId },
+        }),
+        prisma.user.findUnique({
+          where: { id: userId },
+          select: { currentStreak: true },
+        }),
+        prisma.collectedWord.count({ where: { userId } }),
+      ])
 
       userAchievements = achievements
       progress = {
         sessions: sessionCount,
         recordings: recordingCount,
         beats: distinctBeats.length,
-        streak: 0, // TODO: Calculate actual streak
-        words: 0, // TODO: Calculate unique words used
+        streak: userStats?.currentStreak || 0,
+        words: collectedWordsCount,
       }
     }
 

@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: ListenPageProps) {
 
   if (!session) {
     return {
-      title: 'Flow Not Found | FlowForge',
+      title: 'Flow Not Found | FreeStyla',
     }
   }
 
-  const title = `Freestyle by ${session.user.name || 'Anonymous'} | FlowForge`
-  const description = `Listen to this freestyle over "${session.beat.title}" recorded on FlowForge. Create your own today!`
+  const title = `Freestyle by ${session.user.name || 'Anonymous'} | FreeStyla`
+  const description = `Listen to this freestyle over "${session.beat.title}" recorded on FreeStyla. Create your own today!`
 
   return {
     title,
@@ -66,7 +66,7 @@ export default async function ListenPage({ params }: ListenPageProps) {
         <div className="text-center space-y-2">
           <Link href="/" className="inline-block">
             <h1 className="text-3xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-cyan">
-              FLOWFORGE
+              FREESTYLA
             </h1>
           </Link>
           <p className="text-text-secondary">Listen to this flow</p>

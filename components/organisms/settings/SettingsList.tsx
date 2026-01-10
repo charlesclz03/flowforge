@@ -281,7 +281,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
           {/* Report Bug */}
           <a
-            href="mailto:support@flowforge.com"
+            href="mailto:support@freestyla.app"
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
           >
             <Bug size={20} className="text-accent-red" />

@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
             color: '#71717a',
           }}
         >
-          Unleash your flow at flowforge.app
+          Unleash your flow at freestyla.app
         </div>
       </div>,
       {

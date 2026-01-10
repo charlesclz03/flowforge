@@ -9,7 +9,7 @@ const FALLBACK_BEATS = [
     bpm: 90,
     storageUrl: '/beats/2-Naughty.mp3', // Using known safe asset from lib/db/beats fallback
     isPremium: false,
-    artistName: 'FlowForge Default',
+    artistName: 'FreeStyla Default',
     genre: 'Boom Bap',
     duration: 180,
   },
@@ -19,7 +19,7 @@ const FALLBACK_BEATS = [
     bpm: 140,
     storageUrl: '/beats/2-Naughty.mp3',
     isPremium: false,
-    artistName: 'FlowForge Default',
+    artistName: 'FreeStyla Default',
     genre: 'Trap',
     duration: 180,
   },

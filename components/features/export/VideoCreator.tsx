@@ -160,7 +160,7 @@ export function VideoCreator({
       // Brand
       canvasCtx.font = 'bold 30px sans-serif'
       canvasCtx.fillStyle = '#c026d3' // accent-pink
-      canvasCtx.fillText('FLOWFORGE', canvas.width / 2, canvas.height - 50)
+      canvasCtx.fillText('FREESTYLA', canvas.width / 2, canvas.height - 50)
     }
 
     draw()
@@ -251,7 +251,7 @@ export function VideoCreator({
 
               <a
                 href={videoUrl}
-                download={`flowforge-${title}.webm`}
+                download={`freestyla-${title}.webm`}
                 className="block"
               >
                 <Button className="w-full bg-accent-green hover:bg-accent-green/80 text-black h-12 text-lg">

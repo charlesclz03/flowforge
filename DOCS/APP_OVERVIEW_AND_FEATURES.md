@@ -1,7 +1,7 @@
 # FreeStyla - Application Overview & Feature Guide
 
 **Date**: January 10, 2026  
-**Version**: 1.6.1 (Waveform Overhaul + Studio Review)
+**Version**: 1.9.2 (Practice Player Polish)
 
 ---
 
@@ -35,7 +35,7 @@ The heart of the application, designed for zero-latency performance and maximum 
   - **Solo Mode**: Traditional practice with consistent word prompts.
   - **Cypher Mode**: Multi-player practice mode with a dedicated player selector (2, 3, or 4 players) and visual mode indicator.
 - **Beat Selection**:
-  - **Dropdown Interface**: Streamlined dropdown menu for selecting beats.
+  - **Dropdown Interface**: Streamlined dropdown menu for selecting beats (Embeds directly in "Single-Screen" layouts).
   - **Beat Preview**: Play button to preview beats before selecting.
   - **Favorite Beats**: Heart icon to save favorite beats.
   - **Randomize Mode**: Dice icon to instantly pick a random setup.
@@ -52,7 +52,8 @@ The heart of the application, designed for zero-latency performance and maximum 
 ### 2. Audio & Recording System
 
 - **High-Fidelity Recording (Pro Only)**: Captures user vocals with selective audio routing for mobile.
-- **Studio FX**: Toggleable real-time reverb and vocal mixing in the review stage.
+- **Mixed Audio Download**: Automatically merges voice and beat into a single high-quality WAV file.
+- **Studio FX**: Toggleable real-time reverb and vocal mixing in the review stage (One-click "Studio Magic").
 - **Latency Calibration**: Manual nudge slider (+/- 100ms) for post-recording sync.
 
 ### 3. User Accounts & Profile
@@ -62,7 +63,7 @@ The heart of the application, designed for zero-latency performance and maximum 
   - **Performance Stats**: "Total Recordings", "Minutes Practiced", and "Battle Wins".
   - **Badge Showcase**: Visual recognition for practice milestones.
 
-### 3. User Beat Management (Pro)
+### 3. User Beat Management (Beat Vault)
 
 - **Upload System**: Direct MP3/WAV uploads to secure private cloud storage.
 - **Calibration Tools**: Set custom "Start Points" and offsets to ensure uploaded beats loop perfectly with prompts.

@@ -22,7 +22,7 @@ export function SubscriptionSection() {
         <div className="flex items-center justify-between">
           <p className="text-sm text-text-secondary">
             {isPro
-              ? 'You are currently on the FlowForge Pro plan.'
+              ? 'You are currently on the FreeStyla Pro plan.'
               : 'Upgrade to unlock unlimited usage and professional features.'}
           </p>
 

@@ -30,7 +30,7 @@ export function SecuritySection() {
           <div>
             <h3 className="font-medium text-white">Sign Out</h3>
             <p className="mt-1 text-sm text-text-secondary">
-              Sign out of your FlowForge account
+              Sign out of your FreeStyla account
             </p>
           </div>
           <SignOutButton className="rounded-lg border border-stroke-subtle/40 bg-background-card px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:border-accent-red/40 hover:text-accent-red" />

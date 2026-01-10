@@ -54,7 +54,7 @@ export default function AdminUploadPage() {
           <div>
             <p className="font-bold text-white">Beat Uploaded!</p>
             <p className="text-sm text-text-secondary">
-              It's now live on FlowForge.
+              It's now live on FreeStyla.
             </p>
           </div>
         </div>

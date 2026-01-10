@@ -16,6 +16,8 @@ A focused update to refine the Practice Mode experience and squash critical audi
 ### 🩹 Fixes
 - **10-Minute Sessions:** Fixed a bug where sessions auto-stopped after 2 minutes instead of 10.
 - **Gapless Loop:** Implemented an early-seek workaround to eliminate the audio gap when beats loop.
+- **Gamification Logic:** Fixed critical bug where streaks and word counts were hardcoded to 0. Real-time stats now track correctly.
+- **Branding Polish:** Finalized "FreeStyla" rename across all video watermarks, metadata, and admin interfaces.
 
 ---
 

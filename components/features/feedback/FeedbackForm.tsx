@@ -46,7 +46,7 @@ export function FeedbackForm() {
       </h3>
       <p className="text-zinc-400 mb-4 text-sm">
         Have a scroll of wisdom to share? Found a glitch in the matrix? The
-        developers are listening. Your words help shape the future of FlowForge.
+        developers are listening. Your words help shape the future of FreeStyla.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">

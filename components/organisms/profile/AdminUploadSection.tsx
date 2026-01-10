@@ -203,7 +203,7 @@ export function AdminUploadSection() {
                 type="text"
                 value={producer}
                 onChange={(e) => setProducer(e.target.value)}
-                placeholder="e.g. FlowForge Originals"
+                placeholder="e.g. FreeStyla Originals"
                 className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple"
               />
             </div>

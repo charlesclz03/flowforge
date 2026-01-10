@@ -39,6 +39,8 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '10-Minute Sessions: Fixed premature session termination.',
           'Gapless Loop: Eliminated audio gap when beats loop.',
+          'Gamification Logic: Fixed 0-streak bug. Real stats now track.',
+          'Branding Polish: Finalized FreeStyla rename in all exports.',
         ],
       },
     ],

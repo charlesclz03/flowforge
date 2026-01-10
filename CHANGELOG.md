@@ -12,6 +12,8 @@
 ### Fixed
 - **10-Minute Sessions:** Session duration was incorrectly set to 2 min. Now correctly set to 10 min.
 - **Gapless Loop:** Implemented workaround to eliminate the audio gap when beats loop.
+- **Gamification Logic:** Fixed critical bug where streaks and word counts were hardcoded to 0. Real-time stats now track correctly.
+- **Branding Polish:** Finalized "FreeStyla" rename across all video watermarks, metadata, and admin interfaces.
 
 ---
 

@@ -88,7 +88,7 @@ export default function AdminUploadPage() {
             Admin Beat Upload
           </h1>
           <p className="text-text-secondary">
-            Add new instrumentals to the FlowForge library.
+            Add new instrumentals to the FreeStyla library.
           </p>
         </div>
 

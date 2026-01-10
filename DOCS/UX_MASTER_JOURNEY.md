@@ -1,6 +1,6 @@
 # FreeStyla: Master UX & User Journey Guide
 
-**Version**: 1.3.1 (Universal Gateway)
+**Version**: 1.9.2 (Practice Player Polish)
 **Philosophy**: "Frictionless Flow" — Immediate value for guests, deep progression for members.
 
 ---
@@ -15,13 +15,13 @@
   1.  **Landing**: Minimalist, high-energy hero section.
   2.  **How It Works**: A 3-step carousel explaining the core loop (Select Beat -> Catch Prompts -> Improve).
   3.  **Action**: User hits "Studio" and is immediately dropped into the **Difficulty Selection** screen.
-  4.  **The Hook**: They can complete a full 60s session. Only when they try to _save_ or _view stats_ do we ask for an account.
+  4.  **The Hook**: They can complete a full session. Only when they try to _save_ or _view stats_ do we ask for an account.
 
 ### Authenticated Entry ("The Pro Start")
 
 - **Flow**: Login via Google (NextAuth).
 - **Redirect**: Bypasses Landing, goes straight to `/difficultyselection` or `/practice` (based on last state).
-- **Context**: Profile picture loads, XP bar syncs, "My Beats" become available.
+- **Context**: Profile picture loads, XP bar syncs, **Beat Vault** uploads become available.
 
 ---
 
@@ -37,7 +37,7 @@ This is the heart of the application. Everything leads here.
   - **Hard**: 2-bar intervals. Complex, multisyllabic words. (Stress testing).
 - **Beat Selection**:
   - **Default**: "Random" (low friction).
-  - **Selector**: Users can open the **Vinyl Collection** to choose specific tracks (Grime, Boom Bap, Trap) or their own uploads ("My Beats").
+  - **Selector**: Users can open the **Beat Vault** (formerly Vinyl) to choose specific tracks (Grime, Boom Bap, Trap) or their own uploads ("My Beats").
 
 ### B. The Session (`/practice`)
 
@@ -48,14 +48,14 @@ This is the heart of the application. Everything leads here.
   - **Bottom**: Controls (Mic Toggle, Visualizer Mode).
 - **The "Frozen" State**: If the user pauses or takes a call, the visualizer "freezes" in place (crystallizes), maintaining immersion without breaking state.
 - **Duration**:
-  - **Free**: Hard cap at 60 seconds.
+  - **Free**: Session limits (10 mins).
   - **Pro**: Unlimited.
 
-### C. Post-Session (`/summary`)
+### C. Post-Session (`/recordings/studio`)
 
 - **Immediate Feedback**: "Session Complete".
 - **The Payoff**:
-  - **Playback**: Instant audio replay.
+  - **Playback**: Instant audio replay with waveform navigation.
   - **FX Studio**: Users can add Reverb or adjust Vocal Timing (latency correction).
   - **Action**: Save (Persist to DB), Share (Native OS Sheet), or Discard.
 
@@ -67,7 +67,7 @@ We use "Invisible Gamification" — stats are tracked in the background but pres
 
 ### The XP System (Battle Pass Style)
 
-- **Visual**: A sleek, purple/cyan gradient bar on the **Leaderboard** header.
+- **Visual**: A sleek, purple/cyan gradient bar on the **Profile** header.
 - **Logic**:
   - 1 sec of flow = 1 XP.
   - Completing a session = 100 XP Bonus.
@@ -97,11 +97,11 @@ We use "Invisible Gamification" — stats are tracked in the background but pres
 
 Designed to give enough value to be useful for free, but enough power to be essential for pros.
 
-| Feature            | Free Tier (Guest/Auth) | Pro Tier ($4.99/mo)             | The "Upsell" Moment         |
+| Feature            | Free Tier (Guest/Auth) | Pro Tier (3.99€/mo)             | The "Upsell" Moment         |
 | :----------------- | :--------------------- | :------------------------------ | :-------------------------- |
-| **Recording Time** | 60 seconds             | Unlimited                       | When timer hits 0:60.       |
+| **Recording Time** | Limited (10m)          | Unlimited                       | When timer hits limit.      |
 | **History**        | Last 3 sessions        | Infinite Archive                | Scrolling down on Profile.  |
-| **Beats**          | Public Library         | **Upload MP3s** / Cloud Storage | Clicking "Upload" in Vinyl. |
+| **Beats**          | Public Library         | **Upload MP3s** / Cloud Storage | Clicking "Upload" in Beat Vault.|
 | **Stats**          | Basic (Time)           | **Flow Density** / Graphs       | Viewing "Stats" tab.        |
 | **Ads**            | Visible (Banner)       | **Ad-Free**                     | Persistent bottom banner.   |
 
@@ -127,5 +127,5 @@ Designed to give enough value to be useful for free, but enough power to be esse
 
 - **Mobile Bottom Bar**:
   - **Center Orb**: Big "Record" button (Primary Action).
-  - **Sides**: Vinyl, Trophy, Recordings, Profile.
+  - **Sides**: Beats, Trophy, Recordings, Profile.
   - **Smart Hide**: Disappears during active recording to reduce distraction.

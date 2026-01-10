@@ -2,13 +2,13 @@
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
 **Last Updated**: January 10, 2026  
-**Version**: v1.6.1 (The Waveform Update)
+**Version**: v1.9.2 (Practice Player Polish)
 **Status**: 🟢 Production Ready
 **Live URL**: [flowforge-freestyle.vercel.app](https://flowforge-freestyle.vercel.app)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
-> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline is stable. Recent updates include **User Beat Uploads**, **Beat Deletion**, **XP Battle Pass System**, and **Stripe Monetization Fixes**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
+> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline is stable. Recent updates include **Mobile Single-Screen Layout**, **Studio Video Export**, **XP Persistence**, and **Mixed Audio Downloads**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
 
 ## 1) TL;DR
 
@@ -43,7 +43,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
   - Local playback, save to profile, sharing
   - AdSense banner ads
 - **V2 (Pro Tier)**
-  - Subscription (remove ads, expanded beat library, unlimited recording)
+  - Subscription (remove ads, expanded Beat Vault, unlimited recording)
   - TTS voice prompts, onboarding word preference wizard
   - User beat uploads + client‑side bpm analysis for uploads
 - **V3 (Vision) – "Guitar Hero"**
@@ -155,11 +155,11 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 ### ✅ What's Complete (Production Ready)
 
 - **Core Engine**: Beat Dropdown, synchronized Word Prompts, visual Timer Ring, and Frequency/Difficulty controls.
-- **Waveform Visualization**: SoundCloud-style waveforms (Purple/White) with tap-to-seek globally integrated into Beat Upload and Session Review.
-- **Audio System**: High-fidelity recording with mobile optimizations, real-time audio watermark for free users.
+- **Visuals**: "Single-Screen" mobile layout (v1.9.1), SoundCloud-style waveforms with tap-to-seek, and Video Export Studio (v1.7.2).
+- **Audio System**: High-fidelity recording with "Studio FX" (Reverb) defaults, mixed audio downloads (WAV), and "Mute-Play-Unmute" reliability for Safari.
 - **Social Ecosystem**: Public Profiles, Feed, Follow/Like/Comment systems, and "Duel Mode" with community voting.
-- **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks.
-- **Gamification**: Full Badge Suite (8+ badges), Session Count Tracking, and Word Vault (Bag System). (Scoring & Panic Button deferred to V2).
+- **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks. Pro users access the **Beat Vault** uploads.
+- **Gamification**: Real XP Persistence (v1.8.0) with Leveling, Badges (8+), Session Count Tracking, and Word Vault (Bag System).
 - **Viral Growth**: Stat Card sharing (PNG), Public Duel links, and SEO-optimized profiles.
 - **Infrastructure**: NextAuth (Google), Prisma/Postgres, Supabase Storage, Sentry Logging, Auto-cleanup Cron.
 

@@ -55,12 +55,12 @@ export async function generateMetadata({ params }: ProfilePageProps) {
 
   if (!user) {
     return {
-      title: 'User Not Found | FlowForge',
+      title: 'User Not Found | FreeStyla',
     }
   }
 
-  const title = `${user.name || 'Anonymous'}'s Profile | FlowForge`
-  const description = `Check out ${user.name || 'Anonymous'}'s ${user._count.freestyleSessions} flows on FlowForge.`
+  const title = `${user.name || 'Anonymous'}'s Profile | FreeStyla`
+  const description = `Check out ${user.name || 'Anonymous'}'s ${user._count.freestyleSessions} flows on FreeStyla.`
 
   return {
     title,
