@@ -101,7 +101,7 @@ export default function RecordingsPage() {
         {
           voiceVolume: 1.0,
           beatVolume: 0.8,
-          isStudioMode: true, // Enable the FX we added to mixer
+          isStudioMode: true, // List view always uses "Production Defaults" since there's no player UI here
         }
       )
 

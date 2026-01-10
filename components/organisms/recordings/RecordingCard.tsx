@@ -105,6 +105,7 @@ export const RecordingCard = memo(function RecordingCard({
       if (recording.beat?.storageUrl) {
         createdBeat = new Audio(recording.beat.storageUrl)
         createdBeat.volume = 0.8 // Default mix volume
+        createdBeat.loop = true // Loop beat to match recording if session was longer than beat duration
         beatRef.current = createdBeat
       }
 

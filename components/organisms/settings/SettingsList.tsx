@@ -10,12 +10,14 @@ import {
   User,
   Scale,
   LogOut,
+  LogIn,
   ChevronRight,
   Sparkles,
   Zap,
+  Crown,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
@@ -24,6 +26,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
   const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } =
     usePracticeSession()
+
+  // Determine subscription status
+  const isPro =
+    session?.user?.subscriptionStatus === 'active' ||
+    session?.user?.subscriptionStatus === 'trialing'
 
   const handleLinkClick = () => {
     if (onItemClick) onItemClick()
@@ -90,9 +97,15 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-accent-blue border border-white/10">
                   Lyricist
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-accent-yellow border border-white/10 flex items-center gap-1">
-                  <Zap size={10} fill="currentColor" /> Free
-                </span>
+                {isPro ? (
+                  <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-accent-purple/30 to-accent-pink/30 text-[10px] font-bold uppercase tracking-wider text-accent-purple border border-accent-purple/20 flex items-center gap-1">
+                    <Crown size={10} fill="currentColor" /> Pro
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-accent-yellow border border-white/10 flex items-center gap-1">
+                    <Zap size={10} fill="currentColor" /> Free
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -233,9 +246,9 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         </div>
       </div>
 
-      {/* Sign Out */}
-      {session && (
-        <div className="px-4 mt-6">
+      {/* Sign In / Sign Out */}
+      <div className="px-4 mt-6">
+        {session ? (
           <button
             onClick={() => signOut({ callbackUrl: '/' })}
             className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-text-secondary font-medium hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-all active:scale-[0.98]"
@@ -243,11 +256,21 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <LogOut size={18} />
             Sign Out
           </button>
-          <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-            FlowForge v1.0.0
-          </p>
-        </div>
-      )}
+        ) : (
+          <button
+            onClick={() =>
+              signIn('google', { callbackUrl: '/difficultyselection' })
+            }
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-blue text-white font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
+          >
+            <LogIn size={18} />
+            Sign In
+          </button>
+        )}
+        <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
+          FreeStyla v1.6.0
+        </p>
+      </div>
     </div>
   )
 }
