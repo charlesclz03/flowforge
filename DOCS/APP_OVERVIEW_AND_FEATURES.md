@@ -1,7 +1,7 @@
 # FreeStyla - Application Overview & Feature Guide
 
-**Date**: December 21, 2025  
-**Version**: 1.3.1 (Universal Gateway + User Beats)
+**Date**: January 10, 2026  
+**Version**: 1.6.1 (Waveform Overhaul + Studio Review)
 
 ---
 
@@ -42,6 +42,10 @@ The heart of the application, designed for zero-latency performance and maximum 
 - **Visual Feedback**:
   - **"Orb" Player Design**: Central interactive element with a glowing timer ring.
   - **Session Info Tags**: Real-time display of Difficulty, BPM, and Bar settings above the READY state.
+  - **Waveform Visualization & Navigation**:
+    - **SoundCloud-Style Waveform**: Two-tone coloring system (Purple Played / White Unplayed) for clear progress tracking.
+    - **Integrated Review Waveform**: Session Review studio now features a high-fidelity waveform visualization of the recording.
+    - **Global Tap-to-Seek**: Instantly jump to any position by tapping on the waveform in both calibration and review modes.
   - **Frozen Visualizer**: Advanced visualization that "freezes" in place when music is paused, preserving the flow's visual momentum.
   - **Word Prompts**: Synchronized to the selected frequency (2, 4, or 8 bars).
 

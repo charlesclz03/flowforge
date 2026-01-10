@@ -11,7 +11,7 @@ import { RECORDINGS_BUCKET } from '@/lib/supabase/server'
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -21,6 +21,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'Missing fileName or contentType' },
         { status: 400 }
+      )
+    }
+
+    // Pro Check
+    const { prisma } = await import('@/lib/prisma')
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { subscriptionStatus: true, role: true },
+    })
+
+    const isPro =
+      user?.subscriptionStatus === 'active' ||
+      user?.subscriptionStatus === 'trialing' ||
+      user?.role === 'SUPERADMIN'
+
+    if (!isPro) {
+      return NextResponse.json(
+        { error: 'Pro subscription required' },
+        { status: 403 }
       )
     }
 

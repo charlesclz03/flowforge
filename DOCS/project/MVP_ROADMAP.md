@@ -1,8 +1,8 @@
 # FreeStyla MVP Roadmap
 
-**Last Updated**: December 19, 2025  
+**Last Updated**: January 10, 2026  
 **Current Phase**: **Scaling & Expansion (Phase 9)**
-**Next Phase**: AI Voice Coaching
+**Next Phase**: AI Voice Coaching (V2)
 
 ---
 
@@ -28,6 +28,12 @@
 │  • Frictionless Guest Flow                                  │
 │  • Cypher Mode Expansion                                    │
 │  • Branding Overhaul (FreeStyla)                            │
+│                                                             │
+│  ✅ v1.6.0 & v1.6.1 (COMPLETE)                              │
+│  ═════════════════════════════                              │
+│  • Waveform Overhaul (SoundCloud Style)                     │
+│  • Production Studio Export                                 │
+│  • Visual Intensity & Siren Systems                         │
 │                                                             │
 │  🚀 YOU ARE HERE (SCALING & AI)                             │
 │  ══════════════════════════════                             │
@@ -514,10 +520,10 @@ Total to MVP:   50-85 hours
 
 ---
 
-**Current Status**: Infrastructure complete, MVP build required  
-**Next Action**: Start Phase 1 (Authentication)  
-**Timeline**: 2-3 weeks to MVP launch  
-**Confidence**: High (clear plan, solid foundation)
+**Current Status**: v1.6.1 Live (Visual Flow)  
+**Next Action**: Monitor deployment & gather feedback  
+**Timeline**: Scaled production ready  
+**Confidence**: 100% (Certified complete)
 
 ---
 

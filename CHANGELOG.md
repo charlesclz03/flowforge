@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.6.1] - 2026-01-10
+
+### 🌊 The Waveform Update ("Visual Flow")
+
+**Focus:** Comprehensive overhaul of waveform visualization and seeking mechanics for a premium SoundCloud-style experience.
+
+### Added
+- **SoundCloud-Style Waveform**: Implemented two-tone coloring (Purple Played / White Unplayed) across all waveform components.
+- **Global Tap-to-Seek**: Enabled instant seeking by tapping anywhere on the waveform, now supported in both Beat Upload and Session Review.
+- **Integrated Review Waveform**: Replaced the standard progress bar in `SessionPlayer` with the `WaveformScrubber` for a more detailed recording visualization.
+
+### Fixed
+- **Calibration Marker**: Restored the red "START" bar visibility during calibration playback in `UserBeatUpload`.
+- **Cue Point Playback**: Playback now correctly starts from the defined cue point when hitting play in the upload window.
+- **UI Cleanup**: Removed redundant "Test Start Point" button; functionality is now merged into the main play button and tap-to-seek interaction.
+
+---
+
 ## [v1.6.0] - 2026-01-09
 
 ### 🎙️ The Studio Update ("Platinum Record")

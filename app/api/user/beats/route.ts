@@ -19,12 +19,17 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
     })
+
     const isPro =
       user?.subscriptionStatus === 'active' ||
-      user?.subscriptionStatus === 'trialing'
+      user?.subscriptionStatus === 'trialing' ||
+      user?.role === 'SUPERADMIN'
 
     // Strict Pro Gate on Backend
-    if (!isPro && user?.role !== 'SUPERADMIN') {
+    if (!isPro) {
+      console.warn(
+        `[UPLOAD_GATE] Access denied for user ${session.user.id}. Role: ${user?.role}, Status: ${user?.subscriptionStatus}`
+      )
       return NextResponse.json(
         { error: 'Pro subscription required for uploads' },
         { status: 403 }

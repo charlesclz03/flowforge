@@ -51,6 +51,24 @@ A focused update resolving core session timing issues and streamlining the victo
 
 # Patch Notes Master Record
 
+## v1.6.1 - "The Waveform Update"
+**Codename**: Visual Flow
+**Date**: 2026-01-10
+
+**Summary**:
+A comprehensive overhaul of the application's waveform visualization and seeking mechanics, delivering a premium SoundCloud-style experience across all audio playback surfaces.
+
+### 🌊 Visual Overhaul
+- **SoundCloud-Style Waveform**: Two-tone coloring system (Purple Played / White Unplayed) implemented globally for immediate visual feedback.
+- **Integrated Review Waveform**: The basic progress bar in the `SessionPlayer` (Review Page) has been replaced with the high-fidelity `WaveformScrubber`.
+
+### 🎛️ Interaction & Navigation
+- **Global Tap-to-Seek**: Users can now tap any waveform to jump to that timestamp instantly. This behavior is synced across vocal and beat tracks in the review studio.
+- **Beat Upload Calibration**: Restored the red "START" bar visibility and fixed playback to correctly start from the defined cue point.
+
+### 🧹 UI Cleanup
+- **Redundancy Removal**: Deleted the "Test Start Point" button; its functionality is now naturally handled by the main play button and waveform seeking.
+
 ## v1.6.0 - "The Studio Update"
 **Codename**: Platinum Record
 **Date**: 2026-01-09

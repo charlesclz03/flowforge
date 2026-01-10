@@ -21,6 +21,32 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.6.1',
+    date: '2026-01-10',
+    title: 'The Waveform Update',
+    codename: 'Visual Flow',
+    description:
+      'SoundCloud-style waveform overhaul with tap-to-seek functionality and integrated review visualization.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'SoundCloud-Style Waveform: Two-tone coloring system (Purple Played / White Unplayed) across the entire platform.',
+          'Integrated Review Waveform: A high-fidelity waveform has replaced the basic progress bar in the Session Review Studio.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Global Tap-to-Seek: Jump to any timestamp instantly by tapping the waveform in both upload and review modes.',
+          'Calibration Marker: Restored the red "START" bar visibility during beat upload playback.',
+          'Cue Point Mastery: Playback now correctly honors and starts from the defined cue point in the upload window.',
+          'UI Cleanup: Removed the redundant "Test Start Point" button for a more streamlined calibration experience.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-01-09',
     title: 'The Studio Update',

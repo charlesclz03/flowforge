@@ -30,7 +30,8 @@ export default function TracksPage() {
   const user = session?.user
   const isPro =
     user?.subscriptionStatus === 'active' ||
-    user?.subscriptionStatus === 'trialing'
+    user?.subscriptionStatus === 'trialing' ||
+    user?.role === 'SUPERADMIN'
 
   const handleUseTrack = (beat: Beat) => {
     router.push(`/difficultyselection?beatId=${beat.id}`)

@@ -1,8 +1,8 @@
 ## FreeStyla 🎤
 
 **Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
-**Last Updated**: December 21, 2025  
-**Version**: v1.3.1 (Polish & Power Update)
+**Last Updated**: January 10, 2026  
+**Version**: v1.6.1 (The Waveform Update)
 **Status**: 🟢 Production Ready
 **Live URL**: [flowforge-freestyle.vercel.app](https://flowforge-freestyle.vercel.app)
 
@@ -155,6 +155,7 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 ### ✅ What's Complete (Production Ready)
 
 - **Core Engine**: Beat Dropdown, synchronized Word Prompts, visual Timer Ring, and Frequency/Difficulty controls.
+- **Waveform Visualization**: SoundCloud-style waveforms (Purple/White) with tap-to-seek globally integrated into Beat Upload and Session Review.
 - **Audio System**: High-fidelity recording with mobile optimizations, real-time audio watermark for free users.
 - **Social Ecosystem**: Public Profiles, Feed, Follow/Like/Comment systems, and "Duel Mode" with community voting.
 - **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks.
