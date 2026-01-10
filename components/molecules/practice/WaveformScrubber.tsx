@@ -7,18 +7,24 @@ interface WaveformScrubberProps {
   file: File
   initialOffset?: number
   onChange: (offset: number) => void
+  onSeek?: (time: number) => void // Called when user taps to seek during playback
   width?: number
   height?: number
   color?: string
+  playedColor?: string // Color for played portion
+  progress?: number // Current playback progress (0-1) for playback mode
 }
 
 export function WaveformScrubber({
   file,
   initialOffset = 0,
   onChange,
+  onSeek,
   width = 600,
   height = 100,
-  color = '#a855f7', // accent-purple
+  color = '#a855f7', // accent-purple (bright) - unplayed portion
+  playedColor = '#ffffff', // white for played portion (SoundCloud-style)
+  progress, // Optional: for playback visualization
 }: WaveformScrubberProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -39,9 +45,11 @@ export function WaveformScrubber({
       setError(null)
       try {
         const arrayBuffer = await file.arrayBuffer()
-        const audioContext = new (window.AudioContext ||
+        const audioContext = new (
+          window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext)()
+            .webkitAudioContext
+        )()
         const decoded = await audioContext.decodeAudioData(arrayBuffer)
         setAudioBuffer(decoded)
       } catch (err) {
@@ -54,7 +62,7 @@ export function WaveformScrubber({
     decode()
   }, [file])
 
-  // 2. Draw Waveform
+  // 2. Draw Waveform with two-tone coloring (SoundCloud-style)
   const draw = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas || !audioBuffer) return
@@ -79,24 +87,35 @@ export function WaveformScrubber({
     ctx.lineTo(containerWidth, centerY)
     ctx.stroke()
 
-    // --- Draw Data (Fit to Width) ---
+    // --- Calculate split point ---
+    // If progress is provided, use it for playback visualization
+    // Otherwise, use initialOffset for cue point visualization
+    const duration = audioBuffer.duration
+    let splitX: number
+
+    if (progress !== undefined) {
+      // Playback mode: progress is 0-1
+      splitX = progress * containerWidth
+    } else {
+      // Cue point mode: convert offset to position
+      splitX = (initialOffset / duration) * containerWidth
+    }
+
+    // --- Draw Data (Fit to Width) with two-tone coloring ---
     const rawData = audioBuffer.getChannelData(0) // Mono
     const totalSamples = rawData.length
-    
-    // We want to map `containerWidth` pixels to `totalSamples`
+
     // Step size (samples per pixel)
     const step = Math.ceil(totalSamples / containerWidth)
 
-    ctx.fillStyle = color
-    ctx.strokeStyle = color
-
-    // Draw bars
+    // Draw bars with two colors based on position relative to splitX
     for (let x = 0; x < containerWidth; x++) {
       let max = 0
       const startIndex = x * step
-      
+
       // Find max in chunk
-      for (let j = 0; j < step; j += 100) { // optimization skippage
+      for (let j = 0; j < step; j += 100) {
+        // optimization skippage
         if (startIndex + j < totalSamples) {
           const val = Math.abs(rawData[startIndex + j])
           if (val > max) max = val
@@ -104,49 +123,54 @@ export function WaveformScrubber({
       }
 
       const barHeight = Math.max(1, max * height * 0.9)
+
+      // Two-tone coloring: show white for played portion when progress is provided
+      // This works in both playback mode AND cue mode (to show playback position)
+      if (progress !== undefined && progress > 0) {
+        const progressX = progress * containerWidth
+        // Bars before progress position are white (played), after are purple (unplayed)
+        ctx.fillStyle = x < progressX ? playedColor : color
+      } else {
+        // No playback progress - all bars use the main color
+        ctx.fillStyle = color
+      }
+
       // Centered bar
       ctx.fillRect(x, centerY - barHeight / 2, 2, barHeight) // width 2 for fuller look
     }
 
-    // --- Draw Cursor (The Start Point) ---
-    // initialOffset is in seconds.
-    // Convert to pixels: (offset / duration) * width
-    const duration = audioBuffer.duration
-    const cursorX = (initialOffset / duration) * containerWidth
+    // --- Draw Cursor (The Start Point) - only in cue point mode ---
+    if (progress === undefined) {
+      const cursorX = splitX
 
-    // Draw highlighted playback region (optional: overlay before cursor?)
-    // SoundCloud style usually highlights "played" part. 
-    // Here we just mark the start point.
+      // Cursor Line
+      ctx.beginPath()
+      ctx.strokeStyle = '#F43F5E' // accent-red / rose
+      ctx.lineWidth = 2
+      ctx.moveTo(cursorX, 0)
+      ctx.lineTo(cursorX, height)
+      ctx.stroke()
 
-    // Cursor Line
-    ctx.beginPath()
-    ctx.strokeStyle = '#F43F5E' // accent-red / rose
-    ctx.lineWidth = 2
-    ctx.moveTo(cursorX, 0)
-    ctx.lineTo(cursorX, height)
-    ctx.stroke()
+      // "START" Label
+      ctx.fillStyle = '#F43F5E'
+      ctx.font = 'bold 10px sans-serif'
+      ctx.textAlign = 'center'
+      // Ensure label isn't off-screen
+      const labelX = Math.min(Math.max(cursorX, 20), containerWidth - 20)
+      ctx.fillText('START', labelX, 12)
 
-    // "START" Label
-    ctx.fillStyle = '#F43F5E'
-    ctx.font = 'bold 10px sans-serif'
-    ctx.textAlign = 'center'
-    // Ensure label isn't off-screen
-    const labelX = Math.min(Math.max(cursorX, 20), containerWidth - 20)
-    ctx.fillText('START', labelX, 12)
-
-    // Draw Start Time Label
-    const minutes = Math.floor(initialOffset / 60)
-    const seconds = (initialOffset % 60).toFixed(2)
-    ctx.fillStyle = '#fff'
-    ctx.fillText(`${minutes}:${seconds.padStart(5, '0')}`, labelX, height - 5)
-
-  }, [audioBuffer, initialOffset, height, width, color])
+      // Draw Start Time Label
+      const minutes = Math.floor(initialOffset / 60)
+      const seconds = (initialOffset % 60).toFixed(2)
+      ctx.fillStyle = '#fff'
+      ctx.fillText(`${minutes}:${seconds.padStart(5, '0')}`, labelX, height - 5)
+    }
+  }, [audioBuffer, initialOffset, height, width, color, playedColor, progress])
 
   // Animation Loop (though purely reactive here, nice for resize/load)
   useEffect(() => {
     requestAnimationFrame(draw)
   }, [draw])
-
 
   // --- Interactions ---
 
@@ -155,15 +179,19 @@ export function WaveformScrubber({
 
     const rect = containerRef.current.getBoundingClientRect()
     const x = clientX - rect.left
-    const width = rect.width
-    
+    const w = rect.width
+
     // Clamp
-    const clampedX = Math.max(0, Math.min(x, width))
-    
+    const clampedX = Math.max(0, Math.min(x, w))
+
     // Convert px -> time
-    // time = (x / width) * duration
-    const newTime = (clampedX / width) * audioBuffer.duration
-    
+    const newTime = (clampedX / w) * audioBuffer.duration
+
+    // Call onSeek for playback seeking (if provided)
+    if (onSeek) {
+      onSeek(newTime)
+    }
+    // Always call onChange for cue point updates
     onChange(newTime)
   }
 

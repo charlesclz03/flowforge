@@ -26,6 +26,8 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
   // Calibration State
   const [offset, setOffset] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
 
   // Status State
   const [isLoading, setIsLoading] = useState(false)
@@ -78,13 +80,6 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
   const setStartPoint = () => {
     if (!audioRef.current) return
     setOffset(audioRef.current.currentTime)
-  }
-
-  const testLoop = () => {
-    if (!audioRef.current) return
-    audioRef.current.currentTime = offset
-    audioRef.current.play()
-    setIsPlaying(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -248,6 +243,12 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                   onEnded={() => setIsPlaying(false)}
                   onPlay={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}
+                  onLoadedMetadata={(e) =>
+                    setDuration((e.target as HTMLAudioElement).duration)
+                  }
+                  onTimeUpdate={(e) =>
+                    setCurrentTime((e.target as HTMLAudioElement).currentTime)
+                  }
                   className="hidden"
                 />
 
@@ -269,31 +270,32 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                       file={file}
                       initialOffset={offset}
                       onChange={(newOffset) => setOffset(newOffset)}
+                      onSeek={(time) => {
+                        if (audioRef.current) {
+                          audioRef.current.currentTime = time
+                        }
+                      }}
                       height={60}
                       color="#c084fc"
+                      progress={
+                        duration > 0 ? currentTime / duration : undefined
+                      }
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex justify-center">
                   <button
                     type="button"
                     onClick={setStartPoint}
-                    className="px-3 py-2 text-xs font-medium bg-accent-purple/10 text-accent-purple rounded-lg hover:bg-accent-purple/20 border border-accent-purple/30"
+                    className="px-4 py-2 text-xs font-medium bg-accent-purple/10 text-accent-purple rounded-lg hover:bg-accent-purple/20 border border-accent-purple/30"
                   >
                     Set Start Point (Queue)
                   </button>
-                  <button
-                    type="button"
-                    onClick={testLoop}
-                    className="px-3 py-2 text-xs font-medium bg-white/5 text-white rounded-lg hover:bg-white/10 border border-white/10"
-                  >
-                    Test Start Point
-                  </button>
                 </div>
-                <p className="text-[10px] text-text-tertiary">
-                  Play the beat and click "Set Start Point" exactly when the
-                  first bar drops. This syncs your lyrics.
+                <p className="text-[10px] text-text-tertiary text-center">
+                  Play the beat but tap the waveform to navigate, then click
+                  "Set Start Point" when the first bar drops.
                 </p>
               </div>
 
