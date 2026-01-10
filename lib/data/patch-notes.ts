@@ -21,6 +21,272 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.9.0',
+    date: '2026-01-10',
+    title: 'The Rebrand',
+    codename: 'FreeStyla',
+    description:
+      'A new identity. "FlowForge" is now "FreeStyla". We have also renamed the "Vinyl Collection" to "Beat Vault" and polished the gamification system for a unified, premium experience.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Identity Shift: "FlowForge" branding replaced with "FreeStyla" across the entire application.',
+          'Beat Vault: Renamed "Vinyl Collection" to "Beat Vault" to better align with our premium "Unlock the Vault" messaging.',
+          'Navigation: "Vinyl" tab renamed to "Beats" for clarity.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Critical Audio: Resolved playback failures on the Practice Page for reliable sessions.',
+          'Record Button: Fixed icon rendering issues for a cleaner look.',
+          'Profile Images: Google profile pictures now correctly display in the sidebar.',
+          'Victory Screen: Enhanced animations and data connection for the post-session summary.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.8.1',
+    date: '2026-01-10',
+    title: 'The Social Polish',
+    codename: 'Embedded Share',
+    description:
+      'Refining the recording sharing UI to use an embedded, non-overlapping layout.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Embedded Share Menu: The sharing dropdown now pushes content down instead of floating, preventing UI overlap.',
+          'Solid Backgrounds: Removed transparency from the share menu for better readability.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.8.0',
+    date: '2026-01-10',
+    title: 'The Gamification Core',
+    codename: 'Level Up',
+    description:
+      'The gamification system is now fully operational with real backend persistence for XP and Levels. No more placeholders.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Real XP Persistence: User levels and XP are now saved to the database.',
+          'Scoring Engine: Earn 5 XP/word, 2 XP/second, and 100 XP/achievement.',
+          'Live Victory Screen: Session summary now displays your actual database progress.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.7',
+    date: '2026-01-10',
+    title: 'The Seamless Selection',
+    codename: 'Direct Access',
+    description:
+      'Removing friction from the difficulty selection flow. We removed the "Enable Local Tracks" slider and made local uploads directly accessible in the beat dropdown by default.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Direct Access: Removed the "Enable Local Tracks" slider. Local tracks are now always available in the beat dropdown.',
+          'UI Cleanup: Simplified the Difficulty Selection interface.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.6',
+    date: '2026-01-10',
+    title: 'The Heartbeat Update',
+    codename: 'Visual Rhythm',
+    description:
+      'Refining the visual language with a pro-level waveform for uploads and restoring the classic Heart icon for favorites.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Heart Restoration: Replaced the checkmark with a proper Heart icon for favoriting beats.',
+          'Static Waveform: New SoundCloud-style visualization for beat calibration.',
+        ],
+      },
+      {
+        category: 'New Features',
+        items: [
+          'Precision Cue Points: Click or drag anywhere on the new full-width waveform to set your start point instantly.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.5',
+    date: '2026-01-10',
+    title: 'The Final Polish',
+    codename: 'XP Tuner',
+    description:
+      'A critical quality-of-life update focusing on the "gamification feel" and eliminating session friction. We rebalanced the XP system and cleaned up the victory screen.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'XP Rebalance: Shifted to action-based XP (10 XP/word + 1 XP/sec).',
+          'Upload Core: Fixed "Failed to create upload URL" error.',
+          'Victory Screen: Removed redundant "VICTORY" header.',
+          'Display Timing: Word prompt waits for countdown.',
+          'Exit Safety: Added "Leave Session?" confirmation modal.',
+          'Ghost Voices: Fixed TTS persisting after navigation.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.4',
+    date: '2026-01-10',
+    title: 'The Safety Update',
+    codename: 'Secure Flow',
+    description:
+      'Protecting session data with stricter recording safety checks and ensuring reliable playback for deep-dives.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Track Change Safety: Changing beats during a recording now asks for confirmation, preventing accidental session loss.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Recording Review: Fixed playback failures in the detailed review page by implementing signed secure URLs.',
+          'Achievement Text: "Legacy Milestone" is now correctly labeled as "Achievement Unlocked!".',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.3',
+    date: '2026-01-10',
+    title: 'The Studio Perfected',
+    codename: 'Studio Prime',
+    description:
+      'Refined the studio interaction with intelligent defaults and mixed audio downloads for a complete production workflow.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Mixed Audio Download: Downloading a recording now intelligently merges the voice and beat into a high-quality WAV file.',
+          'Studio Defaults: "Studio FX" Reverb is now ON by default for instant professional sound.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Beat Volume Slider: Fixed a critical bug where adjusting the beat volume would stop playback.',
+          'Recording Playback: Recordings now properly play both the voice track and the beat track in sync.',
+          'Studio Tools Visibility: Specialized tools are now open by default for easier discovery.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.2',
+    date: '2026-01-10',
+    title: 'The Video Studio',
+    codename: 'Cinema Verité',
+    description:
+      'Introduced a dedicated Video Export Studio page and refined the gamification UI for clarity.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Video Export Studio: A dedicated page for creating high-fidelity video exports of your sessions.',
+          'Random Difficulty: Level 4 is now fully live, mixing words from all difficulty tiers.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'UI Clarity: Renamed "Difficulty Selection" to "Freestyle Session" and removed cluttered widgets.',
+          'Real-Time Streaks: Fixed gamification displays to show live user data instead of placeholders.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.1',
+    date: '2026-01-10',
+    title: 'The Mobile Polish',
+    codename: 'Liquid Metal',
+    description:
+      'Transformed the Settings menu for mobile, improved navigation flow, and fixed the "Double Beat" upload bug.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Collapsible Studio Controls: Audio settings are now tucked into a sleek accordion to save screen space.',
+          'Compact Support Grid: Support links rearranged into a touch-friendly grid layout.',
+          'Universal Back Navigation: Added back buttons to Terms, Privacy, and Calibration pages.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Duplicate Prevention: Fixed a bug where uploading a beat would show it twice in the list.',
+          'Admin Restoration: Superadmins can once again upload directly to the public library.',
+          'User Beat Upload: Added a clear "X" close button to the upload modal.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.7.0',
+    date: '2026-01-10',
+    title: 'The Admin Update',
+    codename: 'Master Control',
+    description:
+      'Empowering Super Admins with full control over the beat library: curation, editing, and monetization.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Admin Dashboard: New /admin/beats interface for managing the platform catalog.',
+          'Beat Reordering: Curate the playlist order with simple Up/Down controls.',
+          'Metadata Editing: Fix typos or update Beat details (BPM, Artist, Genre) on the fly.',
+          'Monetization Toggle: Instantly switch tracks between FREE and PRO tiers.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Beat Dropdown UI: Moved the Favorite (Heart) icon to the right for a cleaner list view.',
+          'Database Sync: Added sortOrder support for persistent custom playlists.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.6.2',
+    date: '2026-01-10',
+    title: 'The Zero State',
+    codename: 'Pure Flow',
+    description:
+      'Achieved a "Zero Problem" build state, perfected audio loop handling, and finalized admin tools.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Concurrent Playback: Implemented "Single Source of Truth" audio logic. Only one track plays at a time.',
+          'Gapless Looping: Eliminated the restart gap in SessionPlayer and RecordingCard loops.',
+          'Build Stability: Resolved 100% of lint warnings and type errors for a pristine codebase.',
+          'Admin Management: Fixed Beat Reordering and Upload tools.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.6.1',
     date: '2026-01-10',
     title: 'The Waveform Update',

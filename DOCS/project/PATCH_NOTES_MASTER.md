@@ -4,7 +4,172 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
-## 🚀 Update 1.5.9: The Final Polish
+## 🚀 Update 1.8.0: The Gamification Core
+
+**Release Date:** January 10, 2026
+**Codename:** _Level Up_
+
+The gamification system is now fully operational. We've replaced the placeholder visual elements with a real backend engine that tracks your XP, levels, and progress across sessions.
+
+### 🎮 The Core Engine
+- **Real XP Persistence**: Your hard-earned XP is now saved to the secure database. No more vanishing progress.
+- **Dynamic Logic**: Implemented a robust scoring engine:
+  - **Flow Density**: 5 XP per word spoken.
+  - **Endurance**: 2 XP for every second you stay in the flow.
+  - **Mastery**: 100 XP bonus for every achievement unlocked.
+- **Victory Animation**: The post-session screen now reflects your true journey, animating your bar from start to finish.
+
+---
+
+## 🚀 Update 1.7.7: The Seamless Selection
+ 
+ **Release Date:** January 10, 2026
+ **Codename:** _Direct Access_
+ 
+ Removing friction from the practice flow. Local tracks are now inextricably linked to the beat dropdown, removing unnecessary toggles.
+ 
+ ### 🎧 Direct Access
+ - **Slider Removed**: The "Enable Local Tracks" toggle is gone. It was an extra click you didn't need.
+ - **Embedded Integration**: Local tracks now appear automatically in the "My Tracks" tab of the beat dropdown.
+ 
+ ---
+ 
+ ## 🚀 Update 1.7.6: The Heartbeat Update
+
+**Release Date:** January 10, 2026
+**Codename:** _Visual Rhythm_
+
+A visual refinement update simplifying the iconography and upgrading the upload tools for pro users.
+
+### ❤️ Heart Restoration
+- **Favorite Icon**: We've listened to the feedback. The "Red Checkmark" is gone. The **Heart Icon** is back. It's the universal symbol for love, and it just feels right.
+
+### 🌊 Waveform Upgrade
+- **SoundCloud-Style Visualization**: The Beat Upload tool now features a static, full-width waveform instead of the moving bar visualizer.
+- **Precision Seeker**: Click or drag anywhere on the track to set your cue point with millisecond precision.
+
+### 🩹 Fixes
+- **Calibration Precision**: Removed the scrolling animation in `UserBeatUpload` to make it easier to see the full song structure at a glance.
+
+---
+
+## 🚀 Update 1.7.5: The Final Polish & XP Tuner
+
+**Release Date:** January 10, 2026
+**Codename:** _The Final Polish_
+
+A critical quality-of-life update focusing on the "gamification feel" and eliminating session friction. We've rebalanced the XP system to be more rewarding and cleaned up the victory screen.
+
+### 🎮 Gamification Tuned
+- **XP Rebalance:** Shifted from time-based to action-based XP. Now **10 XP per word** + **1 XP per second**, making active freestyling significantly more rewarding than silence.
+- **Victory Screen:** Removed the redundant "VICTORY" header for a cleaner, more modern look.
+- **Display Timing:** Word prompts now wait respectfully for the countdown to finish before appearing (No more premature spoilers!).
+
+### 🩹 Fixes
+- **Upload Core:** Fixed the "Failed to create upload URL" error by correcting the storage bucket reference (`recordings`).
+- **Exit Safety:** Added a "Leave Session?" confirmation modal when navigating away mid-flow.
+- **Word Randomization:** Fixed the fallback word generator to ensure true randomness every session.
+- **Ghost Voices:** Fixed a bug where Text-to-Speech would continue talking after leaving the page.
+
+---
+
+## 🚀 Update 1.7.4: The Safety Update
+
+**Release Date:** January 10, 2026
+**Codename:** _Secure Flow_
+
+Protecting session data with stricter recording safety checks and ensuring reliable playback for deep-dives.
+
+### 🛡️ Safety First
+- **Track Change Safety:** Changing the beat while recording now confirms your intent ("Stop Session?") to prevent accidental data loss.
+- **Secure Playback:** Fixed critical audio loading failures on the Review page by implementing on-demand signed URLs.
+- **Achievement Text:** Fixed the misleading "Legacy Milestone" text.
+- **Duration Fix:** Resolved the `0:00` bug in Recording Details.
+
+---
+
+## 🚀 Update 1.7.3: The Studio Perfected
+**Release Date:** January 10, 2026
+**Codename:** _Studio Prime_
+
+Refined the studio interaction with intelligent defaults and mixed audio downloads for a complete production workflow.
+
+### 🎛️ Studio Prime
+- **Mixed Audio Download:** Downloading a recording now intelligently merges the voice and beat into a high-quality WAV file.
+- **Smart Defaults:** "Studio FX" Reverb and "Studio Tools" are ON by default.
+- **Volume Fix:** Fixed a regression where beat volume adjustment stopped playback.
+- **Sync Fix:** Recordings list plays both voice and beat in perfect sync.
+
+---
+
+## 🚀 Update 1.7.2: The Video Studio
+**Release Date:** January 10, 2026
+**Codename:** _Cinema Verité_
+
+A creative expansion introducing a dedicated Video Export Studio and refining the gamification UI for a cleaner experience.
+
+### 🎥 Cinema Quality
+- **Full-Screen Studio:** Replaced the video export modal with a dedicated creative suite (`/recordings/[id]/video`). Now you have room to breathe while rendering your masterpiece.
+- **Random Difficulty:** Fully integrated Level 4 "Random" mode into the core loop.
+
+### 🧹 UI Clarity
+- **Freestyle Session:** Renamed the Difficulty Selection page to feel more like a studio entrance.
+- **Daily Goal Removal:** Dropped the arbitrary daily goal widget to focus purely on your streak and flow.
+- **Real Stats:** Fixed the "3 Day Streak" placeholder to show your actual grinding stats.
+
+---
+
+## 🚀 Update 1.7.1: The Mobile Polish
+ 
+ **Release Date:** January 10, 2026
+ **Codename:** _Liquid Metal_
+ 
+ A design-focused update transforming the Settings menu for mobile devices and hardening data boundaries for beat uploads.
+  
+ ### 📱 Mobile & Navigation
+ - **Collapsible Studio Controls**: Audio settings are now tucked away in a neat accordion, saving 50% vertical space.
+ - **Compact Support**: Support and Legal links are now in a touch-friendly grid.
+ - **Universal Back Navigation**: No more getting stuck on Terms or Privacy pages.
+ 
+ ### 🛡️ Data Integrity
+ - **Duplicate Prevention**: Strictly separated Public Beats from User Uploads to fix the "Double Beat" bug.
+ - **Admin Restoration**: Superadmins can once again upload directly to the public library.
+ 
+ ---
+ 
+ ## 🚀 Update 1.7.0: The Admin Update
+ 
+ **Release Date:** January 10, 2026
+ **Codename:** _Master Control_
+ 
+ The power is in your hands. This update introduces a full suite of Admin Management tools, giving Super Admins the ability to curate the beat library, correct metadata, and manage monetization with a single click.
+ 
+ ### 🎛️ Master Control
+ - **Admin Dashboard**: A new protected HQ (`/admin/beats`) for managing the platform's audio catalog.
+ - **Curate & Reorder**: Simple "Up/Down" controls allow for perfect playlist sequencing.
+ - **Edit Metadata**: Fix typos, update artists, or adjust BPM values on the fly without database access.
+ - **Pro Toggles**: Instantly switch beats between "Free" and "Pro" tiers to experiment with monetization strategies.
+ 
+ ---
+ 
+ ## 🚀 Update 1.6.2: The Zero State
+
+**Release Date:** January 10, 2026
+**Codename:** _Pure Flow_
+
+The "Zero Problem" update. We have achieved a perfectly clean build, resolved 100% of lint warnings, and perfected the audio loop architecture for a truly professional experience.
+
+### 🛡️ Core Stability
+- **Concurrent Playback Block**: Implemented a "Single Source of Truth" for audio. It is now physically impossible for two tracks to play at once.
+- **Zero-Error Build**: Squashed every single "Unexpected any" warning and type error. The codebase is now cleaner than ever.
+
+### 🔊 Audio Perfection
+- **Gapless Looping**: Fixed the micro-stutter when beats looped in the `SessionPlayer` and `RecordingCard`. The flow is now unbroken.
+- **Visual Timing**: The `TimerRing` now properly encircles the word prompt, fixing the visual clipping issue.
+
+---
+
+## 🚀 Update 1.6.1: The Waveform Update
 
 **Release Date:** January 09, 2026
 **Codename:** _The Final Polish_
@@ -50,6 +215,33 @@ A focused update resolving core session timing issues and streamlining the victo
 ---
 
 # Patch Notes Master Record
+
+## v1.7.3 - "The Studio Perfected"
+**Codename**: Studio Prime
+**Date**: 2026-01-10
+
+**Summary**:
+Refined the studio interaction with intelligent defaults and mixed audio downloads for a complete production workflow.
+
+### 🎛️ Features & Fixes
+- **Mixed Downloads**: Client-side WAV mixing.
+- **Smart Defaults**: Studio FX/Tools enabled by default.
+- **Volume Fixes**: Critical beat volume slider fix.
+
+## v1.6.2 - "The Zero State"
+**Codename**: Pure Flow
+**Date**: 2026-01-10
+
+**Summary**:
+A comprehensive stability update achieving a "Zero Problem" build state. Features gapless audio looping, concurrent playback protection, and fully functional admin tools.
+
+### 🛡️ Core Stability
+- **One Player Rule**: Implemented global audio manager to prevent concurrent playback.
+- **Clean Build**: Resolved all 10+ lint warnings and type discrepancies.
+
+### 🔊 Audio & Admin
+- **Seamless Loops**: Fixed `loop` property on audio elements.
+- **Admin Tools**: Fixed drag-and-drop reordering and beat uploads.
 
 ## v1.6.1 - "The Waveform Update"
 **Codename**: Visual Flow

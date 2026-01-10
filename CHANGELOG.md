@@ -1,5 +1,217 @@
 # Changelog
 
+## [v1.9.0] - 2026-01-10
+
+### 📛 The Rebrand ("FreeStyla")
+
+**Focus:** A major identity update shifting from "FlowForge" to "FreeStyla", alongside the renaming of "Vinyl Collection" to "Beat Vault" for a cohesive premium experience.
+
+### Changed
+- **Branding:** "FlowForge" is now **"FreeStyla"**.
+- **Beat Vault:** Renamed "Vinyl Collection" to **"Beat Vault"**. This aligns with the "Unlock the Vault" premium messaging.
+- **Navigation:** "Vinyl" tab is now **"Beats"**.
+
+### Fixed
+- **Practice Audio:** Resolved critical playback failures where the beat wouldn't start.
+- **Record Button:** Fixed icon rendering to remove visual artifacts.
+- **Profile Images:** Google OAuth profile pictures now display correctly.
+- **Victory Screen:** Post-session summary now uses real live data and enhanced animations.
+
+---
+
+## [v1.8.1] - 2026-01-10
+
+### 🧼 The Social Polish ("Embedded Share")
+
+**Focus:** Refining the UI for sharing recordings to match the embedded pattern established in the beat selection flow.
+
+### Changed
+- **Share Menu:** Now uses an **Embedded** layout in the Recording Card. Instead of floating over content (and potentially getting clipped), it pushes the card content down for a cleaner, more integrated look.
+- **Visuals:** Switched to a solid background for the share menu to improve readability against the recordings list.
+
+---
+
+## [v1.8.0] - 2026-01-10
+
+### 🆙 The Gamification Core ("Level Up")
+
+**Focus:** Complete implementation of the backend logic for XP and Leveling, replacing visual placeholders with real database persistence.
+
+### Added
+- **XP Persistence:** Users now actually earn and save XP (`xp`) and levels (`level`) to their database profile.
+- **Game Logic Engine:** Implemented `lib/gamification/xp.ts` to calculate scores based on:
+  - **Density:** 5 XP per word
+  - **Endurance:** 2 XP per second
+  - **Achievements:** 100 XP bonus
+- **Live Feedback:** The "Victory" screen now animates your actual progress bar and displays your real level.
+
+### Changed
+- **Session Summary:** Removed hardcoded "Level 5" displays; now reflects your true status.
+- **API Response:** `/api/recordings` now returns a full `xpBreakdown` object for the frontend to render.
+
+---
+
+## [v1.7.7] - 2026-01-10
+
+### 🎧 The Seamless Selection Update ("Direct Access")
+
+**Focus:** Reducing friction in the difficulty selection flow by integrating local tracks directly into the beat dropdown.
+
+### Changed
+- **Difficulty Selection:** Removed the "Enable Local Tracks" slider.
+- **Beat Dropdown:** Local tracks are now strictly integrated into the embedded dropdown by default, removing the extra toggle step.
+- **UI Cleanup:** Simplified the difficulty selection settings panel for a cleaner look.
+
+---
+
+## [v1.7.6] - 2026-01-10
+
+### ❤️ The Heartbeat Update ("Visual Rhythm")
+
+**Focus:** Refining the visual language of the beat selection and upload experience with cleaner iconography and pro-level visualization.
+
+### Added
+- **SoundCloud-Style Waveform**: A new high-fidelity, static waveform visualization for the `UserBeatUpload` calibration tool. It now displays the full track width, allowing users to select a start point by simply clicking or dragging the cursor.
+
+### Changed
+- **Beat Selection Icon**: Replaced the "Red Checkmark" for favorites with a proper **Heart Icon**.
+  - **Active**: Filled Red Heart.
+  - **Inactive**: Gray Outline Heart (turns white on hover).
+  - This restores standard UI patterns for "Favoriting" content.
+
+### Fixed
+- **Calibration Experience**: Removed the moving visualizer in favor of the static waveform for better precision when setting cue points.
+
+---
+
+## [v1.7.5] - 2026-01-10
+
+### 🔧 The Final Polish & XP Tuner
+
+**Focus:** Tuning the gamification mechanics for maximum reward and cleaning up UI implementation details.
+
+### Fixed
+- **Upload Error**: Fixed "Failed to create upload URL" by correcting the Supabase bucket reference (`recordings`).
+- **Word Randomization**: Fixed logic where sessions would always start with the same words.
+- **Ghost Voices**: TTS now stops immediately when navigating away.
+- **Victory UI**: Removed the redundant "VICTORY" text from the summary modal.
+
+### Changed
+- **XP System**: Rebalanced XP calculation to **10 XP per word** + **1 XP per second**.
+- **Exit Logic**: Added a cancellation modal when leaving an active session.
+
+---
+
+## [v1.7.4] - 2026-01-10
+
+### 🔒 The Safety Update ("Secure Flow")
+
+**Focus:** Protecting session data with stricter recording safety checks and ensuring reliable playback for deep-dives.
+
+### Added
+- **Track Change Safety**: While recording, changing the beat now triggers a confirmation dialog ("Stop Session?"). This prevents accidental data loss when browsing tracks during a flow.
+
+### Fixed
+- **Recording Playback**: Fixed a critical issue where the "Review" page would fail to load audio. Now generates on-demand signed URLs for secure, instant playback.
+- **Achievement Text**: Corrected the "Legacy Milestone Unlocked" text to the proper "Achievement Unlocked!" notification.
+- **Duration Display**: Fixed `0:00` duration bug in the Recording Details view.
+
+---
+
+
+## [v1.7.3] - 2026-01-10
+
+### 🎛️ The Studio Perfected ("Studio Prime")
+
+**Focus:** Refining the studio interaction with intelligent defaults and mixed audio downloads.
+
+### Added
+- **Mixed Audio Download**: Client-side audio mixing now combines your voice recording with the background beat into a single, high-quality WAV file.
+- **Smart Defaults**: "Studio FX" (Reverb) and "Studio Tools" are now enabled by default, ensuring every session sounds professional from the start.
+
+### Fixed
+- **Beat Volume Slider**: Fixed a regression where adjusting the beat volume during a session would cause playback to stop.
+- **Recording Playback**: "My Recordings" list now correctly plays both the vocal track and the beat track in synchronization.
+
+---
+
+## [v1.7.2] - 2026-01-10
+
+### 🎥 The Video Studio Update ("Cinema Verité")
+
+**Focus:** Elevating the sharing experience with a dedicated video rendering studio and refining the gamification UI.
+
+### Added
+- **Video Export Studio:** A brand new, dedicated page (`/recordings/[id]/video`) for high-fidelity video generation. Replaced the cramped modal with a full-screen creative suite.
+- **Random Difficulty:** "Random" (Level 4) is now fully integrated into the difficulty logic, mixing words from all tiers.
+
+### Changed
+- **Difficulty Selection UI:** Renamed the page title to "Freestyle Session" for a cleaner, more professional look.
+- **Gamification Cleanup:** Removed the "Daily Goal" widget to declutter the interface.
+- **Streak Logic**: Updated the "Daily Streak" widget to use real data from the user profile and clearer instructional text.
+
+### Fixed
+- **Navigation Links:** `RecordingCard` video button now correctly routes to the new Studio page instead of opening a deprecated modal.
+- **Streak Display**: Fixed hardcoded "3 Streak" display on the difficulty selection page to reflect actual user stats.
+
+---
+
+## [v1.7.1] - 2026-01-10
+
+### 📱 The Mobile Polish Update ("Liquid Metal")
+
+**Focus:** Transforming the settings menu and navigation for a seamless mobile experience, alongside critical data safety constraints.
+
+### Added
+- **Collapsible Studio Controls**: Audio settings (Voice, Volume, Latency) are now grouped in a collapsible section, saving 50% vertical screen space.
+- **Compact Support Grid**: "App Support" and "Legal" links are condensed into a touch-friendly grid layout.
+- **Universal Back Navigation**: Added dedicated "Back" buttons to Terms, Privacy, Patch Notes, and Calibration pages.
+- **Close Button**: Added a dedicated "X" close button to the User Beat Upload modal.
+
+### Fixed
+- **Double Beat Upload**: Implemented strict DB filtering to separate "Public Library" results from "User Uploads", preventing duplicate entries.
+- **Admin Upload Restoration**: Fixed visibility and functionality of the Admin Beat Upload zone for Superadmins.
+- **Beat Dropdown Syntax**: Resolved closing tag errors in the `BeatDropdown` component.
+
+---
+
+## [v1.7.0] - 2026-01-10
+
+### 🎛️ The Admin Update ("Master Control")
+
+**Focus:** Empowering Super Admins with complete control over the beat library.
+
+### Added
+- **Admin Beat Management**: New protected route `/admin/beats` for Super Admins.
+- **Beat Reordering**: "Move Up/Down" controls to curate the tracklist order exactly as desired.
+- **Inline Editing**: Edit Beat Title, Artist, BPM, and Genre directly from the list.
+- **Monetization Control**: One-click toggle to switch beats between "FREE" and "PRO" status.
+- **Delete Capability**: Remove beats from the database directly from the admin interface.
+
+### Fixed
+- **Beat Dropdown UI**: Repositions the "Heart" (Favorite) icon to the right side of the track list for better visual hierarchy and consistency.
+- **Database Schema**: Added `sortOrder` field to the `Beat` model to support persistent custom ordering.
+
+---
+
+## [v1.6.2] - 2026-01-10
+
+### 🛡️ The Zero State ("Pure Flow")
+
+**Focus:** Achieved a "Zero Problem" build state, perfected audio loop handling, and finalized admin tools.
+
+### Fixed
+- **Concurrent Playback (Critical)**: Implemented "Single Source of Truth" audio logic. It is now impossible for two recordings or beats to play simultaneously.
+- **Gapless Looping**: Fixed beat looping in `SessionPlayer` and `RecordingCard` by correctly setting the `loop` property on audio elements, eliminating the restart gap.
+- **Admin Management**: Fixed Beat Management tools (Reordering, Uploads) and resolved `sortOrder` type discrepancies.
+- **Build Stability**: Resolved 100% of lint warnings and type errors ("Unexpected any", "Explicit any") for a perfectly clean production build.
+- **Word Timing**: Corrected the visual layout of the `TimerRing` to properly encircle the word prompt without clipping.
+
+### Added
+- **Word Count Metadata**: Recordings now correctly save and display the total `wordCount` in the library and session summary.
+
+---
+
 ## [v1.6.1] - 2026-01-10
 
 ### 🌊 The Waveform Update ("Visual Flow")
