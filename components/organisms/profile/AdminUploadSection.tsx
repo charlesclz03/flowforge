@@ -39,36 +39,66 @@ export function AdminUploadSection() {
     setSuccess(null)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('title', title)
-      formData.append('bpm', bpm)
-      formData.append('artistName', producer) // Map producer to artistName
-      formData.append('genre', genre)
-      formData.append('tags', tags)
-      // Hardcode required backend fields for now
-      formData.append('isPremium', 'true')
+      // Step 1: Get a signed URL for the 'beats' bucket
+      const signedUrlRes = await fetch('/api/upload/signed-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          bucket: 'beats', // Specify the public library bucket
+        }),
+      })
 
+      if (!signedUrlRes.ok) {
+        const data = await signedUrlRes.json()
+        throw new Error(data.error || 'Failed to get upload URL')
+      }
+
+      const { signedUrl, publicUrl } = await signedUrlRes.json()
+
+      // Step 2: Upload directly to Supabase
+      const uploadRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error(`Cloud storage upload failed (${uploadRes.status})`)
+      }
+
+      // Step 3: Register the beat in the database
       const res = await fetch('/api/admin/beats/upload', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          bpm,
+          artistName: producer,
+          genre,
+          storageUrl: publicUrl,
+          tags,
+        }),
       })
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}))
         throw new Error(
-          errorData.error || `Upload failed (Status: ${res.status})`
+          errorData.error ||
+            `Metadata registration failed (Status: ${res.status})`
         )
       }
 
-      setSuccess(`Beat "${title}" uploaded successfully!`)
+      setSuccess(`Beat "${title}" uploaded and published successfully!`)
       // Reset form
       setTitle('')
       setBpm('')
       setProducer('')
       setTags('')
       setFile(null)
-      // Reset file input manually if needed
       const fileInput = document.getElementById(
         'beat-upload'
       ) as HTMLInputElement

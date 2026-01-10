@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { fileName, contentType } = await req.json()
+    const { fileName, contentType, bucket: requestedBucket } = await req.json()
 
     if (!fileName || !contentType) {
       return NextResponse.json(
@@ -49,13 +49,22 @@ export async function POST(req: NextRequest) {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    // Determine bucket (default to recordings, allow 'beats' for admins)
+    const targetBucket =
+      session.user.role === 'SUPERADMIN' && requestedBucket === 'beats'
+        ? 'beats'
+        : RECORDINGS_BUCKET
+
     // Generate a unique file path
     const safeName = fileName.replace(/[^a-zA-Z0-9.-]/g, '-').toLowerCase()
-    const storagePath = `users/${session.user.id}/${Date.now()}-${safeName}`
+    const storagePath =
+      targetBucket === 'beats'
+        ? `library/${Date.now()}-${safeName}`
+        : `users/${session.user.id}/${Date.now()}-${safeName}`
 
     // Create a signed URL valid for 5 minutes (300 seconds)
     const { data, error } = await supabase.storage
-      .from(RECORDINGS_BUCKET)
+      .from(targetBucket)
       .createSignedUploadUrl(storagePath)
 
     if (error) {
@@ -68,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     // Also return the public URL for after the upload completes
     const { data: publicData } = supabase.storage
-      .from(RECORDINGS_BUCKET)
+      .from(targetBucket)
       .getPublicUrl(storagePath)
 
     return NextResponse.json({

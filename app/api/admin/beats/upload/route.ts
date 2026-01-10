@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase Client
 export const runtime = 'nodejs'
@@ -10,82 +9,49 @@ export const maxDuration = 60
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
-  // Initialize Supabase Client (Lazy Load)
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
   try {
     const session = await getServerSession(authOptions)
 
     // 1. Authorization Check
-    if (!session || session.user?.role !== 'SUPERADMIN') {
+    if (session?.user?.role !== 'SUPERADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const formData = await req.formData()
-    // Align keys with Client
-    const audioFile = formData.get('file') as File
-    const title = formData.get('title') as string
-    const bpm = parseInt(formData.get('bpm') as string)
-    const artistName = formData.get('artistName') as string
-    const genre = formData.get('genre') as string
-    const isPremium = formData.get('isPremium') === 'true'
-    const tagsRaw = formData.get('tags') as string
-    const difficulty = 'Medium' // Default since users choose per session
+    const {
+      title,
+      bpm,
+      artistName,
+      genre,
+      storageUrl,
+      tags: tagsRaw,
+    } = await req.json()
 
-    if (!audioFile || !title || !bpm) {
+    if (!storageUrl || !title || !bpm) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields (title, bpm, storageUrl)' },
         { status: 400 }
       )
     }
 
-    // 2. Upload to Supabase Storage
-    const fileExt = audioFile.name.split('.').pop()
-    const fileName = `beats/${Date.now()}-${title.replace(/\s+/g, '-').toLowerCase()}.${fileExt}`
-
-    // Convert File to Buffer for Supabase upload (Node environment)
-    const arrayBuffer = await audioFile.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    const { error: uploadError } = await supabase.storage
-      .from('audio') // Ensure bucket exists 'audio' or 'beats'
-      .upload(fileName, buffer, {
-        contentType: audioFile.type,
-        upsert: false,
-      })
-
-    if (uploadError) {
-      console.error('Supabase Upload Error:', uploadError)
-      return NextResponse.json(
-        { error: 'Failed to upload audio file' },
-        { status: 500 }
-      )
-    }
-
-    // 3. Get Public URL
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('audio').getPublicUrl(fileName)
-
     const tags = tagsRaw
-      ? tagsRaw
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean)
+      ? typeof tagsRaw === 'string'
+        ? tagsRaw
+            .split(',')
+            .map((t: string) => t.trim())
+            .filter(Boolean)
+        : tagsRaw
       : []
 
-    // 4. Create Database Record
+    // 2. Create Database Record
     const beat = await prisma.beat.create({
       data: {
         title,
-        bpm,
+        bpm: parseInt(bpm),
         artistName: artistName || 'Unknown Producer',
         genre: genre || 'Freestyle',
-        difficulty: difficulty || 'Medium',
-        storageUrl: publicUrl,
-        isPremium,
+        difficulty: 'Medium',
+        storageUrl,
+        isPremium: true,
         duration: 0, // Placeholder
         tags: tags,
       },
@@ -93,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, beat })
   } catch (error) {
-    console.error('Admin Beat Upload Error:', error)
+    console.error('Admin Beat Upload Metadata Error:', error)
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

@@ -17,3 +17,4 @@ export const supabase = createClient(
  * Supabase Storage bucket name for recordings
  */
 export const RECORDINGS_BUCKET = 'recordings'
+export const BEATS_BUCKET = 'beats'

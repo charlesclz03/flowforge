@@ -25,3 +25,4 @@ export function createServerClient() {
 }
 
 export const RECORDINGS_BUCKET = 'recordings'
+export const BEATS_BUCKET = 'beats'
