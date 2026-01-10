@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Disc3, Mic, Trophy, User, CassetteTape } from 'lucide-react'
+import { Disc3, Trophy, User, CassetteTape } from 'lucide-react'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -34,7 +35,7 @@ export function BottomNav() {
     {
       name: 'Record',
       href: '/difficultyselection',
-      icon: Mic,
+      icon: null, // Custom logo used instead
       match: (path: string) =>
         path === '/practice' ||
         path === '/difficultyselection' ||
@@ -89,16 +90,15 @@ export function BottomNav() {
                 onClick={(e) => handleTabClick(e, tab)}
                 aria-label={tab.name}
                 className={cn(
-                  'relative flex flex-col items-center justify-center transition-all duration-300 group',
-                  isPrimary ? '-mt-8' : 'h-full'
+                  'relative flex flex-col items-center justify-center transition-all duration-300 group h-full'
                 )}
               >
-                {/* Spotlight Effect for Non-Primary */}
-                {!isPrimary && isActive && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent-purple/30 blur-xl rounded-full pointer-events-none" />
-                )}
-                {!isPrimary && isActive && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-1 bg-accent-purple rounded-b-full shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+                {/* Spotlight Effect for Active Tab */}
+                {isActive && (
+                  <>
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent-purple/30 blur-xl rounded-full pointer-events-none" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-1 bg-accent-purple rounded-b-full shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+                  </>
                 )}
 
                 {/* Icon Container */}
@@ -107,10 +107,10 @@ export function BottomNav() {
                     'relative flex items-center justify-center transition-all duration-300',
                     isPrimary
                       ? cn(
-                          'w-16 h-16 rounded-full shadow-2xl shadow-purple-900/50',
+                          'w-14 h-14 rounded-full',
                           isActive
-                            ? 'bg-accent-purple text-white scale-110'
-                            : 'bg-accent-purple text-white/90 hover:scale-105'
+                            ? 'bg-accent-purple text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                            : 'bg-white/5 text-white/90 hover:bg-white/10'
                         )
                       : cn(
                           'w-12 h-12 rounded-full',
@@ -120,17 +120,32 @@ export function BottomNav() {
                         )
                   )}
                 >
-                  <tab.icon
-                    size={isPrimary ? 28 : 24}
-                    className={cn(
-                      'transition-transform duration-300',
-                      isActive && !isPrimary
-                        ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]'
-                        : '',
-                      !isActive && !isPrimary ? 'group-hover:scale-110' : ''
-                    )}
-                    strokeWidth={isActive ? 2.5 : 2}
-                  />
+                  {isPrimary ? (
+                    <div className="relative w-8 h-8">
+                      <Image
+                        src="/logo.png"
+                        alt="Logo"
+                        fill
+                        className={cn(
+                          'object-contain transition-transform duration-300',
+                          isActive ? 'scale-110' : 'group-hover:scale-110'
+                        )}
+                      />
+                    </div>
+                  ) : (
+                    tab.icon && (
+                      <tab.icon
+                        size={24}
+                        className={cn(
+                          'transition-transform duration-300',
+                          isActive
+                            ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]'
+                            : 'group-hover:scale-110'
+                        )}
+                        strokeWidth={isActive ? 2.5 : 2}
+                      />
+                    )
+                  )}
                 </div>
               </Link>
             )

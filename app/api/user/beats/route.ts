@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
     const isPro =
       user?.subscriptionStatus === 'active' ||
       user?.subscriptionStatus === 'trialing' ||
-      user?.role === 'SUPERADMIN'
+      user?.role === 'SUPERADMIN' ||
+      session.user.role === 'SUPERADMIN'
 
     // Strict Pro Gate on Backend
     if (!isPro) {
