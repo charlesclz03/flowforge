@@ -86,8 +86,15 @@ export default function TracksPage() {
         ]
       }
 
-      setBeats([...userBeats, ...publicBeats])
       setFavoriteIds(new Set(favs))
+      setBeats(() => {
+        const combined = [...userBeats, ...publicBeats]
+        const unique = combined.filter(
+          (beat, index, self) =>
+            index === self.findIndex((b) => b.id === beat.id)
+        )
+        return unique
+      })
     } catch (e) {
       console.error('Fetch beats failed completely', e)
     } finally {

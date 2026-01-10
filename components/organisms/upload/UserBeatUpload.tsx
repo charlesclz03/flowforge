@@ -86,8 +86,8 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isPro) {
-      setShowPremium(true)
+    if (isLoading || !isPro) {
+      if (!isPro) setShowPremium(true)
       return
     }
 
