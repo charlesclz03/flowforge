@@ -32,7 +32,11 @@ export class AudioMixer {
   async mix(
     voiceUrl: string,
     beatUrl: string | null, // Beat might be null (acapella export)
-    options: MixOptions = { voiceVolume: 1.0, beatVolume: 0.8, isStudioMode: true }
+    options: MixOptions = {
+      voiceVolume: 1.0,
+      beatVolume: 0.8,
+      isStudioMode: true,
+    }
   ): Promise<Blob> {
     try {
       // SECURITY CHECK: Integrity Protection
@@ -43,22 +47,21 @@ export class AudioMixer {
 
       // 1. Fetch audio files
       const loadTasks = [this.fetchAndDecode(voiceUrl)]
-      if (beatUrl) loadTasks.push(this.fetchAndDecode(beatUrl) as Promise<AudioBuffer>)
-      
+      if (beatUrl)
+        loadTasks.push(this.fetchAndDecode(beatUrl) as Promise<AudioBuffer>)
+
       const buffers = await Promise.all(loadTasks)
       const voiceBuffer = buffers[0]
       const beatBuffer = beatUrl ? buffers[1] : null
 
       // 2. Setup OfflineAudioContext
-      // Duration is max of voice or beat (if beat exists)
-      const duration = Math.max(
-          voiceBuffer.duration,
-          beatBuffer ? beatBuffer.duration : 0
-      )
-      
+      // Duration is the VOICE duration (the actual recording length)
+      // Beat will be looped if needed to fill the duration
+      const duration = voiceBuffer.duration
+
       // Limit max duration to 10 minutes to prevent crash
       const safeDuration = Math.min(duration, 600)
-      
+
       const sampleRate = 44100
       const length = safeDuration * sampleRate
 
@@ -85,28 +88,28 @@ export class AudioMixer {
       const wetGain = this.ctx.createGain() // Reverb send
 
       if (options.isStudioMode) {
-          // Reverb
-          const convolver = this.ctx.createConvolver()
-          convolver.buffer = createReverb(this.ctx)
+        // Reverb
+        const convolver = this.ctx.createConvolver()
+        convolver.buffer = createReverb(this.ctx)
 
-          // Routing: Source -> Compressor -> Reverb/Dry Split
-          voiceSource.connect(compressor)
-          
-          compressor.connect(dryGain)
-          compressor.connect(convolver)
-          convolver.connect(wetGain)
+        // Routing: Source -> Compressor -> Reverb/Dry Split
+        voiceSource.connect(compressor)
 
-          // FX Levels
-          dryGain.gain.value = 0.7  // Adjusted for mix balance
-          wetGain.gain.value = 0.3  // Standard shimmer
-          
-          wetGain.connect(voiceMainGain)
-          dryGain.connect(voiceMainGain)
+        compressor.connect(dryGain)
+        compressor.connect(convolver)
+        convolver.connect(wetGain)
+
+        // FX Levels
+        dryGain.gain.value = 0.7 // Adjusted for mix balance
+        wetGain.gain.value = 0.3 // Standard shimmer
+
+        wetGain.connect(voiceMainGain)
+        dryGain.connect(voiceMainGain)
       } else {
-          // Direct Dry
-          voiceSource.connect(voiceMainGain)
+        // Direct Dry
+        voiceSource.connect(voiceMainGain)
       }
-      
+
       // Connect Voice Mix to Master
       voiceMainGain.connect(this.ctx.destination)
       voiceSource.start(0)
@@ -115,7 +118,8 @@ export class AudioMixer {
       if (beatBuffer && beatUrl) {
         const beatSource = this.ctx.createBufferSource()
         beatSource.buffer = beatBuffer
-        
+        beatSource.loop = true // Loop beat if voice recording is longer than beat duration
+
         const beatGain = this.ctx.createGain()
         beatGain.gain.value = options.beatVolume
 
@@ -131,7 +135,9 @@ export class AudioMixer {
       return this.bufferToWav(renderedBuffer)
     } catch (err) {
       console.error('Mixing failed:', err)
-      throw new Error(err instanceof Error ? err.message : 'Failed to mix audio tracks')
+      throw new Error(
+        err instanceof Error ? err.message : 'Failed to mix audio tracks'
+      )
     }
   }
 
