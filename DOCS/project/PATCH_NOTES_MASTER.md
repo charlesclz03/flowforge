@@ -4,6 +4,24 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 📛 Update 1.9.0: The Rebrand
+**Release Date:** January 10, 2026
+**Codename:** _FreeStyla_
+
+A major identity update shifting from "FlowForge" to "FreeStyla" across the entire ecosystem. We have also unified the terminology, upgrading "Vinyl Collection" to **"Beat Vault"** to match our premium positioning.
+
+### 📛 Identity & Branding
+- **"FreeStyla" Everywhere:** The transition is complete. All user-facing text, metadata, and logos now reflect the new identity.
+- **Beat Vault:** "Vinyl Collection" has been retired. The library is now the **Beat Vault**.
+- **Unified Navigation:** The "Vinyl" tab is now simply **"Beats"**.
+
+### 🎮 Gamification & Fixes
+- **Victory Screen Refined:** Post-session summary now uses live data with enhanced animations.
+- **Practice Audio Fixed:** Resolved critical playback failures where beats refused to start.
+- **Profile Fixes:** Start using Google profile pictures correctly.
+
+---
+
 ## 🚀 Update 1.8.0: The Gamification Core
 
 **Release Date:** January 10, 2026
