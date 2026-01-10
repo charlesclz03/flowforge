@@ -31,6 +31,13 @@ export class AudioPlayer {
       if (this.onTimeUpdateCallback && this.audio) {
         this.onTimeUpdateCallback(this.audio.currentTime)
       }
+      // Gapless loop workaround: seek to start slightly before track ends
+      if (this.audio && this.audio.loop && this.audio.duration > 0) {
+        const timeRemaining = this.audio.duration - this.audio.currentTime
+        if (timeRemaining < 0.15 && timeRemaining > 0) {
+          this.audio.currentTime = 0
+        }
+      }
     })
 
     this.audio.addEventListener('ended', () => {

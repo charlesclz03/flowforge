@@ -153,7 +153,7 @@ export const SESSION_CONFIG = {
     3: 'Hard',
     4: 'Random',
   } as const,
-  DEFAULT_DURATION_SECONDS: 120, // 2 minutes for free tier
+  DEFAULT_DURATION_SECONDS: 600, // 10 minutes
   DEFAULT_FREQUENCY: 8, // 8 bars
   DEFAULT_DIFFICULTY: 2, // Medium
   TIMER_UPDATE_INTERVAL_MS: 100, // Update timer every 100ms
