@@ -127,7 +127,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-text-primary antialiased h-[100dvh] overflow-hidden`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-text-primary antialiased min-h-[100dvh]`}
       >
         <SessionProvider session={session}>
           <PracticeSessionProvider>

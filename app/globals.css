@@ -14,8 +14,6 @@
     user-select: none;
     -webkit-user-select: none;
     overscroll-behavior: none;
-    height: 100dvh;
-    overflow: hidden; /* LOCK BODY SCROLL */
   }
 
   body {
@@ -26,8 +24,7 @@
     /* App-like feel: prevent rubber-band on mobile body */
     overscroll-behavior: none;
     -webkit-tap-highlight-color: transparent;
-    height: 100dvh; /* Match html height */
-    overflow: hidden; /* LOCK BODY SCROLL */
+    min-height: 100dvh;
     touch-action: pan-x pan-y;
   }
 

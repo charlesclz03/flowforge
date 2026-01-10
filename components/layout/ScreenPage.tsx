@@ -28,20 +28,20 @@ export function ScreenPage({
   return (
     <main
       className={cn(
-        'relative flex flex-col w-full h-[100dvh] overflow-hidden bg-background',
+        'relative flex flex-col w-full min-h-[100dvh] bg-background',
         className
       )}
       {...props}
     >
-      {/* Fixed Header Area */}
+      {/* Header Area - Sticky if needed, or just normal flow */}
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
-      {/* Scrollable Content Area */}
-      <div className="flex-1 w-full relative overflow-y-auto overflow-x-hidden scrollbar-hide overscroll-y-contain">
+      {/* Content Area - Natural Height */}
+      <div className="flex-1 w-full relative">
         {children}
       </div>
 
-      {/* Fixed Footer Area */}
+      {/* Footer Area */}
       {footer && (
         <div
           className={cn('flex-none z-30 relative', {
