@@ -21,9 +21,11 @@ import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
+import { useState } from 'react'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
+  const [isManaging, setIsManaging] = useState(false)
   const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } =
     usePracticeSession()
 
@@ -34,6 +36,22 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
   const handleLinkClick = () => {
     if (onItemClick) onItemClick()
+  }
+
+  const handlePortalRedirect = async () => {
+    if (isManaging) return
+    setIsManaging(true)
+    try {
+      const response = await fetch('/api/stripe/portal', { method: 'POST' })
+      if (!response.ok) throw new Error('Failed to open billing portal')
+      const { url } = await response.json()
+      if (url) window.location.href = url
+    } catch (error) {
+      console.error('Portal error:', error)
+      toast.error('Could not open billing portal')
+    } finally {
+      setIsManaging(false)
+    }
   }
 
   // Helper for consistent menu items
@@ -204,6 +222,15 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             href="/settings/latency"
             color="text-accent-blue"
           />
+
+          {isPro && (
+            <MenuItem
+              icon={Crown}
+              label={isManaging ? 'Opening Portal...' : 'Manage Subscription'}
+              onClick={handlePortalRedirect}
+              color="text-accent-purple"
+            />
+          )}
         </div>
       </div>
 
