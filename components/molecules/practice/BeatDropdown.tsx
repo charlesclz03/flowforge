@@ -308,6 +308,16 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
+                          <p
+                            className={cn(
+                              'text-sm font-medium',
+                              selectedBeat?.id === beat.id
+                                ? 'text-accent-purple'
+                                : 'text-white'
+                            )}
+                          >
+                            {beat.title}
+                          </p>
                           <div
                             onClick={(e) => handleToggleFavorite(beat.id, e)}
                             className={cn(
@@ -324,16 +334,6 @@ export function BeatDropdown(props: BeatDropdownProps) {
                               )}
                             />
                           </div>
-                          <p
-                            className={cn(
-                              'text-sm font-medium',
-                              selectedBeat?.id === beat.id
-                                ? 'text-accent-purple'
-                                : 'text-white'
-                            )}
-                          >
-                            {beat.title}
-                          </p>
                         </div>
                         <p className="text-xs text-text-tertiary">
                           {beat.bpm} BPM • {beat.genre}
@@ -398,6 +398,16 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
+                                <p
+                                  className={cn(
+                                    'text-sm font-medium',
+                                    selectedBeat?.id === beat.id
+                                      ? 'text-accent-purple'
+                                      : 'text-white'
+                                  )}
+                                >
+                                  {beat.title}
+                                </p>
                                 <div
                                   onClick={(e) =>
                                     handleToggleFavorite(beat.id, e)
@@ -416,16 +426,6 @@ export function BeatDropdown(props: BeatDropdownProps) {
                                     )}
                                   />
                                 </div>
-                                <p
-                                  className={cn(
-                                    'text-sm font-medium',
-                                    selectedBeat?.id === beat.id
-                                      ? 'text-accent-purple'
-                                      : 'text-white'
-                                  )}
-                                >
-                                  {beat.title}
-                                </p>
                               </div>
                               <p className="text-xs text-text-tertiary">
                                 {beat.bpm} BPM • Custom
