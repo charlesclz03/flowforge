@@ -23,6 +23,7 @@ import {
 } from 'lucide-react'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
+import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
 
 // Impulse response for reverb (simple noise burst fallback or load file)
 const createReverb = (
@@ -291,14 +292,6 @@ export const SessionPlayer = forwardRef<
       }
     }, [isPlaying])
 
-    const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!audioRef.current) return
-      const time = parseFloat(e.target.value)
-      audioRef.current.currentTime = time
-      if (beatRef.current) beatRef.current.currentTime = time
-      setCurrentTime(time)
-    }
-
     const toggleMute = () => {
       if (!audioRef.current) return
       audioRef.current.muted = !isMuted
@@ -501,18 +494,27 @@ export const SessionPlayer = forwardRef<
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className="mb-6 group">
-          <input
-            type="range"
-            min="0"
-            max={duration || 0}
-            value={currentTime}
-            onChange={handleSeek}
-            className="w-full h-2 bg-background-card rounded-lg appearance-none cursor-pointer accent-accent-purple"
-            style={{
-              backgroundSize: `${(currentTime * 100) / (duration || 1)}% 100%`,
+          <WaveformScrubber
+            url={audioUrl}
+            progress={duration > 0 ? currentTime / duration : 0}
+            onChange={(time) => {
+              if (audioRef.current) {
+                audioRef.current.currentTime = time
+                if (beatRef.current) beatRef.current.currentTime = time
+                setCurrentTime(time)
+              }
             }}
+            onSeek={(time) => {
+              if (audioRef.current) {
+                audioRef.current.currentTime = time
+                if (beatRef.current) beatRef.current.currentTime = time
+                setCurrentTime(time)
+              }
+            }}
+            height={80}
+            color="#ffffff"
+            playedColor="#a855f7"
           />
           <div className="flex justify-between text-xs text-text-tertiary mt-2 font-mono">
             <span>{formatDuration(Math.round(currentTime))}</span>

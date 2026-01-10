@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { Spinner } from '@/components/atoms/Spinner'
 
 interface WaveformScrubberProps {
-  file: File
+  file?: File
+  url?: string
   initialOffset?: number
   onChange: (offset: number) => void
   onSeek?: (time: number) => void // Called when user taps to seek during playback
@@ -22,8 +23,8 @@ export function WaveformScrubber({
   onSeek,
   width = 600,
   height = 100,
-  color = '#a855f7', // accent-purple (bright) - unplayed portion
-  playedColor = '#ffffff', // white for played portion (SoundCloud-style)
+  color = '#ffffff', // white - unplayed portion
+  playedColor = '#a855f7', // purple for played portion
   progress, // Optional: for playback visualization
 }: WaveformScrubberProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -38,18 +39,24 @@ export function WaveformScrubber({
 
   // 1. Decode Audio
   useEffect(() => {
-    if (!file) return
+    if (!file && !url) return
 
     const decode = async () => {
       setIsLoading(true)
       setError(null)
       try {
-        const arrayBuffer = await file.arrayBuffer()
-        const audioContext = new (
-          window.AudioContext ||
+        let arrayBuffer: ArrayBuffer
+        if (file) {
+          arrayBuffer = await file.arrayBuffer()
+        } else {
+          const response = await fetch(url!)
+          if (!response.ok) throw new Error('Failed to fetch audio')
+          arrayBuffer = await response.arrayBuffer()
+        }
+
+        const audioContext = new (window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext
-        )()
+            .webkitAudioContext)()
         const decoded = await audioContext.decodeAudioData(arrayBuffer)
         setAudioBuffer(decoded)
       } catch (err) {
@@ -60,7 +67,7 @@ export function WaveformScrubber({
       }
     }
     decode()
-  }, [file])
+  }, [file, url])
 
   // 2. Draw Waveform with two-tone coloring (SoundCloud-style)
   const draw = useCallback(() => {

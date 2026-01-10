@@ -72,6 +72,8 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
     if (isPlaying) {
       audioRef.current.pause()
     } else {
+      // Start playback from the cue point (offset)
+      audioRef.current.currentTime = offset
       audioRef.current.play()
     }
     setIsPlaying(!isPlaying)
@@ -113,21 +115,27 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
         throw new Error(data.error || 'Failed to get upload URL')
       }
 
-      const { signedUrl, token, publicUrl } = await signedUrlRes.json()
+      const { signedUrl, publicUrl } = await signedUrlRes.json()
 
       // Step 2: Upload directly to Supabase Storage
       const uploadRes = await fetch(signedUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': file.type,
-          Authorization: `Bearer ${token}`,
+          // Authorization header is usually included in the signed URL and can cause 403 if duplicated or mismatched
         },
         body: file,
       })
 
       if (!uploadRes.ok) {
+        const errorText = await uploadRes.text()
+        console.error('Supabase Upload Error:', {
+          status: uploadRes.status,
+          statusText: uploadRes.statusText,
+          body: errorText,
+        })
         throw new Error(
-          'Direct upload failed. File may be too large or storage is full.'
+          `Upload failed (${uploadRes.status}): ${errorText || uploadRes.statusText || 'Unknown error'}. Check if file is < 50MB and storage is not full.`
         )
       }
 
