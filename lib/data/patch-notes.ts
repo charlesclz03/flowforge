@@ -21,6 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.9.2',
+    date: '2026-01-10',
+    title: 'Practice Player Polish',
+    codename: 'Studio Tune-Up',
+    description:
+      'A focused update refining the Practice Mode experience and squashing critical audio bugs.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Session Timer Restored: The countdown is back, displayed below the word.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '10-Minute Sessions: Fixed premature session termination.',
+          'Gapless Loop: Eliminated audio gap when beats loop.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.9.1',
     date: '2026-01-10',
     title: 'The Mobile Flow',

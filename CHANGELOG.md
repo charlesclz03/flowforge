@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.9.2] - 2026-01-10
+
+### 🎛️ Practice Player Polish
+
+**Focus:** Refined Practice Mode UI and fixed critical audio/session bugs.
+
+### Added
+- **Session Timer:** Restored the countdown timer, now displayed below the active word.
+
+### Fixed
+- **10-Minute Sessions:** Session duration was incorrectly set to 2 min. Now correctly set to 10 min.
+- **Gapless Loop:** Implemented workaround to eliminate the audio gap when beats loop.
+
+---
+
 ## [v1.9.1] - 2026-01-10
 
 ### 📱 The Single-Screen Update ("Mobile Flow")

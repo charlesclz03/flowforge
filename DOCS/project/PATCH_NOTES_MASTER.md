@@ -4,6 +4,21 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 🎛️ Update 1.9.2: Practice Player Polish
+**Release Date:** January 10, 2026
+**Codename:** _Studio Tune-Up_
+
+A focused update to refine the Practice Mode experience and squash critical audio bugs.
+
+### ➕ Additions
+- **Session Timer Restored:** The countdown is back, displayed below the active word inside the player.
+
+### 🩹 Fixes
+- **10-Minute Sessions:** Fixed a bug where sessions auto-stopped after 2 minutes instead of 10.
+- **Gapless Loop:** Implemented an early-seek workaround to eliminate the audio gap when beats loop.
+
+---
+
 ## 📱 Update 1.9.1: The Mobile Flow
 **Release Date:** January 10, 2026
 **Codename:** _App Native_
