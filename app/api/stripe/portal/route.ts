@@ -25,15 +25,10 @@ export async function POST() {
 
     if (!customerId) {
       // Fix for Superadmins who don't have a subscription but need access
-      const SUPERADMIN_EMAILS = [
-        'charles.cluzeaud@gmail.com',
-        'triplyricist@gmail.com',
-      ]
-      const userEmail = session.user.email
-
-      if (userEmail && SUPERADMIN_EMAILS.includes(userEmail)) {
+      if (session.user.role === 'SUPERADMIN') {
+        const userEmail = session.user.email
         const newCustomer = await stripe.customers.create({
-          email: userEmail,
+          email: userEmail!,
           name: session.user.name || undefined,
         })
 

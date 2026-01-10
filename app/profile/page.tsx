@@ -203,11 +203,7 @@ export default function ProfilePage() {
           </div>
         }
         adminSection={
-          session?.user?.id &&
-          (process.env.NEXT_PUBLIC_ADMIN_EMAILS?.includes(
-            session.user.email || ''
-          ) ||
-            session.user.email === 'admin@flowforge.com') ? (
+          session?.user?.role === 'SUPERADMIN' ? (
             <AdminUploadSection />
           ) : undefined
         }
