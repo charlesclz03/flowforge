@@ -6,6 +6,8 @@ export const ACHIEVEMENTS = [
     description: 'Completed your first freestyle session.',
     icon: 'Mic',
     points: 10,
+    target: 1,
+    progressType: 'sessions',
   },
   {
     code: 'SESSION_5',
@@ -13,6 +15,8 @@ export const ACHIEVEMENTS = [
     description: 'Completed 5 sessions.',
     icon: 'Play',
     points: 25,
+    target: 5,
+    progressType: 'sessions',
   },
   {
     code: 'SESSION_20',
@@ -20,6 +24,8 @@ export const ACHIEVEMENTS = [
     description: 'Completed 20 sessions.',
     icon: 'TrendingUp',
     points: 50,
+    target: 20,
+    progressType: 'sessions',
   },
   {
     code: 'SESSION_50',
@@ -27,6 +33,8 @@ export const ACHIEVEMENTS = [
     description: 'Completed 50 sessions.',
     icon: 'Headphones',
     points: 100,
+    target: 50,
+    progressType: 'sessions',
   },
   {
     code: 'SESSION_100',
@@ -34,6 +42,8 @@ export const ACHIEVEMENTS = [
     description: 'Completed 100 sessions.',
     icon: 'Crown',
     points: 500,
+    target: 100,
+    progressType: 'sessions',
   },
 
   // Recording Milestones
@@ -43,6 +53,8 @@ export const ACHIEVEMENTS = [
     description: 'Saved your first recording.',
     icon: 'CassetteTape',
     points: 15,
+    target: 1,
+    progressType: 'recordings',
   },
   {
     code: 'RECORDING_10',
@@ -50,6 +62,8 @@ export const ACHIEVEMENTS = [
     description: 'Saved 10 recordings.',
     icon: 'Library',
     points: 50,
+    target: 10,
+    progressType: 'recordings',
   },
   {
     code: 'RECORDING_50',
@@ -57,6 +71,8 @@ export const ACHIEVEMENTS = [
     description: 'Saved 50 recordings.',
     icon: 'Disc',
     points: 200,
+    target: 50,
+    progressType: 'recordings',
   },
 
   // Streaks
@@ -66,6 +82,8 @@ export const ACHIEVEMENTS = [
     description: 'Practiced for 3 days in a row.',
     icon: 'Flame',
     points: 50,
+    target: 3,
+    progressType: 'streak',
   },
   {
     code: 'STREAK_7',
@@ -73,6 +91,8 @@ export const ACHIEVEMENTS = [
     description: 'Practiced for 7 days in a row.',
     icon: 'Zap',
     points: 100,
+    target: 7,
+    progressType: 'streak',
   },
   {
     code: 'STREAK_30',
@@ -80,6 +100,8 @@ export const ACHIEVEMENTS = [
     description: 'Practiced for 30 days in a row.',
     icon: 'Trophy',
     points: 500,
+    target: 30,
+    progressType: 'streak',
   },
 
   // Beat Exploration
@@ -89,6 +111,8 @@ export const ACHIEVEMENTS = [
     description: 'Practiced on 5 different beats.',
     icon: 'Music',
     points: 30,
+    target: 5,
+    progressType: 'beats',
   },
   {
     code: 'BEAT_MASTER_20',
@@ -96,6 +120,8 @@ export const ACHIEVEMENTS = [
     description: 'Practiced on 20 different beats.',
     icon: 'Disc3',
     points: 100,
+    target: 20,
+    progressType: 'beats',
   },
 
   // Word Vault
@@ -105,6 +131,8 @@ export const ACHIEVEMENTS = [
     description: 'Collected 50 unique words.',
     icon: 'Book',
     points: 50,
+    target: 50,
+    progressType: 'words',
   },
   {
     code: 'WORDS_200',
@@ -112,6 +140,8 @@ export const ACHIEVEMENTS = [
     description: 'Collected 200 unique words.',
     icon: 'Feather',
     points: 150,
+    target: 200,
+    progressType: 'words',
   },
   {
     code: 'WORDS_1000',
@@ -119,9 +149,11 @@ export const ACHIEVEMENTS = [
     description: 'Collected 1000 unique words.',
     icon: 'Scroll',
     points: 1000,
+    target: 1000,
+    progressType: 'words',
   },
 
-  // Time Based
+  // Time Based (no progress tracking - one-time conditions)
   {
     code: 'EARLY_BIRD',
     name: 'Early Bird',
@@ -144,3 +176,7 @@ export const ACHIEVEMENTS = [
     points: 30,
   },
 ]
+
+// Type for progress calculation
+export type ProgressType = 'sessions' | 'recordings' | 'beats' | 'streak' | 'words'
+

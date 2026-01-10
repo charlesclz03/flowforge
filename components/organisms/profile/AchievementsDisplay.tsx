@@ -22,9 +22,40 @@ interface UserAchievementWithAchievement {
   achievement: Achievement
 }
 
+interface Progress {
+  sessions: number
+  recordings: number
+  beats: number
+  streak: number
+  words: number
+}
+
+// Progress type mapping from data.ts codes
+const PROGRESS_MAP: Record<string, { type: keyof Progress; target: number }> = {
+  FIRST_FLOW: { type: 'sessions', target: 1 },
+  SESSION_5: { type: 'sessions', target: 5 },
+  SESSION_20: { type: 'sessions', target: 20 },
+  SESSION_50: { type: 'sessions', target: 50 },
+  SESSION_100: { type: 'sessions', target: 100 },
+  FIRST_RECORDING: { type: 'recordings', target: 1 },
+  RECORDING_10: { type: 'recordings', target: 10 },
+  RECORDING_50: { type: 'recordings', target: 50 },
+  BEAT_EXPLORER_5: { type: 'beats', target: 5 },
+  BEAT_MASTER_20: { type: 'beats', target: 20 },
+  STREAK_3: { type: 'streak', target: 3 },
+  STREAK_7: { type: 'streak', target: 7 },
+  STREAK_30: { type: 'streak', target: 30 },
+  WORDS_50: { type: 'words', target: 50 },
+  WORDS_200: { type: 'words', target: 200 },
+  WORDS_1000: { type: 'words', target: 1000 },
+}
+
 type EnrichedAchievement = Achievement & {
   unlockedAt?: Date | string
   isUnlocked: boolean
+  progressCurrent?: number
+  progressTarget?: number
+  progressPercent?: number
 }
 
 import { motion } from 'framer-motion'
@@ -45,7 +76,8 @@ export function AchievementsDisplay() {
     if (filter === 'all') return true
     if (filter === 'owned') return ach.isUnlocked
     if (filter === 'not_achieved') return !ach.isUnlocked
-    if (filter === 'in_progress') return false // No progress tracking yet
+    if (filter === 'in_progress')
+      return !ach.isUnlocked && (ach.progressPercent || 0) > 0
     return true
   })
 
@@ -60,6 +92,13 @@ export function AchievementsDisplay() {
           const userAch =
             data.userAchievements as UserAchievementWithAchievement[]
           const allAch = data.allAchievements as Achievement[]
+          const progressData = (data.progress as Progress) || {
+            sessions: 0,
+            recordings: 0,
+            beats: 0,
+            streak: 0,
+            words: 0,
+          }
 
           const unlockedMap = new Map(
             userAch.map((ua) => [ua.achievementId, ua.unlockedAt])
@@ -69,10 +108,29 @@ export function AchievementsDisplay() {
           const enriched = allAch.map((ach) => {
             const unlockedAt = unlockedMap.get(ach.id)
             if (unlockedAt) points += ach.points
+
+            // Calculate progress for locked achievements
+            const progressInfo = PROGRESS_MAP[ach.code]
+            let progressCurrent: number | undefined
+            let progressTarget: number | undefined
+            let progressPercent: number | undefined
+
+            if (!unlockedAt && progressInfo) {
+              progressTarget = progressInfo.target
+              progressCurrent = progressData[progressInfo.type]
+              progressPercent = Math.min(
+                100,
+                (progressCurrent / progressTarget) * 100
+              )
+            }
+
             return {
               ...ach,
               unlockedAt: unlockedAt as Date | string | undefined,
               isUnlocked: !!unlockedAt,
+              progressCurrent,
+              progressTarget,
+              progressPercent,
             }
           })
 
@@ -154,14 +212,28 @@ export function AchievementsDisplay() {
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
           {filteredAchievements.map((ach) => {
-            // Ring Color based on points/tier (Mock logic)
+            // Ring Color based on points/tier
             const tierColor =
               ach.points >= 50
                 ? '#FF9500'
                 : ach.points >= 20
                   ? '#E0E0E0'
                   : '#CD7F32' // Gold, Silver, Bronze
-            const strokeColor = ach.isUnlocked ? tierColor : '#333'
+
+            // For locked achievements with progress, use accent purple
+            const progressColor = '#7D7AFF' // accent-purple
+            const strokeColor = ach.isUnlocked
+              ? tierColor
+              : ach.progressPercent && ach.progressPercent > 0
+                ? progressColor
+                : '#333'
+
+            // Calculate stroke offset (283 = full circle, 0 = empty)
+            const circumference = 283
+            const targetOffset = ach.isUnlocked
+              ? 0
+              : circumference -
+                (circumference * (ach.progressPercent || 0)) / 100
 
             return (
               <motion.div
@@ -196,7 +268,7 @@ export function AchievementsDisplay() {
                       strokeWidth="6"
                       strokeDasharray="283" // 2 * PI * 45
                       initial={{ strokeDashoffset: 283 }}
-                      animate={{ strokeDashoffset: ach.isUnlocked ? 0 : 283 }}
+                      animate={{ strokeDashoffset: targetOffset }}
                       transition={{
                         duration: 1.5,
                         ease: 'easeOut',
@@ -243,12 +315,22 @@ export function AchievementsDisplay() {
                     {ach.points} pts
                   </div>
                   {/* Description always visible */}
-                  <div className={cn(
-                    'text-[9px] mt-1 leading-tight line-clamp-2',
-                    ach.isUnlocked ? 'text-text-secondary' : 'text-text-tertiary/70'
-                  )}>
+                  <div
+                    className={cn(
+                      'text-[9px] mt-1 leading-tight line-clamp-2',
+                      ach.isUnlocked
+                        ? 'text-text-secondary'
+                        : 'text-text-tertiary/70'
+                    )}
+                  >
                     {ach.description}
                   </div>
+                  {/* Progress indicator for locked achievements */}
+                  {!ach.isUnlocked && ach.progressTarget && (
+                    <div className="text-[10px] mt-1 font-mono font-bold text-accent-purple">
+                      {ach.progressCurrent}/{ach.progressTarget}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )

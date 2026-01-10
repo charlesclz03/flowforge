@@ -11,13 +11,44 @@ export async function GET() {
     let userAchievements: Prisma.UserAchievementGetPayload<{
       include: { achievement: true }
     }>[] = []
+    
+    // Progress tracking variables
+    let progress = {
+      sessions: 0,
+      recordings: 0,
+      beats: 0,
+      streak: 0,
+      words: 0,
+    }
 
     if (session?.user?.id) {
-      userAchievements = await prisma.userAchievement.findMany({
-        where: { userId: session.user.id },
-        include: { achievement: true },
-        orderBy: { unlockedAt: 'desc' },
-      })
+      const userId = session.user.id
+      
+      // Fetch achievements and progress counts in parallel
+      const [achievements, sessionCount, recordingCount, distinctBeats] = await Promise.all([
+        prisma.userAchievement.findMany({
+          where: { userId },
+          include: { achievement: true },
+          orderBy: { unlockedAt: 'desc' },
+        }),
+        prisma.freestyleSession.count({ where: { userId } }),
+        prisma.freestyleSession.count({
+          where: { userId, storageUrl: { not: null } },
+        }),
+        prisma.freestyleSession.groupBy({
+          by: ['beatId'],
+          where: { userId },
+        }),
+      ])
+      
+      userAchievements = achievements
+      progress = {
+        sessions: sessionCount,
+        recordings: recordingCount,
+        beats: distinctBeats.length,
+        streak: 0, // TODO: Calculate actual streak
+        words: 0,  // TODO: Calculate unique words used
+      }
     }
 
     let allAchievements = await prisma.achievement.findMany({
@@ -43,6 +74,7 @@ export async function GET() {
     return NextResponse.json({
       userAchievements,
       allAchievements,
+      progress,
     })
   } catch (error) {
     console.error('Failed to fetch achievements', error)
@@ -52,3 +84,4 @@ export async function GET() {
     )
   }
 }
+

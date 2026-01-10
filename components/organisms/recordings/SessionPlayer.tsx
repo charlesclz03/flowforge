@@ -244,13 +244,14 @@ export const SessionPlayer = forwardRef<
 
       audio.addEventListener('timeupdate', () => {
         setCurrentTime(audio.currentTime)
+        // Sync beat audio only if drift is significant (> 300ms)
+        // Lower thresholds cause stuttering due to constant seeking
         if (beatRef.current) {
           const targetTime = audio.currentTime - nudge / 1000
-          // Only sync if significant drift
-          if (Math.abs(beatRef.current.currentTime - targetTime) > 0.05) {
-            if (targetTime >= 0) {
-              beatRef.current.currentTime = targetTime
-            }
+          const drift = Math.abs(beatRef.current.currentTime - targetTime)
+          // Only sync if drift exceeds 0.3s to avoid stuttering
+          if (drift > 0.3 && targetTime >= 0) {
+            beatRef.current.currentTime = targetTime
           }
         }
       })
