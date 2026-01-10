@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createClient } from '@supabase/supabase-js'
-import { RECORDINGS_BUCKET } from '@/lib/supabase/server'
+import { RECORDINGS_BUCKET, BEATS_BUCKET } from '@/lib/supabase/server'
 
 /**
  * Generates a signed URL for direct-to-Supabase uploads.
@@ -50,15 +50,16 @@ export async function POST(req: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Determine bucket (default to recordings, allow 'beats' for admins)
+    const effectiveRole = user?.role || session.user.role
     const targetBucket =
-      session.user.role === 'SUPERADMIN' && requestedBucket === 'beats'
-        ? 'beats'
+      effectiveRole === 'SUPERADMIN' && requestedBucket === 'beats'
+        ? BEATS_BUCKET
         : RECORDINGS_BUCKET
 
     // Generate a unique file path
     const safeName = fileName.replace(/[^a-zA-Z0-9.-]/g, '-').toLowerCase()
     const storagePath =
-      targetBucket === 'beats'
+      targetBucket === BEATS_BUCKET
         ? `library/${Date.now()}-${safeName}`
         : `users/${session.user.id}/${Date.now()}-${safeName}`
 
@@ -70,7 +71,11 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error('Signed URL Error:', error)
       return NextResponse.json(
-        { error: 'Failed to create upload URL' },
+        {
+          error: 'Failed to create upload URL',
+          details: error.message,
+          bucket: targetBucket,
+        },
         { status: 500 }
       )
     }

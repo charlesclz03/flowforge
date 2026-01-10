@@ -52,7 +52,9 @@ export function AdminUploadSection() {
 
       if (!signedUrlRes.ok) {
         const data = await signedUrlRes.json()
-        throw new Error(data.error || 'Failed to get upload URL')
+        throw new Error(
+          data.details || data.error || 'Failed to get upload URL'
+        )
       }
 
       const { signedUrl, publicUrl } = await signedUrlRes.json()
