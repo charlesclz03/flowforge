@@ -23,7 +23,6 @@ import { ScreenPage } from '@/components/layout/ScreenPage'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
-import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { Button } from '@/components/atoms/Button'
 import { Modal } from '@/components/atoms/Modal'
 
@@ -857,114 +856,44 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-between h-full px-4 pt-4 pb-24 md:pb-8 max-w-lg mx-auto w-full">
-        {/* Top Section: Word Display / Visualizer */}
-        <div className="flex-1 w-full flex flex-col items-center justify-center min-h-0 relative">
-          {/* Combo / Vibe Overlay */}
-          <AnimatePresence>
-            {combo > 1 && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: -20 }}
-                className="absolute top-4 right-4 z-20 pointer-events-none"
-              >
-                <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent-purple/30 shadow-glow-sm">
-                  <span className="text-xl">🔥</span>
-                  <span className="font-bold font-mono text-accent-purple">
-                    {combo}x
-                  </span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Siren Overlay (Visual) */}
-          {isSirenActive && (
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:pb-8 max-w-lg mx-auto w-full">
+        {/* Combo / Vibe Overlay - Absolute Top Right */}
+        <AnimatePresence>
+          {combo > 1 && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.15 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 pointer-events-none rounded-3xl z-0"
-              style={{
-                background:
-                  sirenPhase === 0
-                    ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
-                    : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-              }}
-            />
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: -20 }}
+              className="absolute top-4 right-4 z-20 pointer-events-none"
+            >
+              <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent-purple/30 shadow-glow-sm">
+                <span className="text-xl">🔥</span>
+                <span className="font-bold font-mono text-accent-purple">
+                  {combo}x
+                </span>
+              </div>
+            </motion.div>
           )}
+        </AnimatePresence>
 
-          {/* Dynamic Word Display */}
-          <div className="relative w-full aspect-square max-h-[300px] sm:max-h-[350px] flex items-center justify-center mb-4">
-            {/* Word Text */}
-            <AnimatePresence mode="wait">
-              {currentWord ? (
-                <motion.div
-                  key={`${currentWord}-${wordIndex}`}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.5,
-                    y: 20,
-                    filter: 'blur(10px)',
-                  }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                    filter: 'blur(0px)',
-                    rotate: [-1, 1, -1, 0],
-                  }}
-                  exit={{ opacity: 0, scale: 1.5, filter: 'blur(20px)' }}
-                  transition={{
-                    type: 'spring',
-                    duration: 0.4,
-                    bounce: 0.4,
-                  }}
-                  className="z-20 text-center w-full px-2"
-                >
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/70 tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase">
-                    {currentWord}
-                  </h1>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="z-20 text-center"
-                >
-                  {isRecording ? (
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
-                      <p className="text-text-secondary font-mono text-sm tracking-wider uppercase">
-                        Listening...
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-center space-y-2">
-                      <h2 className="text-2xl font-bold text-white/50">
-                        Ready?
-                      </h2>
-                      <p className="text-sm text-text-tertiary">
-                        Press play to start the session
-                      </p>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+        {/* Siren Overlay (Global Background Flash) */}
+        {isSirenActive && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 pointer-events-none rounded-3xl z-0"
+            style={{
+              background:
+                sirenPhase === 0
+                  ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
+                  : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+            }}
+          />
+        )}
 
-            {/* Visualizer Background */}
-            <div className="absolute inset-0 z-0 opacity-40 scale-125">
-              <AudioVisualizer
-                isPlaying={beatPlayer.isPlaying || isRecording}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section: Controls - Fixed Height */}
-        <div className="w-full flex-none z-20 pb-safe-offset-4">
+        {/* Main Controls - Centered */}
+        <div className="w-full flex-none z-20 flex items-center justify-center">
           {selectedBeat ? (
             <PracticeControls
               selectedBeat={selectedBeat}
@@ -993,6 +922,7 @@ export default function PracticePage() {
               handleDifficultyChange={setDifficulty}
               handleFrequencyChange={setFrequency}
               handleUpgrade={() => setPremiumTrigger('recording')}
+              isGolden={false} // Defaulting to false as logic was removed from PracticePage, can be re-enabled if needed
             />
           ) : (
             <div className="flex flex-col items-center justify-center space-y-4 py-8">

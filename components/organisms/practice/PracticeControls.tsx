@@ -13,7 +13,7 @@ import {
 import { motion } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { TimerRing } from '@/components/atoms/TimerRing'
-import { WordPrompt } from '@/components/molecules/practice/WordPrompt'
+import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
@@ -232,22 +232,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
           )}
         </div>
 
-        {/* Word Prompt */}
-        <div
-          id="tour-word-prompt"
-          className="flex w-full items-center justify-center"
-        >
-          {/* Center Word Prompt */}
-          <div className="mb-4 sm:mb-6">
-            <WordPrompt
-              word={currentWord || ''}
-              show={isPlaying}
-              isGolden={isGolden}
-              isSirenActive={isSirenActive}
-            />
-          </div>
-        </div>
-
         {error && (
           <div className="text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
             {error}
@@ -320,6 +304,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
             )}
           >
+            {/* Visualizer Background */}
+            <div className="absolute inset-0 z-0 opacity-60 scale-125">
+              <AudioVisualizer isPlaying={isPlaying || isRecording} />
+            </div>
+
             {/* Ambient Siren Glows */}
             <div
               className={cn(
@@ -343,7 +332,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
 
             {/* Timer Ring */}
-            <div className="absolute inset-0 p-6 flex items-center justify-center">
+            <div className="absolute inset-0 p-6 flex items-center justify-center pointer-events-none">
               <TimerRing
                 progress={intervalProgress}
                 isSirenActive={isSirenActive}
@@ -363,7 +352,41 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <div className="relative z-10 flex flex-col items-center justify-center text-center">
               {isPlaying ? (
                 <div className="flex flex-col items-center justify-center space-y-2">
-                  {countdownValue ? (
+                  {currentWord ? (
+                    // Display Word if Active
+                    <motion.div
+                      key={currentWord}
+                      initial={{
+                        opacity: 0,
+                        scale: 0.5,
+                        filter: 'blur(10px)',
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        filter: 'blur(0px)',
+                        rotate: [-1, 1, -1, 0],
+                      }}
+                      exit={{ opacity: 0, scale: 1.5, filter: 'blur(20px)' }}
+                      transition={{
+                        type: 'spring',
+                        duration: 0.4,
+                        bounce: 0.4,
+                      }}
+                      className="flex flex-col items-center justify-center max-w-[200px]"
+                    >
+                      <h1
+                        className={cn(
+                          'text-4xl sm:text-5xl font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase leading-none',
+                          isGolden
+                            ? 'bg-gradient-to-r from-yellow-300 via-amber-500 to-yellow-600'
+                            : 'bg-gradient-to-br from-white via-white to-white/70'
+                        )}
+                      >
+                        {currentWord}
+                      </h1>
+                    </motion.div>
+                  ) : countdownValue ? (
                     <motion.div
                       key={countdownValue}
                       initial={{ opacity: 0, scale: 0.5 }}
@@ -380,6 +403,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     </motion.div>
                   ) : (
                     <>
+                      {/* Standard Timer View */}
                       <div className="flex items-center gap-2">
                         {isRecording && !isInfiniteMode && (
                           <span className="relative flex h-2.5 w-2.5">
@@ -421,10 +445,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
                             Math.max(0, sessionDuration - (currentTime || 0))
                           )
                         )}
-                      </span>
-
-                      <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] mt-4">
-                        Tap to Stop
                       </span>
                     </>
                   )}
