@@ -18,7 +18,6 @@ export function AdminUploadSection() {
   const [bpm, setBpm] = useState('')
   const [producer, setProducer] = useState('')
   const [genre, setGenre] = useState('Trap')
-  const [difficulty, setDifficulty] = useState('Medium')
   const [tags, setTags] = useState('')
   const [file, setFile] = useState<File | null>(null)
 
@@ -46,8 +45,6 @@ export function AdminUploadSection() {
       formData.append('bpm', bpm)
       formData.append('artistName', producer) // Map producer to artistName
       formData.append('genre', genre)
-      formData.append('genre', genre)
-      formData.append('difficulty', difficulty)
       formData.append('tags', tags)
       // Hardcode required backend fields for now
       formData.append('isPremium', 'true')
@@ -58,7 +55,10 @@ export function AdminUploadSection() {
       })
 
       if (!res.ok) {
-        throw new Error('Upload failed')
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(
+          errorData.error || `Upload failed (Status: ${res.status})`
+        )
       }
 
       setSuccess(`Beat "${title}" uploaded successfully!`)
@@ -194,24 +194,8 @@ export function AdminUploadSection() {
               </select>
             </div>
 
-            {/* Difficulty */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">
-                Difficulty
-              </label>
-              <select
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-                className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple appearance-none"
-              >
-                <option value="Easy">Easy (Simple formatting)</option>
-                <option value="Medium">Medium (Standard flow)</option>
-                <option value="Hard">Hard (Complex patterns)</option>
-              </select>
-            </div>
-
             {/* Tags */}
-            <div className="space-y-2">
+            <div className="md:col-span-2 space-y-2">
               <label className="text-sm font-medium text-text-secondary">
                 Tags (comma separated)
               </label>

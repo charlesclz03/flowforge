@@ -5,7 +5,8 @@ import { prisma } from '@/lib/prisma'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase Client
-
+export const runtime = 'nodejs'
+export const maxDuration = 60
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
@@ -29,9 +30,9 @@ export async function POST(req: NextRequest) {
     const bpm = parseInt(formData.get('bpm') as string)
     const artistName = formData.get('artistName') as string
     const genre = formData.get('genre') as string
-    const difficulty = formData.get('difficulty') as string // Sent as string
     const isPremium = formData.get('isPremium') === 'true'
     const tagsRaw = formData.get('tags') as string
+    const difficulty = 'Medium' // Default since users choose per session
 
     if (!audioFile || !title || !bpm) {
       return NextResponse.json(

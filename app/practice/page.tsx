@@ -234,7 +234,8 @@ export default function PracticePage() {
       },
       onError: (err) => {
         handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
-        setSessionSummary(null) // Revert UI on failure
+        // Note: We don't null out sessionSummary here as per user UX flow, 
+        // but we ensure the "recording" state is dead so navigation works.
       },
     }
   )
@@ -354,8 +355,8 @@ export default function PracticePage() {
 
   const handleStop = useCallback(() => {
     play('stop')
-    stopRecording()
     stopPlayback()
+    stopRecording() // This will trigger handleRecordingComplete
   }, [play, stopRecording, stopPlayback])
 
   const handleBackNavigation = useCallback(() => {
