@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useCallback } from 'react'
 import { Card } from '@/components/atoms/Card'
 import { Spinner } from '@/components/atoms/Spinner'
 import { EmptyState } from '@/components/molecules/feedback/EmptyState'
@@ -19,6 +20,11 @@ export function RecordingsList({
   onDelete,
   onDownload,
 }: RecordingsListProps) {
+  const [playingId, setPlayingId] = useState<string | null>(null)
+
+  const handlePlayProxy = useCallback((id: string) => {
+    setPlayingId((prev) => (prev === id ? null : id))
+  }, [])
   if (isLoading) {
     return (
       <Card>
@@ -49,6 +55,8 @@ export function RecordingsList({
           recording={recording}
           onDelete={onDelete}
           onDownload={onDownload}
+          playingId={playingId}
+          onPlay={() => handlePlayProxy(recording.id)}
         />
       ))}
     </div>

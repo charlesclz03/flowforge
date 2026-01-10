@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import Link from 'next/link'
 import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
@@ -18,6 +18,8 @@ interface RecordingCardProps {
   onDelete: (id: string) => Promise<void>
   onDownload: (recording: FreestyleSessionWithBeat) => Promise<void>
   className?: string
+  playingId?: string | null
+  onPlay?: () => void
 }
 
 export const RecordingCard = memo(function RecordingCard({
@@ -25,31 +27,14 @@ export const RecordingCard = memo(function RecordingCard({
   onDelete,
   onDownload,
   className,
+  playingId,
+  onPlay,
 }: RecordingCardProps) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackError, setPlaybackError] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
-
-  // Memoize difficulty labels to avoid recreating on every render
-  const difficultyLabels = useMemo(
-    () => ({
-      1: 'Easy',
-      2: 'Medium',
-      3: 'Hard',
-    }),
-    []
-  )
-
-  const difficultyColors = useMemo(
-    () => ({
-      1: 'text-accent-green',
-      2: 'text-accent-orange',
-      3: 'text-accent-red',
-    }),
-    []
-  )
 
   const handleDelete = useCallback(async () => {
     if (!confirm('Are you sure you want to delete this recording?')) {
@@ -132,10 +117,13 @@ export const RecordingCard = memo(function RecordingCard({
       }
 
       createdAudio.onerror = (e) => {
-        console.error('Playback error:', e)
-        setPlaybackError(
-          'Failed to play recording. The file may be missing or corrupted.'
-        )
+        // Only show error if we were actually trying to play
+        if (playingId === recording.id) {
+          console.error('Playback error:', e)
+          setPlaybackError(
+            'Failed to play recording. The file may be missing or corrupted.'
+          )
+        }
         setIsPlaying(false)
       }
     }
@@ -161,35 +149,48 @@ export const RecordingCard = memo(function RecordingCard({
         createdBeat.src = ''
       }
     }
-  }, [recording.storageUrl, recording.beat])
+  }, [recording.storageUrl, recording.beat, playingId, recording.id])
+
+  // Effect: Sync local state with global playingId
+  useEffect(() => {
+    if (playingId !== undefined) {
+      if (playingId === recording.id) {
+        // We SHOULD be playing - manual click starts playback, handled in click handler
+      } else {
+        // We should NOT be playing
+        if (isPlaying) {
+          setIsPlaying(false)
+          if (audioRef.current) audioRef.current.pause()
+          if (beatRef.current) beatRef.current.pause()
+        }
+      }
+    }
+  }, [playingId, recording.id, isPlaying])
 
   const handlePlay = useCallback(() => {
     if (!audioRef.current) return
 
-    // If play is triggered, we start audio. The onplay listener handles the beat.
-    // If pause is triggered, we pause audio. The onpause listener handles the beat.
-    // However, for play, we need to handle potential promise rejection logic which is done in onplay.
-    // Syncing: Reset beat if starting from 0?
-    // Since we don't have seek, play always continues.
-    // The onended resets beat to 0.
-
     if (isPlaying) {
       audioRef.current.pause()
+      // Optional: onPlay() to toggle off?
+      // For now we just pause locally, playingId remains set in list until another plays
+      // But if we want consistent state, we could call onPlay() which might toggle it off in parent
+      if (onPlay && playingId === recording.id) onPlay()
     } else {
-      audioRef.current.play().catch((err) => {
-        console.error('Error playing audio:', err)
-        setIsPlaying(false)
-      })
-    }
-  }, [isPlaying])
+      if (onPlay) onPlay()
 
-  const normalizedDifficulty = (
-    recording.difficulty === 1 ||
-    recording.difficulty === 2 ||
-    recording.difficulty === 3
-      ? recording.difficulty
-      : 2
-  ) as 1 | 2 | 3
+      const playPromise = audioRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.error('Error playing audio:', err)
+          setIsPlaying(false)
+          if (err.name !== 'AbortError') {
+            setPlaybackError('Failed to play. Please try again.')
+          }
+        })
+      }
+    }
+  }, [isPlaying, onPlay, playingId, recording.id])
 
   return (
     <Card className={cn('relative', className)}>
@@ -236,15 +237,7 @@ export const RecordingCard = memo(function RecordingCard({
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-white/10" />
-              {recording.frequency} bars
-            </span>
-            <span
-              className={cn(
-                'px-2 py-0.5 rounded-full bg-white/5 border border-white/10',
-                difficultyColors[normalizedDifficulty]
-              )}
-            >
-              {difficultyLabels[normalizedDifficulty]}
+              {recording.wordCount || 0} Words
             </span>
             <span className="text-white/20">
               {formatRelativeTime(recording.createdAt)}

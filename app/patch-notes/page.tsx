@@ -5,12 +5,14 @@ import { PATCH_NOTES } from '@/lib/data/patch-notes'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { FeedbackForm } from '@/components/features/feedback/FeedbackForm'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function PatchNotesPage() {
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-purple-500/30">
-      <AppHeader />
+      <AppHeader showBackButton onBack={() => router.back()} />
 
       <main className="pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">

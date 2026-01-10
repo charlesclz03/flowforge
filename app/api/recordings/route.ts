@@ -92,7 +92,8 @@ export async function POST(request: Request) {
         mode: 'solo',
         restarts,
         playbacks,
-      }),
+        wordCount,
+      } as any),
       supabase.storage
         .from(RECORDINGS_BUCKET)
         .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS),
@@ -195,7 +196,10 @@ export async function POST(request: Request) {
         }
       }
     } catch (err) {
-      console.error('XP update failed. Possible causes: DB Schema mismatch, missing User record, or connection issue.', err)
+      console.error(
+        'XP update failed. Possible causes: DB Schema mismatch, missing User record, or connection issue.',
+        err
+      )
       if (err instanceof Error) console.error(err.stack)
     }
 

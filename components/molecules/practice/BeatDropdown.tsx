@@ -318,26 +318,33 @@ export function BeatDropdown(props: BeatDropdownProps) {
                           >
                             {beat.title}
                           </p>
-                          <div
-                            onClick={(e) => handleToggleFavorite(beat.id, e)}
-                            className={cn(
-                              'transition-colors cursor-pointer p-1 -m-1',
-                              favoriteIds.has(beat.id)
-                                ? 'text-accent-red'
-                                : 'text-text-tertiary hover:text-white'
-                            )}
-                          >
-                            <Heart
-                              size={14}
-                              className={cn(
-                                favoriteIds.has(beat.id) && 'fill-current'
-                              )}
-                            />
-                          </div>
                         </div>
                         <p className="text-xs text-text-tertiary">
                           {beat.bpm} BPM • {beat.genre}
                         </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {beat.title === 'New' && (
+                        <div className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-accent-blue text-black/80">
+                          NEW
+                        </div>
+                      )}
+                      <div
+                        onClick={(e) => handleToggleFavorite(beat.id, e)}
+                        className={cn(
+                          'transition-colors cursor-pointer p-2 -m-2',
+                          favoriteIds.has(beat.id)
+                            ? 'text-accent-red'
+                            : 'text-text-tertiary hover:text-white'
+                        )}
+                      >
+                        <Heart
+                          size={16}
+                          className={cn(
+                            favoriteIds.has(beat.id) && 'fill-current'
+                          )}
+                        />
                       </div>
                     </div>
                   </div>
@@ -408,36 +415,27 @@ export function BeatDropdown(props: BeatDropdownProps) {
                                 >
                                   {beat.title}
                                 </p>
-                                <div
-                                  onClick={(e) =>
-                                    handleToggleFavorite(beat.id, e)
-                                  }
-                                  className={cn(
-                                    'transition-colors cursor-pointer p-1 -m-1',
-                                    favoriteIds.has(beat.id)
-                                      ? 'text-accent-red'
-                                      : 'text-text-tertiary hover:text-white'
-                                  )}
-                                >
-                                  <Heart
-                                    size={14}
-                                    className={cn(
-                                      favoriteIds.has(beat.id) && 'fill-current'
-                                    )}
-                                  />
-                                </div>
                               </div>
                               <p className="text-xs text-text-tertiary">
                                 {beat.bpm} BPM • Custom
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
+                            <div
+                              onClick={(e) => handleToggleFavorite(beat.id, e)}
+                              className={cn(
+                                'transition-colors cursor-pointer p-2 -m-2',
+                                'text-text-tertiary hover:text-white'
+                              )}
+                            >
+                              <Heart size={16} />
+                            </div>
                             <div
                               onClick={(e) => handleDeleteBeat(beat.id, e)}
                               className="p-2 text-text-tertiary hover:text-accent-red opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             >
-                              <Trash2 size={14} />
+                              <Trash2 size={16} />
                             </div>
                             {selectedBeat?.id === beat.id && (
                               <Check size={16} className="text-accent-purple" />

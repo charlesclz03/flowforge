@@ -856,14 +856,9 @@ export default function PracticePage() {
       />
       <div className="min-h-screen pt-4 pb-4 px-4 md:px-8 max-w-7xl mx-auto space-y-4">
         {/* Header */}
-        <div className="flex justify-center items-center">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-            {selectedBeat ? selectedBeat.title : 'Practice Session'}
-          </h1>
-        </div>
 
         {/* Classic Centralized Layout */}
-        <div className="relative flex flex-col items-center justify-center py-2 min-h-[50vh]">
+        <div className="relative flex flex-col items-center justify-start pt-8 md:pt-12 min-h-[calc(100vh-100px)]">
           {/* Side Visualizers */}
           <div className="absolute inset-y-0 left-0 w-1/4 md:w-1/6 hidden md:block opacity-50 pointer-events-none">
             <AudioVisualizer

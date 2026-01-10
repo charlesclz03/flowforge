@@ -2,7 +2,7 @@
 
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { FreestyleSessionWithBeat } from '@/types/database'
-import { Calendar, Clock, Disc, Mic, BarChart, Activity } from 'lucide-react'
+import { Calendar, Clock, Disc, Activity, Type } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 
 interface SessionMetadataProps {
@@ -10,15 +10,6 @@ interface SessionMetadataProps {
 }
 
 export function SessionMetadata({ recording }: SessionMetadataProps) {
-  const difficultyLabel =
-    ['Easy', 'Medium', 'Hard'][recording.difficulty - 1] || 'Unknown'
-  const difficultyColor =
-    {
-      1: 'text-accent-green',
-      2: 'text-accent-orange',
-      3: 'text-accent-red',
-    }[recording.difficulty] || 'text-text-secondary'
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
       {/* Beat Details */}
@@ -74,20 +65,11 @@ export function SessionMetadata({ recording }: SessionMetadataProps) {
               {formatDuration(recording.durationSeconds)}
             </span>
           </div>
-          <div className="flex justify-between items-center border-b border-white/5 pb-2">
-            <span className="text-text-secondary">Difficulty</span>
-            <span
-              className={`font-medium ${difficultyColor} flex items-center gap-2`}
-            >
-              <BarChart size={14} />
-              {difficultyLabel}
-            </span>
-          </div>
           <div className="flex justify-between items-center">
-            <span className="text-text-secondary">Frequency</span>
+            <span className="text-text-secondary">Word Count</span>
             <span className="text-white font-medium flex items-center gap-2">
-              <Mic size={14} className="text-text-tertiary" />
-              {recording.frequency} bars
+              <Type size={14} className="text-text-tertiary" />
+              {recording.wordCount || 0} Words
             </span>
           </div>
         </div>

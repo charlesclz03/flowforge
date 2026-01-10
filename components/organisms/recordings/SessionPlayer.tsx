@@ -424,16 +424,26 @@ export const SessionPlayer = forwardRef<
                 <div className="flex items-center gap-3 text-[10px] text-text-tertiary">
                   {sessionDifficulty && (
                     <span
-                      className={`flex items-center gap-1 ${
+                      className={cn(
+                        'flex items-center gap-1',
                         sessionDifficulty === 1
                           ? 'text-accent-green'
                           : sessionDifficulty === 2
                             ? 'text-accent-orange'
-                            : 'text-accent-red'
-                      }`}
+                            : sessionDifficulty === 3
+                              ? 'text-accent-red'
+                              : 'text-accent-purple'
+                      )}
                     >
                       <BarChart size={10} />
-                      {['Easy', 'Medium', 'Hard'][sessionDifficulty - 1]}
+                      {
+                        {
+                          1: 'Easy',
+                          2: 'Medium',
+                          3: 'Hard',
+                          4: 'Random',
+                        }[sessionDifficulty]
+                      }
                     </span>
                   )}
                   {sessionDate && (

@@ -12,13 +12,15 @@ import {
 const inMemorySessions: FreestyleSession[] = []
 
 export async function createSession(
-  data: Omit<FreestyleSession, 'id' | 'createdAt' | 'updatedAt'>
+  data: Omit<FreestyleSession, 'id' | 'createdAt'>
 ): Promise<DatabaseResult<FreestyleSession>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
       const created: FreestyleSession = {
         id: 'local-' + Date.now().toString(36),
         createdAt: new Date(),
+        // @ts-expect-error - type sync
+        wordCount: 0,
         ...data,
       }
       inMemorySessions.unshift(created)
@@ -50,26 +52,30 @@ export async function getSessions(
 ): Promise<DatabaseResult<FreestyleSessionWithBeat[]>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
-      const mapped: FreestyleSessionWithBeat[] = inMemorySessions.map((s) => ({
-        ...s,
-        beat: {
-          id: s.beatId,
-          title: 'Local Beat',
-          bpm: 90,
-          storageUrl: '/beats/2-Naughty.mp3',
-          coverImage: null,
-          isPremium: false,
-          genre: null,
-          duration: null,
-          artistName: 'FreeStyla',
-          difficulty: 'Easy',
-          tags: [],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          offset: 0,
-          uploaderId: null,
-        },
-      }))
+      const mapped: FreestyleSessionWithBeat[] = inMemorySessions.map(
+        (s) =>
+          ({
+            ...s,
+            beat: {
+              id: s.beatId,
+              title: 'Local Beat',
+              bpm: 90,
+              storageUrl: '/beats/2-Naughty.mp3',
+              coverImage: null,
+              isPremium: false,
+              genre: null,
+              duration: null,
+              artistName: 'FreeStyla',
+              difficulty: 'Easy',
+              tags: [],
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              offset: 0,
+              uploaderId: null,
+            },
+            wordCount: s.wordCount || 0,
+          }) as any
+      )
       return { success: true, data: mapped }
     }
     const where: Prisma.FreestyleSessionWhereInput = {}

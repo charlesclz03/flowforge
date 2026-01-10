@@ -12,6 +12,7 @@ import {
   LogOut,
   LogIn,
   ChevronRight,
+  ChevronDown,
   Sparkles,
   Zap,
   Crown,
@@ -28,6 +29,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const [isManaging, setIsManaging] = useState(false)
   const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } =
     usePracticeSession()
+  const [isStudioOpen, setIsStudioOpen] = useState(false)
 
   // Determine subscription status
   const isPro =
@@ -130,12 +132,37 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         </div>
       </div>
 
-      {/* Audio Settings Group */}
+      {/* Studio Controls (Collapsible) */}
       <div className="px-4 space-y-2">
-        <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-widest ml-2 mb-3">
-          Studio Controls
-        </h3>
-        <div className="overflow-hidden rounded-2xl bg-background-elevated border border-white/5 divide-y divide-white/5">
+        <button
+          onClick={() => setIsStudioOpen(!isStudioOpen)}
+          className="w-full flex items-center justify-between ml-2 mb-3 group"
+        >
+          <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-widest group-hover:text-white transition-colors">
+            Studio Controls
+          </h3>
+          <div
+            className={cn(
+              'p-1 rounded-md bg-white/5 text-text-secondary transition-all',
+              isStudioOpen && 'bg-accent-purple/20 text-accent-purple'
+            )}
+          >
+            <ChevronDown
+              size={14}
+              className={cn(
+                'transition-transform duration-300',
+                isStudioOpen && 'rotate-180'
+              )}
+            />
+          </div>
+        </button>
+
+        <div
+          className={cn(
+            'overflow-hidden rounded-2xl bg-background-elevated border border-white/5 divide-y divide-white/5 transition-all duration-500 ease-in-out',
+            isStudioOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          )}
+        >
           {/* TTS Toggle */}
           <div className="flex items-center justify-between px-5 py-4">
             <div className="flex items-center gap-4">
@@ -234,42 +261,58 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         </div>
       </div>
 
-      {/* Support & Info Group */}
+      {/* Support & Legal Grid (Condensed) */}
       <div className="px-4 space-y-2">
         <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-widest ml-2 mb-3">
           App Support
         </h3>
-        <div className="overflow-hidden rounded-2xl bg-background-elevated border border-white/5 divide-y divide-white/5">
-          <MenuItem
-            icon={FileText}
-            label="Patch Notes"
+        <div className="grid grid-cols-2 gap-2">
+          {/* Patch Notes */}
+          <Link
             href="/patch-notes"
-            color="text-accent-pink"
-          />
+            onClick={handleLinkClick}
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+          >
+            <FileText size={20} className="text-accent-pink" />
+            <span className="text-xs font-medium text-text-secondary">
+              Patch Notes
+            </span>
+          </Link>
+
+          {/* Report Bug */}
           <a
             href="mailto:support@flowforge.com"
-            className="flex w-full items-center justify-between px-5 py-4 transition-all hover:bg-white/5 active:scale-[0.98]"
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
           >
-            <div className="flex items-center gap-4">
-              <Bug size={20} className="text-accent-red" />
-              <span className="text-sm font-medium text-text-primary">
-                Report a Bug
-              </span>
-            </div>
-            <ChevronRight size={16} className="text-white/20" />
+            <Bug size={20} className="text-accent-red" />
+            <span className="text-xs font-medium text-text-secondary">
+              Report Bug
+            </span>
           </a>
-        </div>
-      </div>
 
-      {/* Legal Group (Collapsed visualally or less prominent) */}
-      <div className="px-4">
-        <div className="overflow-hidden rounded-2xl bg-background-elevated/50 border border-white/5 divide-y divide-white/5">
-          <MenuItem icon={Scale} label="Terms of Service" href="/legal/terms" />
-          <MenuItem
-            icon={Shield}
-            label="Privacy Policy"
+          {/* Terms */}
+          <Link
+            href="/legal/terms"
+            onClick={handleLinkClick}
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+          >
+            <Scale size={18} className="text-text-tertiary" />
+            <span className="text-xs font-medium text-text-secondary">
+              Terms
+            </span>
+          </Link>
+
+          {/* Privacy */}
+          <Link
             href="/legal/privacy"
-          />
+            onClick={handleLinkClick}
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+          >
+            <Shield size={18} className="text-text-tertiary" />
+            <span className="text-xs font-medium text-text-secondary">
+              Privacy
+            </span>
+          </Link>
         </div>
       </div>
 

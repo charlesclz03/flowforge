@@ -28,7 +28,7 @@ export function DailyStreakWidget({
           <p className="text-xs text-text-secondary mt-0.5">
             {hasPracticedToday
               ? "You're on fire today."
-              : 'Complete a session to keep it going.'}
+              : 'Complete at least one session every day to build your streak.'}
           </p>
         </div>
       </div>

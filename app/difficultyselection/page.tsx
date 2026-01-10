@@ -22,7 +22,6 @@ type Frequency = 4 | 8 | 16
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
 import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
-import { DailyGoalWidget } from '@/components/molecules/gamification/DailyGoalWidget'
 
 export default function DifficultySelectionPage() {
   const router = useRouter()
@@ -97,7 +96,7 @@ export default function DifficultySelectionPage() {
 
         <div className="space-y-3 text-center">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
-            Ready to spit bars? Start your session now.
+            Freestyle Session
           </h1>
           <p className="text-base text-text-secondary sm:text-lg">
             Choose your difficulty, word frequency, and beat.
@@ -105,13 +104,11 @@ export default function DifficultySelectionPage() {
         </div>
 
         {/* Gamification Hub */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Mock Data for now - waiting for Integration Phase */}
+        <div className="max-w-md mx-auto w-full">
           <DailyStreakWidget
-            currentStreak={session?.user ? 3 : 0}
+            currentStreak={session?.user?.currentStreak || 0}
             hasPracticedToday={false}
           />
-          <DailyGoalWidget currentXP={120} goalXP={200} />
         </div>
 
         {/* Configuration Sliders */}

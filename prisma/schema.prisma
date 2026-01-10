@@ -27,6 +27,7 @@ model Beat {
   // User Uploads & Calibration
   uploaderId      String?  @map("uploader_id")
   offset          Float    @default(0) // Start point calibration in seconds
+  sortOrder       Int      @default(0) @map("sort_order")
   
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
@@ -158,6 +159,7 @@ model FreestyleSession {
   durationSeconds Int      @map("duration_seconds")
   frequency       Int      @default(8) // 4, 8, or 16 bars
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
+  wordCount       Int      @default(0) @map("word_count")
   score           Int      @default(0) // Legacy score, might be repurposed
   vibe            String?  // "Hype", "Chill", "Locked In"
   mode            String   @default("solo") // "solo"
