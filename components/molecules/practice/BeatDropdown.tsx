@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Music,
   Play,
+  Pause,
   Upload,
   Trash2,
   Heart,
@@ -56,6 +57,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
   const [activeTab, setActiveTab] = useState<'public' | 'local'>('public')
   const [myBeats, setMyBeats] = useState<Beat[]>([])
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
+  const [playingId, setPlayingId] = useState<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchMyBeats = useCallback(async () => {
@@ -123,6 +126,37 @@ export function BeatDropdown(props: BeatDropdownProps) {
       fetchMyBeats()
     }
   }
+
+  const handlePreview = (e: React.MouseEvent, beat: Beat) => {
+    e.stopPropagation()
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio()
+    }
+
+    const audio = audioRef.current
+
+    if (playingId === beat.id) {
+      audio.pause()
+      setPlayingId(null)
+    } else {
+      audio.src = beat.storageUrl
+      audio.play().catch(console.error)
+      setPlayingId(beat.id)
+
+      audio.onended = () => setPlayingId(null)
+    }
+  }
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
+    }
+  }, [])
 
   const filteredBeats = (beats || []).filter(
     (b: Beat) =>
@@ -220,9 +254,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
             >
               <div className="p-1">
                 {filteredBeats.map((beat: Beat) => (
-                  <button
+                  <div
                     key={beat.id}
-                    type="button"
                     onClick={() => {
                       if (!isPro && beat.isPremium) {
                         handleLockedSelect?.()
@@ -232,29 +265,65 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       }
                     }}
                     className={cn(
-                      'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left',
+                      'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left cursor-pointer',
                       selectedBeat?.id === beat.id
                         ? 'bg-accent-purple/10'
                         : 'hover:bg-white/5'
                     )}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-black/40 flex-shrink-0">
+                      <div
+                        onClick={(e) => handlePreview(e, beat)}
+                        className="relative w-10 h-10 rounded-lg overflow-hidden bg-black/40 flex-shrink-0 cursor-pointer"
+                      >
                         {beat.isPremium && (
                           <div className="absolute top-0.5 right-0.5 z-10 p-0.5 bg-accent-yellow rounded-full">
                             <Crown size={8} className="text-black" />
                           </div>
                         )}
                         <Music
-                          className="absolute inset-0 m-auto text-text-tertiary opacity-40"
+                          className={cn(
+                            'absolute inset-0 m-auto text-white/20 transition-opacity',
+                            playingId === beat.id ? 'opacity-0' : 'opacity-40'
+                          )}
                           size={16}
                         />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-accent-purple/40">
-                          <Play size={16} className="text-white fill-white" />
+                        <div
+                          className={cn(
+                            'absolute inset-0 flex items-center justify-center transition-all bg-accent-purple/40',
+                            playingId === beat.id
+                              ? 'opacity-100'
+                              : 'opacity-0 group-hover:opacity-100'
+                          )}
+                        >
+                          {playingId === beat.id ? (
+                            <Pause
+                              size={16}
+                              className="text-white fill-white"
+                            />
+                          ) : (
+                            <Play size={16} className="text-white fill-white" />
+                          )}
                         </div>
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div
+                            onClick={(e) => handleToggleFavorite(beat.id, e)}
+                            className={cn(
+                              'transition-colors cursor-pointer p-1 -m-1',
+                              favoriteIds.has(beat.id)
+                                ? 'text-accent-red'
+                                : 'text-text-tertiary hover:text-white'
+                            )}
+                          >
+                            <Heart
+                              size={14}
+                              className={cn(
+                                favoriteIds.has(beat.id) && 'fill-current'
+                              )}
+                            />
+                          </div>
                           <p
                             className={cn(
                               'text-sm font-medium',
@@ -265,29 +334,13 @@ export function BeatDropdown(props: BeatDropdownProps) {
                           >
                             {beat.title}
                           </p>
-                          <div
-                            onClick={(e) => handleToggleFavorite(beat.id, e)}
-                            className={cn(
-                              'p-1.5 rounded-lg transition-colors cursor-pointer',
-                              favoriteIds.has(beat.id)
-                                ? 'text-accent-red bg-accent-red/10'
-                                : 'text-text-tertiary hover:bg-white/10 hover:text-white'
-                            )}
-                          >
-                            <Heart
-                              size={16}
-                              className={cn(
-                                favoriteIds.has(beat.id) && 'fill-current'
-                              )}
-                            />
-                          </div>
                         </div>
                         <p className="text-xs text-text-tertiary">
                           {beat.bpm} BPM • {beat.genre}
                         </p>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             </TabsContent>
@@ -313,34 +366,67 @@ export function BeatDropdown(props: BeatDropdownProps) {
                     </div>
                   ) : (
                     allUserBeats.map((beat) => (
-                      <div key={beat.id} className="relative group">
-                        <button
-                          onClick={() => {
-                            handleSelect(beat)
-                            setIsExpanded(false)
-                          }}
+                      <div
+                        key={beat.id}
+                        className="relative group p-1"
+                        onClick={() => {
+                          handleSelect(beat)
+                          setIsExpanded(false)
+                        }}
+                      >
+                        <div
                           className={cn(
-                            'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left',
+                            'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left cursor-pointer',
                             selectedBeat?.id === beat.id
                               ? 'bg-accent-purple/10'
                               : 'hover:bg-white/5'
                           )}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-accent-blue/10 flex items-center justify-center flex-shrink-0">
-                              <Upload size={16} className="text-accent-blue" />
+                            <div
+                              onClick={(e) => handlePreview(e, beat)}
+                              className="w-10 h-10 rounded-lg bg-accent-blue/10 flex items-center justify-center flex-shrink-0 cursor-pointer group-hover:bg-accent-blue/20 transition-colors"
+                            >
+                              {playingId === beat.id ? (
+                                <Pause size={16} className="text-accent-blue" />
+                              ) : (
+                                <Upload
+                                  size={16}
+                                  className="text-accent-blue"
+                                />
+                              )}
                             </div>
-                            <div>
-                              <p
-                                className={cn(
-                                  'text-sm font-medium',
-                                  selectedBeat?.id === beat.id
-                                    ? 'text-accent-purple'
-                                    : 'text-white'
-                                )}
-                              >
-                                {beat.title}
-                              </p>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <div
+                                  onClick={(e) =>
+                                    handleToggleFavorite(beat.id, e)
+                                  }
+                                  className={cn(
+                                    'transition-colors cursor-pointer p-1 -m-1',
+                                    favoriteIds.has(beat.id)
+                                      ? 'text-accent-red'
+                                      : 'text-text-tertiary hover:text-white'
+                                  )}
+                                >
+                                  <Heart
+                                    size={14}
+                                    className={cn(
+                                      favoriteIds.has(beat.id) && 'fill-current'
+                                    )}
+                                  />
+                                </div>
+                                <p
+                                  className={cn(
+                                    'text-sm font-medium',
+                                    selectedBeat?.id === beat.id
+                                      ? 'text-accent-purple'
+                                      : 'text-white'
+                                  )}
+                                >
+                                  {beat.title}
+                                </p>
+                              </div>
                               <p className="text-xs text-text-tertiary">
                                 {beat.bpm} BPM • Custom
                               </p>
@@ -357,7 +443,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                               <Check size={16} className="text-accent-purple" />
                             )}
                           </div>
-                        </button>
+                        </div>
                       </div>
                     ))
                   )}
