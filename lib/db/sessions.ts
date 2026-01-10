@@ -151,7 +151,8 @@ export async function getSessionById(
           updatedAt: new Date(),
           offset: 0,
           uploaderId: null,
-        },
+          sortOrder: 0,
+        } as any,
       }
       return { success: true, data: withBeat }
     }
