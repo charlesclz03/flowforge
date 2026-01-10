@@ -93,7 +93,7 @@ export async function POST(request: Request) {
         restarts,
         playbacks,
         wordCount,
-      } as any),
+      } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
       supabase.storage
         .from(RECORDINGS_BUCKET)
         .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS),

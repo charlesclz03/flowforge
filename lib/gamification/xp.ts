@@ -1,6 +1,6 @@
 export const XP_CONFIG = {
   XP_PER_SECOND: 1, // Reduced from 2
-  XP_PER_WORD: 10,  // Increased from 5
+  XP_PER_WORD: 10, // Increased from 5
   XP_PER_SESSION_BASE: 10, // Adjusted for short session balance
   LEVEL_base_XP: 1000,
   LEVEL_MULTIPLIER: 1.2, // Level 2 requires 1000 * 1.2 = 1200 XP

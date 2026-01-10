@@ -178,5 +178,9 @@ export const ACHIEVEMENTS = [
 ]
 
 // Type for progress calculation
-export type ProgressType = 'sessions' | 'recordings' | 'beats' | 'streak' | 'words'
-
+export type ProgressType =
+  | 'sessions'
+  | 'recordings'
+  | 'beats'
+  | 'streak'
+  | 'words'

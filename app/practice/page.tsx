@@ -234,7 +234,7 @@ export default function PracticePage() {
       },
       onError: (err) => {
         handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
-        // Note: We don't null out sessionSummary here as per user UX flow, 
+        // Note: We don't null out sessionSummary here as per user UX flow,
         // but we ensure the "recording" state is dead so navigation works.
       },
     }

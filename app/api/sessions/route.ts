@@ -82,7 +82,7 @@ export async function POST(request: Request) {
       restarts: 0,
       playbacks: 0,
       wordCount: 0,
-    } as any)
+    } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (!result.success) {
       return NextResponse.json(

@@ -45,12 +45,12 @@ export async function reorderBeat(id: string, direction: 'up' | 'down') {
     where: {
       uploaderId: null,
       sortOrder: {
-        [operator]: currentBeat.sortOrder,
+        [operator]: (currentBeat as any).sortOrder, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
-    } as any,
+    } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     orderBy: {
       sortOrder: orderDirection,
-    } as any,
+    } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
   })
 
   if (adjacentBeat) {
@@ -58,11 +58,11 @@ export async function reorderBeat(id: string, direction: 'up' | 'down') {
     await prisma.$transaction([
       prisma.beat.update({
         where: { id: currentBeat.id },
-        data: { sortOrder: adjacentBeat.sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+        data: { sortOrder: (adjacentBeat as any).sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       }),
       prisma.beat.update({
         where: { id: adjacentBeat.id },
-        data: { sortOrder: currentBeat.sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+        data: { sortOrder: (currentBeat as any).sortOrder } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       }),
     ])
 
