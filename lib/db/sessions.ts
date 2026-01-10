@@ -73,7 +73,7 @@ export async function getSessions(
               offset: 0,
               uploaderId: null,
             },
-            wordCount: s.wordCount || 0,
+            wordCount: (s as any).wordCount || 0,
           }) as any
       )
       return { success: true, data: mapped }
