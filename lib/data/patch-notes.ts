@@ -21,6 +21,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.9.1',
+    date: '2026-01-10',
+    title: 'The Mobile Flow',
+    codename: 'App Native',
+    description:
+      'A major layout update transforming FreeStyla into a true single-screen experience. The app now feels native, with locked viewports and smooth internal scrolling.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          'Single-Screen Layout: The app viewport is now locked. No more full-page scrolling.',
+          'Internal Scrolling: Content lists now scroll independently while keeping headers/footers fixed.',
+          'Adaptive Design: Optimized for all mobile notches and safe areas.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Layout Stability: Fixed layout jitter and double scrollbars on mobile.',
+          'Practice Page: Resolved type errors and modal stability issues.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.9.0',
     date: '2026-01-10',
     title: 'The Rebrand',

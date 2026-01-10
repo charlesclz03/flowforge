@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.9.1] - 2026-01-10
+
+### 📱 The Single-Screen Update ("Mobile Flow")
+
+**Focus:** A major mobile optimization update making the app feel native. We've locked the viewports, prevented unwanted scrolling, and introduced a unified `ScreenPage` layout.
+
+### Changed
+- **Navigation:** Enforced a single-screen layout (`100dvh`, `overflow: hidden`) to prevent the entire app from scrolling like a website.
+- **Scrolling:** Content now scrolls internally within its specific container (e.g., track lists, recordings), keeping headers and footers strictly fixed.
+- **Practice Mode:** Updated `PracticePage` to scale perfectly on all screen sizes without overflow.
+
+### Fixed
+- **Type Errors:** Resolved all lingering type and lint warnings in `PracticePage`.
+- **Modals:** Fixed `PremiumModal` missing props causing potential crashes.
+- **Layout Jitter:** Removed double scrollbars on mobile browsers.
+
+---
+
 ## [v1.9.0] - 2026-01-10
 
 ### 📛 The Rebrand ("FreeStyla")

@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react'
 import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUploadModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { ScreenPage } from '@/components/layout/ScreenPage'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -207,11 +208,13 @@ export default function TracksPage() {
     )
 
   return (
-    <div className="min-h-screen bg-background pb-32">
-      <AppHeader />
+    <ScreenPage
+      header={<AppHeader />}
+      footer={<div className="h-24" />} /* spacer for bottom nav */
+    >
       <audio ref={audioRef} className="hidden" />
 
-      <div className="px-6 pt-12 pb-6 space-y-6">
+      <div className="px-6 py-6 space-y-6">
         <div className="flex items-center justify-between">
           <PageHeader
             title="Beat Vault"
@@ -355,6 +358,6 @@ export default function TracksPage() {
         onClose={() => setIsPremiumModalOpen(false)}
         trigger="beat"
       />
-    </div>
+    </ScreenPage>
   )
 }

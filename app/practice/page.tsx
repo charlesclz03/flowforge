@@ -16,17 +16,16 @@ import { useOptimisticAction } from '@/hooks/useOptimisticAction'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { GuestStorage } from '@/lib/guest-storage'
 
-import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
-import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { GuestLoginModal } from '@/components/molecules/auth/GuestLoginModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
+import { ScreenPage } from '@/components/layout/ScreenPage'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
 import { Button } from '@/components/atoms/Button'
 import { Modal } from '@/components/atoms/Modal'
-import { FlowComboOverlay } from '@/components/molecules/gamification/FlowComboOverlay'
 
 interface SessionSummary {
   score: number
@@ -90,7 +89,7 @@ export default function PracticePage() {
   const [wordList, setWordList] = useState<string[]>([])
   const [wordIndex, setWordIndex] = useState(0)
   const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
-  const [saveMessage, setSaveMessage] = useState<string | null>(null)
+  /* saveMessage removed */
   const [combo, setCombo] = useState(0)
 
   // Modals
@@ -315,7 +314,7 @@ export default function PracticePage() {
             setShowGuestModal(true)
           } catch (err) {
             console.error('Guest save failed', err)
-            setSaveMessage('Could not save temp recording. Please sign in.')
+            toast.error('Could not save temp recording. Please sign in.')
           }
         }
       }
@@ -823,12 +822,10 @@ export default function PracticePage() {
 
   // Bento Grid Render
   return (
-    <OnboardingLayout
-      showBackButton={true}
-      showHeader={true}
-      showSettings={true}
-      showProgress={true}
-      onBack={handleBackNavigation}
+    <ScreenPage
+      header={<AppHeader onBack={handleBackNavigation} />}
+      className="bg-black"
+      safeAreaBottom={false}
     >
       <script
         type="application/ld+json"
@@ -854,143 +851,205 @@ export default function PracticePage() {
           }),
         }}
       />
-      <div className="min-h-screen pt-4 pb-4 px-4 md:px-8 max-w-7xl mx-auto space-y-4">
-        {/* Header */}
+      {/* Background Ambience */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-accent-purple/20 rounded-full blur-[128px] animate-pulse-slow" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
+      </div>
 
-        {/* Classic Centralized Layout */}
-        <div className="relative flex flex-col items-center justify-start pt-8 md:pt-12 min-h-[calc(100vh-100px)]">
-          {/* Side Visualizers */}
-          <div className="absolute inset-y-0 left-0 w-1/4 md:w-1/6 hidden md:block opacity-50 pointer-events-none">
-            <AudioVisualizer
-              isPlaying={beatPlayer.isPlaying || isRecording}
-              color="#A855F7"
-              className="w-full h-full"
-            />
-          </div>
-          <div className="absolute inset-y-0 right-0 w-1/4 md:w-1/6 hidden md:block opacity-50 pointer-events-none rotate-180">
-            <AudioVisualizer
-              isPlaying={beatPlayer.isPlaying || isRecording}
-              color="#A855F7"
-              className="w-full h-full"
-            />
-          </div>
-
-          {/* Central Player */}
-          <div className="z-10 w-full max-w-md mx-auto">
-            {selectedBeat ? (
-              <PracticeControls
-                selectedBeat={selectedBeat}
-                beats={beats}
-                isPlaying={beatPlayer.isPlaying}
-                isLoading={!isLoaded && !selectedBeat}
-                currentTime={monotonicTime}
-                sessionDuration={sessionDuration}
-                handleToggle={handlePlayPause}
-                handleBeatSelect={handleBeatSelection}
-                difficulty={difficulty}
-                frequency={frequency}
-                isRecording={isRecording}
-                mode={mode}
-                activePlayer={activePlayer}
-                cypherPlayers={cypherPlayers}
-                isSirenActive={isSirenActive}
-                sirenPhase={sirenPhase}
-                recordingDuration={duration}
-                isPro={isPro}
-                isAuthenticated={!!session?.user || true}
-                currentWord={currentWord}
-                countdownValue={_countdownValue}
-                isRecordingEnabled={isRecordingEnabled}
-                handleDifficultyChange={setDifficulty}
-                handleFrequencyChange={setFrequency}
-                handleUpgrade={() => setPremiumTrigger('recording')}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center space-y-4">
-                <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
-                <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
-                  {loadingText}
-                </span>
-              </div>
+      <div className="relative z-10 flex flex-col items-center justify-between h-full px-4 pt-4 pb-24 md:pb-8 max-w-lg mx-auto w-full">
+        {/* Top Section: Word Display / Visualizer */}
+        <div className="flex-1 w-full flex flex-col items-center justify-center min-h-0 relative">
+          {/* Combo / Vibe Overlay */}
+          <AnimatePresence>
+            {combo > 1 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -20 }}
+                className="absolute top-4 right-4 z-20 pointer-events-none"
+              >
+                <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent-purple/30 shadow-glow-sm">
+                  <span className="text-xl">🔥</span>
+                  <span className="font-bold font-mono text-accent-purple">
+                    {combo}x
+                  </span>
+                </div>
+              </motion.div>
             )}
+          </AnimatePresence>
+
+          {/* Siren Overlay (Visual) */}
+          {isSirenActive && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.15 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none rounded-3xl z-0"
+              style={{
+                background:
+                  sirenPhase === 0
+                    ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
+                    : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+              }}
+            />
+          )}
+
+          {/* Dynamic Word Display */}
+          <div className="relative w-full aspect-square max-h-[300px] sm:max-h-[350px] flex items-center justify-center mb-4">
+            {/* Word Text */}
+            <AnimatePresence mode="wait">
+              {currentWord ? (
+                <motion.div
+                  key={`${currentWord}-${wordIndex}`}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.5,
+                    y: 20,
+                    filter: 'blur(10px)',
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    filter: 'blur(0px)',
+                    rotate: [-1, 1, -1, 0],
+                  }}
+                  exit={{ opacity: 0, scale: 1.5, filter: 'blur(20px)' }}
+                  transition={{
+                    type: 'spring',
+                    duration: 0.4,
+                    bounce: 0.4,
+                  }}
+                  className="z-20 text-center w-full px-2"
+                >
+                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/70 tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase">
+                    {currentWord}
+                  </h1>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="z-20 text-center"
+                >
+                  {isRecording ? (
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                      <p className="text-text-secondary font-mono text-sm tracking-wider uppercase">
+                        Listening...
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <h2 className="text-2xl font-bold text-white/50">
+                        Ready?
+                      </h2>
+                      <p className="text-sm text-text-tertiary">
+                        Press play to start the session
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Visualizer Background */}
+            <div className="absolute inset-0 z-0 opacity-40 scale-125">
+              <AudioVisualizer
+                isPlaying={beatPlayer.isPlaying || isRecording}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Global Overlays & Modals */}
-        <AnimatePresence>
-          {sessionSummary && (
-            <SessionSummaryModal
-              data={sessionSummary}
-              onClose={() => setSessionSummary(null)}
+        {/* Bottom Section: Controls - Fixed Height */}
+        <div className="w-full flex-none z-20 pb-safe-offset-4">
+          {selectedBeat ? (
+            <PracticeControls
+              selectedBeat={selectedBeat}
+              beats={beats}
+              isPlaying={beatPlayer.isPlaying}
+              isLoading={!isLoaded || beatPlayer.isLoading}
+              currentTime={monotonicTime}
+              sessionDuration={sessionDuration}
+              handleToggle={handlePlayPause}
+              handleBeatSelect={handleBeatSelection}
+              difficulty={difficulty}
+              frequency={frequency}
+              isRecording={isRecording}
+              mode={mode}
+              activePlayer={activePlayer}
+              cypherPlayers={cypherPlayers}
+              isSirenActive={isSirenActive}
+              sirenPhase={sirenPhase}
+              recordingDuration={duration}
+              error={error?.message || null}
+              isPro={isPro}
+              isAuthenticated={!!session?.user}
+              currentWord={currentWord}
+              countdownValue={_countdownValue}
+              isRecordingEnabled={isRecordingEnabled}
+              handleDifficultyChange={setDifficulty}
+              handleFrequencyChange={setFrequency}
+              handleUpgrade={() => setPremiumTrigger('recording')}
             />
-          )}
-
-          {showPremiumModal && (
-            <PremiumModal
-              isOpen={showPremiumModal}
-              onClose={() => setShowPremiumModal(false)}
-              trigger={premiumTrigger}
-            />
-          )}
-
-          {/* Saving Indicator */}
-          {saveMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-24 left-1/2 -translate-x-1/2 px-6 py-3 bg-green-500/20 border border-green-500 text-green-400 rounded-full backdrop-blur-md"
-            >
-              {saveMessage}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Errors */}
-        {error && <ErrorAlert error={error} onDismiss={clearError} />}
-
-        {/* Guest Modal */}
-        {showGuestModal && (
-          <GuestLoginModal
-            isOpen={showGuestModal}
-            onClose={() => setShowGuestModal(false)}
-          />
-        )}
-
-        {/* Exit Confirmation Modal */}
-        <Modal
-          isOpen={showExitConfirmation}
-          onClose={() => setShowExitConfirmation(false)}
-          title="Leave Session?"
-          className="max-w-sm"
-        >
-          <div className="space-y-6">
-            <p className="text-text-secondary text-center">
-              Are you sure you want to leave? Your current session will be
-              discarded and not recorded.
-            </p>
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 text-text-secondary"
-                onClick={() => setShowExitConfirmation(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="danger"
-                className="flex-1 bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20"
-                onClick={confirmExit}
-              >
-                Leave & Discard
-              </Button>
+          ) : (
+            <div className="flex flex-col items-center justify-center space-y-4 py-8">
+              <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
+              <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
+                {loadingText}
+              </span>
             </div>
-          </div>
-        </Modal>
-
-        {/* Combo Overlay */}
-        <FlowComboOverlay combo={combo} />
+          )}
+        </div>
       </div>
-    </OnboardingLayout>
+
+      <SessionSummaryModal
+        data={sessionSummary}
+        onClose={() => {
+          setSessionSummary(null)
+          router.push('/recordings')
+        }}
+      />
+
+      <GuestLoginModal
+        isOpen={showGuestModal}
+        onClose={() => {
+          setShowGuestModal(false)
+          router.push('/')
+        }}
+      />
+
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        trigger={premiumTrigger}
+      />
+
+      <Modal
+        isOpen={showExitConfirmation}
+        onClose={() => setShowExitConfirmation(false)}
+        title="End Session?"
+      >
+        <div className="space-y-4">
+          <p className="text-text-secondary">
+            Your recording is in progress. Leaving now will discard this
+            session.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              variant="ghost"
+              onClick={() => setShowExitConfirmation(false)}
+            >
+              Resume
+            </Button>
+            <Button variant="danger" onClick={confirmExit}>
+              Stop & Exit
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </ScreenPage>
   )
 }

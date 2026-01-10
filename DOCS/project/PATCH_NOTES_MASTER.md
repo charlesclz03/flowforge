@@ -4,6 +4,23 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+## 📱 Update 1.9.1: The Mobile Flow
+**Release Date:** January 10, 2026
+**Codename:** _App Native_
+
+We have fundamentally restructured the app's layout engine to behave like a native mobile application. The days of unintended window scrolling are over.
+
+### 📱 Single-Screen Architecture
+- **Locked Viewport:** The app now strictly adheres to `100dvh`, preventing the "bounce" and rubber-banding effect seen on mobile browsers.
+- **Internal Scrolling:** Lists (Tracks, Recordings) now scroll within their own containers while the Header and Navigation Bar stay perfectly fixed.
+- **Adaptive Layout:** The new `ScreenPage` component intelligently handles Safe Areas (notches, home bars) across iOS and Android.
+
+### 🩹 Fixes
+- **Practice Stability:** Resolved prop-drilling issues in the `PracticeControls` and fixed `PremiumModal` triggers.
+- **Code Hygiene:** Cleaned up unused imports and variables for a leaner bundle.
+
+---
+
 ## 📛 Update 1.9.0: The Rebrand
 **Release Date:** January 10, 2026
 **Codename:** _FreeStyla_
