@@ -21,8 +21,6 @@ export default function PatchNotesPage() {
 
       <main className="pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-
-
           {/* Timeline */}
           <div className="space-y-12 relative before:absolute before:left-4 md:before:left-1/2 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-purple-500 before:via-zinc-800 before:to-transparent before:-translate-x-1/2 before:opacity-30">
             {PATCH_NOTES.map((note, index) => (
@@ -91,7 +89,7 @@ export default function PatchNotesPage() {
           </div>
 
           {/* Feedback Section */}
-          <div className="mt-24 max-w-2xl mx-auto">
+          <div id="feedback" className="mt-24 max-w-2xl mx-auto">
             <FeedbackForm />
           </div>
 
