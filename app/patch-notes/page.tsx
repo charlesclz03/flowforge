@@ -21,30 +21,7 @@ export default function PatchNotesPage() {
 
       <main className="pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          {/* Hero Section */}
-          <div className="text-center mb-16 relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-purple-600/20 blur-[100px] rounded-full pointer-events-none" />
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-black mb-4 tracking-tight"
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400">
-                The Meta Manifest
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-zinc-400 max-w-2xl mx-auto text-lg"
-            >
-              System logs, balance changes, and the constant evolution of the
-              grind.
-            </motion.p>
-          </div>
 
           {/* Timeline */}
           <div className="space-y-12 relative before:absolute before:left-4 md:before:left-1/2 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-purple-500 before:via-zinc-800 before:to-transparent before:-translate-x-1/2 before:opacity-30">
