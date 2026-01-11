@@ -718,9 +718,13 @@ export default function PracticePage() {
         }
       }
 
-      // Siren Logic: 4 seconds before the NEXT change
+      // Siren Logic: Dynamic threshold
+      // Either 4 seconds OR 60% of the duration (whichever is smaller)
+      // This prevents the siren from being "always on" for short durations
+      const wordDuration = secondsPerBar * params.frequency
+      const sirenThreshold = Math.min(4, wordDuration * 0.6)
       const timeUntilNext = state.nextWordChangeTime - sessionTime
-      const sirenActive = timeUntilNext <= 4 && timeUntilNext > 0
+      const sirenActive = timeUntilNext <= sirenThreshold && timeUntilNext > 0
 
       setIsSirenActive(sirenActive)
 
@@ -822,7 +826,13 @@ export default function PracticePage() {
   // Bento Grid Render
   return (
     <ScreenPage
-      header={<AppHeader onBack={handleBackNavigation} />}
+      header={
+        <AppHeader
+          onBack={handleBackNavigation}
+          customTitle="THE BOOTH"
+          customSubtitle="Step up and drop your bars"
+        />
+      }
       className="bg-black"
       safeAreaBottom={false}
     >
