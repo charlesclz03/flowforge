@@ -175,6 +175,251 @@ export const ACHIEVEMENTS = [
     icon: 'Calendar',
     points: 30,
   },
+  // --- WAVE 2: CAREER UPDATE ---
+
+  // XP & Progression
+  {
+    code: 'LEVEL_5',
+    name: 'Rising Star',
+    description: 'Reached Level 5.',
+    icon: 'TrendingUp',
+    points: 50,
+    target: 5,
+    progressType: 'level',
+  },
+  {
+    code: 'LEVEL_10',
+    name: 'Headliner',
+    description: 'Reached Level 10.',
+    icon: 'Star',
+    points: 100,
+    target: 10,
+    progressType: 'level',
+  },
+  {
+    code: 'LEVEL_25',
+    name: 'Icon',
+    description: 'Reached Level 25.',
+    icon: 'Award',
+    points: 250,
+    target: 25,
+    progressType: 'level',
+  },
+  {
+    code: 'LEVEL_50',
+    name: 'Living Legend',
+    description: 'Reached Level 50.',
+    icon: 'Crown',
+    points: 1000,
+    target: 50,
+    progressType: 'level',
+  },
+  {
+    code: 'XP_10K',
+    name: 'Paid Dues',
+    description: 'Earned 10,000 Total XP.',
+    icon: 'Briefcase',
+    points: 100,
+    target: 10000,
+    progressType: 'xp',
+  },
+  {
+    code: 'XP_100K',
+    name: 'Six Figures',
+    description: 'Earned 100,000 Total XP.',
+    icon: 'Diamond',
+    points: 500,
+    target: 100000,
+    progressType: 'xp',
+  },
+
+  // Streaks & Consistency
+  {
+    code: 'STREAK_14',
+    name: 'Fortnight Flow',
+    description: 'Practiced for 14 days in a row.',
+    icon: 'CalendarCheck',
+    points: 200,
+    target: 14,
+    progressType: 'streak',
+  },
+  {
+    code: 'STREAK_60',
+    name: 'Habit Former',
+    description: 'Practiced for 60 days in a row.',
+    icon: 'Link',
+    points: 400,
+    target: 60,
+    progressType: 'streak',
+  },
+  {
+    code: 'STREAK_100',
+    name: 'Century Club',
+    description: 'Practiced for 100 days in a row.',
+    icon: 'Infinity',
+    points: 1000,
+    target: 100,
+    progressType: 'streak',
+  },
+  {
+    code: 'STREAK_365',
+    name: 'Year of Flow',
+    description: 'Practiced for 365 days in a row.',
+    icon: 'Globe',
+    points: 5000,
+    target: 365,
+    progressType: 'streak',
+  },
+  {
+    code: 'COMEBACK',
+    name: 'The Remix',
+    description: 'Returned after 7 days of inactivity.',
+    icon: 'RotateCcw',
+    points: 50,
+  },
+
+  // Skill & Flow Density
+  {
+    code: 'SPITFIRE',
+    name: 'Spitfire',
+    description: 'Spit over 150 words in a single session.',
+    icon: 'Flame',
+    points: 50,
+  },
+  {
+    code: 'RAP_GOD',
+    name: 'Rap Deity',
+    description: 'Spit over 300 words in a single session.',
+    icon: 'Zap',
+    points: 150,
+  },
+  {
+    code: 'MARATHON',
+    name: 'Iron Lungs',
+    description: 'Completed a session longer than 5 minutes.',
+    icon: 'Activity',
+    points: 75,
+  },
+  {
+    code: 'ONE_TAKE',
+    name: 'One Take Wonder',
+    description: 'Completed a session with 0 restarts.',
+    icon: 'CheckCircle',
+    points: 50,
+  },
+  {
+    code: 'SLOW_FLOW',
+    name: 'Pocket Watcher',
+    description: 'Completed a session on 4-Bar Frequency.',
+    icon: 'Anchor',
+    points: 30,
+  },
+  {
+    code: 'DOUBLE_TIME',
+    name: 'Double Time',
+    description: 'Completed a session on 16-Bar Frequency.',
+    icon: 'ChevronsRight',
+    points: 30,
+  },
+
+  // Volume & Dedication
+  {
+    code: 'TIME_1H',
+    name: 'Studio Rat',
+    description: 'Accumulated 1 hour of total playtime.',
+    icon: 'Clock',
+    points: 50,
+    target: 60,
+    progressType: 'minutes',
+  },
+  {
+    code: 'TIME_10H',
+    name: 'Mixtape Ready',
+    description: 'Accumulated 10 hours of total playtime.',
+    icon: 'HardDrive',
+    points: 200,
+    target: 600,
+    progressType: 'minutes',
+  },
+  {
+    code: 'TIME_24H',
+    name: 'Day One Flow',
+    description: 'Accumulated 24 hours of total playtime.',
+    icon: 'Sun',
+    points: 500,
+    target: 1440,
+    progressType: 'minutes',
+  },
+  {
+    code: 'TOTAL_WORDS_5K',
+    name: 'Novelist',
+    description: 'Collected 5,000 total words.',
+    icon: 'BookOpen',
+    points: 300,
+    target: 5000,
+    progressType: 'words',
+  },
+
+  // Exploration & Social
+  {
+    code: 'GENRE_3',
+    name: 'Versatile',
+    description: 'Practiced on 3 different genres.',
+    icon: 'Layers',
+    points: 50,
+    target: 3,
+    progressType: 'genres',
+  },
+  {
+    code: 'GENRE_ALL',
+    name: 'Master of All',
+    description: 'Practiced on all available genres.',
+    icon: 'Box',
+    points: 200,
+  },
+  {
+    code: 'CYPHER_1',
+    name: 'Pass the Mic',
+    description: 'Completed your first Cypher session.',
+    icon: 'Users',
+    points: 50,
+    target: 1,
+    progressType: 'cyphers',
+  },
+  {
+    code: 'CYPHER_10',
+    name: 'Crew Love',
+    description: 'Completed 10 Cypher sessions.',
+    icon: 'Heart',
+    points: 150,
+    target: 10,
+    progressType: 'cyphers',
+  },
+  {
+    code: 'CYPHER_50',
+    name: 'Battle Tested',
+    description: 'Completed 50 Cypher sessions.',
+    icon: 'Swords',
+    points: 500,
+    target: 50,
+    progressType: 'cyphers',
+  },
+
+  // Context
+  {
+    code: 'LUNCH_BREAK',
+    name: 'Lunch Money',
+    description: 'Completed a session between 12PM and 2PM.',
+    icon: 'Coffee',
+    points: 20,
+  },
+  {
+    code: 'MIDNIGHT',
+    name: 'Midnight Marauder',
+    description: 'Completed a session between 12AM and 3AM.',
+    icon: 'Moon',
+    points: 30,
+  },
 ]
 
 // Type for progress calculation
@@ -184,3 +429,8 @@ export type ProgressType =
   | 'beats'
   | 'streak'
   | 'words'
+  | 'level'
+  | 'xp'
+  | 'minutes'
+  | 'genres'
+  | 'cyphers'

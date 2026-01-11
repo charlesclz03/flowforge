@@ -62,7 +62,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     label,
     href,
     onClick,
-    color = 'text-text-secondary',
+    color = 'text-zinc-400',
     showChevron = true,
   }: {
     icon: React.ElementType
@@ -76,7 +76,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
       <div className="flex w-full items-center justify-between px-5 py-4 transition-all hover:bg-white/5 active:scale-[0.98]">
         <div className="flex items-center gap-4">
           <Icon size={20} className={color} />
-          <span className="text-sm font-medium text-text-primary">{label}</span>
+          <span className="text-sm font-medium text-zinc-200">{label}</span>
         </div>
         {showChevron && <ChevronRight size={16} className="text-white/20" />}
       </div>
@@ -138,12 +138,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           onClick={() => setIsStudioOpen(!isStudioOpen)}
           className="w-full flex items-center justify-between ml-2 mb-3 group"
         >
-          <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-widest group-hover:text-white transition-colors">
+          <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest group-hover:text-white transition-colors">
             Studio Controls
           </h3>
           <div
             className={cn(
-              'p-1 rounded-md bg-white/5 text-text-secondary transition-all',
+              'p-1 rounded-md bg-white/10 text-zinc-400 transition-all',
               isStudioOpen && 'bg-accent-purple/20 text-accent-purple'
             )}
           >
@@ -159,7 +159,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
         <div
           className={cn(
-            'overflow-hidden rounded-2xl bg-background-elevated border border-white/5 divide-y divide-white/5 transition-all duration-500 ease-in-out',
+            'overflow-hidden rounded-2xl bg-zinc-900/50 border border-white/10 divide-y divide-white/5 transition-all duration-500 ease-in-out',
             isStudioOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           )}
         >
@@ -168,10 +168,10 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <div className="flex items-center gap-4">
               <Mic size={20} className="text-accent-orange" />
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-text-primary">
+                <span className="text-sm font-medium text-zinc-200">
                   Voice Prompts
                 </span>
-                <span className="text-xs text-text-tertiary">
+                <span className="text-xs text-zinc-500">
                   Spoken word suggestions
                 </span>
               </div>
@@ -263,7 +263,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
       {/* Support & Legal Grid (Condensed) */}
       <div className="px-4 space-y-2">
-        <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-widest ml-2 mb-3">
+        <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-2 mb-3">
           App Support
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -271,10 +271,10 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           <Link
             href="/patch-notes"
             onClick={handleLinkClick}
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <FileText size={20} className="text-accent-pink" />
-            <span className="text-xs font-medium text-text-secondary">
+            <span className="text-xs font-medium text-zinc-300">
               Patch Notes
             </span>
           </Link>
@@ -282,10 +282,10 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           {/* Report Bug */}
           <a
             href="mailto:support@freestyla.app"
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <Bug size={20} className="text-accent-red" />
-            <span className="text-xs font-medium text-text-secondary">
+            <span className="text-xs font-medium text-zinc-300">
               Report Bug
             </span>
           </a>
@@ -294,24 +294,20 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           <Link
             href="/legal/terms"
             onClick={handleLinkClick}
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <Scale size={18} className="text-text-tertiary" />
-            <span className="text-xs font-medium text-text-secondary">
-              Terms
-            </span>
+            <Scale size={18} className="text-zinc-500" />
+            <span className="text-xs font-medium text-zinc-400">Terms</span>
           </Link>
 
           {/* Privacy */}
           <Link
             href="/legal/privacy"
             onClick={handleLinkClick}
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-background-elevated/50 border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <Shield size={18} className="text-text-tertiary" />
-            <span className="text-xs font-medium text-text-secondary">
-              Privacy
-            </span>
+            <Shield size={18} className="text-zinc-500" />
+            <span className="text-xs font-medium text-zinc-400">Privacy</span>
           </Link>
         </div>
       </div>
@@ -321,7 +317,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         {session ? (
           <button
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-text-secondary font-medium hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-all active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 font-medium hover:bg-red-950/30 hover:text-red-400 hover:border-red-900/50 transition-all active:scale-[0.98]"
           >
             <LogOut size={18} />
             Sign Out
@@ -338,7 +334,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v1.9.0
+          FreeStyla v1.9.5
         </p>
       </div>
     </div>

@@ -15,13 +15,13 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
   title: {
-    default: 'FreeStyla: AI Rap Generator & Flow Coach',
+    default: 'FreeStyla: AI Freestyle Coach',
     template: '%s | FreeStyla',
   },
   description:
-    'The #1 AI Rap Generator. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI. Practice offline, track XP, and secure your legacy.',
+    'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI. Practice offline, track XP, and secure your legacy.',
   keywords: [
-    'AI Rap Generator',
+    'AI Freestyle Coach',
     'Freestyle Practice',
     'Rhyme Dictionary AI',
     'Rap Beats & Flow',
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
     siteName: 'FreeStyla',
     title: 'Ready to spit bars? Start your session now with FreeStyla.',
     description:
-      'The #1 AI Rap Generator. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
+      'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'FreeStyla - AI Rap Generator',
+        alt: 'FreeStyla - AI Freestyle Coach',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FreeStyla: AI Rap Generator & Flow Coach',
+    title: 'FreeStyla: AI Freestyle Coach',
     description:
-      'The #1 AI Rap Generator. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
+      'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
     images: ['/og-image.png'],
     creator: '@freestyla',
   },

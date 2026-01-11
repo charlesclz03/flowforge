@@ -13,6 +13,8 @@ interface OnboardingLayoutProps {
   showHeader?: boolean
   showProgress?: boolean
   onBack?: () => void
+  customTitle?: string
+  customSubtitle?: string
 }
 
 export function OnboardingLayout({
@@ -23,6 +25,8 @@ export function OnboardingLayout({
   showHeader = true,
   showProgress = true,
   onBack,
+  customTitle,
+  customSubtitle,
 }: OnboardingLayoutProps) {
   return (
     <div className={cn('min-h-screen bg-black text-white', className)}>
@@ -40,6 +44,8 @@ export function OnboardingLayout({
           showSettings={showSettings}
           onBack={onBack}
           hide={!showHeader}
+          customTitle={customTitle}
+          customSubtitle={customSubtitle}
         />
 
         <main

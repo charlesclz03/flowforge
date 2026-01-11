@@ -20,6 +20,8 @@ export default async function AchievementsPage() {
       showBackButton={false}
       showSettings={true}
       className="bg-background"
+      customTitle="HALL OF FAME"
+      customSubtitle="Milestones and trophies earned"
     >
       <Container className="pt-8 pb-32">
         <div className="mb-4">

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/atoms/Container'
-import { PageHeader } from '@/components/organisms/common'
+
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { SearchInput } from '@/components/organisms/search/SearchInput'
 import { Avatar } from '@/components/atoms/Avatar'
 import Link from 'next/link'
@@ -46,13 +47,13 @@ export default async function SearchPage({
   const { beats, users } = await search(query)
 
   return (
-    <div className="min-h-screen bg-background pb-20 pt-8">
-      <Container className="space-y-8">
+    <div className="min-h-screen bg-background pb-20">
+      <AppHeader
+        customTitle="SEARCH"
+        customSubtitle="Find the perfect beat or connect with other emcees"
+      />
+      <Container className="space-y-8 pt-8">
         <div className="flex flex-col items-center space-y-6">
-          <PageHeader
-            title="Search"
-            description="Find the perfect beat or connect with other emcees."
-          />
           <SearchInput />
         </div>
 

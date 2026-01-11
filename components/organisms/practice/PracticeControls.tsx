@@ -373,11 +373,17 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         duration: 0.4,
                         bounce: 0.4,
                       }}
-                      className="flex flex-col items-center justify-center max-w-[200px]"
+                      className="flex flex-col items-center justify-center w-full max-w-[85%] px-2"
                     >
                       <h1
                         className={cn(
-                          'text-4xl sm:text-5xl font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase leading-none',
+                          'font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase leading-none transition-all duration-300',
+                          // Dynamic font sizing
+                          currentWord.length > 12
+                            ? 'text-2xl sm:text-3xl'
+                            : currentWord.length > 8
+                              ? 'text-3xl sm:text-4xl'
+                              : 'text-4xl sm:text-5xl',
                           isGolden
                             ? 'bg-gradient-to-r from-yellow-300 via-amber-500 to-yellow-600'
                             : 'bg-gradient-to-br from-white via-white to-white/70'
@@ -386,7 +392,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         {currentWord}
                       </h1>
                       {/* Session Timer Below Word */}
-                      <span className="text-lg font-light text-white/40 tabular-nums mt-2">
+                      <span className="text-3xl font-medium text-white/60 tabular-nums mt-4 drop-shadow-md">
                         {formatTime(
                           Math.max(0, sessionDuration - (currentTime || 0))
                         )}

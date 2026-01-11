@@ -1,7 +1,7 @@
 'use client'
 
 import { Container } from '@/components/atoms/Container'
-import { PageHeader } from '@/components/organisms/common'
+
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { useRouter } from 'next/navigation'
 
@@ -9,12 +9,18 @@ export default function PrivacyPage() {
   const router = useRouter()
   return (
     <div className="min-h-screen bg-background pb-20">
-      <AppHeader showBackButton onBack={() => router.back()} />
+      <AppHeader
+        showBackButton
+        onBack={() => router.back()}
+        customTitle="LEGAL"
+        customSubtitle="Privacy Policy"
+      />
       <Container className="pt-8">
-        <PageHeader
-          title="Privacy Policy"
-          description="Last Updated: January 10, 2026"
-        />
+        <div className="mb-8">
+          <p className="text-text-secondary text-sm">
+            Last Updated: January 10, 2026
+          </p>
+        </div>
 
         <div className="mt-8 space-y-8 text-text-secondary prose prose-invert max-w-none text-sm leading-relaxed">
           <section>

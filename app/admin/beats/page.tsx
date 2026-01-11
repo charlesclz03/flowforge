@@ -11,7 +11,7 @@ import {
   reorderBeat,
 } from '@/app/actions/admin/beats'
 import { Button } from '@/components/atoms/Button'
-import { PageHeader } from '@/components/organisms/common'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 export default function AdminBeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -111,98 +111,100 @@ export default function AdminBeatsPage() {
   }
 
   return (
-    <div className="container py-8 space-y-8">
-      <PageHeader
-        title="Beat Management"
-        description="Manage system beats, set premium status, and reorder tracks."
+    <div className="min-h-screen bg-background pb-20">
+      <AppHeader
+        showBackButton
+        customTitle="BEAT MANAGEMENT"
+        customSubtitle="Manage system beats, set premium status, and reorder tracks"
       />
-
-      <div className="rounded-md border border-white/10 bg-surface-elevated">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>BPM</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {beats.map((beat) => (
-              <TableRow key={beat.id}>
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    <button
-                      onClick={() => handleReorder(beat.id, 'up')}
-                      className="hover:text-accent-purple p-1"
-                    >
-                      <ArrowUp size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleReorder(beat.id, 'down')}
-                      className="hover:text-accent-purple p-1"
-                    >
-                      <ArrowDown size={16} />
-                    </button>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {editingId === beat.id ? (
-                    <Input
-                      defaultValue={beat.title}
-                      onBlur={(e) =>
-                        handleUpdate(beat.id, { title: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <span className="font-medium">{beat.title}</span>
-                  )}
-                </TableCell>
-                <TableCell>{beat.bpm}</TableCell>
-                <TableCell>
-                  <button
-                    onClick={() =>
-                      handleUpdate(beat.id, { isPremium: !beat.isPremium })
-                    }
-                    className={`px-2 py-1 rounded text-xs font-medium ${
-                      beat.isPremium
-                        ? 'bg-accent-purple/20 text-accent-purple'
-                        : 'bg-green-500/20 text-green-400'
-                    }`}
-                  >
-                    {beat.isPremium ? 'PRO' : 'FREE'}
-                  </button>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() =>
-                        setEditingId(editingId === beat.id ? null : beat.id)
-                      }
-                    >
-                      {editingId === beat.id ? (
-                        <X size={16} />
-                      ) : (
-                        <Edit2 size={16} />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-400 hover:text-red-300"
-                      onClick={() => handleDelete(beat.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                </TableCell>
+      <div className="container py-8 space-y-8">
+        <div className="rounded-md border border-white/10 bg-surface-elevated">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>BPM</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {beats.map((beat) => (
+                <TableRow key={beat.id}>
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <button
+                        onClick={() => handleReorder(beat.id, 'up')}
+                        className="hover:text-accent-purple p-1"
+                      >
+                        <ArrowUp size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleReorder(beat.id, 'down')}
+                        className="hover:text-accent-purple p-1"
+                      >
+                        <ArrowDown size={16} />
+                      </button>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {editingId === beat.id ? (
+                      <Input
+                        defaultValue={beat.title}
+                        onBlur={(e) =>
+                          handleUpdate(beat.id, { title: e.target.value })
+                        }
+                      />
+                    ) : (
+                      <span className="font-medium">{beat.title}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>{beat.bpm}</TableCell>
+                  <TableCell>
+                    <button
+                      onClick={() =>
+                        handleUpdate(beat.id, { isPremium: !beat.isPremium })
+                      }
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        beat.isPremium
+                          ? 'bg-accent-purple/20 text-accent-purple'
+                          : 'bg-green-500/20 text-green-400'
+                      }`}
+                    >
+                      {beat.isPremium ? 'PRO' : 'FREE'}
+                    </button>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          setEditingId(editingId === beat.id ? null : beat.id)
+                        }
+                      >
+                        {editingId === beat.id ? (
+                          <X size={16} />
+                        ) : (
+                          <Edit2 size={16} />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-400 hover:text-red-300"
+                        onClick={() => handleDelete(beat.id)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   )

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { PageHeader } from '@/components/organisms/common'
+
 import {
   RecordingsList,
   RecordingsStats,
@@ -146,6 +146,8 @@ export default function RecordingsPage() {
       showBackButton={false}
       showSettings={true}
       className="bg-background"
+      customTitle="TAPE DECK"
+      customSubtitle="Your flow archive and mixed tracks"
     >
       <div className="pt-8 pb-32">
         <script
@@ -162,10 +164,7 @@ export default function RecordingsPage() {
             }),
           }}
         />
-        <PageHeader
-          title="My Rap Vault & Session History"
-          description="Listen to your past freestyle sessions, analyze your word usage, and track your improvement over time."
-        />
+
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
         <div className="mt-8 space-y-8 relative">

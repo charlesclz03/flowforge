@@ -21,6 +21,68 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.9.5',
+    date: '2026-01-11',
+    title: 'Career Update',
+    codename: 'Wave 2',
+    description:
+      'The "Career Update" is here! We added 27 new achievements to track your rise from rookie to legend, plus better timer visibility and stability fixes.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Added 27 new achievements (XP, Streaks, Skill, Volume)',
+          'Enhanced database seeding for new achievements',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Increased session timer size for better readability in the Booth',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: ['Fixed build system type errors for smoother deployments'],
+      },
+    ],
+  },
+  {
+    version: '1.9.4',
+    date: '2026-01-11',
+    title: 'High Contrast Update',
+    codename: 'Visual Loyalty',
+    description:
+      'Improving accessibility with higher contrast settings menus and finalizing the Global Header rollout.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'High Contrast Settings: Darker backgrounds and brighter text for better readability.',
+          'Global Headers Complete: Finalized AppHeader integration across Search and Admin pages.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.9.3',
+    date: '2026-01-11',
+    title: 'Global Header Architecture',
+    codename: 'Consolidated Identity',
+    description:
+      'Replacing inconsistent page headers with a unified, context-aware global header system that improves mobile visibility and branding.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Global Header System: Unified AppHeader across all pages (Practice, Recordings, Admin, etc.).',
+          'Dynamic Branding: Custom titles (e.g., "THE BOOTH") replace static "FreeStyla" logo.',
+          'Mobile Visibility: Increased header height and enabled subtitles on mobile.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.9.2',
     date: '2026-01-10',
     title: 'Practice Player Polish',

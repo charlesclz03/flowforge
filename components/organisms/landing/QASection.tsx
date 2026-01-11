@@ -9,8 +9,8 @@ export const QASection = () => {
         </h2>
         <div className="prose prose-invert max-w-none text-lg text-text-secondary leading-relaxed">
           The most effective method is using an{' '}
-          <strong className="text-accent-orange">AI Rap Generator</strong> like
-          FreeStyla. Unlike static beats, FreeStyla acts as a{' '}
+          <strong className="text-accent-orange">AI Freestyle Coach</strong>{' '}
+          like FreeStyla. Unlike static beats, FreeStyla acts as a{' '}
           <strong className="text-text-primary">Freestyle Practice</strong>{' '}
           coach, providing a{' '}
           <strong className="text-text-primary">Rhyme Dictionary AI</strong>{' '}

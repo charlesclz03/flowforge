@@ -45,7 +45,7 @@ export function SettingsDropdown() {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 mt-2 w-72 origin-top-right divide-y divide-white/10 rounded-xl bg-background-elevated border border-white/10 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden">
+            <Menu.Items className="absolute right-0 mt-2 w-72 origin-top-right divide-y divide-white/10 rounded-xl bg-zinc-950 border border-white/20 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden">
               <SettingsList />
             </Menu.Items>
           </Transition>

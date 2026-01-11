@@ -67,10 +67,13 @@ export async function GET() {
       orderBy: { points: 'asc' },
     })
 
-    // Auto-seed if empty
-    if (allAchievements.length === 0) {
-      console.log('Achievements table empty, auto-seeding...')
-      const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
+    // Always ensure all defined achievements exist in DB
+    // (This allows adding new achievements without wiping the DB)
+    const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
+
+    // Check if we need to seed (if DB count < DATA count)
+    if (allAchievements.length < ACHIEVEMENTS.length) {
+      console.log('Detected new achievements, seeding...')
       for (const ach of ACHIEVEMENTS) {
         await prisma.achievement.upsert({
           where: { code: ach.code },
@@ -78,6 +81,7 @@ export async function GET() {
           create: ach,
         })
       }
+      // Re-fetch after seeding
       allAchievements = await prisma.achievement.findMany({
         orderBy: { points: 'asc' },
       })

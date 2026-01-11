@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { PageHeader } from '@/components/organisms/common'
 import { Spinner } from '@/components/atoms/Spinner'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
@@ -74,15 +73,15 @@ export default function VideoExportPage({
 
   return (
     <ReviewTemplate
-      header={<AppHeader showBackButton={true} onBack={handleBack} />}
-      pageHeader={
-        <div>
-          <PageHeader
-            title="Video Export Studio"
-            description={`create a video for "${recording.title}"`}
-          />
-        </div>
+      header={
+        <AppHeader
+          showBackButton={true}
+          onBack={handleBack}
+          customTitle="VIDEO EXPORT"
+          customSubtitle={`Create a video for "${recording.title}"`}
+        />
       }
+      pageHeader={null}
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
         <div className="w-full">

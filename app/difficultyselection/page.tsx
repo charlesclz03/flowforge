@@ -87,21 +87,17 @@ export default function DifficultySelectionPage() {
   const canStart = !!selectedBeat
 
   return (
-    <OnboardingLayout showBackButton onBack={() => router.push('/howitworks')}>
+    <OnboardingLayout
+      showBackButton
+      onBack={() => router.push('/howitworks')}
+      customTitle="SKILL CHECK"
+      customSubtitle="Choose your challenge level"
+    >
       <div className="space-y-8">
         {/* Error alert */}
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
         {/* Title */}
-
-        <div className="space-y-3 text-center">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
-            Freestyle Session
-          </h1>
-          <p className="text-base text-text-secondary sm:text-lg">
-            Choose your difficulty, word frequency, and beat.
-          </p>
-        </div>
 
         {/* Gamification Hub */}
         <div className="max-w-md mx-auto w-full">

@@ -8,11 +8,14 @@ import { ArrowLeft, Flame } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 
+// Interface for the global app header
 interface AppHeaderProps {
   showBackButton?: boolean
   showSettings?: boolean
   showTitle?: boolean
   onBack?: () => void
+  customTitle?: string
+  customSubtitle?: string
   hide?: boolean
 }
 
@@ -20,6 +23,8 @@ export function AppHeader({
   showBackButton = false,
   showSettings = true,
   showTitle = true,
+  customTitle,
+  customSubtitle,
   onBack,
   hide = false,
 }: AppHeaderProps) {
@@ -43,7 +48,7 @@ export function AppHeader({
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
-        <div className="relative flex h-16 items-center justify-center">
+        <div className="relative flex h-20 items-center justify-center">
           {/* Back button - top left */}
           {showBackButton && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4">
@@ -78,27 +83,42 @@ export function AppHeader({
             </div>
           )}
 
-          {/* Centered FreeStyla title - navigates to howitworks when logged in */}
+          {/* Centered Title - navigates to howitworks when logged in */}
           {showTitle && (
-            <Link
-              href={homeLink}
-              className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
-              aria-label="Go to FreeStyla home"
-            >
-              <div className="relative h-8 w-8">
-                <Image
-                  src="/logo.png"
-                  alt="FreeStyla Logo"
-                  width={32}
-                  height={32}
-                  className="object-contain drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
-                />
-              </div>
-              <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
-                <span className="text-text-primary">Free</span>
-                <span className="text-accent-purple">Styla</span>
-              </h1>
-            </Link>
+            <div className="flex flex-col items-center justify-center pt-1">
+              <Link
+                href={homeLink}
+                className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
+                aria-label="Go to FreeStyla home"
+              >
+                {!customTitle && (
+                  <div className="relative h-8 w-8">
+                    <Image
+                      src="/logo.png"
+                      alt="FreeStyla Logo"
+                      width={32}
+                      height={32}
+                      className="object-contain drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
+                    />
+                  </div>
+                )}
+                <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
+                  {customTitle ? (
+                    <span className="text-text-primary">{customTitle}</span>
+                  ) : (
+                    <>
+                      <span className="text-text-primary">Free</span>
+                      <span className="text-accent-purple">Styla</span>
+                    </>
+                  )}
+                </h1>
+              </Link>
+              {customSubtitle && (
+                <p className="block text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5">
+                  {customSubtitle}
+                </p>
+              )}
+            </div>
           )}
         </div>
       </Container>

@@ -1,42 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { ArrowLeft, Swords, Globe, Zap } from 'lucide-react'
+import { Swords, Globe, Zap } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 export default function DuelPage() {
   const [isCreating, setIsCreating] = useState(false)
 
   return (
-    <main className="min-h-[100dvh] bg-black text-white p-4 md:p-8 relative overflow-hidden">
+    <main className="min-h-[100dvh] bg-black text-white relative overflow-hidden">
       {/* Background Gradients - Red/Orange for Duel Aggression */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-accent-orange/20 blur-[120px] rounded-full mix-blend-screen" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-red-600/10 blur-[120px] rounded-full mix-blend-screen" />
       </div>
 
-      <div className="max-w-4xl mx-auto relative z-10 font-sans">
-        {/* Header */}
-        <header className="flex items-center gap-4 mb-12">
-          <Link
-            href="/"
-            className="p-2 hover:bg-white/10 rounded-full transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-orange to-red-500 bg-clip-text text-transparent">
-            Duel Mode
-          </h1>
-          <div className="ml-auto px-3 py-1 bg-accent-orange/20 border border-accent-orange/50 rounded-full text-xs text-accent-orange font-medium flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-orange opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-orange"></span>
-            </span>
-            Live Beta
-          </div>
-        </header>
+      <AppHeader
+        showBackButton
+        customTitle="DUEL MODE"
+        customSubtitle="Live Beta"
+      />
 
+      <div className="max-w-4xl mx-auto relative z-10 font-sans p-4 md:p-8">
         {/* Content */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Create Challenge */}

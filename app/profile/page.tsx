@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ProfileTemplate } from '@/components/templates'
-import { PageHeader } from '@/components/organisms/common'
+
 import {
   AccountInfo,
   SubscriptionSection,
@@ -159,6 +159,8 @@ export default function ProfilePage() {
       showBackButton={false}
       showSettings={false}
       className="bg-background pb-32"
+      customTitle="ARTIST ID"
+      customSubtitle="Your stats, progression, and legacy"
     >
       {restorationMessage && (
         <div className="mx-auto max-w-md p-4">
@@ -170,14 +172,7 @@ export default function ProfilePage() {
       )}
 
       <ProfileTemplate
-        pageHeader={
-          <div className="px-6 pt-8 pb-4">
-            <PageHeader
-              title="Profile"
-              description="Your stats and settings."
-            />
-          </div>
-        }
+        pageHeader={<div className="px-6 pt-8 pb-4"></div>}
         accountInfo={
           <AccountInfo
             user={session.user}

@@ -15,7 +15,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
       {/* Header */}
       <div className="space-y-6 text-center">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
-          Dominate the Cypher: The AI Rap Generator
+          Dominate the Cypher: The AI Freestyle Coach
         </h1>
         <p className="mx-auto max-w-2xl text-base text-text-secondary sm:text-xl">
           Unleash your potential with instant beat sync and infinite word flows.
@@ -96,7 +96,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
             <Sparkles className="mt-1 h-6 w-6 flex-shrink-0 text-violet-400" />
             <div>
               <h4 className="mb-2 text-lg">
-                Freestyle rap word generator with beats
+                Freestyle practice engine with beats
               </h4>
               <p className="text-sm text-text-secondary">
                 Our AI Vault adapts to your skill level, helping you learn{' '}

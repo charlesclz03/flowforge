@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { PageHeader } from '@/components/organisms/common'
+
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
 import { Search, Music, Plus, Lock } from 'lucide-react'
@@ -209,19 +209,17 @@ export default function TracksPage() {
 
   return (
     <ScreenPage
-      header={<AppHeader />}
+      header={
+        <AppHeader
+          customTitle="Beat Vault"
+          customSubtitle="Discover beats for your next session"
+        />
+      }
       footer={<div className="h-24" />} /* spacer for bottom nav */
     >
       <audio ref={audioRef} className="hidden" />
 
       <div className="px-6 py-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <PageHeader
-            title="Beat Vault"
-            description="Discover beats for your next session."
-          />
-        </div>
-
         <div className="flex items-center justify-between mb-6">
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button

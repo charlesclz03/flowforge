@@ -1,5 +1,34 @@
 # Changelog
 
+## [v1.9.4] - 2026-01-11
+
+### 👁️ The Visual Polish ("High Contrast")
+
+**Focus:** A targeted UI update to improve accessibility and readability in the settings menu, alongside final global header consistency.
+
+### Changed
+- **Settings Dropdown:** Significantly improved contrast.
+  - Background darkened to `bg-zinc-950` for depth.
+  - Text brightened to `text-zinc-200` and `text-zinc-400` for legibility.
+  - Borders and buttons given higher opacity `white/10` strokes for better definition.
+- **Global Headers:** Finalized `AppHeader` rollout to `Search`, `Video Export`, and `Admin` layouts for a 100% unified navigation experience.
+
+---
+
+## [v1.9.3] - 2026-01-11
+
+### 🏗️ Global Header Architecture ("Consolidated Identity")
+
+**Focus:** Replacing inconsistent page headers with a unified, context-aware global header system that improves mobile visibility and branding.
+
+### Changed
+- **Global Header System:** Replaced standalone `PageHeader` components with a unified `AppHeader` integration across Practice, Recordings, Profile, Settings, Admin, and Legal pages.
+- **Dynamic Branding:** Headers now support page-specific titles (e.g., "THE BOOTH", "TAPE DECK") instead of the static "FreeStyla" logo, providing better context.
+- **Mobile Visibility:** Increased header height to `h-20` and enabled subtitle visibility on mobile devices for improved navigation context.
+- **Admin & Legal:** Updated Admin Dashboard, Terms of Service, and Privacy Policy to use the new consistent header layout.
+
+---
+
 ## [v1.9.2] - 2026-01-10
 
 ### 🎛️ Practice Player Polish

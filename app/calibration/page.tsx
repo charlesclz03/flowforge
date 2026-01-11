@@ -150,14 +150,15 @@ export default function CalibrationPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <AppHeader />
+      <AppHeader
+        showBackButton
+        customTitle="AUDIO CHECK"
+        customSubtitle="Calibrate mic latency"
+      />
       <Container className="flex flex-col items-center justify-center min-h-[80vh] gap-8">
         {step === 'intro' && (
           <div className="text-center max-w-md space-y-6">
             <Volume2 className="w-16 h-16 text-accent-purple mx-auto animate-pulse" />
-            <h1 className="text-3xl font-bold font-header tracking-tighter">
-              Audio Calibration
-            </h1>
             <p className="text-text-secondary">
               We'll play 5 beeps. Tap the button exactly when you hear the sound
               to measure your device's latency.

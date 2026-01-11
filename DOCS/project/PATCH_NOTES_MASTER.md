@@ -4,6 +4,50 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
+
+## v1.9.5 - Career Update (Wave 2)
+**Date:** January 11, 2026
+**Status:** Ready for Deployment
+
+### New Features
+- **Wave 2 Achievements:** Launched 27 new achievements to expand the career mode.
+  - **XP Milestones:** Rewards for Level 5, 10, 25, 50.
+  - **Total Volume:** Badges for hours practiced and words spit.
+  - **Skill Challenges:** "Spitfire" (>150 words), "Rap God" (>300 words), "Iron Lungs" (>5 min).
+  - **Consistency Streaks:** New badges for 14, 60, 100, and 365 days.
+
+### Improvements
+- **Practice UI:** Increased session timer size and contrast for significantly better readability.
+- **Backend:** Enhanced achievement API to auto-seed new definitions without manual DB intervention.
+- **Build System:** Fixed `AppHeader` type errors to ensure smooth Vercel deployments.
+
+---
+
+## 👁️ Update 1.9.4: High Contrast
+**Release Date:** January 11, 2026
+**Codename:** _Visual Loyalty_
+
+A targeted UI polish to ensure the settings menu is as readable as it is functional, plus the final unification of our Global Header system.
+
+### 👁️ Visual Clarity
+- **Settings Dropdown:** We've dialed in the contrast. Darker backgrounds (`zinc-950`) and brighter text (`zinc-200`) make navigation effortless.
+- **Global Headers:** The unification is complete. Every single page, from Search to Video Export, now shares the same robust `AppHeader` DNA.
+
+---
+
+## 🏗️ Update 1.9.3: Global Header Architecture
+**Release Date:** January 11, 2026
+**Codename:** _Consolidated Identity_
+
+Replacing inconsistent page headers with a unified, context-aware global header system that improves mobile visibility and branding.
+
+### 🏗️ Visual Structure
+- **Global Header System:** Unified `AppHeader` across all pages (Practice, Recordings, Admin, Legal).
+- **Dynamic Branding:** Custom titles replace the static "FreeStyla" logo for better context.
+- **Mobile Visibility:** Increased header height and enabled subtitles on mobile.
+
+---
+
 ## 🎛️ Update 1.9.2: Practice Player Polish
 **Release Date:** January 10, 2026
 **Codename:** _Studio Tune-Up_

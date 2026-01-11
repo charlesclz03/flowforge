@@ -37,9 +37,7 @@ export function ScreenPage({
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
       {/* Content Area - Natural Height */}
-      <div className="flex-1 w-full relative">
-        {children}
-      </div>
+      {children}
 
       {/* Footer Area */}
       {footer && (

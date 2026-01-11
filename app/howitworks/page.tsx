@@ -8,7 +8,10 @@ export default function HowItWorksPage() {
   const router = useRouter()
 
   return (
-    <OnboardingLayout>
+    <OnboardingLayout
+      customTitle="THE BLUEPRINT"
+      customSubtitle="Mastering the art of freestyle"
+    >
       <HowItWorksContent
         onStartPractice={() => router.push('/difficultyselection')}
       />

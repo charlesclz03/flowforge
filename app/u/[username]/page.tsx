@@ -10,6 +10,7 @@ import {
   TabsTrigger,
 } from '@/components/atoms/Tabs'
 import { FreestyleSession, Beat } from '@prisma/client'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 interface SocialLinks {
   instagram?: string
@@ -88,6 +89,14 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <Container className="py-8 space-y-8">
+      <AppHeader
+        showBackButton={true}
+        onBack={() => {}} // Cleanest way for server component: let it use default router.back or we'd need a client wrapper. AppHeader handles router.back if onBack is undefined? No, onBack is optional.
+        // Wait, AppHeader uses useRouter. useRouter works in Client Components. AppHeader IS a client component.
+        // So I can just pass nothing for onBack and it will default to router.back().
+        customTitle="ARTIST PROFILE"
+        customSubtitle={`${user.name || 'Artist'}'s flowfolio`}
+      />
       {/* Profile Header */}
       <Card padding="lg" className="relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">

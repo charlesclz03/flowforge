@@ -12,7 +12,12 @@ export default function PatchNotesPage() {
   const router = useRouter()
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-purple-500/30">
-      <AppHeader showBackButton onBack={() => router.back()} />
+      <AppHeader
+        showBackButton
+        onBack={() => router.back()}
+        customTitle="PATCH NOTES"
+        customSubtitle="System changelog"
+      />
 
       <main className="pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
