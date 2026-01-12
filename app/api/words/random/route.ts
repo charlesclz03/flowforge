@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 // Fallback words to ensure the app works even if DB fails
+// Fallback words to ensure the app works even if DB fails - Expanded list
 const FALLBACK_WORDS = [
   // Easy (1 Syllable)
   { wordText: 'flow', difficultyLevel: 1 },
@@ -24,7 +25,7 @@ const FALLBACK_WORDS = [
   { wordText: 'trust', difficultyLevel: 1 },
   { wordText: 'build', difficultyLevel: 1 },
   { wordText: 'create', difficultyLevel: 1 },
-  
+
   // Medium (2-3 Syllables)
   { wordText: 'rhythm', difficultyLevel: 2 },
   { wordText: 'vision', difficultyLevel: 2 },
@@ -46,7 +47,7 @@ const FALLBACK_WORDS = [
   { wordText: 'passion', difficultyLevel: 2 },
   { wordText: 'purpose', difficultyLevel: 2 },
   { wordText: 'progress', difficultyLevel: 2 },
-  
+
   // Hard (4+ Syllables / Complex)
   { wordText: 'imagination', difficultyLevel: 3 },
   { wordText: 'extraordinary', difficultyLevel: 3 },

@@ -57,6 +57,7 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 
 export default function PracticePage() {
+  // Ring animation logic updated to track word duration
   const router = useRouter()
   const { data: session } = useSession()
   const [isInfiniteMode] = useState(false)

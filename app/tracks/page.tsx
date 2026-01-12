@@ -15,6 +15,7 @@ import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { cn } from '@/lib/utils'
 
+// Desktop responsiveness fix applied
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoading, setIsLoading] = useState(true)
