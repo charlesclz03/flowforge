@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.12',
+    date: '2026-01-12',
+    title: 'Visual Velocity',
+    codename: 'Fresh Paint',
+    description:
+      'We have completely overhauled the track browser with a new Generative Art engine. Every beat now gets a unique, high-fidelity cover.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Generative Covers: No more static gradients. Every track has unique, code-generated art.',
+          'Streetwear Aesthetic: Added noise textures and bold typography overlays.',
+          'Dynamic Patterns: Mesh gradients, neon shapes, and geometric grids.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.11',
     date: '2026-01-12',
     title: 'UI Hotfix',

@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.9.12] - 2026-01-12
+
+### 🎨 The Visual Velocity Update ("Fresh Paint")
+
+**Focus:** Replacing static gradients with a high-fidelity, generative visual system for track covers.
+
+### Added
+- **Generative Track Art:** Implemented a determinstic visual engine that creates unique, premium cover art for every track based on its ID and title.
+- **Dynamic Styles:** Tracks now feature Mesh Gradients, Neon Abstract patterns, and Geometric overlays.
+- **Genre Typography:** Added oversized, stylized genre text (e.g. "TRAP") integrated into the cover art for a streetwear aesthetic.
+- **Texture Grain:** Applied a subtle noise filter to track cards for a more tangible, "printed" feel.
+
+---
+
 ## [v0.9.11] - 2026-01-12
 
 ### 🧹 UI Hotfix ("Clean Sweep")
