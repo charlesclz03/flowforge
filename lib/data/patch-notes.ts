@@ -21,7 +21,7 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '1.9.5',
+    version: '0.9.5',
     date: '2026-01-11',
     title: 'Career Update',
     codename: 'Wave 2',
@@ -48,7 +48,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.9.4',
+    version: '0.9.4',
     date: '2026-01-11',
     title: 'High Contrast Update',
     codename: 'Visual Loyalty',
@@ -65,7 +65,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.9.3',
+    version: '0.9.3',
     date: '2026-01-11',
     title: 'Global Header Architecture',
     codename: 'Consolidated Identity',
@@ -83,7 +83,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.9.2',
+    version: '0.9.2',
     date: '2026-01-10',
     title: 'Practice Player Polish',
     codename: 'Studio Tune-Up',
@@ -108,7 +108,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.9.1',
+    version: '0.9.1',
     date: '2026-01-10',
     title: 'The Mobile Flow',
     codename: 'App Native',
@@ -133,7 +133,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.9.0',
+    version: '0.9.0',
     date: '2026-01-10',
     title: 'The Rebrand',
     codename: 'FreeStyla',
@@ -160,7 +160,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.8.1',
+    version: '0.8.1',
     date: '2026-01-10',
     title: 'The Social Polish',
     codename: 'Embedded Share',
@@ -177,7 +177,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.8.0',
+    version: '0.8.0',
     date: '2026-01-10',
     title: 'The Gamification Core',
     codename: 'Level Up',
@@ -195,7 +195,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.7',
+    version: '0.7.7',
     date: '2026-01-10',
     title: 'The Seamless Selection',
     codename: 'Direct Access',
@@ -212,7 +212,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.6',
+    version: '0.7.6',
     date: '2026-01-10',
     title: 'The Heartbeat Update',
     codename: 'Visual Rhythm',
@@ -235,7 +235,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.5',
+    version: '0.7.5',
     date: '2026-01-10',
     title: 'The Final Polish',
     codename: 'XP Tuner',
@@ -256,7 +256,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.4',
+    version: '0.7.4',
     date: '2026-01-10',
     title: 'The Safety Update',
     codename: 'Secure Flow',
@@ -279,7 +279,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.3',
+    version: '0.7.3',
     date: '2026-01-10',
     title: 'The Studio Perfected',
     codename: 'Studio Prime',
@@ -304,7 +304,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.2',
+    version: '0.7.2',
     date: '2026-01-10',
     title: 'The Video Studio',
     codename: 'Cinema Verité',
@@ -328,7 +328,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.1',
+    version: '0.7.1',
     date: '2026-01-10',
     title: 'The Mobile Polish',
     codename: 'Liquid Metal',
@@ -354,7 +354,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.7.0',
+    version: '0.7.0',
     date: '2026-01-10',
     title: 'The Admin Update',
     codename: 'Master Control',
@@ -380,7 +380,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.6.2',
+    version: '0.6.2',
     date: '2026-01-10',
     title: 'The Zero State',
     codename: 'Pure Flow',
@@ -399,7 +399,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.6.1',
+    version: '0.6.1',
     date: '2026-01-10',
     title: 'The Waveform Update',
     codename: 'Visual Flow',
@@ -425,7 +425,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.6.0',
+    version: '0.6.0',
     date: '2026-01-09',
     title: 'The Studio Update',
     codename: 'Platinum Record',
@@ -459,7 +459,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.9',
+    version: '0.5.9',
     date: '2026-01-09',
     title: 'The Final Polish',
     codename: 'Final Polish',
@@ -479,7 +479,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.8',
+    version: '0.5.8',
     date: '2026-01-09',
     title: 'Sirens & Intensity',
     codename: 'High Intensity',
@@ -496,7 +496,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.7',
+    version: '0.5.7',
     title: 'The Direct Flow',
     codename: 'Direct Flow',
     date: 'January 09, 2026',
@@ -514,7 +514,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.6',
+    version: '0.5.6',
     title: 'The Stable Circle',
     codename: 'Back to Basics',
     date: 'January 09, 2026',
@@ -532,7 +532,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.5',
+    version: '0.5.5',
     title: 'The Zero Warning',
     codename: 'Perfect Sync',
     date: 'January 09, 2026',
@@ -552,7 +552,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.4',
+    version: '0.5.4',
     title: 'The Polish',
     codename: 'Smooth Operator',
     date: 'January 09, 2026',
@@ -571,7 +571,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.5.3',
+    version: '0.5.3',
     title: 'The Resurrection',
     codename: 'Second Wind',
     date: 'January 09, 2026',
@@ -600,7 +600,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.4.0',
+    version: '0.4.0',
     title: 'The Platinum Polish',
     codename: 'Diamond Cutter',
     date: 'December 21, 2025',
@@ -628,7 +628,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.3.0',
+    version: '0.3.0',
     title: 'The Gamification Update',
     codename: 'Level Up',
     date: 'December 20, 2025',
@@ -653,7 +653,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '1.1.0',
+    version: '0.2.1',
     title: 'The Perfectionist',
     codename: 'Infinite Loop',
     date: 'December 18, 2025',
@@ -680,7 +680,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.8.0',
+    version: '0.1.8',
     title: 'The Social Awakening',
     codename: 'Arena of Voices',
     date: 'December 14, 2025',
@@ -706,7 +706,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.7.0',
+    version: '0.1.7',
     title: 'The Polish & The Pragmatic',
     codename: 'Crystal Clarity',
     date: 'December 14, 2025',
@@ -724,7 +724,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.5.0',
+    version: '0.1.5',
     title: 'The Purple Void',
     codename: 'Royal Ascension',
     date: 'December 11, 2025',
@@ -749,7 +749,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.4.0',
+    version: '0.1.4',
     title: 'The Vault',
     codename: 'Memory Keepers',
     date: 'November 11, 2025',
@@ -768,7 +768,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.3.0',
+    version: '0.1.3',
     title: 'Echoes of the Beat',
     codename: 'Sonic Boom',
     date: 'November 11, 2025',
@@ -787,7 +787,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.1.0',
+    version: '0.1.1',
     title: 'Genesis',
     codename: 'The Foundation',
     date: 'November 10, 2025',

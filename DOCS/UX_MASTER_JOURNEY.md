@@ -1,6 +1,6 @@
 # FreeStyla: Master UX & User Journey Guide
 
-**Version**: 1.9.2 (Practice Player Polish)
+**Version**: 0.9.5 (Beta)
 **Philosophy**: "Frictionless Flow" — Immediate value for guests, deep progression for members.
 
 ---

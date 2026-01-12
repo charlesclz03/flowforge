@@ -126,7 +126,7 @@ export default function PracticePage() {
   useEffect(() => {
     const texts = [
       'Building Studio Environment...',
-      'Syncing AI Word Bank...',
+      'Syncing Word Bank...',
       'Dropping the Beat...',
     ]
     let i = 0
@@ -965,6 +965,7 @@ export default function PracticePage() {
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         trigger={premiumTrigger}
+        beatCount={beats.length || 100}
       />
 
       <Modal

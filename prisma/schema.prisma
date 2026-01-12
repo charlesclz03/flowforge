@@ -88,6 +88,7 @@ model User {
   collectedWords CollectedWord[]
   favoriteBeats FavoriteBeat[]
   uploadedBeats Beat[]
+  feedback      Feedback[]
 
   // Achievements
   achievements UserAchievement[]
@@ -235,4 +236,19 @@ model UserAchievement {
   @@unique([userId, achievementId])
   @@index([userId])
   @@map("user_achievements")
+}
+
+// User Feedback System
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  userId    String?  @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  isRead    Boolean  @default(false) @map("is_read")
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("feedback")
 }

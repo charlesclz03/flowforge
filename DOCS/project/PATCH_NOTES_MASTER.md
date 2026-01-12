@@ -5,7 +5,7 @@ _System logs, balance changes, and the constant evolution of the grind._
 ---
 
 
-## v1.9.5 - Career Update (Wave 2)
+## v0.9.5 (Beta) - Career Update (Wave 2)
 **Date:** January 11, 2026
 **Status:** Ready for Deployment
 
@@ -23,7 +23,7 @@ _System logs, balance changes, and the constant evolution of the grind._
 
 ---
 
-## 👁️ Update 1.9.4: High Contrast
+## 👁️ Update 0.9.4 (Beta): High Contrast
 **Release Date:** January 11, 2026
 **Codename:** _Visual Loyalty_
 
@@ -35,7 +35,7 @@ A targeted UI polish to ensure the settings menu is as readable as it is functio
 
 ---
 
-## 🏗️ Update 1.9.3: Global Header Architecture
+## 🏗️ Update 0.9.3 (Beta): Global Header Architecture
 **Release Date:** January 11, 2026
 **Codename:** _Consolidated Identity_
 
@@ -48,7 +48,7 @@ Replacing inconsistent page headers with a unified, context-aware global header 
 
 ---
 
-## 🎛️ Update 1.9.2: Practice Player Polish
+## 🎛️ Update 0.9.2 (Beta): Practice Player Polish
 **Release Date:** January 10, 2026
 **Codename:** _Studio Tune-Up_
 
@@ -65,7 +65,7 @@ A focused update to refine the Practice Mode experience and squash critical audi
 
 ---
 
-## 📱 Update 1.9.1: The Mobile Flow
+## 📱 Update 0.9.1 (Beta): The Mobile Flow
 **Release Date:** January 10, 2026
 **Codename:** _App Native_
 
@@ -82,7 +82,7 @@ We have fundamentally restructured the app's layout engine to behave like a nati
 
 ---
 
-## 📛 Update 1.9.0: The Rebrand
+## 📛 Update 0.9.0 (Beta): The Rebrand
 **Release Date:** January 10, 2026
 **Codename:** _FreeStyla_
 
@@ -100,7 +100,7 @@ A major identity update shifting from "FlowForge" to "FreeStyla" across the enti
 
 ---
 
-## 🚀 Update 1.8.0: The Gamification Core
+## 🚀 Update 0.8.0 (Beta): The Gamification Core
 
 **Release Date:** January 10, 2026
 **Codename:** _Level Up_
@@ -117,7 +117,7 @@ The gamification system is now fully operational. We've replaced the placeholder
 
 ---
 
-## 🚀 Update 1.7.7: The Seamless Selection
+## 🚀 Update 0.7.7 (Beta): The Seamless Selection
  
  **Release Date:** January 10, 2026
  **Codename:** _Direct Access_
@@ -130,7 +130,7 @@ The gamification system is now fully operational. We've replaced the placeholder
  
  ---
  
- ## 🚀 Update 1.7.6: The Heartbeat Update
+ ## 🚀 Update 0.7.6 (Beta): The Heartbeat Update
 
 **Release Date:** January 10, 2026
 **Codename:** _Visual Rhythm_
@@ -149,7 +149,7 @@ A visual refinement update simplifying the iconography and upgrading the upload 
 
 ---
 
-## 🚀 Update 1.7.5: The Final Polish & XP Tuner
+## 🚀 Update 0.7.5 (Beta): The Final Polish & XP Tuner
 
 **Release Date:** January 10, 2026
 **Codename:** _The Final Polish_
@@ -169,7 +169,7 @@ A critical quality-of-life update focusing on the "gamification feel" and elimin
 
 ---
 
-## 🚀 Update 1.7.4: The Safety Update
+## 🚀 Update 0.7.4 (Beta): The Safety Update
 
 **Release Date:** January 10, 2026
 **Codename:** _Secure Flow_
@@ -184,7 +184,7 @@ Protecting session data with stricter recording safety checks and ensuring relia
 
 ---
 
-## 🚀 Update 1.7.3: The Studio Perfected
+## 🚀 Update 0.7.3 (Beta): The Studio Perfected
 **Release Date:** January 10, 2026
 **Codename:** _Studio Prime_
 
@@ -198,7 +198,7 @@ Refined the studio interaction with intelligent defaults and mixed audio downloa
 
 ---
 
-## 🚀 Update 1.7.2: The Video Studio
+## 🚀 Update 0.7.2 (Beta): The Video Studio
 **Release Date:** January 10, 2026
 **Codename:** _Cinema Verité_
 
@@ -215,7 +215,7 @@ A creative expansion introducing a dedicated Video Export Studio and refining th
 
 ---
 
-## 🚀 Update 1.7.1: The Mobile Polish
+## 🚀 Update 0.7.1 (Beta): The Mobile Polish
  
  **Release Date:** January 10, 2026
  **Codename:** _Liquid Metal_
@@ -233,7 +233,7 @@ A creative expansion introducing a dedicated Video Export Studio and refining th
  
  ---
  
- ## 🚀 Update 1.7.0: The Admin Update
+ ## 🚀 Update 0.7.0 (Beta): The Admin Update
  
  **Release Date:** January 10, 2026
  **Codename:** _Master Control_
@@ -248,7 +248,7 @@ A creative expansion introducing a dedicated Video Export Studio and refining th
  
  ---
  
- ## 🚀 Update 1.6.2: The Zero State
+ ## 🚀 Update 0.6.2 (Beta): The Zero State
 
 **Release Date:** January 10, 2026
 **Codename:** _Pure Flow_
@@ -265,7 +265,7 @@ The "Zero Problem" update. We have achieved a perfectly clean build, resolved 10
 
 ---
 
-## 🚀 Update 1.6.1: The Waveform Update
+## 🚀 Update 0.6.1 (Beta): The Waveform Update
 
 **Release Date:** January 09, 2026
 **Codename:** _The Final Polish_
@@ -357,7 +357,7 @@ A comprehensive overhaul of the application's waveform visualization and seeking
 ### 🧹 UI Cleanup
 - **Redundancy Removal**: Deleted the "Test Start Point" button; its functionality is now naturally handled by the main play button and waveform seeking.
 
-## v1.6.0 - "The Studio Update"
+## v0.6.0 (Beta) - "The Studio Update"
 **Codename**: Platinum Record
 **Date**: 2026-01-09
 
@@ -379,56 +379,56 @@ A major consolidation release that rolls up the audio engine overhaul, visual in
 - **Navigation**: removed "Text Links" in favor of standard Header Arrows.
 - **Crash Safety**: Modal confirmations added for session exit.
 
-## v1.5.9 - "The Final Polish"
+## v0.5.9 (Beta) - "The Final Polish"
 **Date**: 2026-01-09
 **Focus**: Friction points in practice session (Uploads, Timing, Exits).
 
-## v1.5.8 - "Sirens & Intensity"
+## v0.5.8 (Beta) - "Sirens & Intensity"
 **Date**: 2026-01-09
 **Focus**: Visual urgency (Siren effects, Shake animations).
 
-## v1.5.7 - "The Direct Flow"
+## v0.5.7 (Beta) - "The Direct Flow"
 **Date**: 2026-01-09
 **Focus**: Session termination and Victory screen streamlining.
 
-## v1.5.6 - "The Stable Circle"
+## v0.5.6 (Beta) - "The Stable Circle"
 **Date**: 2026-01-09
 **Focus**: Restored Classic Circular UI and fixed serializability bugs.
 
-## v1.5.5 - "The Zero Warning"
+## v0.5.5 (Beta) - "The Zero Warning"
 **Date**: 2026-01-09
 **Focus**: Critical audio sync fixes and 0-warning build state.
 
-## v1.5.3 - "The Resurrection"
+## v0.5.3 (Beta) - "The Resurrection"
 **Date**: 2026-01-09
 **Focus**: Major Audio Engine overhaul (Mute-Prime strategies).
 
-## v1.4.0 - "The Platinum Polish"
+## v0.4.0 (Beta) - "The Platinum Polish"
 **Date**: 2025-12-21
 **Focus**: User Beat Uploads and Library Management Tabs.
 
-## v1.3.0 - "The Gamification Update"
+## v0.3.0 (Beta) - "The Gamification Update"
 **Date**: 2025-12-20
 **Focus**: XP System, Streaks, Battle Pass.
 
-## v1.2.0 - "The Social Awakening"
+## v0.1.8 (Alpha) - "The Social Awakening"
 **Date**: 2025-12-14
 **Focus**: Global Feeds, Public Profiles, Duels.
 
-## v1.1.0 - "The Perfectionist"
+## v0.2.1 (Beta) - "The Perfectionist"
 **Date**: 2025-12-18
 **Focus**: Word Bag System, Stat Sharing.
 
-## v0.5.0 - "The Purple Void"
+## v0.1.5 (Alpha) - "The Purple Void"
 **Date**: 2025-12-11
 **Focus**: Design System migration to Purple (#7D7AFF).
 
-## v0.1.0 - "Genesis"
+## v0.1.1 (Alpha) - "Genesis"
 **Date**: 2025-11-10
 **Focus**: Initial Infrastructure (Next.js, Supabase, Prisma).
 
 ---
-## 🚀 Update 1.5.6: The Stable Circle
+## 🚀 Update 0.5.6 (Beta): The Stable Circle
 
 **Release Date:** January 09, 2026
 **Codename:** _Back to Basics_
@@ -446,7 +446,7 @@ This final stabilization patch restores the core practice UI while hardening the
 
 ---
 
-## 🚀 Update 1.5.5: The Zero Warning
+## 🚀 Update 0.5.5 (Beta): The Zero Warning
 
 **Release Date:** January 09, 2026
 **Codename:** _Perfect Sync_
@@ -466,7 +466,7 @@ This patch resolves critical regressions in audio timing and synchronization, wh
 
 ---
 
-## 🎛️ Update 1.5.4: The Polish
+## 🎛️ Update 0.5.4 (Beta): The Polish
 
 **Release Date:** January 09, 2026
 **Codename:** _Smooth Operator_
@@ -475,7 +475,7 @@ Quality-of-life improvements that make the app feel more responsive and polished
 
 ### 🎧 Beat Selection Overhaul
 - **Collapsible Dropdown**: The Beat selector in difficulty selection is now fully **collapsible**. No more taking up 50% of the screen when you've already made your choice.
-- **Smart Pre-Selection**: Coming from the Vinyl Collection? Your track is already locked in, dropdown collapsed, ready to hit "Practice".
+- **Smart Pre-Selection**: Coming from the Beat Vault? Your track is already locked in, dropdown collapsed, ready to hit "Practice".
 - **Buttery Animation**: Smooth 300ms slide animation when expanding/collapsing. Feels premium.
 
 ### 🎤 Visual Fixes
@@ -484,7 +484,7 @@ Quality-of-life improvements that make the app feel more responsive and polished
 
 ---
 
-## 🔧 Update 1.5.3: The Resurrection
+## 🔧 Update 0.5.3 (Beta): The Resurrection
 
 **Release Date:** January 09, 2026
 **Codename:** _Second Wind_
@@ -512,7 +512,7 @@ The app was critically broken. Users couldn't record, couldn't see their profile
 
 ---
 
-## 📱 Update 1.5.2: Studio Flow & Mobile Polish
+## 📱 Update 0.5.2 (Beta): Studio Flow & Mobile Polish
 
 ### 🎧 Audio Engine Repair
 - **Persistent FX**: Fixed a complex issue where Studio FX (Reverb, EQ) would drop out when toggling modes or replaying tracks. The audio graph now initializes robustly every time.
@@ -528,7 +528,7 @@ The app was critically broken. Users couldn't record, couldn't see their profile
 
 ---
 
-## 🎛️ Update 1.5.1: The Focused Studio
+## 🎛️ Update 0.5.1 (Beta): The Focused Studio
 
 **Release Date:** January 09, 2026
 **Codename:** _Silent Mode_
@@ -545,7 +545,7 @@ We've refined the studio experience to cut out the noise. Users now have total c
 
 ---
 
-## 🛡️ Update 1.5.0: Pitch Perfect & Production Ready
+## 🛡️ Update 0.5.0 (Beta): Pitch Perfect & Production Ready
 
 **Release Date:** January 09, 2026
 **Codename:** _Diamond State_
@@ -566,20 +566,20 @@ The "Deep Scan Audit" has concluded. We went line-by-line through the critical s
 
 ---
 
-## 🛡️ Update 1.4.0: The Enterprise Standard
+## 🛡️ Update 0.4.0 (Beta): The Enterprise Standard
 
 
 
 ---
 
-## 🌊 Update 1.3.0: Universal Gateway
+## 🌊 Update 0.3.0 (Beta): Universal Gateway
 
 **Release Date:** December 19, 2024
 **Codename:** _Flow Without Borders_
 
 The barriers have come down. FreeStyla is now open to everyone from the first click. Practice instantly as a guest, master the new Cypher mode, and enjoy a more fluid, interactive experience.
 
-### 🛡️ Patch 1.1.9: The Guardian Update (Jan 08, 2026)
+### 🛡️ Patch 0.2.2 (Beta): The Guardian Update (Jan 08, 2026)
 
 **Focus:** Critical Stability & Navigation
 
@@ -588,7 +588,7 @@ The barriers have come down. FreeStyla is now open to everyone from the first cl
 - **Navigation**: Added global navigation header to the Tracks page to match the rest of the application.
 - **Code Health**: Enforced strict linting and formatting standards across critical files.
 
-### 🩹 Patch 1.3.1: The Sonic Fix (Jan 07, 2026)
+### 🩹 Patch 0.3.1 (Beta): The Sonic Fix (Jan 07, 2026)
 
 **Focus:** Audio Stability & Practice Regressions
 
@@ -627,7 +627,7 @@ A comprehensive "Pro" audit of v1.3.0 revealed critical areas for the next patch
 
 ---
 
-## 🎤 Update 1.2.1: The Rebrand
+## 🎤 Update 0.1.9 (Alpha): The Rebrand
 
 **Release Date:** December 19, 2025
 **Codename:** _Identity_
@@ -650,7 +650,7 @@ FreeStyla gets its official branding treatment. New transparent icon, proper cap
 
 ---
 
-## 🎭 Update 1.2.0: The Guest Experience
+## 🎭 Update 0.1.8 (Alpha): The Guest Experience
 
 **Release Date:** December 19, 2025
 **Codename:** _Open Doors_
@@ -679,7 +679,7 @@ The practice gym is now truly open to everyone. Guest users can now experience t
 
 ---
 
-## 🎨 Update 1.1.3: The Flow Refinement
+## 🎨 Update 0.2.0-beta3: The Flow Refinement
 
 **Release Date:** December 18, 2025
 **Codename:** _Silk Touch_
@@ -701,7 +701,7 @@ The interface has been refined to a mirror shine. Navigation now flows like a se
 
 ---
 
-## 🚀 Update 1.1.1: The Production Forge
+## 🚀 Update 0.2.0-beta1: The Production Forge
 
 **Release Date:** December 18, 2025
 **Codename:** _Titan's Grip_
@@ -723,7 +723,7 @@ The final chains holding back production have been shattered. The deployment pip
 
 ---
 
-## 🐲 Update 0.8.0: The Social Awakening
+## 🐲 Update 0.1.8 (Alpha): The Social Awakening
 
 **Release Date:** December 14, 2025
 **Codename:** _Arena of Voices_
@@ -744,7 +744,7 @@ The silence has been broken. The barriers between emcees have fallen. The **Soci
 
 ---
 
-## 🔮 Update 0.7.0: The Polish & The Pragmatic
+## 🔮 Update 0.1.7 (Alpha): The Polish & The Pragmatic
 
 **Release Date:** December 14, 2025
 **Codename:** _Crystal Clarity_
@@ -759,7 +759,7 @@ Before the gates opened, the world had to be perfected. This update focused on s
 
 ---
 
-## 👑 Update 0.5.0: The Purple Void
+## 👑 Update 0.1.5 (Alpha): The Purple Void
 
 **Release Date:** December 11, 2025
 **Codename:** _Royal Ascension_
@@ -779,7 +779,7 @@ A shift in the visual spectrum. The old Orange has faded, replaced by the regal 
 
 ---
 
-## 📼 Update 0.4.0: The Vault
+## 📼 Update 0.1.4 (Alpha): The Vault
 
 **Release Date:** November 11, 2025
 **Codename:** _Memory Keepers_
@@ -795,7 +795,7 @@ The ability to capture time. Emcees can now save their sessions to the cloud, bu
 
 ---
 
-## 🔊 Update 0.3.0: Echoes of the Beat
+## 🔊 Update 0.1.3 (Alpha): Echoes of the Beat
 
 **Release Date:** November 11, 2025
 **Codename:** _Sonic Boom_

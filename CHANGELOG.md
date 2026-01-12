@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.9.4] - 2026-01-11
+## [v0.9.4] - 2026-01-11
 
 ### 👁️ The Visual Polish ("High Contrast")
 
@@ -15,7 +15,7 @@
 
 ---
 
-## [v1.9.3] - 2026-01-11
+## [v0.9.3] - 2026-01-11
 
 ### 🏗️ Global Header Architecture ("Consolidated Identity")
 
@@ -29,7 +29,7 @@
 
 ---
 
-## [v1.9.2] - 2026-01-10
+## [v0.9.2] - 2026-01-10
 
 ### 🎛️ Practice Player Polish
 
@@ -46,7 +46,7 @@
 
 ---
 
-## [v1.9.1] - 2026-01-10
+## [v0.9.1] - 2026-01-10
 
 ### 📱 The Single-Screen Update ("Mobile Flow")
 
@@ -64,7 +64,7 @@
 
 ---
 
-## [v1.9.0] - 2026-01-10
+## [v0.9.0] - 2026-01-10
 
 ### 📛 The Rebrand ("FreeStyla")
 
@@ -83,7 +83,7 @@
 
 ---
 
-## [v1.8.1] - 2026-01-10
+## [v0.8.1] - 2026-01-10
 
 ### 🧼 The Social Polish ("Embedded Share")
 
@@ -95,7 +95,7 @@
 
 ---
 
-## [v1.8.0] - 2026-01-10
+## [v0.8.0] - 2026-01-10
 
 ### 🆙 The Gamification Core ("Level Up")
 
@@ -115,7 +115,7 @@
 
 ---
 
-## [v1.7.7] - 2026-01-10
+## [v0.7.7] - 2026-01-10
 
 ### 🎧 The Seamless Selection Update ("Direct Access")
 
@@ -128,7 +128,7 @@
 
 ---
 
-## [v1.7.6] - 2026-01-10
+## [v0.7.6] - 2026-01-10
 
 ### ❤️ The Heartbeat Update ("Visual Rhythm")
 
@@ -148,7 +148,7 @@
 
 ---
 
-## [v1.7.5] - 2026-01-10
+## [v0.7.5] - 2026-01-10
 
 ### 🔧 The Final Polish & XP Tuner
 
@@ -166,7 +166,7 @@
 
 ---
 
-## [v1.7.4] - 2026-01-10
+## [v0.7.4] - 2026-01-10
 
 ### 🔒 The Safety Update ("Secure Flow")
 
@@ -183,7 +183,7 @@
 ---
 
 
-## [v1.7.3] - 2026-01-10
+## [v0.7.3] - 2026-01-10
 
 ### 🎛️ The Studio Perfected ("Studio Prime")
 
@@ -199,7 +199,7 @@
 
 ---
 
-## [v1.7.2] - 2026-01-10
+## [v0.7.2] - 2026-01-10
 
 ### 🎥 The Video Studio Update ("Cinema Verité")
 
@@ -220,7 +220,7 @@
 
 ---
 
-## [v1.7.1] - 2026-01-10
+## [v0.7.1] - 2026-01-10
 
 ### 📱 The Mobile Polish Update ("Liquid Metal")
 
@@ -239,7 +239,7 @@
 
 ---
 
-## [v1.7.0] - 2026-01-10
+## [v0.7.0] - 2026-01-10
 
 ### 🎛️ The Admin Update ("Master Control")
 
@@ -258,7 +258,7 @@
 
 ---
 
-## [v1.6.2] - 2026-01-10
+## [v0.6.2] - 2026-01-10
 
 ### 🛡️ The Zero State ("Pure Flow")
 
@@ -276,7 +276,7 @@
 
 ---
 
-## [v1.6.1] - 2026-01-10
+## [v0.6.1] - 2026-01-10
 
 ### 🌊 The Waveform Update ("Visual Flow")
 
@@ -294,7 +294,7 @@
 
 ---
 
-## [v1.6.0] - 2026-01-09
+## [v0.6.0] - 2026-01-09
 
 ### 🎙️ The Studio Update ("Platinum Record")
 
@@ -312,7 +312,7 @@
 
 ---
 
-## [v1.5.9] - 2026-01-09
+## [v0.5.9] - 2026-01-09
 
 ### 🔧 The Final Polish
 
@@ -330,12 +330,12 @@
 
 ---
 
-## [v1.5.8] - 2026-01-09
+## [v0.5.8] - 2026-01-09
 ### Added
 - **Sirens Warning**: High-intensity "cop siren" visual effects (alternating red/blue ring and background pulse) that trigger 4 seconds before every other word change.
 - **Dynamic Feedback**: Implemented a "shake" animation for the word prompt during the siren warning phase.
 
-## [v1.5.7] - 2026-01-09
+## [v0.5.7] - 2026-01-09
 
 ### 🎯 Precision Flow & UI Simplification
 
@@ -350,7 +350,7 @@
 
 ---
 
-## [v1.5.6] - 2026-01-09
+## [v0.5.6] - 2026-01-09
 
 ### 🏗️ Architecture Stabilization & UI Restoration
 
@@ -365,7 +365,7 @@
 
 ---
 
-## [v1.5.5] - 2026-01-09
+## [v0.5.5] - 2026-01-09
 
 ### 🚀 Critical Fixes & Quality Assurance ("The Zero Warning")
 
@@ -381,7 +381,7 @@
 
 ---
 
-## [v1.5.4] - 2026-01-09
+## [v0.5.4] - 2026-01-09
 
 ### 🎛️ UX Improvements & Bug Fixes ("The Polish")
 
@@ -401,7 +401,7 @@
 
 ---
 
-## [v1.5.3] - 2026-01-09
+## [v0.5.3] - 2026-01-09
 
 ### 🔧 Critical Bug Fixes & Audio Engine Overhaul ("The Resurrection")
 
@@ -433,7 +433,7 @@
 
 ---
 
-## [v1.5.2] - 2026-01-09
+## [v0.5.2] - 2026-01-09
 
 ### 📱 Mobile Polish & Studio FX ("Studio Flow")
 
@@ -449,7 +449,7 @@
 - **UI Cleanup**: Removed the "PNG Record" button from summary modal and the "Vibe Score" metric as requested.
 - **Linting**: Cleaned up unused imports and component definitions in `PracticeControls`.
 
-## [v1.5.1] - 2026-01-09
+## [v0.5.1] - 2026-01-09
 
 ### 🎛️ Feature & UI Polish ("Studio Focus")
 
@@ -488,7 +488,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Audio Resources**: Optimized `BeatDropdown` to better manage audio instances during rapid previews.
 - **Layout Consistency**: Unified header usage across `Tracks` and `Difficulty` selection pages.
 
-## [v1.4.1] - 2026-01-09
+## [v0.4.1] - 2026-01-09
 
 
 ### Fixed
@@ -511,7 +511,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 
 - **Code Quality**: Enforced project-wide Prettier formatting and linting rules.
 
-## [v1.4.0] - 2025-12-21
+## [v0.4.0] - 2025-12-21
 
 ### 💎 The Platinum Polish ("Diamond Cutter")
 
@@ -526,7 +526,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Search & Filter**: Rewrote filtering logic on Tracks page (search by BPM, Tag, Title).
 - **Typography**: Standardized font usage (Inter/JetBrains Mono).
 
-## [v1.3.0] - 2025-12-20
+## [v0.3.0] - 2025-12-20
 
 ### 🎮 The Gamification Update ("Level Up")
 
@@ -541,7 +541,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Mobile Safe Area**: Added `SafeAreaWrapper` to handle notches and Dynamic Islands on iOS.
 - **Optimistic UI**: Progress updates locally before server confirmation for instant feedback.
 
-## [v1.1.8] - 2026-01-07
+## [v0.2.1] - 2026-01-07
 
 ### Fixed
 
@@ -551,14 +551,14 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Stability**: Removed duplicate `SessionPlayer` component causing conflicts.
 - **My Tracks**: Refactored audio handling to use React Refs for better stability and error handling.
 
-## [v1.1.7] - 2025-12-19
+## [v0.2.0] - 2025-12-19
 
 ### Added
 
 - **PWA Install Modal**: Intelligent installation prompt for iOS/Android users to encourage "Add to Home Screen" for better fullscreen experience and reduced audio latency.
 - **Environment Types**: Added explicit `es5` and `dom` lib references to `env.d.ts` to fix type checking in certain environments.
 
-## [v1.1.6] - 2025-12-19
+## [v0.2.0-beta6] - 2025-12-19
 
 ### Added
 
@@ -575,14 +575,14 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Streak Freeze**: Removed all UI and logic.
 - **Safe Mode**: Removed all UI and logic.
 
-## [v1.1.5] - 2025-12-18
+## [v0.2.0-beta5] - 2025-12-18
 
 ### Added
 
 - **Random Difficulty**: Added a new "Random" (Level 4) difficulty mode that mixes words from all complexity levels.
 - **Smart Word Logic**: Implemented "1-Hour No Repeat" rule. Words seen in a session are now saved to local history and filtered out of future sessions for 60 minutes to ensure variety.
 
-## [v1.1.4] - 2025-12-18
+## [v0.2.0-beta4] - 2025-12-18
 
 ### Fixed
 
@@ -596,7 +596,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 
 - **Default Frequency**: Set default word frequency to 4 Bars (previously 8).
 
-## [v1.1.3] - 2025-12-18
+## [v0.2.0-beta3] - 2025-12-18
 
 ### Added
 
@@ -623,7 +623,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Unused Imports**: Cleaned up Eye/EyeOff and other unused imports.
 - **Prisma Queries**: Fixed FavoriteBeat queries to use correct findFirst pattern.
 
-## [v1.1.2] - 2025-12-18
+## [v0.2.0-beta2] - 2025-12-18
 
 ### Added
 
@@ -634,7 +634,7 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 
 - **Roadmap**: Moved Hashtags and Trending Feed to Phase 8 (Social Expansion).
 
-## [v1.1.1] - 2025-12-18
+## [v0.2.0-beta1] - 2025-12-18
 
 ### Fixed
 
@@ -650,42 +650,42 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 - **Deployment Target**: Explicitly disconnected `flowforge` Vercel project; now strictly deploying to `flowforge-freestyle`.
 - **Build Process**: Added `postinstall` script (`prisma generate`) to ensure fresh client generation on Vercel.
 
-## [v1.1.0] - 2025-12-17
+## [v0.2.0] - 2025-12-17
 
 - Initial "Bible Complete" Release.
 - Advanced Badge Tracking.
 - Word Vault Analytics.
 
-## [v0.8.0] - 2025-12-14
+## [v0.1.8] - 2025-12-14
 ### 🌍 The Social Awakening ("Arena of Voices")
 - **Global Feed**: Live stream of community recording drops.
 - **Duels**: Asynchronous rap battle system (Challenge friends).
 - **Public Profiles**: Showcase stats, tracks, and duel history.
 
-## [v0.7.0] - 2025-12-14
+## [v0.1.7] - 2025-12-14
 ### 💎 Crystal Clarity
 - **Mobile Responsiveness**: Overhauled CSS grid for small screens.
 - **Performance**: Reduced audio latency.
 
-## [v0.5.0] - 2025-12-11
+## [v0.1.5] - 2025-12-11
 ### 👑 The Purple Void ("Royal Ascension")
 - **Design System**: Migrated from Orange to "FreeStyla Purple" (#7D7AFF).
 - **Dark Mode**: Tuned contrast for late-night sessions.
 - **Premium**: Added "Pro" badge infrastructure.
 
-## [v0.4.0] - 2025-11-11
+## [v0.1.4] - 2025-11-11
 ### ☁️ The Vault ("Memory Keepers")
 - **Cloud Storage**: Integrated Supabase Storage for recording persistence.
 - **Library**: Manage/Rename/Delete tracks.
 - **Auto-Save**: Sessions save automatically on completion.
 
-## [v0.3.0] - 2025-11-11
+## [v0.1.3] - 2025-11-11
 ### 🔊 Echoes of the Beat ("Sonic Boom")
 - **Practice Studio**: Core audio player implementation.
 - **Timer Ring**: SVG stroke-dasharray animation synced to BPM.
 - **Audio Recorder**: Browser `MediaRecorder` API integration.
 
-## [v0.1.0] - 2025-11-10
+## [v0.1.1] - 2025-11-10
 ### 🏗️ Genesis ("The Foundation")
 - **Stack**: Next.js 14, Supabase (Postgres), Prisma, Tailwind.
 - **Auth**: Google OAuth via NextAuth.js.

@@ -5,13 +5,19 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 
-interface PremiumModalProps {
+export interface PremiumModalProps {
   isOpen: boolean
   onClose: () => void
   trigger: 'recording' | 'beat' | 'history' | 'general'
+  beatCount?: number
 }
 
-export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
+export function PremiumModal({
+  isOpen,
+  onClose,
+  trigger,
+  beatCount,
+}: PremiumModalProps) {
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
 
@@ -62,7 +68,7 @@ export function PremiumModal({ isOpen, onClose, trigger }: PremiumModalProps) {
 
   const benefits = [
     'Record full tracks. No limits. Total freedom.',
-    'Unlock the Secret Beat Vault',
+    `Unlock access to ${beatCount || 100}+ premium beats`,
     'Analyze your evolution with advanced stats',
     'Download studio-quality audio',
   ]

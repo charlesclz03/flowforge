@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
-import { PageHeader } from '@/components/organisms/common'
+import { ScreenPage } from '@/components/layout/ScreenPage'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Card } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { toast } from 'react-hot-toast'
@@ -97,13 +97,17 @@ export default function LatencyWizard() {
   }
 
   return (
-    <OnboardingLayout showBackButton onBack={() => router.back()}>
-      <div className="max-w-md mx-auto py-8 px-4 space-y-8">
-        <PageHeader
-          title="Latency Wizard"
-          description="Sync your vocals perfectly by calibrating your device's audio delay."
+    <ScreenPage
+      header={
+        <AppHeader
+          showBackButton
+          onBack={() => router.back()}
+          customTitle="LATENCY WIZARD"
+          customSubtitle="Audio calibration"
         />
-
+      }
+    >
+      <div className="max-w-md mx-auto py-8 px-4 space-y-8">
         <Card padding="lg">
           {step === 'intro' && (
             <div className="space-y-6 text-center">
@@ -201,6 +205,6 @@ export default function LatencyWizard() {
           </div>
         )}
       </div>
-    </OnboardingLayout>
+    </ScreenPage>
   )
 }

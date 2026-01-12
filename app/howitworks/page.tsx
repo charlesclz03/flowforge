@@ -1,20 +1,18 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { HowItWorksContent } from '@/components/organisms/onboarding/HowItWorksContent'
 
-export default function HowItWorksPage() {
-  const router = useRouter()
+import { prisma } from '@/lib/prisma'
+
+export default async function HowItWorksPage() {
+  // Fetch beat count, defaulting to 10 if error
+  const beatCount = await prisma.beat.count().catch(() => 10)
 
   return (
     <OnboardingLayout
       customTitle="THE BLUEPRINT"
       customSubtitle="Mastering the art of freestyle"
     >
-      <HowItWorksContent
-        onStartPractice={() => router.push('/difficultyselection')}
-      />
+      <HowItWorksContent beatCount={beatCount} />
     </OnboardingLayout>
   )
 }

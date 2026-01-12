@@ -238,8 +238,8 @@ When adding new documentation:
 
 ## 🔄 Last Updated
 
-**Date:** November 2025  
-**Maintainer:** Freestyla Development Team
+**Date:** January 2026  
+**Maintainer:** FreeStyla Development Team
 
 ---
 

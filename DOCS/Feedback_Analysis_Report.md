@@ -10,7 +10,7 @@
 
 The reviews indicate a passionate but frustrated user base. The competitor app is praised for its _concept_ (giving words to rhyme) but criticized heavily for its _execution_ (audio issues, lack of control, limited content).
 
-**FlowForge Opportunity:** By solving these 3 core frustrations, we can capture this audience immediately.
+**FreeStyla Opportunity:** By solving these 3 core frustrations, we can capture this audience immediately.
 
 ---
 
@@ -22,7 +22,7 @@ The reviews indicate a passionate but frustrated user base. The competitor app i
 > _"The beats to loud can't hear myself on playback"_
 
 - **Problem:** Users expect a studio-like experience but get a dictaphone. Acapella recordings are useless for sharing.
-- **FlowForge Solution:** Our current `MediaRecorder` + `AudioContext` pipeline already solves this (mixing voice + beat). We must ensure **Headphone Mode** (latency compensation) is rock solid.
+- **FreeStyla Solution:** Our current `MediaRecorder` + `AudioContext` pipeline already solves this (mixing voice + beat). We must ensure **Headphone Mode** (latency compensation) is rock solid.
 
 ### 2. Pacing & Flow Control (High Priority)
 
@@ -31,7 +31,7 @@ The reviews indicate a passionate but frustrated user base. The competitor app i
 > _"The 'rounds' are veeeeeeeery short"_
 
 - **Problem:** One speed does not fit all. Beginners panic; pros get bored.
-- **FlowForge Solution:**
+- **FreeStyla Solution:**
   - **Adjustable Interval:** We already changed default to 4 bars. We should add a slider (e.g., 4, 8, 12 bars).
   - **Manual Mode:** A "Next Word" button for total control (good for writing sessions).
 
@@ -42,7 +42,7 @@ The reviews indicate a passionate but frustrated user base. The competitor app i
 > _"I would really love if I could upload my own instrumentals"_
 
 - **Problem:** Users burn through built-in beats and rhymes quickly.
-- **FlowForge Solution:**
+- **FreeStyla Solution:**
   - **User Uploads:** Allow MP3 uploads for practice.
   - **Diverse Categories:** Ensure our word-bank isn't just "random nouns" but includes thematic packs (Street, Conscious, Battle).
 

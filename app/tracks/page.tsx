@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
-import { Search, Music, Plus, Lock } from 'lucide-react'
+import { Music, Plus, Lock } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 
 import { useSession } from 'next-auth/react'
@@ -18,7 +18,7 @@ export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
-  const [searchQuery, setSearchQuery] = useState('')
+
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
 
   const { data: session } = useSession()
@@ -190,22 +190,13 @@ export default function TracksPage() {
     setIsUploadModalOpen(true)
   }
 
-  const filteredBeats = beats
-    .filter((b) => {
-      if (activeTab === 'mine') {
-        return b.uploaderId && b.uploaderId === session?.user?.id
-      } else {
-        return !b.uploaderId // System beats
-      }
-    })
-    .filter(
-      (b) =>
-        b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.tags.some((t: string) =>
-          t.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    )
+  const filteredBeats = beats.filter((b) => {
+    if (activeTab === 'mine') {
+      return b.uploaderId && b.uploaderId === session?.user?.id
+    } else {
+      return !b.uploaderId // System beats
+    }
+  })
 
   return (
     <ScreenPage
@@ -254,22 +245,6 @@ export default function TracksPage() {
           </button>
         </div>
 
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Search beats, flow types, and drill vibes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-white placeholder:text-text-tertiary focus:outline-none focus:border-accent-purple/50 focus:ring-1 focus:ring-accent-purple/50 transition-all"
-            />
-          </div>
-        </div>
-
         {isLoading ? (
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
@@ -303,45 +278,30 @@ export default function TracksPage() {
           </div>
         )}
 
-        {filteredBeats.length === 0 && !isLoading && searchQuery.length > 0 && (
+        {filteredBeats.length === 0 && !isLoading && activeTab === 'public' && (
           <div className="py-20 text-center space-y-4 opacity-50">
             <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
               <Music size={32} />
             </div>
-            <p>No beats found looking for &quot;{searchQuery}&quot;</p>
+            <p>No beats available. Pull to refresh.</p>
           </div>
         )}
 
-        {filteredBeats.length === 0 &&
-          !isLoading &&
-          searchQuery.length === 0 &&
-          activeTab === 'public' && (
-            <div className="py-20 text-center space-y-4 opacity-50">
-              <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-                <Music size={32} />
-              </div>
-              <p>No beats available. Pull to refresh.</p>
+        {filteredBeats.length === 0 && !isLoading && activeTab === 'mine' && (
+          <div className="py-20 text-center space-y-4 px-6 opacity-50">
+            <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+              <Music size={32} />
             </div>
-          )}
-
-        {filteredBeats.length === 0 &&
-          !isLoading &&
-          activeTab === 'mine' &&
-          searchQuery.length === 0 && (
-            <div className="py-20 text-center space-y-4 px-6 opacity-50">
-              <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-                <Music size={32} />
-              </div>
-              <p className="text-lg font-bold text-white">
-                Capture your own sound.
-              </p>
-              <p className="max-w-xs mx-auto text-sm">
-                Upload local tracks to practice rap improvisation offline. Build
-                your personal library and flow to your own instrumentals,
-                anywhere, anytime.
-              </p>
-            </div>
-          )}
+            <p className="text-lg font-bold text-white">
+              Capture your own sound.
+            </p>
+            <p className="max-w-xs mx-auto text-sm">
+              Upload local tracks to practice rap improvisation offline. Build
+              your personal library and flow to your own instrumentals,
+              anywhere, anytime.
+            </p>
+          </div>
+        )}
       </div>
       <UserBeatUploadModal
         isOpen={isUploadModalOpen}

@@ -6,6 +6,7 @@ interface SubscriptionModalProps {
   isOpen: boolean
   onClose: () => void
   onSubscribe?: (plan: 'monthly' | 'annual') => void
+  beatCount?: number
 }
 
 /**
@@ -16,6 +17,7 @@ export function SubscriptionModal({
   isOpen,
   onClose,
   onSubscribe,
+  beatCount = 100,
 }: SubscriptionModalProps) {
   if (!isOpen) return null
 
@@ -102,10 +104,10 @@ export function SubscriptionModal({
           </p>
           {[
             'Unlimited recording time',
-            'Access to 100+ premium beats',
+            `Access to ${beatCount}+ premium beats`,
             'Ad-free experience',
             'Upload your own beats',
-            'AI-powered features (V2)',
+            'Smart features (V2)',
           ].map((feature, index) => (
             <div
               key={index}

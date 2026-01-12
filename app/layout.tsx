@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
   title: {
-    default: 'FreeStyla: AI Freestyle Coach',
+    default: 'FreeStyla: Freestyle Rap Coach',
     template: '%s | FreeStyla',
   },
   description:
-    'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI. Practice offline, track XP, and secure your legacy.',
+    'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine. Practice offline, track XP, and secure your legacy.',
   keywords: [
-    'AI Freestyle Coach',
+    'Freestyle Rap Coach',
     'Freestyle Practice',
-    'Rhyme Dictionary AI',
+    'Rhyme Engine',
     'Rap Beats & Flow',
     'Drill Beats',
     'Trap Flow',
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
     siteName: 'FreeStyla',
     title: 'Ready to spit bars? Start your session now with FreeStyla.',
     description:
-      'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
+      'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'FreeStyla - AI Freestyle Coach',
+        alt: 'FreeStyla - Freestyle Rap Coach',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FreeStyla: AI Freestyle Coach',
+    title: 'FreeStyla: Freestyle Rap Coach',
     description:
-      'The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.',
+      'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
     images: ['/og-image.png'],
     creator: '@freestyla',
   },

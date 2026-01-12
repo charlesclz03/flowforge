@@ -280,15 +280,16 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </Link>
 
           {/* Report Bug */}
-          <a
-            href="mailto:support@freestyla.app"
+          <Link
+            href="/patch-notes#feedback"
+            onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <Bug size={20} className="text-accent-red" />
             <span className="text-xs font-medium text-zinc-300">
               Report Bug
             </span>
-          </a>
+          </Link>
 
           {/* Terms */}
           <Link
@@ -334,7 +335,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v1.9.5
+          FreeStyla v0.9.5 (Beta)
         </p>
       </div>
     </div>

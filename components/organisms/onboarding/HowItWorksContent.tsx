@@ -1,21 +1,30 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { Music, Timer, Mic, Sparkles, Zap, Target } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 
 interface HowItWorksContentProps {
   onStartPractice?: () => void
+  beatCount?: number
 }
 
 import { QASection } from '@/components/organisms/landing/QASection'
 
-export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
+export function HowItWorksContent({
+  onStartPractice,
+  beatCount = 10,
+}: HowItWorksContentProps) {
+  const router = useRouter()
+  const handleStart =
+    onStartPractice || (() => router.push('/difficultyselection'))
+
   return (
     <div className="space-y-12">
       {/* Header */}
       <div className="space-y-6 text-center">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
-          Dominate the Cypher: The AI Freestyle Coach
+          Dominate the Cypher: The Freestyle Coach
         </h1>
         <p className="mx-auto max-w-2xl text-base text-text-secondary sm:text-xl">
           Unleash your potential with instant beat sync and infinite word flows.
@@ -99,10 +108,8 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
                 Freestyle practice engine with beats
               </h4>
               <p className="text-sm text-text-secondary">
-                Our AI Vault adapts to your skill level, helping you learn{' '}
-                <strong className="text-white">
-                  how to improve rap flow with AI
-                </strong>{' '}
+                Our Beat Vault adapts to your skill level, helping you learn{' '}
+                <strong className="text-white">how to improve rap flow</strong>{' '}
                 in real-time.
               </p>
             </div>
@@ -142,7 +149,7 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
           variant="primary"
           size="lg"
           className="bg-gradient-to-r from-accent-purple to-accent-purple/80 px-10 py-4 text-lg text-black shadow-purple hover:scale-105 hover:shadow-glow"
-          onClick={onStartPractice}
+          onClick={handleStart}
         >
           Start
         </Button>
@@ -151,7 +158,9 @@ export function HowItWorksContent({ onStartPractice }: HowItWorksContentProps) {
       {/* Stats */}
       <div className="flex items-center justify-center space-x-8 pt-4 text-center text-sm text-text-secondary">
         <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">10+</div>
+          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
+            {beatCount}+
+          </div>
           <div>Curated beats</div>
         </div>
         <div className="h-12 w-px bg-white/10" />

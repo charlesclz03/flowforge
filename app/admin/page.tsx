@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { UploadCloud, Music, Users } from 'lucide-react'
+import { UploadCloud, Music, Users, MessageSquare } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
@@ -46,6 +46,20 @@ export default function AdminPage() {
           </div>
           <p className="text-text-secondary">User management coming soon.</p>
         </Card>
+
+        <Link href="/admin/feedback">
+          <Card className="p-6 hover:border-accent-yellow transition-all cursor-pointer group">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-3 rounded-full bg-accent-yellow/20 text-accent-yellow group-hover:scale-110 transition-transform">
+                <MessageSquare size={24} />
+              </div>
+              <h2 className="text-xl font-bold">Feedback</h2>
+            </div>
+            <p className="text-text-secondary">
+              View user bug reports and suggestions.
+            </p>
+          </Card>
+        </Link>
       </div>
     </div>
   )
