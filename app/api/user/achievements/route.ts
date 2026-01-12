@@ -67,38 +67,35 @@ export async function GET() {
       orderBy: { points: 'asc' },
     })
 
-    // Always ensure all defined achievements exist in DB
-    // (This allows adding new achievements without wiping the DB)
     const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
 
+    // Always ensure all defined achievements exist in DB
+    // (This allows adding new achievements without wiping the DB)
     // Check if we need to seed (if DB count < DATA count)
-    // Check if we need to seed (if DB count < DATA count)
-    if (
-      allAchievements.length === 0 ||
-      allAchievements.length < ACHIEVEMENTS.length
-    ) {
-      console.log(
-        `Seeding achievements: DB=${allAchievements.length}, DATA=${ACHIEVEMENTS.length}`
-      )
-      
-      for (const ach of ACHIEVEMENTS) {
-        // Map to Prisma schema fields only
-        const achievementData = {
-          code: ach.code,
-          name: ach.name,
-          description: ach.description,
-          icon: ach.icon || 'Trophy', // Default icon if null
-          points: ach.points,
-        }
+    // We filter for missing codes to avoid unnecessary operations
+    const existingCodes = new Set(allAchievements.map((a) => a.code))
+    const missingAchievements = ACHIEVEMENTS.filter(
+      (a) => !existingCodes.has(a.code)
+    )
 
-        await prisma.achievement.upsert({
-          where: { code: ach.code },
-          update: achievementData,
-          create: achievementData,
-        })
-      }
-      
-      // Re-fetch after seeding
+    if (missingAchievements.length > 0) {
+      console.log(`Seeding ${missingAchievements.length} new achievements...`)
+
+      const creationData = missingAchievements.map((ach) => ({
+        code: ach.code,
+        name: ach.name,
+        description: ach.description,
+        icon: ach.icon || 'Trophy',
+        points: ach.points,
+      }))
+
+      // Use createMany for bulk insertion (much faster than serial upserts)
+      await prisma.achievement.createMany({
+        data: creationData,
+        skipDuplicates: true,
+      })
+
+      // Re-fetch after seeding to get the IDs
       allAchievements = await prisma.achievement.findMany({
         orderBy: { points: 'asc' },
       })
