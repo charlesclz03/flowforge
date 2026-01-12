@@ -68,7 +68,6 @@ export default async function AchievementsPage() {
         </div>
 
         <div className="mt-8 space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-xl font-bold text-white">Achievements</h2>
           <AchievementsDisplay />
         </div>
       </Container>

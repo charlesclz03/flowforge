@@ -72,22 +72,37 @@ export async function GET() {
     const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
 
     // Check if we need to seed (if DB count < DATA count)
+    // Check if we need to seed (if DB count < DATA count)
     if (
       allAchievements.length === 0 ||
       allAchievements.length < ACHIEVEMENTS.length
     ) {
-      console.log('Detected new achievements, seeding...')
+      console.log(
+        `Seeding achievements: DB=${allAchievements.length}, DATA=${ACHIEVEMENTS.length}`
+      )
+      
       for (const ach of ACHIEVEMENTS) {
+        // Map to Prisma schema fields only
+        const achievementData = {
+          code: ach.code,
+          name: ach.name,
+          description: ach.description,
+          icon: ach.icon || 'Trophy', // Default icon if null
+          points: ach.points,
+        }
+
         await prisma.achievement.upsert({
           where: { code: ach.code },
-          update: ach,
-          create: ach,
+          update: achievementData,
+          create: achievementData,
         })
       }
+      
       // Re-fetch after seeding
       allAchievements = await prisma.achievement.findMany({
         orderBy: { points: 'asc' },
       })
+      console.log(`Seeding complete. New count: ${allAchievements.length}`)
     }
 
     return NextResponse.json({

@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.9.7] - 2026-01-12
+
+### ⏱️ The Precision Sync Update ("Grid Lock")
+
+**Focus:** Fixing critical word alignment issues when switching difficulties mid-session, ensuring the visual ring and audio loop remain perfectly synchronized.
+
+### Fixed
+- **Difficulty Switching:** Changing difficulty (Bar Frequency) mid-session no longer causes the word timer to drift off-beat.
+- **Grid Alignment:** Implemented "Bridge Word" logic that intelligently snaps the next word to the global musical grid (Bar 1/5/9) when switching durations.
+- **Visual Ring:** The timer ring now always starts at 0% (Top) for every new word, eliminating the "ring starts in middle" visual bug.
+
+---
+
 ## [v0.9.4] - 2026-01-11
 
 ### 👁️ The Visual Polish ("High Contrast")

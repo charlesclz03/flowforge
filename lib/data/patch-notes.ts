@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.7',
+    date: '2026-01-12',
+    title: 'Precision Sync Update',
+    codename: 'Grid Lock',
+    description:
+      'We fixed a critical timing bug where switching difficulties mid-session would cause words to drift off-beat. Now, everything snaps perfectly to the musical grid.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Grid Alignment: Difficulty switches now "snap" to the next musical phrase.',
+          'Visual Sync: Timer ring always starts fresh on new words, no matter when you switch.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.5',
     date: '2026-01-11',
     title: 'Career Update',

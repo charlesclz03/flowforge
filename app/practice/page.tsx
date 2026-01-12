@@ -760,12 +760,17 @@ export default function PracticePage() {
       if (sessionTime >= state.nextWordChangeTime) {
         // Trigger Word Change
         // Calculate the NEXT target based on CURRENT settings
-        state.nextWordChangeTime += secondsPerBar * params.frequency
+        // Grid Snap: Align the NEXT word to the global musical grid
+        // This ensures that if you switch from 2 bars to 4 bars, we play a "bridge" word
+        // to get back to Bar 1/5/9, rather than drifting off-phase.
+        const interval = secondsPerBar * params.frequency
+        const nextGridPoint =
+          Math.ceil((state.nextWordChangeTime + 0.01) / interval) * interval
+        state.nextWordChangeTime = nextGridPoint
 
         // Ensure we don't get stuck in the past if lag happens (catch up)
-        if (state.nextWordChangeTime < sessionTime) {
-          state.nextWordChangeTime =
-            sessionTime + secondsPerBar * params.frequency
+        if (state.nextWordChangeTime <= sessionTime) {
+          state.nextWordChangeTime = sessionTime + interval
         }
 
         // Update Index
