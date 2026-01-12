@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import { ArrowLeft, Flame } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
+import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
 
 // Interface for the global app header
 interface AppHeaderProps {
@@ -69,14 +70,24 @@ export function AppHeader({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-3">
               {/* Streak Counter */}
               {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
-                <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20">
-                  <Flame
-                    size={14}
-                    className="sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
-                  />
-                  <span className="text-xs sm:text-sm font-bold text-accent-orange tabular-nums">
-                    {session?.user?.currentStreak}
-                  </span>
+                <div className="group relative">
+                  <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
+                    <Flame
+                      size={14}
+                      className="sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
+                    />
+                    <span className="text-xs sm:text-sm font-bold text-accent-orange tabular-nums">
+                      {session?.user?.currentStreak}
+                    </span>
+                  </div>
+
+                  {/* Hover Widget */}
+                  <div className="absolute top-full right-0 mt-4 w-72 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                    <DailyStreakWidget
+                      currentStreak={session?.user?.currentStreak || 0}
+                      hasPracticedToday={false}
+                    />
+                  </div>
                 </div>
               )}
               <SettingsDropdown />

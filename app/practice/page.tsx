@@ -160,6 +160,9 @@ export default function PracticePage() {
   const [isSirenActive, setIsSirenActive] = useState(false)
   const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
 
+  // Track relative timing for the UI ring
+  const [wordTiming, setWordTiming] = useState({ start: 0, duration: 0 })
+
   const stopPlayback = useCallback(() => {
     beatPlayer.stop()
     releaseLock()
@@ -783,6 +786,11 @@ export default function PracticePage() {
         if (newWord) {
           setCurrentWord(newWord)
           setWordIndex(newIndex) // This drives the UI shake effect via key
+
+          // Fix: Start a fresh visual timer for this word
+          const duration = state.nextWordChangeTime - sessionTime
+          setWordTiming({ start: sessionTime, duration })
+
           if (params.isTTSEnabled) speak(newWord)
         }
       }
@@ -1012,6 +1020,7 @@ export default function PracticePage() {
               isPaused={isPaused}
               onTogglePause={togglePause}
               onDiscard={handleDiscard}
+              wordTiming={wordTiming}
             />
           ) : (
             <div className="flex flex-col items-center justify-center space-y-4 py-8">

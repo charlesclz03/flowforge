@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.9.10] - 2026-01-12
+
+### 🎭 The Cypher Polish ("Neon Squad")
+
+**Focus:** Refining the Cypher Mode experience with distinct player identities and cleaning up global header rendering.
+
+### Changed
+- **Cypher Player Roster:** Implemented game-like avatars with unique colors (Purple, Orange, Gold, Green, Blue) for each player.
+- **Hover Streak Widget:** Moved the Streak details into a tooltip to reduce header clutter.
+- **Header Cleanup:** Resolved text duplication issues in the window title for a cleaner app presence.
+- **Manifest:** Shortened app name to "FreeStyla" to prevent title redundancy.
+- **Color Logic:** Fixed "all blue" bug by correcting accent color definitions in the theme.
+
+---
+
 ## [v0.9.7] - 2026-01-12
 
 ### ⏱️ The Precision Sync Update ("Grid Lock")
@@ -10,6 +25,8 @@
 - **Difficulty Switching:** Changing difficulty (Bar Frequency) mid-session no longer causes the word timer to drift off-beat.
 - **Grid Alignment:** Implemented "Bridge Word" logic that intelligently snaps the next word to the global musical grid (Bar 1/5/9) when switching durations.
 - **Visual Ring:** The timer ring now always starts at 0% (Top) for every new word, eliminating the "ring starts in middle" visual bug.
+- **Cypher UI:** Moved the "Player Indicator" pill to below the Record button for better visibility and less header clutter.
+- **Bug Fix:** Resolved "Failed to play recording" error by adding robust checks for valid secure links and preventing fallback to internal paths.
 
 ---
 

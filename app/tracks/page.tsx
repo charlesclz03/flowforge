@@ -284,7 +284,7 @@ export default function TracksPage() {
         )}
 
         {isLoading ? (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -293,7 +293,7 @@ export default function TracksPage() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredBeats.map((beat) => (
               <BeatGridCard
                 key={beat.id}

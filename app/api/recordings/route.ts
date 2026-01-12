@@ -108,7 +108,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const signedUrl = signedUrlRes.data?.signedUrl || filePath
+    const signedUrl = signedUrlRes.data?.signedUrl || null
 
     // NON-BLOCKING (ish) / PARALLEL FEEDBACK: Achievements & Words
     let newBadges: string[] = []
@@ -262,7 +262,7 @@ export async function GET() {
 
         return {
           ...recording,
-          storageUrl: signedUrlData?.signedUrl ?? recording.storageUrl,
+          storageUrl: signedUrlData?.signedUrl ?? null,
         }
       })
     )

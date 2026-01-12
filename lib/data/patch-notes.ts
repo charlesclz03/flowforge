@@ -21,6 +21,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.10',
+    date: '2026-01-12',
+    title: 'The Cypher Polish',
+    codename: 'Neon Squad',
+    description:
+      'Refining the Cypher Mode experience with distinct player identities and cleaning up global header rendering.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Cypher Player Roster: Implemented game-like avatars with unique colors (Purple, Orange, Gold, Green, Blue) for each player.',
+          'Hover Streak Widget: Moved the Streak details into a tooltip to reduce header clutter.',
+          'Header Cleanup: Resolved text duplication issues in the window title for a cleaner app presence.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Manifest Update: Shortened app name to "FreeStyla" to prevent title redundancy.',
+          'Color Logic: Fixed "all blue" bug by correcting accent color definitions in the theme.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.7',
     date: '2026-01-12',
     title: 'Precision Sync Update',
@@ -33,6 +58,13 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           'Grid Alignment: Difficulty switches now "snap" to the next musical phrase.',
           'Visual Sync: Timer ring always starts fresh on new words, no matter when you switch.',
+          'Cypher UI: Relocated player indicator to the bottom controls.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Playback: Fixed "Failed to play recording" error for new uploads.',
         ],
       },
     ],

@@ -73,7 +73,7 @@ export const RecordingCard = memo(function RecordingCard({
     let createdAudio: HTMLAudioElement | null = null
     let createdBeat: HTMLAudioElement | null = null
 
-    if (recording.storageUrl) {
+    if (recording.storageUrl && recording.storageUrl.startsWith('http')) {
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.src = ''
@@ -247,7 +247,7 @@ export const RecordingCard = memo(function RecordingCard({
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
-          {recording.storageUrl && (
+          {recording.storageUrl && recording.storageUrl.startsWith('http') && (
             <Button
               variant="secondary"
               size="sm"
@@ -268,7 +268,7 @@ export const RecordingCard = memo(function RecordingCard({
             <Download size={20} className="text-text-secondary" />
           </Button>
 
-          {recording.storageUrl && (
+          {recording.storageUrl && recording.storageUrl.startsWith('http') && (
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FreeStyla!"
