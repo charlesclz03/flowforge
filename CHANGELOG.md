@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.9.11] - 2026-01-12
+
+### 🧹 UI Hotfix ("Clean Sweep")
+
+**Focus:** Removing redundant UI elements.
+
+### Changed
+- **UI Cleanup:** Removed the duplicate "Keep the Streak" widget from the center of the Skill Check page. Tracking is now exclusively via the header icon.
+
+---
+
 ## [v0.9.10] - 2026-01-12
 
 ### 🎭 The Cypher Polish ("Neon Squad")
@@ -667,7 +678,6 @@ The comprehensive "Deep Scan Audit" is complete. The application stability, secu
 ## [v0.2.0-beta1] - 2025-12-18
 
 ### Fixed
-
 - **Vercel Deployment**: Resolved multiple build failures preventing production deployment.
 - **Dependencies**: Added missing `react-intersection-observer` (AdBanner) and `resend` (Email) packages to `package.json`.
 - **Prisma Schema**: Fixed `createSession` type mismatch by adding explicit `any` cast to bypass stale cache issues in Vercel's build environment.

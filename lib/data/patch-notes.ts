@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.11',
+    date: '2026-01-12',
+    title: 'UI Hotfix',
+    codename: 'Clean Sweep',
+    description:
+      'Removed the redundant Daily Streak widget from the Difficulty Selection page. Tracking is now exclusively via the header icon.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'UI Cleanup: Removed the duplicate "Keep the Streak" widget from the center of the Skill Check page.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.10',
     date: '2026-01-12',
     title: 'The Cypher Polish',

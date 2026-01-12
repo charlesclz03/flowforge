@@ -21,7 +21,6 @@ type Frequency = 4 | 8 | 16
 
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
-import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
 
 export default function DifficultySelectionPage() {
   const router = useRouter()
@@ -98,14 +97,6 @@ export default function DifficultySelectionPage() {
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
         {/* Title */}
-
-        {/* Gamification Hub */}
-        <div className="max-w-md mx-auto w-full">
-          <DailyStreakWidget
-            currentStreak={session?.user?.currentStreak || 0}
-            hasPracticedToday={false}
-          />
-        </div>
 
         {/* Configuration Sliders */}
         <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">

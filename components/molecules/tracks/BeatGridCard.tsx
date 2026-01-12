@@ -13,6 +13,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { useMemo } from 'react'
+import { getBeatVisualStyle } from '@/lib/utils/beat-visuals'
 
 interface BeatGridCardProps {
   beat: Beat
@@ -40,14 +42,7 @@ export function BeatGridCard({
   onUseTrack,
 }: BeatGridCardProps) {
   // Placeholder gradients based on genre or random
-  const gradients = [
-    'from-purple-500 to-indigo-600',
-    'from-pink-500 to-rose-500',
-    'from-blue-400 to-cyan-500',
-    'from-emerald-400 to-teal-500',
-    'from-amber-400 to-orange-500',
-  ]
-  const randomGradient = gradients[beat.title.length % gradients.length]
+  const visualStyle = useMemo(() => getBeatVisualStyle(beat), [beat])
 
   return (
     <div
@@ -62,11 +57,36 @@ export function BeatGridCard({
     >
       {/* Cover Art Area */}
       <div
-        className={cn(
-          'relative aspect-square w-full overflow-hidden bg-gradient-to-br',
-          randomGradient
-        )}
+        className="relative aspect-square w-full overflow-hidden transition-all duration-500"
+        style={{
+          background: visualStyle.background,
+        }}
       >
+        {/* Pattern Overlay */}
+        {visualStyle.pattern && (
+          <div
+            className="absolute inset-0 opacity-50"
+            style={{
+              backgroundImage: visualStyle.pattern,
+              backgroundSize: '10px 10px',
+            }}
+          />
+        )}
+
+        {/* Noise Overlay */}
+        <div
+          className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
+
+        {/* Large Genre Text Background */}
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
+          <span className="text-9xl font-black text-white/10 -rotate-45 scale-150 uppercase tracking-tighter whitespace-nowrap">
+            {beat.genre || 'RAP'}
+          </span>
+        </div>
         {beat.coverImage ? (
           <Image
             src={beat.coverImage}
