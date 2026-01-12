@@ -13,6 +13,7 @@ import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUpl
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { ScreenPage } from '@/components/layout/ScreenPage'
+import { cn } from '@/lib/utils'
 
 export default function TracksPage() {
   const [beats, setBeats] = useState<Beat[]>([])
@@ -20,6 +21,7 @@ export default function TracksPage() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
 
   const [playingBeatId, setPlayingBeatId] = useState<string | null>(null)
+  const [selectedGenre, setSelectedGenre] = useState<string>('All')
 
   const { data: session } = useSession()
   const router = useRouter()
@@ -191,12 +193,28 @@ export default function TracksPage() {
   }
 
   const filteredBeats = beats.filter((b) => {
+    // 1. Tab Filter
+    let matchesTab = false
     if (activeTab === 'mine') {
-      return b.uploaderId && b.uploaderId === session?.user?.id
+      matchesTab = !!(b.uploaderId && b.uploaderId === session?.user?.id)
     } else {
-      return !b.uploaderId // System beats
+      matchesTab = !b.uploaderId // System beats
     }
+
+    // 2. Genre Filter
+    let matchesGenre = true
+    if (selectedGenre !== 'All') {
+      matchesGenre = b.genre === selectedGenre
+    }
+
+    return matchesTab && matchesGenre
   })
+
+  // Derive Genres
+  const genres = [
+    'All',
+    ...new Set(beats.map((b) => b.genre).filter(Boolean)),
+  ] as string[]
 
   return (
     <ScreenPage
@@ -244,6 +262,26 @@ export default function TracksPage() {
             <span>New Beat</span>
           </button>
         </div>
+
+        {/* Genre Filter */}
+        {!isLoading && beats.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {genres.map((genre) => (
+              <button
+                key={genre}
+                onClick={() => setSelectedGenre(genre)}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border',
+                  selectedGenre === genre
+                    ? 'bg-white text-black border-white'
+                    : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'
+                )}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+        )}
 
         {isLoading ? (
           <div className="grid grid-cols-2 gap-4">

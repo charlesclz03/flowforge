@@ -29,7 +29,10 @@ async function getUser(username: string) {
   // Try to find by ID first (primary method for now)
   const user = await prisma.user.findFirst({
     where: {
-      OR: [{ id: username }],
+      OR: [
+        { id: username },
+        { name: { equals: username, mode: 'insensitive' } },
+      ],
     },
     include: {
       _count: {

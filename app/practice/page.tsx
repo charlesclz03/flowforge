@@ -72,8 +72,9 @@ export default function PracticePage() {
     setBeat,
     frequency,
     difficulty,
-    setFrequency,
     setDifficulty,
+    setFrequency,
+    beatVolume,
     isTTSEnabled,
     ttsVolume,
     isLoaded,
@@ -90,6 +91,8 @@ export default function PracticePage() {
   const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
   /* saveMessage removed */
   const [combo, setCombo] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const shouldSaveRef = useRef(true)
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -238,18 +241,34 @@ export default function PracticePage() {
     }
   )
 
+  // Volume Sync
+  useEffect(() => {
+    beatPlayer.setVolume(beatVolume)
+  }, [beatVolume, beatPlayer])
+
   // Recording Complete Handler
   const handleRecordingComplete = useCallback(
     async (blob: Blob, recordedDuration: number) => {
+      if (!shouldSaveRef.current) {
+        console.log('Session discarded, skipping save')
+        return
+      }
+
       // Infinite Mode Check
       if (isInfiniteMode) {
         toast('Session Completed (Practice Mode)', {
-          icon: '♾️',
-          style: {
-            background: 'linear-gradient(to right, #6b21a8, #c026d3)',
-            color: '#fff',
-          },
+          icon: '🎤',
         })
+        // handleStop logic inlined to avoid circular dependency
+        play('stop')
+        shouldSaveRef.current = true
+        stopPlayback()
+        setIsPaused(false)
+        return
+      }
+
+      if (recordedDuration < 3) {
+        toast.error('Recording too short to save (min 3s)')
         return
       }
 
@@ -326,7 +345,11 @@ export default function PracticePage() {
       handleError,
       usedWords,
       isInfiniteMode,
-      saveSessionOptimistic, // Added dep
+      saveSessionOptimistic,
+      shouldSaveRef,
+      stopPlayback,
+      play,
+      setIsPaused,
     ]
   )
 
@@ -336,6 +359,7 @@ export default function PracticePage() {
     duration,
     start: startRecording,
     stop: stopRecording,
+    pause: pauseRecording,
     resume: resumeRecording,
   } = useRecording({
     maxDuration: isPro ? null : 120,
@@ -349,12 +373,45 @@ export default function PracticePage() {
     },
   })
 
+  // Pause Logic
+  const togglePause = useCallback(async () => {
+    if (isPaused) {
+      // Resume
+      try {
+        await beatPlayer.play()
+        if (isRecording) resumeRecording()
+        setIsPaused(false)
+      } catch (e) {
+        console.error('Resume failed', e)
+        toast.error('Failed to resume playback')
+      }
+    } else {
+      // Pause
+      beatPlayer.pause()
+      if (isRecording) pauseRecording() // Handled by hook
+      setIsPaused(true)
+    }
+  }, [isPaused, isRecording, beatPlayer, resumeRecording, pauseRecording])
+
   // Handlers
 
   const handleStop = useCallback(() => {
     play('stop')
+    shouldSaveRef.current = true // Default to save
     stopPlayback()
     stopRecording() // This will trigger handleRecordingComplete
+    setIsPaused(false)
+  }, [play, stopRecording, stopPlayback])
+
+  const handleDiscard = useCallback(() => {
+    if (confirm('Discard this session? It will not be saved.')) {
+      play('click')
+      shouldSaveRef.current = false // Prevent save
+      stopPlayback()
+      stopRecording()
+      setIsPaused(false)
+      toast('Session Discarded', { icon: '🗑️' })
+    }
   }, [play, stopRecording, stopPlayback])
 
   const handleBackNavigation = useCallback(() => {
@@ -689,6 +746,13 @@ export default function PracticePage() {
         }
       }
 
+      // Pause Check
+      if (isPaused) {
+        lastFrameTime = now // Keep updating lastFrameTime to avoid jump
+        requestAnimationFrame(updateLoop)
+        return
+      }
+
       // Timing Logic
       const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
 
@@ -740,7 +804,14 @@ export default function PracticePage() {
     return () => {
       cancelAnimationFrame(frameId)
     }
-  }, [beatPlayer.isPlaying, handleStop, beatPlayer, speak, forceUpdate])
+  }, [
+    beatPlayer.isPlaying,
+    handleStop,
+    beatPlayer,
+    speak,
+    forceUpdate,
+    isPaused,
+  ])
 
   // Watch for audio errors
   useEffect(() => {
@@ -932,7 +1003,10 @@ export default function PracticePage() {
               handleDifficultyChange={setDifficulty}
               handleFrequencyChange={setFrequency}
               handleUpgrade={() => setPremiumTrigger('recording')}
-              isGolden={false} // Defaulting to false as logic was removed from PracticePage, can be re-enabled if needed
+              isGolden={false}
+              isPaused={isPaused}
+              onTogglePause={togglePause}
+              onDiscard={handleDiscard}
             />
           ) : (
             <div className="flex flex-col items-center justify-center space-y-4 py-8">

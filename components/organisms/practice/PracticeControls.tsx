@@ -1,5 +1,3 @@
-'use client'
-
 import { Card } from '@/components/atoms/Card'
 import {
   RefreshCcw,
@@ -9,6 +7,9 @@ import {
   User,
   Users,
   Mic,
+  Pause,
+  Play,
+  LogOut,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -48,6 +49,9 @@ interface PracticeControlsProps {
   sirenPhase?: number
   activePlayer?: number
   cypherPlayers?: number
+  isPaused?: boolean
+  onTogglePause?: () => void
+  onDiscard?: () => void
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -81,6 +85,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
     sirenPhase = 0,
     activePlayer = 1,
     cypherPlayers = 1,
+    isPaused = false,
+    onTogglePause,
+    onDiscard,
   } = props
 
   const formatTime = (seconds: number) => {
@@ -528,6 +535,54 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
           </div>
         </button>
+
+        {/* Pause Control & Discard */}
+        {isPlaying && onTogglePause && (
+          <div className="flex gap-4 mt-4 z-30">
+            {/* Discard Button (Only when paused or playing) */}
+            {onDiscard && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDiscard()
+                }}
+                className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
+              >
+                <LogOut
+                  size={16}
+                  className="text-red-400 group-hover:text-red-300"
+                />
+                <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
+                  Discard
+                </span>
+              </button>
+            )}
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onTogglePause()
+              }}
+              className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
+            >
+              {isPaused ? (
+                <>
+                  <Play size={16} className="text-accent-green" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-white">
+                    Resume
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Pause size={16} className="text-accent-yellow" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-white">
+                    Pause
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </Card>
   )

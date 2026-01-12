@@ -27,8 +27,17 @@ import { useState } from 'react'
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
   const [isManaging, setIsManaging] = useState(false)
-  const { isTTSEnabled, setTTSEnabled, ttsVolume, setTTSVolume, testVoice } =
-    usePracticeSession()
+  const {
+    isTTSEnabled,
+    setTTSEnabled,
+    ttsVolume,
+    setTTSVolume,
+    testVoice,
+    isStudioFXEnabled,
+    setStudioFXEnabled,
+    beatVolume,
+    setBeatVolume,
+  } = usePracticeSession()
   const [isStudioOpen, setIsStudioOpen] = useState(false)
 
   // Determine subscription status
@@ -201,29 +210,99 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             </button>
           </div>
 
-          {/* Volume Slider - Animated Height */}
+          {/* Studio FX Toggle */}
+          <div className="flex items-center justify-between px-5 py-4">
+            <div className="flex items-center gap-4">
+              <Zap size={20} className="text-accent-cyan" />
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-zinc-200">
+                  Studio FX
+                </span>
+                <span className="text-xs text-zinc-500">
+                  Reverb and audio enhancements
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                const newValue = !isStudioFXEnabled
+                setStudioFXEnabled(newValue)
+                toast.success(
+                  newValue ? 'Studio FX Enabled' : 'Studio FX Disabled'
+                )
+              }}
+              className={cn(
+                'w-11 h-6 rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-cyan/50',
+                isStudioFXEnabled ? 'bg-accent-cyan' : 'bg-white/10'
+              )}
+            >
+              <div
+                className={cn(
+                  'absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm',
+                  isStudioFXEnabled ? 'left-6' : 'left-1'
+                )}
+              />
+            </button>
+          </div>
+
+          {/* Audio Levels (Beat & TTS) */}
           <div
             className={cn(
               'overflow-hidden transition-all duration-300 bg-black/20',
-              isTTSEnabled ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
+              isStudioOpen || isTTSEnabled
+                ? 'max-h-40 opacity-100'
+                : 'max-h-0 opacity-0'
             )}
           >
-            <div className="px-5 py-4">
-              <div className="flex items-center gap-4">
-                <Volume2 size={16} className="text-text-tertiary" />
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={ttsVolume}
-                  onChange={(e) => {
-                    e.preventDefault()
-                    setTTSVolume(parseFloat(e.target.value))
-                  }}
-                  className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-lg hover:[&::-webkit-slider-thumb]:bg-accent-orange transition-colors"
-                />
+            <div className="px-5 py-4 space-y-4">
+              {/* Beat Volume */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs text-zinc-400">
+                  <span>Beat Volume</span>
+                  <span>{Math.round(beatVolume * 100)}%</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Volume2 size={16} className="text-accent-cyan" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={beatVolume}
+                    onChange={(e) => {
+                      e.preventDefault()
+                      setBeatVolume(parseFloat(e.target.value))
+                    }}
+                    className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-lg hover:[&::-webkit-slider-thumb]:bg-accent-cyan transition-colors"
+                  />
+                </div>
               </div>
+
+              {/* TTS Volume */}
+              {isTTSEnabled && (
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs text-zinc-400">
+                    <span>Voice Volume</span>
+                    <span>{Math.round(ttsVolume * 100)}%</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Volume2 size={16} className="text-accent-orange" />
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={ttsVolume}
+                      onChange={(e) => {
+                        e.preventDefault()
+                        setTTSVolume(parseFloat(e.target.value))
+                      }}
+                      className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-lg hover:[&::-webkit-slider-thumb]:bg-accent-orange transition-colors"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -267,6 +346,20 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           App Support
         </h3>
         <div className="grid grid-cols-2 gap-2">
+          {/* Contact Support */}
+          <Link
+            href="mailto:support@freestyla.app"
+            onClick={handleLinkClick}
+            className="col-span-2 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
+          >
+            <div className="flex items-center gap-2">
+              <Mic size={16} className="text-accent-blue" />
+              <span className="text-xs font-bold text-white">
+                Contact Support
+              </span>
+            </div>
+          </Link>
+
           {/* Patch Notes */}
           <Link
             href="/patch-notes"

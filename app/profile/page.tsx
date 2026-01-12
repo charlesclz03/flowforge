@@ -152,7 +152,15 @@ export default function ProfilePage() {
     )
   }
 
-  if (!session?.user) return null
+  if (!session?.user) {
+    return (
+      <OnboardingLayout>
+        <div className="flex h-[50vh] items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      </OnboardingLayout>
+    )
+  }
 
   return (
     <OnboardingLayout

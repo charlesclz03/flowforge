@@ -59,15 +59,15 @@ export default function SessionSummaryModal({
           origin: { y: 0.6 },
           colors: ['#7D7AFF', '#FFD700', '#FF00FF'],
         })
-      }, 1500) // Delay confetti for badge reveal
+      }, 800) // Faster confetti for badge reveal
     }
   }, [data?.newBadges])
 
-  // Sequence Timer
+  // Sequence Timer (Optimized for snappier reveal)
   useEffect(() => {
     if (!data) return
-    const t1 = setTimeout(() => setStep(1), 500) // Start XP fill
-    const t2 = setTimeout(() => setStep(2), 2500) // Show Badges
+    const t1 = setTimeout(() => setStep(1), 200) // Start XP fill quickly
+    const t2 = setTimeout(() => setStep(2), 1200) // Show Badges sooner
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
@@ -149,7 +149,7 @@ export default function SessionSummaryModal({
                     ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
                     : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
               }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
             />
             {/* Added XP Chunk */}

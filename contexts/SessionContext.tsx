@@ -22,6 +22,8 @@ export interface PracticeSessionState {
   wordCategory: string | null
   cypherPlayers: number
   isRecordingEnabled: boolean
+  isStudioFXEnabled: boolean
+  beatVolume: number
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -34,6 +36,8 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setCypherPlayers: (count: number) => void
   setWordCategory: (category: string | null) => void
   setIsRecordingEnabled: (enabled: boolean) => void
+  setStudioFXEnabled: (enabled: boolean) => void
+  setBeatVolume: (volume: number) => void
   testVoice: () => void
   startSession: () => void
   stopSession: () => void
@@ -57,6 +61,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     cypherPlayers: 2,
     wordCategory: null,
     isRecordingEnabled: true,
+    isStudioFXEnabled: true,
+    beatVolume: 0.7,
   })
 
   // Load state from localStorage on mount
@@ -96,6 +102,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       cypherPlayers,
       wordCategory,
       isRecordingEnabled,
+      isStudioFXEnabled,
+      beatVolume,
     } = state
     const toSave = {
       selectedBeat,
@@ -107,6 +115,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       cypherPlayers,
       wordCategory,
       isRecordingEnabled,
+      isStudioFXEnabled,
+      beatVolume,
     }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
   }, [state])
@@ -147,6 +157,14 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, isRecordingEnabled: enabled }))
   }, [])
 
+  const setStudioFXEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, isStudioFXEnabled: enabled }))
+  }, [])
+
+  const setBeatVolume = useCallback((volume: number) => {
+    setState((prev) => ({ ...prev, beatVolume: volume }))
+  }, [])
+
   const startSession = useCallback(() => {
     setState((prev) => ({ ...prev, isActive: true }))
   }, [])
@@ -181,6 +199,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setCypherPlayers,
         setWordCategory,
         setIsRecordingEnabled,
+        setStudioFXEnabled,
+        setBeatVolume,
         testVoice: useCallback(() => {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
             const u = new SpeechSynthesisUtterance(

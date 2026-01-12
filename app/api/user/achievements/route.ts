@@ -72,7 +72,10 @@ export async function GET() {
     const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
 
     // Check if we need to seed (if DB count < DATA count)
-    if (allAchievements.length < ACHIEVEMENTS.length) {
+    if (
+      allAchievements.length === 0 ||
+      allAchievements.length < ACHIEVEMENTS.length
+    ) {
       console.log('Detected new achievements, seeding...')
       for (const ach of ACHIEVEMENTS) {
         await prisma.achievement.upsert({

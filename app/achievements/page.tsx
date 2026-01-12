@@ -5,6 +5,8 @@ import { Trophy } from 'lucide-react'
 import Link from 'next/link'
 import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
+import { prisma } from '@/lib/prisma'
+import { getLevelInfo } from '@/lib/gamification/xp'
 import { XPBar } from '@/components/molecules/gamification/XPBar'
 
 // Cache for 60 seconds
@@ -12,8 +14,23 @@ export const revalidate = 60
 
 export default async function AchievementsPage() {
   const session = await getServerSession(authOptions)
-  // Suppress unused variable warning
-  void session
+
+  let levelInfo = {
+    currentXP: 0,
+    maxXP: 1000,
+    level: 1,
+    progress: 0,
+  }
+
+  if (session?.user?.id) {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { xp: true },
+    })
+    if (user) {
+      levelInfo = getLevelInfo(user.xp)
+    }
+  }
 
   return (
     <OnboardingLayout
@@ -25,7 +42,11 @@ export default async function AchievementsPage() {
     >
       <Container className="pt-8 pb-32">
         <div className="mb-4">
-          <XPBar current={1200} max={2000} level={5} />
+          <XPBar
+            current={levelInfo.currentXP}
+            max={levelInfo.maxXP}
+            level={levelInfo.level}
+          />
           <Link href="/cypher">
             <div className="mt-4 w-full p-4 rounded-xl bg-gradient-to-r from-accent-purple/20 to-accent-cyan/20 border border-white/10 flex items-center justify-between hover:border-accent-purple/50 transition-all group cursor-pointer">
               <div className="flex items-center gap-3">
