@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.9.18] - 2026-01-13
+
+### 🧹 Feature Pruning
+
+**Focus:** Streamlining the core practice experience.
+
+### Removed Features
+- **Word Themes:** Removed the "Word Theme" selection feature entirely. The app now focuses on a single, high-quality word bank to simplify session configuration and reduce cognitive load.
+
+---
+
 ## [v0.9.17] - 2026-01-13
 
 ### 🎧 Waveform Navigation

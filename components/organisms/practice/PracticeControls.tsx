@@ -296,7 +296,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 // Using simple pre-calc classes for first 4, then fallback or rotation.
                 // Since Tailwind doesn't have dynamic rotation, we use style.
                 const angleDeg = -45 + i * 90 // 0 -> -45, 1 -> 45, 2 -> 135, 3 -> 225
-                const radius = 180 // px
+                const radius = 210 // px - increased for more breathing room
                 const x = radius * Math.sin(angleDeg * (Math.PI / 180))
                 const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
 
@@ -346,7 +346,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     className={cn(
                       'absolute flex items-center justify-center rounded-full border-2 transition-all duration-500 backdrop-blur-md',
                       isActive
-                        ? 'w-16 h-16 scale-110 z-30'
+                        ? 'w-14 h-14 scale-110 z-30'
                         : 'w-10 h-10 opacity-50 z-10',
                       colorClass,
                       shadowClass

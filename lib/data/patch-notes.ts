@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.18',
+    date: '2026-01-13',
+    title: 'Streamlined Setup',
+    codename: 'Focus Mode',
+    description:
+      'We removed the "Word Theme" selector to make starting a session faster and more intuitive. One bank, total focus.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Feature Removal: Word Themes have been pruned for a simpler experience.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.17',
     date: '2026-01-13',
     title: 'Visual Playhead',

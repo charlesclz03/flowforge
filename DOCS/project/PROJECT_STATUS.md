@@ -5,7 +5,7 @@
 
 - **Build Status**: 🟢 Stable
 - **Vercel Deployment**: Pending
-- **Current Version**: v0.9.17
+- **Current Version**: v0.9.18
 - **Last Updated**: 2026-01-13
 - **Status**: Stable / Feature Complete
   **Overall Progress:** 100%
