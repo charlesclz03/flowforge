@@ -257,88 +257,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
 
         {/* Cypher Mode Indicator */}
+        {/* Cypher Mode: Active Player Text (Floating above) */}
         {mode === 'cypher' && (
-          <div className="flex flex-col items-center mb-4 z-30 space-y-3">
-            {/* Player Roster */}
-            <div className="flex items-center gap-3 md:gap-4 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/5">
-              {Array.from({ length: cypherPlayers }).map((_, i) => {
-                const pNum = i + 1
-                // Defensive: Ensure numeric comparison
-                const isActive = Number(activePlayer) === pNum
-
-                // Color Mapping
-                // 1: Purple, 2: Orange, 3: Gold (Yellow), 4: Green, 5: Blue
-                let colorClass = 'text-white border-white/20 bg-white/10'
-                let shadowClass = ''
-
-                if (isActive) {
-                  switch (pNum) {
-                    case 1: // Purple
-                      colorClass =
-                        'text-accent-purple border-accent-purple bg-accent-purple/20'
-                      shadowClass = 'shadow-[0_0_15px_rgba(168,85,247,0.5)]'
-                      break
-                    case 2: // Orange
-                      colorClass =
-                        'text-accent-orange border-accent-orange bg-accent-orange/20'
-                      shadowClass = 'shadow-[0_0_15px_rgba(249,115,22,0.5)]'
-                      break
-                    case 3: // Yellow -> Gold
-                      colorClass =
-                        'text-accent-gold border-accent-gold bg-accent-gold/20'
-                      shadowClass = 'shadow-[0_0_15px_rgba(255,214,10,0.5)]'
-                      break
-                    case 4: // Green
-                      colorClass =
-                        'text-accent-green border-accent-green bg-accent-green/20'
-                      shadowClass = 'shadow-[0_0_15px_rgba(48,209,88,0.5)]'
-                      break
-                    case 5: // Blue
-                      colorClass =
-                        'text-accent-blue border-accent-blue bg-accent-blue/20'
-                      shadowClass = 'shadow-[0_0_15px_rgba(10,132,255,0.5)]'
-                      break
-                    default:
-                      colorClass = 'text-white border-white bg-white/20'
-                  }
-                } else {
-                  // Inactive dimming
-                  colorClass = 'text-white/20 border-white/5 bg-white/5'
-                }
-
-                return (
-                  <div
-                    key={i}
-                    className={cn(
-                      'relative flex items-center justify-center rounded-full border-2 transition-all duration-500',
-                      isActive
-                        ? 'w-12 h-12 md:w-14 md:h-14 scale-110'
-                        : 'w-8 h-8 md:w-10 md:h-10 opacity-50',
-                      colorClass,
-                      shadowClass
-                    )}
-                  >
-                    <User
-                      size={isActive ? 24 : 16}
-                      strokeWidth={isActive ? 2.5 : 1.5}
-                    />
-
-                    {/* Active Indicator Dot */}
-                    {isActive && (
-                      <div
-                        className={cn(
-                          'absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-white animate-pulse'
-                        )}
-                      />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-
-            {/* Active Player Text */}
-            <div className="flex items-center gap-2">
-              <span
+          <div className="absolute top-16 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
+             <span
                 className={cn(
                   'text-lg font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
                   activePlayer === 1 && 'text-accent-purple',
@@ -350,15 +272,83 @@ export default function PracticeControls(props: PracticeControlsProps) {
               >
                 Player {activePlayer}
               </span>
-              <span className="text-xs font-bold text-white/40 uppercase tracking-widest mt-0.5">
+              <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
                 Your Turn
               </span>
-            </div>
           </div>
         )}
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
+          {/* Radial Cypher Players */}
+          {mode === 'cypher' && (
+            <div className="absolute inset-0 z-20 pointer-events-none">
+              {Array.from({ length: cypherPlayers }).map((_, i) => {
+                const pNum = i + 1
+                const isActive = Number(activePlayer) === pNum
+                
+                // Radial Positioning
+                // P1: NW (-45deg), P2: NE (45deg), P3: SE (135deg), P4: SW (225deg)
+                // Radius approx 190px from center.
+                // Using simple pre-calc classes for first 4, then fallback or rotation.
+                // Since Tailwind doesn't have dynamic rotation, we use style.
+                const angleDeg = -45 + (i * 90) // 0 -> -45, 1 -> 45, 2 -> 135, 3 -> 225
+                const radius = 180 // px
+                const x = radius * Math.sin(angleDeg * (Math.PI / 180))
+                const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
+
+                // Color Mapping
+                let colorClass = 'text-white border-white/20 bg-white/10'
+                let shadowClass = ''
+                if (isActive) {
+                  switch (pNum) {
+                    case 1: colorClass = 'text-accent-purple border-accent-purple bg-accent-purple/20'; shadowClass = 'shadow-[0_0_20px_rgba(168,85,247,0.5)]'; break;
+                    case 2: colorClass = 'text-accent-orange border-accent-orange bg-accent-orange/20'; shadowClass = 'shadow-[0_0_20px_rgba(249,115,22,0.5)]'; break;
+                    case 3: colorClass = 'text-accent-gold border-accent-gold bg-accent-gold/20'; shadowClass = 'shadow-[0_0_20px_rgba(255,214,10,0.5)]'; break;
+                    case 4: colorClass = 'text-accent-green border-accent-green bg-accent-green/20'; shadowClass = 'shadow-[0_0_20px_rgba(48,209,88,0.5)]'; break;
+                    default: colorClass = 'text-accent-blue border-accent-blue bg-accent-blue/20'; shadowClass = 'shadow-[0_0_20px_rgba(10,132,255,0.5)]'; break;
+                  }
+                } else {
+                  colorClass = 'text-white/20 border-white/5 bg-white/5'
+                }
+
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                      left: '50%',
+                      top: '50%',
+                    }}
+                    className={cn(
+                      'absolute flex items-center justify-center rounded-full border-2 transition-all duration-500 backdrop-blur-md',
+                      isActive
+                        ? 'w-16 h-16 scale-110 z-30'
+                        : 'w-10 h-10 opacity-50 z-10',
+                      colorClass,
+                      shadowClass
+                    )}
+                  >
+                     <User
+                      size={isActive ? 28 : 18}
+                      strokeWidth={isActive ? 2.5 : 1.5}
+                    />
+                     {isActive && (
+                      <div className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                     )}
+                     
+                     {/* Player Label */}
+                     <span className={cn(
+                        "absolute -top-6 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-opacity",
+                        isActive ? "opacity-100 text-white" : "opacity-0"
+                     )}>
+                        Player {pNum}
+                     </span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
           <motion.button
             id="tour-record-btn"
             whileHover={{ scale: 1.05 }}
