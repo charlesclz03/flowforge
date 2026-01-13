@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.9.14] - 2026-01-13
+
+### 🛡️ Session Safety & UI Polish ("Safe Mode")
+
+**Focus:** Protecting users from accidental session loss and refining the practice interface layout.
+
+### Added
+- **Session Interruption Safeguard:** Attempting to navigate away during an active session (via Mic button or tabs) now triggers a confirmation modal.
+- **Immediate TTS Cleanup:** Navigating away or discarding a session now instantly cuts off any active Text-to-Speech audio.
+
+### Changed
+- **Practice UI Layout:**
+  - **Compact Controls:** Reduced the size of the central "Record" ring to 300px (was 340px) for better screen real estate.
+  - **Repositioned:** Moved the entire control bar UP to prevent overlap with the bottom navigation.
+  - **Conditional Logic:** "Pause" and "Discard" buttons are now completely hidden if Recording is disabled, simplifying the view for casual practice.
+
+---
+
 ## [v0.9.13] - 2026-01-13
 
 ### 🌑 Visual Refinement ("Dark Mode")

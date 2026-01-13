@@ -389,7 +389,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none',
-              'w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] md:w-[340px] md:h-[340px]',
+              'w-[200px] h-[200px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
@@ -431,7 +431,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 progress={intervalProgress}
                 isSirenActive={isSirenActive}
                 sirenPhase={sirenPhase}
-                size={340}
+                size={300}
                 className={cn(
                   'w-full h-full text-white/5 transition-colors duration-500',
                   isPlaying &&
@@ -594,7 +594,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             if (isRecordingEnabled) handleUpgrade?.()
           }}
           className={cn(
-            'mt-8 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 pb-4 z-20 relative',
+            'mt-6 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 pb-12 z-20 relative',
             !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
           )}
         >
@@ -623,11 +623,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </div>
         </button>
 
-
-
-        {/* Pause Control & Discard */}
-        {isPlaying && onTogglePause && (
-          <div className="flex gap-4 mt-4 z-30">
+        {/* Pause Control & Discard - Only show if recording is enabled */}
+        {isPlaying && onTogglePause && isRecordingEnabled && (
+          <div className="flex gap-4 -mt-8 z-30 mb-8">
             {/* Discard Button (Only when paused or playing) */}
             {onDiscard && (
               <button

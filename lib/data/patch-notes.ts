@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.14',
+    date: '2026-01-13',
+    title: 'Session Safety & Layout',
+    codename: 'Safe Mode',
+    description:
+      'Practice sessions are now safer! We added confirmation dialogues to prevent accidental exits and polished the studio controls layout.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          'Exit Safeguard: Use the Bottom Bar freely. We now ask for confirmation before discarding your session.',
+          'Layout Polish: Resized the Record button and moved controls up for a cleaner look.',
+          'Smart Controls: Pause/Discard buttons now hide automatically when recording is disabled.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.13',
     date: '2026-01-13',
     title: 'Dark Mode Refined',
