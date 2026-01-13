@@ -19,7 +19,6 @@ export interface PracticeSessionState {
   ttsVolume: number // 0.0 to 1.0
   isLoaded: boolean
   mode: 'solo' | 'cypher'
-  wordCategory: string | null
   cypherPlayers: number
   isRecordingEnabled: boolean
   isStudioFXEnabled: boolean
@@ -34,7 +33,6 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setTTSVolume: (volume: number) => void
   setMode: (mode: 'solo' | 'cypher') => void
   setCypherPlayers: (count: number) => void
-  setWordCategory: (category: string | null) => void
   setIsRecordingEnabled: (enabled: boolean) => void
   setStudioFXEnabled: (enabled: boolean) => void
   setBeatVolume: (volume: number) => void
@@ -59,7 +57,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     isLoaded: false,
     mode: 'solo',
     cypherPlayers: 2,
-    wordCategory: null,
     isRecordingEnabled: false,
     isStudioFXEnabled: true,
     beatVolume: 0.7,
@@ -100,7 +97,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       ttsVolume,
       mode,
       cypherPlayers,
-      wordCategory,
       isRecordingEnabled,
       isStudioFXEnabled,
       beatVolume,
@@ -113,7 +109,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       ttsVolume,
       mode,
       cypherPlayers,
-      wordCategory,
       isRecordingEnabled,
       isStudioFXEnabled,
       beatVolume,
@@ -149,10 +144,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, cypherPlayers: count }))
   }, [])
 
-  const setWordCategory = useCallback((category: string | null) => {
-    setState((prev) => ({ ...prev, wordCategory: category }))
-  }, [])
-
   const setIsRecordingEnabled = useCallback((enabled: boolean) => {
     setState((prev) => ({ ...prev, isRecordingEnabled: enabled }))
   }, [])
@@ -182,7 +173,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isActive: false,
       mode: 'solo',
       cypherPlayers: 2,
-      wordCategory: null,
     }))
   }, [])
 
@@ -197,7 +187,6 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setTTSVolume,
         setMode,
         setCypherPlayers,
-        setWordCategory,
         setIsRecordingEnabled,
         setStudioFXEnabled,
         setBeatVolume,

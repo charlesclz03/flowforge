@@ -86,7 +86,6 @@ export type WordFilters = {
   difficultyLevel?: number
   minSyllables?: number
   maxSyllables?: number
-  category?: string
 }
 
 export type SessionFilters = {

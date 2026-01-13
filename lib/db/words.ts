@@ -57,8 +57,6 @@ export async function getRandomWords(
       let pool = fallback
       if (filters?.difficultyLevel)
         pool = pool.filter((w) => w.difficultyLevel === filters.difficultyLevel)
-      if (filters?.category)
-        pool = pool.filter((w) => w.category === filters.category)
 
       const shuffled = pool.sort(() => Math.random() - 0.5)
       const selected = shuffled.slice(0, count)
@@ -70,8 +68,8 @@ export async function getRandomWords(
       where.difficultyLevel = filters.difficultyLevel
     }
 
-    if (filters?.category) {
-      where.category = filters.category
+    if (filters?.difficultyLevel) {
+      where.difficultyLevel = filters.difficultyLevel
     }
 
     if (filters?.minSyllables || filters?.maxSyllables) {

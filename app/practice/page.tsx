@@ -79,7 +79,6 @@ export default function PracticePage() {
     isTTSEnabled,
     ttsVolume,
     isLoaded,
-    wordCategory,
     isRecordingEnabled,
     mode,
     cypherPlayers,
@@ -457,7 +456,7 @@ export default function PracticePage() {
     const initSession = async () => {
       try {
         const wordsRes = await fetch(
-          `/api/words/random?difficulty=${difficulty}&count=100&category=${wordCategory || ''}`
+          `/api/words/random?difficulty=${difficulty}&count=100`
         )
 
         if (

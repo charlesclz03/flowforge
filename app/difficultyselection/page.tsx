@@ -13,7 +13,7 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ChevronDown, Sparkles, User, Users, Mic } from 'lucide-react'
+import { ChevronDown, User, Users, Mic } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 
@@ -36,8 +36,6 @@ export default function DifficultySelectionPage() {
     setDifficulty,
     mode,
     setMode,
-    wordCategory,
-    setWordCategory,
     cypherPlayers,
     setCypherPlayers,
     isRecordingEnabled,
@@ -95,8 +93,6 @@ export default function DifficultySelectionPage() {
       <div className="space-y-8">
         {/* Error alert */}
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
-
-        {/* Title */}
 
         {/* Configuration Sliders */}
         <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
@@ -177,7 +173,7 @@ export default function DifficultySelectionPage() {
                 />
               </div>
               <span>Advanced Settings</span>
-              {!isAdvancedOpen && (wordCategory || mode === 'cypher') && (
+              {!isAdvancedOpen && mode === 'cypher' && (
                 <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1" />
               )}
             </button>
@@ -277,37 +273,6 @@ export default function DifficultySelectionPage() {
                       </p>
                     </div>
                   )}
-                </div>
-
-                {/* Theme Dropdown */}
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-text-secondary flex items-center gap-2">
-                    Word Theme
-                    <Sparkles size={12} className="text-accent-orange" />
-                  </label>
-                  <select
-                    value={wordCategory || 'All'}
-                    onChange={(e) =>
-                      setWordCategory(
-                        e.target.value === 'All' ? null : e.target.value
-                      )
-                    }
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-purple appearance-none"
-                  >
-                    {[
-                      'All',
-                      'Street',
-                      'Political',
-                      'Abstract',
-                      'Nature',
-                      'Ego Trip',
-                      'Life',
-                    ].map((theme) => (
-                      <option key={theme} value={theme}>
-                        {theme}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             )}
