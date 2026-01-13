@@ -83,6 +83,8 @@ export default function PracticePage() {
     isRecordingEnabled,
     mode,
     cypherPlayers,
+    startSession,
+    stopSession,
   } = usePracticeSession()
 
   // Local State
@@ -402,10 +404,11 @@ export default function PracticePage() {
   const handleStop = useCallback(() => {
     play('stop')
     shouldSaveRef.current = true // Default to save
+    stopSession()
     stopPlayback()
     stopRecording() // This will trigger handleRecordingComplete
     setIsPaused(false)
-  }, [play, stopRecording, stopPlayback])
+  }, [play, stopRecording, stopPlayback, stopSession])
 
   const handleDiscard = useCallback(() => {
     if (confirm('Discard this session? It will not be saved.')) {
@@ -598,6 +601,7 @@ export default function PracticePage() {
       // Single authoritative play call
       beatPlayer.setLoop(true) // Ensure track loops seamlessly
       await beatPlayer.play()
+      startSession()
     } catch (e) {
       handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
     }
@@ -635,6 +639,7 @@ export default function PracticePage() {
     resumeRecording,
     handleError,
     clearError,
+    startSession,
   ])
 
   const handlePlayPause = useCallback(async () => {

@@ -161,7 +161,7 @@ export function BeatGridCard({
                     e.stopPropagation()
                     onUseTrack(e)
                   }}
-                  className="flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 bg-accent-blue text-white hover:bg-accent-blue/80 backdrop-blur-md"
+                  className="flex h-14 w-14 items-center justify-center rounded-full shadow-xl transition-all hover:scale-110 active:scale-95 bg-gradient-pulse text-white hover:bg-opacity-90 backdrop-blur-md shadow-purple"
                   title="Use this track"
                 >
                   <ArrowRight size={28} strokeWidth={3} />

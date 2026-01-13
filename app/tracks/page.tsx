@@ -236,7 +236,7 @@ export default function TracksPage() {
               onClick={() => handleTabChange('public')}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'public'
-                  ? 'bg-accent-purple text-white shadow-sm'
+                  ? 'bg-gradient-pulse text-white shadow-purple'
                   : 'text-text-tertiary hover:text-white'
               }`}
             >
@@ -246,7 +246,7 @@ export default function TracksPage() {
               onClick={() => handleTabChange('mine')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'mine'
-                  ? 'bg-accent-purple text-white shadow-sm'
+                  ? 'bg-gradient-pulse text-white shadow-purple'
                   : 'text-text-tertiary hover:text-white'
               }`}
             >
@@ -257,7 +257,7 @@ export default function TracksPage() {
 
           <button
             onClick={handleNewBeatClick}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-purple text-white rounded-lg font-medium text-sm hover:scale-105 transition-transform"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-pulse text-white rounded-lg font-medium text-sm hover:scale-105 transition-transform shadow-purple"
           >
             {isPro ? <Plus size={16} /> : <Lock size={16} />}
             <span>New Beat</span>

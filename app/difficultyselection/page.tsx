@@ -193,7 +193,7 @@ export default function DifficultySelectionPage() {
                     {/* Animated Background Highlight */}
                     <div
                       className={cn(
-                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-blue rounded-xl transition-all duration-300 shadow-lg shadow-accent-blue/20',
+                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-pulse rounded-xl transition-all duration-300 shadow-lg shadow-purple',
                         mode === 'cypher'
                           ? 'left-[calc(50%+1.5px)]'
                           : 'left-1.5'
