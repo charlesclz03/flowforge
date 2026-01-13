@@ -330,7 +330,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 // P1: -65deg (NW), P2: 65deg (NE), P3: 115deg (SE), P4: -115deg (SW)
                 const angles = [-65, 65, 115, -115]
                 const angleDeg = angles[i % angles.length]
-                const radius = 200 // px
+                const radius = 220 // px - further out to prevent overlap
                 const x = radius * Math.sin(angleDeg * (Math.PI / 180))
                 const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
 
@@ -438,8 +438,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
-              // Responsive size: larger on mobile for immersive feel
-              'w-[min(72vmin,340px)] h-[min(72vmin,340px)] sm:w-[340px] sm:h-[340px]',
+              // Responsive size: balanced for mobile
+              'w-[min(65vmin,300px)] h-[min(65vmin,300px)] sm:w-[320px] sm:h-[320px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
