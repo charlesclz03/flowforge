@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.13',
+    date: '2026-01-13',
+    title: 'Dark Mode Refined',
+    codename: 'Obsidian',
+    description:
+      'We heard you! The track covers have been reimagined with a sleeker, darker, and more premium aesthetic.',
+    changes: [
+      {
+        category: 'Visual Polish',
+        items: [
+          'Dark Premium Palettes: Replaced neon colors with deep blacks, blues, and charcoals.',
+          'De-cluttered Interface: Removed the large "RAP" text overlay from track cards.',
+          'Subtle Textures: Refined the noise and pattern overlays for a cleaner finish.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.12',
     date: '2026-01-12',
     title: 'Visual Velocity',

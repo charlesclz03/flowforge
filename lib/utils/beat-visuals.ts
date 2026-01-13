@@ -40,49 +40,43 @@ class ReseedableRandom {
 }
 
 // Color Palettes (Dark/Neon/Vibrant)
+// Dark Premium Color Palettes
 const PALETTES = [
-  // Purple/Blue/Pink (Cyberpunk)
-  { bg: ['#2D00F7', '#6A00F4', '#F20089'], accent: '#F20089' },
-  // Teal/Blue/Green (Deep Sea)
-  { bg: ['#007F5F', '#2B9348', '#80B918'], accent: '#CCFF33' },
-  // Orange/Red/Yellow (Fire)
-  { bg: ['#D00000', '#E85D04', '#FFBA08'], accent: '#FFBA08' },
-  // Deep Purple/Black (Midnight)
-  { bg: ['#10002B', '#240046', '#3C096C'], accent: '#E0AAFF' },
-  // Monochrome/Accent
-  { bg: ['#000000', '#212529', '#343A40'], accent: '#CED4DA' },
+  // Obsidian (Black/Dark Gray)
+  { bg: ['#000000', '#1A1A1A', '#2C2C2C'], accent: '#FFFFFF' },
+  // Midnight (Deep Blue)
+  { bg: ['#020024', '#090979', '#000000'], accent: '#00d4ff' },
+  // Deep Space (Purple/Black)
+  { bg: ['#1A0B2E', '#11052C', '#000000'], accent: '#E0AAFF' },
+  // Forest Night (Very Dark Green)
+  { bg: ['#051F20', '#0B2B26', '#000000'], accent: '#A7D7C5' },
+  // Vampire (Dark Red/Black)
+  { bg: ['#2B0505', '#1A0000', '#000000'], accent: '#FF5E5E' },
 ]
 
-function generateMeshGradient(rng: ReseedableRandom, colors: string[]): string {
-  const points = []
-  const numPoints = rng.range(3, 6)
+function generateDarkGradient(rng: ReseedableRandom, colors: string[]): string {
+  // Always use a linear gradient for a sleek look
+  // Occasionally do a subtle radial, but mostly linear
+  const angle = rng.range(135, 225) // Diagonal flow
+  const c1 = colors[0]
+  const c2 = colors[colors.length - 1]
 
-  for (let i = 0; i < numPoints; i++) {
-    const x = rng.range(0, 100)
-    const y = rng.range(0, 100)
-    const color = rng.pick(colors)
-    points.push(
-      `radial-gradient(circle at ${x}% ${y}%, ${color}, transparent 50%)`
-    )
-  }
-
-  // Add a base color
-  const baseBase = rng.pick(colors)
-  return `${points.join(', ')}, ${baseBase}`
+  return `linear-gradient(${angle}deg, ${c1}, ${c2})`
 }
 
-function generateGeometricPattern(
-  rng: ReseedableRandom,
-  color: string
-): string {
-  const type = rng.pick(['circles', 'lines', 'dots'])
-  if (type === 'circles') {
-    return `radial-gradient(circle, ${color} 2px, transparent 2.5px)`
-  } else if (type === 'lines') {
-    const deg = rng.pick([0, 45, 90, 135])
-    return `repeating-linear-gradient(${deg}deg, ${color}, ${color} 1px, transparent 1px, transparent 10px)`
-  } else {
-    return `radial-gradient(${color} 1px, transparent 1px)`
+function generateSubtlePattern(rng: ReseedableRandom, _color: string): string {
+  const type = rng.range(0, 3)
+  const opacity = 0.05 // Very subtle
+
+  switch (type) {
+    case 0: // Dots
+      return `radial-gradient(rgba(255,255,255,${opacity}) 1px, transparent 1px)`
+    case 1: // Grid
+      return `linear-gradient(rgba(255,255,255,${opacity}) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,${opacity}) 1px, transparent 1px)`
+    case 2: // Diagonal Lines
+      return `repeating-linear-gradient(45deg, rgba(255,255,255,${opacity}), rgba(255,255,255,${opacity}) 1px, transparent 1px, transparent 10px)`
+    default:
+      return ''
   }
 }
 
@@ -92,34 +86,13 @@ export function getBeatVisualStyle(beat: Beat): BeatVisualStyle {
   // 1. Pick a Palette
   const palette = rng.pick(PALETTES)
 
-  // 2. Decide Style Type
-  // 0: Mesh Gradient
-  // 1: Sharp/Abstract
-  // 2: Dark Minimal
-  const styleType = rng.range(0, 2)
+  // 2. Generate Background (Dark Gradient)
+  const background = generateDarkGradient(rng, palette.bg)
 
-  let background = ''
+  // 3. Add Pattern Overlay
   let pattern = ''
-
-  switch (styleType) {
-    case 0: // Mesh
-      background = generateMeshGradient(rng, palette.bg)
-      break
-    case 1: // Abstract Linear
-      const c1 = rng.pick(palette.bg)
-      const c2 = rng.pick(palette.bg)
-      const deg = rng.range(0, 360)
-      background = `linear-gradient(${deg}deg, ${c1}, ${c2})`
-      break
-    case 2: // Dark Minimal
-      background = `linear-gradient(to bottom right, #000000, ${rng.pick(palette.bg)})`
-      break
-  }
-
-  // 3. Add Pattern Overlay (CSS)
-  // We will apply this as a separate style or background image
-  if (rng.next() > 0.5) {
-    pattern = generateGeometricPattern(rng, 'rgba(255,255,255,0.1)')
+  if (rng.next() > 0.3) {
+    pattern = generateSubtlePattern(rng, palette.accent)
   }
 
   return {

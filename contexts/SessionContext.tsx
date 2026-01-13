@@ -60,7 +60,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     mode: 'solo',
     cypherPlayers: 2,
     wordCategory: null,
-    isRecordingEnabled: true,
+    isRecordingEnabled: false,
     isStudioFXEnabled: true,
     beatVolume: 0.7,
   })

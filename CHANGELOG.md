@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.9.13] - 2026-01-13
+
+### 🌑 Visual Refinement ("Dark Mode")
+
+**Focus:** pivoting from neon/bright visuals to a sophisticated "Dark Premium" aesthetic based on user feedback.
+
+### Changed
+- **Track Visuals:** Switched all generative palettes to deep, moody themes (Obsidian, Midnight, Forest Night).
+- **Cleaner Cards:** Removed the large, repetitive "RAP" text overlay for a more professional look.
+- **Subtlety:** Reduced noise texture opacity and simplified geometric patterns to be less distracting.
+
+---
+
 ## [v0.9.12] - 2026-01-12
 
 ### 🎨 The Visual Velocity Update ("Fresh Paint")
