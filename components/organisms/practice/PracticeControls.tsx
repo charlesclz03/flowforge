@@ -170,10 +170,45 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-4 sm:py-4'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-2 sm:py-4 relative'
       )}
     >
-      <div className="flex flex-col items-center gap-2 sm:gap-6 w-full h-full justify-between">
+      {/* Top-Right Session Controls (Pause / Exit) */}
+      {isPlaying && isRecordingEnabled && (
+        <div className="absolute top-2 right-2 z-40 flex items-center gap-2">
+          {onTogglePause && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onTogglePause()
+              }}
+              className={cn(
+                'p-2 rounded-full border transition-all',
+                isPaused
+                  ? 'bg-accent-green/20 border-accent-green/30 text-accent-green'
+                  : 'bg-white/10 border-white/10 text-white hover:bg-white/20'
+              )}
+              title={isPaused ? 'Resume' : 'Pause'}
+            >
+              {isPaused ? <Play size={18} /> : <Pause size={18} />}
+            </button>
+          )}
+          {onDiscard && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onDiscard()
+              }}
+              className="p-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all"
+              title="Exit Session"
+            >
+              <LogOut size={18} />
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
         {/* Top Controls Section - Compact */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
           <BeatDropdown
@@ -404,7 +439,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
               // Responsive size: larger on mobile for immersive feel
-              'w-[min(65vmin,300px)] h-[min(65vmin,300px)] sm:w-[320px] sm:h-[320px]',
+              'w-[min(72vmin,340px)] h-[min(72vmin,340px)] sm:w-[340px] sm:h-[340px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
@@ -603,7 +638,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
 
         {/* Record Notifier / Bottom Control Area */}
-        <div className="h-20 flex items-center justify-center shrink-0">
+        <div className="h-14 flex items-center justify-center shrink-0">
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -640,54 +675,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
             </div>
           </button>
-
-          {/* Pause Control & Discard - Overlay on bottom area */}
-          {isPlaying && onTogglePause && isRecordingEnabled && (
-            <div className="absolute bottom-4 z-30 flex gap-4">
-              {/* Discard Button (Only when paused or playing) */}
-              {onDiscard && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDiscard()
-                  }}
-                  className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
-                >
-                  <LogOut
-                    size={16}
-                    className="text-red-400 group-hover:text-red-300"
-                  />
-                  <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
-                    Discard
-                  </span>
-                </button>
-              )}
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onTogglePause()
-                }}
-                className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
-              >
-                {isPaused ? (
-                  <>
-                    <Play size={16} className="text-accent-green" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-white">
-                      Resume
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Pause size={16} className="text-accent-yellow" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-white">
-                      Pause
-                    </span>
-                  </>
-                )}
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </Card>
