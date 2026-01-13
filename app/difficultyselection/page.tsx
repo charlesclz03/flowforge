@@ -193,7 +193,7 @@ export default function DifficultySelectionPage() {
                     {/* Animated Background Highlight */}
                     <div
                       className={cn(
-                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-pulse rounded-xl transition-all duration-300 shadow-lg shadow-purple',
+                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-purple/20 border border-accent-purple/30 rounded-xl transition-all duration-300 shadow-[0_0_15px_rgba(125,122,255,0.2)] backdrop-blur-sm',
                         mode === 'cypher'
                           ? 'left-[calc(50%+1.5px)]'
                           : 'left-1.5'
@@ -234,20 +234,42 @@ export default function DifficultySelectionPage() {
                           Number of Players
                         </label>
                         <div className="flex items-center gap-3">
-                          {[2, 3, 4, 5].map((count) => (
-                            <button
-                              key={count}
-                              onClick={() => setCypherPlayers(count)}
-                              className={cn(
-                                'h-10 w-10 rounded-lg border font-bold transition-all',
-                                cypherPlayers === count
-                                  ? 'bg-accent-blue border-accent-blue text-white shadow-glow-sm'
-                                  : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'
-                              )}
-                            >
-                              {count}
-                            </button>
-                          ))}
+                          {[2, 3, 4, 5].map((count) => {
+                            let activeClass = ''
+                            switch (count) {
+                              case 2: // Orange
+                                activeClass =
+                                  'bg-accent-orange border-accent-orange shadow-[0_0_15px_rgba(249,115,22,0.5)]'
+                                break
+                              case 3: // Gold
+                                activeClass =
+                                  'bg-accent-gold border-accent-gold shadow-[0_0_15px_rgba(255,214,10,0.5)]'
+                                break
+                              case 4: // Green
+                                activeClass =
+                                  'bg-accent-green border-accent-green shadow-[0_0_15px_rgba(48,209,88,0.5)]'
+                                break
+                              case 5: // Blue
+                                activeClass =
+                                  'bg-accent-blue border-accent-blue shadow-[0_0_15px_rgba(10,132,255,0.5)]'
+                                break
+                            }
+
+                            return (
+                              <button
+                                key={count}
+                                onClick={() => setCypherPlayers(count)}
+                                className={cn(
+                                  'h-10 w-10 rounded-lg border font-bold transition-all',
+                                  cypherPlayers === count
+                                    ? `${activeClass} text-white`
+                                    : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'
+                                )}
+                              >
+                                {count}
+                              </button>
+                            )
+                          })}
                         </div>
                       </div>
                       <p className="text-xs text-text-secondary italic">

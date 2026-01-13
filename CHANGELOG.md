@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.9.15] - 2026-01-13
+
+### 🎨 Visual Polish
+
+**Focus:** enhancing the visual consistency of the Cypher mode setup.
+
+### Changed
+- **Cypher Setup:** The "Number of Players" selection buttons now match the in-game colors of the unlocked players (2=Orange, 3=Gold, 4=Green, 5=Blue).
+
 ## [v0.9.14] - 2026-01-13
 
 ### 🛡️ Session Safety & UI Polish ("Safe Mode")

@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.15',
+    date: '2026-01-13',
+    title: 'Cypher Visual Alignment',
+    codename: 'Prism',
+    description:
+      'Small but mighty visual tweak: The Cypher player selection buttons now match the actual in-game player colors.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Cypher Setup: Player count buttons now sport their team colors (Orange, Gold, Green, Blue).',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.14',
     date: '2026-01-13',
     title: 'Session Safety & Layout',

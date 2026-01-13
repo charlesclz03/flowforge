@@ -326,7 +326,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                     </div>
                     <div className="flex items-center gap-2">
                       {beat.title === 'New' && (
-                        <div className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-accent-purple text-white shadow-purple">
+                        <div className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-accent-purple/20 text-accent-purple border border-accent-purple/20 shadow-[0_0_10px_rgba(125,122,255,0.2)]">
                           NEW
                         </div>
                       )}
@@ -395,7 +395,10 @@ export function BeatDropdown(props: BeatDropdownProps) {
                               className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0 cursor-pointer group-hover:bg-accent-purple/20 transition-colors"
                             >
                               {playingId === beat.id ? (
-                                <Pause size={16} className="text-accent-purple" />
+                                <Pause
+                                  size={16}
+                                  className="text-accent-purple"
+                                />
                               ) : (
                                 <Upload
                                   size={16}
