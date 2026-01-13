@@ -16,6 +16,17 @@
 
 ---
 
+## [v0.9.16] - 2026-01-13
+
+### 🧠 Logic & Layout Polish
+
+**Focus:** enhancing the review experience and ensuring difficulty settings are unbreakable.
+
+### Changed
+- **Review Page:** Moved session title to the sticky header for a cleaner look and reclaimed lost vertical space by tightening the layout.
+- **Word Logic:** Fixed a potential "difficulty leak" where hard words could appear in easy mode during network hiccups. added dynamic re-fetching so you can change difficulty mid-session seamlessly.
+- **Practice UI:** Refined control layouts and record button positioning (User adjustments).
+
 ## [v0.9.15] - 2026-01-13
 
 ### 🎨 Visual Polish

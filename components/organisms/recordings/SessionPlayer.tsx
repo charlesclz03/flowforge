@@ -73,7 +73,6 @@ export const SessionPlayer = forwardRef<
       beatBpm,
       beatArtist,
 
-      sessionDifficulty,
       sessionDate,
     },
     ref
@@ -404,32 +403,6 @@ export const SessionPlayer = forwardRef<
 
           {/* Session Metadata Badge */}
           <div className="flex items-center gap-3">
-            {sessionDifficulty && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 border border-white/5 text-xs font-medium">
-                <div
-                  className={cn(
-                    'w-1.5 h-1.5 rounded-full',
-                    sessionDifficulty === 1
-                      ? 'bg-accent-green shadow-[0_0_8px_rgba(48,209,88,0.5)]'
-                      : sessionDifficulty === 2
-                        ? 'bg-accent-orange shadow-[0_0_8px_rgba(255,149,0,0.5)]'
-                        : sessionDifficulty === 3
-                          ? 'bg-accent-red shadow-[0_0_8px_rgba(255,69,58,0.5)]'
-                          : 'bg-accent-purple shadow-[0_0_8px_rgba(125,122,255,0.5)]'
-                  )}
-                />
-                <span className="text-text-secondary">
-                  {
-                    {
-                      1: 'Easy',
-                      2: 'Medium',
-                      3: 'Hard',
-                      4: 'Random',
-                    }[sessionDifficulty]
-                  }
-                </span>
-              </div>
-            )}
             {sessionDate && (
               <div className="text-xs text-text-tertiary font-mono">
                 {formatRelativeTime(sessionDate)}

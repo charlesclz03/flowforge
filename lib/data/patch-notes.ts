@@ -23,6 +23,30 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.16',
     date: '2026-01-13',
+    title: 'Smart Fallbacks & Sleek Reviews',
+    codename: 'Safety Net',
+    description:
+      'We polished the Review page to look more pro and fixed a logic quirk where "Easy" mode could get tough if the internet blipped. Plus, dynamic difficulty switching!',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Review Page: Title moved to app header, removing clutter and waste of space.',
+          'Layout: Tighter spacing on top of review and practice screens.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Word Engine: "Easy" mode is now strictly easy, even offline.',
+          'Dynamic Difficulty: Changing the difficulty slider mid-session now instantly updates the word vibe.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.15',
+    date: '2026-01-13',
     title: 'Mobile Experience',
     codename: 'One Screen',
     description:
