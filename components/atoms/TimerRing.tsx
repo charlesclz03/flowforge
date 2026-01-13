@@ -81,7 +81,6 @@ export function TimerRing({
         strokeDashoffset={offset}
         strokeLinecap="butt"
         className={cn(
-          'transition-all duration-300 ease-linear',
           isSirenActive
             ? sirenPhase === 0
               ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]'
