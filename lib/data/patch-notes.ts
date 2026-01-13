@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.17',
+    date: '2026-01-13',
+    title: 'Visual Playhead',
+    codename: 'Red Line',
+    description:
+      'Added a distinct red playback cursor to the audio waveform, so you always know exactly where you are in the track.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          'Waveform: Now features a glowing red playhead indicating current position.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.16',
     date: '2026-01-13',
     title: 'Smart Fallbacks & Sleek Reviews',

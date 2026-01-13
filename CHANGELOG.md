@@ -1,5 +1,16 @@
 # Changelog
 
+## [v0.9.17] - 2026-01-13
+
+### 🎧 Waveform Navigation
+
+**Focus:** Enhanced visual feedback during playback.
+
+### New Features
+- **Red Playhead:** Added a visible red cursor to the waveform scrubber during playback, making it easier to track your current position (SoundCloud-style).
+
+---
+
 ## [v0.9.16] - 2026-01-13
 
 ### 📱 Mobile Experience ("The One-Screen Update")

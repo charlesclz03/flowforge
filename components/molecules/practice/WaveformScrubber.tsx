@@ -167,6 +167,26 @@ export function WaveformScrubber({
       ctx.fillStyle = '#fff'
       ctx.fillText(`${minutes}:${seconds.padStart(5, '0')}`, labelX, height - 5)
     }
+
+    // --- Draw Playhead (Current Position) ---
+    if (progress !== undefined) {
+      const playheadX = progressX
+
+      // Playhead Line
+      ctx.beginPath()
+      ctx.strokeStyle = '#F43F5E' // accent-red
+      ctx.lineWidth = 2
+      ctx.moveTo(playheadX, 0)
+      ctx.lineTo(playheadX, height)
+      ctx.stroke()
+
+      // Optional: Glow effect for visibility
+      ctx.shadowBlur = 4
+      ctx.shadowColor = '#F43F5E'
+      ctx.stroke()
+      ctx.stroke()
+      ctx.shadowBlur = 0 // reset
+    }
   }, [
     audioBuffer,
     initialOffset,
