@@ -203,7 +203,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
               onClick={cycleDifficulty}
               disabled={!handleDifficultyChange}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.7rem] font-bold border transition-all',
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.65rem] font-bold border transition-all',
                 difficultyMeta.classes,
                 !handleDifficultyChange && 'cursor-default'
               )}
@@ -212,7 +212,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <span>{difficultyMeta.label}</span>
             </button>
 
-            <span className="text-xs font-bold text-white/20">
+            <span className="text-[0.65rem] font-bold text-white/20">
               {selectedBeat?.bpm || 90} BPM
             </span>
 
@@ -220,7 +220,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
               onClick={cycleFrequency}
               disabled={!handleFrequencyChange}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[0.7rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.65rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
                 !handleFrequencyChange && 'cursor-default opacity-50'
               )}
             >
@@ -252,7 +252,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </div>
 
       {/* Center Stage - Flexible */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0 py-8">
         {error && (
           <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
             {error}
@@ -261,8 +261,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Cypher Mode Indicator */}
         {/* Cypher Mode: Active Player Text (Floating above) */}
-        {mode === 'cypher' && (
-          <div className="absolute top-16 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
+        {mode === 'cypher' && activePlayer !== 0 && (
+          <div className="absolute top-20 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
             <span
               className={cn(
                 'text-lg font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
@@ -291,12 +291,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 const isActive = Number(activePlayer) === pNum
 
                 // Radial Positioning
-                // P1: NW (-45deg), P2: NE (45deg), P3: SE (135deg), P4: SW (225deg)
-                // Radius approx 190px from center.
-                // Using simple pre-calc classes for first 4, then fallback or rotation.
-                // Since Tailwind doesn't have dynamic rotation, we use style.
-                const angleDeg = -45 + i * 90 // 0 -> -45, 1 -> 45, 2 -> 135, 3 -> 225
-                const radius = 210 // px - increased for more breathing room
+                // Using skewed angles to avoid the vertical center where badges sit
+                // P1: -65deg (NW), P2: 65deg (NE), P3: 115deg (SE), P4: -115deg (SW)
+                const angles = [-65, 65, 115, -115]
+                const angleDeg = angles[i % angles.length]
+                const radius = 200 // px
                 const x = radius * Math.sin(angleDeg * (Math.PI / 180))
                 const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
 
