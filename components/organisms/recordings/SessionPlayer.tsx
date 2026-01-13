@@ -382,278 +382,282 @@ export const SessionPlayer = forwardRef<
     return (
       <div
         className={cn(
-          'bg-background-elevated rounded-2xl p-4 md:p-8 border border-white/5 shadow-2xl relative',
+          'bg-black/80 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl relative overflow-hidden group/player',
           className
         )}
       >
-        {/* Error Message */}
-        {audioError && (
-          <div className="mb-4 bg-red-500/20 text-red-200 text-xs px-3 py-2 rounded-lg border border-red-500/50 flex items-center gap-2">
-            <span>⚠️ {audioError}</span>
-          </div>
-        )}
+        {/* Glow Effects */}
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-accent-purple/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-accent-blue/5 rounded-full blur-[100px] pointer-events-none" />
 
-        {/* Compact Metadata Pills */}
-        {(beatTitle || sessionDuration) && (
-          <div className="flex gap-2 mb-4">
-            {/* Beat Info Pill */}
-            {beatTitle && (
-              <div className="flex-1 bg-background-card/50 rounded-xl p-3 border border-white/5">
-                <div className="flex items-center gap-2 mb-1">
-                  <Disc size={14} className="text-accent-purple" />
-                  <span className="text-xs font-medium text-white truncate">
-                    {beatTitle}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-[10px] text-text-tertiary">
-                  {beatBpm && <span>{beatBpm} BPM</span>}
-                  {beatArtist && <span className="truncate">{beatArtist}</span>}
-                </div>
+        {/* 1. Unified Console Header */}
+        <div className="relative px-6 py-5 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/2">
+          {/* Track Info */}
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-accent-purple/10 flex items-center justify-center border border-accent-purple/10 shadow-[0_0_15px_rgba(125,122,255,0.1)]">
+              <Disc size={20} className="text-accent-purple" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white text-base leading-tight">
+                {beatTitle || 'Freestyle Session'}
+              </h3>
+              <div className="flex items-center gap-2 text-xs text-text-secondary mt-0.5">
+                <span className="font-mono text-accent-purple/80">
+                  {beatBpm} BPM
+                </span>
+                {beatArtist && (
+                  <>
+                    <span className="w-1 h-1 rounded-full bg-white/10" />
+                    <span>{beatArtist}</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Session Metadata Badge */}
+          <div className="flex items-center gap-3">
+            {sessionDifficulty && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 border border-white/5 text-xs font-medium">
+                <div
+                  className={cn(
+                    'w-1.5 h-1.5 rounded-full',
+                    sessionDifficulty === 1
+                      ? 'bg-accent-green shadow-[0_0_8px_rgba(48,209,88,0.5)]'
+                      : sessionDifficulty === 2
+                        ? 'bg-accent-orange shadow-[0_0_8px_rgba(255,149,0,0.5)]'
+                        : sessionDifficulty === 3
+                          ? 'bg-accent-red shadow-[0_0_8px_rgba(255,69,58,0.5)]'
+                          : 'bg-accent-purple shadow-[0_0_8px_rgba(125,122,255,0.5)]'
+                  )}
+                />
+                <span className="text-text-secondary">
+                  {
+                    {
+                      1: 'Easy',
+                      2: 'Medium',
+                      3: 'Hard',
+                      4: 'Random',
+                    }[sessionDifficulty]
+                  }
+                </span>
               </div>
             )}
-
-            {/* Session Stats Pill */}
-            {sessionDuration !== undefined && (
-              <div className="flex-1 bg-background-card/50 rounded-xl p-3 border border-white/5">
-                <div className="flex items-center gap-2 mb-1">
-                  <Activity size={14} className="text-accent-purple" />
-                  <span className="text-xs font-medium text-white">
-                    {formatDuration(sessionDuration)}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-[10px] text-text-tertiary">
-                  {sessionDifficulty && (
-                    <span
-                      className={cn(
-                        'flex items-center gap-1',
-                        sessionDifficulty === 1
-                          ? 'text-accent-green'
-                          : sessionDifficulty === 2
-                            ? 'text-accent-orange'
-                            : sessionDifficulty === 3
-                              ? 'text-accent-red'
-                              : 'text-accent-purple'
-                      )}
-                    >
-                      <BarChart size={10} />
-                      {
-                        {
-                          1: 'Easy',
-                          2: 'Medium',
-                          3: 'Hard',
-                          4: 'Random',
-                        }[sessionDifficulty]
-                      }
-                    </span>
-                  )}
-                  {sessionDate && (
-                    <span className="flex items-center gap-1">
-                      <Calendar size={10} />
-                      {formatRelativeTime(sessionDate)}
-                    </span>
-                  )}
-                </div>
+            {sessionDate && (
+              <div className="text-xs text-text-tertiary font-mono">
+                {formatRelativeTime(sessionDate)}
               </div>
             )}
           </div>
-        )}
+        </div>
 
-        {/* Main Controls - Centered */}
-        <div className="flex flex-col items-center justify-center mb-8 gap-6">
-          {/* Time Display */}
-          <div className="text-4xl font-light font-numeral text-accent-purple tracking-wider tabular-nums">
-            {formatDuration(Math.round(currentTime))}
+        {/* 2. Main Stage */}
+        <div className="p-8 pb-10 flex flex-col items-center gap-8 relative z-10">
+          {audioError && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-500/10 text-red-300 text-xs px-4 py-2 rounded-full border border-red-500/20 backdrop-blur-md">
+              ⚠️ {audioError}
+            </div>
+          )}
+
+          {/* Big Time Display */}
+          <div className="text-center">
+            <div className="text-6xl md:text-7xl font-light font-numeral text-white/90 tracking-wider tabular-nums drop-shadow-xl">
+              {formatDuration(Math.round(currentTime))}
+            </div>
+            <div className="text-sm font-medium text-text-tertiary tracking-[0.2em] mt-2 uppercase opacity-60">
+              Total {formatDuration(Math.round(duration))}
+            </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <button
-              onClick={resetPlayback}
-              className="hidden md:block p-3 text-text-secondary hover:text-white transition-colors hover:bg-white/5 rounded-full"
-              aria-label="Restart"
-            >
-              <RefreshCcw size={20} />
-            </button>
-
+          {/* Controls */}
+          <div className="flex items-center gap-8">
             <button
               onClick={skipBackward}
-              className="p-3 text-text-secondary hover:text-white transition-colors hover:bg-white/5 rounded-full"
-              aria-label="Skip Back 10s"
+              className="group p-4 md:p-3 rounded-full hover:bg-white/5 transition-colors text-text-secondary hover:text-white"
             >
-              <SkipBack size={24} />
+              <SkipBack
+                size={24}
+                className="group-hover:-translate-x-0.5 transition-transform"
+              />
             </button>
 
             <button
               onClick={togglePlay}
-              className="w-20 h-20 rounded-full bg-accent-purple text-white flex items-center justify-center hover:bg-accent-purple/90 hover:scale-105 transition-all shadow-glow-purple"
-              aria-label={isPlaying ? 'Pause' : 'Play'}
-            >
-              {isPlaying ? (
-                <Pause size={32} fill="currentColor" />
-              ) : (
-                <Play size={32} fill="currentColor" className="ml-1" />
+              className={cn(
+                'w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95',
+                'bg-black/40 border border-accent-purple/30 backdrop-blur-md shadow-[0_0_30px_rgba(125,122,255,0.15)]',
+                'hover:border-accent-purple/60 hover:shadow-[0_0_40px_rgba(125,122,255,0.25)] hover:bg-accent-purple/10',
+                isPlaying &&
+                  'border-accent-purple bg-accent-purple/5 shadow-[0_0_50px_rgba(125,122,255,0.3)]'
               )}
+            >
+              <div
+                className={cn(
+                  'w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300',
+                  isPlaying
+                    ? 'bg-accent-purple shadow-[inset_0_2px_10px_rgba(255,255,255,0.3)]'
+                    : 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-110'
+                )}
+              >
+                {isPlaying ? (
+                  <Pause size={28} className="text-white fill-white" />
+                ) : (
+                  <Play size={32} className="ml-1 fill-black" />
+                )}
+              </div>
             </button>
 
             <button
               onClick={skipForward}
-              className="p-3 text-text-secondary hover:text-white transition-colors hover:bg-white/5 rounded-full"
-              aria-label="Skip Forward 10s"
+              className="group p-4 md:p-3 rounded-full hover:bg-white/5 transition-colors text-text-secondary hover:text-white"
             >
-              <SkipForward size={24} />
+              <SkipForward
+                size={24}
+                className="group-hover:translate-x-0.5 transition-transform"
+              />
             </button>
           </div>
-        </div>
 
-        <div className="mb-6 group">
-          <WaveformScrubber
-            url={audioUrl}
-            progress={duration > 0 ? currentTime / duration : 0}
-            onChange={(time) => {
-              if (audioRef.current) {
-                audioRef.current.currentTime = time
-                if (beatRef.current) beatRef.current.currentTime = time
-                setCurrentTime(time)
-              }
-            }}
-            onSeek={(time) => {
-              if (audioRef.current) {
-                audioRef.current.currentTime = time
-                if (beatRef.current) beatRef.current.currentTime = time
-                setCurrentTime(time)
-              }
-            }}
-            height={80}
-          />
-          <div className="flex justify-between text-xs text-text-tertiary mt-2 font-mono">
-            <span>{formatDuration(Math.round(currentTime))}</span>
-            <span>{formatDuration(Math.round(duration))}</span>
-          </div>
-        </div>
-
-        {/* Volume Control */}
-        <div className="flex flex-col gap-4">
-          {/* Main Volume (Vocals) */}
-          <div className="flex justify-between items-center gap-4">
-            <span className="text-xs text-text-secondary uppercase tracking-wider w-16">
-              Vocals
-            </span>
-            <div className="flex items-center gap-2 flex-1">
-              <button
-                onClick={toggleMute}
-                className="text-text-secondary hover:text-white"
-              >
-                {isMuted || volume === 0 ? (
-                  <VolumeX size={18} />
-                ) : (
-                  <Volume2 size={18} />
-                )}
-              </button>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value={isMuted ? 0 : volume}
-                onChange={handleVolumeChange}
-                className="w-full h-1 bg-background-card rounded-lg appearance-none cursor-pointer accent-white/50 hover:accent-white"
+          {/* Waveform */}
+          <div className="w-full max-w-2xl px-4">
+            <div className="bg-black/20 rounded-xl p-1 border border-white/5">
+              <WaveformScrubber
+                url={audioUrl}
+                progress={duration > 0 ? currentTime / duration : 0}
+                onChange={(time) => {
+                  if (audioRef.current) {
+                    audioRef.current.currentTime = time
+                    if (beatRef.current) beatRef.current.currentTime = time
+                    setCurrentTime(time)
+                  }
+                }}
+                onSeek={(time) => {
+                  if (audioRef.current) {
+                    audioRef.current.currentTime = time
+                    if (beatRef.current) beatRef.current.currentTime = time
+                    setCurrentTime(time)
+                  }
+                }}
+                height={64}
               />
             </div>
           </div>
+        </div>
 
-          {/* Beat Volume (Mixer) */}
-          {beatUrl && (
-            <div className="flex justify-between items-center gap-4">
-              <span className="text-xs text-text-secondary uppercase tracking-wider w-16">
-                Beat
-              </span>
-              <div className="flex items-center gap-2 flex-1">
-                <Volume2 size={18} className="text-text-secondary" />
+        {/* 3. Mixing Console Deck */}
+        <div className="bg-[#0A0A0C]/90 backdrop-blur-md border-t border-white/5 p-6 md:p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto">
+            {/* Left: Mixer Levels */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Volume2 size={14} className="text-accent-purple" />
+                <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">
+                  Mixer Levels
+                </span>
+              </div>
+
+              {/* Vocal Slider */}
+              <div className="space-y-2 group">
+                <div className="flex justify-between text-xs font-medium">
+                  <span className="text-white group-hover:text-accent-purple transition-colors">
+                    Vocals
+                  </span>
+                  <span className="font-mono text-text-tertiary">
+                    {Math.round((isMuted ? 0 : volume) * 100)}%
+                  </span>
+                </div>
                 <input
                   type="range"
                   min="0"
                   max="1"
                   step="0.05"
-                  value={beatVolume}
-                  onChange={handleBeatVolumeChange}
-                  className="w-full h-1 bg-background-card rounded-lg appearance-none cursor-pointer accent-accent-purple/50 hover:accent-accent-purple"
+                  value={isMuted ? 0 : volume}
+                  onChange={handleVolumeChange}
+                  className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-white hover:accent-accent-purple transition-colors"
                 />
               </div>
-            </div>
-          )}
-        </div>
 
-        {/* Advanced Controls Toggle */}
-        <div className="mt-6 border-t border-white/5 pt-4">
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="text-xs text-text-tertiary hover:text-white flex items-center gap-2 w-full justify-center transition-colors"
-          >
-            {showAdvanced ? 'Hide Studio Tools' : 'Show Studio Tools'}
-          </button>
-
-          {showAdvanced && (
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-2">
-              {/* Studio FX */}
-              <div className="bg-background-card p-4 rounded-xl border border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Sparkles
-                    className={cn(
-                      'w-5 h-5',
-                      isStudioMode ? 'text-accent-blue' : 'text-text-secondary'
-                    )}
-                  />
-                  <div>
-                    <div className="text-sm text-white font-medium">
-                      Studio FX
-                    </div>
-                    <div className="text-xs text-text-tertiary">
-                      Add Reverb & Polish
-                    </div>
+              {/* Beat Slider */}
+              {beatUrl && (
+                <div className="space-y-2 group">
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-white group-hover:text-accent-blue transition-colors">
+                      Beat
+                    </span>
+                    <span className="font-mono text-text-tertiary">
+                      {Math.round(beatVolume * 100)}%
+                    </span>
                   </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={beatVolume}
+                    onChange={handleBeatVolumeChange}
+                    className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-text-secondary hover:accent-accent-blue transition-colors"
+                  />
                 </div>
+              )}
+            </div>
+
+            {/* Right: Studio Tools (Always visible in Console) */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles size={14} className="text-accent-blue" />
+                <span className="text-xs font-bold text-text-secondary uppercase tracking-widest">
+                  Studio Processing
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* FX Toggle Button */}
                 <button
                   onClick={() => setIsStudioMode(!isStudioMode)}
                   className={cn(
-                    'w-10 h-6 rounded-full transition-colors relative',
-                    isStudioMode ? 'bg-accent-blue' : 'bg-white/10'
+                    'flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-300',
+                    isStudioMode
+                      ? 'bg-accent-blue/10 border-accent-blue/30 text-accent-blue shadow-[0_0_15px_rgba(10,132,255,0.15)]'
+                      : 'bg-white/5 border-white/5 text-text-secondary hover:bg-white/10 hover:text-white'
                   )}
                 >
-                  <div
+                  <Sparkles size={20} />
+                  <span className="text-xs font-medium">Reverb & EQ</span>
+                  <span
                     className={cn(
-                      'absolute top-1 w-4 h-4 rounded-full bg-white transition-transform',
-                      isStudioMode ? 'left-5' : 'left-1'
+                      'text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm',
+                      isStudioMode
+                        ? 'bg-accent-blue text-black'
+                        : 'bg-white/10 text-text-tertiary'
                     )}
-                  />
-                </button>
-              </div>
-
-              {/* Nudge / Latency */}
-              <div className="bg-background-card p-4 rounded-xl border border-white/5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock size={16} className="text-accent-pink" />
-                    <span className="text-sm font-medium">Vocal Timing</span>
-                  </div>
-                  <span className="text-xs font-mono text-accent-pink">
-                    {nudge > 0 ? `+${nudge}` : nudge}ms
+                  >
+                    {isStudioMode ? 'ON' : 'OFF'}
                   </span>
-                </div>
-                <input
-                  type="range"
-                  min="-200"
-                  max="200"
-                  step="10"
-                  value={nudge}
-                  onChange={(e) => setNudge(parseInt(e.target.value))}
-                  className="w-full h-1 bg-black rounded-lg appearance-none cursor-pointer accent-accent-pink"
-                />
-                <div className="flex justify-between text-[10px] text-text-tertiary uppercase">
-                  <span>Early</span>
-                  <span>Late</span>
+                </button>
+
+                {/* Vocal Align Control */}
+                <div className="bg-black/20 rounded-xl p-3 border border-white/5 flex flex-col justify-center">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] font-medium text-text-secondary uppercase">
+                      Alignment
+                    </span>
+                    <span className="text-[10px] font-mono text-accent-pink">
+                      {nudge > 0 ? `+${nudge}` : nudge}ms
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-200"
+                    max="200"
+                    step="10"
+                    value={nudge}
+                    onChange={(e) => setNudge(parseInt(e.target.value))}
+                    className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-accent-pink/80 hover:accent-accent-pink"
+                  />
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     )
