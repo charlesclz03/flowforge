@@ -170,10 +170,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-4 pb-8 sm:py-4'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-4 sm:py-4'
       )}
     >
-      <div className="flex flex-col items-center gap-3 sm:gap-6 w-full h-full justify-between">
+      <div className="flex flex-col items-center gap-2 sm:gap-6 w-full h-full justify-between">
         {/* Top Controls Section - Compact */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
           <BeatDropdown
@@ -251,8 +251,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
       </div>
 
-      {/* Center Stage - Flexible with collision prevention */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0 py-4 max-h-[60vh]">
+      {/* Center Stage - Flexible */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
         {error && (
           <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
             {error}
@@ -403,8 +403,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
-              // Responsive size: scales with vh on mobile to prevent overflow
-              'w-[min(55vmin,260px)] h-[min(55vmin,260px)] sm:w-[300px] sm:h-[300px]',
+              // Responsive size: larger on mobile for immersive feel
+              'w-[min(65vmin,300px)] h-[min(65vmin,300px)] sm:w-[320px] sm:h-[320px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
@@ -603,7 +603,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
 
         {/* Record Notifier / Bottom Control Area */}
-        <div className="h-28 sm:h-20 flex items-center justify-center shrink-0">
+        <div className="h-20 flex items-center justify-center shrink-0">
           <button
             onClick={(e) => {
               e.stopPropagation()
