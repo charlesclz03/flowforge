@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.9.16] - 2026-01-13
+
+### 📱 Mobile Experience ("The One-Screen Update")
+
+**Focus:** Delivering a true app-like experience on mobile web by locking the viewport and eliminating scroll.
+
+### Fixed
+- **Viewport Layout:** Enforced `100dvh` (Dynamic Viewport Height) on the Practice Session page to prevent browser chrome from causing scroll issues.
+- **Responsive Controls:** The central "Record" ring now scales intelligently (`min(70vmin)`) to fit smaller screens without overcrowding.
+- **Layout Shift:** Removed excess bottom padding and switched to a flex-based vertical distribution to keep all controls visible on screen.
+
+### Changed
+- **Words Database:** Improved fallback logic for offline words to respect difficulty filters even when using the backup list.
+
+---
+
 ## [v0.9.15] - 2026-01-13
 
 ### 🎨 Visual Polish

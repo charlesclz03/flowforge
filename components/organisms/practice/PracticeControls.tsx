@@ -249,36 +249,35 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </motion.button>
           )}
         </div>
+      </div>
 
-        </div>
-
-        {/* Center Stage - Flexible */}
-        <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
-          {error && (
-            <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
-              {error}
-            </div>
-          )}
+      {/* Center Stage - Flexible */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
+        {error && (
+          <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+            {error}
+          </div>
+        )}
 
         {/* Cypher Mode Indicator */}
         {/* Cypher Mode: Active Player Text (Floating above) */}
         {mode === 'cypher' && (
           <div className="absolute top-16 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
-             <span
-                className={cn(
-                  'text-lg font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
-                  activePlayer === 1 && 'text-accent-purple',
-                  activePlayer === 2 && 'text-accent-orange',
-                  activePlayer === 3 && 'text-accent-gold',
-                  activePlayer === 4 && 'text-accent-green',
-                  activePlayer === 5 && 'text-accent-blue'
-                )}
-              >
-                Player {activePlayer}
-              </span>
-              <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                Your Turn
-              </span>
+            <span
+              className={cn(
+                'text-lg font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
+                activePlayer === 1 && 'text-accent-purple',
+                activePlayer === 2 && 'text-accent-orange',
+                activePlayer === 3 && 'text-accent-gold',
+                activePlayer === 4 && 'text-accent-green',
+                activePlayer === 5 && 'text-accent-blue'
+              )}
+            >
+              Player {activePlayer}
+            </span>
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+              Your Turn
+            </span>
           </div>
         )}
 
@@ -290,13 +289,13 @@ export default function PracticeControls(props: PracticeControlsProps) {
               {Array.from({ length: cypherPlayers }).map((_, i) => {
                 const pNum = i + 1
                 const isActive = Number(activePlayer) === pNum
-                
+
                 // Radial Positioning
                 // P1: NW (-45deg), P2: NE (45deg), P3: SE (135deg), P4: SW (225deg)
                 // Radius approx 190px from center.
                 // Using simple pre-calc classes for first 4, then fallback or rotation.
                 // Since Tailwind doesn't have dynamic rotation, we use style.
-                const angleDeg = -45 + (i * 90) // 0 -> -45, 1 -> 45, 2 -> 135, 3 -> 225
+                const angleDeg = -45 + i * 90 // 0 -> -45, 1 -> 45, 2 -> 135, 3 -> 225
                 const radius = 180 // px
                 const x = radius * Math.sin(angleDeg * (Math.PI / 180))
                 const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
@@ -306,11 +305,31 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 let shadowClass = ''
                 if (isActive) {
                   switch (pNum) {
-                    case 1: colorClass = 'text-accent-purple border-accent-purple bg-accent-purple/20'; shadowClass = 'shadow-[0_0_20px_rgba(168,85,247,0.5)]'; break;
-                    case 2: colorClass = 'text-accent-orange border-accent-orange bg-accent-orange/20'; shadowClass = 'shadow-[0_0_20px_rgba(249,115,22,0.5)]'; break;
-                    case 3: colorClass = 'text-accent-gold border-accent-gold bg-accent-gold/20'; shadowClass = 'shadow-[0_0_20px_rgba(255,214,10,0.5)]'; break;
-                    case 4: colorClass = 'text-accent-green border-accent-green bg-accent-green/20'; shadowClass = 'shadow-[0_0_20px_rgba(48,209,88,0.5)]'; break;
-                    default: colorClass = 'text-accent-blue border-accent-blue bg-accent-blue/20'; shadowClass = 'shadow-[0_0_20px_rgba(10,132,255,0.5)]'; break;
+                    case 1:
+                      colorClass =
+                        'text-accent-purple border-accent-purple bg-accent-purple/20'
+                      shadowClass = 'shadow-[0_0_20px_rgba(168,85,247,0.5)]'
+                      break
+                    case 2:
+                      colorClass =
+                        'text-accent-orange border-accent-orange bg-accent-orange/20'
+                      shadowClass = 'shadow-[0_0_20px_rgba(249,115,22,0.5)]'
+                      break
+                    case 3:
+                      colorClass =
+                        'text-accent-gold border-accent-gold bg-accent-gold/20'
+                      shadowClass = 'shadow-[0_0_20px_rgba(255,214,10,0.5)]'
+                      break
+                    case 4:
+                      colorClass =
+                        'text-accent-green border-accent-green bg-accent-green/20'
+                      shadowClass = 'shadow-[0_0_20px_rgba(48,209,88,0.5)]'
+                      break
+                    default:
+                      colorClass =
+                        'text-accent-blue border-accent-blue bg-accent-blue/20'
+                      shadowClass = 'shadow-[0_0_20px_rgba(10,132,255,0.5)]'
+                      break
                   }
                 } else {
                   colorClass = 'text-white/20 border-white/5 bg-white/5'
@@ -333,21 +352,23 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       shadowClass
                     )}
                   >
-                     <User
+                    <User
                       size={isActive ? 28 : 18}
                       strokeWidth={isActive ? 2.5 : 1.5}
                     />
-                     {isActive && (
+                    {isActive && (
                       <div className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                     )}
-                     
-                     {/* Player Label */}
-                     <span className={cn(
-                        "absolute -top-6 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-opacity",
-                        isActive ? "opacity-100 text-white" : "opacity-0"
-                     )}>
-                        Player {pNum}
-                     </span>
+                    )}
+
+                    {/* Player Label */}
+                    <span
+                      className={cn(
+                        'absolute -top-6 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-opacity',
+                        isActive ? 'opacity-100 text-white' : 'opacity-0'
+                      )}
+                    >
+                      Player {pNum}
+                    </span>
                   </div>
                 )
               })}
@@ -594,121 +615,80 @@ export default function PracticeControls(props: PracticeControlsProps) {
               !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
             )}
           >
-          <div className="flex items-center gap-2 px-6 py-2">
-            {/* Left Bracket */}
-            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
+            <div className="flex items-center gap-2 px-6 py-2">
+              {/* Left Bracket */}
+              <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
 
-            <div className="flex items-center gap-3 mx-1">
-              {/* Dot */}
-              <div
-                className={cn(
-                  'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
-                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-red-900/50',
-                  isRecording &&
-                    'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
-                )}
-              />
-              {/* Text */}
-              <span className="text-3xl font-black tracking-tighter text-white/90 drop-shadow-lg">
-                REC
-              </span>
+              <div className="flex items-center gap-3 mx-1">
+                {/* Dot */}
+                <div
+                  className={cn(
+                    'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
+                    isPro && isRecordingEnabled
+                      ? 'bg-red-500'
+                      : 'bg-red-900/50',
+                    isRecording &&
+                      'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                  )}
+                />
+                {/* Text */}
+                <span className="text-3xl font-black tracking-tighter text-white/90 drop-shadow-lg">
+                  REC
+                </span>
+              </div>
+
+              {/* Right Bracket */}
+              <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
             </div>
+          </button>
 
-            {/* Right Bracket */}
-            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
-          </div>
-        </button>
-
-        {/* Pause Control & Discard - Overlay on bottom area */}
-        {isPlaying && onTogglePause && isRecordingEnabled && (
-          <div className="absolute bottom-4 z-30 flex gap-4">
-            {/* Discard Button (Only when paused or playing) */}
-            {onDiscard && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDiscard()
-                }}
-                className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
-              >
-                <LogOut
-                  size={16}
-                  className="text-red-400 group-hover:text-red-300"
-                />
-                <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
-                  Discard
-                </span>
-              </button>
-            )}
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onTogglePause()
-              }}
-              className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
-            >
-              {isPaused ? (
-                <>
-                  <Play size={16} className="text-accent-green" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-white">
-                    Resume
+          {/* Pause Control & Discard - Overlay on bottom area */}
+          {isPlaying && onTogglePause && isRecordingEnabled && (
+            <div className="absolute bottom-4 z-30 flex gap-4">
+              {/* Discard Button (Only when paused or playing) */}
+              {onDiscard && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDiscard()
+                  }}
+                  className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
+                >
+                  <LogOut
+                    size={16}
+                    className="text-red-400 group-hover:text-red-300"
+                  />
+                  <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
+                    Discard
                   </span>
-                </>
-              ) : (
-                <>
-                  <Pause size={16} className="text-accent-yellow" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-white">
-                    Pause
-                  </span>
-                </>
-        {/* Pause Control & Discard - Overlay on bottom area */}
-        {isPlaying && onTogglePause && isRecordingEnabled && (
-          <div className="absolute bottom-4 z-30 flex gap-4">
-            {/* Discard Button (Only when paused or playing) */}
-            {onDiscard && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDiscard()
-                }}
-                className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
-              >
-                <LogOut
-                  size={16}
-                  className="text-red-400 group-hover:text-red-300"
-                />
-                <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
-                  Discard
-                </span>
-              </button>
-            )}
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onTogglePause()
-              }}
-              className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
-            >
-              {isPaused ? (
-                <>
-                  <Play size={16} className="text-accent-green" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-white">
-                    Resume
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Pause size={16} className="text-accent-yellow" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-white">
-                    Pause
-                  </span>
-                </>
+                </button>
               )}
-            </button>
-          </div>
-        )}
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onTogglePause()
+                }}
+                className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
+              >
+                {isPaused ? (
+                  <>
+                    <Play size={16} className="text-accent-green" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-white">
+                      Resume
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Pause size={16} className="text-accent-yellow" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-white">
+                      Pause
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </Card>

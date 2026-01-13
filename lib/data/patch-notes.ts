@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.16',
+    date: '2026-01-13',
+    title: 'Mobile Experience',
+    codename: 'One Screen',
+    description:
+      'Practice sessions now fit perfectly on your mobile screen. No scrolling, no distractions—just you and the booth.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Viewport Lock: The "The Booth" now uses 100% of your screen height, eliminating annoying scrollbars.',
+          'Responsive Ring: The record button scales down for smaller phones so you can reach every control.',
+          'Smart Layout: Controls now distribute themselves evenly to fill available space.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.15',
     date: '2026-01-13',
     title: 'Cypher Visual Alignment',

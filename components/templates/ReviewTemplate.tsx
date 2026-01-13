@@ -24,12 +24,12 @@ export function ReviewTemplate({
     <div className="min-h-screen bg-background text-text-primary pb-32">
       {header}
 
-      <main className="pt-20 md:pt-28 px-4">
+      <main className="pt-20 md:pt-24 px-4">
         <Container>
           {alerts}
 
-          {/* Centered Page Header */}
-          <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>
+          {/* Centered Page Header - Only render if content exists to avoid empty margin space */}
+          {pageHeader && <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>}
 
           <div className="max-w-2xl mx-auto space-y-6">
             <section>{player}</section>

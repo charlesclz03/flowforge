@@ -151,7 +151,7 @@ export async function getRandomWords(
     // we might want to return *something*, but for now let's respect the filter
     // so we don't leak "transformation" into easy mode.
     // If empty, user just gets no words (better than wrong difficulty).
-    
+
     return { success: true, data: pool.slice(0, count) }
   }
 }
