@@ -29,7 +29,7 @@ export const PATCH_NOTES: PatchNote[] = [
       'We heard you! The track covers have been reimagined with a sleeker, darker, and more premium aesthetic.',
     changes: [
       {
-        category: 'Visual Polish',
+        category: 'New Features',
         items: [
           'Dark Premium Palettes: Replaced neon colors with deep blacks, blues, and charcoals.',
           'De-cluttered Interface: Removed the large "RAP" text overlay from track cards.',
