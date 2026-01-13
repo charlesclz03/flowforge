@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { PageHeader } from '@/components/organisms/common'
 import {
   SessionPlayer,
   SessionPlayerHandles,
@@ -143,15 +142,15 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
 
   return (
     <ReviewTemplate
-      header={<AppHeader showBackButton={true} onBack={handleBack} />}
-      pageHeader={
-        <div>
-          <PageHeader
-            title={recording.title}
-            description="Listen back and analyze your flow"
-          />
-        </div>
+      header={
+        <AppHeader
+          showBackButton={true}
+          onBack={handleBack}
+          customTitle={recording.title}
+          customSubtitle="Listen back and analyze your flow"
+        />
       }
+      pageHeader={null}
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
         <SessionPlayer

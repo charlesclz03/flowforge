@@ -10,16 +10,10 @@ import {
   Play,
   Pause,
   Volume2,
-  VolumeX,
   SkipBack,
   SkipForward,
   Sparkles,
-  Clock,
-  RefreshCcw,
   Disc,
-  Activity,
-  Calendar,
-  BarChart,
 } from 'lucide-react'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -78,7 +72,7 @@ export const SessionPlayer = forwardRef<
       beatTitle,
       beatBpm,
       beatArtist,
-      sessionDuration,
+
       sessionDifficulty,
       sessionDate,
     },
@@ -95,7 +89,6 @@ export const SessionPlayer = forwardRef<
     // Advanced Features
     const [nudge, setNudge] = useState(0)
     const [isStudioMode, setIsStudioMode] = useState(true)
-    const [showAdvanced, setShowAdvanced] = useState(false)
 
     // Expose settings to parent (e.g. for downloading mix)
     useImperativeHandle(ref, () => ({
@@ -291,12 +284,6 @@ export const SessionPlayer = forwardRef<
         setIsPlaying(true)
       }
     }, [isPlaying])
-
-    const toggleMute = () => {
-      if (!audioRef.current) return
-      audioRef.current.muted = !isMuted
-      setIsMuted(!isMuted)
-    }
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!audioRef.current) return

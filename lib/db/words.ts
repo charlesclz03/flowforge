@@ -118,7 +118,7 @@ export async function getRandomWords(
       { id: 'w8', wordText: 'zone', difficultyLevel: 1 },
       { id: 'w9', wordText: 'truth', difficultyLevel: 1 },
       { id: 'w10', wordText: 'light', difficultyLevel: 1 },
-      
+
       // Medium (2-3 Syllables)
       { id: 'w20', wordText: 'rhythm', difficultyLevel: 2 },
       { id: 'w21', wordText: 'vision', difficultyLevel: 2 },
@@ -130,7 +130,7 @@ export async function getRandomWords(
       { id: 'w27', wordText: 'legacy', difficultyLevel: 2 },
       { id: 'w28', wordText: 'destiny', difficultyLevel: 2 },
       { id: 'w29', wordText: 'clarity', difficultyLevel: 2 },
-      
+
       // Hard (4+ Syllables)
       { id: 'w40', wordText: 'imagination', difficultyLevel: 3 },
       { id: 'w41', wordText: 'extraordinary', difficultyLevel: 3 },
