@@ -41,6 +41,15 @@ export class AudioPlayer {
     })
 
     this.audio.addEventListener('ended', () => {
+      // Only fire onEnded if looping is disabled (browser handles loop internally)
+      // If loop is enabled and we get here, it means the gapless workaround missed
+      // In that case, seek back to 0 and continue playing
+      if (this.audio?.loop) {
+        this.log('Loop enabled, ignoring ended event and seeking to 0')
+        this.audio.currentTime = 0
+        this.audio.play().catch(console.error)
+        return
+      }
       this.log('Playback ended')
       if (this.onEndedCallback) {
         this.onEndedCallback()
