@@ -153,7 +153,7 @@ export default function DifficultySelectionPage() {
             handleLockedSelect={() => setShowPremiumModal(true)}
             isPro={isPro}
             embedded={true}
-            defaultCollapsed={!!searchParams.get('beatId')}
+            defaultCollapsed={true}
           />
 
           {/* Advanced Section */}
