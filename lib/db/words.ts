@@ -143,7 +143,16 @@ export async function getRandomWords(
       { id: 'w48', wordText: 'generation', difficultyLevel: 3 },
       { id: 'w49', wordText: 'liberation', difficultyLevel: 3 },
     ] as unknown as Word[]
-    return { success: true, data: fallback.slice(0, count) }
+    let pool = fallback
+    if (filters?.difficultyLevel) {
+      pool = pool.filter((w) => w.difficultyLevel === filters.difficultyLevel)
+    }
+    // If we filtered everyone out (e.g. only have easy fallback but requested hard),
+    // we might want to return *something*, but for now let's respect the filter
+    // so we don't leak "transformation" into easy mode.
+    // If empty, user just gets no words (better than wrong difficulty).
+    
+    return { success: true, data: pool.slice(0, count) }
   }
 }
 

@@ -256,9 +256,7 @@ export async function GET() {
 
         const { data: signedUrlData } = await supabase.storage
           .from(RECORDINGS_BUCKET)
-          .createSignedUrl(recording.storageUrl, SIGNED_URL_TTL_SECONDS, {
-            download: `${recording.title}.webm`,
-          })
+          .createSignedUrl(recording.storageUrl, SIGNED_URL_TTL_SECONDS)
 
         return {
           ...recording,

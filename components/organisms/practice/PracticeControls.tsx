@@ -170,12 +170,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between py-2'
       )}
     >
-      <div className="flex flex-col items-center gap-4 sm:gap-6">
-        {/* Beat Selection Dropdown */}
-        <div className="w-full max-w-xs z-20">
+      <div className="flex flex-col items-center gap-2 sm:gap-6 w-full h-full justify-between">
+        {/* Top Controls Section - Compact */}
+        <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
           <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
@@ -250,11 +250,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
           )}
         </div>
 
-        {error && (
-          <div className="text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
-            {error}
-          </div>
-        )}
+        </div>
+
+        {/* Center Stage - Flexible */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
+          {error && (
+            <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
+              {error}
+            </div>
+          )}
 
         {/* Cypher Mode Indicator */}
         {/* Cypher Mode: Active Player Text (Floating above) */}
@@ -378,8 +382,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
             }}
             disabled={isLoading}
             className={cn(
-              'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none',
-              'w-[200px] h-[200px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px]',
+              'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
+              // Responsive size: defaults to smaller on mobile, scales up on larger screens
+              'w-[min(70vmin,260px)] h-[min(70vmin,260px)] sm:w-[300px] sm:h-[300px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
@@ -577,17 +582,18 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </motion.button>
         </div>
 
-        {/* Record Notifier */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            if (isRecordingEnabled) handleUpgrade?.()
-          }}
-          className={cn(
-            'mt-6 flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 pb-12 z-20 relative',
-            !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
-          )}
-        >
+        {/* Record Notifier / Bottom Control Area */}
+        <div className="h-20 flex items-center justify-center shrink-0">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              if (isRecordingEnabled) handleUpgrade?.()
+            }}
+            className={cn(
+              'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',
+              !isRecordingEnabled && 'opacity-30 grayscale cursor-default'
+            )}
+          >
           <div className="flex items-center gap-2 px-6 py-2">
             {/* Left Bracket */}
             <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
@@ -613,9 +619,52 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </div>
         </button>
 
-        {/* Pause Control & Discard - Only show if recording is enabled */}
+        {/* Pause Control & Discard - Overlay on bottom area */}
         {isPlaying && onTogglePause && isRecordingEnabled && (
-          <div className="flex gap-4 -mt-8 z-30 mb-8">
+          <div className="absolute bottom-4 z-30 flex gap-4">
+            {/* Discard Button (Only when paused or playing) */}
+            {onDiscard && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDiscard()
+                }}
+                className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all flex items-center gap-2 group"
+              >
+                <LogOut
+                  size={16}
+                  className="text-red-400 group-hover:text-red-300"
+                />
+                <span className="text-xs font-bold uppercase tracking-widest text-red-400 group-hover:text-red-300">
+                  Discard
+                </span>
+              </button>
+            )}
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onTogglePause()
+              }}
+              className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition-all flex items-center gap-2"
+            >
+              {isPaused ? (
+                <>
+                  <Play size={16} className="text-accent-green" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-white">
+                    Resume
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Pause size={16} className="text-accent-yellow" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-white">
+                    Pause
+                  </span>
+                </>
+        {/* Pause Control & Discard - Overlay on bottom area */}
+        {isPlaying && onTogglePause && isRecordingEnabled && (
+          <div className="absolute bottom-4 z-30 flex gap-4">
             {/* Discard Button (Only when paused or playing) */}
             {onDiscard && (
               <button
@@ -660,6 +709,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </button>
           </div>
         )}
+        </div>
       </div>
     </Card>
   )
