@@ -317,7 +317,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
 
         {/* Hero Player - Centered */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center mt-20 sm:mt-24">
           {/* Session Controls - Repositioned to Upper Corners (10 and 2 o'clock) */}
           {isPlaying && isRecordingEnabled && (
             <>

@@ -425,8 +425,9 @@ export default function PracticePage() {
       stopRecording()
       setIsPaused(false)
       toast('Session Discarded', { icon: '🗑️' })
+      router.push('/difficultyselection')
     }
-  }, [play, stopRecording, stopPlayback])
+  }, [play, stopRecording, stopPlayback, router])
 
   const handleBackNavigation = useCallback(() => {
     if (isRecording || beatPlayer.isPlaying) {
