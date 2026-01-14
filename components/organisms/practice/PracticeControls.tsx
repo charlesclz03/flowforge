@@ -240,18 +240,17 @@ export default function PracticeControls(props: PracticeControlsProps) {
           />
         </div>
 
-        {/* Info Tags - Row 1: Mode */}
-        <div className="flex items-center justify-center">
+        {/* Info Tags - Single Row: Mode, Difficulty, Bars */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 text-xs uppercase tracking-wider">
+          {/* Mode Chip */}
           <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
             <User size={12} className="text-white/40" />
-            <span className="text-xs font-bold uppercase tracking-widest text-white/60">
+            <span className="text-[0.7rem] font-bold uppercase tracking-widest text-white/60">
               {mode}
             </span>
           </div>
-        </div>
 
-        {/* Info Tags - Row 2: Difficulty, Bars */}
-        <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
+          {/* Difficulty Chip */}
           <button
             onClick={cycleDifficulty}
             disabled={!handleDifficultyChange}
@@ -265,6 +264,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <span>{difficultyMeta.label}</span>
           </button>
 
+          {/* Bars Chip */}
           <button
             onClick={cycleFrequency}
             disabled={!handleFrequencyChange}
@@ -393,8 +393,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     key={i}
                     className="absolute rounded-full border-[6px]"
                     style={{
-                      width: 'calc(min(65vmin, 300px) + 60px)',
-                      height: 'calc(min(65vmin, 300px) + 60px)',
+                      width: 'calc(min(60vmin, 260px) + 60px)',
+                      height: 'calc(min(60vmin, 260px) + 60px)',
                       borderColor: 'transparent',
                       borderTopColor: borderColor, // Only show top segment
                       transform: `rotate(${rotation}deg)`,
@@ -420,8 +420,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <motion.div
                 className="absolute rounded-full border-2 pointer-events-none"
                 style={{
-                  width: 'calc(min(65vmin, 300px) + 40px)',
-                  height: 'calc(min(65vmin, 300px) + 40px)',
+                  width: 'calc(min(60vmin, 260px) + 40px)',
+                  height: 'calc(min(60vmin, 260px) + 40px)',
                   borderColor: 'rgba(74, 72, 176, 0.4)',
                   boxShadow: '0 0 20px rgba(74, 72, 176, 0.2)',
                 }}
@@ -439,8 +439,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <motion.div
                 className="absolute rounded-full border-2 pointer-events-none"
                 style={{
-                  width: 'calc(min(65vmin, 300px) + 80px)',
-                  height: 'calc(min(65vmin, 300px) + 80px)',
+                  width: 'calc(min(60vmin, 260px) + 80px)',
+                  height: 'calc(min(60vmin, 260px) + 80px)',
                   borderColor: 'rgba(61, 59, 142, 0.3)',
                   boxShadow: '0 0 30px rgba(61, 59, 142, 0.15)',
                 }}
@@ -487,8 +487,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
             disabled={isLoading}
             className={cn(
               'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
-              // Responsive size: balanced for mobile
-              'w-[min(65vmin,300px)] h-[min(65vmin,300px)] sm:w-[320px] sm:h-[320px]',
+              // Responsive size: reduced to match mockup
+              'w-[min(60vmin,260px)] h-[min(60vmin,260px)] sm:w-[280px] sm:h-[280px]',
               'border backdrop-blur-md shadow-2xl overflow-hidden',
               isPlaying
                 ? isRecording && !isInfiniteMode
@@ -687,7 +687,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
 
         {/* Record Notifier / Bottom Control Area */}
-        <div className="h-14 flex items-center justify-center shrink-0">
+        <div className="h-14 flex items-center justify-center shrink-0 mt-8 sm:mt-12">
           <button
             onClick={(e) => {
               e.stopPropagation()
