@@ -229,15 +229,49 @@ export default function PracticeControls(props: PracticeControlsProps) {
       <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
         {/* Top Controls Section - Compact */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
-          <BeatDropdown
-            beats={beats}
-            selectedBeat={selectedBeat}
-            handleSelect={handleBeatSelect}
-            isPro={isPro}
-            disabled={false}
-            embedded={true}
-            defaultCollapsed={true}
-          />
+          {/* Beat Dropdown with Session Controls */}
+          <div className="w-full flex items-center justify-center gap-3 px-4">
+            {/* Back/Discard - Left of Dropdown */}
+            {isPlaying && isRecordingEnabled && onDiscard && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDiscard()
+                }}
+                className="p-2.5 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm shrink-0"
+                title="Exit Session"
+              >
+                <Undo2 size={18} />
+              </button>
+            )}
+
+            <BeatDropdown
+              beats={beats}
+              selectedBeat={selectedBeat}
+              handleSelect={handleBeatSelect}
+              isPro={isPro}
+              disabled={false}
+              embedded={true}
+              defaultCollapsed={true}
+            />
+
+            {/* Pause - Right of Dropdown */}
+            {isPlaying && isRecordingEnabled && onTogglePause && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (!isPaused) {
+                    onTogglePause()
+                    setShowPauseModal(true)
+                  }
+                }}
+                className="p-2.5 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm shrink-0"
+                title="Pause"
+              >
+                <Pause size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Info Tags - Row 1: Mode */}
@@ -250,7 +284,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </div>
         </div>
 
-        {/* Info Tags - Row 2: Difficulty, BPM, Bars */}
+        {/* Info Tags - Row 2: Difficulty, Bars */}
         <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
           <button
             onClick={cycleDifficulty}
@@ -264,10 +298,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <Gauge size={12} />
             <span>{difficultyMeta.label}</span>
           </button>
-
-          <span className="text-[0.7rem] font-bold text-white/40">
-            {selectedBeat?.bpm || 90} BPM
-          </span>
 
           <button
             onClick={cycleFrequency}
@@ -324,42 +354,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
-          {/* Session Controls - Beside Player Circle */}
-          {isPlaying && isRecordingEnabled && (
-            <>
-              {/* Back/Discard - Left of Player */}
-              {onDiscard && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDiscard()
-                  }}
-                  className="absolute left-0 sm:-left-16 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
-                  style={{ transform: 'translateX(-120%)' }}
-                  title="Exit Session"
-                >
-                  <Undo2 size={20} />
-                </button>
-              )}
-              {/* Pause - Right of Player */}
-              {onTogglePause && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (!isPaused) {
-                      onTogglePause()
-                      setShowPauseModal(true)
-                    }
-                  }}
-                  className="absolute right-0 sm:-right-16 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
-                  style={{ transform: 'translateX(120%)' }}
-                  title="Pause"
-                >
-                  <Pause size={20} />
-                </button>
-              )}
-            </>
-          )}
           {/* Pulsing Concentric Rings - Only visible when playing */}
           {isPlaying && (
             <>
