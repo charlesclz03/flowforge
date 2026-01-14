@@ -413,6 +413,10 @@ export default function PracticePage() {
     if (confirm('Discard this session? It will not be saved.')) {
       play('click')
       shouldSaveRef.current = false // Prevent save
+      // Cancel TTS to stop any ongoing speech
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
       stopPlayback()
       stopRecording()
       setIsPaused(false)
