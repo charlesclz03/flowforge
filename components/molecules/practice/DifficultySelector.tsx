@@ -10,13 +10,6 @@ interface DifficultySelectorProps {
   className?: string
 }
 
-const difficultyDescriptions: Record<number, string> = {
-  1: '1-2 syllable words, easy warm-up',
-  2: '3-4 syllable words, moderate challenge',
-  3: '4+ syllable words, advanced practice',
-  4: 'Everything from simple to complex, mixed randomly',
-}
-
 export function DifficultySelector({
   value,
   onChange,
@@ -73,10 +66,6 @@ export function DifficultySelector({
           background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) 100%)`,
         }}
       />
-
-      <p className="text-xs text-text-tertiary">
-        {difficultyDescriptions[value]}
-      </p>
     </div>
   )
 }

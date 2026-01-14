@@ -30,12 +30,6 @@ const frequencyLabels: Record<number, string> = {
   8: 'Every 8 bars',
 }
 
-const frequencyDescriptions: Record<number, string> = {
-  2: 'New word every 2 bars - intense',
-  4: 'New word every 4 bars - fast-paced',
-  8: 'New word every 8 bars - balanced',
-}
-
 export function FrequencySelector({
   value,
   onChange,
@@ -83,10 +77,6 @@ export function FrequencySelector({
           background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${(currentIndex / 2) * 100}%, rgba(255,255,255,0.1) ${(currentIndex / 2) * 100}%, rgba(255,255,255,0.1) 100%)`,
         }}
       />
-
-      <p className="text-xs text-text-tertiary">
-        {frequencyDescriptions[value]}
-      </p>
     </div>
   )
 }

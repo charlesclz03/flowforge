@@ -9,6 +9,8 @@ import {
   Mic,
   Pause,
   Play,
+  Settings,
+  Volume2,
   ArrowLeft,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -174,9 +176,44 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-4 pt-2 pb-2 sm:py-4 relative'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-4 pt-16 pb-2 sm:py-4 relative'
       )}
     >
+      {/* Session Controls - Fixed to Top Corners */}
+      {isPlaying && isRecordingEnabled && (
+        <>
+          {/* Back/Discard - Top Left */}
+          {onDiscard && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onDiscard()
+              }}
+              className="absolute top-4 left-4 z-50 w-12 h-12 rounded-full bg-black/50 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center hover:scale-105 active:scale-95 shadow-lg"
+              title="Exit Session"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          )}
+          {/* Pause - Top Right */}
+          {onTogglePause && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                if (!isPaused) {
+                  onTogglePause()
+                  setShowPauseModal(true)
+                }
+              }}
+              className="absolute top-4 right-4 z-50 w-12 h-12 rounded-full bg-black/50 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center hover:scale-105 active:scale-95 shadow-lg"
+              title="Pause"
+            >
+              <Pause size={20} />
+            </button>
+          )}
+        </>
+      )}
+
       {/* Pause Modal */}
       <AnimatePresence>
         {showPauseModal && isPaused && (
@@ -226,68 +263,66 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
+      {/* Top Controls Section - Beat & Info */}
+      <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
+        {/* Beat Selection Dropdown */}
+        <BeatDropdown
+          beats={beats}
+          selectedBeat={selectedBeat}
+          handleSelect={handleBeatSelect}
+          isPro={isPro}
+          disabled={false}
+          embedded={true}
+          defaultCollapsed={true}
+        />
+      </div>
 
-        {/* Top Controls Section - Beat & Info */}
-        <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
-          {/* Beat Selection Dropdown */}
-          <BeatDropdown
-            beats={beats}
-            selectedBeat={selectedBeat}
-            handleSelect={handleBeatSelect}
-            isPro={isPro}
-            disabled={false}
-            embedded={true}
-            defaultCollapsed={true}
+      {/* Info Tags - Single Row: Mode, Difficulty, Bars */}
+      <div className="flex items-center justify-center gap-2 sm:gap-3 text-xs uppercase tracking-wider relative z-20">
+        {/* Mode Chip */}
+        <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
+          <User size={12} className="text-white/40" />
+          <span className="text-[0.7rem] font-bold uppercase tracking-widest text-white/60">
+            {mode}
+          </span>
+        </div>
+
+        {/* Difficulty Chip */}
+        <button
+          onClick={cycleDifficulty}
+          disabled={!handleDifficultyChange}
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border transition-all',
+            difficultyMeta.classes,
+            !handleDifficultyChange && 'cursor-default'
+          )}
+        >
+          <Gauge size={12} />
+          <span>{difficultyMeta.label}</span>
+        </button>
+
+        {/* Bars Chip */}
+        <button
+          onClick={cycleFrequency}
+          disabled={!handleFrequencyChange}
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+            !handleFrequencyChange && 'cursor-default opacity-50'
+          )}
+        >
+          <Zap
+            size={12}
+            className={
+              frequency === 2
+                ? 'text-accent-red'
+                : frequency === 4
+                  ? 'text-accent-yellow'
+                  : 'text-accent-blue'
+            }
           />
-        </div>
-
-        {/* Info Tags - Single Row: Mode, Difficulty, Bars */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 text-xs uppercase tracking-wider relative z-20">
-          {/* Mode Chip */}
-          <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
-            <User size={12} className="text-white/40" />
-            <span className="text-[0.7rem] font-bold uppercase tracking-widest text-white/60">
-              {mode}
-            </span>
-          </div>
-
-          {/* Difficulty Chip */}
-          <button
-            onClick={cycleDifficulty}
-            disabled={!handleDifficultyChange}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border transition-all',
-              difficultyMeta.classes,
-              !handleDifficultyChange && 'cursor-default'
-            )}
-          >
-            <Gauge size={12} />
-            <span>{difficultyMeta.label}</span>
-          </button>
-
-          {/* Bars Chip */}
-          <button
-            onClick={cycleFrequency}
-            disabled={!handleFrequencyChange}
-            className={cn(
-              'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
-              !handleFrequencyChange && 'cursor-default opacity-50'
-            )}
-          >
-            <Zap
-              size={12}
-              className={
-                frequency === 2
-                  ? 'text-accent-red'
-                  : frequency === 4
-                    ? 'text-accent-yellow'
-                    : 'text-accent-blue'
-              }
-            />
-            <span>{frequency} Bars</span>
-          </button>
-        </div>
-
+          <span>{frequency} Bars</span>
+        </button>
+      </div>
 
       {/* Center Stage - Flexible */}
       <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0 mt-4 z-0">
@@ -319,41 +354,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
-          {/* Session Controls - Repositioned to Upper Corners (10 and 2 o'clock) */}
-          {isPlaying && isRecordingEnabled && (
-            <>
-              {/* Back/Discard - Top Left Corner */}
-              {onDiscard && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDiscard()
-                  }}
-                  className="absolute -top-16 left-0 z-40 w-16 h-10 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center"
-                  title="Exit Session"
-                >
-                  <ArrowLeft size={24} />
-                </button>
-              )}
-              {/* Pause - Top Right Corner */}
-              {onTogglePause && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (!isPaused) {
-                      onTogglePause()
-                      setShowPauseModal(true)
-                    }
-                  }}
-                  className="absolute -top-16 right-0 z-40 w-16 h-10 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center"
-                  title="Pause"
-                >
-                  <Pause size={24} />
-                </button>
-              )}
-            </>
-          )}
-
           {/* Simon Ring (Cypher Mode) - SVG Implementation */}
           {mode === 'cypher' && isPlaying && (
             <div className="absolute flex items-center justify-center pointer-events-none z-10">

@@ -110,37 +110,6 @@ export default function DifficultySelectionPage() {
             disabled={false}
           />
 
-          {/* Recording Toggle */}
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div
-                className={cn(
-                  'h-10 w-10 rounded-xl flex items-center justify-center transition-colors',
-                  isRecordingEnabled
-                    ? 'bg-red-500/20 text-red-500'
-                    : 'bg-white/10 text-text-tertiary'
-                )}
-              >
-                <Mic size={20} />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-white">
-                  Capture the Audio
-                </p>
-                <p className="text-xs text-text-tertiary">
-                  {isRecordingEnabled
-                    ? 'Audio will be recorded'
-                    : 'Stealth Mode (No Recording)'}
-                </p>
-              </div>
-            </div>
-            <Switch
-              checked={isRecordingEnabled}
-              onCheckedChange={setIsRecordingEnabled}
-              className="data-[state=checked]:bg-red-500"
-            />
-          </div>
-
           <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
@@ -222,6 +191,37 @@ export default function DifficultySelectionPage() {
                     </button>
                   </div>
 
+                  {/* Recording Toggle (Moved from top) */}
+                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={cn(
+                          'h-10 w-10 rounded-xl flex items-center justify-center transition-colors',
+                          isRecordingEnabled
+                            ? 'bg-red-500/20 text-red-500'
+                            : 'bg-white/10 text-text-tertiary'
+                        )}
+                      >
+                        <Mic size={20} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white">
+                          Capture the Audio
+                        </p>
+                        <p className="text-xs text-text-tertiary">
+                          {isRecordingEnabled
+                            ? 'Audio will be recorded'
+                            : 'Stealth Mode (No Recording)'}
+                        </p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={isRecordingEnabled}
+                      onCheckedChange={setIsRecordingEnabled}
+                      className="data-[state=checked]:bg-red-500"
+                    />
+                  </div>
+
                   {/* Cypher Player Selector (Expands when Cypher is selected) */}
                   {mode === 'cypher' && (
                     <div className="animate-in fade-in slide-in-from-top-2 duration-300 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -245,7 +245,6 @@ export default function DifficultySelectionPage() {
                                 activeClass =
                                   'bg-accent-green border-accent-green shadow-[0_0_15px_rgba(48,209,88,0.5)]'
                                 break
-
                             }
 
                             return (
