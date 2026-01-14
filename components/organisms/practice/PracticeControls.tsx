@@ -174,7 +174,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-2 sm:py-4 relative'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-evenly pt-2 pb-2 sm:py-4 relative'
       )}
     >
       {/* Pause Modal */}
@@ -317,7 +317,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
 
         {/* Hero Player - Centered */}
-        <div className="relative flex items-center justify-center mt-20 sm:mt-24">
+        <div className="relative flex items-center justify-center">
           {/* Session Controls - Repositioned to Upper Corners (10 and 2 o'clock) */}
           {isPlaying && isRecordingEnabled && (
             <>

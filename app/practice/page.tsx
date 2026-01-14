@@ -931,22 +931,22 @@ export default function PracticePage() {
           customSubtitle="Step up and drop your bars"
         />
       }
-      className="bg-black"
-      safeAreaBottom={false}
+      className="bg-background h-[100dvh] overflow-hidden"
     >
+      {/* Schema.org - App Metadata */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'SoftwareApplication',
-            name: 'FreeStyla Practice Studio',
-            operatingSystem: 'iOS, Android, Web',
-            applicationCategory: 'MusicApplication',
+            name: 'FlowForge - Freestyle',
+            applicationCategory: 'LifestyleApplication',
+            operatingSystem: 'Web',
             offers: {
               '@type': 'Offer',
-              price: '3.99',
-              priceCurrency: 'EUR',
+              price: '0',
+              priceCurrency: 'USD',
             },
             aggregateRating: {
               '@type': 'AggregateRating',
@@ -964,7 +964,7 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:pb-8 max-w-lg mx-auto w-full">
+      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-20 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
         {/* Combo / Vibe Overlay - Absolute Top Right */}
         <AnimatePresence>
           {combo > 1 && (

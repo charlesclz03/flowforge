@@ -49,7 +49,7 @@ export function AppHeader({
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
-        <div className="relative flex h-20 items-center justify-center">
+        <div className="relative flex h-14 sm:h-20 items-center justify-center">
           {/* Back button - top left */}
           {showBackButton && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4">
@@ -59,7 +59,7 @@ export function AppHeader({
                 className="mb-0 flex items-center gap-2 text-text-secondary transition-colors hover:text-text-primary"
                 aria-label="Go back"
               >
-                <ArrowLeft size={18} />
+                <ArrowLeft size={18} className="sm:w-6 sm:h-6" />
                 <span className="hidden text-sm sm:inline">Back</span>
               </button>
             </div>
@@ -67,16 +67,15 @@ export function AppHeader({
 
           {/* Account section - top right */}
           {showSettings && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-3">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2 sm:gap-3">
               {/* Streak Counter */}
               {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
                 <div className="group relative">
                   <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
                     <Flame
-                      size={14}
-                      className="sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
                     />
-                    <span className="text-xs sm:text-sm font-bold text-accent-orange tabular-nums">
+                    <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
                       {session?.user?.currentStreak}
                     </span>
                   </div>
@@ -103,7 +102,7 @@ export function AppHeader({
                 aria-label="Go to FreeStyla home"
               >
                 {!customTitle && (
-                  <div className="relative h-8 w-8">
+                  <div className="relative h-6 w-6 sm:h-8 sm:w-8">
                     <Image
                       src="/logo.png"
                       alt="FreeStyla Logo"
@@ -113,7 +112,7 @@ export function AppHeader({
                     />
                   </div>
                 )}
-                <h1 className="text-base sm:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
+                <h1 className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.35em] uppercase text-text-secondary text-center">
                   {customTitle ? (
                     <span className="text-text-primary">{customTitle}</span>
                   ) : (
@@ -125,7 +124,7 @@ export function AppHeader({
                 </h1>
               </Link>
               {customSubtitle && (
-                <p className="block text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5">
+                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5">
                   {customSubtitle}
                 </p>
               )}
