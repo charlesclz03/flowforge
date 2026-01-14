@@ -403,6 +403,10 @@ export default function PracticePage() {
   const handleStop = useCallback(() => {
     play('stop')
     shouldSaveRef.current = true // Default to save
+    // Cancel TTS to stop any ongoing speech
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
     stopSession()
     stopPlayback()
     stopRecording() // This will trigger handleRecordingComplete
