@@ -364,71 +364,74 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   transform: 'rotate(-90deg)', // Align 0 to Top
                 }}
               >
-                {Array.from({ length: cypherPlayers }).map((_, i) => {
-                  const pNum = i + 1
-                  const isActive = Number(activePlayer) === pNum
+                {Array.from({ length: Number(cypherPlayers) || 4 }).map(
+                  (_, i) => {
+                    const pNum = i + 1
+                    const isActive = Number(activePlayer) === pNum
+                    const playerCount = Number(cypherPlayers) || 4
 
-                  // Logic for Rotations based on player count
-                  let rotation = 0
-                  if (cypherPlayers === 2) {
-                    // P1: Left (180), P2: Right (0)
-                    rotation = i === 0 ? 180 : 0
-                  } else if (cypherPlayers === 3) {
-                    // P1: TL (240), P2: TR (0), P3: Bottom (120)
-                    rotation = i === 0 ? 240 : i === 1 ? 0 : 120
-                  } else {
-                    // 4 Players: P1: NW (270), P2: NE (0), P3: SE (90), P4: SW (180)
-                    rotation = i === 0 ? 270 : (i - 1) * 90
+                    // Logic for Rotations based on player count
+                    let rotation = 0
+                    if (playerCount === 2) {
+                      // P1: Left (180), P2: Right (0)
+                      rotation = i === 0 ? 180 : 0
+                    } else if (playerCount === 3) {
+                      // P1: TL (240), P2: TR (0), P3: Bottom (120)
+                      rotation = i === 0 ? 240 : i === 1 ? 0 : 120
+                    } else {
+                      // 4 Players: P1: NW (270), P2: NE (0), P3: SE (90), P4: SW (180)
+                      rotation = i === 0 ? 270 : (i - 1) * 90
+                    }
+
+                    // Color mapping
+                    let color = '#0A84FF'
+                    switch (pNum) {
+                      case 1:
+                        color = '#A855F7' // Purple
+                        break
+                      case 2:
+                        color = '#F97316' // Orange
+                        break
+                      case 3:
+                        color = '#FFD60A' // Gold
+                        break
+                      case 4:
+                        color = '#30D158' // Green
+                        break
+                    }
+
+                    const C = 2 * Math.PI * 45 // Circumference ~282.74
+                    const gap = 4 // units of gap
+                    const segmentAngle = 360 / playerCount
+                    const segmentLength = (segmentAngle / 360) * C - gap
+
+                    return (
+                      <motion.circle
+                        key={i}
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        stroke={color}
+                        strokeLinecap="round"
+                        strokeDasharray={`${segmentLength} ${C - segmentLength}`}
+                        initial={{ opacity: 0.3, strokeWidth: 2 }}
+                        animate={{
+                          opacity: isActive ? 1 : 0.3,
+                          strokeWidth: isActive ? 3 : 2,
+                          filter: isActive
+                            ? `drop-shadow(0 0 4px ${color})`
+                            : 'none',
+                        }}
+                        style={{
+                          transformOrigin: '50px 50px',
+                          transform: `rotate(${rotation}deg)`,
+                        }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )
                   }
-
-                  // Color mapping
-                  let color = '#0A84FF'
-                  switch (pNum) {
-                    case 1:
-                      color = '#A855F7' // Purple
-                      break
-                    case 2:
-                      color = '#F97316' // Orange
-                      break
-                    case 3:
-                      color = '#FFD60A' // Gold
-                      break
-                    case 4:
-                      color = '#30D158' // Green
-                      break
-                  }
-
-                  const C = 2 * Math.PI * 45 // Circumference ~282.74
-                  const gap = 4 // units of gap
-                  const segmentAngle = 360 / cypherPlayers
-                  const segmentLength = (segmentAngle / 360) * C - gap
-
-                  return (
-                    <motion.circle
-                      key={i}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="none"
-                      stroke={color}
-                      strokeLinecap="round"
-                      strokeDasharray={`${segmentLength} ${C - segmentLength}`}
-                      initial={{ opacity: 0.3, strokeWidth: 2 }}
-                      animate={{
-                        opacity: isActive ? 1 : 0.3,
-                        strokeWidth: isActive ? 3 : 2,
-                        filter: isActive
-                          ? `drop-shadow(0 0 4px ${color})`
-                          : 'none',
-                      }}
-                      style={{
-                        transformOrigin: '50px 50px',
-                        transform: `rotate(${rotation}deg)`,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )
-                })}
+                )}
               </svg>
             </div>
           )}
