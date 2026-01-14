@@ -85,7 +85,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     isSirenActive = false,
     sirenPhase = 0,
     activePlayer = 1,
-    cypherPlayers = 1,
+    // cypherPlayers (unused, forced to 4 visual)
     isPaused = false,
     onTogglePause,
     onDiscard,
@@ -356,10 +356,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
           {/* Simon Ring (Cypher Mode) - Replaces Outer Pulsing Ring */}
           {mode === 'cypher' && isPlaying && (
             <div className="absolute flex items-center justify-center pointer-events-none z-10">
-              {Array.from({ length: cypherPlayers }).map((_, i) => {
+              {Array.from({ length: 4 }).map((_, i) => {
                 const pNum = i + 1
                 const isActive = Number(activePlayer) === pNum
-                const rotation = i * (360 / cypherPlayers) - 90 // Start from top
+                const rotation = i * 90 - 45 // NW, NE, SE, SW
 
                 // Color mapping
                 let borderColor = 'transparent'
