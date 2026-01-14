@@ -226,7 +226,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
+      <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-start">
         {/* Top Controls Section - Beat & Info */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
           {/* Beat Selection Dropdown */}
