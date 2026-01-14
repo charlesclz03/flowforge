@@ -226,7 +226,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-start">
+
         {/* Top Controls Section - Beat & Info */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
           {/* Beat Selection Dropdown */}
@@ -287,7 +287,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <span>{frequency} Bars</span>
           </button>
         </div>
-      </div>
+
 
       {/* Center Stage - Flexible */}
       <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0 mt-4 z-0">
