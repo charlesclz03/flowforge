@@ -167,6 +167,11 @@ export default function PracticePage() {
 
   const stopPlayback = useCallback(() => {
     beatPlayer.stop()
+    // Force TTS Stop
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.pause()
+      window.speechSynthesis.cancel()
+    }
     releaseLock()
     sessionTimeRef.current = 0
     setMonotonicTime(0)
@@ -404,7 +409,9 @@ export default function PracticePage() {
     play('stop')
     shouldSaveRef.current = true // Default to save
     // Cancel TTS to stop any ongoing speech
+    // Cancel TTS to stop any ongoing speech
     if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.pause()
       window.speechSynthesis.cancel()
     }
     stopSession()
@@ -418,7 +425,9 @@ export default function PracticePage() {
       play('click')
       shouldSaveRef.current = false // Prevent save
       // Cancel TTS to stop any ongoing speech
+      // Cancel TTS to stop any ongoing speech
       if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.pause()
         window.speechSynthesis.cancel()
       }
       stopPlayback()
@@ -442,7 +451,9 @@ export default function PracticePage() {
   const confirmExit = useCallback(() => {
     handleStop()
     // Explicitly cancel TTS to prevent it from continuing on the next page
+    // Explicitly cancel TTS to prevent it from continuing on the next page
     if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.pause()
       window.speechSynthesis.cancel()
     }
     setShowExitConfirmation(false)
@@ -537,6 +548,8 @@ export default function PracticePage() {
     (text: string, force = false) => {
       if (typeof window === 'undefined' || !window.speechSynthesis) return
       if (!isTTSEnabled && !force) return
+      // Safety: Don't speak if playback is stopped (unless forced e.g. test)
+      if (!force && !beatPlayer.isPlaying && !isRecording) return
       try {
         const u = new SpeechSynthesisUtterance(text)
         u.rate = 1.1
@@ -547,7 +560,7 @@ export default function PracticePage() {
         console.error('TTS Error', err)
       }
     },
-    [isTTSEnabled, ttsVolume, voice]
+    [isTTSEnabled, ttsVolume, voice, beatPlayer.isPlaying, isRecording]
   )
 
   const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
