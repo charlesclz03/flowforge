@@ -230,7 +230,7 @@ export default function DifficultySelectionPage() {
                           Number of Players
                         </label>
                         <div className="flex items-center gap-3">
-                          {[2, 3, 4, 5].map((count) => {
+                          {[2, 3, 4].map((count) => {
                             let activeClass = ''
                             switch (count) {
                               case 2: // Orange
@@ -245,10 +245,7 @@ export default function DifficultySelectionPage() {
                                 activeClass =
                                   'bg-accent-green border-accent-green shadow-[0_0_15px_rgba(48,209,88,0.5)]'
                                 break
-                              case 5: // Blue
-                                activeClass =
-                                  'bg-accent-blue border-accent-blue shadow-[0_0_15px_rgba(10,132,255,0.5)]'
-                                break
+
                             }
 
                             return (

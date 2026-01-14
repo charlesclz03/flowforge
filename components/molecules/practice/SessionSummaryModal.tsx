@@ -109,138 +109,142 @@ export default function SessionSummaryModal({
 
   return (
     <Modal isOpen={!!data} onClose={onClose} title="VICTORY">
-      <div className="space-y-8 py-4">
-        {/* Animated Header */}
-        <div className="text-center space-y-4">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring' }}
-            className="inline-block p-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-neon-gold mb-2"
-          >
-            <Crown size={48} className="text-white fill-white" />
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 uppercase tracking-tighter"
-          >
-            Session Cleared!
-          </motion.h2>
-          <p className="text-text-secondary font-medium">{data.description}</p>
-        </div>
-
-        {/* XP Bar Animation */}
-        <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-          <div className="flex justify-between text-sm font-bold text-text-secondary mb-2">
-            <span>Level {data.xp?.newLevel || 1}</span>
-            <span>
-              {data.xp?.currentXP || 0} / {data.xp?.maxXP || 1000} XP
-            </span>
-          </div>
-          <div className="h-4 bg-black/40 rounded-full overflow-hidden relative">
+      <div className="max-h-[70vh] overflow-y-auto px-1 -mx-1 py-4">
+        <div className="space-y-4">
+          {/* Animated Header */}
+          <div className="text-center space-y-2">
             <motion.div
-              initial={{
-                width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-              }}
-              animate={{
-                width:
-                  step >= 1
-                    ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
-                    : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-              }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
-            />
-            {/* Added XP Chunk */}
-            {step >= 1 && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
-                style={{
-                  left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-                  width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`,
-                }}
-              />
-            )}
-          </div>
-          <div className="mt-2 text-right">
-            <span className="text-green-400 font-bold text-sm">
-              +{data.xp?.gained || 0} XP Gained
-            </span>
-          </div>
-        </div>
-
-        {/* Stats Grid - Pop In */}
-        <div className="grid grid-cols-2 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white/5 p-4 rounded-xl text-center border border-white/5"
-          >
-            <div className="text-3xl font-black text-white">
-              {data.wordCount}
-            </div>
-            <div className="text-xs font-bold uppercase tracking-widest text-text-tertiary">
-              Words
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white/5 p-4 rounded-xl text-center border border-white/5"
-          >
-            {/* Mock Streak until real data integrated */}
-            <div className="text-3xl font-black text-orange-400">🔥 7</div>
-            <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
-              Consistency Streak: 7 Days. Keep the fire burning.
-            </div>
-          </motion.div>
-        </div>
-
-        {/* New Badges Reveal */}
-        <AnimatePresence>
-          {step >= 2 && data.newBadges && data.newBadges.length > 0 && (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-gradient-to-br from-accent-purple/20 to-accent-pink/20 border border-accent-purple/50 rounded-2xl p-6 text-center"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring' }}
+              className="inline-block p-4 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-neon-gold mb-1"
             >
-              <div className="flex flex-col items-center gap-2">
-                <Sparkles
-                  className="text-yellow-300 animate-spin-slow"
-                  size={32}
+              <Crown size={32} className="text-white fill-white" />
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-yellow-300 uppercase tracking-tighter"
+            >
+              Session Cleared!
+            </motion.h2>
+            <p className="text-text-secondary font-medium text-sm">
+              {data.description}
+            </p>
+          </div>
+
+          {/* XP Bar Animation */}
+          <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+            <div className="flex justify-between text-xs font-bold text-text-secondary mb-2">
+              <span>Level {data.xp?.newLevel || 1}</span>
+              <span>
+                {data.xp?.currentXP || 0} / {data.xp?.maxXP || 1000} XP
+              </span>
+            </div>
+            <div className="h-3 bg-black/40 rounded-full overflow-hidden relative">
+              <motion.div
+                initial={{
+                  width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                }}
+                animate={{
+                  width:
+                    step >= 1
+                      ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
+                      : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
+              />
+              {/* Added XP Chunk */}
+              {step >= 1 && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
+                  style={{
+                    left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                    width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`,
+                  }}
                 />
-                <h3 className="font-bold text-xl text-white">
-                  Achievement Unlocked!
-                </h3>
-                <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {data.newBadges.map((badge) => (
-                    <span
-                      key={badge}
-                      className="px-4 py-2 rounded-full bg-accent-purple text-white font-bold text-sm shadow-lg"
-                    >
-                      {badge}
-                    </span>
-                  ))}
-                </div>
+              )}
+            </div>
+            <div className="mt-2 text-right">
+              <span className="text-green-400 font-bold text-xs">
+                +{data.xp?.gained || 0} XP Gained
+              </span>
+            </div>
+          </div>
+
+          {/* Stats Grid - Pop In */}
+          <div className="grid grid-cols-2 gap-3">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/5 p-3 rounded-xl text-center border border-white/5"
+            >
+              <div className="text-2xl font-black text-white">
+                {data.wordCount}
+              </div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-text-tertiary">
+                Words
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/5 p-3 rounded-xl text-center border border-white/5"
+            >
+              {/* Mock Streak until real data integrated */}
+              <div className="text-2xl font-black text-orange-400">🔥 7</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
+                Consistency Streak
+              </div>
+            </motion.div>
+          </div>
 
-        {/* Actions */}
-        <div className="flex justify-center pt-4">
-          <Button
-            onClick={() => router.push('/recordings')}
-            className="w-full max-w-xs bg-white text-black hover:bg-white/90 font-bold"
-          >
-            Continue
-          </Button>
+          {/* New Badges Reveal */}
+          <AnimatePresence>
+            {step >= 2 && data.newBadges && data.newBadges.length > 0 && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="bg-gradient-to-br from-accent-purple/20 to-accent-pink/20 border border-accent-purple/50 rounded-2xl p-4 text-center"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <Sparkles
+                    className="text-yellow-300 animate-spin-slow"
+                    size={24}
+                  />
+                  <h3 className="font-bold text-lg text-white">
+                    Achievement Unlocked!
+                  </h3>
+                  <div className="flex flex-wrap justify-center gap-2 mt-1">
+                    {data.newBadges.map((badge) => (
+                      <span
+                        key={badge}
+                        className="px-3 py-1 rounded-full bg-accent-purple text-white font-bold text-xs shadow-lg"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Actions */}
+          <div className="flex justify-center pt-2">
+            <Button
+              onClick={() => router.push('/recordings')}
+              className="w-full max-w-xs bg-white text-black hover:bg-white/90 font-bold"
+            >
+              Continue
+            </Button>
+          </div>
         </div>
       </div>
       <PWAInstallModal isOpen={showPWA} onClose={() => setShowPWA(false)} />
