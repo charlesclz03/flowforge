@@ -177,41 +177,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
         'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-2 sm:py-4 relative'
       )}
     >
-      {/* Session Controls - Split Left/Right */}
-      {isPlaying && isRecordingEnabled && (
-        <>
-          {/* Back/Discard - Top Left */}
-          {onDiscard && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onDiscard()
-              }}
-              className="absolute top-4 left-4 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
-              title="Exit Session"
-            >
-              <Undo2 size={20} />
-            </button>
-          )}
-          {/* Pause - Top Right */}
-          {onTogglePause && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                if (!isPaused) {
-                  onTogglePause()
-                  setShowPauseModal(true)
-                }
-              }}
-              className="absolute top-4 right-4 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
-              title="Pause"
-            >
-              <Pause size={20} />
-            </button>
-          )}
-        </>
-      )}
-
       {/* Pause Modal */}
       <AnimatePresence>
         {showPauseModal && isPaused && (
@@ -359,6 +324,42 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
+          {/* Session Controls - Beside Player Circle */}
+          {isPlaying && isRecordingEnabled && (
+            <>
+              {/* Back/Discard - Left of Player */}
+              {onDiscard && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDiscard()
+                  }}
+                  className="absolute left-0 sm:-left-16 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
+                  style={{ transform: 'translateX(-120%)' }}
+                  title="Exit Session"
+                >
+                  <Undo2 size={20} />
+                </button>
+              )}
+              {/* Pause - Right of Player */}
+              {onTogglePause && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (!isPaused) {
+                      onTogglePause()
+                      setShowPauseModal(true)
+                    }
+                  }}
+                  className="absolute right-0 sm:-right-16 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
+                  style={{ transform: 'translateX(120%)' }}
+                  title="Pause"
+                >
+                  <Pause size={20} />
+                </button>
+              )}
+            </>
+          )}
           {/* Pulsing Concentric Rings - Only visible when playing */}
           {isPlaying && (
             <>
