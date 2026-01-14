@@ -28,7 +28,7 @@ export function ScreenPage({
   return (
     <main
       className={cn(
-        'relative flex flex-col w-full min-h-[100dvh] bg-background',
+        'relative flex flex-col w-full h-[100dvh] overflow-hidden bg-background',
         className
       )}
       {...props}
@@ -36,8 +36,10 @@ export function ScreenPage({
       {/* Header Area - Sticky if needed, or just normal flow */}
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
-      {/* Content Area - Natural Height */}
-      {children}
+      {/* Content Area - Internal Scrolling */}
+      <div className="flex-1 w-full overflow-y-auto relative z-0 scrollbar-none">
+        {children}
+      </div>
 
       {/* Footer Area */}
       {footer && (
