@@ -29,7 +29,7 @@ export function OnboardingLayout({
   customSubtitle,
 }: OnboardingLayoutProps) {
   return (
-    <div className={cn('min-h-screen bg-black text-white', className)}>
+    <div className={cn('h-[100dvh] overflow-hidden bg-black text-white flex flex-col', className)}>
       {/* Animated background gradient */}
       <div className="fixed inset-0 bg-gradient-to-br from-black via-purple-950/20 to-black" />
 
@@ -38,7 +38,7 @@ export function OnboardingLayout({
       <div className="pointer-events-none fixed bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl animate-pulse delay-1000" />
 
       {/* Page content */}
-      <div className="relative z-10 flex min-h-screen flex-col">
+      <div className="relative z-10 flex h-full flex-col">
         <AppHeader
           showBackButton={showBackButton}
           showSettings={showSettings}
@@ -51,9 +51,9 @@ export function OnboardingLayout({
         <main
           id="main-content"
           role="main"
-          className="flex flex-1 justify-center px-6 pb-24 pt-4 sm:pt-6"
+          className="flex flex-1 flex-col justify-center px-6 pb-24 pt-4 sm:pt-6 overflow-y-auto scrollbar-none"
         >
-          <div className="w-full max-w-4xl">{children}</div>
+          <div className="w-full max-w-4xl mx-auto">{children}</div>
         </main>
       </div>
 

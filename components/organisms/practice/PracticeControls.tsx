@@ -227,8 +227,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </AnimatePresence>
 
       <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
-        {/* Top Controls Section - Compact */}
-        <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
+        {/* Top Controls Section - Beat & Info */}
+        <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
+          {/* Beat Selection Dropdown */}
           <BeatDropdown
             beats={beats}
             selectedBeat={selectedBeat}
@@ -241,7 +242,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
 
         {/* Info Tags - Single Row: Mode, Difficulty, Bars */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 text-xs uppercase tracking-wider">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 text-xs uppercase tracking-wider relative z-20">
           {/* Mode Chip */}
           <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
             <User size={12} className="text-white/40" />
@@ -289,7 +290,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </div>
 
       {/* Center Stage - Flexible */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-center w-full relative min-h-0 mt-4 z-0">
         {error && (
           <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
             {error}
