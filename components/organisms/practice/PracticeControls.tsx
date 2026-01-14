@@ -229,49 +229,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
       <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
         {/* Top Controls Section - Compact */}
         <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0">
-          {/* Beat Dropdown with Session Controls */}
-          <div className="w-full flex items-center justify-center gap-3 px-4">
-            {/* Back/Discard - Left of Dropdown */}
-            {isPlaying && isRecordingEnabled && onDiscard && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDiscard()
-                }}
-                className="p-2.5 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm shrink-0"
-                title="Exit Session"
-              >
-                <Undo2 size={18} />
-              </button>
-            )}
-
-            <BeatDropdown
-              beats={beats}
-              selectedBeat={selectedBeat}
-              handleSelect={handleBeatSelect}
-              isPro={isPro}
-              disabled={false}
-              embedded={true}
-              defaultCollapsed={true}
-            />
-
-            {/* Pause - Right of Dropdown */}
-            {isPlaying && isRecordingEnabled && onTogglePause && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!isPaused) {
-                    onTogglePause()
-                    setShowPauseModal(true)
-                  }
-                }}
-                className="p-2.5 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm shrink-0"
-                title="Pause"
-              >
-                <Pause size={18} />
-              </button>
-            )}
-          </div>
+          <BeatDropdown
+            beats={beats}
+            selectedBeat={selectedBeat}
+            handleSelect={handleBeatSelect}
+            isPro={isPro}
+            disabled={false}
+            embedded={true}
+            defaultCollapsed={true}
+          />
         </div>
 
         {/* Info Tags - Row 1: Mode */}
@@ -332,11 +298,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Cypher Mode Indicator */}
         {/* Cypher Mode: Active Player Text (Floating above) */}
+        {/* Cypher Mode: Active Player Text (Floating above) */}
         {mode === 'cypher' && activePlayer !== 0 && (
-          <div className="absolute top-20 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
+          <div className="absolute top-2 sm:top-8 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
             <span
               className={cn(
-                'text-lg font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
+                'text-sm font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
                 activePlayer === 1 && 'text-accent-purple',
                 activePlayer === 2 && 'text-accent-orange',
                 activePlayer === 3 && 'text-accent-gold',
@@ -346,16 +313,108 @@ export default function PracticeControls(props: PracticeControlsProps) {
             >
               Player {activePlayer}
             </span>
-            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-              Your Turn
-            </span>
           </div>
         )}
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
-          {/* Pulsing Concentric Rings - Only visible when playing */}
-          {isPlaying && (
+          {/* Session Controls - Repositioned to Upper Corners (10 and 2 o'clock) */}
+          {isPlaying && isRecordingEnabled && (
+            <>
+              {/* Back/Discard - Top Left Corner */}
+              {onDiscard && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDiscard()
+                  }}
+                  className="absolute -top-12 left-0 sm:-left-8 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm transform -translate-x-1/2"
+                  title="Exit Session"
+                >
+                  <Undo2 size={20} />
+                </button>
+              )}
+              {/* Pause - Top Right Corner */}
+              {onTogglePause && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (!isPaused) {
+                      onTogglePause()
+                      setShowPauseModal(true)
+                    }
+                  }}
+                  className="absolute -top-12 right-0 sm:-right-8 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm transform translate-x-1/2"
+                  title="Pause"
+                >
+                  <Pause size={20} />
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Simon Ring (Cypher Mode) - Replaces Outer Pulsing Ring */}
+          {mode === 'cypher' && isPlaying && (
+            <div className="absolute flex items-center justify-center pointer-events-none z-10">
+              {Array.from({ length: cypherPlayers }).map((_, i) => {
+                const pNum = i + 1
+                const isActive = Number(activePlayer) === pNum
+                const rotation = i * (360 / cypherPlayers) - 90 // Start from top
+
+                // Color mapping
+                let borderColor = 'transparent'
+                let shadowColor = 'transparent'
+
+                switch (pNum) {
+                  case 1:
+                    borderColor = '#A855F7' // Purple
+                    shadowColor = 'rgba(168, 85, 247, 0.6)'
+                    break
+                  case 2:
+                    borderColor = '#F97316' // Orange
+                    shadowColor = 'rgba(249, 115, 22, 0.6)'
+                    break
+                  case 3:
+                    borderColor = '#FFD60A' // Gold
+                    shadowColor = 'rgba(255, 214, 10, 0.6)'
+                    break
+                  case 4:
+                    borderColor = '#30D158' // Green
+                    shadowColor = 'rgba(48, 209, 88, 0.6)'
+                    break
+                  default:
+                    borderColor = '#0A84FF' // Blue
+                    shadowColor = 'rgba(10, 132, 255, 0.6)'
+                    break
+                }
+
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full border-[6px]"
+                    style={{
+                      width: 'calc(min(65vmin, 300px) + 60px)',
+                      height: 'calc(min(65vmin, 300px) + 60px)',
+                      borderColor: 'transparent',
+                      borderTopColor: borderColor, // Only show top segment
+                      transform: `rotate(${rotation}deg)`,
+                      boxShadow: isActive ? `0 0 30px ${shadowColor}` : 'none',
+                      opacity: isActive ? 1 : 0.3,
+                    }}
+                    animate={isActive ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      repeat: isActive ? Infinity : 0,
+                      repeatDelay: 1,
+                    }}
+                  />
+                )
+              })}
+            </div>
+          )}
+
+          {/* Pulsing Concentric Rings - Standard Mode Only */}
+          {mode !== 'cypher' && isPlaying && (
             <>
               {/* Ring 1 - Inner */}
               <motion.div
@@ -397,97 +456,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 }}
               />
             </>
-          )}
-
-          {/* Radial Cypher Players */}
-          {mode === 'cypher' && (
-            <div className="absolute inset-0 z-20 pointer-events-none">
-              {Array.from({ length: cypherPlayers }).map((_, i) => {
-                const pNum = i + 1
-                const isActive = Number(activePlayer) === pNum
-
-                // Radial Positioning
-                // Using skewed angles to avoid the vertical center where badges sit
-                // P1: -65deg (NW), P2: 65deg (NE), P3: 115deg (SE), P4: -115deg (SW)
-                const angles = [-65, 65, 115, -115]
-                const angleDeg = angles[i % angles.length]
-                const radius = 220 // px - further out to prevent overlap
-                const x = radius * Math.sin(angleDeg * (Math.PI / 180))
-                const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
-
-                // Color Mapping
-                let colorClass = 'text-white border-white/20 bg-white/10'
-                let shadowClass = ''
-                if (isActive) {
-                  switch (pNum) {
-                    case 1:
-                      colorClass =
-                        'text-accent-purple border-accent-purple bg-accent-purple/20'
-                      shadowClass = 'shadow-[0_0_20px_rgba(168,85,247,0.5)]'
-                      break
-                    case 2:
-                      colorClass =
-                        'text-accent-orange border-accent-orange bg-accent-orange/20'
-                      shadowClass = 'shadow-[0_0_20px_rgba(249,115,22,0.5)]'
-                      break
-                    case 3:
-                      colorClass =
-                        'text-accent-gold border-accent-gold bg-accent-gold/20'
-                      shadowClass = 'shadow-[0_0_20px_rgba(255,214,10,0.5)]'
-                      break
-                    case 4:
-                      colorClass =
-                        'text-accent-green border-accent-green bg-accent-green/20'
-                      shadowClass = 'shadow-[0_0_20px_rgba(48,209,88,0.5)]'
-                      break
-                    default:
-                      colorClass =
-                        'text-accent-blue border-accent-blue bg-accent-blue/20'
-                      shadowClass = 'shadow-[0_0_20px_rgba(10,132,255,0.5)]'
-                      break
-                  }
-                } else {
-                  colorClass = 'text-white/20 border-white/5 bg-white/5'
-                }
-
-                return (
-                  <div
-                    key={i}
-                    style={{
-                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                      left: '50%',
-                      top: '50%',
-                    }}
-                    className={cn(
-                      'absolute flex items-center justify-center rounded-full border-2 transition-all duration-500 backdrop-blur-md',
-                      isActive
-                        ? 'w-14 h-14 scale-110 z-30'
-                        : 'w-10 h-10 opacity-50 z-10',
-                      colorClass,
-                      shadowClass
-                    )}
-                  >
-                    <User
-                      size={isActive ? 28 : 18}
-                      strokeWidth={isActive ? 2.5 : 1.5}
-                    />
-                    {isActive && (
-                      <div className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                    )}
-
-                    {/* Player Label */}
-                    <span
-                      className={cn(
-                        'absolute -top-6 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-opacity',
-                        isActive ? 'opacity-100 text-white' : 'opacity-0'
-                      )}
-                    >
-                      Player {pNum}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
           )}
           <motion.button
             id="tour-record-btn"
