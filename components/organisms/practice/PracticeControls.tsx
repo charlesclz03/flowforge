@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
 import {
   RefreshCcw,
@@ -8,9 +9,9 @@ import {
   Mic,
   Pause,
   Play,
-  LogOut,
+  Undo2,
 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
@@ -90,6 +91,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
     onDiscard,
     wordTiming,
   } = props
+
+  // State for pause modal
+  const [showPauseModal, setShowPauseModal] = useState(false)
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -173,40 +177,89 @@ export default function PracticeControls(props: PracticeControlsProps) {
         'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between pt-2 pb-2 sm:py-4 relative'
       )}
     >
-      {/* Top-Right Session Controls (Pause / Exit) */}
+      {/* Session Controls - Split Left/Right */}
       {isPlaying && isRecordingEnabled && (
-        <div className="absolute top-2 right-2 z-40 flex items-center gap-2">
-          {onTogglePause && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                onTogglePause()
-              }}
-              className={cn(
-                'p-2 rounded-full border transition-all',
-                isPaused
-                  ? 'bg-accent-green/20 border-accent-green/30 text-accent-green'
-                  : 'bg-white/10 border-white/10 text-white hover:bg-white/20'
-              )}
-              title={isPaused ? 'Resume' : 'Pause'}
-            >
-              {isPaused ? <Play size={18} /> : <Pause size={18} />}
-            </button>
-          )}
+        <>
+          {/* Back/Discard - Top Left */}
           {onDiscard && (
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 onDiscard()
               }}
-              className="p-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all"
+              className="absolute top-4 left-4 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
               title="Exit Session"
             >
-              <LogOut size={18} />
+              <Undo2 size={20} />
             </button>
           )}
-        </div>
+          {/* Pause - Top Right */}
+          {onTogglePause && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                if (!isPaused) {
+                  onTogglePause()
+                  setShowPauseModal(true)
+                }
+              }}
+              className="absolute top-4 right-4 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm"
+              title="Pause"
+            >
+              <Pause size={20} />
+            </button>
+          )}
+        </>
       )}
+
+      {/* Pause Modal */}
+      <AnimatePresence>
+        {showPauseModal && isPaused && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="flex items-center gap-6 p-6 rounded-2xl bg-background-elevated/90 border border-white/10 backdrop-blur-xl"
+            >
+              {/* Resume Button */}
+              <button
+                onClick={() => {
+                  setShowPauseModal(false)
+                  onTogglePause?.()
+                }}
+                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-accent-purple/20 border border-accent-purple/30 text-accent-purple hover:bg-accent-purple/30 transition-all"
+              >
+                <Play size={32} />
+                <span className="text-xs font-bold uppercase tracking-widest">
+                  Resume
+                </span>
+              </button>
+              {/* Restart Button */}
+              {handleRestart && (
+                <button
+                  onClick={() => {
+                    setShowPauseModal(false)
+                    handleRestart()
+                  }}
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all"
+                >
+                  <RefreshCcw size={32} />
+                  <span className="text-xs font-bold uppercase tracking-widest">
+                    Restart
+                  </span>
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col items-center gap-2 sm:gap-4 w-full h-full justify-between">
         {/* Top Controls Section - Compact */}
@@ -222,67 +275,55 @@ export default function PracticeControls(props: PracticeControlsProps) {
           />
         </div>
 
-        {/* Info Tags (Standardized) */}
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex items-center justify-center gap-2">
-            <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
-              <User size={12} className="text-white/40" />
-              <span className="text-xs font-bold uppercase tracking-widest text-white/60">
-                {mode}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
-            <button
-              onClick={cycleDifficulty}
-              disabled={!handleDifficultyChange}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.65rem] font-bold border transition-all',
-                difficultyMeta.classes,
-                !handleDifficultyChange && 'cursor-default'
-              )}
-            >
-              <Gauge size={12} />
-              <span>{difficultyMeta.label}</span>
-            </button>
-
-            <span className="text-[0.65rem] font-bold text-white/20">
-              {selectedBeat?.bpm || 90} BPM
+        {/* Info Tags - Row 1: Mode */}
+        <div className="flex items-center justify-center">
+          <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 flex items-center gap-2">
+            <User size={12} className="text-white/40" />
+            <span className="text-xs font-bold uppercase tracking-widest text-white/60">
+              {mode}
             </span>
-
-            <button
-              onClick={cycleFrequency}
-              disabled={!handleFrequencyChange}
-              className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[0.65rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
-                !handleFrequencyChange && 'cursor-default opacity-50'
-              )}
-            >
-              <Zap
-                size={12}
-                className={
-                  frequency === 2
-                    ? 'text-accent-red'
-                    : frequency === 4
-                      ? 'text-accent-yellow'
-                      : 'text-accent-blue'
-                }
-              />
-              <span>{frequency} Bars</span>
-            </button>
           </div>
-          {handleRestart && (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleRestart}
-              className="mt-1 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 text-text-tertiary hover:text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest transition-colors flex items-center gap-1.5"
-            >
-              <RefreshCcw size={10} />
-              <span>Restart</span>
-            </motion.button>
-          )}
+        </div>
+
+        {/* Info Tags - Row 2: Difficulty, BPM, Bars */}
+        <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
+          <button
+            onClick={cycleDifficulty}
+            disabled={!handleDifficultyChange}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border transition-all',
+              difficultyMeta.classes,
+              !handleDifficultyChange && 'cursor-default'
+            )}
+          >
+            <Gauge size={12} />
+            <span>{difficultyMeta.label}</span>
+          </button>
+
+          <span className="text-[0.7rem] font-bold text-white/40">
+            {selectedBeat?.bpm || 90} BPM
+          </span>
+
+          <button
+            onClick={cycleFrequency}
+            disabled={!handleFrequencyChange}
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[0.7rem] font-bold border border-white/10 bg-white/5 hover:bg-white/10 transition-colors',
+              !handleFrequencyChange && 'cursor-default opacity-50'
+            )}
+          >
+            <Zap
+              size={12}
+              className={
+                frequency === 2
+                  ? 'text-accent-red'
+                  : frequency === 4
+                    ? 'text-accent-yellow'
+                    : 'text-accent-blue'
+              }
+            />
+            <span>{frequency} Bars</span>
+          </button>
         </div>
       </div>
 
@@ -318,6 +359,51 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
         {/* Hero Player - Centered */}
         <div className="relative flex items-center justify-center">
+          {/* Pulsing Concentric Rings - Only visible when playing */}
+          {isPlaying && (
+            <>
+              {/* Ring 1 - Inner */}
+              <motion.div
+                className="absolute rounded-full border-2 pointer-events-none"
+                style={{
+                  width: 'calc(min(65vmin, 300px) + 40px)',
+                  height: 'calc(min(65vmin, 300px) + 40px)',
+                  borderColor: 'rgba(74, 72, 176, 0.4)',
+                  boxShadow: '0 0 20px rgba(74, 72, 176, 0.2)',
+                }}
+                animate={{
+                  scale: [1, 1.08, 1],
+                  opacity: [0.6, 0.3, 0.6],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+              {/* Ring 2 - Outer */}
+              <motion.div
+                className="absolute rounded-full border-2 pointer-events-none"
+                style={{
+                  width: 'calc(min(65vmin, 300px) + 80px)',
+                  height: 'calc(min(65vmin, 300px) + 80px)',
+                  borderColor: 'rgba(61, 59, 142, 0.3)',
+                  boxShadow: '0 0 30px rgba(61, 59, 142, 0.15)',
+                }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.4, 0.15, 0.4],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 0.2,
+                }}
+              />
+            </>
+          )}
+
           {/* Radial Cypher Players */}
           {mode === 'cypher' && (
             <div className="absolute inset-0 z-20 pointer-events-none">
