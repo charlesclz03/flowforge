@@ -9,7 +9,7 @@ import {
   Mic,
   Pause,
   Play,
-  Undo2,
+  ArrowLeft,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -329,10 +329,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     e.stopPropagation()
                     onDiscard()
                   }}
-                  className="absolute -top-12 left-0 sm:-left-8 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm transform -translate-x-1/2"
+                  className="absolute -top-16 left-0 z-40 w-16 h-10 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center"
                   title="Exit Session"
                 >
-                  <Undo2 size={20} />
+                  <ArrowLeft size={24} />
                 </button>
               )}
               {/* Pause - Top Right Corner */}
@@ -345,10 +345,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       setShowPauseModal(true)
                     }
                   }}
-                  className="absolute -top-12 right-0 sm:-right-8 z-40 p-3 rounded-full bg-background-elevated/80 border border-white/10 text-white/70 hover:text-white hover:bg-background-elevated transition-all backdrop-blur-sm transform translate-x-1/2"
+                  className="absolute -top-16 right-0 z-40 w-16 h-10 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md flex items-center justify-center"
                   title="Pause"
                 >
-                  <Pause size={20} />
+                  <Pause size={24} />
                 </button>
               )}
             </>
