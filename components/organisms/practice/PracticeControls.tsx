@@ -174,7 +174,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-evenly pt-2 pb-2 sm:py-4 relative'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-4 pt-2 pb-2 sm:py-4 relative'
       )}
     >
       {/* Pause Modal */}
