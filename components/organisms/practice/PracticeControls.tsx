@@ -88,7 +88,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     cypherPlayers = 4,
     isPaused = false,
     onTogglePause,
-    onDiscard,
+    onDiscard, // Keeping prop definition but removing usage warnings if any
     wordTiming,
   } = props
 
@@ -298,21 +298,21 @@ export default function PracticeControls(props: PracticeControlsProps) {
       {/* Row 2: SATELLITES (Exit & Pause) */}
       {/* Fixed height to prevent layout shift when buttons appear */}
       <div className="w-full max-w-lg flex items-center justify-between px-4 mt-2 sm:mt-4 relative z-20 min-h-14">
-        {/* Left: EXIT */}
+        {/* Left: RESTART */}
         <div className="w-14 flex justify-center">
-          {isPlaying && onDiscard && (
+          {isPlaying && handleRestart && (
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={(e) => {
                 e.stopPropagation()
-                onDiscard()
+                handleRestart()
               }}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
-              title="Exit Session"
+              title="Restart Session"
             >
-              <ArrowLeft size={24} />
+              <RefreshCcw size={24} />
             </motion.button>
           )}
         </div>

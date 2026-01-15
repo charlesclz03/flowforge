@@ -164,6 +164,14 @@ export default function PracticePage() {
   const [isSirenActive, setIsSirenActive] = useState(false)
   const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
 
+  // Pending Action State for Safety Modal
+  // 'exit' -> Go to difficulty selection
+  // 'restart' -> Stop and restart session (countwodn)
+  // 'finish' -> Stop and save session
+  const [pendingAction, setPendingAction] = useState<
+    'exit' | 'restart' | 'finish' | null
+  >(null)
+
   // Track relative timing for the UI ring
   const [wordTiming, setWordTiming] = useState({ start: 0, duration: 0 })
 
@@ -437,6 +445,7 @@ export default function PracticePage() {
     if (isRecording || beatPlayer.isPlaying) {
       // Pause playback while deciding
       if (beatPlayer.isPlaying) beatPlayer.pause()
+      setPendingAction('exit')
       setShowExitConfirmation(true)
     } else {
       router.push('/difficultyselection')
@@ -445,11 +454,43 @@ export default function PracticePage() {
 
   const confirmExit = useCallback(() => {
     isStoppingRef.current = true // Sync Guard
-    handleStop()
     stopTTS()
     setShowExitConfirmation(false)
-    router.push('/difficultyselection')
-  }, [handleStop, router, stopTTS])
+
+    if (pendingAction === 'restart') {
+      // Cleanest way is to stop everything, then effectively "press start" again
+      // handleStop clears session state
+      play('click')
+      shouldSaveRef.current = false // Don't save abandoned session
+      stopSession()
+      stopPlayback()
+      stopRecording()
+      setIsPaused(false)
+
+      // Short delay to allow state to settle before restarting
+      setTimeout(() => {
+        startCountdown()
+      }, 100)
+    } else if (pendingAction === 'finish') {
+      // User chose to Finish and Save
+      handleStop() // This saves by default (shouldSaveRef defaults true in handleStop)
+    } else {
+      // Default: Exit
+      handleStop()
+      router.push('/difficultyselection')
+    }
+    setPendingAction(null)
+  }, [
+    handleStop,
+    router,
+    stopTTS,
+    pendingAction,
+    play,
+    stopPlayback,
+    stopRecording,
+    stopSession,
+    startCountdown,
+  ])
 
   // Warn on browser refresh/close if recording
   useEffect(() => {
@@ -718,6 +759,27 @@ export default function PracticePage() {
     },
     [isRecording, handleStop, setBeat]
   )
+
+  const handleRestart = useCallback(() => {
+    if (isRecording || beatPlayer.isPlaying) {
+      if (beatPlayer.isPlaying) beatPlayer.pause()
+      setPendingAction('restart')
+      setShowExitConfirmation(true)
+    } else {
+      // Just start over if not running (rare)
+      startCountdown()
+    }
+  }, [isRecording, beatPlayer, startCountdown])
+
+  const handleCenterStop = useCallback(() => {
+    if (isRecording) {
+      if (beatPlayer.isPlaying) beatPlayer.pause()
+      setPendingAction('finish')
+      setShowExitConfirmation(true)
+    } else {
+      handlePlayPause()
+    }
+  }, [isRecording, beatPlayer, handlePlayPause])
 
   // Sync Logic
   const sessionStateRef = useRef({
@@ -1081,7 +1143,8 @@ export default function PracticePage() {
               isLoading={!isLoaded || beatPlayer.isLoading}
               currentTime={monotonicTime}
               sessionDuration={sessionDuration}
-              handleToggle={handlePlayPause}
+              handleToggle={handleCenterStop}
+              handleRestart={handleRestart}
               handleBeatSelect={handleBeatSelection}
               difficulty={difficulty}
               frequency={frequency}
@@ -1148,18 +1211,31 @@ export default function PracticePage() {
       >
         <div className="space-y-4">
           <p className="text-text-secondary">
-            Your recording is in progress. Leaving now will discard this
-            session.
+            {pendingAction === 'restart'
+              ? 'Are you sure you want to restart? Current progress will be lost.'
+              : pendingAction === 'finish'
+                ? 'Stop recording and save your session?'
+                : 'Your recording is in progress. Leaving now will discard this session.'}
           </p>
           <div className="flex gap-3 justify-end">
             <Button
               variant="ghost"
-              onClick={() => setShowExitConfirmation(false)}
+              onClick={() => {
+                setShowExitConfirmation(false)
+                setPendingAction(null)
+              }}
             >
               Resume
             </Button>
-            <Button variant="danger" onClick={confirmExit}>
-              Stop & Exit
+            <Button
+              variant={pendingAction === 'finish' ? 'primary' : 'danger'}
+              onClick={confirmExit}
+            >
+              {pendingAction === 'restart'
+                ? 'Restart'
+                : pendingAction === 'finish'
+                  ? 'Finish & Save'
+                  : 'Stop & Exit'}
             </Button>
           </div>
         </div>
