@@ -34,7 +34,7 @@ const withPWA = require('next-pwa')({
 
 if (process.env.NODE_ENV === 'development') {
   module.exports = withPWA(nextConfig)
-} else {
+} else if (process.env.SENTRY_AUTH_TOKEN) {
   module.exports = withSentryConfig(
     withPWA(nextConfig),
     {
@@ -66,4 +66,7 @@ if (process.env.NODE_ENV === 'development') {
       disableLogger: true,
     }
   )
+} else {
+  // Production build without Sentry (e.g. CI without secrets)
+  module.exports = withPWA(nextConfig)
 }
