@@ -93,11 +93,53 @@ export default function TermsPage() {
             </h3>
             <p>
               The Service, including but not limited to its
-              &quot;FreeStyla&quot; code, design, interface, graphics, and
-              pre-loaded instrumental beats (&quot;System Beats&quot;), is the
-              exclusive property of FreeStyla or its licensors. You may not
-              copy, modify, distribute, sell, or lease any part of our Service
-              or included software.
+              &quot;FreeStyla&quot; code, design, interface, graphics, and ALL
+              instrumental beats (&quot;System Beats&quot;), is the exclusive
+              property of FreeStyla or its licensors. You acknowledge that you
+              have no ownership rights in the System Beats.
+            </p>
+
+            <h3 className="text-lg font-semibold text-white mt-4 mb-2">
+              4.3 Beat Usage License
+            </h3>
+            <p className="mb-2">
+              We grant you a limited, non-sublicensable license to use System
+              Beats solely as follows:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 mt-2">
+              <li>
+                <strong>✅ Permitted:</strong> You may use System Beats to
+                create, record, and practice freestyle sessions within the
+                FreeStyla application.
+              </li>
+              <li>
+                <strong>✅ Permitted:</strong> You may share video or audio
+                recordings exported directly from FreeStyla (which contain the
+                System Beat) on personal social media platforms (e.g.,
+                Instagram, TikTok, YouTube) for non-commercial, promotional
+                purposes.
+              </li>
+              <li>
+                <strong>❌ Prohibited:</strong> You may NOT distribute, sell, or
+                upload any track containing a System Beat to digital service
+                providers (DSPs) such as Spotify, Apple Music, SoundCloud
+                (monetized), or any other streaming service.
+              </li>
+              <li>
+                <strong>❌ Prohibited:</strong> You may NOT extract, download,
+                or use the System Beat files separately from the FreeStyla
+                application for any purpose.
+              </li>
+              <li>
+                <strong>❌ Prohibited:</strong> You may NOT use System Beats for
+                commercial advertisements (TV, Radio, Online Ads) or third-party
+                commercial projects without a separate written license from
+                FreeStyla.
+              </li>
+            </ul>
+            <p className="mt-4 text-accent-red font-bold">
+              Violation of this license may result in immediate account
+              termination and legal action for copyright infringement.
             </p>
           </section>
 
@@ -143,7 +185,8 @@ export default function TermsPage() {
               </li>
               <li>
                 Infringe upon the intellectual property rights of others (e.g.,
-                rapping over copyrighted beats you do not have rights to).
+                rapping over copyrighted beats you do not have rights to) or
+                violate the <strong>Beat Usage License</strong> (Section 4.3).
               </li>
               <li>
                 Attempt to reverse engineer, decompile, or extract source code
