@@ -17,8 +17,7 @@ export function AdminUploadSection() {
   const [title, setTitle] = useState('')
   const [bpm, setBpm] = useState('')
   const [producer, setProducer] = useState('')
-  const [genre, setGenre] = useState('Trap')
-  const [tags, setTags] = useState('')
+  const [genre, setGenre] = useState('Hip-Hop')
   const [file, setFile] = useState<File | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +81,7 @@ export function AdminUploadSection() {
           artistName: producer,
           genre,
           storageUrl: publicUrl,
-          tags,
+          tags: '',
         }),
       })
 
@@ -99,7 +98,6 @@ export function AdminUploadSection() {
       setTitle('')
       setBpm('')
       setProducer('')
-      setTags('')
       setFile(null)
       const fileInput = document.getElementById(
         'beat-upload'
@@ -209,7 +207,7 @@ export function AdminUploadSection() {
             </div>
 
             {/* Style / Genre */}
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium text-text-secondary">
                 Genre
               </label>
@@ -218,26 +216,20 @@ export function AdminUploadSection() {
                 onChange={(e) => setGenre(e.target.value)}
                 className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple appearance-none"
               >
+                <option value="Hip-Hop">Hip-Hop (General)</option>
+                <option value="Old School">Old School / Boom Bap</option>
                 <option value="Trap">Trap</option>
-                <option value="Boom Bap">Boom Bap</option>
-                <option value="Lo-Fi">Lo-Fi</option>
                 <option value="Drill">Drill</option>
+                <option value="Lo-Fi">Lo-Fi</option>
+                <option value="West Coast">West Coast</option>
+                <option value="East Coast">East Coast</option>
+                <option value="Underground">Underground</option>
+                <option value="Grime">Grime</option>
+                <option value="Experimental">Experimental</option>
+                <option value="Afrobeat">Afrobeat</option>
                 <option value="R&B">R&B</option>
+                <option value="Soul">Soul</option>
               </select>
-            </div>
-
-            {/* Tags */}
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-medium text-text-secondary">
-                Tags (comma separated)
-              </label>
-              <input
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                placeholder="e.g. moody, hard, fast"
-                className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple"
-              />
             </div>
           </div>
 
