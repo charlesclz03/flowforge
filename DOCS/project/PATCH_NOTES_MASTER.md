@@ -1,5 +1,27 @@
 # Patch Notes Master List
 
+## v0.9.27 - The True Timer Fix ⏱️
+**Released:** 2026-01-15
+
+### ⏰ Timer Accuracy
+Fixed a critical bug where the session timer ran at 2x speed.
+- **Root Cause:** React StrictMode was double-invoking effects, spawning duplicate animation loops.
+- **Fix:** Added `animationFrameRef` guard and disabled StrictMode in production.
+- **Result:** Timer now counts at exactly 1 second per real second.
+
+### 🧹 Code Quality
+- Added proper cleanup for all animation loop exit paths.
+- All frame IDs now tracked via ref for reliable cancellation.
+
+---
+
+## v0.9.26 - Stability Fixes
+**Released:** 2026-01-15
+- Removed unstable object references from timer effect dependencies.
+- Added fixed height to control buttons row to prevent layout shift.
+
+---
+
 ## v0.9.25 - The Mobile & Precision Update 📱
 **Released:** 2026-01-15
 

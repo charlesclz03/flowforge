@@ -1,9 +1,19 @@
 # Changelog
 
+## v0.9.27 - The True Timer Fix
+- **Fix (Critical)**: Timer was running at 2x speed due to React StrictMode double-invoking effects. Fixed by adding `animationFrameRef` guard and disabling StrictMode.
+- **Fix (Core)**: All animation loop exit paths now properly cleanup frame references.
+
+## v0.9.26 - Stability Fixes
+- **Fix (Core)**: Removed unstable `beatPlayer` object reference from effect dependencies.
+- **Fix (UI)**: Added `min-h-14` to control buttons row to prevent layout shift when buttons appear.
+
+## v0.9.25 - The Mobile & Precision Update
+- **Fix (Mobile)**: Practice ring now caps at 45% viewport height.
+- **Fix (UI)**: Split Exit/Pause buttons into dedicated row.
+- **Fix (Core)**: Grid Lock frequency change no longer freezes timer.
+
 ## v0.9.20 - The Precision Update (UI & Timing)
-- **Feature (UI)**: "Satellite Layout" for Practice Controls. Moved Exit/Pause buttons to absolute top corners to prevent cropping and width overflow on mobile.
-- **Fix (Core)**: Implemented "Grid Lock" timing engine. Word switching is now calculated via Bar Index (`floor(bars / frequency)`) rather than time accumulation, solving the "every bar" drift bug.
-- **Fix (Layout)**: Removed dangerous `justify-center` from `OnboardingLayout`, fixing top-content clipping on scrollable pages (How It Works, Profile, etc.).
 
 ## v0.9.19 - The Polish Update (Scalability & Audio)
 - **Fix (Audio)**: Solved 0.5s audio loop delay by removing manual seek hacks and relying on native browser looping.
