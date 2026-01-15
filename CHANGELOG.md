@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.28 - Cypher Rings Restored
+- **Fix (Regression)**: Restored missing SVG turn rings in Cypher Mode (previously accidentally removed during cleanup).
+
 ## v0.9.27 - The True Timer Fix
 - **Fix (Critical)**: Timer was running at 2x speed due to React StrictMode double-invoking effects. Fixed by adding `animationFrameRef` guard and disabling StrictMode.
 - **Fix (Core)**: All animation loop exit paths now properly cleanup frame references.

@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.28',
+    date: '2026-01-15',
+    title: 'Cypher Rings Restored 💍',
+    codename: 'The One Ring',
+    description:
+      'Fixed a regression where the player turn indicators in Cypher Mode were missing. The visual rings are back!',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '💍 **Cypher Mode**: Restored missing player turn rings.',
+          '🎨 **Visual Fix**: Corrected SVG rendering for player segments.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.27',
     date: '2026-01-15',
     title: 'The True Timer Fix ⏱️',

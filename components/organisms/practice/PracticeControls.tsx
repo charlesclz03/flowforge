@@ -388,7 +388,48 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 >
                   {Array.from({ length: Number(cypherPlayers) || 4 }).map(
                     (_, i) => {
-                      return <motion.circle key={i} /* ... */ />
+                      // Calculate segment properties for ring
+                      const total = Number(cypherPlayers) || 4 // Fallback safely
+                      const radius = 48 // Radius (fits in 100x100)
+                      const circumference = 2 * Math.PI * radius
+                      const GAP_SIZE = 4 // Gap between segments in px
+                      
+                      // Length of one active segment
+                      const segmentLength = (circumference / total) - GAP_SIZE
+                      
+                      // Rotation per segment to distribute around circle
+                      const rotation = (360 / total) * i
+
+                      const isActive = (activePlayer || 1) - 1 === i // activePlayer is 1-based usually, check logic
+
+                      // Note: activePlayer default is 1 in props destructuring. 
+                      // If logic uses 1-based index (Player 1, Player 2...), we subtract 1.
+                      // If 0-based, we remove subtraction. Standard game logic usually 1-indexed for display.
+                      // Let's assume 1-based for now based on 'activePlayer = 1' default.
+
+                      return (
+                        <motion.circle
+                          key={i}
+                          cx="50"
+                          cy="50"
+                          r={radius}
+                          fill="none"
+                          stroke={isActive ? '#FFFFFF' : 'rgba(255,255,255,0.1)'}
+                          strokeWidth={isActive ? 3 : 2}
+                          strokeDasharray={`${segmentLength} ${circumference}`}
+                          strokeLinecap="round"
+                          initial={false}
+                          animate={{
+                            stroke: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.1)',
+                            scale: isActive ? 1.02 : 1,
+                            opacity: 1,
+                          }}
+                          style={{
+                            transformOrigin: '50px 50px',
+                            transform: `rotate(${rotation}deg)`,
+                          }}
+                        />
+                      )
                     }
                   )}
                 </svg>
