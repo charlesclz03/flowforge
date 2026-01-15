@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
-import { Upload, Music, Check } from 'lucide-react'
+import { Upload, Music, Check, Crown, Unlock } from 'lucide-react'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { Spinner } from '@/components/atoms/Spinner'
@@ -17,7 +17,8 @@ export function AdminUploadSection() {
   const [title, setTitle] = useState('')
   const [bpm, setBpm] = useState('')
   const [producer, setProducer] = useState('')
-  const [genre, setGenre] = useState('Hip-Hop')
+  const [genre, setGenre] = useState('')
+  const [isPremium, setIsPremium] = useState(false)
   const [file, setFile] = useState<File | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,9 +27,13 @@ export function AdminUploadSection() {
     }
   }
 
+  const handleTogglePremium = () => {
+    setIsPremium(!isPremium)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!file || !title || !bpm) {
+    if (!file || !title || !bpm || !genre || !producer) {
       setError('Please fill in all required fields')
       return
     }
@@ -80,6 +85,7 @@ export function AdminUploadSection() {
           bpm,
           artistName: producer,
           genre,
+          isPremium,
           storageUrl: publicUrl,
           tags: '',
         }),
@@ -98,6 +104,8 @@ export function AdminUploadSection() {
       setTitle('')
       setBpm('')
       setProducer('')
+      setGenre('')
+      setIsPremium(false)
       setFile(null)
       const fileInput = document.getElementById(
         'beat-upload'
@@ -113,7 +121,49 @@ export function AdminUploadSection() {
   }
 
   return (
-    <Card title="Admin Zone: Upload Beats" className="border-accent-purple/30">
+    <Card
+      title="Admin Zone: Upload Beats"
+      className="border-accent-purple/30"
+      action={
+        <button
+          onClick={handleTogglePremium}
+          className={`relative min-w-[120px] h-10 rounded-full flex items-center p-1 transition-all ${
+            isPremium
+              ? 'bg-accent-purple/20 border border-accent-purple/50'
+              : 'bg-white/5 border border-white/10'
+          }`}
+          title={isPremium ? 'Premium Track' : 'Free Track'}
+        >
+          {/* Slider Background Indicator */}
+          className=
+          {`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full transition-all duration-300 ${
+            isPremium
+              ? 'left-[calc(50%+2px)] bg-accent-purple'
+              : 'left-1 bg-white/20'
+          }`}
+          {/* Wrapper for content */}
+          <div className="flex w-full justify-between items-center px-1 z-10">
+            {/* Free Side */}
+            <div
+              className={`flex-1 flex justify-center transition-colors ${
+                !isPremium ? 'text-white' : 'text-white/30'
+              }`}
+            >
+              <Unlock size={16} />
+            </div>
+
+            {/* Premium Side */}
+            <div
+              className={`flex-1 flex justify-center transition-colors ${
+                isPremium ? 'text-white' : 'text-white/30'
+              }`}
+            >
+              <Crown size={16} />
+            </div>
+          </div>
+        </button>
+      }
+    >
       <div className="space-y-6">
         <p className="text-sm text-text-secondary">
           Upload new instrumental tracks to the public library. These will be
@@ -195,7 +245,7 @@ export function AdminUploadSection() {
             {/* Producer */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-text-secondary">
-                Producer Name
+                Producer Name *
               </label>
               <input
                 type="text"
@@ -203,19 +253,24 @@ export function AdminUploadSection() {
                 onChange={(e) => setProducer(e.target.value)}
                 placeholder="e.g. FreeStyla Originals"
                 className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple"
+                required
               />
             </div>
 
             {/* Style / Genre */}
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium text-text-secondary">
-                Genre
+                Genre *
               </label>
               <select
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
                 className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple appearance-none"
+                required
               >
+                <option value="" disabled>
+                  Select Genre
+                </option>
                 <option value="Hip-Hop">Hip-Hop (General)</option>
                 <option value="Old School">Old School / Boom Bap</option>
                 <option value="Trap">Trap</option>

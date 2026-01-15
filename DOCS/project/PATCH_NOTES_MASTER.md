@@ -1,9 +1,21 @@
-# Patch Notes Master List
+## v0.9.29 - The Safe Resume & Admin Polish Update 💎 (2026-01-15)
+**Codename:** Smooth Operator
 
-## v0.9.27 - The True Timer Fix ⏱️
-**Released:** 2026-01-15
+We’ve ironed out the playback wrinkles in Practice Mode (resuming works perfectly now!) and gave the Admin Beat Upload experience a serious upgrade with better layouts and stricter data controls.
 
-### ⏰ Timer Accuracy
+### Fixes & Improvements
+- ⏯️ **Perfect Resume**: Fixed a bug where resuming a paused session wouldn't restart the beat. Now it picks up exactly where you left off.
+- 🧼 **Safe Pausing**: Switching browser tabs now safely pauses your session instead of stopping it completely.
+- 🎹 **Spacebar Safety**: Pressing Spacebar now gently pauses the session (with confirmation) instead of abruptly ending it.
+
+### New Features
+- 🎛️ **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.
+- 🏷️ **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.
+- 🔒 **Data Integrity**: Producer Name and Genre are now mandatory fields for new uploads.
+
+---
+
+## v0.9.28 - Cypher Rings Restored 💍 (2026-01-15)
 Fixed a critical bug where the session timer ran at 2x speed.
 - **Root Cause:** React StrictMode was double-invoking effects, spawning duplicate animation loops.
 - **Fix:** Added `animationFrameRef` guard and disabled StrictMode in production.

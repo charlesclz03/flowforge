@@ -21,6 +21,32 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.29',
+    date: '2026-01-15',
+    title: 'The Safe Resume & Admin Polish Update 💎',
+    codename: 'Smooth Operator',
+    description:
+      'We’ve ironed out the playback wrinkles in Practice Mode (resuming works perfectly now!) and gave the Admin Beat Upload experience a serious upgrade with better layouts and stricter data controls.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          "⏯️ **Perfect Resume**: Fixed a bug where resuming a paused session wouldn't restart the beat. Now it picks up exactly where you left off.",
+          '🧼 **Safe Pausing**: Switching browser tabs now safely pauses your session instead of stopping it completely.',
+          '🎹 **Spacebar Safety**: Pressing Spacebar now gently pauses the session (with confirmation) instead of abruptly ending it.',
+        ],
+      },
+      {
+        category: 'New Features',
+        items: [
+          '🎛️ **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.',
+          '🏷️ **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.',
+          '🔒 **Data Integrity**: Producer Name and Genre are now mandatory fields for new uploads.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.28',
     date: '2026-01-15',
     title: 'Cypher Rings Restored 💍',

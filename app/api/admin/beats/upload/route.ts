@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
       genre,
       storageUrl,
       tags: tagsRaw,
+      isPremium,
     } = await req.json()
 
     if (!storageUrl || !title || !bpm) {
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
         genre: genre || 'Freestyle',
         difficulty: 'Medium',
         storageUrl,
-        isPremium: true,
+        isPremium: !!isPremium, // Use provided value or false
         duration: 0, // Placeholder
         tags: tags,
       },
