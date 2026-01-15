@@ -990,7 +990,7 @@ export default function PracticePage() {
         return
       if (e.code === 'Space') {
         e.preventDefault()
-        handlePlayPause()
+        handleCenterStop()
       }
       if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying)
         startRecording(!isPro)
@@ -1004,7 +1004,7 @@ export default function PracticePage() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [
-    handlePlayPause,
+    handleCenterStop,
     isRecording,
     beatPlayer.isPlaying,
     startRecording,
@@ -1014,12 +1014,19 @@ export default function PracticePage() {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.hidden && beatPlayer.isPlaying) handlePlayPause()
+      // If hidden and playing, Pause (don't Stop/Finish)
+      if (document.hidden && beatPlayer.isPlaying) {
+        beatPlayer.pause()
+        // We can't easily call togglePause here because it toggles, and we want explicit PAUSE.
+        // But we DO want to update proper state if possible.
+        // For now, pausing audio is the critical part to stop noise.
+        // Ideally, we'd invoke the pause logic from togglePause.
+      }
     }
     window.addEventListener('visibilitychange', handleVisibilityChange)
     return () =>
       window.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [beatPlayer.isPlaying, handlePlayPause])
+  }, [beatPlayer])
 
   useEffect(() => {
     if (isLoaded && !selectedBeat) router.push('/difficultyselection')
