@@ -19,7 +19,8 @@ export function Modal({
   title,
   children,
   className,
-}: ModalProps) {
+  showCloseButton = true,
+}: ModalProps & { showCloseButton?: boolean }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export function Modal({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
+        onClick={showCloseButton ? onClose : undefined}
       />
 
       {/* Card */}
@@ -52,12 +53,14 @@ export function Modal({
         )}
       >
         {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-text-secondary hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10"
-        >
-          <X size={20} />
-        </button>
+        {showCloseButton && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-text-secondary hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10"
+          >
+            <X size={20} />
+          </button>
+        )}
 
         <div className="p-6">
           {title && (

@@ -373,94 +373,83 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
           {/* Hero Player - Centered */}
           <div className="relative flex items-center justify-center">
-            {/* Radial Cypher Players */}
-            {mode === 'cypher' && (
-              <div className="absolute inset-0 z-20 pointer-events-none">
-                {Array.from({ length: cypherPlayers }).map((_, i) => {
-                  const pNum = i + 1
-                  const isActive = Number(activePlayer) === pNum
+            {/* Simon Ring (Cypher Mode) - SVG Implementation */}
+            {mode === 'cypher' && isPlaying && (
+              <div className="absolute flex items-center justify-center pointer-events-none z-10">
+                <svg
+                  viewBox="0 0 100 100"
+                  style={{
+                    width: 'calc(min(60vmin, 260px) + 60px)',
+                    height: 'calc(min(60vmin, 260px) + 60px)',
+                    transform: 'rotate(-90deg)', // Align 0 to Top
+                  }}
+                >
+                  {Array.from({ length: cypherPlayers }).map((_, i) => {
+                    const pNum = i + 1
+                    const isActive = Number(activePlayer) === pNum
 
-                  // Radial Positioning
-                  // Using skewed angles to avoid the vertical center where badges sit
-                  // P1: -65deg (NW), P2: 65deg (NE), P3: 115deg (SE), P4: -115deg (SW)
-                  const angles = [-65, 65, 115, -115]
-                  const angleDeg = angles[i % angles.length]
-                  const radius = 220 // px - further out to prevent overlap
-                  const x = radius * Math.sin(angleDeg * (Math.PI / 180))
-                  const y = -radius * Math.cos(angleDeg * (Math.PI / 180))
+                    // Logic for Rotations based on player count
+                    let rotation = 0
+                    if (cypherPlayers === 2) {
+                      // P1: Left (180), P2: Right (0)
+                      rotation = i === 0 ? 180 : 0
+                    } else if (cypherPlayers === 3) {
+                      // P1: TL (240), P2: TR (0), P3: Bottom (120)
+                      rotation = i === 0 ? 240 : i === 1 ? 0 : 120
+                    } else {
+                      // 4 Players: P1: NW (270), P2: NE (0), P3: SE (90), P4: SW (180)
+                      rotation = i === 0 ? 270 : (i - 1) * 90
+                    }
 
-                  // Color Mapping
-                  let colorClass = 'text-white border-white/20 bg-white/10'
-                  let shadowClass = ''
-                  if (isActive) {
+                    // Color mapping
+                    let color = '#0A84FF'
                     switch (pNum) {
                       case 1:
-                        colorClass =
-                          'text-accent-purple border-accent-purple bg-accent-purple/20'
-                        shadowClass = 'shadow-[0_0_20px_rgba(168,85,247,0.5)]'
+                        color = '#A855F7' // Purple
                         break
                       case 2:
-                        colorClass =
-                          'text-accent-orange border-accent-orange bg-accent-orange/20'
-                        shadowClass = 'shadow-[0_0_20px_rgba(249,115,22,0.5)]'
+                        color = '#F97316' // Orange
                         break
                       case 3:
-                        colorClass =
-                          'text-accent-gold border-accent-gold bg-accent-gold/20'
-                        shadowClass = 'shadow-[0_0_20px_rgba(255,214,10,0.5)]'
+                        color = '#FFD60A' // Gold
                         break
                       case 4:
-                        colorClass =
-                          'text-accent-green border-accent-green bg-accent-green/20'
-                        shadowClass = 'shadow-[0_0_20px_rgba(48,209,88,0.5)]'
-                        break
-                      default:
-                        colorClass =
-                          'text-accent-blue border-accent-blue bg-accent-blue/20'
-                        shadowClass = 'shadow-[0_0_20px_rgba(10,132,255,0.5)]'
+                        color = '#30D158' // Green
                         break
                     }
-                  } else {
-                    colorClass = 'text-white/20 border-white/5 bg-white/5'
-                  }
 
-                  return (
-                    <div
-                      key={i}
-                      style={{
-                        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                        left: '50%',
-                        top: '50%',
-                      }}
-                      className={cn(
-                        'absolute flex items-center justify-center rounded-full border-2 transition-all duration-500 backdrop-blur-md',
-                        isActive
-                          ? 'w-14 h-14 scale-110 z-30'
-                          : 'w-10 h-10 opacity-50 z-10',
-                        colorClass,
-                        shadowClass
-                      )}
-                    >
-                      <User
-                        size={isActive ? 28 : 18}
-                        strokeWidth={isActive ? 2.5 : 1.5}
+                    const C = 2 * Math.PI * 45 // Circumference ~282.74
+                    const gap = 4 // units of gap
+                    const segmentAngle = 360 / cypherPlayers
+                    const segmentLength = (segmentAngle / 360) * C - gap
+
+                    return (
+                      <motion.circle
+                        key={i}
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="none"
+                        stroke={color}
+                        strokeLinecap="round"
+                        strokeDasharray={`${segmentLength} ${C - segmentLength}`}
+                        initial={{ opacity: 0.3, strokeWidth: 2 }}
+                        animate={{
+                          opacity: isActive ? 1 : 0.3,
+                          strokeWidth: isActive ? 3 : 2,
+                          filter: isActive
+                            ? `drop-shadow(0 0 4px ${color})`
+                            : 'none',
+                        }}
+                        style={{
+                          transformOrigin: '50px 50px',
+                          transform: `rotate(${rotation}deg)`,
+                        }}
+                        transition={{ duration: 0.3 }}
                       />
-                      {isActive && (
-                        <div className="absolute -bottom-2 w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                      )}
-
-                      {/* Player Label */}
-                      <span
-                        className={cn(
-                          'absolute -top-6 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-opacity',
-                          isActive ? 'opacity-100 text-white' : 'opacity-0'
-                        )}
-                      >
-                        Player {pNum}
-                      </span>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
+                </svg>
               </div>
             )}
 

@@ -1215,6 +1215,7 @@ export default function PracticePage() {
         isOpen={showExitConfirmation}
         onClose={() => setShowExitConfirmation(false)}
         title="End Session?"
+        showCloseButton={false}
       >
         <div className="space-y-4">
           <p className="text-text-secondary">
