@@ -38,16 +38,6 @@
         }
       ]
     }
-  ],
-
-  "crons": [
-    {
-      "path": "/api/cron/reconcile-subs",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/aggregate-leaderboard",
-      "schedule": "0 0 * * *"
-    }
   ]
 }
+
