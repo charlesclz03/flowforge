@@ -1,5 +1,3 @@
-'use client'
-
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { cn } from '@/lib/utils'
 

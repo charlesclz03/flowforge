@@ -908,6 +908,7 @@ export default function PracticePage() {
         animationFrameRef.current = null
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatPlayer.isPlaying, handleStop, speak, forceUpdate, isPaused])
 
   // Watch for audio errors
