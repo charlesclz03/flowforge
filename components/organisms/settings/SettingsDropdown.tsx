@@ -4,7 +4,7 @@ import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Settings } from 'lucide-react'
 import { SettingsList } from '@/components/organisms/settings/SettingsList' // Adjust path
-import { BottomSheet } from '@/components/atoms/BottomSheet'
+import { Modal } from '@/components/atoms/Modal'
 
 export function SettingsDropdown() {
   const [showSheet, setShowSheet] = useState(false)
@@ -15,24 +15,27 @@ export function SettingsDropdown() {
       <div className="lg:hidden">
         <button
           onClick={() => setShowSheet(true)}
-          className="p-2 text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
+          className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
         >
           <Settings size={20} />
         </button>
-        <BottomSheet
+        <Modal
           isOpen={showSheet}
           onClose={() => setShowSheet(false)}
           title="Settings"
         >
-          <SettingsList onItemClick={() => setShowSheet(false)} />
-        </BottomSheet>
+          <div className="max-h-[70vh] overflow-y-auto -mx-1 px-1">
+            <SettingsList onItemClick={() => setShowSheet(false)} />
+          </div>
+        </Modal>
       </div>
+
 
       {/* Desktop: Dropdown Menu */}
       <div className="hidden lg:block">
         <Menu as="div" className="relative inline-block text-left">
           <div>
-            <Menu.Button className="p-2 text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5">
+            <Menu.Button className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5">
               <Settings size={20} />
             </Menu.Button>
           </div>

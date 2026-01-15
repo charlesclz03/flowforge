@@ -3,6 +3,7 @@
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { cn } from '@/lib/utils'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Props are valid for client-only components
 interface DifficultySelectorProps {
   value: number
   onChange: (value: number) => void

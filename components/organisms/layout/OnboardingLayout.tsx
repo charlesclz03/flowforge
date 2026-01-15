@@ -29,7 +29,12 @@ export function OnboardingLayout({
   customSubtitle,
 }: OnboardingLayoutProps) {
   return (
-    <div className={cn('h-[100dvh] overflow-hidden bg-black text-white flex flex-col', className)}>
+    <div
+      className={cn(
+        'h-[100dvh] overflow-hidden bg-black text-white flex flex-col',
+        className
+      )}
+    >
       {/* Animated background gradient */}
       <div className="fixed inset-0 bg-gradient-to-br from-black via-purple-950/20 to-black" />
 
@@ -51,7 +56,7 @@ export function OnboardingLayout({
         <main
           id="main-content"
           role="main"
-          className="flex flex-1 flex-col justify-center px-6 pb-24 pt-4 sm:pt-6 overflow-y-auto scrollbar-none"
+          className="flex flex-1 flex-col px-6 pb-24 pt-4 sm:pt-6 overflow-y-auto scrollbar-none"
         >
           <div className="w-full max-w-4xl mx-auto">{children}</div>
         </main>

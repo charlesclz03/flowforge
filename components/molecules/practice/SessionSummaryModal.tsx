@@ -35,6 +35,7 @@ interface SessionSummaryData {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Props are valid for client-only components
 type SessionSummaryModalProps = {
   data: SessionSummaryData | null
   onClose: () => void
@@ -108,7 +109,7 @@ export default function SessionSummaryModal({
   }
 
   return (
-    <Modal isOpen={!!data} onClose={onClose} title="VICTORY">
+    <Modal isOpen={!!data} onClose={onClose} title="">
       <div className="max-h-[70vh] overflow-y-auto px-1 -mx-1 py-4">
         <div className="space-y-4">
           {/* Animated Header */}
@@ -196,7 +197,7 @@ export default function SessionSummaryModal({
               transition={{ delay: 0.3 }}
               className="bg-white/5 p-3 rounded-xl text-center border border-white/5"
             >
-              {/* Mock Streak until real data integrated */}
+              {/* TODO: Replace hardcoded streak with real user data */}
               <div className="text-2xl font-black text-orange-400">🔥 7</div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
                 Consistency Streak

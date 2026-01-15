@@ -428,7 +428,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v0.9.5 (Beta)
+          FreeStyla v0.9.25 (Beta)
         </p>
       </div>
     </div>

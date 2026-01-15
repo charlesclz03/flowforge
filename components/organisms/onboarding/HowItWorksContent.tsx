@@ -21,16 +21,6 @@ export function HowItWorksContent({
 
   return (
     <div className="space-y-12">
-      {/* Header */}
-      <div className="space-y-6 text-center">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent sm:text-6xl">
-          Dominate the Cypher: The Freestyle Coach
-        </h1>
-        <p className="mx-auto max-w-2xl text-base text-text-secondary sm:text-xl">
-          Unleash your potential with instant beat sync and infinite word flows.
-        </p>
-      </div>
-
       {/* How It Works Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         {/* Step 1 */}

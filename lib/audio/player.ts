@@ -31,23 +31,12 @@ export class AudioPlayer {
       if (this.onTimeUpdateCallback && this.audio) {
         this.onTimeUpdateCallback(this.audio.currentTime)
       }
-      // Gapless loop workaround: seek to start slightly before track ends
-      if (this.audio && this.audio.loop && this.audio.duration > 0) {
-        const timeRemaining = this.audio.duration - this.audio.currentTime
-        if (timeRemaining < 0.15 && timeRemaining > 0) {
-          this.audio.currentTime = 0
-        }
-      }
     })
 
     this.audio.addEventListener('ended', () => {
-      // Only fire onEnded if looping is disabled (browser handles loop internally)
-      // If loop is enabled and we get here, it means the gapless workaround missed
-      // In that case, seek back to 0 and continue playing
+      // Browser handles looping naturally if .loop is true.
+      // We only need to notify if playback actually stops.
       if (this.audio?.loop) {
-        this.log('Loop enabled, ignoring ended event and seeking to 0')
-        this.audio.currentTime = 0
-        this.audio.play().catch(console.error)
         return
       }
       this.log('Playback ended')

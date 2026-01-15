@@ -125,11 +125,11 @@ export default function DifficultySelectionPage() {
           <div className="pt-2">
             <button
               onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-              className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-white transition-colors group"
+              className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-white transition-colors group w-full sm:w-auto"
             >
               <div
                 className={cn(
-                  'p-1 rounded-md bg-white/5 group-hover:bg-white/10 transition-colors',
+                  'p-1 rounded-md bg-white/5 group-hover:bg-white/10 transition-colors shrink-0',
                   isAdvancedOpen && 'bg-accent-purple/20 text-accent-purple'
                 )}
               >
@@ -141,9 +141,9 @@ export default function DifficultySelectionPage() {
                   size={14}
                 />
               </div>
-              <span>Advanced Settings</span>
+              <span className="truncate">Advanced Settings</span>
               {!isAdvancedOpen && mode === 'cypher' && (
-                <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1" />
+                <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1 shrink-0" />
               )}
             </button>
 
@@ -252,7 +252,7 @@ export default function DifficultySelectionPage() {
                                 key={count}
                                 onClick={() => setCypherPlayers(count)}
                                 className={cn(
-                                  'h-10 w-10 rounded-lg border font-bold transition-all',
+                                  'h-10 w-10 rounded-lg border font-bold transition-all flex items-center justify-center',
                                   cypherPlayers === count
                                     ? `${activeClass} text-white`
                                     : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'

@@ -66,6 +66,17 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                     and fullscreen mode.
                   </p>
 
+                  {isIOS && (
+                    <div className="mb-6 bg-accent-purple/10 border border-accent-purple/20 rounded-xl p-3 text-sm flex gap-3 text-left">
+                      <span className="text-xl">💡</span>
+                      <span className="text-accent-purple/90">
+                        <strong>Pro Tip:</strong> Installing fixes the
+                        repetitive <strong>Microphone Permission</strong>{' '}
+                        prompts!
+                      </span>
+                    </div>
+                  )}
+
                   <div className="bg-white/5 rounded-2xl p-6 border border-white/5 space-y-4 text-left">
                     {isIOS ? (
                       <div className="space-y-4">

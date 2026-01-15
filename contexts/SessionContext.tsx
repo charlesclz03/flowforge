@@ -193,7 +193,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         testVoice: useCallback(() => {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
             const u = new SpeechSynthesisUtterance(
-              'Mic check, one two. FlowForge audio systems operational.'
+              'Mic check, one two. FreeStyla audio systems operational.'
             )
             u.rate = 1.1
             u.volume = state.ttsVolume

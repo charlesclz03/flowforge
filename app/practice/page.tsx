@@ -95,6 +95,7 @@ export default function PracticePage() {
   const [combo, setCombo] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const shouldSaveRef = useRef(true)
+  const isStoppingRef = useRef(false) // Guard against race conditions
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -165,19 +166,22 @@ export default function PracticePage() {
   // Track relative timing for the UI ring
   const [wordTiming, setWordTiming] = useState({ start: 0, duration: 0 })
 
-  const stopPlayback = useCallback(() => {
-    beatPlayer.stop()
-    // Force TTS Stop
+  const stopTTS = useCallback(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.pause()
       window.speechSynthesis.cancel()
     }
+  }, [])
+
+  const stopPlayback = useCallback(() => {
+    beatPlayer.stop()
+    stopTTS()
     releaseLock()
     sessionTimeRef.current = 0
     setMonotonicTime(0)
     setCurrentWord('')
     forceUpdate() // Ensure UI updates
-  }, [beatPlayer, forceUpdate, releaseLock])
+  }, [beatPlayer, forceUpdate, releaseLock, stopTTS])
 
   // Optimistic Action Hook
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
@@ -285,11 +289,6 @@ export default function PracticePage() {
       if (blob.size < 1000) {
         console.warn('Recording too small', blob.size)
         // toast.error('No audio detected.', { icon: '🎤' }) // Reduced noise for "silent" tests
-        return
-      }
-
-      if (recordedDuration < 2) {
-        toast.error('Recording too short.', { icon: 'too-short' })
         return
       }
 
@@ -406,37 +405,30 @@ export default function PracticePage() {
   // Handlers
 
   const handleStop = useCallback(() => {
+    isStoppingRef.current = true // Sync Guard
     play('stop')
     shouldSaveRef.current = true // Default to save
-    // Cancel TTS to stop any ongoing speech
-    // Cancel TTS to stop any ongoing speech
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.pause()
-      window.speechSynthesis.cancel()
-    }
+    stopTTS()
     stopSession()
     stopPlayback()
     stopRecording() // This will trigger handleRecordingComplete
     setIsPaused(false)
-  }, [play, stopRecording, stopPlayback, stopSession])
+  }, [play, stopRecording, stopPlayback, stopSession, stopTTS])
 
   const handleDiscard = useCallback(() => {
     if (confirm('Discard this session? It will not be saved.')) {
+      isStoppingRef.current = true // Sync Guard
       play('click')
       shouldSaveRef.current = false // Prevent save
-      // Cancel TTS to stop any ongoing speech
-      // Cancel TTS to stop any ongoing speech
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.pause()
-        window.speechSynthesis.cancel()
-      }
+      stopTTS() // Immediate silence
+      stopSession() // Mark session as inactive
       stopPlayback()
       stopRecording()
       setIsPaused(false)
       toast('Session Discarded', { icon: '🗑️' })
       router.push('/difficultyselection')
     }
-  }, [play, stopRecording, stopPlayback, router])
+  }, [play, stopRecording, stopPlayback, router, stopTTS, stopSession])
 
   const handleBackNavigation = useCallback(() => {
     if (isRecording || beatPlayer.isPlaying) {
@@ -449,16 +441,12 @@ export default function PracticePage() {
   }, [isRecording, beatPlayer, router])
 
   const confirmExit = useCallback(() => {
+    isStoppingRef.current = true // Sync Guard
     handleStop()
-    // Explicitly cancel TTS to prevent it from continuing on the next page
-    // Explicitly cancel TTS to prevent it from continuing on the next page
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.pause()
-      window.speechSynthesis.cancel()
-    }
+    stopTTS()
     setShowExitConfirmation(false)
     router.push('/difficultyselection')
-  }, [handleStop, router])
+  }, [handleStop, router, stopTTS])
 
   // Warn on browser refresh/close if recording
   useEffect(() => {
@@ -550,6 +538,9 @@ export default function PracticePage() {
       if (!isTTSEnabled && !force) return
       // Safety: Don't speak if playback is stopped (unless forced e.g. test)
       if (!force && !beatPlayer.isPlaying && !isRecording) return
+      // Safety: Strict Ref Check for race conditions
+      if (isStoppingRef.current && !force) return
+
       try {
         const u = new SpeechSynthesisUtterance(text)
         u.rate = 1.1
@@ -579,7 +570,13 @@ export default function PracticePage() {
       return
     }
 
-    const msPerBeat = (60 / selectedBeat.bpm) * 1000
+    // Reset Stopping Guard
+    isStoppingRef.current = false
+
+    // COUNTDOWN LOGIC
+    // User requested stable countdown speed regardless of BPM.
+    // We use a fixed 800ms tick for a consistent "Ready, Set, Go" pace.
+    const tickMs = 800
     const offsetMs = (selectedBeat.offset || 0) * 1000
 
     const playBeep = (freq: number, type: OscillatorType) => {
@@ -609,7 +606,7 @@ export default function PracticePage() {
       setCountdownValue(val as number | 'GO' | null)
       if (val === 'GO') playBeep(880, 'square')
       else playBeep(440, 'sine')
-      await new Promise((r) => setTimeout(r, msPerBeat))
+      await new Promise((r) => setTimeout(r, tickMs))
     }
 
     // THE DROP (GO) logic
@@ -668,6 +665,7 @@ export default function PracticePage() {
 
     if (beatPlayer.isPlaying) {
       play('stop')
+      stopTTS() // Immediate silence
       if (isRecording) {
         handleStop()
       } else {
@@ -690,7 +688,15 @@ export default function PracticePage() {
         startCountdown()
       }
     }
-  }, [play, selectedBeat, beatPlayer, isRecording, handleStop, startCountdown])
+  }, [
+    play,
+    selectedBeat,
+    beatPlayer,
+    isRecording,
+    handleStop,
+    startCountdown,
+    stopTTS,
+  ])
 
   const handleBeatSelection = useCallback(
     (beat: Beat) => {
@@ -714,7 +720,8 @@ export default function PracticePage() {
   const sessionStateRef = useRef({
     lastWordIndex: -1,
     isActive: false,
-    nextWordChangeTime: 0, // New accumulator tracker
+    nextWordChangeTime: 0,
+    lastFreq: 0, // Track frequency changes
   })
   const paramsRef = useRef({
     frequency,
@@ -783,38 +790,69 @@ export default function PracticePage() {
         return
       }
 
-      // Timing Logic
-      const secondsPerBar = (60 / params.selectedBeat.bpm) * 4
+      // Timing Logic - GRID LOCK IMPLEMENTATION
+      // Calculates strictly based on Bar Count to prevent drift
+      const secondsPerBeat = 60 / params.selectedBeat.bpm
+      const secondsPerBar = secondsPerBeat * 4
 
-      // Word Change Logic
-      if (sessionTime >= state.nextWordChangeTime) {
-        // Trigger Word Change
-        // Calculate the NEXT target based on CURRENT settings
-        // Grid Snap: Align the NEXT word to the global musical grid
-        // This ensures that if you switch from 2 bars to 4 bars, we play a "bridge" word
-        // to get back to Bar 1/5/9, rather than drifting off-phase.
-        const interval = secondsPerBar * params.frequency
-        const nextGridPoint =
-          Math.ceil((state.nextWordChangeTime + 0.01) / interval) * interval
-        state.nextWordChangeTime = nextGridPoint
+      // Calculate absolute position in the song's structure
+      // We accept negative time (intro) but only count positive for words
+      const absTime = Math.max(0, sessionTime)
+      const barsElapsed = absTime / secondsPerBar
 
-        // Ensure we don't get stuck in the past if lag happens (catch up)
-        if (state.nextWordChangeTime <= sessionTime) {
-          state.nextWordChangeTime = sessionTime + interval
+      // Calculate which "Phrase Chunk" we are in (e.g. Chunk 0 = Bar 1-4, Chunk 1 = Bar 5-8)
+      const safeFreq = Number(params.frequency) || 4
+
+      // Frequency Change Watcher - Critical for Timer Ring
+      if (safeFreq !== state.lastFreq) {
+        // Frequency changed! Force re-evaluation
+        state.lastFreq = safeFreq
+        // Resetting index allows the loop to "catch up" if we switched to a slower freq
+        // or trigger immediately if we switched to faster
+        state.lastWordIndex = -1
+        state.nextWordChangeTime = 0
+      }
+
+      const currentPhraseIndex = Math.floor(barsElapsed / safeFreq)
+
+      // DEBUG: Trace potential issues with Frequency (dev only)
+      if (process.env.NODE_ENV === 'development') {
+        if (Math.abs(barsElapsed % 1) < 0.05 && Math.random() < 0.1) {
+          console.log('[GridLock] State:', {
+            freq: params.frequency,
+            freqType: typeof params.frequency,
+            bar: barsElapsed.toFixed(2),
+            phrase: currentPhraseIndex,
+            bpm: params.selectedBeat.bpm,
+          })
         }
+      }
 
-        // Update Index
-        const newIndex = state.lastWordIndex + 1
-        state.lastWordIndex = newIndex
+      // Initial Sync or Phrase Change Trigger
+      // We check if we've moved to a new phrase index since the last frame
+      if (
+        state.lastWordIndex === -1 ||
+        currentPhraseIndex > state.lastWordIndex
+      ) {
+        // Critical: Update the tracking index immediately
+        // Use the mathematical phrase index as the source of truth
+        state.lastWordIndex = currentPhraseIndex
 
-        const actualIndex = newIndex % params.wordList.length
+        // Calculate the NEXT change time purely for the Visualizer/UI Ring
+        // (Phrase + 1) * BarsPerPhrase * SecondsPerBar
+        const nextTargetBar = (currentPhraseIndex + 1) * params.frequency
+        state.nextWordChangeTime = nextTargetBar * secondsPerBar
+
+        // Get Next Word
+        // We use the phrase index to drive the word list, ensuring deterministic order if not random
+        const actualIndex = currentPhraseIndex % params.wordList.length
         const newWord = params.wordList[actualIndex]
 
         if (newWord) {
           setCurrentWord(newWord)
-          setWordIndex(newIndex) // This drives the UI shake effect via key
+          setWordIndex(currentPhraseIndex) // Drives UI key
 
-          // Fix: Start a fresh visual timer for this word
+          // Visual Timer Setup
           const duration = state.nextWordChangeTime - sessionTime
           setWordTiming({ start: sessionTime, duration })
 
@@ -953,7 +991,7 @@ export default function PracticePage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'SoftwareApplication',
-            name: 'FlowForge - Freestyle',
+            name: 'FreeStyla',
             applicationCategory: 'LifestyleApplication',
             operatingSystem: 'Web',
             offers: {
@@ -967,7 +1005,7 @@ export default function PracticePage() {
               reviewCount: '1024',
             },
             description:
-              'Interactive AI rap training environment. Select beats, control word frequency, and improve your flow.',
+              'Interactive freestyle practice environment. Select beats, control word frequency, and improve your flow.',
           }),
         }}
       />
@@ -977,7 +1015,7 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-20 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center h-[100dvh] px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
         {/* Combo / Vibe Overlay - Absolute Top Right */}
         <AnimatePresence>
           {combo > 1 && (

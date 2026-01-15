@@ -234,7 +234,7 @@ export default function TracksPage() {
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button
               onClick={() => handleTabChange('public')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center ${
                 activeTab === 'public'
                   ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_15px_rgba(125,122,255,0.15)]'
                   : 'text-text-tertiary hover:text-white'
@@ -244,7 +244,7 @@ export default function TracksPage() {
             </button>
             <button
               onClick={() => handleTabChange('mine')}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'mine'
                   ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_15px_rgba(125,122,255,0.15)]'
                   : 'text-text-tertiary hover:text-white'
@@ -257,7 +257,7 @@ export default function TracksPage() {
 
           <button
             onClick={handleNewBeatClick}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-purple/10 text-accent-purple border border-accent-purple/20 rounded-lg font-medium text-sm hover:bg-accent-purple/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.15)]"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-purple/10 text-accent-purple border border-accent-purple/20 rounded-lg font-medium text-sm hover:bg-accent-purple/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.15)]"
           >
             {isPro ? <Plus size={16} /> : <Lock size={16} />}
             <span>New Beat</span>
@@ -272,7 +272,7 @@ export default function TracksPage() {
                 key={genre}
                 onClick={() => setSelectedGenre(genre)}
                 className={cn(
-                  'px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border',
+                  'px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border flex items-center justify-center',
                   selectedGenre === genre
                     ? 'bg-white text-black border-white'
                     : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'

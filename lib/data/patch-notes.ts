@@ -21,6 +21,72 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.25',
+    date: '2026-01-15',
+    title: 'The Mobile & Precision Update 📱',
+    codename: 'Pocket Studio',
+    description:
+      'A comprehensive update focusing on mobile ergonomics and rigorous timing precision. We rebuilt the layout for small screens and locked the word intervals to the musical grid.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '🔒 **Grid Lock Integrity**: Fixed a bug where changing bar frequency mid-session could freeze the timer. Timing is now reset instantly on change.',
+          '📲 **Smart PWA Installer**: The app now detects iOS vs Android and teaches iOS users how to bypass microphone permission prompts.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '📏 **Dynamic Scaling**: The practice ring now caps its height at 45% of the screen, ensuring buttons are never cut off on smaller IPhones.',
+          '🔄 **Split Layout**: Separated the Exit/Pause buttons into their own dedicated row to prevent overlap with the main player ring.',
+          '🧭 **Viewport Stability**: Enforced `100dvh` (Dynamic Viewport Height) to respect the Safari bottom bar, preventing navigation issues.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.20',
+    date: '2026-01-15',
+    title: 'The Precision Update 🎯',
+    codename: 'Grid Lock',
+    description:
+      'A major stability update introducing the "Grid Lock" timing engine for perfect musical synchronization, plus a polished "Satellite Layout" for the player controls.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '🔒 **Grid Lock Timing**: Word switching is now mathematically locked to the beat grid. No more drifting!',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '🛰️ **Satellite UI**: Redesigned player controls to prevent button cropping and improve reachability.',
+          '📱 **Layout Fixes**: Solved vertical scrolling issues on smaller screens across the app.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.19',
+    date: '2026-01-15',
+    title: 'Polish & Precision',
+    codename: 'Silent Loop',
+    description:
+      'A smoother practice experience with seamless audio looping, pixel-perfect button alignment, and a smarter TTS engine that knows when to be quiet.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Seamless Looping: Fixed the 0.5s delay at the end of audio tracks. Beats now loop perfectly forever.',
+          'Smart Silence: The voice coach now instantly stops talking when you leave a session or switch tabs.',
+          'Visual Balance: Interactive buttons are now perfectly centered, and the Mode indicator takes center stage.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.18',
     date: '2026-01-13',
     title: 'Streamlined Setup',
