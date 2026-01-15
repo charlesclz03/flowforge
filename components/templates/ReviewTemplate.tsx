@@ -29,7 +29,9 @@ export function ReviewTemplate({
           {alerts}
 
           {/* Centered Page Header - Only render if content exists to avoid empty margin space */}
-          {pageHeader && <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>}
+          {pageHeader && (
+            <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>
+          )}
 
           <div className="max-w-2xl mx-auto space-y-6">
             <section>{player}</section>

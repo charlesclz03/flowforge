@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
 import {
   RefreshCcw,
+  Pause,
+  Play,
+  Mic,
   Zap,
   Gauge,
   Infinity as InfinityIcon,
   User,
-  Mic,
-  Pause,
-  Play,
-  ArrowLeft,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -88,7 +87,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
     cypherPlayers = 4,
     isPaused = false,
     onTogglePause,
-    onDiscard, // Keeping prop definition but removing usage warnings if any
     wordTiming,
   } = props
 

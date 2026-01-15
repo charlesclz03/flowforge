@@ -72,9 +72,7 @@ export function AppHeader({
               {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
                 <div className="group relative">
                   <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
-                    <Flame
-                      className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse"
-                    />
+                    <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse" />
                     <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
                       {session?.user?.currentStreak}
                     </span>

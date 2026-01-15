@@ -163,7 +163,8 @@ export default function PracticePage() {
   const [monotonicTime, setMonotonicTime] = useState(0)
   const [isSirenActive, setIsSirenActive] = useState(false)
   const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
-
+  
+  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
   // Pending Action State for Safety Modal
   // 'exit' -> Go to difficulty selection
   // 'restart' -> Stop and restart session (countwodn)
@@ -414,6 +415,108 @@ export default function PracticePage() {
   }, [isPaused, isRecording, beatPlayer, resumeRecording, pauseRecording])
 
   // Handlers
+  
+  const startCountdown = useCallback(async () => {
+    if (!selectedBeat) return
+
+    // Shuffle words for a fresh start every time we begin
+    setWordList((prev) => [...prev].sort(() => Math.random() - 0.5))
+
+    // Final check for loading errors
+    if (beatPlayer.error) {
+      toast.error(`Cannot start: ${beatPlayer.error}`)
+      return
+    }
+
+    // Reset Stopping Guard
+    isStoppingRef.current = false
+
+    // COUNTDOWN LOGIC
+    // User requested stable countdown speed regardless of BPM.
+    // We use a fixed 800ms tick for a consistent "Ready, Set, Go" pace.
+    const tickMs = 800
+    const offsetMs = (selectedBeat.offset || 0) * 1000
+
+    const playBeep = (freq: number, type: OscillatorType) => {
+      const AudioContext =
+        window.AudioContext ||
+        (
+          window as unknown as {
+            webkitAudioContext: typeof window.AudioContext
+          }
+        ).webkitAudioContext
+      if (!AudioContext) return
+      const ctx = new AudioContext()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = type
+      osc.frequency.setValueAtTime(freq, ctx.currentTime)
+      gain.gain.setValueAtTime(0.1, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+    }
+
+    const sequence = [3, 2, 1, 'GO']
+    for (const val of sequence) {
+      setCountdownValue(val as number | 'GO' | null)
+      if (val === 'GO') playBeep(880, 'square')
+      else playBeep(440, 'sine')
+      await new Promise((r) => setTimeout(r, tickMs))
+    }
+
+    // THE DROP (GO) logic
+    try {
+      // Unmute and seek to start
+      const seekTime = offsetMs < 0 ? Math.abs(offsetMs) / 1000 : 0
+      beatPlayer.setVolume(1)
+      beatPlayer.seek(seekTime)
+
+      // Single authoritative play call
+      beatPlayer.setLoop(true) // Ensure track loops seamlessly
+      await beatPlayer.play()
+      startSession()
+    } catch (e) {
+      handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+    }
+
+    // THE DROP (GO) logic
+    clearError()
+
+    // Start Recorder
+    try {
+      if (isRecordingEnabled) {
+        if (!isRecording) {
+          await requestLock()
+          if (isPro) startRecording(true).catch(console.error)
+        } else {
+          resumeRecording()
+        }
+      }
+    } catch (err) {
+      console.error('Recording start failed', err)
+    }
+
+    setTimeout(() => setCountdownValue(null), 1000)
+
+    return () => {
+      // No timer to clear
+    }
+  }, [
+    selectedBeat,
+    beatPlayer,
+    isRecording,
+    isRecordingEnabled,
+    requestLock,
+    startRecording,
+    isPro,
+    resumeRecording,
+    handleError,
+    clearError,
+    startSession,
+  ])
 
   const handleStop = useCallback(() => {
     isStoppingRef.current = true // Sync Guard
@@ -598,111 +701,7 @@ export default function PracticePage() {
     [isTTSEnabled, ttsVolume, voice, beatPlayer.isPlaying, isRecording]
   )
 
-  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
-    null
-  )
 
-  const startCountdown = useCallback(async () => {
-    if (!selectedBeat) return
-
-    // Shuffle words for a fresh start every time we begin
-    setWordList((prev) => [...prev].sort(() => Math.random() - 0.5))
-
-    // Final check for loading errors
-    if (beatPlayer.error) {
-      toast.error(`Cannot start: ${beatPlayer.error}`)
-      return
-    }
-
-    // Reset Stopping Guard
-    isStoppingRef.current = false
-
-    // COUNTDOWN LOGIC
-    // User requested stable countdown speed regardless of BPM.
-    // We use a fixed 800ms tick for a consistent "Ready, Set, Go" pace.
-    const tickMs = 800
-    const offsetMs = (selectedBeat.offset || 0) * 1000
-
-    const playBeep = (freq: number, type: OscillatorType) => {
-      const AudioContext =
-        window.AudioContext ||
-        (
-          window as unknown as {
-            webkitAudioContext: typeof window.AudioContext
-          }
-        ).webkitAudioContext
-      if (!AudioContext) return
-      const ctx = new AudioContext()
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = type
-      osc.frequency.setValueAtTime(freq, ctx.currentTime)
-      gain.gain.setValueAtTime(0.1, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start()
-      osc.stop(ctx.currentTime + 0.5)
-    }
-
-    const sequence = [3, 2, 1, 'GO']
-    for (const val of sequence) {
-      setCountdownValue(val as number | 'GO' | null)
-      if (val === 'GO') playBeep(880, 'square')
-      else playBeep(440, 'sine')
-      await new Promise((r) => setTimeout(r, tickMs))
-    }
-
-    // THE DROP (GO) logic
-    try {
-      // Unmute and seek to start
-      const seekTime = offsetMs < 0 ? Math.abs(offsetMs) / 1000 : 0
-      beatPlayer.setVolume(1)
-      beatPlayer.seek(seekTime)
-
-      // Single authoritative play call
-      beatPlayer.setLoop(true) // Ensure track loops seamlessly
-      await beatPlayer.play()
-      startSession()
-    } catch (e) {
-      handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
-    }
-
-    // THE DROP (GO) logic
-    clearError()
-
-    // Start Recorder
-    try {
-      if (isRecordingEnabled) {
-        if (!isRecording) {
-          await requestLock()
-          if (isPro) startRecording(true).catch(console.error)
-        } else {
-          resumeRecording()
-        }
-      }
-    } catch (err) {
-      console.error('Recording start failed', err)
-    }
-
-    setTimeout(() => setCountdownValue(null), 1000)
-
-    return () => {
-      // No timer to clear
-    }
-  }, [
-    selectedBeat,
-    beatPlayer,
-    isRecording,
-    isRecordingEnabled,
-    requestLock,
-    startRecording,
-    isPro,
-    resumeRecording,
-    handleError,
-    clearError,
-    startSession,
-  ])
 
   const handlePlayPause = useCallback(async () => {
     if (!selectedBeat) return
