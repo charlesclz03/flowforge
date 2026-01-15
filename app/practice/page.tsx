@@ -159,6 +159,7 @@ export default function PracticePage() {
 
   // Playback Control (Detached from hook to resolve circular deps)
   const sessionTimeRef = useRef(0)
+  const animationFrameRef = useRef<number | null>(null) // StrictMode guard: prevents duplicate loops
   const [monotonicTime, setMonotonicTime] = useState(0)
   const [isSirenActive, setIsSirenActive] = useState(false)
   const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
@@ -744,6 +745,16 @@ export default function PracticePage() {
   useEffect(() => {
     if (!beatPlayer.isPlaying) {
       sessionStateRef.current.isActive = false
+      // Clean up any stray animation loop
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = null
+      }
+      return
+    }
+
+    // StrictMode Guard: If loop is already running, don't start another
+    if (animationFrameRef.current !== null) {
       return
     }
 
@@ -766,9 +777,15 @@ export default function PracticePage() {
       const delta = (now - lastFrameTime) / 1000
       lastFrameTime = now
 
-      if (!state.isActive) return
+      if (!state.isActive) {
+        animationFrameRef.current = null
+        return
+      }
       const params = paramsRef.current
-      if (!params.selectedBeat || params.wordList.length === 0) return
+      if (!params.selectedBeat || params.wordList.length === 0) {
+        animationFrameRef.current = null
+        return
+      }
 
       // Increment monotonic session time
       sessionTimeRef.current += delta
@@ -779,6 +796,7 @@ export default function PracticePage() {
       if (sessionTime > 1.5) {
         if (sessionTime >= params.sessionDuration) {
           handleStop()
+          animationFrameRef.current = null
           return
         }
       }
@@ -786,7 +804,7 @@ export default function PracticePage() {
       // Pause Check
       if (isPaused) {
         lastFrameTime = now // Keep updating lastFrameTime to avoid jump
-        requestAnimationFrame(updateLoop)
+        animationFrameRef.current = requestAnimationFrame(updateLoop)
         return
       }
 
@@ -876,19 +894,19 @@ export default function PracticePage() {
       }
 
       forceUpdate()
-      requestAnimationFrame(updateLoop)
+      animationFrameRef.current = requestAnimationFrame(updateLoop)
     }
-    const frameId = requestAnimationFrame(updateLoop)
+
+    // Start the loop and store frame ID
+    animationFrameRef.current = requestAnimationFrame(updateLoop)
+
     return () => {
-      cancelAnimationFrame(frameId)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = null
+      }
     }
-  }, [
-    beatPlayer.isPlaying,
-    handleStop,
-    speak,
-    forceUpdate,
-    isPaused,
-  ])
+  }, [beatPlayer.isPlaying, handleStop, speak, forceUpdate, isPaused])
 
   // Watch for audio errors
   useEffect(() => {
