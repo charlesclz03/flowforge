@@ -193,29 +193,31 @@ export default function TracksPage() {
     setIsUploadModalOpen(true)
   }
 
-  const filteredBeats = beats.filter((b) => {
-    // 1. Tab Filter
-    let matchesTab = false
+  // 1. Filter by Active Tab (Public vs Mine)
+  const currentTabBeats = beats.filter((b) => {
     if (activeTab === 'mine') {
-      matchesTab = !!(b.uploaderId && b.uploaderId === session?.user?.id)
+      return !!(b.uploaderId && b.uploaderId === session?.user?.id)
     } else {
-      matchesTab = !b.uploaderId // System beats
+      return !b.uploaderId // System beats (Public)
     }
-
-    // 2. Genre Filter
-    let matchesGenre = true
-    if (selectedGenre !== 'All') {
-      matchesGenre = b.genre === selectedGenre
-    }
-
-    return matchesTab && matchesGenre
   })
 
-  // Derive Genres
+  // 2. Derive Genres from ONLY the tracks in the current tab
   const genres = [
     'All',
-    ...new Set(beats.map((b) => b.genre).filter(Boolean)),
+    ...new Set(currentTabBeats.map((b) => b.genre).filter(Boolean)),
   ] as string[]
+
+  // 3. Filter by Selected Genre
+  const filteredBeats = currentTabBeats.filter((b) => {
+    if (selectedGenre === 'All') return true
+    return b.genre === selectedGenre
+  })
+
+  // Reset genre when tab changes (optional but safer)
+  useEffect(() => {
+    setSelectedGenre('All')
+  }, [activeTab])
 
   return (
     <ScreenPage
@@ -264,8 +266,8 @@ export default function TracksPage() {
           </button>
         </div>
 
-        {/* Genre Filter */}
-        {!isLoading && beats.length > 0 && (
+        {/* Genre Filter - derived dynamically */}
+        {!isLoading && currentTabBeats.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             {genres.map((genre) => (
               <button
