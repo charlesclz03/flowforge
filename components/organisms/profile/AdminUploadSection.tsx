@@ -135,12 +135,13 @@ export function AdminUploadSection() {
           title={isPremium ? 'Premium Track' : 'Free Track'}
         >
           {/* Slider Background Indicator */}
-          className=
-          {`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full transition-all duration-300 ${
-            isPremium
-              ? 'left-[calc(50%+2px)] bg-accent-purple'
-              : 'left-1 bg-white/20'
-          }`}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full transition-all duration-300 ${
+              isPremium
+                ? 'left-[calc(50%+2px)] bg-accent-purple'
+                : 'left-1 bg-white/20'
+            }`}
+          />
           {/* Wrapper for content */}
           <div className="flex w-full justify-between items-center px-1 z-10">
             {/* Free Side */}

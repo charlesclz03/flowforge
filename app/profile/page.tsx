@@ -10,7 +10,6 @@ import {
   SubscriptionSection,
   SecuritySection,
   StatsSection,
-  QuickActions,
 } from '@/components/organisms/profile'
 // Removed BadgesDisplay and SocialsForm
 // Removed AchievementsDisplay (Moved to Leaderboard)
@@ -198,11 +197,6 @@ export default function ProfilePage() {
               wordVaultCount={wordVaultCount}
             />
             {/* Achievements moved to Leaderboard */}
-          </div>
-        }
-        quickActions={
-          <div className="space-y-8">
-            <QuickActions />
           </div>
         }
         adminSection={

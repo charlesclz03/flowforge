@@ -8,7 +8,7 @@ interface ProfileTemplateProps {
   subscription: ReactNode
   security: ReactNode
   stats: ReactNode
-  quickActions: ReactNode
+  quickActions?: ReactNode
   adminSection?: ReactNode
 }
 
