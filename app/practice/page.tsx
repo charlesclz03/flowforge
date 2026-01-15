@@ -885,7 +885,6 @@ export default function PracticePage() {
   }, [
     beatPlayer.isPlaying,
     handleStop,
-    beatPlayer,
     speak,
     forceUpdate,
     isPaused,

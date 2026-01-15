@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.26',
+    date: '2026-01-15',
+    title: 'The Metronome Fix ⏱️',
+    codename: 'True Time',
+    description:
+      'Critical timing bug squashed! The session timer was running at 2x speed due to a React dependency issue. Time is now perfectly accurate.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '⏰ **Accurate Timer**: Fixed a bug where the session countdown ran at double speed (1 second = 0.5s real time).',
+          '🎯 **Stable Animation Loop**: Removed unstable dependency from the timer effect, preventing duplicate update loops.',
+          '📐 **Layout Lock**: Added fixed height to control buttons row to prevent player circle from shifting when controls appear.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.25',
     date: '2026-01-15',
     title: 'The Mobile & Precision Update 📱',
