@@ -163,8 +163,10 @@ export default function PracticePage() {
   const [monotonicTime, setMonotonicTime] = useState(0)
   const [isSirenActive, setIsSirenActive] = useState(false)
   const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
-  
-  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
+
+  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
+    null
+  )
   // Pending Action State for Safety Modal
   // 'exit' -> Go to difficulty selection
   // 'restart' -> Stop and restart session (countwodn)
@@ -415,7 +417,7 @@ export default function PracticePage() {
   }, [isPaused, isRecording, beatPlayer, resumeRecording, pauseRecording])
 
   // Handlers
-  
+
   const startCountdown = useCallback(async () => {
     if (!selectedBeat) return
 
@@ -700,8 +702,6 @@ export default function PracticePage() {
     },
     [isTTSEnabled, ttsVolume, voice, beatPlayer.isPlaying, isRecording]
   )
-
-
 
   const handlePlayPause = useCallback(async () => {
     if (!selectedBeat) return
@@ -1058,6 +1058,7 @@ export default function PracticePage() {
     <ScreenPage
       header={
         <AppHeader
+          showBackButton
           onBack={handleBackNavigation}
           customTitle="THE BOOTH"
           customSubtitle="Step up and drop your bars"
