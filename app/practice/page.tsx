@@ -1223,6 +1223,10 @@ export default function PracticePage() {
               onClick={() => {
                 setShowExitConfirmation(false)
                 setPendingAction(null)
+                // Resume playback if it was paused
+                if (!beatPlayer.isPlaying) {
+                  beatPlayer.play().catch(console.error)
+                }
               }}
             >
               Resume
