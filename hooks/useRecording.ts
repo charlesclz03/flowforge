@@ -214,13 +214,23 @@ export function useRecording({
    * Download the recording
    */
   const download = useCallback(
-    (filename: string = 'recording.webm') => {
+    (filename?: string) => {
       if (!recordingBlob) return
+
+      // Auto-generate structured filename if not provided
+      // Format: FreeStyla_Session_YYYY-MM-DD_HH-mm.webm
+      const finalFilename =
+        filename ||
+        `FreeStyla_Session_${new Date()
+          .toISOString()
+          .slice(0, 16)
+          .replace(':', '-')
+          .replace('T', '_')}.webm`
 
       const url = URL.createObjectURL(recordingBlob)
       const a = document.createElement('a')
       a.href = url
-      a.download = filename
+      a.download = finalFilename
       a.click()
       URL.revokeObjectURL(url)
     },

@@ -242,7 +242,68 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-bold text-white mb-4">
-              10. Contact Us
+              10. Indemnification
+            </h2>
+            <p>
+              You agree to defend, indemnify, and hold harmless FreeStyla and
+              its licensee and licensors, and their employees, contractors,
+              agents, officers, and directors, from and against any and all
+              claims, damages, obligations, losses, liabilities, costs or debt,
+              and expenses (including but not limited to attorney&#39;s fees),
+              resulting from or arising out of a) your use and access of the
+              Service, by you or any person using your account and password; b)
+              a breach of these Terms, or c) Content posted on the Service.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              11. Dispute Resolution (Arbitration)
+            </h2>
+            <p>
+              For any dispute with FreeStyla, you agree to first contact us at
+              legal@freestyla.com and attempt to resolve the dispute with us
+              informally. In the unlikely event that FreeStyla has not been able
+              to resolve a dispute it has with you after sixty (60) days, we
+              each agree to resolve any claim, dispute, or controversy
+              (excluding any claims for injunctive or other equitable relief)
+              arising out of or in connection with or relating to these Terms,
+              or the breach or alleged breach thereof, by binding arbitration.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              12. Class Action Waiver
+            </h2>
+            <p>
+              You agree that any arbitration or proceeding shall be limited to
+              the Dispute between us and you individually. To the full extent
+              permitted by law, (i) no arbitration or proceeding shall be joined
+              with any other; (ii) there is no right or authority for any
+              Dispute to be arbitrated or resolved on a class action-basis or to
+              utilize class action procedures; and (iii) there is no right or
+              authority for any Dispute to be brought in a purported
+              representative capacity on behalf of the general public or any
+              other persons.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              13. Entire Agreement
+            </h2>
+            <p>
+              These Terms constitute the entire agreement between you and
+              FreeStyla regarding our Service, and supersede and replace any
+              prior agreements we might have had between us regarding the
+              Service.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              14. Contact Us
             </h2>
             <p>
               If you have any questions about these Terms, please contact us at:

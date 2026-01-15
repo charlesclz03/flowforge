@@ -162,7 +162,57 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white mb-4">8. Contact Us</h2>
+            <h2 className="text-xl font-bold text-white mb-4">
+              8. Children&#39;s Privacy
+            </h2>
+            <p>
+              Our Service does not address anyone under the age of 13. We do not
+              knowingly collect personally identifiable information from anyone
+              under the age of 13. If You are a parent or guardian and You are
+              aware that Your child has provided Us with Personal Data, please
+              contact Us. If We become aware that We have collected Personal
+              Data from anyone under the age of 13 without verification of
+              parental consent, We take steps to remove that information from
+              Our servers.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              9. International Data Transfers
+            </h2>
+            <p>
+              Your information, including Personal Data, is processed at the
+              Company&#39;s operating offices and in any other places where the
+              parties involved in the processing are located. It means that this
+              information may be transferred to — and maintained on — computers
+              located outside of Your state, province, country, or other
+              governmental jurisdiction where the data protection laws may
+              differ from those from Your jurisdiction. Your consent to this
+              Privacy Policy followed by Your submission of such information
+              represents Your agreement to that transfer.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              10. Cookies and Tracking Technologies
+            </h2>
+            <p>
+              We use Cookies and similar tracking technologies to track the
+              activity on Our Service and store certain information. Tracking
+              technologies used are beacons, tags, and scripts to collect and
+              track information and to improve and analyze Our Service. You can
+              instruct Your browser to refuse all Cookies or to indicate when a
+              Cookie is being sent. However, if You do not accept Cookies, You
+              may not be able to use some parts of our Service.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              11. Contact Us
+            </h2>
             <p>
               If you have any questions about this Privacy Policy or our data
               practices, please contact us at:
