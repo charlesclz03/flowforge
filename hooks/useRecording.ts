@@ -18,6 +18,7 @@ export function useRecording({
   const [isPaused, setIsPaused] = useState(false)
   const [duration, setDuration] = useState(0)
   const [recordingBlob, setRecordingBlob] = useState<Blob | null>(null)
+  const [isSaved, setIsSaved] = useState(false) // Track if recording was saved successfully
   const [error, setError] = useState<string | null>(null)
   const [isInitializing, setIsInitializing] = useState(false)
 
@@ -80,23 +81,26 @@ export function useRecording({
     }
   }, []) // Empty dependency array - purely mount/unmount logic for the recorder instance
 
-  // Route Guard: Warn before leaving if recording or unsaved data exists
+  // Route Guard: Warn before leaving if recording or UNSAVED data exists
+  // Skip guard if recording has been saved successfully
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isRecording || (recordingBlob && !isInitializing)) {
+      // Only warn if actively recording OR blob exists but hasn't been saved
+      if (isRecording || (recordingBlob && !isSaved && !isInitializing)) {
         e.preventDefault()
         e.returnValue = '' // Chrome requires returnValue to be set
       }
     }
 
-    if (isRecording || recordingBlob) {
+    // Only attach listener if we have unsaved data
+    if (isRecording || (recordingBlob && !isSaved)) {
       window.addEventListener('beforeunload', handleBeforeUnload)
     }
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
-  }, [isRecording, recordingBlob, isInitializing])
+  }, [isRecording, recordingBlob, isInitializing, isSaved])
 
   // Update duration while recording
   useEffect(() => {
@@ -130,6 +134,7 @@ export function useRecording({
       setIsInitializing(true)
       setError(null)
       setRecordingBlob(null)
+      setIsSaved(false) // Reset save flag for new recording
       setDuration(0)
 
       try {
@@ -189,12 +194,20 @@ export function useRecording({
   }, [])
 
   /**
-   * Reset recording
+   * Reset recording state
    */
   const reset = useCallback(() => {
     setRecordingBlob(null)
     setDuration(0)
     setError(null)
+    setIsSaved(false) // Allow beforeunload guard for next recording
+  }, [])
+
+  /**
+   * Mark recording as successfully saved (disables beforeunload guard)
+   */
+  const markAsSaved = useCallback(() => {
+    setIsSaved(true)
   }, [])
 
   /**
@@ -232,5 +245,6 @@ export function useRecording({
     resume,
     reset,
     download,
+    markAsSaved, // Call after successful save to disable beforeunload guard
   }
 }

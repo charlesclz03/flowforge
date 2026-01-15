@@ -34,6 +34,7 @@ export const PATCH_NOTES: PatchNote[] = [
           '⏰ **Accurate Timer**: Timer now counts at exactly 1 second per real second.',
           '🛡️ **StrictMode Guard**: Added animation ref guard to prevent duplicate timing loops.',
           '🧹 **Clean Exit Paths**: All animation loop exit points now properly clean up the frame reference.',
+          '🚫 **Silence on Save**: Fixed "Leave site?" warning appearing after successful session save.',
         ],
       },
     ],
@@ -43,8 +44,7 @@ export const PATCH_NOTES: PatchNote[] = [
     date: '2026-01-15',
     title: 'The Metronome Fix ⏱️',
     codename: 'True Time',
-    description:
-      'Minor timer stability improvements and layout polish.',
+    description: 'Minor timer stability improvements and layout polish.',
     changes: [
       {
         category: 'Fixes & Improvements',

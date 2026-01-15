@@ -198,8 +198,9 @@ export default function PracticePage() {
     },
     {
       onOptimistic: (formData: FormData) => {
-        // 1. Immediate Feedback: Play Success Sound
+        // 1. Immediate Feedback: Play Success Sound & Mark Saved
         play('success')
+        markAsSaved()
 
         // 2. Predict Session Summary
         // Parse basic values back from FormData for immediate display
@@ -371,6 +372,7 @@ export default function PracticePage() {
     stop: stopRecording,
     pause: pauseRecording,
     resume: resumeRecording,
+    markAsSaved,
   } = useRecording({
     maxDuration: isPro ? null : 120,
     onComplete: handleRecordingComplete,
