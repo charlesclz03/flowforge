@@ -296,8 +296,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </div>
 
       {/* Row 2: SATELLITES (Exit & Pause) */}
-      {/* Placed in their own block row between Pills and Ring */}
-      <div className="w-full max-w-lg flex items-center justify-between px-4 mt-2 sm:mt-4 relative z-20">
+      {/* Fixed height to prevent layout shift when buttons appear */}
+      <div className="w-full max-w-lg flex items-center justify-between px-4 mt-2 sm:mt-4 relative z-20 min-h-14">
         {/* Left: EXIT */}
         <div className="w-14 flex justify-center">
           {isPlaying && onDiscard && (
