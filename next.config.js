@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // DISABLED: StrictMode causes effects to run twice, breaking the timer animation loop
+  reactStrictMode: false,
   swcMinify: true,
   images: {
     remotePatterns: [
