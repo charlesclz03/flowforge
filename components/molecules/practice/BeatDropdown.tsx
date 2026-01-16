@@ -54,6 +54,33 @@ function UploadFirstBeatEmptyState() {
   )
 }
 
+// Compact upload row that appears after existing tracks
+function UploadNewTrackRow() {
+  const router = useRouter()
+
+  const handleUploadClick = () => {
+    router.push('/tracks?tab=mine&upload=true')
+  }
+
+  return (
+    <div onClick={handleUploadClick} className="p-1">
+      <div className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/5 cursor-pointer border border-dashed border-white/10 hover:border-accent-purple/30">
+        <div className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
+          <Upload size={16} className="text-accent-purple" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-medium text-accent-purple">
+            Upload new track
+          </p>
+          <p className="text-xs text-text-tertiary">
+            Add another beat to your library
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 interface BeatDropdownProps {
   beats: Beat[]
   selectedBeat: Beat | null
@@ -492,6 +519,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       </div>
                     ))
                   )}
+                  {/* Upload new track row - always visible */}
+                  <UploadNewTrackRow />
                 </div>
               </TabsContent>
             )}
