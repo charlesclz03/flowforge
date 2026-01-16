@@ -40,6 +40,7 @@ Before you start the technical build, ensure these items are ready. Google **wil
 | **Content Rating Questionnaire** | Google asks about violence, gambling, etc. For FreeStyla: "Everyone". Takes 2 min. |
 | **Target Audience Declaration** | Is it for kids under 13? (Answer: No, unless you want COPPA compliance). |
 | **App Category** | Recommended: "Music & Audio" or "Education". |
+| **Contact Email** | Visible on Play Store page. |
 
 ---
 
@@ -154,9 +155,97 @@ We will use Google's **Bubblewrap CLI** to generate the Android project.
     *   *Note*: If you haven't deployed the `assetlinks.json` yet, you will still see the browser URL bar at the top. This is normal.
 2.  **Upload to Play Store**:
     *   Create a release in the [Google Play Console](https://play.google.com/console).
-    *   Upload the `.aab` file.
-    *   Fill out the store listing (screenshots, description, rating rating).
+    *   Upload the `.aab` file (not the .apk).
+    *   Fill out the store listing (screenshots, description, rating).
 3.  **Verify Asset Links**: Use the [Play Console's Deep Link Validator](https://play.google.com/console/about/deep-linking/) to ensure your website and app are properly linked.
+
+---
+
+## 🔐 Keystore Management (CRITICAL)
+
+> [!CAUTION]
+> If you lose your keystore file or passwords, **you cannot update your app ever again**. You would have to publish a new app with a new package name.
+
+| Item | Details |
+|------|---------|
+| **What it is** | A cryptographic file that "signs" your APK. Proves you are the owner. |
+| **When created** | During `bubblewrap init` (it will ask for passwords). |
+| **Action** | Save the `.keystore` file and passwords in a secure location (password manager, encrypted drive, NOT in git). |
+
+### Play App Signing (Recommended)
+Google offers to manage your signing key for you:
+*   **Pros:** If you lose your local keystore, Google still has a copy. Safer.
+*   **Cons:** You give Google control of your signing key.
+*   **Recommendation:** Enable it. Most developers do now.
+
+---
+
+## 🔄 App Update Behavior
+
+Unlike native apps, TWA updates **do not** require a Play Store re-upload:
+
+| Change | Requires Play Store Update? |
+|--------|-----------------------------|
+| Code changes (features, bug fixes) | ❌ No — Deploy to Vercel, users see it immediately |
+| App name or icon change | ✅ Yes |
+| New Android permissions | ✅ Yes |
+| Package name change | ✅ Yes (new app) |
+
+---
+
+## 📊 Analytics & Crash Reporting
+
+| Tool | Status |
+|------|--------|
+| **Google Analytics** | Works normally (tracks as web traffic). |
+| **Sentry** | Works normally (you already have it configured). |
+| **Play Console Vitals** | Limited. Google can't see inside your web code. Crash reports are minimal. |
+
+---
+
+## 🔗 Deep Linking (Optional)
+
+If you want users to click `freestyla.app/tracks/xyz` and open directly in the app:
+1.  Add intent filters in `twa-manifest.json` during `bubblewrap init`.
+2.  Ensure `assetlinks.json` lists all subpaths.
+
+*Not required for launch, but good for social sharing.*
+
+---
+
+## 📋 Play Store Review Process
+
+| Stage | Timeline |
+|-------|----------|
+| **First Submission** | 1-7 days (they scrutinize new developers). |
+| **Updates** | Usually hours, sometimes instant. |
+| **Rejection** | You get an email explaining why. Common reasons: missing Privacy Policy link, metadata issues, low-quality screenshots. |
+
+---
+
+## 📦 AAB vs APK
+
+*   `bubblewrap build` creates both.
+*   **Upload the `.aab`** (Android App Bundle) to Play Console, not the `.apk`.
+*   Google generates optimized APKs for each device type from the AAB.
+*   The `.apk` is for local testing only.
+
+---
+
+## 📱 Minimum Android Version
+
+*   TWAs require **Android 7.0 (API 24)** or higher.
+*   ~97% of active Android devices are covered.
+*   Users on Android 6 or below will see a fallback browser experience (Chrome Custom Tab with URL bar visible).
+
+---
+
+## 🌐 WebView Version
+
+TWA uses the system **Chrome WebView** (or full Chrome if available):
+*   Most users have recent Chrome auto-updated.
+*   Edge case: Old phones with outdated WebView may have API quirks.
+*   **Your mitigation:** You already use fallbacks (e.g., `webkitAudioContext`). ✔️
 
 ---
 
@@ -167,3 +256,23 @@ We will use Google's **Bubblewrap CLI** to generate the Android project.
     - Check that the `package_name` in `assetlinks.json` matches your Android app exactly.
     - Check that the `sha256_cert_fingerprints` matches your Keystore exactly.
 - **Offline issues**: Ensure your `sw.js` (Service Worker) is caching the start URL (`/`).
+- **Play Store Rejection**: Read the email carefully. Usually it's a missing Privacy Policy URL or low-quality screenshots.
+
+---
+
+## Final Checklist
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Add `orientation: portrait` to `manifest.json` | ⬜ |
+| 2 | Create Feature Graphic (1024x500) | ⬜ |
+| 3 | Take 2+ Screenshots | ⬜ |
+| 4 | Buy custom domain (recommended) | ⬜ |
+| 5 | Run `bubblewrap init` | ⬜ |
+| 6 | **Save keystore + passwords securely** | ⬜ |
+| 7 | Deploy `assetlinks.json` to website | ⬜ |
+| 8 | Build AAB | ⬜ |
+| 9 | Upload to Play Console | ⬜ |
+| 10 | Fill out Play Console forms | ⬜ |
+| 11 | Submit for review | ⬜ |
+

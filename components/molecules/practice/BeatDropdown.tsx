@@ -153,8 +153,24 @@ export function BeatDropdown(props: BeatDropdownProps) {
   const handleDeleteBeat = async (beatId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     if (confirm('Delete this track?')) {
-      await deleteLocalBeat(beatId)
-      fetchMyBeats()
+      try {
+        // Check if it's a local beat (stored in IndexedDB) vs server beat
+        if (beatId.startsWith('local-')) {
+          await deleteLocalBeat(beatId)
+        } else {
+          // Server-side beat - call the API
+          const res = await fetch(`/api/user/beats/${beatId}`, {
+            method: 'DELETE',
+          })
+          if (!res.ok) {
+            throw new Error('Failed to delete beat')
+          }
+        }
+        fetchMyBeats()
+      } catch (error) {
+        console.error('Delete beat error:', error)
+        alert('Failed to delete beat')
+      }
     }
   }
 
