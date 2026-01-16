@@ -359,6 +359,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 <svg
                   viewBox="0 0 100 100"
                   className="w-full h-full scale-[1.02]" // Slight outward scale to overlap border
+                  overflow="visible" // Prevent glow clipping
                   style={{
                     transform: 'rotate(-90deg)', // Align 0 to Top
                   }}
@@ -412,10 +413,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         stroke={color}
                         strokeLinecap="round"
                         strokeDasharray={`${segmentLength} ${C - segmentLength}`}
-                        initial={{ opacity: 0.3, strokeWidth: 2 }}
+                        initial={{ opacity: 0.3, strokeWidth: 1 }}
                         animate={{
                           opacity: isActive ? 1 : 0.4,
-                          strokeWidth: isActive ? 4 : 2, // Thicker active stroke
+                          strokeWidth: isActive ? 2 : 1, // Reduced thickness
                           filter: isActive
                             ? `drop-shadow(0 0 8px ${color})`
                             : 'none',

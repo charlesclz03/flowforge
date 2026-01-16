@@ -33,6 +33,7 @@ interface SessionSummaryData {
       achievements: number
     }
   }
+  isOptimistic?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Props are valid for client-only components
@@ -136,44 +137,62 @@ export default function SessionSummaryModal({
 
           {/* XP Bar Animation */}
           <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-            <div className="flex justify-between text-xs font-bold text-text-secondary mb-2">
-              <span>Level {data.xp?.newLevel || 1}</span>
-              <span>
-                {data.xp?.currentXP || 0} / {data.xp?.maxXP || 1000} XP
-              </span>
-            </div>
-            <div className="h-3 bg-black/40 rounded-full overflow-hidden relative">
-              <motion.div
-                initial={{
-                  width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-                }}
-                animate={{
-                  width:
-                    step >= 1
-                      ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
-                      : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-                }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
-              />
-              {/* Added XP Chunk */}
-              {step >= 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
-                  style={{
-                    left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
-                    width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`,
-                  }}
-                />
-              )}
-            </div>
-            <div className="mt-2 text-right">
-              <span className="text-green-400 font-bold text-xs">
-                +{data.xp?.gained || 0} XP Gained
-              </span>
-            </div>
+            {data.isOptimistic ? (
+              <div className="animate-pulse space-y-3">
+                <div className="flex justify-between text-xs font-bold text-text-secondary">
+                  <div className="h-4 w-16 bg-white/10 rounded"></div>
+                  <div className="h-4 w-24 bg-white/10 rounded"></div>
+                </div>
+                <div className="h-3 bg-white/10 rounded-full w-full"></div>
+                <div className="flex justify-end">
+                  <div className="h-4 w-20 bg-white/10 rounded"></div>
+                </div>
+                <div className="text-center text-xs text-text-tertiary mt-1">
+                  Syncing Session Data...
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-between text-xs font-bold text-text-secondary mb-2">
+                  <span>Level {data.xp?.newLevel || 1}</span>
+                  <span>
+                    {data.xp?.currentXP || 0} / {data.xp?.maxXP || 1000} XP
+                  </span>
+                </div>
+                <div className="h-3 bg-black/40 rounded-full overflow-hidden relative">
+                  <motion.div
+                    initial={{
+                      width: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                    }}
+                    animate={{
+                      width:
+                        step >= 1
+                          ? `${((data.xp?.currentXP || 0) / (data.xp?.maxXP || 1000)) * 100}%`
+                          : `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                    }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent-purple to-accent-pink"
+                  />
+                  {/* Added XP Chunk */}
+                  {step >= 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="absolute inset-y-0 left-[0%] w-full bg-white/50 animate-pulse"
+                      style={{
+                        left: `${Math.max(0, (((data.xp?.currentXP || 0) - (data.xp?.gained || 0)) / (data.xp?.maxXP || 1000)) * 100)}%`,
+                        width: `${((data.xp?.gained || 0) / (data.xp?.maxXP || 1000)) * 100}%`,
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="mt-2 text-right">
+                  <span className="text-green-400 font-bold text-xs">
+                    +{data.xp?.gained || 0} XP Gained
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Stats Grid - Pop In */}
