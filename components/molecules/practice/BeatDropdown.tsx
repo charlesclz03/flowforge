@@ -162,7 +162,13 @@ export function BeatDropdown(props: BeatDropdownProps) {
     (b: Beat) =>
       b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       b.artistName?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  ).sort((a, b) => {
+    const aFav = favoriteIds.has(a.id)
+    const bFav = favoriteIds.has(b.id)
+    if (aFav && !bFav) return -1
+    if (!aFav && bFav) return 1
+    return 0
+  })
 
   const allUserBeats = [...myBeats]
 
