@@ -48,13 +48,19 @@ export const authOptions: NextAuthOptions = {
         // @ts-expect-error - user object from adapter has additional fields
         session.user.bio = user.bio
 
-        // Fetch latest streak from DB to ensure accuracy
+        // Fetch latest streak & stats from DB to ensure accuracy
         const latestUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { currentStreak: true },
+          select: {
+            currentStreak: true,
+            xp: true,
+            level: true,
+          },
         })
         if (latestUser) {
           session.user.currentStreak = latestUser.currentStreak
+          session.user.xp = latestUser.xp
+          session.user.level = latestUser.level
         }
       }
       return session

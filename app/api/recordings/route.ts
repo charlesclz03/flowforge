@@ -178,14 +178,24 @@ export async function POST(request: Request) {
       }
 
       // Fetch current user XP
+      console.log(`[XP_UPDATE] Starting update for user: ${session.user.id}`)
+
       const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
         select: { xp: true, level: true },
       })
 
       if (currentUser) {
+        console.log(
+          `[XP_UPDATE] User found found. Current XP: ${currentUser.xp}, Level: ${currentUser.level}`
+        )
+
         const totalXP = (currentUser.xp || 0) + xpResult.total
         const levelInfo = getLevelInfo(totalXP)
+
+        console.log(
+          `[XP_UPDATE] New Totals - XP: ${totalXP}, Level: ${levelInfo.level}`
+        )
 
         // Update User
         await prisma.user.update({
@@ -205,7 +215,7 @@ export async function POST(request: Request) {
         }
       } else {
         console.warn(
-          `User ${session.user.id} not found in public.users table. XP not saved.`
+          `[XP_UPDATE] User ${session.user.id} not found in public.users table. XP not saved.`
         )
       }
     } catch (err) {
