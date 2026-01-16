@@ -10,6 +10,8 @@ declare module 'next-auth' {
       username?: string | null
       bio?: string | null
       currentStreak?: number
+      xp?: number
+      level?: number
     } & DefaultSession['user']
   }
 }

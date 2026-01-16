@@ -358,7 +358,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                 <svg
                   viewBox="0 0 100 100"
-                  className="w-full h-full scale-[1.02]" // Slight outward scale to overlap border
+                  className="w-full h-full scale-[1.05] sm:scale-[1.05]" // Slightly larger to be the true border
                   overflow="visible" // Prevent glow clipping
                   style={{
                     transform: 'rotate(-90deg)', // Align 0 to Top
@@ -418,7 +418,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           opacity: isActive ? 1 : 0.4,
                           strokeWidth: isActive ? 2 : 1, // Reduced thickness
                           filter: isActive
-                            ? `drop-shadow(0 0 8px ${color})`
+                            ? `drop-shadow(0 0 12px ${color})` // Stronger glow
                             : 'none',
                         }}
                         style={{
@@ -509,11 +509,14 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 // Caps width and height to 45% of viewport height to prevent crop on short screens
                 'w-[min(70vmin,320px,45vh)] h-[min(70vmin,320px,45vh)] sm:w-[340px] sm:h-[340px] max-w-[calc(100vw-10rem)] max-h-[calc(100vw-10rem)]',
                 'border backdrop-blur-md shadow-2xl overflow-hidden',
-                isPlaying
-                  ? isRecording && !isInfiniteMode
-                    ? 'border-red-500/50 bg-black/40 shadow-red-glow'
-                    : 'border-accent-purple/30 bg-black/40 shadow-purple-glow'
-                  : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
+                // HIDE BORDER IN CYPHER MODE (SVG Ring acts as border)
+                mode === 'cypher'
+                  ? 'border-transparent'
+                  : isPlaying
+                    ? isRecording && !isInfiniteMode
+                      ? 'border-red-500/50 bg-black/40 shadow-red-glow'
+                      : 'border-accent-purple/30 bg-black/40 shadow-purple-glow'
+                    : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
               )}
             >
               {/* Visualizer Background */}
