@@ -351,26 +351,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
           )}
 
-          {/* Cypher Mode Indicator */}
-          {/* ... (omitted for brevity, assume unchanged logic if not shown) ... */}
-          {/* Cypher Mode: Active Player Text (Floating above) */}
-          {mode === 'cypher' && activePlayer !== 0 && (
-            <div className="absolute top-2 sm:top-8 z-30 flex flex-col items-center animate-in fade-in slide-in-from-top-4">
-              <span
-                className={cn(
-                  'text-sm font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
-                  activePlayer === 1 && 'text-accent-purple',
-                  activePlayer === 2 && 'text-accent-orange',
-                  activePlayer === 3 && 'text-accent-gold',
-                  activePlayer === 4 && 'text-accent-green',
-                  activePlayer === 5 && 'text-accent-blue'
-                )}
-              >
-                Player {activePlayer}
-              </span>
-            </div>
-          )}
-
           {/* Hero Player - Centered */}
           <div className="relative flex items-center justify-center">
             {/* Simon Ring (Cypher Mode) - SVG Implementation */}
@@ -582,6 +562,24 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
               {/* Inner Content */}
               <div className="relative z-10 flex flex-col items-center justify-center text-center">
+                {/* Cypher Player Label - Centered in Upper Ring */}
+                {mode === 'cypher' && activePlayer !== 0 && (
+                  <div className="absolute -top-12 w-full flex justify-center animate-in fade-in slide-in-from-top-2">
+                    <span
+                      className={cn(
+                        'text-lg sm:text-xl font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
+                        activePlayer === 1 && 'text-accent-purple',
+                        activePlayer === 2 && 'text-accent-orange',
+                        activePlayer === 3 && 'text-accent-gold',
+                        activePlayer === 4 && 'text-accent-green',
+                        activePlayer === 5 && 'text-accent-blue'
+                      )}
+                    >
+                      Player {activePlayer}
+                    </span>
+                  </div>
+                )}
+
                 {isPlaying ? (
                   <div className="flex flex-col items-center justify-center space-y-2">
                     {currentWord ? (

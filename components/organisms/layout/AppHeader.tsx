@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, Flame } from 'lucide-react'
+import { ArrowLeft, Flame, HelpCircle } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
@@ -68,6 +68,21 @@ export function AppHeader({
           {/* Account section - top right */}
           {showSettings && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2 sm:gap-3">
+              {/* Help Button - Redirects to How It Works */}
+              <Link
+                href="/howitworks"
+                className="flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                aria-label="How it works"
+              >
+                <HelpCircle
+                  className="w-4 h-4 sm:w-4 sm:h-4"
+                  strokeWidth={2.5}
+                />
+                <span className="hidden sm:inline ml-1.5 text-xs font-bold uppercase tracking-wider">
+                  Help
+                </span>
+              </Link>
+
               {/* Streak Counter */}
               {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
                 <div className="group relative">
