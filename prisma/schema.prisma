@@ -22,6 +22,7 @@ model Beat {
   tags            String[] @default([])
   duration        Int?     // Duration in seconds
   artistName      String?  @map("artist_name")
+  label           String?
   difficulty      String   @default("Medium") // "Easy", "Medium", "Hard"
   
   // User Uploads & Calibration

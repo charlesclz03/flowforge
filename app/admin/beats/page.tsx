@@ -30,6 +30,7 @@ export default function AdminBeatsPage() {
   const [editForm, setEditForm] = useState({
     title: '',
     artistName: '',
+    label: '',
     bpm: 0,
     isPremium: false,
   })
@@ -103,6 +104,7 @@ export default function AdminBeatsPage() {
     setEditForm({
       title: beat.title,
       artistName: beat.artistName || '',
+      label: beat.label || '',
       bpm: beat.bpm,
       isPremium: beat.isPremium,
     })
@@ -110,7 +112,13 @@ export default function AdminBeatsPage() {
 
   const cancelEdit = () => {
     setEditingId(null)
-    setEditForm({ title: '', artistName: '', bpm: 0, isPremium: false })
+    setEditForm({
+      title: '',
+      artistName: '',
+      label: '',
+      bpm: 0,
+      isPremium: false,
+    })
   }
 
   const handleSave = async (id: string) => {
@@ -118,7 +126,8 @@ export default function AdminBeatsPage() {
       const updated = await updateBeat(id, {
         title: editForm.title,
         artistName: editForm.artistName,
-        bpm: editForm.bpm,
+        label: editForm.label,
+        bpm: Number(editForm.bpm),
         isPremium: editForm.isPremium,
       })
       setBeats(beats.map((b) => (b.id === id ? updated : b)))
@@ -167,6 +176,7 @@ export default function AdminBeatsPage() {
                 <TableHead>Order</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Producer</TableHead>
+                <TableHead>Label</TableHead>
                 <TableHead>BPM</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Actions</TableHead>
@@ -233,6 +243,26 @@ export default function AdminBeatsPage() {
                     ) : (
                       <span className="text-text-secondary">
                         {beat.artistName || 'Unknown'}
+                      </span>
+                    )}
+                  </TableCell>
+
+                  {/* Edit Mode: Label */}
+                  <TableCell>
+                    {editingId === beat.id ? (
+                      <Input
+                        value={editForm.label}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            label: e.target.value,
+                          })
+                        }
+                        placeholder="Label"
+                      />
+                    ) : (
+                      <span className="text-text-secondary">
+                        {beat.label || '-'}
                       </span>
                     )}
                   </TableCell>

@@ -21,6 +21,8 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
   // Metadata State
   const [title, setTitle] = useState('')
   const [bpm, setBpm] = useState('')
+  const [artist, setArtist] = useState('')
+  const [label, setLabel] = useState('')
   const [genre] = useState('Freestyle')
 
   // Calibration State
@@ -64,6 +66,10 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
       setAudioUrl(URL.createObjectURL(selected))
       // Auto-fill title from filename
       setTitle(selected.name.replace(/\.[^/.]+$/, ''))
+      setBpm('')
+      setArtist('')
+      setLabel('')
+      setOffset(0)
     }
   }
 
@@ -139,21 +145,22 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
         )
       }
 
-      // Step 3: Send metadata to our API to create the DB record
-      const metadataRes = await fetch('/api/user/beats', {
+      // Step 3: Register in DB
+      const res = await fetch('/api/user/beats/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
           bpm: parseInt(bpm),
-          genre,
-          offset,
+          artistName: artist,
+          label, // Include label
           storageUrl: publicUrl,
+          offset,
         }),
       })
 
-      if (!metadataRes.ok) {
-        const data = await metadataRes.json()
+      if (!res.ok) {
+        const data = await res.json()
         throw new Error(data.error || 'Failed to save beat metadata')
       }
 
@@ -329,6 +336,33 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-text-secondary">
+                  Producer Name *
+                </label>
+                <input
+                  type="text"
+                  value={artist}
+                  onChange={(e) => setArtist(e.target.value)}
+                  placeholder="e.g. You or the producer"
+                  className="w-full bg-background-elevated border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-accent-purple text-sm"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-text-secondary">
+                  Label{' '}
+                  <span className="text-xs text-text-tertiary">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={label}
+                  onChange={(e) => setLabel(e.target.value)}
+                  placeholder="e.g. My Label"
+                  className="w-full bg-background-elevated border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-accent-purple text-sm"
+                />
               </div>
 
               <button

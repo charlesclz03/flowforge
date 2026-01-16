@@ -17,6 +17,7 @@ export function AdminUploadSection() {
   const [title, setTitle] = useState('')
   const [bpm, setBpm] = useState('')
   const [producer, setProducer] = useState('')
+  const [label, setLabel] = useState('Freestyla')
   const [genre, setGenre] = useState('')
   const [isPremium, setIsPremium] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -84,6 +85,7 @@ export function AdminUploadSection() {
           title,
           bpm,
           artistName: producer,
+          label, // Include label
           genre,
           isPremium,
           storageUrl: publicUrl,
@@ -104,6 +106,7 @@ export function AdminUploadSection() {
       setTitle('')
       setBpm('')
       setProducer('')
+      setLabel('Freestyla') // Reset to default
       setGenre('')
       setIsPremium(false)
       setFile(null)
@@ -255,6 +258,20 @@ export function AdminUploadSection() {
                 placeholder="e.g. FreeStyla Originals"
                 className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple"
                 required
+              />
+            </div>
+
+            {/* Label */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-secondary">
+                Label
+              </label>
+              <input
+                type="text"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                placeholder="e.g. Freestyla"
+                className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple"
               />
             </div>
 

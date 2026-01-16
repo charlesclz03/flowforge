@@ -219,6 +219,11 @@ export function BeatGridCard({
           <span className="inline-flex items-center rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-medium text-text-secondary border border-white/5">
             {beat.bpm} BPM
           </span>
+          {beat.label && (
+            <span className="inline-flex items-center rounded-full bg-accent-purple/10 px-2 py-0.5 text-[10px] font-medium text-accent-purple border border-accent-purple/30">
+              {beat.label}
+            </span>
+          )}
           {beat.genre && (
             <span className="inline-flex items-center rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-medium text-text-secondary border border-white/5">
               {beat.genre}

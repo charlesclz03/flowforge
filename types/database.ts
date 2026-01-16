@@ -24,6 +24,7 @@ export type BeatResponse = {
   coverImage?: string | null
   duration?: number | null
   artistName?: string | null
+  label?: string | null // Added
   uploaderId?: string | null // Added
   offset: number // Added (Float in Prisma, number in TS)
   isPremium: boolean
