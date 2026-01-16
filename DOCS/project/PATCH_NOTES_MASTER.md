@@ -1,3 +1,75 @@
+## v0.9.35 - The Flow State Update 🌊 (2026-01-16)
+**Codename:** Seamless Upload
+
+We smoothed out the "My Tracks" experience. You can now upload beats directly from the difficulty menu and managing your library is easier than ever.
+
+### New Features
+- 📤 **Instant Upload**: Added a smart "Upload your first beat" prompt and a permanent "Upload new track" button right in the My Tracks dropdown.
+- 🔄 **Seamless Flow**: Uploading from the difficulty menu now auto-redirects you to the upload vault.
+
+### Fixes & Improvements
+- 🗑️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!
+
+---
+
+## v0.9.34 - The Social Proof Update 🌟 (2026-01-16)
+**Codename:** Five Stars
+
+We enabled a seamless rating experience, polished beat card visuals, and finally solved audio looping for infinite flow.
+
+### New Features
+- 🌟 **Rate Us**: Added a sleek rating modal that appears after your 3rd session. Love the app? Let us know!
+- ⭐ **Star Power**: You can now drop a star rating directly in the feedback form.
+
+### Fixes & Improvements
+- ♾️ **Perfect Loops**: Rewrote the audio engine to use Web Audio scheduling. Beats now loop seamlessly with zero gaps.
+- 🎨 **Clean Cards**: Combined Artist and Producer names on beat cards for a cleaner look.
+
+---
+
+## v0.9.33 - The Green Light Update 🟢 (2026-01-16)
+**Codename:** Go Time
+
+We made sure your recordings always playback perfectly and gave the Practice Mode a clearer, punchier "START" button so you know exactly when to drop your bars.
+
+### Fixes & Improvements
+- 📼 **Playback Rescued**: Fixed a "Failed to Play" bug caused by some beats having spaces in their cloud filenames. Your history is safe!
+- 🟢 **Clearer Start**: Swapped the ambiguous mic icon for a big, bold, pulsing "START" button. Less guessing, more rapping.
+
+---
+
+## v0.9.32 - The Responsive Polish Update 📱 (2026-01-16)
+**Codename:** Liquid Flow
+
+We smoothed out the Admin experience and fine-tuned the mobile layout to feel even more native. Plus, difficulty settings now stick instantly!
+
+### Fixes & Improvements
+- 🖱️ **Admin Focus Fix**: Resolved an annoying bug where editing track details would lose focus after every character. Smooth typing is back!
+- 🎚️ **Instant Difficulty**: Changing difficulty mid-session now instantly updates the word vibe for the rest of your session.
+
+### Visual Overhaul
+- 📏 **Compact Mobile Layout**: Optimized padding and scaling for small iPhones (SE, Mini) to ensure all controls fit on a single screen without scrolling.
+- 🔄 **Responsive Practice controls**: The REC indicator and main buttons now scale aggressively to respect the viewport on smaller devices.
+
+---
+
+## v0.9.31 - The Quality of Life Update 🛡️ (2026-01-16)
+**Codename:** Safe Zone
+
+A massive polish update ensuring content never covers navigation, fixing audio glitches during review, and professionalizing the experience with better legal pages and feedback tools.
+
+### Visual Overhaul
+- 🛑 **Bottom Nav Safety**: Implemented global padding logic so content is never hidden behind the bottom bar on any device.
+- 📱 **Header Harmony**: Constrained header titles to prevent text overlapping with buttons on smaller screens.
+- ✨ **Professional Polish**: Refined the look of legal pages and feedback forms with cleaner iconography.
+
+### Fixes & Improvements
+- 🐛 **Audio Glitch Eradicated**: Fixed stuttering and popping during recording review playback.
+- 🌊 **Smooth Waveform**: The playback indicator now smoothly glides across the track without jitter.
+- 🗣️ **Feedback Center**: Launched a dedicated `/feedback` page for easier bug reporting.
+
+---
+
 ## v0.9.30 - The Visual Polish Update 💅 (2026-01-16)
 **Codename:** Neon Ring
 
