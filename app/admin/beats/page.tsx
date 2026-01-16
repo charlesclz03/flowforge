@@ -129,12 +129,18 @@ export default function AdminBeatsPage() {
     }
   }
 
+  // Local state for reloading UI feedback
+  const [reorderingId, setReorderingId] = useState<string | null>(null)
+
   const handleReorder = async (id: string, direction: 'up' | 'down') => {
     try {
+      setReorderingId(id)
       await reorderBeat(id, direction)
-      loadBeats()
+      await loadBeats()
     } catch (error) {
       toast.error('Failed to reorder beat')
+    } finally {
+      setReorderingId(null)
     }
   }
 
@@ -170,19 +176,27 @@ export default function AdminBeatsPage() {
               {beats.map((beat) => (
                 <TableRow key={beat.id}>
                   <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <button
-                        onClick={() => handleReorder(beat.id, 'up')}
-                        className="hover:text-accent-purple p-1"
-                      >
-                        <ArrowUp size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleReorder(beat.id, 'down')}
-                        className="hover:text-accent-purple p-1"
-                      >
-                        <ArrowDown size={16} />
-                      </button>
+                    <div className="flex flex-col gap-1 items-center">
+                      {reorderingId === beat.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-accent-purple" />
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleReorder(beat.id, 'up')}
+                            className="hover:text-accent-purple p-1 disabled:opacity-50"
+                            disabled={!!reorderingId}
+                          >
+                            <ArrowUp size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleReorder(beat.id, 'down')}
+                            className="hover:text-accent-purple p-1 disabled:opacity-50"
+                            disabled={!!reorderingId}
+                          >
+                            <ArrowDown size={16} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
 

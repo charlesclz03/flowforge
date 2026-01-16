@@ -9,9 +9,7 @@ export async function getAdminBeats() {
     where: {
       uploaderId: null, // Only fetch public beats for admin management
     },
-    orderBy: {
-      sortOrder: 'asc', // Default sort by custom order
-    } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
   })
 }
 
@@ -37,7 +35,7 @@ export async function reorderBeat(id: string, direction: 'up' | 'down') {
   // 1. Fetch ALL admin beats in current sorted order
   const allBeats = await prisma.beat.findMany({
     where: { uploaderId: null },
-    orderBy: { sortOrder: 'asc' } as any,
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
   })
 
   const currentIndex = allBeats.findIndex((b) => b.id === id)
