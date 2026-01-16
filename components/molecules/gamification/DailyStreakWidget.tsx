@@ -12,7 +12,7 @@ export function DailyStreakWidget({
   hasPracticedToday,
 }: DailyStreakWidgetProps) {
   return (
-    <div className="relative group overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500/10 to-red-600/10 border border-orange-500/20 p-4">
+    <div className="relative group overflow-hidden rounded-2xl bg-background-glow bg-gradient-to-br from-orange-500/10 to-red-600/10 border border-orange-500/20 p-4">
       {/* Background glow */}
       <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-orange-500/20 blur-3xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
 
