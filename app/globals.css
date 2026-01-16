@@ -172,6 +172,18 @@
     padding-right: env(safe-area-inset-right);
   }
 
+  /* Bottom navigation safe padding - accounts for fixed nav bar height + safe area */
+  /* BottomNav: h-20 (80px) + bottom-6 (24px) + extra buffer = ~120px min */
+  .pb-bottomnav {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-height: 800px) {
+    .pb-bottomnav {
+      padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
   .touch-target {
     min-width: 44px;
     min-height: 44px;
@@ -191,3 +203,100 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================
+   SMALL SCREEN RESPONSIVE UTILITIES
+   Target: iPhone SE (667px), small Android devices
+   Purpose: Ensure app-feel with no scrolling
+   ============================================ */
+
+/* Very small screens (iPhone SE, small Android) */
+@media (max-height: 667px) {
+  /* Reduce header padding */
+  .app-header-compact {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Tighter vertical spacing */
+  .space-y-8 {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
+  }
+
+  .space-y-6 {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+  }
+
+  /* Reduce main content padding */
+  .pb-24 {
+    padding-bottom: 4.5rem !important;
+  }
+
+  .pt-8 {
+    padding-top: 1rem !important;
+  }
+
+  /* Scale down large text */
+  .text-5xl {
+    font-size: 2rem !important;
+  }
+
+  .text-6xl {
+    font-size: 2.5rem !important;
+  }
+
+  .text-7xl {
+    font-size: 3rem !important;
+  }
+}
+
+/* Compact height screens (iPhone 12 Mini, etc) */
+@media (max-height: 750px) {
+  /* Reduce gaps */
+  .gap-8 {
+    gap: 1.25rem !important;
+  }
+
+  .gap-6 {
+    gap: 1rem !important;
+  }
+
+  /* Reduce vertical padding on main areas */
+  .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .pt-16 {
+    padding-top: 2.5rem !important;
+  }
+}
+
+/* Utility class for preventing scroll on specific pages */
+.app-screen-fixed {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+/* Container that should flex-fit its content */
+.app-screen-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Make elements scale based on available height */
+.scale-to-fit {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+

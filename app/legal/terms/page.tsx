@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 export default function TermsPage() {
   const router = useRouter()
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-bottomnav">
       <AppHeader
         showBackButton
         onBack={() => router.back()}
@@ -108,30 +108,30 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
               <li>
-                <strong>✅ Permitted:</strong> You may use System Beats to
-                create, record, and practice freestyle sessions within the
-                FreeStyla application.
+                <strong>[PERMITTED]</strong> You may use System Beats to create,
+                record, and practice freestyle sessions within the FreeStyla
+                application.
               </li>
               <li>
-                <strong>✅ Permitted:</strong> You may share video or audio
+                <strong>[PERMITTED]</strong> You may share video or audio
                 recordings exported directly from FreeStyla (which contain the
                 System Beat) on personal social media platforms (e.g.,
                 Instagram, TikTok, YouTube) for non-commercial, promotional
                 purposes.
               </li>
               <li>
-                <strong>❌ Prohibited:</strong> You may NOT distribute, sell, or
+                <strong>[PROHIBITED]</strong> You may NOT distribute, sell, or
                 upload any track containing a System Beat to digital service
                 providers (DSPs) such as Spotify, Apple Music, SoundCloud
                 (monetized), or any other streaming service.
               </li>
               <li>
-                <strong>❌ Prohibited:</strong> You may NOT extract, download,
-                or use the System Beat files separately from the FreeStyla
+                <strong>[PROHIBITED]</strong> You may NOT extract, download, or
+                use the System Beat files separately from the FreeStyla
                 application for any purpose.
               </li>
               <li>
-                <strong>❌ Prohibited:</strong> You may NOT use System Beats for
+                <strong>[PROHIBITED]</strong> You may NOT use System Beats for
                 commercial advertisements (TV, Radio, Online Ads) or third-party
                 commercial projects without a separate written license from
                 FreeStyla.

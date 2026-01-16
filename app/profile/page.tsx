@@ -165,7 +165,7 @@ export default function ProfilePage() {
     <OnboardingLayout
       showBackButton={false}
       showSettings={false}
-      className="bg-background pb-32"
+      className="bg-background pb-bottomnav"
       customTitle="ARTIST ID"
       customSubtitle="Your stats, progression, and legacy"
     >

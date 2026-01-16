@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.36',
+    date: '2026-01-16',
+    title: 'The Feedback Fix 🐛',
+    codename: 'Direct Line',
+    description:
+      'We fixed the "Report Bug" link in the settings menu to correctly redirect to the dedicated feedback page, and cleaned up the Patch Notes UI.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '🐛 **Report Bug Redirect**: The "Report Bug" button in Settings now correctly takes you to the Feedback page instead of the Patch Notes.',
+          '🧹 **UI Cleanup**: Removed the redundant "Feedback" form from the bottom of the Patch Notes page.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.35',
     date: '2026-01-16',
     title: 'The Flow State Update 🌊',
@@ -38,7 +55,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🗑️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn\'t working. Clean up your library with confidence!',
+          "🗑️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!",
         ],
       },
     ],

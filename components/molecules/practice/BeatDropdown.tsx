@@ -232,6 +232,14 @@ export function BeatDropdown(props: BeatDropdownProps) {
     }
   }, [])
 
+  // Stop audio preview when dropdown collapses
+  useEffect(() => {
+    if (!isExpanded && audioRef.current) {
+      audioRef.current.pause()
+      setPlayingId(null)
+    }
+  }, [isExpanded])
+
   const filteredBeats = (beats || [])
     .filter(
       (b: Beat) =>

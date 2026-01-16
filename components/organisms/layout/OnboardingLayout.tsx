@@ -15,6 +15,8 @@ interface OnboardingLayoutProps {
   onBack?: () => void
   customTitle?: string
   customSubtitle?: string
+  /** If true, prevents scroll and fits content to screen (for immersive pages like practice) */
+  preventScroll?: boolean
 }
 
 export function OnboardingLayout({
@@ -27,11 +29,13 @@ export function OnboardingLayout({
   onBack,
   customTitle,
   customSubtitle,
+  preventScroll = false,
 }: OnboardingLayoutProps) {
   return (
     <div
       className={cn(
-        'h-[100dvh] overflow-hidden bg-black text-white flex flex-col',
+        'h-[100dvh] bg-black text-white flex flex-col',
+        preventScroll ? 'overflow-hidden' : 'overflow-hidden',
         className
       )}
     >
@@ -43,7 +47,7 @@ export function OnboardingLayout({
       <div className="pointer-events-none fixed bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl animate-pulse delay-1000" />
 
       {/* Page content */}
-      <div className="relative z-10 flex h-full flex-col">
+      <div className="relative z-10 flex h-full flex-col min-h-0">
         <AppHeader
           showBackButton={showBackButton}
           showSettings={showSettings}
@@ -56,9 +60,21 @@ export function OnboardingLayout({
         <main
           id="main-content"
           role="main"
-          className="flex flex-1 flex-col px-6 pb-24 pt-4 sm:pt-6 overflow-y-auto scrollbar-none"
+          className={cn(
+            'flex flex-1 flex-col px-6 pt-4 sm:pt-6 min-h-0',
+            // Responsive bottom padding - less on small screens
+            'pb-20 sm:pb-24',
+            preventScroll ? 'overflow-hidden' : 'overflow-y-auto scrollbar-none'
+          )}
         >
-          <div className="w-full max-w-4xl mx-auto">{children}</div>
+          <div
+            className={cn(
+              'w-full max-w-4xl mx-auto',
+              preventScroll && 'h-full flex flex-col min-h-0'
+            )}
+          >
+            {children}
+          </div>
         </main>
       </div>
 

@@ -1,3 +1,14 @@
+## v0.9.36 - The Feedback Fix 🐛 (2026-01-16)
+**Codename:** Direct Line
+
+We fixed the "Report Bug" link in the settings menu to correctly redirect to the dedicated feedback page, and cleaned up the Patch Notes UI.
+
+### Fixes & Improvements
+- 🐛 **Report Bug Redirect**: The "Report Bug" button in Settings now correctly takes you to the Feedback page instead of the Patch Notes.
+- 🧹 **UI Cleanup**: Removed the redundant "Feedback" form from the bottom of the Patch Notes page.
+
+---
+
 ## v0.9.35 - The Flow State Update 🌊 (2026-01-16)
 **Codename:** Seamless Upload
 

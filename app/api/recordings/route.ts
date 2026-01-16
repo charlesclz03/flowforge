@@ -11,6 +11,13 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
 const SIGNED_URL_TTL_SECONDS = 60 * 60
 
+// Temp interface to handle Prisma type lag
+interface UserWithRate {
+  xp: number
+  level: number
+  hasRated: boolean
+}
+
 /**
  * POST /api/recordings
  * Upload a recording and create a session
@@ -160,6 +167,7 @@ export async function POST(request: Request) {
       },
     }
 
+    let currentUser = null
     try {
       // Calculate XP
       const xpResult = calculateSessionXP({
@@ -180,10 +188,10 @@ export async function POST(request: Request) {
       // Fetch current user XP
       console.log(`[XP_UPDATE] Starting update for user: ${session.user.id}`)
 
-      const currentUser = await prisma.user.findUnique({
+      currentUser = (await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { xp: true, level: true },
-      })
+        select: { xp: true, level: true, hasRated: true } as any,
+      })) as UserWithRate | null
 
       if (currentUser) {
         console.log(
@@ -232,6 +240,12 @@ export async function POST(request: Request) {
         storageUrl: signedUrl,
         newBadges,
         xp: xpData, // Return XP data to client
+        meta: {
+          totalSessions: await prisma.freestyleSession.count({
+            where: { userId: session.user.id },
+          }),
+          hasRated: currentUser?.hasRated || false,
+        },
       },
       storageUrl: signedUrl,
     })

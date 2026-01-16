@@ -12,6 +12,7 @@ import { FreestyleSessionWithBeat } from '@/types/database'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
+import { SeamlessLooper } from '@/lib/audio/seamless-looper'
 
 interface RecordingCardProps {
   recording: FreestyleSessionWithBeat
@@ -67,52 +68,52 @@ export const RecordingCard = memo(function RecordingCard({
   }, [recording, onDownload, handleError, clearError])
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const beatRef = useRef<HTMLAudioElement | null>(null)
+  // Use SeamlessLooper for gapless beat looping
+  const beatLooperRef = useRef<SeamlessLooper | null>(null)
 
   useEffect(() => {
     let createdAudio: HTMLAudioElement | null = null
-    let createdBeat: HTMLAudioElement | null = null
+    let beatLooper: SeamlessLooper | null = null
 
     if (recording.storageUrl && recording.storageUrl.startsWith('http')) {
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.src = ''
       }
-      if (beatRef.current) {
-        beatRef.current.pause()
-        beatRef.current.src = ''
+      if (beatLooperRef.current) {
+        beatLooperRef.current.destroy()
+        beatLooperRef.current = null
       }
 
       createdAudio = new Audio(recording.storageUrl)
       audioRef.current = createdAudio
 
-      // Initialize beat audio if available
+      // Initialize beat with SeamlessLooper for gapless playback
       if (recording.beat?.storageUrl) {
-        createdBeat = new Audio(recording.beat.storageUrl)
-        createdBeat.volume = 0.8 // Default mix volume
-        createdBeat.loop = true // Loop beat to match recording if session was longer than beat duration
-        beatRef.current = createdBeat
+        beatLooper = new SeamlessLooper()
+        beatLooper.setVolume(0.8) // Default mix volume
+        beatLooper.load(recording.beat.storageUrl).catch((err) => {
+          console.error('Failed to load beat for seamless looping:', err)
+        })
+        beatLooperRef.current = beatLooper
       }
 
       createdAudio.onended = () => {
         setIsPlaying(false)
-        if (beatRef.current) {
-          beatRef.current.pause()
-          beatRef.current.currentTime = 0
+        if (beatLooperRef.current) {
+          beatLooperRef.current.stop()
         }
       }
 
       createdAudio.onpause = () => {
         setIsPlaying(false)
-        if (beatRef.current) beatRef.current.pause()
+        if (beatLooperRef.current) beatLooperRef.current.pause()
       }
 
       createdAudio.onplay = () => {
         setIsPlaying(true)
-        if (beatRef.current) {
-          beatRef.current
-            .play()
-            .catch((e) => console.error('Beat playback error:', e))
+        if (beatLooperRef.current) {
+          beatLooperRef.current.play()
         }
       }
 
@@ -134,19 +135,17 @@ export const RecordingCard = memo(function RecordingCard({
         audioRef.current.src = ''
         audioRef.current = null
       }
-      if (beatRef.current) {
-        beatRef.current.pause()
-        beatRef.current.src = ''
-        beatRef.current = null
+      if (beatLooperRef.current) {
+        beatLooperRef.current.destroy()
+        beatLooperRef.current = null
       }
 
       if (createdAudio) {
         createdAudio.pause()
         createdAudio.src = ''
       }
-      if (createdBeat) {
-        createdBeat.pause()
-        createdBeat.src = ''
+      if (beatLooper) {
+        beatLooper.destroy()
       }
     }
   }, [recording.storageUrl, recording.beat, playingId, recording.id])
@@ -161,7 +160,7 @@ export const RecordingCard = memo(function RecordingCard({
         if (isPlaying) {
           setIsPlaying(false)
           if (audioRef.current) audioRef.current.pause()
-          if (beatRef.current) beatRef.current.pause()
+          if (beatLooperRef.current) beatLooperRef.current.pause()
         }
       }
     }

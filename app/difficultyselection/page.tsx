@@ -103,12 +103,13 @@ export default function DifficultySelectionPage() {
       customTitle="SKILL CHECK"
       customSubtitle="Choose your challenge level"
     >
-      <div className="space-y-8">
+      {/* Responsive spacing - tighter on small screens */}
+      <div className="space-y-4 sm:space-y-8">
         {/* Error alert */}
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
         {/* Configuration Sliders */}
-        <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+        <div className="space-y-4 sm:space-y-6 rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-sm">
           <DifficultySelector
             value={difficulty || SESSION_CONFIG.DEFAULT_DIFFICULTY}
             onChange={setDifficulty}

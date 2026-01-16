@@ -149,7 +149,8 @@ export default function RecordingsPage() {
       customTitle="TAPE DECK"
       customSubtitle="Your flow archive and mixed tracks"
     >
-      <div className="pt-8 pb-32">
+      {/* Responsive padding - less on small screens */}
+      <div className="pt-4 sm:pt-8 pb-bottomnav">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

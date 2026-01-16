@@ -241,11 +241,10 @@ export default function TracksPage() {
           customSubtitle="Discover beats for your next session"
         />
       }
-      footer={<div className="h-24" />} /* spacer for bottom nav */
     >
       <audio ref={audioRef} className="hidden" />
 
-      <div className="px-6 py-6 space-y-6">
+      <div className="px-6 py-6 space-y-6 pb-bottomnav">
         <div className="flex items-center justify-between mb-6">
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button

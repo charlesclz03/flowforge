@@ -146,7 +146,7 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
         <AppHeader
           showBackButton={true}
           onBack={handleBack}
-          customTitle={recording.title}
+          customTitle="TRACK REVIEW"
           customSubtitle="Listen back and analyze your flow"
         />
       }

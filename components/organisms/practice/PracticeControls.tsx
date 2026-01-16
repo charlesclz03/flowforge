@@ -172,7 +172,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-4 pt-16 pb-2 sm:py-4 relative'
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-2 sm:gap-4',
+        // Responsive top padding - much less on small screens
+        'pt-8 sm:pt-16 pb-2 sm:py-4 relative'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
@@ -702,23 +704,28 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     </span>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center">
-                    <div
-                      className={cn(
-                        'h-28 w-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group-hover:scale-105',
-                        !isPro || !isRecordingEnabled
-                          ? 'bg-white/5 border border-white/10 text-white/20'
-                          : 'bg-red-500 text-white shadow-red-500/20'
-                      )}
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    {/* START Text - Primary CTA */}
+                    <motion.span
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        opacity: [0.9, 1, 0.9],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                      className="text-5xl sm:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/70 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] uppercase"
                     >
-                      {isPro && isRecordingEnabled && (
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" />
-                      )}
-                      <Mic
-                        size={48}
-                        strokeWidth={1.5}
-                        className="text-white/90 drop-shadow-lg"
-                      />
+                      START
+                    </motion.span>
+                    {/* Mic Indicator - Secondary */}
+                    <div className="flex items-center gap-2 text-white/50">
+                      <Mic size={18} strokeWidth={1.5} />
+                      <span className="text-xs font-medium uppercase tracking-widest">
+                        Tap to begin
+                      </span>
                     </div>
                   </div>
                 )}
@@ -727,7 +734,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </div>
 
           {/* Record Notifier / Bottom Control Area */}
-          <div className="h-14 flex items-center justify-center shrink-0 mt-8 sm:mt-12">
+          <div className="h-10 sm:h-14 flex items-center justify-center shrink-0 mt-4 sm:mt-12">
             <button
               onClick={(e) => {
                 e.stopPropagation()

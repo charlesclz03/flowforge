@@ -2,7 +2,6 @@
 
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
-import { useRouter } from 'next/navigation'
 import { Sparkles, Crown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PostProcessingModal } from './PostProcessingModal'
@@ -46,7 +45,6 @@ export default function SessionSummaryModal({
   data,
   onClose,
 }: SessionSummaryModalProps) {
-  const router = useRouter()
   const [showStudio, setShowStudio] = useState(false)
   const [showPWA, setShowPWA] = useState(false)
   const [step, setStep] = useState(0) // 0: Init, 1: XP Fill, 2: Badges
@@ -259,7 +257,7 @@ export default function SessionSummaryModal({
           {/* Actions */}
           <div className="flex justify-center pt-2">
             <Button
-              onClick={() => router.push('/recordings')}
+              onClick={onClose}
               className="w-full max-w-xs bg-white text-black hover:bg-white/90 font-bold"
             >
               Continue

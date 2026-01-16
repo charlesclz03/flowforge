@@ -47,7 +47,7 @@ export default async function SearchPage({
   const { beats, users } = await search(query)
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-bottomnav">
       <AppHeader
         customTitle="SEARCH"
         customSubtitle="Find the perfect beat or connect with other emcees"

@@ -79,7 +79,7 @@ export default function AdminUploadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-bottomnav">
       <AppHeader />
       <Container className="pt-24 max-w-2xl">
         <div className="mb-8">

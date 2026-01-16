@@ -198,9 +198,22 @@ export function WaveformScrubber({
     showCuePoint,
   ])
 
-  // Animation Loop (though purely reactive here, nice for resize/load)
+  // Animation Loop - Redraw on progress changes and continuously during playback
   useEffect(() => {
-    requestAnimationFrame(draw)
+    // Draw immediately when dependencies change
+    draw()
+
+    // For smooth playhead animation, we track if we need continuous updates
+    // The progress prop changing triggers this effect, and we redraw
+  }, [draw])
+
+  // Separate effect for handling resize events
+  useEffect(() => {
+    const handleResize = () => {
+      requestAnimationFrame(draw)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [draw])
 
   // --- Interactions ---

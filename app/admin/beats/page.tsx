@@ -21,6 +21,41 @@ import {
 import { Button } from '@/components/atoms/Button'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
+// Local simple components to replace missing shadcn/ui
+const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
+  <input
+    {...props}
+    className={`flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-tertiary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple disabled:cursor-not-allowed disabled:opacity-50 ${props.className}`}
+  />
+)
+
+const Table = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-full overflow-auto">
+    <table className="w-full caption-bottom text-sm text-left">
+      {children}
+    </table>
+  </div>
+)
+const TableHeader = ({ children }: { children: React.ReactNode }) => (
+  <thead className="[&_tr]:border-b [&_tr]:border-white/10">{children}</thead>
+)
+const TableBody = ({ children }: { children: React.ReactNode }) => (
+  <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
+)
+const TableRow = ({ children }: { children: React.ReactNode }) => (
+  <tr className="border-b border-white/10 transition-colors hover:bg-white/5 data-[state=selected]:bg-white/10">
+    {children}
+  </tr>
+)
+const TableHead = ({ children }: { children: React.ReactNode }) => (
+  <th className="h-12 px-4 text-left align-middle font-medium text-text-secondary [&:has([role=checkbox])]:pr-0">
+    {children}
+  </th>
+)
+const TableCell = ({ children }: { children: React.ReactNode }) => (
+  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{children}</td>
+)
+
 export default function AdminBeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -35,43 +70,6 @@ export default function AdminBeatsPage() {
     bpm: 0,
     isPremium: false,
   })
-
-  // Local simple components to replace missing shadcn/ui
-  const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input
-      {...props}
-      className={`flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-tertiary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple disabled:cursor-not-allowed disabled:opacity-50 ${props.className}`}
-    />
-  )
-
-  const Table = ({ children }: { children: React.ReactNode }) => (
-    <div className="w-full overflow-auto">
-      <table className="w-full caption-bottom text-sm text-left">
-        {children}
-      </table>
-    </div>
-  )
-  const TableHeader = ({ children }: { children: React.ReactNode }) => (
-    <thead className="[&_tr]:border-b [&_tr]:border-white/10">{children}</thead>
-  )
-  const TableBody = ({ children }: { children: React.ReactNode }) => (
-    <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
-  )
-  const TableRow = ({ children }: { children: React.ReactNode }) => (
-    <tr className="border-b border-white/10 transition-colors hover:bg-white/5 data-[state=selected]:bg-white/10">
-      {children}
-    </tr>
-  )
-  const TableHead = ({ children }: { children: React.ReactNode }) => (
-    <th className="h-12 px-4 text-left align-middle font-medium text-text-secondary [&:has([role=checkbox])]:pr-0">
-      {children}
-    </th>
-  )
-  const TableCell = ({ children }: { children: React.ReactNode }) => (
-    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-      {children}
-    </td>
-  )
 
   useEffect(() => {
     loadBeats()
@@ -166,7 +164,7 @@ export default function AdminBeatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-bottomnav">
       <AppHeader
         showBackButton
         customTitle="BEAT MANAGEMENT"

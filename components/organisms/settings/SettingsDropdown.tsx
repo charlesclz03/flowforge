@@ -30,7 +30,6 @@ export function SettingsDropdown() {
         </Modal>
       </div>
 
-
       {/* Desktop: Dropdown Menu */}
       <div className="hidden lg:block">
         <Menu as="div" className="relative inline-block text-left">

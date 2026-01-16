@@ -7,7 +7,7 @@ import { authOptions } from '@/lib/auth'
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    const { content } = await req.json()
+    const { content, rating } = await req.json()
 
     if (!content || typeof content !== 'string') {
       return NextResponse.json(
@@ -19,9 +19,18 @@ export async function POST(req: NextRequest) {
     const feedback = await prisma.feedback.create({
       data: {
         content,
-        userId: session?.user?.id || null, // Link to user if logged in
+        rating: typeof rating === 'number' ? rating : undefined,
+        userId: session?.user?.id || null,
       },
     })
+
+    // If user is logged in and providing a rating, mark them as having rated
+    if (session?.user?.id && typeof rating === 'number') {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { hasRated: true },
+      })
+    }
 
     return NextResponse.json({ success: true, feedback }, { status: 201 })
   } catch (error) {

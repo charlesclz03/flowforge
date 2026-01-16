@@ -36,7 +36,7 @@ export function ScreenPage({
       {/* Header Area - Sticky if needed, or just normal flow */}
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
-      {/* Content Area - Internal Scrolling */}
+      {/* Content Area - Internal Scrolling with responsive padding */}
       <div className="flex-1 w-full overflow-y-auto relative z-0 scrollbar-none">
         {children}
       </div>

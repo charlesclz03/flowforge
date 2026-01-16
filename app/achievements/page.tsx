@@ -40,7 +40,7 @@ export default async function AchievementsPage() {
       customTitle="HALL OF FAME"
       customSubtitle="Milestones and trophies earned"
     >
-      <Container className="pt-8 pb-32">
+      <Container className="pt-8 pb-bottomnav">
         <div className="mb-4">
           <XPBar
             current={levelInfo.currentXP}

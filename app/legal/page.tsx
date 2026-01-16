@@ -10,7 +10,7 @@ export default function LegalPage() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-bottomnav">
       <AppHeader
         showBackButton
         onBack={() => router.back()}

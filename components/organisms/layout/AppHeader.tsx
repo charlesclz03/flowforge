@@ -74,7 +74,10 @@ export function AppHeader({
                 className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
                 aria-label="How it works"
               >
-                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
+                <HelpCircle
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  strokeWidth={2.5}
+                />
               </Link>
 
               {/* Streak Counter */}
@@ -101,8 +104,9 @@ export function AppHeader({
           )}
 
           {/* Centered Title - navigates to howitworks when logged in */}
+          {/* max-width constraint prevents title from overlapping with absolutely positioned controls */}
           {showTitle && (
-            <div className="flex flex-col items-center justify-center pt-1">
+            <div className="flex flex-col items-center justify-center pt-1 max-w-[calc(100%-160px)] sm:max-w-[calc(100%-200px)]">
               <Link
                 href={homeLink}
                 className="flex items-center justify-center gap-2 rounded-full px-3 py-1"

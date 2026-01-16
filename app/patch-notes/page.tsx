@@ -3,7 +3,6 @@
 import { PATCH_NOTES } from '@/lib/data/patch-notes'
 
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { FeedbackForm } from '@/components/features/feedback/FeedbackForm'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -19,7 +18,7 @@ export default function PatchNotesPage() {
         customSubtitle="System changelog"
       />
 
-      <main className="pt-24 pb-20">
+      <main className="pt-24 pb-bottomnav">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           {/* Timeline - Shifted right for breathing room (left-6) */}
           <div className="space-y-12 relative before:absolute before:left-6 md:before:left-1/2 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-purple-500 before:via-zinc-800 before:to-transparent before:-translate-x-1/2 before:opacity-30">
@@ -89,11 +88,6 @@ export default function PatchNotesPage() {
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          {/* Feedback Section */}
-          <div id="feedback" className="mt-24 max-w-2xl mx-auto">
-            <FeedbackForm />
           </div>
 
           <div className="text-center mt-12">

@@ -27,6 +27,32 @@ Before you start the technical build, ensure these items are ready. Google **wil
 - **Practically required**: A `.vercel.app` subdomain looks unprofessional and locks you to Vercel forever. If you ever migrate, your app breaks.
 - **Action**: Buy a domain (e.g., `freestyla.app` ~$14/year) and point it to Vercel.
 
+#### Domain Registrar Upsells — Skip These
+When purchasing your domain (e.g., from Spaceship, Namecheap, etc.), the registrar will offer add-ons. **Skip all of them**:
+
+| Upsell | Do You Need It? |
+|--------|-----------------|
+| Web Hosting | ❌ No — You use **Vercel** (free tier) |
+| WordPress Hosting | ❌ No — You don't use WordPress |
+| Virtual Machines / Servers | ❌ No — You use Vercel serverless |
+| Load Balancers / Volumes | ❌ No — Enterprise overkill |
+| SSL Certificates | ❌ No — Vercel provides free SSL |
+| Custom Email (you@freestyla.app) | 🟡 Optional — See below |
+
+**Just buy the domain. That's it.**
+
+#### Custom Email (Optional, Nice-to-Have)
+A professional email like `support@freestyla.app` looks better than a Gmail address on the Play Store.
+
+| Option | Cost | Notes |
+|--------|------|-------|
+| **Zoho Mail (Free Tier)** | $0 | 5 users free, custom domain email |
+| **Google Workspace** | ~$6/mo | Full Gmail integration, overkill for now |
+| **Registrar's Email** | ~$1-3/mo | Works but may have poor deliverability |
+
+**Recommendation:** Start with Gmail for support. Add custom email later when you want to look more professional.
+
+
 ### Play Store Graphics
 | Asset | Dimensions | Notes |
 |---|---|---|
@@ -276,3 +302,84 @@ TWA uses the system **Chrome WebView** (or full Chrome if available):
 | 10 | Fill out Play Console forms | ⬜ |
 | 11 | Submit for review | ⬜ |
 
+---
+
+## 💰 Cost Summary
+
+| Item | Cost | When |
+|------|------|------|
+| Google Play Developer Account | $25 (one-time) | Before first upload |
+| Custom Domain | ~$14/year | Before `assetlinks.json` setup |
+| Vercel + Supabase | Already covered | Ongoing |
+| **Total Upfront** | **~$39** | |
+
+---
+
+## 🧪 Testing Strategy
+
+Before submitting to Google:
+
+1.  **Internal Testing Track** — Upload to Play Console's "Internal Testing" first. 
+    *   Only visible to emails you whitelist.
+    *   Instant availability (no review).
+    *   Test real install flow on multiple devices.
+
+2.  **Devices to Test On:**
+    *   A phone with a notch (Samsung S21, Pixel 6).
+    *   A phone without a notch (older budget device).
+    *   With Bluetooth headphones.
+    *   With wired headphones.
+
+---
+
+## 📈 Post-Launch: What to Monitor
+
+| Metric | Where | Why |
+|--------|-------|-----|
+| Installs & Uninstalls | Play Console | Measure retention |
+| Crashes | Play Console Vitals (limited for TWA) | May miss web errors |
+| Real errors | Sentry | Your source of truth |
+| User feedback | Play Store Reviews | Respond within 24h for better ratings |
+
+---
+
+## 🗣️ User Support Expectations
+
+Once you're on the Play Store:
+*   Users **will** leave 1-star reviews for things you can't control ("doesn't work offline" when their internet is spotty).
+*   **Respond politely** to negative reviews. Google favors apps where developers engage.
+*   Consider adding a "Report Issue" button in-app that opens an email to you.
+
+---
+
+## 📣 Marketing / ASO (App Store Optimization)
+
+| Tip | Why |
+|-----|-----|
+| Use keywords in your app name | "FreeStyla: AI Freestyle Rap Coach" |
+| Use keywords in description | "freestyle", "rap", "hip-hop", "battle", "practice" |
+| Get early reviews | Ask beta testers to review. First 10 reviews matter most. |
+| Localize if relevant | Spanish, French descriptions = wider reach. |
+
+---
+
+## 🎯 Timing Considerations
+
+| Question | Answer |
+|----------|--------|
+| When to launch? | After testing. Don't rush. |
+| Wait for iOS? | No. Launch Android now, add iOS later if demand exists. |
+| Wait for ads? | No. Launch with Stripe only. Add rewarded ads later if needed. |
+| Wait for push notifications? | No. TWA doesn't support them anyway. Not a blocker. |
+
+
+## 🌟 Rate Us Configuration
+Once your app is live on the Play Store, you should update the redirection logic in the "Rate App" feature to open the native store listing directly.
+
+*   **File**: `components/organisms/feedback/RateAppModal.tsx`
+*   **Action**: Replace the `/feedback` redirect with your store URL:
+    ```javascript
+    window.location.href = "market://details?id=com.flowforge.freestyla";
+    // or
+    window.location.href = "https://play.google.com/store/apps/details?id=com.flowforge.freestyla";
+    ```

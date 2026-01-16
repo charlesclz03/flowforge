@@ -21,6 +21,7 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { RateAppModal } from '@/components/organisms/feedback/RateAppModal'
 
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { Button } from '@/components/atoms/Button'
@@ -49,6 +50,10 @@ interface SessionSummary {
       words: number
       achievements: number
     }
+  }
+  meta?: {
+    totalSessions: number
+    hasRated: boolean
   }
 }
 
@@ -110,6 +115,7 @@ export default function PracticePage() {
   const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(
     null
   )
+  const [showRateModal, setShowRateModal] = useState(false)
 
   // Derived state
   const usedWords = wordList.slice(0, wordIndex + 1)
@@ -228,7 +234,7 @@ export default function PracticePage() {
           wordCount: wordCount,
           achievementsUnlocked: 0, // Can't predict badges
         })
-        
+
         // Get user's current XP from session (if available)
         const currentUserXP = session?.user?.xp || 0
         const newTotalXP = currentUserXP + predictedXP.total
@@ -265,6 +271,7 @@ export default function PracticePage() {
               score: data.session.score, // Correct score from server
               newBadges: data.session.newBadges,
               xp: data.session.xp, // Crucial: Update XP data from server
+              meta: data.session.meta, // Store metadata for Rate App trigger
               isOptimistic: false,
             }
           })
@@ -664,8 +671,7 @@ export default function PracticePage() {
       u.volume = 0
       window.speechSynthesis.speak(u)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [difficulty, handleError])
 
   // TTS Voice
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
@@ -1208,8 +1214,29 @@ export default function PracticePage() {
       <SessionSummaryModal
         data={sessionSummary}
         onClose={() => {
-          setSessionSummary(null)
+          const meta = sessionSummary?.meta
+          // Trigger Logic: 3+ recordings and hasn't rated yet
+          if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
+            setSessionSummary(null)
+            setShowRateModal(true)
+          } else {
+            setSessionSummary(null)
+            router.push('/recordings')
+          }
+        }}
+      />
+
+      <RateAppModal
+        isOpen={showRateModal}
+        onClose={() => {
+          setShowRateModal(false)
           router.push('/recordings')
+        }}
+        onRate={() => {
+          // Optimistic update locally if needed
+          setShowRateModal(false)
+          // Redirect to feedback with rating mode
+          router.push('/feedback?mode=rate')
         }}
       />
 

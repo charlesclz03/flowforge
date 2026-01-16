@@ -18,6 +18,7 @@ import {
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
+import { SeamlessLooper } from '@/lib/audio/seamless-looper'
 
 // Impulse response for reverb (simple noise burst fallback or load file)
 const createReverb = (
@@ -87,6 +88,7 @@ export const SessionPlayer = forwardRef<
 
     // Advanced Features
     const [nudge, setNudge] = useState(0)
+    const nudgeRef = useRef(0) // Ref to avoid re-creating audio on nudge change
     const [isStudioMode, setIsStudioMode] = useState(true)
 
     // Expose settings to parent (e.g. for downloading mix)
@@ -99,7 +101,8 @@ export const SessionPlayer = forwardRef<
     }))
 
     const audioRef = useRef<HTMLAudioElement | null>(null)
-    const beatRef = useRef<HTMLAudioElement | null>(null)
+    // Use SeamlessLooper for gapless beat looping
+    const beatLooperRef = useRef<SeamlessLooper | null>(null)
 
     // Web Audio Refs
     const contextRef = useRef<AudioContext | null>(null)
@@ -112,14 +115,21 @@ export const SessionPlayer = forwardRef<
     useEffect(() => {
       const saved = localStorage.getItem('flowforge_latency')
       if (saved) {
-        setNudge(parseInt(saved))
+        const val = parseInt(saved)
+        setNudge(val)
+        nudgeRef.current = val
       }
     }, [])
 
+    // Keep nudgeRef in sync with state changes
+    useEffect(() => {
+      nudgeRef.current = nudge
+    }, [nudge])
+
     // dedicated effect for beat volume
     useEffect(() => {
-      if (beatRef.current) {
-        beatRef.current.volume = beatVolume
+      if (beatLooperRef.current) {
+        beatLooperRef.current.setVolume(beatVolume)
       }
     }, [beatVolume])
 
@@ -197,12 +207,15 @@ export const SessionPlayer = forwardRef<
       audioRef.current = audio
       audio.crossOrigin = 'anonymous' // Enable Web Audio API
 
-      // Initialize beat audio if URL provided
+      // Initialize beat with SeamlessLooper for gapless playback
+      let beatLooper: SeamlessLooper | null = null
       if (beatUrl) {
-        const beat = new Audio(beatUrl)
-        beat.volume = beatVolume
-        beat.loop = true // Loop beat to match recording if session was longer than beat duration
-        beatRef.current = beat
+        beatLooper = new SeamlessLooper()
+        beatLooper.setVolume(beatVolume)
+        beatLooper.load(beatUrl).catch((err) => {
+          console.error('Failed to load beat for seamless looping:', err)
+        })
+        beatLooperRef.current = beatLooper
       }
 
       const handleError = (e: Event) => {
@@ -237,24 +250,15 @@ export const SessionPlayer = forwardRef<
 
       audio.addEventListener('timeupdate', () => {
         setCurrentTime(audio.currentTime)
-        // Sync beat audio only if drift is significant (> 300ms)
-        // Lower thresholds cause stuttering due to constant seeking
-        if (beatRef.current) {
-          const targetTime = audio.currentTime - nudge / 1000
-          const drift = Math.abs(beatRef.current.currentTime - targetTime)
-          // Only sync if drift exceeds 0.3s to avoid stuttering
-          if (drift > 0.3 && targetTime >= 0) {
-            beatRef.current.currentTime = targetTime
-          }
-        }
+        // NOTE: Removed beat sync drift correction - it was causing audio glitches
+        // Beat sync is now only done on explicit seek actions (skip, waveform click)
       })
 
       audio.addEventListener('ended', () => {
         setIsPlaying(false)
         setCurrentTime(0)
-        if (beatRef.current) {
-          beatRef.current.pause()
-          beatRef.current.currentTime = 0
+        if (beatLooperRef.current) {
+          beatLooperRef.current.stop()
         }
       })
 
@@ -262,24 +266,24 @@ export const SessionPlayer = forwardRef<
         audio.removeEventListener('error', handleError)
         audio.pause()
         audio.src = ''
-        if (beatRef.current) {
-          beatRef.current.pause()
-          beatRef.current.src = ''
+        if (beatLooperRef.current) {
+          beatLooperRef.current.destroy()
+          beatLooperRef.current = null
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [audioUrl, beatUrl, nudge])
+    }, [audioUrl, beatUrl]) // Removed nudge - handled via ref to avoid audio recreation
 
     const togglePlay = useCallback(() => {
       if (!audioRef.current) return
 
       if (isPlaying) {
         audioRef.current.pause()
-        if (beatRef.current) beatRef.current.pause()
+        if (beatLooperRef.current) beatLooperRef.current.pause()
         setIsPlaying(false)
       } else {
         audioRef.current.play()
-        if (beatRef.current) beatRef.current.play()
+        if (beatLooperRef.current) beatLooperRef.current.play()
         setIsPlaying(true)
       }
     }, [isPlaying])
@@ -293,10 +297,11 @@ export const SessionPlayer = forwardRef<
     }
 
     const handleBeatVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!beatRef.current) return
       const val = parseFloat(e.target.value)
       setBeatVolume(val)
-      beatRef.current.volume = val
+      if (beatLooperRef.current) {
+        beatLooperRef.current.setVolume(val)
+      }
     }
 
     const skipForward = () => {
@@ -306,14 +311,14 @@ export const SessionPlayer = forwardRef<
         audioRef.current.currentTime + 10
       )
       audioRef.current.currentTime = newTime
-      if (beatRef.current) beatRef.current.currentTime = newTime
+      if (beatLooperRef.current) beatLooperRef.current.seek(newTime)
     }
 
     const skipBackward = () => {
       if (!audioRef.current) return
       const newTime = Math.max(0, audioRef.current.currentTime - 10)
       audioRef.current.currentTime = newTime
-      if (beatRef.current) beatRef.current.currentTime = newTime
+      if (beatLooperRef.current) beatLooperRef.current.seek(newTime)
     }
 
     const resetPlayback = () => {
@@ -321,8 +326,8 @@ export const SessionPlayer = forwardRef<
         audioRef.current.currentTime = 0
         setCurrentTime(0)
       }
-      if (beatRef.current) {
-        beatRef.current.currentTime = 0
+      if (beatLooperRef.current) {
+        beatLooperRef.current.seek(0)
       }
     }
 
@@ -415,7 +420,7 @@ export const SessionPlayer = forwardRef<
         <div className="p-8 pb-10 flex flex-col items-center gap-8 relative z-10">
           {audioError && (
             <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-500/10 text-red-300 text-xs px-4 py-2 rounded-full border border-red-500/20 backdrop-blur-md">
-              ⚠️ {audioError}
+              Error: {audioError}
             </div>
           )}
 
@@ -487,14 +492,14 @@ export const SessionPlayer = forwardRef<
                 onChange={(time) => {
                   if (audioRef.current) {
                     audioRef.current.currentTime = time
-                    if (beatRef.current) beatRef.current.currentTime = time
+                    if (beatLooperRef.current) beatLooperRef.current.seek(time)
                     setCurrentTime(time)
                   }
                 }}
                 onSeek={(time) => {
                   if (audioRef.current) {
                     audioRef.current.currentTime = time
-                    if (beatRef.current) beatRef.current.currentTime = time
+                    if (beatLooperRef.current) beatLooperRef.current.seek(time)
                     setCurrentTime(time)
                   }
                 }}

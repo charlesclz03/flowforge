@@ -96,7 +96,7 @@ export async function getBeats(
       success: true,
       data: sanitized,
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching beats:', error)
     // Fallback to static data when DB is unavailable
     try {
