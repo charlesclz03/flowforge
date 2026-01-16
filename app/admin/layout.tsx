@@ -10,7 +10,10 @@ export default async function AdminLayout({
   const session = await getServerSession(authOptions)
   const adminEmail = process.env.ADMIN_EMAIL
 
-  if (!session || !session.user?.email || session.user.email !== adminEmail) {
+  const isSuperAdmin = session?.user?.role === 'SUPERADMIN'
+  const isEmailAdmin = session?.user?.email === adminEmail
+
+  if (!session || (!isSuperAdmin && !isEmailAdmin)) {
     redirect('/')
   }
 
