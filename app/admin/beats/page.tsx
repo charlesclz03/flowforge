@@ -31,6 +31,7 @@ export default function AdminBeatsPage() {
     title: '',
     artistName: '',
     label: '',
+    genre: '',
     bpm: 0,
     isPremium: false,
   })
@@ -105,6 +106,7 @@ export default function AdminBeatsPage() {
       title: beat.title,
       artistName: beat.artistName || '',
       label: beat.label || '',
+      genre: beat.genre || '',
       bpm: beat.bpm,
       isPremium: beat.isPremium,
     })
@@ -116,6 +118,7 @@ export default function AdminBeatsPage() {
       title: '',
       artistName: '',
       label: '',
+      genre: '',
       bpm: 0,
       isPremium: false,
     })
@@ -127,6 +130,7 @@ export default function AdminBeatsPage() {
         title: editForm.title,
         artistName: editForm.artistName,
         label: editForm.label,
+        genre: editForm.genre,
         bpm: Number(editForm.bpm),
         isPremium: editForm.isPremium,
       })
@@ -177,6 +181,7 @@ export default function AdminBeatsPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Producer</TableHead>
                 <TableHead>Label</TableHead>
+                <TableHead>Genre</TableHead>
                 <TableHead>BPM</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Actions</TableHead>
@@ -263,6 +268,39 @@ export default function AdminBeatsPage() {
                     ) : (
                       <span className="text-text-secondary">
                         {beat.label || '-'}
+                      </span>
+                    )}
+                  </TableCell>
+
+                  {/* Edit Mode: Genre */}
+                  <TableCell>
+                    {editingId === beat.id ? (
+                      <select
+                        value={editForm.genre}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            genre: e.target.value,
+                          })
+                        }
+                        className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple"
+                      >
+                        <option value="Freestyle">Freestyle</option>
+                        <option value="Hip-Hop">Hip-Hop</option>
+                        <option value="Old School">Old School</option>
+                        <option value="Trap">Trap</option>
+                        <option value="Chill">Chill</option>
+                        <option value="Drill">Drill</option>
+                        <option value="Lo-Fi">Lo-Fi</option>
+                        <option value="West Coast">West Coast</option>
+                        <option value="Boom Bap">Boom Bap</option>
+                        <option value="R&B">R&B</option>
+                        <option value="Grime">Grime</option>
+                        <option value="Afrobeat">Afrobeat</option>
+                      </select>
+                    ) : (
+                      <span className="text-text-secondary">
+                        {beat.genre || '-'}
                       </span>
                     )}
                   </TableCell>
