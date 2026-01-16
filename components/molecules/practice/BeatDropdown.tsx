@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Beat } from '@/types/database'
 import {
   Crown,
@@ -22,6 +23,36 @@ import {
   TabsTrigger,
 } from '@/components/atoms/Tabs'
 import { deleteLocalBeat } from '@/lib/beats/localBeats'
+
+// Empty state component for My Tracks tab - redirects to /tracks upload flow
+function UploadFirstBeatEmptyState() {
+  const router = useRouter()
+
+  const handleUploadClick = () => {
+    router.push('/tracks?tab=mine&upload=true')
+  }
+
+  return (
+    <div className="py-6 px-4">
+      <p className="text-sm font-medium text-text-secondary text-center mb-4">
+        Upload your first beat
+      </p>
+      <div
+        onClick={handleUploadClick}
+        className="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:bg-white/5 hover:border-accent-purple/30 transition-all cursor-pointer group"
+      >
+        <div className="flex flex-col items-center justify-center gap-2">
+          <Upload
+            className="text-accent-purple group-hover:scale-110 transition-transform"
+            size={32}
+          />
+          <p className="text-white font-medium text-sm">Click to Upload Beat</p>
+          <p className="text-xs text-text-tertiary">MP3, WAV supported</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 interface BeatDropdownProps {
   beats: Beat[]
@@ -158,17 +189,19 @@ export function BeatDropdown(props: BeatDropdownProps) {
     }
   }, [])
 
-  const filteredBeats = (beats || []).filter(
-    (b: Beat) =>
-      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.artistName?.toLowerCase().includes(searchQuery.toLowerCase())
-  ).sort((a, b) => {
-    const aFav = favoriteIds.has(a.id)
-    const bFav = favoriteIds.has(b.id)
-    if (aFav && !bFav) return -1
-    if (!aFav && bFav) return 1
-    return 0
-  })
+  const filteredBeats = (beats || [])
+    .filter(
+      (b: Beat) =>
+        b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.artistName?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aFav = favoriteIds.has(a.id)
+      const bFav = favoriteIds.has(b.id)
+      if (aFav && !bFav) return -1
+      if (!aFav && bFav) return 1
+      return 0
+    })
 
   const allUserBeats = [...myBeats]
 
@@ -365,18 +398,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
               >
                 <div className="p-1">
                   {allUserBeats.length === 0 ? (
-                    <div className="py-10 text-center px-4">
-                      <Music
-                        className="mx-auto text-text-tertiary mb-3 opacity-20"
-                        size={32}
-                      />
-                      <p className="text-sm font-medium text-text-secondary">
-                        No custom beats yet
-                      </p>
-                      <p className="text-xs text-text-tertiary mt-1">
-                        Upload your own instrumentals to practice
-                      </p>
-                    </div>
+                    <UploadFirstBeatEmptyState />
                   ) : (
                     allUserBeats.map((beat) => (
                       <div

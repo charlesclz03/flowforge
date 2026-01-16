@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
@@ -26,6 +26,7 @@ export default function TracksPage() {
 
   const { data: session } = useSession()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
 
@@ -176,6 +177,19 @@ export default function TracksPage() {
   }
 
   const [activeTab, setActiveTab] = useState<'public' | 'mine'>('public')
+
+  // Handle URL query params for redirecting from difficulty selection
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    const uploadParam = searchParams.get('upload')
+
+    if (tabParam === 'mine' && isPro) {
+      setActiveTab('mine')
+      if (uploadParam === 'true') {
+        setIsUploadModalOpen(true)
+      }
+    }
+  }, [searchParams, isPro])
 
   const handleTabChange = (tab: 'public' | 'mine') => {
     if (tab === 'mine' && !isPro) {

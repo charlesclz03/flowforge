@@ -9,6 +9,40 @@ This guide walks you through converting your Next.js PWA into a native Android a
 
 ---
 
+## Step 0: Pre-Flight Checklist (Play Store Requirements)
+
+Before you start the technical build, ensure these items are ready. Google **will reject** your app if these are missing.
+
+### Legal Pages (REQUIRED)
+| Page | Status | Notes |
+|---|---|---|
+| **Privacy Policy** (`/legal/privacy`) | ⬜ | Must explain what data you collect (email, recordings, analytics). Must be publicly accessible (no login required). |
+| **Terms of Service** (`/legal/terms`) | ⬜ | Standard usage terms. |
+
+> [!IMPORTANT]
+> The Privacy Policy URL is entered directly into the Play Store listing. If Google can't access it, your app **will be rejected**.
+
+### Custom Domain (STRONGLY RECOMMENDED)
+- **Technically optional**: You *can* use `your-app.vercel.app`.
+- **Practically required**: A `.vercel.app` subdomain looks unprofessional and locks you to Vercel forever. If you ever migrate, your app breaks.
+- **Action**: Buy a domain (e.g., `freestyla.app` ~$14/year) and point it to Vercel.
+
+### Play Store Graphics
+| Asset | Dimensions | Notes |
+|---|---|---|
+| **App Icon** | 512x512 PNG | Already in `/public`. ✔️ |
+| **Feature Graphic** | 1024x500 PNG | Promotional banner for the Store page. Use Canva/Figma. **You need this.** |
+| **Screenshots** | Min 2 | Show the app in action. Use phone frame mockups. |
+
+### Play Store Console Setup
+| Item | Notes |
+|---|---|
+| **Content Rating Questionnaire** | Google asks about violence, gambling, etc. For FreeStyla: "Everyone". Takes 2 min. |
+| **Target Audience Declaration** | Is it for kids under 13? (Answer: No, unless you want COPPA compliance). |
+| **App Category** | Recommended: "Music & Audio" or "Education". |
+
+---
+
 ## Step 1: Polish Your Manifest (`manifest.json`)
 
 Before building, your `public/manifest.json` needs specific fields to look good as a native app.
