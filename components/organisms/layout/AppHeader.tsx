@@ -71,16 +71,10 @@ export function AppHeader({
               {/* Help Button - Redirects to How It Works */}
               <Link
                 href="/howitworks"
-                className="flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
                 aria-label="How it works"
               >
-                <HelpCircle
-                  className="w-4 h-4 sm:w-4 sm:h-4"
-                  strokeWidth={2.5}
-                />
-                <span className="hidden sm:inline ml-1.5 text-xs font-bold uppercase tracking-wider">
-                  Help
-                </span>
+                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
               </Link>
 
               {/* Streak Counter */}

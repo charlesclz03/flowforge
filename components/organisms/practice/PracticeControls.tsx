@@ -353,14 +353,13 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
           {/* Hero Player - Centered */}
           <div className="relative flex items-center justify-center">
-            {/* Simon Ring (Cypher Mode) - SVG Implementation */}
+            {/* Simon Ring (Cypher Mode) - Outer Edge */}
             {mode === 'cypher' && isPlaying && (
-              <div className="absolute flex items-center justify-center pointer-events-none z-10">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                 <svg
                   viewBox="0 0 100 100"
+                  className="w-full h-full scale-[1.02]" // Slight outward scale to overlap border
                   style={{
-                    width: 'calc(min(60vmin, 260px) + 60px)',
-                    height: 'calc(min(60vmin, 260px) + 60px)',
                     transform: 'rotate(-90deg)', // Align 0 to Top
                   }}
                 >
@@ -398,8 +397,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         break
                     }
 
-                    const C = 2 * Math.PI * 45 // Circumference ~282.74
-                    const gap = 4 // units of gap
+                    const C = 2 * Math.PI * 49 // Circumference (r=49 to hug edge)
+                    const gap = 2 // thinner gap for border look
                     const segmentAngle = 360 / cypherPlayers
                     const segmentLength = (segmentAngle / 360) * C - gap
 
@@ -408,17 +407,17 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         key={i}
                         cx="50"
                         cy="50"
-                        r="45"
+                        r="49"
                         fill="none"
                         stroke={color}
                         strokeLinecap="round"
                         strokeDasharray={`${segmentLength} ${C - segmentLength}`}
                         initial={{ opacity: 0.3, strokeWidth: 2 }}
                         animate={{
-                          opacity: isActive ? 1 : 0.3,
-                          strokeWidth: isActive ? 3 : 2,
+                          opacity: isActive ? 1 : 0.4,
+                          strokeWidth: isActive ? 4 : 2, // Thicker active stroke
                           filter: isActive
-                            ? `drop-shadow(0 0 4px ${color})`
+                            ? `drop-shadow(0 0 8px ${color})`
                             : 'none',
                         }}
                         style={{
@@ -521,15 +520,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 <AudioVisualizer isPlaying={isPlaying || isRecording} />
               </div>
 
-              {/* Ambient Siren Glows */}
+              {/* Ambient Siren Glows - Boosted Intensity */}
               <div
                 className={cn(
                   'absolute inset-0 rounded-full blur-[80px] opacity-0 transition-all duration-300',
                   isPlaying && 'opacity-20',
                   isSirenActive &&
                     (sirenPhase === 0
-                      ? 'bg-red-600 opacity-40 scale-125'
-                      : 'bg-blue-600 opacity-40 scale-125')
+                      ? 'bg-red-600 opacity-80 scale-150' // Boosted from 40/125
+                      : 'bg-blue-600 opacity-80 scale-150')
                 )}
               />
 
