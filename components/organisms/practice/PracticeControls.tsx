@@ -416,9 +416,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         initial={{ opacity: 0.3, strokeWidth: 1 }}
                         animate={{
                           opacity: isActive ? 1 : 0.4,
-                          strokeWidth: isActive ? 2 : 1, // Reduced thickness
+                          strokeWidth: isActive ? 3 : 1.5, // slightly restored thickness for glow surface
                           filter: isActive
-                            ? `drop-shadow(0 0 12px ${color})` // Stronger glow
+                            ? `drop-shadow(0 0 6px ${color}) drop-shadow(0 0 12px ${color})` // Double shadow for intense neon
                             : 'none',
                         }}
                         style={{
