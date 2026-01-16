@@ -20,6 +20,7 @@ export function AdminUploadSection() {
   const [label, setLabel] = useState('Freestyla')
   const [genre, setGenre] = useState('')
   const [isPremium, setIsPremium] = useState(false)
+  const [duration] = useState(0)
   const [file, setFile] = useState<File | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,16 +279,31 @@ export function AdminUploadSection() {
               />
             </div>
 
+            {/* Genre */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-secondary">
+                Genre *
+              </label>
+              <select
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple appearance-none"
+                required
+              >
+                <option value="" disabled>
+                  Select Genre
+                </option>
+                <option value="Hip-Hop">Hip-Hop (General)</option>
+                <option value="Old School">Old School</option>
+                <option value="Trap">Trap</option>
+                <option value="Chill">Chill</option>
                 <option value="Drill">Drill</option>
                 <option value="Lo-Fi">Lo-Fi</option>
                 <option value="West Coast">West Coast</option>
-                <option value="East Coast">East Coast</option>
-                <option value="Underground">Underground</option>
-                <option value="Grime">Grime</option>
-                <option value="Experimental">Experimental</option>
-                <option value="Afrobeat">Afrobeat</option>
+                <option value="Boom Bap">Boom Bap</option>
                 <option value="R&B">R&B</option>
-                <option value="Soul">Soul</option>
+                <option value="Grime">Grime</option>
+                <option value="Afrobeat">Afrobeat</option>
               </select>
             </div>
           </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Beat } from '@prisma/client'
+import { Beat } from '@/types/database'
 import { toast } from 'react-hot-toast'
 import {
   Edit2,

@@ -1,15 +1,19 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { Beat } from '@prisma/client'
+import { Beat } from '@/types/database'
 import { revalidatePath } from 'next/cache'
+import { Prisma } from '@prisma/client'
 
 export async function getAdminBeats() {
   return await prisma.beat.findMany({
     where: {
       uploaderId: null, // Only fetch public beats for admin management
     },
-    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
+    orderBy: [
+      { sortOrder: 'asc' },
+      { createdAt: 'desc' },
+    ] as Prisma.BeatOrderByWithRelationInput[],
   })
 }
 
@@ -35,7 +39,10 @@ export async function reorderBeat(id: string, direction: 'up' | 'down') {
   // 1. Fetch ALL admin beats in current sorted order
   const allBeats = await prisma.beat.findMany({
     where: { uploaderId: null },
-    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
+    orderBy: [
+      { sortOrder: 'asc' },
+      { createdAt: 'desc' },
+    ] as Prisma.BeatOrderByWithRelationInput[],
   })
 
   const currentIndex = allBeats.findIndex((b) => b.id === id)

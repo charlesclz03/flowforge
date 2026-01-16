@@ -1,7 +1,12 @@
-import { Beat, Word, FreestyleSession } from '@prisma/client'
+import { Beat as PrismaBeat, Word, FreestyleSession } from '@prisma/client'
 
 // Export Prisma types
-export type { Beat, Word, FreestyleSession }
+export type { Word, FreestyleSession }
+
+// Force label inclusion to resolve tooling lag
+export type Beat = PrismaBeat & {
+  label?: string | null
+}
 
 // Extended types with relations
 export type BeatWithSessions = Beat & {
