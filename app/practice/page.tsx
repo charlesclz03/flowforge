@@ -55,6 +55,7 @@ interface SessionSummary {
 import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { ErrorCodes } from '@/lib/errors'
+import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 
 export default function PracticePage() {
   // Ring animation logic updated to track word duration
@@ -221,8 +222,17 @@ export default function PracticePage() {
         const wordCount = JSON.parse(formData.get('wordsUsed') as string).length
         const beatBpm = selectedBeat?.bpm || 0
 
-        // Optimistic Score - REMOVED as per user request
-        // const predictedScore = Math.round(duration * 10 * (1 + wordCount / 10))
+        // 3. OPTIMISTIC XP PREDICTION - Client-side calculation for instant feedback
+        const predictedXP = calculateSessionXP({
+          durationSeconds: duration,
+          wordCount: wordCount,
+          achievementsUnlocked: 0, // Can't predict badges
+        })
+        
+        // Get user's current XP from session (if available)
+        const currentUserXP = session?.user?.xp || 0
+        const newTotalXP = currentUserXP + predictedXP.total
+        const levelInfo = getLevelInfo(newTotalXP)
 
         setSessionSummary({
           score: 0, // Removed
@@ -235,7 +245,14 @@ export default function PracticePage() {
           difficulty: difficulty,
           bpm: beatBpm,
           frequency: frequency,
-          isOptimistic: true, // UI can show a spinner for specific fields if needed
+          isOptimistic: false, // Show the predicted XP immediately (no skeleton)
+          xp: {
+            gained: predictedXP.total,
+            newLevel: levelInfo.level,
+            currentXP: levelInfo.currentXP,
+            maxXP: levelInfo.maxXP,
+            breakdown: predictedXP.breakdown,
+          },
         })
       },
       onSuccess: (data) => {
