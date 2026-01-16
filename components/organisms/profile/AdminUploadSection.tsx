@@ -292,6 +292,7 @@ export function AdminUploadSection() {
                 <option value="Hip-Hop">Hip-Hop (General)</option>
                 <option value="Old School">Old School / Boom Bap</option>
                 <option value="Trap">Trap</option>
+                <option value="Chill">Chill</option>
                 <option value="Drill">Drill</option>
                 <option value="Lo-Fi">Lo-Fi</option>
                 <option value="West Coast">West Coast</option>

@@ -154,6 +154,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
           bpm: parseInt(bpm),
           artistName: artist,
           label, // Include label
+          genre, // Include genre again
           storageUrl: publicUrl,
           offset,
         }),
