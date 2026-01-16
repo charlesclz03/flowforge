@@ -47,7 +47,7 @@ export default async function AchievementsPage() {
             max={levelInfo.maxXP}
             level={levelInfo.level}
           />
-          <Link href="/cypher">
+          <Link href="/difficultyselection?mode=cypher&advanced=true">
             <div className="mt-4 w-full p-4 rounded-xl bg-gradient-to-r from-accent-purple/20 to-accent-cyan/20 border border-white/10 flex items-center justify-between hover:border-accent-purple/50 transition-all group cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-full bg-accent-purple/20 text-accent-purple group-hover:scale-110 transition-transform">

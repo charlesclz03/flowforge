@@ -52,8 +52,9 @@ export default function DifficultySelectionPage() {
   const [isLoadingBeats, setIsLoadingBeats] = useState(true)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
 
-  // Handle Pre-selection from Tracks Page
+  // Handle URL Params (Beat, Mode, Advanced Settings)
   useEffect(() => {
+    // 1. Beat Selection
     const beatId = searchParams.get('beatId')
     if (beatId && beats.length > 0) {
       const beat = beats.find((b) => b.id === beatId)
@@ -61,7 +62,19 @@ export default function DifficultySelectionPage() {
         setBeat(beat)
       }
     }
-  }, [searchParams, beats, setBeat])
+
+    // 2. Mode Selection
+    const modeParam = searchParams.get('mode')
+    if (modeParam === 'cypher') {
+      setMode('cypher')
+    }
+
+    // 3. Advanced Settings Expansion
+    const advancedParam = searchParams.get('advanced')
+    if (advancedParam === 'true') {
+      setIsAdvancedOpen(true)
+    }
+  }, [searchParams, beats, setBeat, setMode])
 
   // Fetch beats for selection
   useEffect(() => {
