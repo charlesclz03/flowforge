@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
-import { Music, Plus, Lock } from 'lucide-react'
+import { Music, Plus, Lock, Settings } from 'lucide-react'
 import { getFavoriteBeatIds, toggleBeatFavorite } from '@/app/actions/beats'
 
 import { useSession } from 'next-auth/react'
@@ -257,6 +257,15 @@ export default function TracksPage() {
             </button>
           </div>
 
+          {session?.user?.role === 'SUPERADMIN' && (
+            <button
+              onClick={() => router.push('/admin/beats')}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg font-medium text-sm hover:bg-red-500/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(248,113,113,0.15)] mr-2"
+            >
+              <Settings size={16} />
+              <span>Admin</span>
+            </button>
+          )}
           <button
             onClick={handleNewBeatClick}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-purple/10 text-accent-purple border border-accent-purple/20 rounded-lg font-medium text-sm hover:bg-accent-purple/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.15)]"
