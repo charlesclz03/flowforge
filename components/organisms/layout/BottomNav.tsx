@@ -142,12 +142,7 @@ export function BottomNav() {
                   className={cn(
                     'relative flex items-center justify-center transition-all duration-300',
                     isPrimary
-                      ? cn(
-                          'w-14 h-14 rounded-full',
-                          isActive
-                            ? 'bg-accent-purple text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                            : 'bg-white/5 text-white/90 hover:bg-white/10'
-                        )
+                      ? 'w-14 h-14 rounded-full border-2 border-accent-purple bg-transparent shadow-[0_0_15px_rgba(168,85,247,0.3)]'
                       : cn(
                           'w-12 h-12 rounded-full',
                           isActive
