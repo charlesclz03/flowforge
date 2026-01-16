@@ -310,7 +310,7 @@ export default function AdminBeatsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="text-red-400 hover:text-red-300 transition-opacity"
                             onClick={() => handleDelete(beat.id)}
                           >
                             <Trash2 size={16} />

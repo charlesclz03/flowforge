@@ -72,9 +72,7 @@ export async function getBeats(
 
     const beats = await prisma.beat.findMany({
       where,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
     })
 
     // Runtime fix: legacy beats from seed might have spaces in storageUrl
