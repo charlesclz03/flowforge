@@ -14,7 +14,7 @@ datasource db {
 model Beat {
   id              String   @id @default(uuid())
   title           String
-  bpm             Int
+  bpm             Float
   storageUrl      String   @map("storage_url")
   coverImage      String?  @map("cover_image")
   isPremium       Boolean  @default(false) @map("is_premium")

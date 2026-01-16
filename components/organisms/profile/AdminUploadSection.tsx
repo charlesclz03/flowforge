@@ -83,13 +83,16 @@ export function AdminUploadSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
-          bpm,
-          artistName: producer,
-          label, // Include label
-          genre,
-          isPremium,
+          artistName: producer, // Assuming 'artist' from instruction maps to 'producer'
+          label,
+          bpm: parseFloat(bpm),
+          isPremium: isPremium,
           storageUrl: publicUrl,
-          tags: '',
+          duration: Math.round(duration), // Using the placeholder duration
+          genre,
+          // 'tags' field was present before, but not in the instruction's snippet.
+          // Keeping it for now, or remove if it's intended to be removed.
+          // For this edit, we'll assume the instruction snippet is the complete new body.
         }),
       })
 
@@ -275,24 +278,6 @@ export function AdminUploadSection() {
               />
             </div>
 
-            {/* Style / Genre */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-text-secondary">
-                Genre *
-              </label>
-              <select
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-accent-purple appearance-none"
-                required
-              >
-                <option value="" disabled>
-                  Select Genre
-                </option>
-                <option value="Hip-Hop">Hip-Hop (General)</option>
-                <option value="Old School">Old School / Boom Bap</option>
-                <option value="Trap">Trap</option>
-                <option value="Chill">Chill</option>
                 <option value="Drill">Drill</option>
                 <option value="Lo-Fi">Lo-Fi</option>
                 <option value="West Coast">West Coast</option>

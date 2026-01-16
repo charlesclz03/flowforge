@@ -310,17 +310,18 @@ export default function AdminBeatsPage() {
                     {editingId === beat.id ? (
                       <Input
                         type="number"
+                        step="0.01"
                         value={editForm.bpm}
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            bpm: parseInt(e.target.value) || 0,
+                            bpm: parseFloat(e.target.value),
                           })
                         }
                         className="w-20"
                       />
                     ) : (
-                      beat.bpm
+                      <span className="text-text-secondary">{beat.bpm}</span>
                     )}
                   </TableCell>
 
