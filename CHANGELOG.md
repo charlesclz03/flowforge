@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.9.28 - Cypher Rings Restored
+## v0.9.30 - The Visual Polish Update
+- **UI (Cypher)**: Relocated player segments to the outer edge of the control ring.
+- **UI (Header)**: Added a "Help" button linked to /howitworks.
+- **FX**: Boosted "Police Siren" intensity by 200%.
+- **UI (Polish)**: Central record button is now a consistent glass ring.
+
+## v0.9.29 - The Safe Resume & Admin Polish Update
 - **Fix (Regression)**: Restored missing SVG turn rings in Cypher Mode (previously accidentally removed during cleanup).
 
 ## v0.9.27 - The True Timer Fix

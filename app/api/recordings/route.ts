@@ -168,6 +168,15 @@ export async function POST(request: Request) {
         achievementsUnlocked: newBadges.length,
       })
 
+      // Default response with gained XP (so user sees progress even if DB save fails)
+      xpData = {
+        gained: xpResult.total,
+        newLevel: 1, // Fallback
+        currentXP: xpResult.total, // Ensure bar animates from 0 -> total
+        maxXP: 1000, // Fallback
+        breakdown: xpResult.breakdown,
+      }
+
       // Fetch current user XP
       const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
@@ -194,6 +203,10 @@ export async function POST(request: Request) {
           maxXP: levelInfo.maxXP,
           breakdown: xpResult.breakdown,
         }
+      } else {
+        console.warn(
+          `User ${session.user.id} not found in public.users table. XP not saved.`
+        )
       }
     } catch (err) {
       console.error(

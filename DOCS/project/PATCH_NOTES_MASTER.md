@@ -1,3 +1,16 @@
+## v0.9.30 - The Visual Polish Update 💅 (2026-01-16)
+**Codename:** Neon Ring
+
+We gave the Cypher UI a major facelift with a new outer-ring layout and boosted the "Siren" intensity for maximum hype. Plus, a handy Help button in the header!
+
+### Visual Overhaul
+- 💍 **Cypher Outer Ring**: The player segments now hug the outer edge of the main control button for a cleaner, futuristic look.
+- 🚨 **Siren Boost**: The "Police Siren" effect before word switches is now 200% more intense. You can't miss it!
+- ℹ️ **Header Help**: Added a quick-access Help button (?) to the global header that takes you straight to the "How it Works" guide.
+- 🟣 **Glass Record Ring**: The central record button is now a consistent transparent glass ring with a purple border, ensuring the logo always shines through.
+
+---
+
 ## v0.9.29 - The Safe Resume & Admin Polish Update 💎 (2026-01-15)
 **Codename:** Smooth Operator
 

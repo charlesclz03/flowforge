@@ -21,6 +21,25 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.30',
+    date: '2026-01-16',
+    title: 'The Visual Polish Update 💅',
+    codename: 'Neon Ring',
+    description:
+      'We gave the Cypher UI a major facelift with a new outer-ring layout and boosted the "Siren" intensity for maximum hype. Plus, a handy Help button in the header!',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '💍 **Cypher Outer Ring**: The player segments now hug the outer edge of the main control button for a cleaner, futuristic look.',
+          '🚨 **Siren Boost**: The "Police Siren" effect before word switches is now 200% more intense. You can\'t miss it!',
+          'ℹ️ **Header Help**: Added a quick-access Help button (?) to the global header that takes you straight to the "How it Works" guide.',
+          '🟣 **Glass Record Ring**: The central record button is now a consistent transparent glass ring with a purple border, ensuring the logo always shines through.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.29',
     date: '2026-01-15',
     title: 'The Safe Resume & Admin Polish Update 💎',
