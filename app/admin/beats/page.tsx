@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react'
 import { Beat } from '@prisma/client'
 import { toast } from 'react-hot-toast'
-import { Edit2, Trash2, X, ArrowUp, ArrowDown, Loader2 } from 'lucide-react'
+import {
+  Edit2,
+  Trash2,
+  X,
+  ArrowUp,
+  ArrowDown,
+  Loader2,
+  Check,
+} from 'lucide-react'
 import {
   deleteBeat,
   getAdminBeats,
@@ -17,6 +25,14 @@ export default function AdminBeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
+
+  // Local state for the row currently being edited
+  const [editForm, setEditForm] = useState({
+    title: '',
+    artistName: '',
+    bpm: 0,
+    isPremium: false,
+  })
 
   // Local simple components to replace missing shadcn/ui
   const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
@@ -82,9 +98,29 @@ export default function AdminBeatsPage() {
     }
   }
 
-  const handleUpdate = async (id: string, data: Partial<Beat>) => {
+  const startEdit = (beat: Beat) => {
+    setEditingId(beat.id)
+    setEditForm({
+      title: beat.title,
+      artistName: beat.artistName || '',
+      bpm: beat.bpm,
+      isPremium: beat.isPremium,
+    })
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+    setEditForm({ title: '', artistName: '', bpm: 0, isPremium: false })
+  }
+
+  const handleSave = async (id: string) => {
     try {
-      const updated = await updateBeat(id, data)
+      const updated = await updateBeat(id, {
+        title: editForm.title,
+        artistName: editForm.artistName,
+        bpm: editForm.bpm,
+        isPremium: editForm.isPremium,
+      })
       setBeats(beats.map((b) => (b.id === id ? updated : b)))
       setEditingId(null)
       toast.success('Beat updated')
@@ -124,6 +160,7 @@ export default function AdminBeatsPage() {
               <TableRow>
                 <TableHead>Order</TableHead>
                 <TableHead>Title</TableHead>
+                <TableHead>Producer</TableHead>
                 <TableHead>BPM</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Actions</TableHead>
@@ -148,56 +185,138 @@ export default function AdminBeatsPage() {
                       </button>
                     </div>
                   </TableCell>
+
+                  {/* Edit Mode: Title */}
                   <TableCell>
                     {editingId === beat.id ? (
                       <Input
-                        defaultValue={beat.title}
-                        onBlur={(e) =>
-                          handleUpdate(beat.id, { title: e.target.value })
+                        value={editForm.title}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, title: e.target.value })
                         }
+                        placeholder="Title"
                       />
                     ) : (
-                      <span className="font-medium">{beat.title}</span>
+                      <span className="font-medium text-white">
+                        {beat.title}
+                      </span>
                     )}
                   </TableCell>
-                  <TableCell>{beat.bpm}</TableCell>
+
+                  {/* Edit Mode: Producer */}
                   <TableCell>
-                    <button
-                      onClick={() =>
-                        handleUpdate(beat.id, { isPremium: !beat.isPremium })
-                      }
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        beat.isPremium
-                          ? 'bg-accent-purple/20 text-accent-purple'
-                          : 'bg-green-500/20 text-green-400'
-                      }`}
-                    >
-                      {beat.isPremium ? 'PRO' : 'FREE'}
-                    </button>
+                    {editingId === beat.id ? (
+                      <Input
+                        value={editForm.artistName}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            artistName: e.target.value,
+                          })
+                        }
+                        placeholder="Producer"
+                      />
+                    ) : (
+                      <span className="text-text-secondary">
+                        {beat.artistName || 'Unknown'}
+                      </span>
+                    )}
                   </TableCell>
+
+                  {/* Edit Mode: BPM */}
+                  <TableCell>
+                    {editingId === beat.id ? (
+                      <Input
+                        type="number"
+                        value={editForm.bpm}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            bpm: parseInt(e.target.value) || 0,
+                          })
+                        }
+                        className="w-20"
+                      />
+                    ) : (
+                      beat.bpm
+                    )}
+                  </TableCell>
+
+                  {/* Edit Mode: Type (Pro/Free) */}
+                  <TableCell>
+                    {editingId === beat.id ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() =>
+                            setEditForm({ ...editForm, isPremium: false })
+                          }
+                          className={`px-2 py-1 rounded text-xs font-bold transition-all ${!editForm.isPremium ? 'bg-green-500 text-black' : 'bg-white/5 text-text-secondary'}`}
+                        >
+                          FREE
+                        </button>
+                        <button
+                          onClick={() =>
+                            setEditForm({ ...editForm, isPremium: true })
+                          }
+                          className={`px-2 py-1 rounded text-xs font-bold transition-all ${editForm.isPremium ? 'bg-accent-purple text-black' : 'bg-white/5 text-text-secondary'}`}
+                        >
+                          PRO
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-bold ${
+                          beat.isPremium
+                            ? 'bg-accent-purple/20 text-accent-purple'
+                            : 'bg-green-500/20 text-green-400'
+                        }`}
+                      >
+                        {beat.isPremium ? 'PRO' : 'FREE'}
+                      </span>
+                    )}
+                  </TableCell>
+
+                  {/* Actions */}
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setEditingId(editingId === beat.id ? null : beat.id)
-                        }
-                      >
-                        {editingId === beat.id ? (
-                          <X size={16} />
-                        ) : (
-                          <Edit2 size={16} />
-                        )}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-400 hover:text-red-300"
-                        onClick={() => handleDelete(beat.id)}
-                      >
-                        <Trash2 size={16} />
-                      </Button>
+                      {editingId === beat.id ? (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-green-400 hover:text-green-300 hover:bg-green-400/10"
+                            onClick={() => handleSave(beat.id)}
+                          >
+                            <Check size={18} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                            onClick={cancelEdit}
+                          >
+                            <X size={18} />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => startEdit(beat)}
+                          >
+                            <Edit2 size={16} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => handleDelete(beat.id)}
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
