@@ -38,7 +38,6 @@ interface PracticeControlsProps {
   handleDifficultyChange?: (value: number) => void
   handleFrequencyChange?: (value: number) => void
   isPro?: boolean
-  isAuthenticated?: boolean
   handleUpgrade?: () => void
   mode?: 'solo' | 'cypher'
   isRecordingEnabled?: boolean
@@ -75,7 +74,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleDifficultyChange,
     handleFrequencyChange,
     isPro = false,
-    isAuthenticated = false,
     handleUpgrade,
     mode = 'solo',
     isRecordingEnabled = true,

@@ -1195,7 +1195,6 @@ export default function PracticePage() {
               recordingDuration={duration}
               error={error?.message || null}
               isPro={isPro}
-              isAuthenticated={!!session?.user}
               currentWord={currentWord}
               countdownValue={_countdownValue}
               isRecordingEnabled={isRecordingEnabled}
