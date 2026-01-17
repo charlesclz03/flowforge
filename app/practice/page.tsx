@@ -327,7 +327,7 @@ export default function PracticePage() {
       // For Pros: Must have audio data.
       // For Guests: Practice mode produces empty blobs, so we allow them IF duration was sufficient.
       if (blob.size < 1000) {
-        // If it's a guest and they practiced long enough, proceed (Simulated Save Flow)
+        // If it's a non-Pro (Guest or Free) and they practiced long enough, proceed (Simulated Save Flow)
         if (!isPro && recordedDuration >= 3) {
           // Pass through
         } else {
@@ -338,36 +338,43 @@ export default function PracticePage() {
 
       if (selectedBeat) {
         if (session?.user) {
-          try {
-            const measuredDuration = Math.round(recordedDuration)
-            const fallbackDuration =
-              blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
-            const actualDuration = Math.max(
-              1,
-              measuredDuration > 0 ? measuredDuration : fallbackDuration
-            )
+          // Authenticated User Logic
+          if (isPro) {
+            try {
+              const measuredDuration = Math.round(recordedDuration)
+              const fallbackDuration =
+                blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
+              const actualDuration = Math.max(
+                1,
+                measuredDuration > 0 ? measuredDuration : fallbackDuration
+              )
 
-            const vibe = 'Freestyle Flow'
-            const finalScore = 0 // Server calculates real score
+              const vibe = 'Freestyle Flow'
+              const finalScore = 0 // Server calculates real score
 
-            const formData = new FormData()
-            formData.append('audio', blob, 'recording.webm')
-            formData.append('beatId', selectedBeat.id)
-            formData.append(
-              'title',
-              `${selectedBeat.title} - ${new Date().toLocaleDateString()}`
-            )
-            formData.append('durationSeconds', actualDuration.toString())
-            formData.append('frequency', frequency.toString())
-            formData.append('difficulty', difficulty.toString())
-            formData.append('score', finalScore.toString())
-            formData.append('vibe', vibe)
-            formData.append('wordsUsed', JSON.stringify(usedWords))
+              const formData = new FormData()
+              formData.append('audio', blob, 'recording.webm')
+              formData.append('beatId', selectedBeat.id)
+              formData.append(
+                'title',
+                `${selectedBeat.title} - ${new Date().toLocaleDateString()}`
+              )
+              formData.append('durationSeconds', actualDuration.toString())
+              formData.append('frequency', frequency.toString())
+              formData.append('difficulty', difficulty.toString())
+              formData.append('score', finalScore.toString())
+              formData.append('vibe', vibe)
+              formData.append('wordsUsed', JSON.stringify(usedWords))
 
-            // EXECUTE OPTIMISTIC SAVE
-            await saveSessionOptimistic(formData)
-          } catch (err) {
-            handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
+              // EXECUTE OPTIMISTIC SAVE
+              await saveSessionOptimistic(formData)
+            } catch (err) {
+              handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
+            }
+          } else {
+            // Authenticated but FREE -> Prompt Upgrade
+            setPremiumTrigger('recording')
+            setShowPremiumModal(true)
           }
         } else {
           // Guest Mode (unchanged)
@@ -531,7 +538,7 @@ export default function PracticePage() {
           if (isPro) {
             startRecording(true).catch(console.error)
           } else {
-            // Guests: Practice mode (Mic on, no recording)
+            // Non-Pro (Guest & Free): Practice mode (Mic on, no recording)
             practice().catch(console.error)
           }
         } else {

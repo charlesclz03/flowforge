@@ -41,7 +41,7 @@
 | ID | Test Case | Steps | Expected Result |
 |----|-----------|-------|-----------------|
 | AUTH-011 | Guest Practice | Start session without login | Session plays normally |
-| AUTH-012 | Guest Save Prompt | Complete session → Try to save | Sign-in modal appears |
+| AUTH-012 | Guest Save Prompt | Complete session (Min 5s) → Try to save | Sign-in modal appears |
 | AUTH-013 | Guest to User Transition | Sign in after guest session | Recording saved to account |
 | AUTH-014 | Guest Beat Access | Select free beats | All free beats accessible |
 | AUTH-015 | Guest Premium Beat | Click premium beat | Upgrade prompt shown |
@@ -130,7 +130,7 @@
 | FLOW-015 | Session Resume | Click play after pause | Beat resumes from pause point |
 | FLOW-016 | Session End (Natural) | Let timer reach 0 | Session summary modal appears |
 | FLOW-017 | Session End (Manual) | Click stop | Save prompt appears |
-| FLOW-018 | Session Save | Click "Save" after session | Recording saved, success message |
+| FLOW-018 | Session Save | Click "Save" after session (Min 5s) | Recording saved, success message |
 | FLOW-019 | Session Discard | Click "Discard" | No recording saved, return to menu |
 
 ### 3.4 Recordings (`/recordings`)
