@@ -1,4 +1,9 @@
 # 🧪 Test Report: Module 1 (Authentication & Authorization)
+
+> [!IMPORTANT]
+> **Testing Environment Warning**
+> All tests MUST be performed on the live Vercel deployment: `https://flowforge-freestyle.vercel.app`
+> DO NOT test on `localhost`.
 **Date**: January 17, 2026
 **Environment**: Production (https://flowforge-freestyle.vercel.app)
 **Tester**: Antigravity (AI Agent)
@@ -6,7 +11,7 @@
 ## Summary
 | Module | Total Tests | Passed | Failed | Blocked | Skipped |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **1. Auth & Roles** | 17 | 13 | 0 | 3 | 1 |
+| **1. Auth & Roles** | 17 | 15 | 0 | 1 | 1 |
 
 ---
 
@@ -32,8 +37,8 @@
 | ID | Test Case | Status | Observations |
 | :--- | :--- | :--- | :--- |
 | **AUTH-011** | Guest Practice | ✅ **PASS** | Guests can successfully start a practice session and access the player. |
-| **AUTH-012** | Guest Finish Redirect | ⏳ **PENDING** | Verifying new "Redirect to Menu" flow (No Upsell). |
-| **AUTH-013** | Guest No-Save Check | ⏳ **PENDING** | Verifying session is strictly practice (not saved). |
+| **AUTH-012** | Guest Finish Redirect | ✅ **PASS** | Guest session correctly redirected to `/difficultyselection`. No upsell modal. Button said "Finish" (not "Finish & Save"). |
+| **AUTH-013** | Guest No-Save Check | ✅ **PASS** | Guest practice sessions do NOT save. `/recordings` and `/profile` both redirect to `/howitworks`. |
 | **AUTH-014** | Guest Beat Access | ✅ **PASS** | Unlocked beats are fully accessible and playable in Guest mode. |
 | **AUTH-015** | Guest Premium Beat | ✅ **PASS** | Clicking a Premium beat as Guest correctly blocks access/prompts upgrade. |
 
@@ -44,5 +49,6 @@
 | **AUTH-017** | Admin Email Override | ✅ **PASS** | Account used for testing (Charles) correctly identified as Superadmin. |
 
 ## 📝 Notes
-*   **Microphone Limitation**: The automated browser environment blocks microphone access by default. This prevents "The Booth" from entering the `recording` state, meaning we cannot test "Stop & Save" flows (AUTH-010, AUTH-012, AUTH-013) that rely on a generated audio blob.
-*   **Recommendation**: Manually verify **AUTH-012** (Guest Save Prompt) on a real device to ensure the "Sign Up to Save" funnel is working.
+*   **Microphone Limitation**: The automated browser environment blocks microphone access by default. This prevents full testing of time-limit enforcement (AUTH-010).
+*   **AUTH-010 (Recording Time Limit)**: Remains **BLOCKED** - requires 10+ minute manual session to validate free tier limit enforcement.
+*   **Guest Practice Mode**: Now correctly redirects to menu without saving. "REC" indicator is gray and button says "Finish" (not "Finish & Save").

@@ -738,7 +738,13 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <button
               onClick={(e) => {
                 e.stopPropagation()
-                if (isRecordingEnabled) handleUpgrade?.()
+                if (isRecordingEnabled) {
+                  if (isPro) {
+                    handleToggle()
+                  } else {
+                    handleUpgrade?.()
+                  }
+                }
               }}
               className={cn(
                 'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',

@@ -1,3 +1,11 @@
+## v0.9.39 - The Pro Save Fix 💾
+**Date**: 2026-01-17 | **Codename**: Unblocked
+
+We fixed a critical bug where Pro users were blocked from saving their sessions by an incorrect "Get Pro" modal. Your flow is now unblocked!
+
+### Fixes & Improvements
+*   🔓 **Pro Save Unblocked**: Fixed a bug where the "REC" button would trigger the "Get Pro" modal even for subscribed users. Pro users can now toggle recording and save sessions freely.
+
 ## v0.9.38 - The Guest Pass Hotfix 🎟️ (2026-01-17)
 **Codename:** Open Mic
 

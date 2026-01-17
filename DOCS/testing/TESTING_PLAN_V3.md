@@ -1,5 +1,10 @@
 # 🧪 FreeStyla v1.0 (Candidate) - Professional QA Testing Plan V3
 
+> [!IMPORTANT]
+> **Testing Environment Warning**
+> All tests MUST be performed on the live Vercel deployment: `https://flowforge-freestyle.vercel.app`
+> DO NOT test on `localhost`.
+
 **Version**: 3.0  
 **Last Updated**: January 16, 2026  
 **Basis**: Evolution of V2 + Historical "Day 0" Development & Bug Analysis  
@@ -62,8 +67,8 @@
 | AUDIO-001 | Beat Library Load | Navigate to `/tracks` | All beats load with titles, BPM, waveforms |
 | AUDIO-002 | Beat Preview | Click play on any beat | Audio plays, waveform animates |
 | AUDIO-003 | Beat Favorite | Click heart icon | Beat added to favorites (persists on refresh) |
-| AUDIO-004 | Beat Search | Type in search box | Results filter in real-time |
-| AUDIO-005 | Beat Category Filter | Select genre filter | Only matching beats shown |
+| AUDIO-004 | Beat Search | [REMOVED - No Search Bar] | N/A |
+| AUDIO-005 | Beat Category Filter | Select genre filter bubbles | Only matching beats shown |
 
 ### 2.2 Practice Session (`/practice`)
 | ID | Test Case | Steps | Expected Result |

@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.39',
+    date: '2026-01-17',
+    title: 'The Pro Save Fix 💾',
+    codename: 'Unblocked',
+    description:
+      'We fixed a critical bug where Pro users were blocked from saving their sessions by an incorrect "Get Pro" modal. Your flow is now unblocked!',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '🔓 **Pro Save Unblocked**: Fixed a bug where the "REC" button would trigger the "Get Pro" modal even for subscribed users. Pro users can now toggle recording and save sessions freely.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.38',
     date: '2026-01-17',
     title: 'The Guest Pass Hotfix 🎟️',
