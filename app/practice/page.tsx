@@ -318,7 +318,13 @@ export default function PracticePage() {
         return
       }
 
-      if (recordedDuration < 3) {
+      // Fallback to internal timer if recorder duration is missing (Practice Mode)
+      const actualRecordedDuration = Math.max(
+        recordedDuration,
+        lastSessionDurationRef.current
+      )
+
+      if (actualRecordedDuration < 3) {
         // Only show error to Pros who actually expected a recording
         if (isPro) {
           toast.error('Recording too short to save (min 3s)')
@@ -331,7 +337,7 @@ export default function PracticePage() {
       // For Guests: Practice mode produces empty blobs, so we allow them IF duration was sufficient.
       if (blob.size < 1000) {
         // If it's a non-Pro (Guest or Free) and they practiced long enough, proceed (Simulated Save Flow)
-        if (!isPro && recordedDuration >= 3) {
+        if (!isPro && actualRecordedDuration >= 3) {
           // Pass through
         } else {
           console.warn('Recording too small', blob.size)
