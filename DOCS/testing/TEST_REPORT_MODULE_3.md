@@ -37,7 +37,7 @@
 | FLOW-015 | Session Resume | PASS | Timer continues. |
 | FLOW-016 | Session End (Natural) | SKIPPED | Not testing lyrics in this pass. |
 | FLOW-017 | Session End (Manual) | SKIPPED | Visuals verified, functionality assumed from playback. |
-| FLOW-018 | Session Save | FAIL | **BLOCKED**: "Get Pro" modal appears for Pro user, blocking save. |
+| FLOW-018 | Session Save | PASS | **VERIFIED (v0.9.39)**: Pro user successfully stopped session using Bottom REC button and saved. "Get Pro" modal did not appear. |
 | FLOW-019 | Session Discard | PASS | "Stop & Exit" works correctly. |
 
 ## 3.4 Recordings (`/recordings`)
@@ -45,9 +45,9 @@
 |----|-----------|--------|-------|
 | FLOW-020 | Recordings List | PASS | Existing recordings visible. |
 | FLOW-021 | Recording Playback | PASS | Playback works, navigates to review. |
-| FLOW-022 | Recording Delete | PENDING | |
-| FLOW-023 | Recording Download | PENDING | |
-| FLOW-024 | Recording Share | PENDING | |
+| FLOW-022 | Recording Delete | FAIL | **BUG**: Delete icon click triggers no action. Modal does not appear. |
+| FLOW-023 | Recording Download | PASS | Download triggered, "Rendering..." toast observed. |
+| FLOW-024 | Recording Share | PASS | Share menu works, "Link copied" toast confirmed. |
 | FLOW-025 | Empty State | SKIPPED | List was populated. |
 
 ## 3.5 New UX Refinements (V3)

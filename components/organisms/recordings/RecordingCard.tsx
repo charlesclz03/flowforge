@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import Link from 'next/link'
 import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
+import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
@@ -32,16 +33,13 @@ export const RecordingCard = memo(function RecordingCard({
   onPlay,
 }: RecordingCardProps) {
   const [isDeleting, setIsDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackError, setPlaybackError] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
 
-  const handleDelete = useCallback(async () => {
-    if (!confirm('Are you sure you want to delete this recording?')) {
-      return
-    }
-
+  const confirmDelete = useCallback(async () => {
     setIsDeleting(true)
     clearError()
 
@@ -51,6 +49,7 @@ export const RecordingCard = memo(function RecordingCard({
       handleError(err, ErrorCodes.SESSION_DELETE_FAILED)
     } finally {
       setIsDeleting(false)
+      setShowDeleteConfirm(false)
     }
   }, [recording.id, onDelete, handleError, clearError])
 
@@ -193,6 +192,36 @@ export const RecordingCard = memo(function RecordingCard({
 
   return (
     <Card className={cn('relative', className)}>
+      <Modal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        title="Delete Recording?"
+      >
+        <div className="space-y-6">
+          <p className="text-zinc-300">
+            Are you sure you want to delete this recording? This action cannot
+            be undone.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              variant="ghost"
+              onClick={() => setShowDeleteConfirm(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={confirmDelete}
+              isLoading={isDeleting}
+              className="bg-red-500 hover:bg-red-600 border-red-400/20"
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
       {(error || playbackError) && (
         <ErrorAlert
           error={
@@ -293,8 +322,7 @@ export const RecordingCard = memo(function RecordingCard({
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleDelete}
-            isLoading={isDeleting}
+            onClick={() => setShowDeleteConfirm(true)}
             className="flex-1 md:flex-none justify-center px-2 text-red-400 hover:text-red-300 hover:bg-red-500/10"
           >
             <Trash2 size={20} />
