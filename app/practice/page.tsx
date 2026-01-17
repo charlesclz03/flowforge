@@ -14,7 +14,6 @@ import { useWakeLock } from '@/hooks/useWakeLock'
 import { useSound } from '@/hooks/useSound'
 import { useOptimisticAction } from '@/hooks/useOptimisticAction'
 import { usePracticeSession } from '@/contexts/SessionContext'
-import { GuestStorage } from '@/lib/guest-storage'
 
 import { GuestLoginModal } from '@/components/molecules/auth/GuestLoginModal'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
@@ -375,31 +374,16 @@ export default function PracticePage() {
               handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
             }
           } else {
-            // Authenticated but FREE -> Prompt Upgrade
-            setPremiumTrigger('recording')
-            setShowPremiumModal(true)
+            // Authenticated but FREE -> Practice Mode End
+            // No save, no upsell, just redirect
+            toast('Practice Session Completed', { icon: '🎤' })
+            router.push('/difficultyselection')
           }
         } else {
-          // Guest Mode (unchanged)
-          try {
-            const actualDuration = Math.max(1, Math.round(recordedDuration))
-            const metadata = {
-              beatId: selectedBeat.id,
-              beatTitle: selectedBeat.title,
-              frequency: frequency,
-              difficulty: difficulty,
-              duration: actualDuration,
-              createdAt: Date.now(),
-            }
-            // Only stick in IndexedDB if it has data
-            if (blob.size > 0) {
-              await GuestStorage.saveSession(blob, metadata)
-            }
-            setShowGuestModal(true)
-          } catch (err) {
-            console.error('Guest save failed', err)
-            toast.error('Could not save temp recording. Please sign in.')
-          }
+          // Guest Mode -> Practice Mode End
+          // No save, just redirect
+          toast('Practice Session Completed', { icon: '🎤' })
+          router.push('/difficultyselection')
         }
       }
     },
@@ -417,6 +401,7 @@ export default function PracticePage() {
       play,
       setIsPaused,
       isPro,
+      router,
     ]
   )
 
@@ -1321,7 +1306,9 @@ export default function PracticePage() {
               {pendingAction === 'restart'
                 ? 'Restart'
                 : pendingAction === 'finish'
-                  ? 'Finish & Save'
+                  ? isPro
+                    ? 'Finish & Save'
+                    : 'Finish'
                   : 'Stop & Exit'}
             </Button>
           </div>
