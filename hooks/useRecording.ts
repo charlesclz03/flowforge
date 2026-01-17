@@ -165,13 +165,53 @@ export function useRecording({
   )
 
   /**
+   * Start practice mode (Mic only, no recording)
+   */
+  const practice = useCallback(async () => {
+    if (!recorderRef.current) return
+
+    setIsInitializing(true)
+    setError(null)
+    setRecordingBlob(null)
+    setIsSaved(false)
+    setDuration(0)
+
+    try {
+      await recorderRef.current.initialize()
+      // We manually set isRecording to true safely to trigger UI states (visualizers, timer)
+      // BUT we do not call recorderRef.current.start(), so no data is collected.
+      // However, the `isRecording` state might imply "Active Session" rather than "Saving Data".
+      // Let's verify if `isRecording` blocks anything downstream.
+      // In page.tsx: isRecording triggers `handleStop` which calls `stop()`.
+      // If we stop() but didn't start(), AudioRecorder.stop() might complain or return null.
+      // AudioRecorder.stop() handles the inactive state gracefully.
+      setIsRecording(true)
+      setIsInitializing(false)
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to access microphone'
+      )
+      setIsInitializing(false)
+    }
+  }, [])
+
+  /**
    * Stop recording
    */
   const stop = useCallback(() => {
     if (!recorderRef.current) return
 
     recorderRef.current.stop()
-  }, [])
+
+    // If we were in Practice Mode (mic initialized but no MediaRecorder started),
+    // onStop callback won't fire. We must manually reset state.
+    const state = recorderRef.current.getState()
+    if (!state.isRecording && isRecording) {
+      setIsRecording(false)
+      setIsPaused(false)
+      setDuration(0)
+    }
+  }, [isRecording])
 
   /**
    * Pause recording
@@ -250,6 +290,7 @@ export function useRecording({
 
     // Actions
     start,
+    practice,
     stop,
     pause,
     resume,

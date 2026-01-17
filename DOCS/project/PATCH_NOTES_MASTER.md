@@ -1,3 +1,14 @@
+## v0.9.38 - The Guest Pass Hotfix 🎟️ (2026-01-17)
+**Codename:** Open Mic
+
+We fixed a critical bug preventing guest users from starting a recording session. The "The Booth" is now open to everyone again!
+
+### Fixes & Improvements
+- 🎤 **Guest Recording Enabled**: Removed an incorrect check that blocked unauthenticated users from hitting record. Rap first, sign up later.
+- 🔄 **Upgrade Trigger**: Fixed the "Get Pro" modal not appearing when requested.
+
+---
+
 ## v0.9.37 - The True Shuffle Update 🎲 (2026-01-17)
 **Codename:** Fair Game
 

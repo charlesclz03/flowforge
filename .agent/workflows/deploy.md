@@ -25,6 +25,7 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
     - **Update**: `lib/data/patch-notes.ts` (Ensure entry exists).
     - **Update**: `DOCS/project/PATCH_NOTES_MASTER.md`.
     - **Update**: `DOCS/project/PROJECT_STATUS.md` (Update "Last Updated" date).
+    - **Update**: `components/organisms/settings/SettingsList.tsx` (Update displayed version).
 
 6.  **Deploy (Push to Vercel)**
     - Run `git add .`

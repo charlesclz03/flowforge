@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.38',
+    date: '2026-01-17',
+    title: 'The Guest Pass Hotfix 🎟️',
+    codename: 'Open Mic',
+    description:
+      'We fixed a critical bug preventing guest users from starting a recording session. The "The Booth" is now open to everyone again!',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '🎤 **Guest Recording Enabled**: Removed an incorrect check that blocked unauthenticated users from hitting record. Rap first, sign up later.',
+          '🔄 **Upgrade Trigger**: Fixed the "Get Pro" modal not appearing when requested.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.37',
     date: '2026-01-17',
     title: 'The True Shuffle Update 🎲',

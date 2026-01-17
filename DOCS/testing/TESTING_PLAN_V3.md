@@ -270,7 +270,7 @@
 | ADMIN-003 | Beat List | View beats page | All beats listed with controls |
 | ADMIN-004 | Edit Beat Title | Click edit → Change title | Title updates |
 | ADMIN-005 | Toggle Pro/Free | Click badge to toggle | isPremium status changes |
-| ADMIN-006 | Reorder Beats | Click up/down arrows | Order changes in DB |
+| ADMIN-006 | **Sort Persistence** | Reorder beats -> Refresh Page | New order **Persists**. (Verifies deterministic sort logic). |
 | ADMIN-007 | Delete Beat | Click delete → Confirm | Beat removed |
 
 ### 7.3 Feedback Viewer (`/admin/feedback`)
@@ -387,6 +387,10 @@
 | RGR-001 | **TTS Stop-on-Discard** | Start session -> Wait for word spoken -> Immediately Click Discard | **Audio Cutoff**. Voice stops INSTANTLY. No "ghost" word finishes speaking after screen change. |
 | RGR-002 | **Word Theme Zero** | Check `PracticeControls` & `DifficultySelection` | **NO "Theme" Dropdown**. Feature should be invisible. UI code fully cleaned. |
 | RGR-003 | Slider Text Leak | Check Admin Toggle Sliders | **No ClassName Text**. The toggle switch should look like a switch, not display `relative inline-flex...` text. |
+| RGR-004 | **Timer Speed (2x Bug)** | Start Session -> Compare with Stopwatch (10s) | **Accurate Time**. Timer should NOT tick down 2x as fast (StrictMode duplicate bug). |
+| RGR-005 | **Spacebar Safety** | Type in a text area (e.g. Feedback) -> Press Space | **Text input only**. Should NOT toggle play/pause while typing. |
+| RGR-006 | **Exit Resume Flow** | Recording -> Back Button -> "Stay"/Cancel | **Audio Resumes**. Music should start playing again immediately after cancelling exit. |
+| RGR-007 | **Clean Navigation** | Save Session -> Navigate Away | **No "Leave Site?" Alert**. Browser should trust that the session is saved. |
 
 ---
 
@@ -439,6 +443,6 @@
 | API | 10 | 10 | Network |
 | Security | 10 | 10 | Hardening |
 | Android/TWA| 0 | 7 | **Play Store** |
-| Regressions| 0 | 3 | **Ghost Features** |
+| Regressions| 0 | 7 | **Ghost Features** |
 | Stress | 0 | 4 | **Reliability** |
-| **TOTAL** | **147** | **176** | **Production Stability** |
+| **TOTAL** | **147** | **180+** | **Production Stability** |

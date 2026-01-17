@@ -404,6 +404,7 @@ export default function PracticePage() {
     isRecording,
     duration,
     start: startRecording,
+    practice,
     stop: stopRecording,
     pause: pauseRecording,
     resume: resumeRecording,
@@ -516,7 +517,12 @@ export default function PracticePage() {
       if (isRecordingEnabled) {
         if (!isRecording) {
           await requestLock()
-          if (isPro) startRecording(true).catch(console.error)
+          if (isPro) {
+            startRecording(true).catch(console.error)
+          } else {
+            // Guests: Practice mode (Mic on, no recording)
+            practice().catch(console.error)
+          }
         } else {
           resumeRecording()
         }
@@ -542,6 +548,7 @@ export default function PracticePage() {
     handleError,
     clearError,
     startSession,
+    practice,
   ])
 
   const handleStop = useCallback(() => {
@@ -1194,7 +1201,10 @@ export default function PracticePage() {
               isRecordingEnabled={isRecordingEnabled}
               handleDifficultyChange={setDifficulty}
               handleFrequencyChange={setFrequency}
-              handleUpgrade={() => setPremiumTrigger('recording')}
+              handleUpgrade={() => {
+                setPremiumTrigger('recording')
+                setShowPremiumModal(true)
+              }}
               isGolden={false}
               isPaused={isPaused}
               onTogglePause={togglePause}

@@ -149,10 +149,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
   }
 
   const handleRecordClick = () => {
-    if (!isAuthenticated && !isPlaying) {
-      handleUpgrade?.()
-      return
-    }
+    // START FIX: Allow guests to record (will trigger save/auth flow on completion)
+    // if (!isAuthenticated && !isPlaying) {
+    //   handleUpgrade?.()
+    //   return
+    // }
+    // END FIX
     handleToggle()
   }
 

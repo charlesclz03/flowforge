@@ -168,7 +168,14 @@ export class AudioRecorder {
    */
   stop(): Blob | null {
     if (!this.mediaRecorder) {
-      // console.warn('MediaRecorder not initialized, cannot stop')
+      // If no media recorder but we have a stream (Practice Mode), we must clean it up
+      if (this.stream) {
+        this.stream.getTracks().forEach((track) => track.stop())
+        this.stream = null
+      }
+      if (this.audioContext && this.audioContext.state !== 'closed') {
+        this.audioContext.close()
+      }
       return null
     }
 
