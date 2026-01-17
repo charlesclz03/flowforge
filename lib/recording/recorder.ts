@@ -37,7 +37,7 @@ export class AudioRecorder {
   private onErrorCallback: ((error: Error) => void) | null = null
   private onMaxDurationCallback: (() => void) | null = null
 
-  /**
+   /**
    * Initialize and get microphone permission
    */
   async initialize(): Promise<void> {
@@ -51,6 +51,22 @@ export class AudioRecorder {
           sampleRate: RECORDING_CONFIG.SAMPLE_RATE,
         },
       })
+
+      // Initialize Web Audio Context (Standardize for both Practice and Recording)
+      if (!this.audioContext || this.audioContext.state === 'closed') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.audioContext = new (
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext
+        )()
+        this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
+      }
+
+      // Resume AudioContext if suspended (browser policy)
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume()
+      }
     } catch (error) {
       throw new Error(`Failed to access microphone: ${error}`)
     }
@@ -67,21 +83,17 @@ export class AudioRecorder {
     if (!this.stream) {
       throw new Error('No audio stream available')
     }
-
-    // Initialize Web Audio Context if needed
-    if (!this.audioContext || this.audioContext.state === 'closed') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.audioContext = new (
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext
-      )()
-      this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
-    }
-
-    // Resume AudioContext if suspended (browser policy)
-    if (this.audioContext.state === 'suspended') {
-      await this.audioContext.resume()
+    
+    // AudioContext is now guaranteed by initialize()
+    if (!this.audioContext) {
+        // Fallback or re-init if something weird happened
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.audioContext = new (
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext
+        )()
+        this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
     }
 
     // Set up Audio Graph: Mic -> Destination
