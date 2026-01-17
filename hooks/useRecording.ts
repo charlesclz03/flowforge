@@ -202,14 +202,19 @@ export function useRecording({
     recorderRef.current.stop()
 
     // If we were in Practice Mode (mic initialized but no MediaRecorder started),
-    // onStop callback won't fire. We must manually reset state.
+    // onStop callback won't fire. We must manually reset state AND trigger onComplete
+    // so that the UI knows the session ended (for "Simulated Save").
     const state = recorderRef.current.getState()
     if (!state.isRecording && isRecording) {
+      if (onCompleteRef.current) {
+        // Create empty blob to signify "Practice Session"
+        onCompleteRef.current(new Blob([], { type: 'audio/webm' }), duration)
+      }
       setIsRecording(false)
       setIsPaused(false)
       setDuration(0)
     }
-  }, [isRecording])
+  }, [isRecording, duration])
 
   /**
    * Pause recording

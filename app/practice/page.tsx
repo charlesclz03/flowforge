@@ -323,10 +323,17 @@ export default function PracticePage() {
         return
       }
 
+      // Size Check
+      // For Pros: Must have audio data.
+      // For Guests: Practice mode produces empty blobs, so we allow them IF duration was sufficient.
       if (blob.size < 1000) {
-        console.warn('Recording too small', blob.size)
-        // toast.error('No audio detected.', { icon: '🎤' }) // Reduced noise for "silent" tests
-        return
+        // If it's a guest and they practiced long enough, proceed (Simulated Save Flow)
+        if (!isPro && recordedDuration >= 3) {
+          // Pass through
+        } else {
+          console.warn('Recording too small', blob.size)
+          return
+        }
       }
 
       if (selectedBeat) {
@@ -374,7 +381,10 @@ export default function PracticePage() {
               duration: actualDuration,
               createdAt: Date.now(),
             }
-            await GuestStorage.saveSession(blob, metadata)
+            // Only stick in IndexedDB if it has data
+            if (blob.size > 0) {
+              await GuestStorage.saveSession(blob, metadata)
+            }
             setShowGuestModal(true)
           } catch (err) {
             console.error('Guest save failed', err)
@@ -396,6 +406,7 @@ export default function PracticePage() {
       stopPlayback,
       play,
       setIsPaused,
+      isPro,
     ]
   )
 
