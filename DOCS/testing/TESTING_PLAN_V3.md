@@ -41,8 +41,8 @@
 | ID | Test Case | Steps | Expected Result |
 |----|-----------|-------|-----------------|
 | AUTH-011 | Guest Practice | Start session without login | Session plays normally |
-| AUTH-012 | Guest Save Prompt | Complete session (Min 5s) → Try to save | Sign-in modal appears |
-| AUTH-013 | Guest to User Transition | Sign in after guest session | Recording saved to account |
+| AUTH-012 | Guest Finish Redirect | Complete session (Min 3s) → Click Finish | Redirect to Menu (No Upsell Modal) |
+| AUTH-013 | Guest No-Save Check | Finish guest session → Check Profile/Beats | No session saved, clean state |
 | AUTH-014 | Guest Beat Access | Select free beats | All free beats accessible |
 | AUTH-015 | Guest Premium Beat | Click premium beat | Upgrade prompt shown |
 

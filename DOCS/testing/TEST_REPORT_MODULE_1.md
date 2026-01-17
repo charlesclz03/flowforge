@@ -32,8 +32,8 @@
 | ID | Test Case | Status | Observations |
 | :--- | :--- | :--- | :--- |
 | **AUTH-011** | Guest Practice | ✅ **PASS** | Guests can successfully start a practice session and access the player. |
-| **AUTH-012** | Guest Save Prompt | 🚧 **BLOCKED** | Cannot verify Save Modal because "Recording" state requires Microphone permission, which is restricted in automation. |
-| **AUTH-013** | Guest to User Transition | 🚧 **BLOCKED** | Depended on AUTH-012. |
+| **AUTH-012** | Guest Finish Redirect | ⏳ **PENDING** | Verifying new "Redirect to Menu" flow (No Upsell). |
+| **AUTH-013** | Guest No-Save Check | ⏳ **PENDING** | Verifying session is strictly practice (not saved). |
 | **AUTH-014** | Guest Beat Access | ✅ **PASS** | Unlocked beats are fully accessible and playable in Guest mode. |
 | **AUTH-015** | Guest Premium Beat | ✅ **PASS** | Clicking a Premium beat as Guest correctly blocks access/prompts upgrade. |
 

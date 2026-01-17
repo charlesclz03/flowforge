@@ -165,6 +165,7 @@ export default function PracticePage() {
 
   // Playback Control (Detached from hook to resolve circular deps)
   const sessionTimeRef = useRef(0)
+  const lastSessionDurationRef = useRef(0) // Persist duration for callback
   const animationFrameRef = useRef<number | null>(null) // StrictMode guard: prevents duplicate loops
   const [monotonicTime, setMonotonicTime] = useState(0)
   const [isSirenActive, setIsSirenActive] = useState(false)
@@ -561,6 +562,7 @@ export default function PracticePage() {
     isStoppingRef.current = true // Sync Guard
     play('stop')
     shouldSaveRef.current = true // Default to save
+    lastSessionDurationRef.current = sessionTimeRef.current // Capture duration BEFORE reset
     stopTTS()
     stopSession()
     stopPlayback()
