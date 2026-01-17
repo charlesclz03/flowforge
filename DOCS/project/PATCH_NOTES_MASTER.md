@@ -1,3 +1,14 @@
+## v0.9.37 - The True Shuffle Update 🎲 (2026-01-17)
+**Codename:** Fair Game
+
+We fixed the word randomization logic to ensure you actually get new words in every session, and now your stats will finally track "Words Unlocked" correctly.
+
+### Fixes & Improvements
+- 🎲 **True Randomness**: Fixed a caching issue that caused the same words to appear repeatedly. Every session now pulls a fresh batch.
+- 📈 **Stats Sync**: "Words Unlocked" stats now correctly track unique words encountered, fixing the discrepancy with "Total Words Generated".
+
+---
+
 ## v0.9.36 - The Feedback Fix 🐛 (2026-01-16)
 **Codename:** Direct Line
 

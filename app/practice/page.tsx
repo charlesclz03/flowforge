@@ -637,7 +637,8 @@ export default function PracticePage() {
     const initSession = async () => {
       try {
         const wordsRes = await fetch(
-          `/api/words/random?difficulty=${difficulty}&count=100`
+          `/api/words/random?difficulty=${difficulty}&count=100`,
+          { cache: 'no-store' }
         )
 
         if (

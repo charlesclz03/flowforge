@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.37',
+    date: '2026-01-17',
+    title: 'The True Shuffle Update 🎲',
+    codename: 'Fair Game',
+    description:
+      'We fixed the word randomization logic to ensure you actually get new words in every session, and now your stats will finally track "Words Unlocked" correctly.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '🎲 **True Randomness**: Fixed a caching issue that caused the same words to appear repeatedly. Every session now pulls a fresh batch.',
+          '📈 **Stats Sync**: "Words Unlocked" stats now correctly track unique words encountered, fixing the discrepancy with "Total Words Generated".',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.36',
     date: '2026-01-16',
     title: 'The Feedback Fix 🐛',

@@ -111,10 +111,17 @@ export async function GET(request: Request) {
     // Ensure we respect the count
     const finalWords = wordsData.slice(0, count)
 
-    return NextResponse.json({
-      words: finalWords,
-      count: finalWords.length,
-    })
+    return NextResponse.json(
+      {
+        words: finalWords,
+        count: finalWords.length,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, max-age=0',
+        },
+      }
+    )
   } catch (error) {
     console.error('API Error:', error)
     // Absolute final failsafe - return JSON, never throw 500 HTML
