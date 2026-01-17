@@ -515,7 +515,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 mode === 'cypher'
                   ? 'border-transparent'
                   : isPlaying
-                    ? isRecording && !isInfiniteMode
+                    ? isRecording && !isInfiniteMode && isPro
                       ? 'border-red-500/50 bg-black/40 shadow-red-glow'
                       : 'border-accent-purple/30 bg-black/40 shadow-purple-glow'
                     : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/20'
@@ -661,16 +661,16 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           <span
                             className={cn(
                               'text-[10px] font-bold uppercase tracking-[0.3em]',
-                              isRecording && !isInfiniteMode
+                              isRecording && !isInfiniteMode && isPro
                                 ? 'text-red-400'
                                 : 'text-accent-purple'
                             )}
                           >
                             {isInfiniteMode
                               ? 'Free Flow'
-                              : isRecording
+                              : isRecording && isPro
                                 ? 'Recording'
-                                : 'Playing'}
+                                : 'Practice'}
                           </span>
                         </div>
 
@@ -754,15 +754,23 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   <div
                     className={cn(
                       'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
+                      // Base State
                       isPro && isRecordingEnabled
                         ? 'bg-red-500'
-                        : 'bg-red-900/50',
-                      isRecording &&
-                        'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                        : 'bg-gray-700',
+                      // Active State - Only Pulse Red if Pro
+                      isRecording && isPro
+                        ? 'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                        : ''
                     )}
                   />
                   {/* Text */}
-                  <span className="text-3xl font-black tracking-tighter text-white/90 drop-shadow-lg">
+                  <span
+                    className={cn(
+                      'text-3xl font-black tracking-tighter drop-shadow-lg transition-colors',
+                      isPro ? 'text-white/90' : 'text-white/30'
+                    )}
+                  >
                     REC
                   </span>
                 </div>
