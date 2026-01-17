@@ -177,17 +177,15 @@ export function useRecording({
     setDuration(0)
 
     try {
-      await recorderRef.current.initialize()
-      // We manually set isRecording to true safely to trigger UI states (visualizers, timer)
-      // BUT we do not call recorderRef.current.start(), so no data is collected.
-      // However, the `isRecording` state might imply "Active Session" rather than "Saving Data".
-      // Let's verify if `isRecording` blocks anything downstream.
-      // In page.tsx: isRecording triggers `handleStop` which calls `stop()`.
-      // If we stop() but didn't start(), AudioRecorder.stop() might complain or return null.
-      // AudioRecorder.stop() handles the inactive state gracefully.
+      // Optimistically set recording state to allow UI/TTS to function immediately
+      // This protects against browser-specific audio interruptions during getUserMedia
       setIsRecording(true)
+
+      await recorderRef.current.initialize()
       setIsInitializing(false)
     } catch (err) {
+      // Revert state if permission denied or error
+      setIsRecording(false)
       setError(
         err instanceof Error ? err.message : 'Failed to access microphone'
       )
