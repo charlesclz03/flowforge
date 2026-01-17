@@ -319,7 +319,10 @@ export default function PracticePage() {
       }
 
       if (recordedDuration < 3) {
-        toast.error('Recording too short to save (min 3s)')
+        // Only show error to Pros who actually expected a recording
+        if (isPro) {
+          toast.error('Recording too short to save (min 3s)')
+        }
         return
       }
 
