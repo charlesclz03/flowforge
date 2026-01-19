@@ -28,7 +28,7 @@ export const PATCH_NOTES: PatchNote[] = [
     description: 'UI polish to make the app feel cleaner and more native.',
     changes: [
       {
-        category: 'UI/UX Improvements',
+        category: 'Visual Overhaul',
         items: [
           'Fixed Navigation: Bottom bar is now locked to the bottom of the screen (no more scrolling away)',
           'Natural Scrolling: Removed forced 100vh locks for a smoother native scroll feel',
