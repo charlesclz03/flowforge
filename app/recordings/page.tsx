@@ -144,7 +144,10 @@ export default function RecordingsPage() {
     session?.user?.subscriptionStatus === 'trialing'
 
   // Calculate Storage Usage (Total Duration in Seconds)
-  const totalUsedSeconds = recordings.reduce((acc, curr) => acc + (curr.durationSeconds || 0), 0)
+  const totalUsedSeconds = recordings.reduce(
+    (acc, curr) => acc + (curr.durationSeconds || 0),
+    0
+  )
 
   // If free user, show list but with blocked access modal
   return (
@@ -152,8 +155,6 @@ export default function RecordingsPage() {
       showBackButton={false}
       showSettings={true}
       className="bg-background"
-      customTitle="TAPE DECK"
-      customSubtitle="Your flow archive and mixed tracks"
     >
       {/* Responsive padding - less on small screens */}
       <div className="pt-4 sm:pt-8 w-full max-w-2xl mx-auto">
@@ -176,11 +177,11 @@ export default function RecordingsPage() {
 
         {/* Storage Bar (Above List) */}
         {!isLoading && (
-            <StorageBar 
-              usedSeconds={totalUsedSeconds} 
-              isPro={isPro} 
-              onUpgradeClick={() => setShowPremiumModal(true)}
-            />
+          <StorageBar
+            usedSeconds={totalUsedSeconds}
+            isPro={isPro}
+            onUpgradeClick={() => setShowPremiumModal(true)}
+          />
         )}
 
         <div className="mt-4 space-y-8 relative">

@@ -1,3 +1,16 @@
+## v0.9.42 - Unified Identity
+**Date**: 2026-01-20 | **Codename**: Unified Profile
+
+We have completely overhauled the profile system, merging the private dashboard with your public profile page. No more navigating between two different screens – your public profile is now your command center.
+
+### New Features
+*   **Unified Profile Hub**: Your public profile (`/u/[username]`) is now the single source of truth.
+*   **Owner Controls**: When viewing your own profile, you get exclusive access to **Edit**, **Stats**, and **Settings**.
+*   **Smart Redirects**: The old `/profile` link now automatically redirects to your public handle.
+*   **Consistent Header**: The app header is now standardized across the entire application.
+
+---
+
 ## v0.9.41 - The Admin Visibility Update
 **Date**: 2026-01-19 | **Codename**: Full Roster
 

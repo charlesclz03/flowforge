@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.42',
+    date: '2026-01-20',
+    title: 'Unified Identity',
+    codename: 'Unified Profile', // Added codename to match interface
+    description: 'Merging private profiles with public pages for a cohesive experience.',
+    changes: [
+      {
+        category: 'New Features', // Structured changes to match PatchNoteItem interface
+        items: [
+          'Refactored Profile System: Private dashboard merged into public /u/[username] page',
+          'Unified Header: Standardized navigation bar across App, Profile, and Record pages',
+          'Owner Controls: Added edit/settings tools directly to your public profile page',
+          'Smart Redirects: /profile now auto-redirects to your unique user handle',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.41',
     date: '2026-01-19',
     title: 'The Admin Visibility Update',

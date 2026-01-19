@@ -11,6 +11,12 @@ import {
 } from '@/components/atoms/Tabs'
 import { FreestyleSession, Beat } from '@prisma/client'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+
+import { ProfileOwnerControls } from '@/components/organisms/profile/ProfileOwnerControls'
+import { ProfileSettingsTab } from '@/components/organisms/profile/ProfileSettingsTab'
+import { ProfileStatsTab } from '@/components/organisms/profile/ProfileStatsTab'
 
 interface SocialLinks {
   instagram?: string
@@ -26,12 +32,13 @@ interface ProfilePageProps {
 }
 
 async function getUser(username: string) {
-  // Try to find by ID first (primary method for now)
+  // Try to find by ID first (primary method for now) or username
   const user = await prisma.user.findFirst({
     where: {
       OR: [
         { id: username },
         { name: { equals: username, mode: 'insensitive' } },
+        { username: { equals: username, mode: 'insensitive' } },
       ],
     },
     include: {
@@ -84,22 +91,21 @@ export async function generateMetadata({ params }: ProfilePageProps) {
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
-  const user = await getUser(params.username)
+  const [user, session] = await Promise.all([
+    getUser(params.username),
+    getServerSession(authOptions),
+  ])
 
   if (!user) {
     notFound()
   }
 
+  // Check if the current viewer is the owner of this profile
+  const isOwner = session?.user?.id === user.id
+
   return (
     <Container className="py-8 space-y-8">
-      <AppHeader
-        showBackButton={true}
-        onBack={() => {}} // Cleanest way for server component: let it use default router.back or we'd need a client wrapper. AppHeader handles router.back if onBack is undefined? No, onBack is optional.
-        // Wait, AppHeader uses useRouter. useRouter works in Client Components. AppHeader IS a client component.
-        // So I can just pass nothing for onBack and it will default to router.back().
-        customTitle="ARTIST PROFILE"
-        customSubtitle={`${user.name || 'Artist'}'s flowfolio`}
-      />
+      <AppHeader showBackButton={true} onBack={() => {}} />
       {/* Profile Header */}
       <Card padding="lg" className="relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
@@ -114,8 +120,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <h1 className="text-3xl font-bold text-white">
               {user.name || 'Anonymous User'}
             </h1>
-            {/* We display the ID/slug in the URL as the "username" for now */}
-            {/* <p className="text-text-secondary">@{params.username}</p> */}
+            {/* Display username if available */}
+            {user.username && session?.user && (
+              <p className="text-text-secondary">@{user.username}</p>
+            )}
 
             <div className="flex items-center justify-center md:justify-start gap-6 text-sm text-text-tertiary pt-2">
               <div>
@@ -182,23 +190,20 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
 
           <div className="flex gap-3">
-            {/* Removed Follow/Message buttons */}
-            {/* <ShareProfileButton username={user.name || 'User'} userId={user.id} /> */}
-            {/* Assuming ShareProfileButton might also supply some social logic or be missing. 
-                 It was imported from 'social'. Checking if file exists. 
-                 If I deleted 'components/molecules/social', then ShareProfileButton is gone too. 
-                 I should probably define a simple local button or remove it. 
-                 For now, I'll remove it to be safe.
-             */}
+            {isOwner && <ProfileOwnerControls user={user} />}
           </div>
         </div>
       </Card>
 
       {/* Content Tabs */}
       <Tabs defaultValue="flows" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+        <TabsList
+          className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} lg:w-[${isOwner ? '600px' : '400px'}]`}
+        >
           <TabsTrigger value="flows">Flows</TabsTrigger>
+          {isOwner && <TabsTrigger value="stats">Stats</TabsTrigger>}
           <TabsTrigger value="about">About</TabsTrigger>
+          {isOwner && <TabsTrigger value="settings">Settings</TabsTrigger>}
         </TabsList>
         <TabsContent value="flows" className="mt-6 space-y-4">
           {user.freestyleSessions.length === 0 ? (
@@ -237,6 +242,17 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </div>
           </Card>
         </TabsContent>
+
+        {isOwner && (
+          <>
+            <TabsContent value="stats">
+              <ProfileStatsTab />
+            </TabsContent>
+            <TabsContent value="settings">
+              <ProfileSettingsTab />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </Container>
   )

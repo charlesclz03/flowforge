@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 function HomePageContent() {
   const { status } = useSession()
@@ -25,8 +26,12 @@ function HomePageContent() {
   }, [status, router, searchParams])
 
   return (
-    <main className="flex h-[100dvh] items-center justify-center bg-black">
-      <div className="animate-pulse">
+    <main className="flex flex-col h-[100dvh] bg-black">
+      <div className="absolute top-0 w-full z-10">
+        {/* Header specifically for Home - Standard Logo */}
+        <AppHeader showBackButton={false} showSettings={false} />
+      </div>
+      <div className="flex-1 flex items-center justify-center animate-pulse">
         <Image
           src="/logo.png"
           alt="Loading FreeStyla..."
