@@ -1,3 +1,15 @@
+## v0.9.43 - Natural Flow
+**Date**: 2026-01-20 | **Codename**: Native Feel
+
+This update focuses on the "feel" of the app. We've fixed the navigation bar to stay put like a real native app, unlocked natural window scrolling, and finally brought your XP stats into the Settings menu.
+
+### UI/UX Improvements
+*   **Fixed Bottom Nav**: The navigation dock is now anchored to the bottom of your viewport.
+*   **Natural Scrolling**: Removed strict height locks (`100vh`) so pages scroll naturally.
+*   **Settings Stats**: You can now see your **Level** and **XP Progress** directly in the Settings menu.
+
+---
+
 ## v0.9.42 - Unified Identity
 **Date**: 2026-01-20 | **Codename**: Unified Profile
 

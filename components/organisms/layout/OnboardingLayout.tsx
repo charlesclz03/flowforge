@@ -34,8 +34,8 @@ export function OnboardingLayout({
   return (
     <div
       className={cn(
-        'h-[100dvh] bg-black text-white flex flex-col',
-        preventScroll ? 'overflow-hidden' : 'overflow-hidden',
+        'min-h-[100dvh] bg-black text-white flex flex-col',
+        preventScroll ? 'overflow-hidden h-[100dvh]' : '',
         className
       )}
     >
@@ -47,7 +47,7 @@ export function OnboardingLayout({
       <div className="pointer-events-none fixed bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl animate-pulse delay-1000" />
 
       {/* Page content */}
-      <div className="relative z-10 flex h-full flex-col min-h-0">
+      <div className="relative z-10 flex flex-1 flex-col min-h-0">
         <AppHeader
           showBackButton={showBackButton}
           showSettings={showSettings}
@@ -61,10 +61,9 @@ export function OnboardingLayout({
           id="main-content"
           role="main"
           className={cn(
-            'flex flex-1 flex-col px-6 pt-4 sm:pt-6 min-h-0',
+            'flex flex-1 flex-col px-6 pt-4 sm:pt-6',
             // Responsive bottom padding - less on small screens
-            'pb-20 sm:pb-24',
-            preventScroll ? 'overflow-hidden' : 'overflow-y-auto scrollbar-none'
+            'pb-20 sm:pb-24'
           )}
         >
           <div

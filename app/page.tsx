@@ -26,7 +26,7 @@ function HomePageContent() {
   }, [status, router, searchParams])
 
   return (
-    <main className="flex flex-col h-[100dvh] bg-black">
+    <main className="flex flex-col min-h-[100dvh] bg-black">
       <div className="absolute top-0 w-full z-10">
         {/* Header specifically for Home - Standard Logo */}
         <AppHeader showBackButton={false} showSettings={false} />

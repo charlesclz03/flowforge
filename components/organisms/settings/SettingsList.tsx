@@ -115,13 +115,25 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <Sparkles size={64} className="text-white" />
           </div>
           <div className="relative z-10 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-full bg-accent-purple flex items-center justify-center border-2 border-white/20 shadow-lg">
+            <div className="h-14 w-14 rounded-full bg-accent-purple flex items-center justify-center border-2 border-white/20 shadow-lg shrink-0">
               <User size={24} className="text-white" />
             </div>
-            <div>
-              <p className="text-lg font-bold text-white leading-tight">
-                {session?.user?.name || 'Practitioner'}
-              </p>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-bold text-white leading-tight truncate">
+                  {session?.user?.name || 'Practitioner'}
+                </p>
+                {/* Level Badge */}
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-accent-gold/10 border border-accent-gold/20 shrink-0">
+                  <span className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">
+                    Lvl
+                  </span>
+                  <span className="text-sm font-black text-accent-gold">
+                    {session?.user?.level || 1}
+                  </span>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2 mt-1">
                 <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-accent-blue border border-white/10">
                   Lyricist
@@ -135,6 +147,33 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                     <Zap size={10} fill="currentColor" /> Free
                   </span>
                 )}
+              </div>
+
+              {/* XP Bar */}
+              <div className="mt-3 w-full">
+                <div className="flex justify-between text-[10px] font-bold text-zinc-400 mb-1">
+                  <span>XP</span>
+                  <span>
+                    {Math.round(session?.user?.xp || 0)} /{' '}
+                    {((session?.user?.level || 1) + 1) * 1000}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/10">
+                  <div
+                    className="h-full bg-gradient-to-r from-accent-blue to-accent-purple rounded-full transition-all duration-500 ease-out"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        Math.max(
+                          0,
+                          ((session?.user?.xp || 0) /
+                            (((session?.user?.level || 1) + 1) * 1000)) *
+                            100
+                        )
+                      )}%`,
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -428,7 +467,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v0.9.42 (Beta)
+          FreeStyla v0.9.43 (Beta)
         </p>
       </div>
     </div>

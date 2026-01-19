@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.43',
+    date: '2026-01-20',
+    title: 'Natural Flow',
+    codename: 'Native Feel',
+    description: 'UI polish to make the app feel cleaner and more native.',
+    changes: [
+      {
+        category: 'UI/UX Improvements',
+        items: [
+          'Fixed Navigation: Bottom bar is now locked to the bottom of the screen (no more scrolling away)',
+          'Natural Scrolling: Removed forced 100vh locks for a smoother native scroll feel',
+          'Settings Upgrade: Added visible Level badge and XP progress bar to your settings profile card',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.42',
     date: '2026-01-20',
     title: 'Unified Identity',
