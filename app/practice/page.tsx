@@ -307,8 +307,8 @@ export default function PracticePage() {
       }
 
       // Infinite Mode Check
-        if (isInfiniteMode) {
-          toast('Session Completed (Practice Mode)')
+      if (isInfiniteMode) {
+        toast('Session Completed (Practice Mode)')
         // handleStop logic inlined to avoid circular dependency
         play('stop')
         shouldSaveRef.current = true
@@ -853,7 +853,7 @@ export default function PracticePage() {
     lastWordIndex: -1,
     isActive: false,
     nextWordChangeTime: 0,
-    lastFreq: 0, // Track frequency changes
+    activeFrequency: 0, // Track the ACTUAL frequency currently playing
   })
   const paramsRef = useRef({
     frequency,
@@ -944,66 +944,44 @@ export default function PracticePage() {
       const secondsPerBeat = 60 / params.selectedBeat.bpm
       const secondsPerBar = secondsPerBeat * 4
 
-      // Calculate absolute position in the song's structure
-      // We accept negative time (intro) but only count positive for words
-      const absTime = Math.max(0, sessionTime)
-      const barsElapsed = absTime / secondsPerBar
-
-      // Calculate which "Phrase Chunk" we are in (e.g. Chunk 0 = Bar 1-4, Chunk 1 = Bar 5-8)
-      const safeFreq = Number(params.frequency) || 4
-
-      // Frequency Change Watcher - Critical for Timer Ring
-      if (safeFreq !== state.lastFreq) {
-        // Frequency changed! Force re-evaluation
-        state.lastFreq = safeFreq
-        // Resetting index allows the loop to "catch up" if we switched to a slower freq
-        // or trigger immediately if we switched to faster
-        state.lastWordIndex = -1
-        state.nextWordChangeTime = 0
+      // Initialize activeFrequency if unset
+      if (!state.activeFrequency) {
+        state.activeFrequency = Number(params.frequency) || 4
       }
 
-      const currentPhraseIndex = Math.floor(barsElapsed / safeFreq)
+      // Check if we reached the Target Time for the next word
+      // Note: We use > instead of >= to avoid double-triggering on the exact frame if deltas are small
+      if (sessionTime >= state.nextWordChangeTime) {
+        // --- TRIGGER WORD SWITCH ---
 
-      // DEBUG: Trace potential issues with Frequency (dev only)
-      if (process.env.NODE_ENV === 'development') {
-        if (Math.abs(barsElapsed % 1) < 0.05 && Math.random() < 0.1) {
-          console.log('[GridLock] State:', {
-            freq: params.frequency,
-            freqType: typeof params.frequency,
-            bar: barsElapsed.toFixed(2),
-            phrase: currentPhraseIndex,
-            bpm: params.selectedBeat.bpm,
-          })
-        }
-      }
+        // 1. Commit Target Frequency -> Active Frequency
+        // This is the "Smart Switch": We only adopt the new speed AT the boundary.
+        const targetFreq = Number(params.frequency) || 4
+        state.activeFrequency = targetFreq
 
-      // Initial Sync or Phrase Change Trigger
-      // We check if we've moved to a new phrase index since the last frame
-      if (
-        state.lastWordIndex === -1 ||
-        currentPhraseIndex > state.lastWordIndex
-      ) {
-        // Critical: Update the tracking index immediately
-        // Use the mathematical phrase index as the source of truth
-        state.lastWordIndex = currentPhraseIndex
+        // 2. Calculate NEXT Target Time
+        // Anchor to previous target to prevent drift (Grid Lock)
+        // If we are starting (time 0), anchor to 0.
+        const lastTarget =
+          state.nextWordChangeTime < 0.1 ? 0 : state.nextWordChangeTime
+        const intervalDuration = state.activeFrequency * secondsPerBar
+        state.nextWordChangeTime = lastTarget + intervalDuration
 
-        // Calculate the NEXT change time purely for the Visualizer/UI Ring
-        // (Phrase + 1) * BarsPerPhrase * SecondsPerBar
-        const nextTargetBar = (currentPhraseIndex + 1) * params.frequency
-        state.nextWordChangeTime = nextTargetBar * secondsPerBar
+        // 3. Update Content
+        state.lastWordIndex++ // Simple incrementer now
 
-        // Get Next Word
-        // We use the phrase index to drive the word list, ensuring deterministic order if not random
-        const actualIndex = currentPhraseIndex % params.wordList.length
+        // Get Next Word (using simple incrementing index)
+        const actualIndex = state.lastWordIndex % params.wordList.length
         const newWord = params.wordList[actualIndex]
 
         if (newWord) {
           setCurrentWord(newWord)
-          setWordIndex(currentPhraseIndex) // Drives UI key
+          setWordIndex(state.lastWordIndex)
 
           // Visual Timer Setup
-          const duration = state.nextWordChangeTime - sessionTime
-          setWordTiming({ start: sessionTime, duration })
+          // Start time is checking frame time (approx) or purely calculated?
+          // Using 'lastTarget' gives us the PERFECT theoretical start time
+          setWordTiming({ start: lastTarget, duration: intervalDuration })
 
           if (params.isTTSEnabled) speak(newWord)
         }
@@ -1172,7 +1150,7 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
         {/* Combo / Vibe Overlay - Absolute Top Right */}
         <AnimatePresence>
           {combo > 1 && (

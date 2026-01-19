@@ -63,6 +63,37 @@ export async function POST(request: Request) {
     const wordCount = Array.isArray(words) ? words.length : 0
     const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
 
+    // Calculate File Size
+    const fileSize = audioFile.size
+
+    // STORAGE LIMIT CHECK (For Free Users)
+    const FREE_LIMIT_BYTES = 100 * 1024 * 1024 // 100MB
+
+    // Fetch current usage if user is free
+    if (session.user.subscriptionStatus === 'free') {
+      const currentUsage = await prisma.freestyleSession.aggregate({
+        where: { userId: session.user.id },
+        _sum: { fileSizeBytes: true },
+      })
+
+      const totalUsed = currentUsage._sum.fileSizeBytes || 0
+      const estimatedLegacyUsage = await prisma.freestyleSession
+        .count({
+          where: { userId: session.user.id, fileSizeBytes: null },
+        })
+        .then((count) => count * (60 * 16384)) // Estimate ~1MB per minute (approx)
+
+      if (totalUsed + estimatedLegacyUsage + fileSize > FREE_LIMIT_BYTES) {
+        return NextResponse.json(
+          {
+            error:
+              'Storage Limit Exceeded. Please upgrade to Pro or delete old recordings.',
+          },
+          { status: 403 }
+        )
+      }
+    }
+
     // Generate recording ID
     const recordingId = randomUUID()
     const filePath = `${session.user.id}/${recordingId}.webm`
@@ -91,6 +122,7 @@ export async function POST(request: Request) {
         beatId,
         title,
         storageUrl: filePath,
+        fileSizeBytes: fileSize, // Save file size
         durationSeconds,
         frequency,
         difficulty,

@@ -6,13 +6,15 @@ import { calculatePromptInterval } from './calculator'
  */
 export class WordPromptScheduler {
   private bpm: number
-  private frequencyInBars: number
+  private activeFrequencyInBars: number
+  private nextFrequencyInBars: number
   private lastPromptTime: number = -1
   private onPromptCallback: ((word: WordData) => void) | null = null
 
   constructor(bpm: number, frequencyInBars: number) {
     this.bpm = bpm
-    this.frequencyInBars = frequencyInBars
+    this.activeFrequencyInBars = frequencyInBars
+    this.nextFrequencyInBars = frequencyInBars
   }
 
   /**
@@ -23,10 +25,17 @@ export class WordPromptScheduler {
   }
 
   /**
-   * Update frequency
+   * Queue a frequency update for the next cycle
    */
   setFrequency(frequencyInBars: number): void {
-    this.frequencyInBars = frequencyInBars
+    this.nextFrequencyInBars = frequencyInBars
+  }
+
+  /**
+   * Get the currently active frequency (what the beat is running on)
+   */
+  getActiveFrequency(): number {
+    return this.activeFrequencyInBars
   }
 
   /**
@@ -40,7 +49,7 @@ export class WordPromptScheduler {
    * Check if a prompt should trigger at current time
    */
   checkAndTrigger(currentTime: number, word: WordData): boolean {
-    const interval = calculatePromptInterval(this.bpm, this.frequencyInBars)
+    const interval = calculatePromptInterval(this.bpm, this.activeFrequencyInBars)
 
     // Calculate which interval we're in
     const currentInterval = Math.floor(currentTime / interval)
@@ -52,6 +61,11 @@ export class WordPromptScheduler {
 
     if (hasNewInterval && intervalStartTime > 0) {
       this.lastPromptTime = currentTime
+
+      // Commit queued frequency change
+      if (this.nextFrequencyInBars !== this.activeFrequencyInBars) {
+        this.activeFrequencyInBars = this.nextFrequencyInBars
+      }
 
       if (this.onPromptCallback) {
         this.onPromptCallback(word)
@@ -68,12 +82,15 @@ export class WordPromptScheduler {
    */
   reset(): void {
     this.lastPromptTime = -1
+    // Optional: Reset active to match next on full stop?
+    // For now, keep them synced
+    this.activeFrequencyInBars = this.nextFrequencyInBars
   }
 
   /**
-   * Get interval duration
+   * Get interval duration based on ACTIVE frequency
    */
   getInterval(): number {
-    return calculatePromptInterval(this.bpm, this.frequencyInBars)
+    return calculatePromptInterval(this.bpm, this.activeFrequencyInBars)
   }
 }

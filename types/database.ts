@@ -13,8 +13,10 @@ export type BeatWithSessions = Beat & {
   sessions: FreestyleSession[]
 }
 
+// Force fileSizeBytes inclusion if Prisma types lag
 export type FreestyleSessionWithBeat = FreestyleSession & {
   beat: Beat
+  fileSizeBytes?: number | null
 }
 
 // API response types

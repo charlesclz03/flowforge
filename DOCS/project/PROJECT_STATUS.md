@@ -4,8 +4,8 @@
 **Current Phase**: **Phase 9: Post-Launch & Scaling** -  **READY FOR DEPLOYMENT**
 
 - **Build Status**:  Stable
-- **Vercel Deployment**: Pending (v0.9.44)
-- **Current Version:** v0.9.44 (Smart Flow)
+- **Vercel Deployment**: Pending (v0.9.45)
+- **Current Version:** v0.9.45 (Cloud Control)
 - **Status:** LIVE BETA
 - **Overall Progress:** 100%
 
@@ -415,6 +415,7 @@ See `ISSUES_RESOLVED_NOV_11_2025.md` for detailed information.
 - [ ] Practice mode with feedback
 - [ ] AI-powered word suggestions
 - [ ] Multi-language support
+- [ ] Buyable Storage Add-ons (e.g., 50GB Plan)
 
 ---
 

@@ -1,3 +1,14 @@
+## v0.9.45 - Cloud Control ☁️ (2026-01-20)
+**Description:** Free users now have storage limits (100MB) to ensure sustainability. Experience our perfectly centered player on any device.
+
+### New Features
+- **Storage Limits**: Free users now have a 100MB (~1 hour) storage limit. Pro users remain unlimited.
+- **Legacy Estimation**: Old recordings are automatically estimated to ensure fair usage calculations.
+
+### Visual Overhaul
+- **Perfect Center**: The practice player is now perfectly centered on all devices, ensuring a consistent experience.
+- **Storage Bar**: A new visual indicator helping you track your cloud usage at a glance.
+
 ## v0.9.44 - The Smart Flow Update 🧠
 **Date**: 2026-01-20 | **Codename**: Smart Flow
 
@@ -9,6 +20,7 @@ We made the practice engine smarter! No more repeated words, and we now prevent 
 
 ### Fixes & Improvements
 *   **Navbar Scroll Fix**: The bottom navigation bar now reserves its own space in the layout, ensuring that content lists can never scroll behind it or be obscured.
+*   **Smart Frequency Switch**: Changing the word frequency (e.g., 4 to 8 bars) now waits for the current word to finish before applying. No more jarring jumps or broken flows!
 
 ---
 

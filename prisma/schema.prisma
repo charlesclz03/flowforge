@@ -161,6 +161,7 @@ model FreestyleSession {
   beatId          String   @map("beat_id")
   title           String
   storageUrl      String?  @map("storage_url")
+  fileSizeBytes   Int?     @map("file_size_bytes") // Added for storage limits
   durationSeconds Int      @map("duration_seconds")
   frequency       Int      @default(8) // 4, 8, or 16 bars
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard

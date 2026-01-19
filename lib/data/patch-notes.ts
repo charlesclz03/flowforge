@@ -21,6 +21,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.45',
+    date: '2026-01-20', // Same day, fast iteration
+    title: 'Cloud Control ☁️',
+    codename: 'Cloud Control',
+    description:
+      'We are introducing smart storage limits to keep the platform sustainable while ensuring Pro users get the premium experience.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          ' **Storage Limits**: Free users now have a 100MB (~1 hour) storage limit. Pro users remain unlimited.',
+          ' **Legacy Estimation**: Old recordings are automatically estimated to ensure fair usage calculations.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Perfect Center**: The practice player is now perfectly centered on all devices, ensuring a consistent experience.',
+          ' **Storage Bar**: A new visual indicator helping you track your cloud usage at a glance.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.44',
     date: '2026-01-20',
     title: 'The Smart Flow Update 🧠',
@@ -39,6 +63,7 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           ' **Navbar Scroll Fix**: The bottom navigation bar now reserves its own space in the layout, ensuring that content lists can never scroll behind it or be obscured.',
+          ' **Smart Frequency Switch**: Changing the word frequency (e.g., 4 to 8 bars) now waits for the current word to finish before applying. No more jarring jumps or broken flows!',
         ],
       },
     ],

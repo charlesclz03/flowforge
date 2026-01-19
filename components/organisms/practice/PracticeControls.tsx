@@ -52,6 +52,7 @@ interface PracticeControlsProps {
   onDiscard?: () => void
   onToggleRecordingMode?: () => void
   wordTiming?: { start: number; duration: number }
+  activeFrequency?: number
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -66,7 +67,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleRestart,
     handleBeatSelect,
     difficulty,
-    frequency,
+    frequency, // Target frequency (User Selection)
+    activeFrequency = frequency, // Active frequency (Audio Engine) - defaults to target if not provided
     isGolden = false,
     isRecording = false,
     isInfiniteMode = false,
@@ -139,11 +141,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
     const elapsed = currentTime - wordTiming.start
     intervalProgress = Math.min(Math.max(elapsed / wordTiming.duration, 0), 1)
   } else {
-    // Fallback for initialization
+    // Fallback: Use ACTIVE frequency (the one currently driving the word)
     intervalProgress = getIntervalProgress(
       currentTime || 0,
       selectedBeat?.bpm || 90,
-      frequency
+      activeFrequency // <--- Use Active Frequency Here for Smooth Ring
     )
   }
 

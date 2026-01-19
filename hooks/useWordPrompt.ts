@@ -25,6 +25,8 @@ export function useWordPrompt({
   const [currentWord, setCurrentWord] = useState<string | null>(null)
   const [showWord, setShowWord] = useState(false)
   const [promptCount, setPromptCount] = useState(0)
+  // New: Track the frequency actively being used by the scheduler
+  const [activeFrequency, setActiveFrequency] = useState(frequency)
 
   const generatorRef = useRef<WordGenerator | null>(null)
   const schedulerRef = useRef<WordPromptScheduler | null>(null)
@@ -34,6 +36,8 @@ export function useWordPrompt({
   useEffect(() => {
     generatorRef.current = new WordGenerator(words)
     schedulerRef.current = new WordPromptScheduler(bpm, frequency)
+    // Synchronize initial active frequency
+    setActiveFrequency(frequency)
 
     // Preload first word
     nextWordRef.current = generatorRef.current.getRandomWord()
@@ -53,13 +57,18 @@ export function useWordPrompt({
     }
   }, [difficulty])
 
-  // Update BPM and frequency
+  // Update BPM and frequency (queued via scheduler)
   useEffect(() => {
     if (schedulerRef.current) {
       schedulerRef.current.setBPM(bpm)
       schedulerRef.current.setFrequency(frequency)
+      
+      // If NOT playing, update active immediately to match selection
+      if (!isPlaying) {
+         setActiveFrequency(frequency)
+      }
     }
-  }, [bpm, frequency])
+  }, [bpm, frequency, isPlaying])
 
   // Check for prompt triggers
   useEffect(() => {
@@ -77,6 +86,11 @@ export function useWordPrompt({
       setCurrentWord(nextWordRef.current.wordText)
       setShowWord(true)
       setPromptCount((count) => count + 1)
+      
+      // Sync active frequency from scheduler (it might have just changed)
+      if (schedulerRef.current) {
+         setActiveFrequency(schedulerRef.current.getActiveFrequency())
+      }
 
       // Preload next word
       if (generatorRef.current) {
@@ -99,6 +113,8 @@ export function useWordPrompt({
       setPromptCount(0)
       setCurrentWord(null)
       setShowWord(false)
+      // Force sync active to target on stop
+      setActiveFrequency(frequency)
 
       // Preload first word for next session
       if (generatorRef.current) {
@@ -117,13 +133,15 @@ export function useWordPrompt({
     setCurrentWord(null)
     setShowWord(false)
     setPromptCount(0)
+    setActiveFrequency(frequency)
     nextWordRef.current = generatorRef.current?.getRandomWord() || null
-  }, [])
+  }, [frequency])
 
   return {
     currentWord,
     showWord,
     promptCount,
+    activeFrequency, // Exposed for UI
     nextWord: nextWordRef.current?.wordText || null,
     reset,
   }
