@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.44',
+    date: '2026-01-20',
+    title: 'The Smart Flow Update 🧠',
+    codename: 'Smart Flow',
+    description:
+      'We made the practice engine smarter! No more repeated words, and we now prevent simple rhymes from appearing back-to-back to force you to think harder.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          ' **Smart Anti-Repeat**: Words will now cycle through the ENTIRE library before repeating. No more seeing the same word twice in one session!',
+          ' **Anti-Rhyme Logic**: The engine now prevents consecutive words that rhyme too easily (like "Nation" -> "Station"), ensuring a more diverse flow.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.43',
     date: '2026-01-20',
     title: 'Natural Flow',

@@ -9,6 +9,7 @@ export class WordGenerator {
   private usedWords: Set<string> = new Set()
   private currentDifficulty: number = 2
   private safeMode: boolean = false
+  private lastWord: string | null = null
 
   constructor(words: WordData[]) {
     this.words = words
@@ -20,6 +21,7 @@ export class WordGenerator {
   setSafeMode(enabled: boolean): void {
     this.safeMode = enabled
     this.usedWords.clear()
+    this.lastWord = null
   }
 
   /**
@@ -28,6 +30,7 @@ export class WordGenerator {
   setDifficulty(difficulty: number): void {
     this.currentDifficulty = difficulty
     this.usedWords.clear() // Reset when difficulty changes
+    this.lastWord = null
   }
 
   /**
@@ -51,6 +54,23 @@ export class WordGenerator {
   }
 
   /**
+   * Check if a candidate word rhymes too perfectly with the last word
+   * Rules:
+   * 1. Match last 3 characters (e.g. -ation, -ing, -ght)
+   */
+  private isTooSimilar(candidate: string): boolean {
+    if (!this.lastWord) return false
+
+    // Safety check for short words
+    if (this.lastWord.length < 3 || candidate.length < 3) return false
+
+    const lastSuffix = this.lastWord.slice(-3).toLowerCase()
+    const candidateSuffix = candidate.slice(-3).toLowerCase()
+
+    return lastSuffix === candidateSuffix
+  }
+
+  /**
    * Get a random word
    */
   getRandomWord(): WordData | null {
@@ -66,14 +86,18 @@ export class WordGenerator {
       return null // No words available for this difficulty
     }
 
-    const selected = getRandomWords(available, 1)[0]
-    this.usedWords.add(selected.wordText)
+    // Apply anti-rhyme/anti-flow constraints
+    // Filter out words that are too similar to the last one
+    const constrained = available.filter((w) => !this.isTooSimilar(w.wordText))
 
-    // Keep usedWords set from growing too large
-    if (this.usedWords.size > 20) {
-      const toRemove = Array.from(this.usedWords)[0]
-      this.usedWords.delete(toRemove)
-    }
+    // Fallback: If all available words violate constraints (unlikely but possible),
+    // use the original available list to prevent jamming.
+    const pool = constrained.length > 0 ? constrained : available
+
+    const selected = getRandomWords(pool, 1)[0]
+
+    this.usedWords.add(selected.wordText)
+    this.lastWord = selected.wordText
 
     return selected
   }
@@ -99,6 +123,7 @@ export class WordGenerator {
    */
   reset(): void {
     this.usedWords.clear()
+    this.lastWord = null
   }
 
   /**
