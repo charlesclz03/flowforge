@@ -330,7 +330,12 @@ export default function TracksPage() {
                 onPlay={() => handlePlay(beat)}
                 onSelect={() => {}}
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
-                onUseTrack={() => handleUseTrack(beat)}
+                onUseTrack={
+                  !isPro && beat.isPremium
+                    ? () => setIsPremiumModalOpen(true)
+                    : () => handleUseTrack(beat)
+                }
+                onLockedClick={() => setIsPremiumModalOpen(true)}
                 onDelete={
                   beat.uploaderId && beat.uploaderId === session?.user?.id
                     ? () => handleDeleteBeat(beat.id)

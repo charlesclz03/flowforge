@@ -45,7 +45,7 @@
 |----|-----------|--------|-------|
 | FLOW-020 | Recordings List | PASS | Existing recordings visible. |
 | FLOW-021 | Recording Playback | PASS | Playback works, navigates to review. |
-| FLOW-022 | Recording Delete | FAIL | **BUG**: Delete icon click triggers no action. Modal does not appear. |
+| FLOW-022 | Recording Delete | PENDING | **Fix Deployed (v0.9.40)**. Replaced native confirm with Modal. Ready for manual verification. |
 | FLOW-023 | Recording Download | PASS | Download triggered, "Rendering..." toast observed. |
 | FLOW-024 | Recording Share | PASS | Share menu works, "Link copied" toast confirmed. |
 | FLOW-025 | Empty State | SKIPPED | List was populated. |

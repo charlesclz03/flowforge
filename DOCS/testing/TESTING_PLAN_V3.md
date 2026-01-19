@@ -4,6 +4,7 @@
 > **Testing Environment Warning**
 > All tests MUST be performed on the live Vercel deployment: `https://flowforge-freestyle.vercel.app`
 > DO NOT test on `localhost`.
+> **CRITICAL**: Always wait at least **9 seconds** after navigating to a page to ensure full load before interacting or verifying.
 
 **Version**: 3.0  
 **Last Updated**: January 16, 2026  

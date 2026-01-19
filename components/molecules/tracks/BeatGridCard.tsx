@@ -27,6 +27,7 @@ interface BeatGridCardProps {
   onToggleFavorite: (e: React.MouseEvent) => void
   onDelete?: (e: React.MouseEvent) => void
   onUseTrack?: (e: React.MouseEvent) => void
+  onLockedClick?: () => void
 }
 
 export function BeatGridCard({
@@ -40,13 +41,14 @@ export function BeatGridCard({
   onToggleFavorite,
   onDelete,
   onUseTrack,
+  onLockedClick,
 }: BeatGridCardProps) {
   // Placeholder gradients based on genre or random
   const visualStyle = useMemo(() => getBeatVisualStyle(beat), [beat])
 
   return (
     <div
-      onClick={isLocked ? undefined : onSelect}
+      onClick={isLocked ? onLockedClick : onSelect}
       className={cn(
         'group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer',
         isSelected
@@ -107,12 +109,18 @@ export function BeatGridCard({
           )}
         >
           {isLocked ? (
-            <div className="flex flex-col items-center justify-center text-white/70 gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                onLockedClick?.()
+              }}
+              className="flex flex-col items-center justify-center text-white/70 gap-2 hover:text-accent-purple hover:scale-105 transition-all cursor-pointer"
+            >
               <Lock size={24} />
               <span className="text-[10px] font-medium uppercase tracking-wider">
-                Locked
+                Tap to Unlock
               </span>
-            </div>
+            </button>
           ) : (
             <>
               {/* Favorite Button (Left) */}
