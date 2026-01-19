@@ -17,7 +17,7 @@ export function ResponsiveLayout({
   return (
     <div
       className={cn(
-        'min-h-[100dvh] w-full bg-background text-text-primary relative pb-32',
+        'h-[100dvh] flex flex-col w-full bg-background text-text-primary relative overflow-hidden',
         className
       )}
     >

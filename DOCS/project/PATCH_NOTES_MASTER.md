@@ -7,6 +7,9 @@ We made the practice engine smarter! No more repeated words, and we now prevent 
 *   **Smart Anti-Repeat**: Words will now cycle through the ENTIRE library before repeating. No more seeing the same word twice in one session!
 *   **Anti-Rhyme Logic**: The engine now prevents consecutive words that rhyme too easily (like "Nation" -> "Station"), ensuring a more diverse flow.
 
+### Fixes & Improvements
+*   **Navbar Scroll Fix**: The bottom navigation bar now reserves its own space in the layout, ensuring that content lists can never scroll behind it or be obscured.
+
 ---
 
 ## v0.9.43 - Natural Flow

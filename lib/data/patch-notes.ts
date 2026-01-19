@@ -35,6 +35,12 @@ export const PATCH_NOTES: PatchNote[] = [
           ' **Anti-Rhyme Logic**: The engine now prevents consecutive words that rhyme too easily (like "Nation" -> "Station"), ensuring a more diverse flow.',
         ],
       },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Navbar Scroll Fix**: The bottom navigation bar now reserves its own space in the layout, ensuring that content lists can never scroll behind it or be obscured.',
+        ],
+      },
     ],
   },
   {
