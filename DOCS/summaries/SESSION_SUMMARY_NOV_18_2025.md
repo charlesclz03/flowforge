@@ -5,7 +5,7 @@
 
 ---
 
-### ✅ Changes Implemented
+###  Changes Implemented
 
 - **Beat library refresh**
   - Replaced the original 8 beats with **18 curated MP3 tracks** in `public/beats/`.
@@ -25,7 +25,7 @@
 
 ---
 
-### 🧩 Docs & Status Updates
+###  Docs & Status Updates
 
 - **Status & project docs**
   - Updated `CURRENT_STATUS_SUMMARY.md`:
@@ -42,7 +42,7 @@
 
 ---
 
-### 🎯 Next Session Suggestions
+###  Next Session Suggestions
 
 1. **Stripe & subscription data model**
    - Implement `User` subscription fields and basic subscription status (`free`, `pro`) per `QUICK_START_NEXT_SESSION.md`.

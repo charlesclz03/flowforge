@@ -5,7 +5,7 @@
 
 ---
 
-## 🚀 Application Overview
+##  Application Overview
 
 **FreeStyla** is a specialized web application designed to help rappers, poets, and vocalists practice their freestyle skills. It creates a focused, high-pressure environment by combining instrumental beats with timed word prompts, forcing users to improvise and improve their lyrical adaptability.
 
@@ -20,7 +20,7 @@ The app follows a simple but powerful "Hook Model" loop:
 
 ---
 
-## ✅ Implemented Features (Universal Gateway Phase)
+##  Implemented Features (Universal Gateway Phase)
 
 All features listed here are currently live and functional in the production environment.
 
@@ -91,7 +91,7 @@ The heart of the application, designed for zero-latency performance and maximum 
 
 ---
 
-## 🛠 Technical Stack
+##  Technical Stack
 
 - **Framework**: Next.js 14 (App Router)
 - **Database**: PostgreSQL (Supabase) + Prisma ORM

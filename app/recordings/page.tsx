@@ -18,11 +18,14 @@ import { FreestyleSessionWithBeat } from '@/types/database'
 import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 
+import { StorageBar } from '@/components/organisms/recordings/StorageBar'
+
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [recordings, setRecordings] = useState<FreestyleSessionWithBeat[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
 
   const fetchRecordings = useCallback(async () => {
@@ -140,6 +143,9 @@ export default function RecordingsPage() {
     session?.user?.subscriptionStatus === 'active' ||
     session?.user?.subscriptionStatus === 'trialing'
 
+  // Calculate Storage Usage (Total Duration in Seconds)
+  const totalUsedSeconds = recordings.reduce((acc, curr) => acc + (curr.durationSeconds || 0), 0)
+
   // If free user, show list but with blocked access modal
   return (
     <OnboardingLayout
@@ -150,7 +156,7 @@ export default function RecordingsPage() {
       customSubtitle="Your flow archive and mixed tracks"
     >
       {/* Responsive padding - less on small screens */}
-      <div className="pt-4 sm:pt-8 pb-bottomnav">
+      <div className="pt-4 sm:pt-8 w-full max-w-2xl mx-auto">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -168,13 +174,17 @@ export default function RecordingsPage() {
 
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
-        <div className="mt-8 space-y-8 relative">
-          {/* Blur content if not pro */}
-          <div
-            className={
-              !isPro ? 'blur-sm pointer-events-none select-none opacity-50' : ''
-            }
-          >
+        {/* Storage Bar (Above List) */}
+        {!isLoading && (
+            <StorageBar 
+              usedSeconds={totalUsedSeconds} 
+              isPro={isPro} 
+              onUpgradeClick={() => setShowPremiumModal(true)}
+            />
+        )}
+
+        <div className="mt-4 space-y-8 relative">
+          <div className="opacity-100">
             <RecordingsStats recordings={recordings} />
             <RecordingsList
               recordings={recordings}
@@ -184,14 +194,11 @@ export default function RecordingsPage() {
             />
           </div>
 
-          {/* Overlaid Premium Modal for non-pro */}
-          {!isPro && !isLoading && (
-            <PremiumModal
-              isOpen={true}
-              onClose={() => router.push('/practice')}
-              trigger="history"
-            />
-          )}
+          <PremiumModal
+            isOpen={showPremiumModal}
+            onClose={() => setShowPremiumModal(false)}
+            trigger="recording" // Context adjusted
+          />
         </div>
       </div>
     </OnboardingLayout>

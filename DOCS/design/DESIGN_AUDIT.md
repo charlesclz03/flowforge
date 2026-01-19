@@ -19,12 +19,12 @@
 
 ### Page 1: Landing Page (`app/page.tsx`)
 
-- ✅ Hero section with stats
-- ✅ Timer ring display
-- ✅ Session badges
-- ✅ How it Works section
-- ✅ Pricing section
-- ✅ FAQ section
+-  Hero section with stats
+-  Timer ring display
+-  Session badges
+-  How it Works section
+-  Pricing section
+-  FAQ section
 
 **Potential Issues to Check:**
 
@@ -36,9 +36,9 @@
 
 ### Page 2: Practice Setup (`app/practice/page.tsx`)
 
-- ✅ Beat selector
-- ✅ Frequency selector (4/8/16 bars)
-- ✅ Difficulty selector (Easy/Medium/Hard)
+-  Beat selector
+-  Frequency selector (4/8/16 bars)
+-  Difficulty selector (Easy/Medium/Hard)
 
 **Potential Issues to Check:**
 
@@ -50,10 +50,10 @@
 
 ### Page 3: Practice Session (`app/practice/page.tsx` - active session)
 
-- ✅ Play button with timer ring
-- ✅ Word prompt display
-- ✅ Recording indicator
-- ✅ Session info pill
+-  Play button with timer ring
+-  Word prompt display
+-  Recording indicator
+-  Session info pill
 
 **CRITICAL**: Play button must match screenshot exactly (purple color)
 

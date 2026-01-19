@@ -1,4 +1,4 @@
-# 🧪 Test Report: Module 3 - Core User Flows
+#  Test Report: Module 3 - Core User Flows
 
 > [!IMPORTANT]
 > **Testing Environment Warning**
@@ -57,5 +57,5 @@
 | FLOW-027 | Help Button Nav | PENDING | |
 | FLOW-028 | Header Overlap | PENDING | |
 
-## 📝 Summary
+##  Summary
 *Pending execution.*

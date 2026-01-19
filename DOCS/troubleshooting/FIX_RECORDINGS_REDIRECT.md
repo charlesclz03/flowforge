@@ -167,22 +167,22 @@
 
 ## Expected Behavior
 
-✅ **When NOT signed in:**
+ **When NOT signed in:**
 
 - Accessing `/recordings` → Redirected to `/`
 - After signing in → Redirected to `/recordings`
 
-✅ **When signed in:**
+ **When signed in:**
 
 - Accessing `/recordings` → See recordings page
 - No redirects
 
-✅ **Callback URL preservation:**
+ **Callback URL preservation:**
 
 - Original URL is preserved in redirect
 - After signing in, user is redirected back to original URL
 
-## 🔄 Related Fixes
+##  Related Fixes
 
 ### Recording Save Fix
 
@@ -190,14 +190,14 @@
 - Stop button correctly stops recording (not pauses)
 - See `FIX_RECORDING_SAVE.md` for recording save fixes
 
-## 📚 Related Documentation
+##  Related Documentation
 
 - `DIAGNOSE_RECORDING_ISSUES.md` - Comprehensive diagnostic guide
 - `QUICK_FIX_GUIDE.md` - Quick troubleshooting steps
 - `FIX_RECORDING_SAVE.md` - Recording save fixes
 - `PHASE_4_COMPLETE.md` - Complete Phase 4 documentation
 
-## ⚠️ Important Notes
+## ️ Important Notes
 
 1. **Authentication Required**: Users must be signed in to access `/recordings`
 2. **Sign In First**: If redirected to home page, sign in first, then try `/recordings` again
@@ -205,7 +205,7 @@
 
 ---
 
-**Status**: ✅ Fixed  
+**Status**:  Fixed  
 **Last Updated**: November 11, 2025  
 **Tested**: Pending user verification  
 **Related Issues**: Recording save requires authentication

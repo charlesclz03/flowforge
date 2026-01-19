@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 High-Level Goals
+##  High-Level Goals
 
 1. Make the **landing, onboarding, and practice** screens share a coherent, Figma-accurate visual system.
 2. Simplify the **onboarding flow** and CTA copy so the path to practice is obvious and consistent.
@@ -15,7 +15,7 @@
 
 ---
 
-## 🖼️ Layout & Shared Shell
+## ️ Layout & Shared Shell
 
 ### OnboardingLayout (new shared shell)
 
@@ -38,7 +38,7 @@ Result: all core screens now share the same “purple HUD” frame, header, and 
 
 ---
 
-## 🧭 Onboarding Flow & Pages
+##  Onboarding Flow & Pages
 
 ### 1) How It Works (`/howitworks`)
 
@@ -79,7 +79,7 @@ Overall, `/difficultyselection` now feels like the middle step of a 3-page wizar
 
 ---
 
-## 🎧 Practice Screen (`/practice`)
+##  Practice Screen (`/practice`)
 
 ### Layout & Shell
 
@@ -130,7 +130,7 @@ Overall, `/difficultyselection` now feels like the middle step of a 3-page wizar
 
 ---
 
-## 🧱 Header, Auth & Avatar
+##  Header, Auth & Avatar
 
 ### AppHeader refinements
 
@@ -160,7 +160,7 @@ Result: the header is visually lighter and closer to the Figma navigation bar, w
 
 ---
 
-## 🏠 Landing Page (`/`)
+##  Landing Page (`/`)
 
 ### Shared Layout & Hero
 
@@ -199,7 +199,7 @@ Result: the header is visually lighter and closer to the Figma navigation bar, w
 
 ---
 
-## 🔁 Smaller System-Level Tweaks
+##  Smaller System-Level Tweaks
 
 - **Loading screen**:
   - `app/loading.tsx` now returns `null` (no full-screen “Loading…” overlay), so routes “just start” without a blocking loading page.
@@ -226,7 +226,7 @@ Result: the header is visually lighter and closer to the Figma navigation bar, w
 
 ---
 
-## 📊 MVP Status After This Session
+##  MVP Status After This Session
 
 - **Core functionality** (auth, beat playback, prompts, recording, Supabase storage, recordings library) remains complete and stable.
 - **UX improvements from this session**:

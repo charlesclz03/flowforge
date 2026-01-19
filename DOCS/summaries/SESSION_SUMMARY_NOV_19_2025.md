@@ -5,7 +5,7 @@
 
 ---
 
-### ✅ Changes Implemented
+###  Changes Implemented
 
 - **Profile page content & structure**
   - Updated the main profile info card title from **“Account Information”** to **“Profile Information”** to better reflect its purpose.
@@ -23,7 +23,7 @@
 
 ---
 
-### 🐛 Issues Encountered
+###  Issues Encountered
 
 - **Local Google auth failure (`OAuthCallbackError`)**
   - While production Google auth continues to work on the deployed build, local sign‑in started failing with:
@@ -41,7 +41,7 @@
 
 ---
 
-### 🔍 Diagnosis & Conclusions
+###  Diagnosis & Conclusions
 
 - The **code paths** for authentication and protected routes (NextAuth config, `middleware.ts`, `/profile` page) match the architecture used in the working deployed build.
 - The `invalid_client (Unauthorized)` error indicates that **Google is rejecting the local OAuth client**, which happens before Prisma/Supabase are involved:
@@ -53,7 +53,7 @@
 
 ---
 
-### 🎯 Recommended Next Steps (Auth)
+###  Recommended Next Steps (Auth)
 
 1. **Align local env with production**
    - In Vercel (or the deployed environment), copy the exact values of:
@@ -80,7 +80,7 @@
 
 ---
 
-### ✅ Status After This Session
+###  Status After This Session
 
 - **Profile UI**: `/profile` now presents a richer, more complete account hub with:
   - Profile Information

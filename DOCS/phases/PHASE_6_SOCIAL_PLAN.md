@@ -1,16 +1,16 @@
 # Phase 6: Social & Community Features
 
-**Status**: ✅ **COMPLETE**
+**Status**:  **COMPLETE**
 **Date**: December 11, 2025
 **Expected Start**: Started Q4 2025
 
 ---
 
-## 🎯 Goal
+##  Goal
 
 Turn Freestyla from a solitary practice tool into a vibrant community where rappers can share, compete, and grow together.
 
-## 📦 Key Features
+##  Key Features
 
 ### 1. Public Profiles & Feeds
 
@@ -37,7 +37,7 @@ Turn Freestyla from a solitary practice tool into a vibrant community where rapp
 
 ---
 
-## 📅 High-Level Roadmap
+##  High-Level Roadmap
 
 - **Week 1-2**: Database schema for Social Graph (Follows, Likes, Comments).
 - **Week 3-4**: Public Profile UI and Feed implementation.
@@ -46,6 +46,6 @@ Turn Freestyla from a solitary practice tool into a vibrant community where rapp
 
 ---
 
-## 🔮 Vision
+##  Vision
 
 Social features are the "viral engine" of Freestyla. While the tool provides utility, the community provides retention.

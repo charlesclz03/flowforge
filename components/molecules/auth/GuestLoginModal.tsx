@@ -28,7 +28,7 @@ export function GuestLoginModal({ isOpen, onClose }: GuestLoginModalProps) {
 
         <div className="text-center space-y-4">
           <div className="w-16 h-16 bg-[#7D7AFF]/20 rounded-full flex items-center justify-center mx-auto mb-2">
-            <span className="text-3xl">🔥</span>
+            <span className="text-3xl font-bold text-[#7D7AFF]">!</span>
           </div>
 
           <h2 className="text-2xl font-bold text-white">

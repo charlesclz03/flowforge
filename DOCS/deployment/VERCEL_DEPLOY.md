@@ -1,6 +1,6 @@
 # Freestyla Deployment Guide
 
-## ✅ Deployment Target: `flowforge-freestyle`
+##  Deployment Target: `flowforge-freestyle`
 
 > [!NOTE]
 > **December 18, 2025**: The `flowforge` Vercel project has been disconnected from GitHub.

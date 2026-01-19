@@ -211,12 +211,12 @@ Clear hierarchy makes onboarding new developers easier and reduces cognitive loa
 Use barrel exports (index.ts) for cleaner imports:
 
 ```tsx
-// ✅ Good - Clean barrel import
+//  Good - Clean barrel import
 import { Button, Card, Spinner } from '@/components/atoms'
 import { ErrorAlert, SuccessAlert } from '@/components/molecules'
 import { PageHeader } from '@/components/organisms/common'
 
-// ❌ Avoid - Direct file imports when barrel exists
+//  Avoid - Direct file imports when barrel exists
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 ```

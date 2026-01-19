@@ -1,4 +1,4 @@
-# Assets Creation Guide 🎨
+# Assets Creation Guide 
 
 ## What You Need to Create
 

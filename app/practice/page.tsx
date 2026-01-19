@@ -89,6 +89,7 @@ export default function PracticePage() {
     cypherPlayers,
     startSession,
     stopSession,
+    setIsRecordingEnabled,
   } = usePracticeSession()
 
   // Local State
@@ -134,7 +135,7 @@ export default function PracticePage() {
     'Building Studio Environment...'
   )
 
-  // Fetch Beats Effect
+  // Loading Text Effect
   useEffect(() => {
     const texts = [
       'Building Studio Environment...',
@@ -279,7 +280,7 @@ export default function PracticePage() {
           // Toast Badges
           if (data.session.newBadges && Array.isArray(data.session.newBadges)) {
             data.session.newBadges.forEach((badge: string) => {
-              toast.success(`Achievement Unlocked: ${badge}!`, { icon: '🏆' })
+              toast.success(`Achievement Unlocked: ${badge}!`)
             })
           }
         }
@@ -306,10 +307,8 @@ export default function PracticePage() {
       }
 
       // Infinite Mode Check
-      if (isInfiniteMode) {
-        toast('Session Completed (Practice Mode)', {
-          icon: '🎤',
-        })
+        if (isInfiniteMode) {
+          toast('Session Completed (Practice Mode)')
         // handleStop logic inlined to avoid circular dependency
         play('stop')
         shouldSaveRef.current = true
@@ -383,13 +382,13 @@ export default function PracticePage() {
           } else {
             // Authenticated but FREE -> Practice Mode End
             // No save, no upsell, just redirect
-            toast('Practice Session Completed', { icon: '🎤' })
+            toast('Practice Session Completed')
             router.push('/difficultyselection')
           }
         } else {
           // Guest Mode -> Practice Mode End
           // No save, just redirect
-          toast('Practice Session Completed', { icon: '🎤' })
+          toast('Practice Session Completed')
           router.push('/difficultyselection')
         }
       }
@@ -433,6 +432,30 @@ export default function PracticePage() {
       }
     },
   })
+
+  // Handler for Manual Recording Toggle (REC Button)
+  const handleToggleRecordingMode = useCallback(() => {
+    // Only allow toggle if session is NOT active
+    if (beatPlayer.isPlaying || isRecording) {
+      toast.error('Cannot change settings during active session')
+      return
+    }
+
+    const newState = !isRecordingEnabled
+    setIsRecordingEnabled(newState)
+
+    // Toast Feedback
+    if (newState) {
+      toast.success('Audio Capture Enabled')
+    } else {
+      toast.success('Audio Capture Disabled')
+    }
+  }, [
+    beatPlayer.isPlaying,
+    isRecording,
+    isRecordingEnabled,
+    setIsRecordingEnabled,
+  ])
 
   // Pause Logic
   const togglePause = useCallback(async () => {
@@ -586,7 +609,7 @@ export default function PracticePage() {
       stopPlayback()
       stopRecording()
       setIsPaused(false)
-      toast('Session Discarded', { icon: '🗑️' })
+      toast('Session Discarded')
       router.push('/difficultyselection')
     }
   }, [play, stopRecording, stopPlayback, router, stopTTS, stopSession])
@@ -1116,7 +1139,7 @@ export default function PracticePage() {
           customSubtitle="Step up and drop your bars"
         />
       }
-      className="bg-background h-[100dvh] overflow-hidden"
+      className="bg-background h-full min-h-full overflow-hidden"
     >
       {/* Schema.org - App Metadata */}
       <script
@@ -1149,7 +1172,7 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center h-[100dvh] px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
         {/* Combo / Vibe Overlay - Absolute Top Right */}
         <AnimatePresence>
           {combo > 1 && (
@@ -1160,7 +1183,6 @@ export default function PracticePage() {
               className="absolute top-4 right-4 z-20 pointer-events-none"
             >
               <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent-purple/30 shadow-glow-sm">
-                <span className="text-xl">🔥</span>
                 <span className="font-bold font-mono text-accent-purple">
                   {combo}x
                 </span>
@@ -1222,6 +1244,7 @@ export default function PracticePage() {
               isPaused={isPaused}
               onTogglePause={togglePause}
               onDiscard={handleDiscard}
+              onToggleRecordingMode={handleToggleRecordingMode}
               wordTiming={wordTiming}
             />
           ) : (

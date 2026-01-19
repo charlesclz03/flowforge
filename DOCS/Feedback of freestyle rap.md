@@ -122,7 +122,7 @@ Ademola Praise billy
 
 May 25, 2022
 
-This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app❤️❤️❤️❤️❤️❤️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.🖖🖖🤫
+This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app️️️️️️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.
 
 1 person found this review helpful
 
@@ -152,7 +152,7 @@ Stable Mike
 
 April 17, 2023
 
-This app is a great app but the options are very limited.. No new beats or rhym Schemes. ❗ I need more beats please.. Update urgently please.. ❗
+This app is a great app but the options are very limited.. No new beats or rhym Schemes.  I need more beats please.. Update urgently please.. 
 
 1 person found this review helpful
 
@@ -182,7 +182,7 @@ Ofentse Kevin
 
 April 26, 2022
 
-This app teached me how to freestyle rapping in 2 months... man i love it❤❤❤... but add more beats please... much love
+This app teached me how to freestyle rapping in 2 months... man i love it... but add more beats please... much love
 
 1 person found this review helpful
 
@@ -222,7 +222,7 @@ Bobby Fox (The Zambian Prince)
 
 June 6, 2021
 
-Great and wonderful for practice but please add more beats otherwise I'm in love with this❤❤
+Great and wonderful for practice but please add more beats otherwise I'm in love with this
 
 9 people found this review helpful
 
@@ -232,7 +232,7 @@ Ytw Tayo
 
 May 24, 2020
 
-Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star👎. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
+Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
 
 5 people found this review helpful
 
@@ -360,7 +360,7 @@ harman vevo
 
 February 8, 2021
 
-We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we broke😅😅😅broke as hell
+We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we brokebroke as hell
 
 1 person found this review helpful
 
@@ -624,7 +624,7 @@ A Google user
 
 May 19, 2019
 
-very nice app 😃❤😍🤗
+very nice app 
 
 2 people found this review helpful
 
@@ -634,7 +634,7 @@ hungry
 
 February 14, 2022
 
-Nice for beginners 👌
+Nice for beginners 
 
 Did you find this helpful?
 
@@ -692,7 +692,7 @@ A Google user
 
 April 8, 2019
 
-i love itttttt💋💋💋👌
+i love itttttt
 
 3 people found this review helpful
 
@@ -796,7 +796,7 @@ OGBOLE FIDELIS
 
 July 4, 2021
 
-Love ur wrk. 🏆
+Love ur wrk. 
 
 Did you find this helpful?
 
@@ -820,7 +820,7 @@ Vinita dsouza
 
 July 31, 2021
 
-Awesome 👌
+Awesome 
 
 Did you find this helpful?
 
@@ -860,7 +860,7 @@ Muhammad Adebayor (DIROC)
 
 May 18, 2020
 
-Superb❤️❤️
+Superb️️
 
 Did you find this helpful?
 
@@ -982,7 +982,7 @@ A Google user
 
 June 13, 2018
 
-This is absolutely brilliant, perfect for messing around with your mates 😂
+This is absolutely brilliant, perfect for messing around with your mates 
 
 6 people found this review helpful
 
@@ -1132,7 +1132,7 @@ A Google user
 
 June 9, 2019
 
-😒🤬😡😡😡😡🤮🤮🤮
+
 
 2 people found this review helpful
 
@@ -1186,7 +1186,7 @@ A Google user
 
 March 6, 2018
 
-😁😀😀😀😀
+
 
 7 people found this review helpful
 
@@ -1346,7 +1346,7 @@ Stable Mike
 
 April 17, 2023
 
-This app is a great app but the options are very limited.. No new beats or rhym Schemes. ❗ I need more beats please.. Update urgently please.. ❗
+This app is a great app but the options are very limited.. No new beats or rhym Schemes.  I need more beats please.. Update urgently please.. 
 
 1 person found this review helpful
 
@@ -1418,7 +1418,7 @@ Ademola Praise billy
 
 May 25, 2022
 
-This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app❤️❤️❤️❤️❤️❤️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.🖖🖖🤫
+This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app️️️️️️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.
 
 1 person found this review helpful
 
@@ -1436,7 +1436,7 @@ Ofentse Kevin
 
 April 26, 2022
 
-This app teached me how to freestyle rapping in 2 months... man i love it❤❤❤... but add more beats please... much love
+This app teached me how to freestyle rapping in 2 months... man i love it... but add more beats please... much love
 
 1 person found this review helpful
 
@@ -1462,7 +1462,7 @@ hungry
 
 February 14, 2022
 
-Nice for beginners 👌
+Nice for beginners 
 
 Did you find this helpful?
 
@@ -1480,7 +1480,7 @@ Vinita dsouza
 
 July 31, 2021
 
-Awesome 👌
+Awesome 
 
 Did you find this helpful?
 
@@ -1504,7 +1504,7 @@ OGBOLE FIDELIS
 
 July 4, 2021
 
-Love ur wrk. 🏆
+Love ur wrk. 
 
 Did you find this helpful?
 
@@ -1538,7 +1538,7 @@ Bobby Fox (The Zambian Prince)
 
 June 6, 2021
 
-Great and wonderful for practice but please add more beats otherwise I'm in love with this❤❤
+Great and wonderful for practice but please add more beats otherwise I'm in love with this
 
 9 people found this review helpful
 
@@ -1610,7 +1610,7 @@ harman vevo
 
 February 8, 2021
 
-We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we broke😅😅😅broke as hell
+We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we brokebroke as hell
 
 1 person found this review helpful
 
@@ -1820,7 +1820,7 @@ Ytw Tayo
 
 May 24, 2020
 
-Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star👎. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
+Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
 
 5 people found this review helpful
 
@@ -1846,7 +1846,7 @@ Muhammad Adebayor (DIROC)
 
 May 18, 2020
 
-Superb❤️❤️
+Superb️️
 
 Did you find this helpful?
 
@@ -2086,7 +2086,7 @@ A Google user
 
 June 9, 2019
 
-😒🤬😡😡😡😡🤮🤮🤮
+
 
 2 people found this review helpful
 
@@ -2116,7 +2116,7 @@ A Google user
 
 May 19, 2019
 
-very nice app 😃❤😍🤗
+very nice app 
 
 2 people found this review helpful
 
@@ -2146,7 +2146,7 @@ A Google user
 
 April 8, 2019
 
-i love itttttt💋💋💋👌
+i love itttttt
 
 3 people found this review helpful
 
@@ -2338,7 +2338,7 @@ A Google user
 
 June 13, 2018
 
-This is absolutely brilliant, perfect for messing around with your mates 😂
+This is absolutely brilliant, perfect for messing around with your mates 
 
 6 people found this review helpful
 
@@ -2368,7 +2368,7 @@ A Google user
 
 March 6, 2018
 
-😁😀😀😀😀
+
 
 7 people found this review helpful
 
@@ -2415,7 +2415,7 @@ Ademola Praise billy
 
 May 25, 2022
 
-This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app❤️❤️❤️❤️❤️❤️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.🖖🖖🤫
+This is the best App for any level of rappers.......if there is 10 stars I will gladly give it to them....so exciting app️️️️️️ It has increased my skill in freestyling and I hope y'all keep on getting better...the sky is the limit.
 
 1 person found this review helpful
 
@@ -2445,7 +2445,7 @@ Ofentse Kevin
 
 April 26, 2022
 
-This app teached me how to freestyle rapping in 2 months... man i love it❤❤❤... but add more beats please... much love
+This app teached me how to freestyle rapping in 2 months... man i love it... but add more beats please... much love
 
 1 person found this review helpful
 
@@ -2465,7 +2465,7 @@ Bobby Fox (The Zambian Prince)
 
 June 6, 2021
 
-Great and wonderful for practice but please add more beats otherwise I'm in love with this❤❤
+Great and wonderful for practice but please add more beats otherwise I'm in love with this
 
 9 people found this review helpful
 
@@ -2511,7 +2511,7 @@ harman vevo
 
 February 8, 2021
 
-We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we broke😅😅😅broke as hell
+We need more like this man this Shi\*\* dope asf man we Gon want an updated version of this cool app and don't tend to take our reviews and give us payment options we brokebroke as hell
 
 1 person found this review helpful
 
@@ -2597,7 +2597,7 @@ A Google user
 
 May 19, 2019
 
-very nice app 😃❤😍🤗
+very nice app 
 
 2 people found this review helpful
 
@@ -2631,7 +2631,7 @@ A Google user
 
 April 8, 2019
 
-i love itttttt💋💋💋👌
+i love itttttt
 
 3 people found this review helpful
 
@@ -2691,7 +2691,7 @@ OGBOLE FIDELIS
 
 July 4, 2021
 
-Love ur wrk. 🏆
+Love ur wrk. 
 
 Did you find this helpful?
 
@@ -2707,7 +2707,7 @@ Vinita dsouza
 
 July 31, 2021
 
-Awesome 👌
+Awesome 
 
 Did you find this helpful?
 
@@ -2731,7 +2731,7 @@ Muhammad Adebayor (DIROC)
 
 May 18, 2020
 
-Superb❤️❤️
+Superb️️
 
 Did you find this helpful?
 
@@ -2803,7 +2803,7 @@ A Google user
 
 June 13, 2018
 
-This is absolutely brilliant, perfect for messing around with your mates 😂
+This is absolutely brilliant, perfect for messing around with your mates 
 
 6 people found this review helpful
 
@@ -2967,7 +2967,7 @@ A Google user
 
 March 6, 2018
 
-😁😀😀😀😀
+
 
 7 people found this review helpful
 
@@ -3013,7 +3013,7 @@ Stable Mike
 
 April 17, 2023
 
-This app is a great app but the options are very limited.. No new beats or rhym Schemes. ❗ I need more beats please.. Update urgently please.. ❗
+This app is a great app but the options are very limited.. No new beats or rhym Schemes.  I need more beats please.. Update urgently please.. 
 
 1 person found this review helpful
 
@@ -3109,7 +3109,7 @@ hungry
 
 February 14, 2022
 
-Nice for beginners 👌
+Nice for beginners 
 
 Did you find this helpful?
 
@@ -3363,7 +3363,7 @@ Ytw Tayo
 
 May 24, 2020
 
-Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star👎. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
+Im so disappointed\! Thumbs down definitely i dont even know if this app deserves to get rated with even a 1 star. Yall literally put the N\*word with the hard er at the end\! I find that very racist and very unnecessary\!
 
 5 people found this review helpful
 
@@ -3569,7 +3569,7 @@ A Google user
 
 June 9, 2019
 
-😒🤬😡😡😡😡🤮🤮🤮
+
 
 2 people found this review helpful
 

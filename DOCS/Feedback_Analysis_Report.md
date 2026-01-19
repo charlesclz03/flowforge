@@ -14,7 +14,7 @@ The reviews indicate a passionate but frustrated user base. The competitor app i
 
 ---
 
-## 🚨 Critical Pain Points (The "Must-Fix" List)
+##  Critical Pain Points (The "Must-Fix" List)
 
 ### 1. The Audio Engine Failures (High Priority)
 
@@ -48,7 +48,7 @@ The reviews indicate a passionate but frustrated user base. The competitor app i
 
 ---
 
-## 💡 Feature Roadmap Recommendations
+##  Feature Roadmap Recommendations
 
 Based on this feedback, here is the recommended feature roadmap for the next quarter:
 
@@ -70,7 +70,7 @@ Based on this feedback, here is the recommended feature roadmap for the next qua
 
 ---
 
-## 🗣️ User Voice Quotes
+## ️ User Voice Quotes
 
 - **On Customization:** _"I would really love if I could upload my own instrumentals and also input my own rhymes (local slangs)"_
 - **On Difficulty:** _"make it interesting by introducing Levels - I mean Amateur.. intermediate and then pro levels.."_

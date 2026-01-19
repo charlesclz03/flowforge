@@ -15,7 +15,7 @@ This guide will help you set up Supabase Storage for recording uploads in Freest
 3. Click **New bucket**
 4. Configure the bucket:
    - **Name**: `recordings`
-   - **Public bucket**: ✅ **Checked** (so users can download their recordings)
+   - **Public bucket**:  **Checked** (so users can download their recordings)
    - **File size limit**: `50 MB` (adjust based on your needs)
    - **Allowed MIME types**: `audio/webm,audio/ogg,audio/mp4` (optional, for validation)
 
@@ -94,7 +94,7 @@ USING (
 2. Copy the following:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - **anon/public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (⚠️ Keep this secret!)
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (️ Keep this secret!)
 
 ## Step 4: Update Environment Variables
 

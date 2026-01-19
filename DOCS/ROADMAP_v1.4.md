@@ -5,7 +5,7 @@
 
 This document outlines features deferred from v1.3.1 to maintain production stability, as well as new planned enhancements.
 
-## 📅 Deferred Features (From v1.0 Spec)
+##  Deferred Features (From v1.0 Spec)
 
 These items were in the original "Bible" but not implemented in the v1.3.1 Universal Gateway release.
 
@@ -29,7 +29,7 @@ These items were in the original "Bible" but not implemented in the v1.3.1 Unive
 - **Status**: Partially replaced by Video Export.
 - **Requirement**: Lightweight social sharing image (Open Graph style) for users who don't want to share a full video.
 
-## 🚀 New Objectives (v1.4)
+##  New Objectives (v1.4)
 
 ### AI Voice Coaching (V2 Prep)
 

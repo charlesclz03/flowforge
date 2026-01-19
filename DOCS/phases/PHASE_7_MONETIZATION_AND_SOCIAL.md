@@ -2,7 +2,7 @@
 
 **Goal:** Transform the "MVP" into a monetizable, shareable product.
 
-## 📋 Features
+##  Features
 
 ### 1. Real Payments (Stripe)
 
@@ -32,6 +32,6 @@
 - **Details:**
   - Audio tag ("Recorded on Freestyla") mixed into free-tier downloads/shares.
 
-## 🚫 Excluded
+##  Excluded
 
 - **MP3 Export:** Users should use screen recording for visuals.

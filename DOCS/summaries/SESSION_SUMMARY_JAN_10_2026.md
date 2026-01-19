@@ -2,7 +2,7 @@
 
 ## Version: v1.6.1 "Visual Flow"
 
-### 🌊 Waveform Overhaul ("SoundCloud Mode")
+###  Waveform Overhaul ("SoundCloud Mode")
 Successfully implemented a comprehensive redesign of the waveform visualization system to provide a premium, modern experience across all surfaces.
 
 1.  **Two-Tone Coloring**:
@@ -18,21 +18,21 @@ Successfully implemented a comprehensive redesign of the waveform visualization 
     *   Replaced the basic range slider/progress bar in `SessionPlayer` with the high-fidelity `WaveformScrubber`.
     *   Provides high-resolution visual feedback of the recorded session.
 
-### 🎛️ User Beat Upload Refinements
+### ️ User Beat Upload Refinements
 1.  **Calibration Fixes**:
     *   Restored the red "START" bar marker (cue point) during playback.
     *   Ensured playback starts exactly from the defined cue point when hitting play in the calibration window.
 2.  **UI Cleanup**:
     *   Removed the redundant "Test Start Point" button; interaction is now naturally handled by waveform tapping and the play button.
 
-### 📜 Documentation Update
+###  Documentation Update
 *   Updated `CHANGELOG.md`, `README.md`, and `PATCH_NOTES_MASTER.md`.
 *   Synchronized `lib/data/patch-notes.ts` for the in-app "What's New" display.
 *   Updated `PROJECT_STATUS.md` and `APP_OVERVIEW_AND_FEATURES.md` to reflect v1.6.1.
 
 ## Build Status
 *   **Version**: 1.6.1
-*   **Status**: ✅ STABLE / DEPLOYED
+*   **Status**:  STABLE / DEPLOYED
 *   **Lint/TS**: 0 Errors / 0 Warnings
 
 ## Next Steps

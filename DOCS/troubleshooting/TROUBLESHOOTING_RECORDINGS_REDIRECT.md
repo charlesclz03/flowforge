@@ -191,12 +191,12 @@ If you're sure you're signed in but still getting redirected:
 
 After applying fixes, verify:
 
-1. ✅ Can access `/recordings` when signed in
-2. ✅ Cannot access `/recordings` when signed out (redirects to `/`)
-3. ✅ After signing in from `/recordings` redirect, can access `/recordings`
-4. ✅ Session persists across page refreshes
-5. ✅ Can access `/profile` (also protected)
-6. ✅ Cannot access `/profile` when signed out
+1.  Can access `/recordings` when signed in
+2.  Cannot access `/recordings` when signed out (redirects to `/`)
+3.  After signing in from `/recordings` redirect, can access `/recordings`
+4.  Session persists across page refreshes
+5.  Can access `/profile` (also protected)
+6.  Cannot access `/profile` when signed out
 
 ## Still Not Working?
 

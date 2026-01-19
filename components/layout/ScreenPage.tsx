@@ -22,13 +22,12 @@ export function ScreenPage({
   header,
   footer,
   className,
-  safeAreaBottom = true,
   ...props
 }: ScreenPageProps) {
   return (
     <main
       className={cn(
-        'relative flex flex-col w-full h-[100dvh] overflow-hidden bg-background',
+        'relative flex flex-col w-full h-full min-h-full bg-background',
         className
       )}
       {...props}
@@ -36,20 +35,12 @@ export function ScreenPage({
       {/* Header Area - Sticky if needed, or just normal flow */}
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
-      {/* Content Area - Internal Scrolling with responsive padding */}
-      <div className="flex-1 w-full overflow-y-auto relative z-0 scrollbar-none">
-        {children}
-      </div>
+      {/* Content Area - Internal Scrolling if needed, or just flow */}
+      <div className="flex-1 w-full relative z-0">{children}</div>
 
-      {/* Footer Area */}
+      {/* Deprecated Footer Slot - Keeping for backward compat if passed explicitly, but global nav is outside */}
       {footer && (
-        <div
-          className={cn('flex-none z-30 relative', {
-            'pb-[env(safe-area-inset-bottom)]': safeAreaBottom,
-          })}
-        >
-          {footer}
-        </div>
+        <div className="flex-none z-30 relative pb-safe">{footer}</div>
       )}
     </main>
   )

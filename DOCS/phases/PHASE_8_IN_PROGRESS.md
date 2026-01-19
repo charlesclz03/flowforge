@@ -1,6 +1,6 @@
 # Phase 8: Pro Tier & Superadmin (In Progress)
 
-**Status**: 🚧 In Progress
+**Status**:  In Progress
 **Date**: December 18, 2025
 
 ## 1. Overview
@@ -9,7 +9,7 @@ Phase 8 focuses on monetization infrastructure (Pro Tier), Superadmin capabiliti
 
 ## 2. Key Deliverables
 
-### 2.1 Superadmin Role & Content Management 👑
+### 2.1 Superadmin Role & Content Management 
 
 - **Role Management**: Defined `SUPERADMIN` role in `Prisma` and `NextAuth`.
 - **Beat Upload**: Created a dedicated `AdminUploadSection` for Superadmins to upload beats directly from the profile page.

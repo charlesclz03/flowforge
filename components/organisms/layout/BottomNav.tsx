@@ -110,9 +110,9 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 safe-bottom w-full max-w-[400px] px-4">
+      <nav className="w-full flex justify-center pb-6 pt-2 bg-transparent pointer-events-auto px-4 safe-bottom">
         {/* iOS-style Glass Dock */}
-        <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5">
+        <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5 w-full max-w-[400px]">
           {tabs.map((tab) => {
             const isActive = tab.match
               ? tab.match(pathname)

@@ -3,7 +3,7 @@
 **Date:** December 11, 2025
 **Focus:** Phase 5 Completion (Premium Features & Monetization)
 
-## ✅ Key Achievements
+##  Key Achievements
 
 ### 1. Stripe Integration (Completed)
 
@@ -32,7 +32,7 @@
 - Verified accordance with `STRIPE_SETUP.md`.
 - Updated `DOCS/status/PROJECT_STATUS.md` (to be done).
 
-## 🛠 Technical Details
+##  Technical Details
 
 - **Environment**: Used `STRIPE_PRICE_ID_MONTHLY` and `STRIPE_PRICE_ID_YEARLY` env vars.
 - **Schema**: confirmed `User` model has `subscriptionStatus`, `customerId`, `subscriptionId` fields.

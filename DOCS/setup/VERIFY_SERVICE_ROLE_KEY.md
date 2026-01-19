@@ -1,6 +1,6 @@
-# ⚠️ Important: Verify Service Role Key
+# ️ Important: Verify Service Role Key
 
-## 🔍 Issue Detected
+##  Issue Detected
 
 The service role key you provided (`Ssuuppaabbaassee036973`) looks suspiciously **short**.
 
@@ -24,7 +24,7 @@ Ssuuppaabbaassee036973
 
 ---
 
-## ✅ How to Get the Correct Service Role Key
+##  How to Get the Correct Service Role Key
 
 1. **Go to Supabase Dashboard:**
    - Navigate to: https://supabase.com/dashboard/project/xwfyycspigomivevvnqw/settings/api
@@ -56,16 +56,16 @@ Ssuuppaabbaassee036973
 
 ---
 
-## 🔒 Security Note
+##  Security Note
 
-- ⚠️ The service role key is a **secret key**
-- ⚠️ Never commit it to git (it should be in `.env.local` which is in `.gitignore`)
-- ⚠️ Never share it publicly
-- ⚠️ Only use it server-side (which we do in our API routes)
+- ️ The service role key is a **secret key**
+- ️ Never commit it to git (it should be in `.env.local` which is in `.gitignore`)
+- ️ Never share it publicly
+- ️ Only use it server-side (which we do in our API routes)
 
 ---
 
-## 🧪 Test After Updating
+##  Test After Updating
 
 After updating the service role key:
 
@@ -88,7 +88,7 @@ After updating the service role key:
 
 ---
 
-## ✅ Verification
+##  Verification
 
 Once you have the correct service role key, you can verify it by:
 
@@ -106,7 +106,7 @@ Once you have the correct service role key, you can verify it by:
 
 ---
 
-## 📚 Reference
+##  Reference
 
 - **Supabase Dashboard**: https://supabase.com/dashboard/project/xwfyycspigomivevvnqw/settings/api
 - **Service Role Key Location**: Settings > API > Project API keys > service_role
@@ -114,13 +114,13 @@ Once you have the correct service role key, you can verify it by:
 
 ---
 
-## 🎯 Next Steps
+##  Next Steps
 
-1. ✅ Get the correct service role key from Supabase Dashboard
-2. ✅ Update `.env.local` with the correct key
-3. ✅ Restart development server
-4. ✅ Test recording upload
-5. ✅ Verify it works
+1.  Get the correct service role key from Supabase Dashboard
+2.  Update `.env.local` with the correct key
+3.  Restart development server
+4.  Test recording upload
+5.  Verify it works
 
 ---
 

@@ -1,4 +1,4 @@
-# 🧪 FreeStyla v1.0 (Candidate) - Professional QA Testing Plan V3
+#  FreeStyla v1.0 (Candidate) - Professional QA Testing Plan V3
 
 > [!IMPORTANT]
 > **Testing Environment Warning**
@@ -13,7 +13,7 @@
 
 ---
 
-## 🆕 New in V3: "The Reality Check" Integration
+##  New in V3: "The Reality Check" Integration
 *Based on development history (Sessions 0-20), the following critical areas have been added:*
 
 1.  **Android TWA & PWA Deep Dive**: Validating the Play Store readiness.
@@ -23,7 +23,7 @@
 
 ---
 
-## 🔐 Module 1: Authentication & Authorization (17 tests)
+##  Module 1: Authentication & Authorization (17 tests)
 
 ### 1.1 Sign-In/Sign-Up Flow
 | ID | Test Case | Steps | Expected Result |
@@ -60,7 +60,7 @@
 
 ---
 
-## 🎵 Module 2: Audio Engine & Beat Playback (22 tests)
+##  Module 2: Audio Engine & Beat Playback (22 tests)
 
 ### 2.1 Beat Library (`/tracks`)
 | ID | Test Case | Steps | Expected Result |
@@ -106,7 +106,7 @@
 
 ---
 
-## 📱 Module 3: Core User Flows (28 tests)
+##  Module 3: Core User Flows (28 tests)
 
 ### 3.1 Landing & Onboarding
 | ID | Test Case | Steps | Expected Result |
@@ -158,7 +158,7 @@
 
 ---
 
-## 👤 Module 4: Profile & Gamification (25 tests)
+##  Module 4: Profile & Gamification (25 tests)
 
 ### 4.1 Profile Page (`/profile`)
 | ID | Test Case | Steps | Expected Result |
@@ -207,7 +207,7 @@
 
 ---
 
-## 🛠 Module 5: Settings & Configuration (15 tests)
+##  Module 5: Settings & Configuration (15 tests)
 
 ### 5.1 Settings Menu
 | ID | Test Case | Steps | Expected Result |
@@ -238,7 +238,7 @@
 
 ---
 
-## 💎 Module 6: Premium & Monetization (12 tests)
+##  Module 6: Premium & Monetization (12 tests)
 
 ### 6.1 Subscription Modal
 | ID | Test Case | Steps | Expected Result |
@@ -262,7 +262,7 @@
 
 ---
 
-## 🔧 Module 7: Admin Panel (13 tests)
+##  Module 7: Admin Panel (13 tests)
 
 ### 7.1 Admin Dashboard (`/admin`)
 | ID | Test Case | Steps | Expected Result |
@@ -299,7 +299,7 @@
 
 ---
 
-## 📱 Module 8: Mobile & Responsiveness (10 tests)
+##  Module 8: Mobile & Responsiveness (10 tests)
 
 ### 8.1 Layout
 | ID | Test Case | Steps | Expected Result |
@@ -321,7 +321,7 @@
 
 ---
 
-## 🌐 Module 9: API & Network (10 tests)
+##  Module 9: API & Network (10 tests)
 
 ### 9.1 API Endpoints
 | ID | Test Case | Steps | Expected Result |
@@ -343,7 +343,7 @@
 
 ---
 
-## 🔒 Module 10: Security & Edge Cases (10 tests)
+##  Module 10: Security & Edge Cases (10 tests)
 
 ### 10.1 Security
 | ID | Test Case | Steps | Expected Result |
@@ -365,7 +365,7 @@
 
 ---
 
-## 🤖 Module 11: Android TWA & PWA (New Module)
+##  Module 11: Android TWA & PWA (New Module)
 *Critically important for the Play Store release.*
 
 ### 11.1 PWA Foundation
@@ -385,7 +385,7 @@
 
 ---
 
-## 👻 Module 12: The "Graveyard" (Regression Tests)
+##  Module 12: The "Graveyard" (Regression Tests)
 *Ensuring removed features don't haunt the code and weird bugs don't respawn.*
 
 | ID | Test Case | Steps | Expected Result |
@@ -400,7 +400,7 @@
 
 ---
 
-## ⚡ Module 13: Stress & Reliability
+##  Module 13: Stress & Reliability
 *Pushing the app to the breaking point.*
 
 | ID | Test Case | Steps | Expected Result |
@@ -412,7 +412,7 @@
 
 ---
 
-## 📊 Execution & Reporting
+##  Execution & Reporting
 
 ### Bug Report Template
 ```markdown
@@ -434,7 +434,7 @@
 
 ---
 
-## 📊 Summary of Final Testing Plan
+##  Summary of Final Testing Plan
 
 | Module | V2 Count | V3 Count | Primary Focus |
 |--------|----------|----------|---------------|

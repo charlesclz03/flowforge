@@ -32,12 +32,12 @@ When purchasing your domain (e.g., from Spaceship, Namecheap, etc.), the registr
 
 | Upsell | Do You Need It? |
 |--------|-----------------|
-| Web Hosting | ❌ No — You use **Vercel** (free tier) |
-| WordPress Hosting | ❌ No — You don't use WordPress |
-| Virtual Machines / Servers | ❌ No — You use Vercel serverless |
-| Load Balancers / Volumes | ❌ No — Enterprise overkill |
-| SSL Certificates | ❌ No — Vercel provides free SSL |
-| Custom Email (you@freestyla.app) | 🟡 Optional — See below |
+| Web Hosting |  No — You use **Vercel** (free tier) |
+| WordPress Hosting |  No — You don't use WordPress |
+| Virtual Machines / Servers |  No — You use Vercel serverless |
+| Load Balancers / Volumes |  No — Enterprise overkill |
+| SSL Certificates |  No — Vercel provides free SSL |
+| Custom Email (you@freestyla.app) |  Optional — See below |
 
 **Just buy the domain. That's it.**
 
@@ -56,7 +56,7 @@ A professional email like `support@freestyla.app` looks better than a Gmail addr
 ### Play Store Graphics
 | Asset | Dimensions | Notes |
 |---|---|---|
-| **App Icon** | 512x512 PNG | Already in `/public`. ✔️ |
+| **App Icon** | 512x512 PNG | Already in `/public`. ️ |
 | **Feature Graphic** | 1024x500 PNG | Promotional banner for the Store page. Use Canva/Figma. **You need this.** |
 | **Screenshots** | Min 2 | Show the app in action. Use phone frame mockups. |
 
@@ -187,7 +187,7 @@ We will use Google's **Bubblewrap CLI** to generate the Android project.
 
 ---
 
-## 🔐 Keystore Management (CRITICAL)
+##  Keystore Management (CRITICAL)
 
 > [!CAUTION]
 > If you lose your keystore file or passwords, **you cannot update your app ever again**. You would have to publish a new app with a new package name.
@@ -206,20 +206,20 @@ Google offers to manage your signing key for you:
 
 ---
 
-## 🔄 App Update Behavior
+##  App Update Behavior
 
 Unlike native apps, TWA updates **do not** require a Play Store re-upload:
 
 | Change | Requires Play Store Update? |
 |--------|-----------------------------|
-| Code changes (features, bug fixes) | ❌ No — Deploy to Vercel, users see it immediately |
-| App name or icon change | ✅ Yes |
-| New Android permissions | ✅ Yes |
-| Package name change | ✅ Yes (new app) |
+| Code changes (features, bug fixes) |  No — Deploy to Vercel, users see it immediately |
+| App name or icon change |  Yes |
+| New Android permissions |  Yes |
+| Package name change |  Yes (new app) |
 
 ---
 
-## 📊 Analytics & Crash Reporting
+##  Analytics & Crash Reporting
 
 | Tool | Status |
 |------|--------|
@@ -229,7 +229,7 @@ Unlike native apps, TWA updates **do not** require a Play Store re-upload:
 
 ---
 
-## 🔗 Deep Linking (Optional)
+##  Deep Linking (Optional)
 
 If you want users to click `freestyla.app/tracks/xyz` and open directly in the app:
 1.  Add intent filters in `twa-manifest.json` during `bubblewrap init`.
@@ -239,7 +239,7 @@ If you want users to click `freestyla.app/tracks/xyz` and open directly in the a
 
 ---
 
-## 📋 Play Store Review Process
+##  Play Store Review Process
 
 | Stage | Timeline |
 |-------|----------|
@@ -249,7 +249,7 @@ If you want users to click `freestyla.app/tracks/xyz` and open directly in the a
 
 ---
 
-## 📦 AAB vs APK
+##  AAB vs APK
 
 *   `bubblewrap build` creates both.
 *   **Upload the `.aab`** (Android App Bundle) to Play Console, not the `.apk`.
@@ -258,7 +258,7 @@ If you want users to click `freestyla.app/tracks/xyz` and open directly in the a
 
 ---
 
-## 📱 Minimum Android Version
+##  Minimum Android Version
 
 *   TWAs require **Android 7.0 (API 24)** or higher.
 *   ~97% of active Android devices are covered.
@@ -266,12 +266,12 @@ If you want users to click `freestyla.app/tracks/xyz` and open directly in the a
 
 ---
 
-## 🌐 WebView Version
+##  WebView Version
 
 TWA uses the system **Chrome WebView** (or full Chrome if available):
 *   Most users have recent Chrome auto-updated.
 *   Edge case: Old phones with outdated WebView may have API quirks.
-*   **Your mitigation:** You already use fallbacks (e.g., `webkitAudioContext`). ✔️
+*   **Your mitigation:** You already use fallbacks (e.g., `webkitAudioContext`). ️
 
 ---
 
@@ -304,7 +304,7 @@ TWA uses the system **Chrome WebView** (or full Chrome if available):
 
 ---
 
-## 💰 Cost Summary
+##  Cost Summary
 
 | Item | Cost | When |
 |------|------|------|
@@ -315,7 +315,7 @@ TWA uses the system **Chrome WebView** (or full Chrome if available):
 
 ---
 
-## 🧪 Testing Strategy
+##  Testing Strategy
 
 Before submitting to Google:
 
@@ -332,7 +332,7 @@ Before submitting to Google:
 
 ---
 
-## 📈 Post-Launch: What to Monitor
+##  Post-Launch: What to Monitor
 
 | Metric | Where | Why |
 |--------|-------|-----|
@@ -343,7 +343,7 @@ Before submitting to Google:
 
 ---
 
-## 🗣️ User Support Expectations
+## ️ User Support Expectations
 
 Once you're on the Play Store:
 *   Users **will** leave 1-star reviews for things you can't control ("doesn't work offline" when their internet is spotty).
@@ -352,7 +352,7 @@ Once you're on the Play Store:
 
 ---
 
-## 📣 Marketing / ASO (App Store Optimization)
+##  Marketing / ASO (App Store Optimization)
 
 | Tip | Why |
 |-----|-----|
@@ -363,7 +363,7 @@ Once you're on the Play Store:
 
 ---
 
-## 🎯 Timing Considerations
+##  Timing Considerations
 
 | Question | Answer |
 |----------|--------|
@@ -373,7 +373,7 @@ Once you're on the Play Store:
 | Wait for push notifications? | No. TWA doesn't support them anyway. Not a blocker. |
 
 
-## 🌟 Rate Us Configuration
+##  Rate Us Configuration
 Once your app is live on the Play Store, you should update the redirection logic in the "Rate App" feature to open the native store listing directly.
 
 *   **File**: `components/organisms/feedback/RateAppModal.tsx`

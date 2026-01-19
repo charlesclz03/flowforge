@@ -1,17 +1,17 @@
 # Phase 8: Future Vision (Mobile & Advanced AI)
 
-**Status**: 🔭 **VISION**  
+**Status**:  **VISION**  
 **Timeline**: 2026+
 
 ---
 
-## 🎯 Goal
+##  Goal
 
 Expand Freestyla beyond the web browser and into deep AI integration. This phase begins after Freestyla V1.1 has been validated by users.
 
 ---
 
-## 📦 Key Initiatives
+##  Key Initiatives
 
 ### 1. Mobile Native App (iOS/Android)
 
@@ -37,7 +37,7 @@ Expand Freestyla beyond the web browser and into deep AI integration. This phase
 
 ---
 
-## ✅ Prerequisite
+##  Prerequisite
 
 Phase 8 begins after user feedback and analytics from the v1.1.0 launch confirm demand for these features.
 

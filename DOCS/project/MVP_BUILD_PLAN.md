@@ -1,12 +1,12 @@
 # Freestyla MVP Build Plan
 
 **Date**: November 6, 2025  
-**Status**: ✅ **COMPLETED / ARCHIVED** (See `PROJECT_STATUS.md` for current state)
+**Status**:  **COMPLETED / ARCHIVED** (See `PROJECT_STATUS.md` for current state)
 **Outcome**: All phases successfully implemented as of Dec 10, 2025.
 
 ---
 
-## 🎯 Executive Summary
+##  Executive Summary
 
 **Current State**: Infrastructure (backend, database, APIs) is 100% complete. Marketing page is deployed.
 
@@ -22,9 +22,9 @@
 
 ---
 
-## 📊 What's Already Built (Infrastructure)
+##  What's Already Built (Infrastructure)
 
-### ✅ Backend & Database (100%)
+###  Backend & Database (100%)
 
 - Supabase PostgreSQL database
 - Prisma ORM configured
@@ -32,7 +32,7 @@
 - 45 words seeded (with difficulty levels)
 - All database migrations applied
 
-### ✅ API Endpoints (100%)
+###  API Endpoints (100%)
 
 - `GET /api/beats` - Returns all beats
 - `GET /api/beats?free=true` - Returns free beats only
@@ -40,14 +40,14 @@
 - `GET /api/sessions` - Returns user sessions
 - `POST /api/sessions` - Creates new session
 
-### ✅ Visual Assets (100%)
+###  Visual Assets (100%)
 
 - Favicon (all sizes)
 - PWA icons
 - OG image for social sharing
 - Brand colors and design system
 
-### ✅ Marketing Page (100%)
+###  Marketing Page (100%)
 
 - Landing page deployed at https://flowforge-pi.vercel.app
 - Hero section with animated timer (decorative)
@@ -56,7 +56,7 @@
 
 ---
 
-## ❌ What Needs to Be Built (MVP User Journey)
+##  What Needs to Be Built (MVP User Journey)
 
 ### Phase 1: Authentication (5-8 hours)
 
@@ -512,7 +512,7 @@ const totalPrompts = Math.floor(sessionDuration / secondsPerPrompt)
 
 ---
 
-## 📁 File Structure (After MVP Build)
+##  File Structure (After MVP Build)
 
 ```
 flowforge/
@@ -579,7 +579,7 @@ flowforge/
 
 ---
 
-## 🎯 MVP Feature Checklist
+##  MVP Feature Checklist
 
 ### Core User Journey
 
@@ -642,7 +642,7 @@ flowforge/
 
 ---
 
-## 🚀 Recommended Build Order
+##  Recommended Build Order
 
 ### Week 1: Core Functionality
 
@@ -679,7 +679,7 @@ flowforge/
 
 ---
 
-## 🎨 Design Considerations
+##  Design Considerations
 
 ### Practice Page Layout (Desktop)
 
@@ -717,7 +717,7 @@ flowforge/
 │         │   "CONNECTION"  │                 │
 │         └─────────────────┘                 │
 │                                             │
-│            🔴 Recording...                  │
+│             Recording...                  │
 │                                             │
 └─────────────────────────────────────────────┘
 ```
@@ -726,7 +726,7 @@ flowforge/
 
 ```
 ┌───────────────────┐
-│ ☰  Freestyla  👤 │
+│   Freestyla   │
 ├───────────────────┤
 │                   │
 │  Beat Selector ▼  │
@@ -754,14 +754,14 @@ flowforge/
 │  │ "CONNECTION"│  │
 │  └─────────────┘  │
 │                   │
-│   🔴 Recording    │
+│    Recording    │
 │                   │
 └───────────────────┘
 ```
 
 ---
 
-## 🔧 Technical Challenges & Solutions
+##  Technical Challenges & Solutions
 
 ### Challenge 1: Audio Timing Accuracy
 
@@ -876,7 +876,7 @@ if (isIOS) {
 
 ---
 
-## 📚 Key Resources
+##  Key Resources
 
 ### Documentation
 
@@ -900,7 +900,7 @@ if (isIOS) {
 
 ---
 
-## ✅ Definition of Done
+##  Definition of Done
 
 The MVP is complete when:
 
@@ -932,7 +932,7 @@ The MVP is complete when:
 
 ---
 
-## 🎯 Success Metrics
+##  Success Metrics
 
 After MVP launch, measure:
 
@@ -952,7 +952,7 @@ After MVP launch, measure:
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 1. **Review this plan** with the team
 2. **Set up development environment** (if not already done)
@@ -968,19 +968,19 @@ After MVP launch, measure:
 
 **Focus on**:
 
-- ✅ Core user journey working
-- ✅ Audio quality acceptable
-- ✅ Timing accurate
-- ✅ Mobile-friendly
-- ✅ Error handling
+-  Core user journey working
+-  Audio quality acceptable
+-  Timing accurate
+-  Mobile-friendly
+-  Error handling
 
 **Don't worry about** (for MVP):
 
-- ❌ Advanced features (TTS, AI scoring, etc.)
-- ❌ Perfect design polish
-- ❌ Extensive beat library (15 is enough)
-- ❌ Social features
-- ❌ Premium tier (can add after MVP validation)
+-  Advanced features (TTS, AI scoring, etc.)
+-  Perfect design polish
+-  Extensive beat library (15 is enough)
+-  Social features
+-  Premium tier (can add after MVP validation)
 
 ---
 

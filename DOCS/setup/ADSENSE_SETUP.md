@@ -217,20 +217,20 @@ NEXT_PUBLIC_AD_SLOT_FEED=1122334455
 
 ### Content Guidelines
 
-- ✅ Original music/beats content
-- ✅ User-generated content
-- ✅ Educational content (practice tool)
-- ❌ Copyrighted music without license
-- ❌ Explicit/offensive content
+-  Original music/beats content
+-  User-generated content
+-  Educational content (practice tool)
+-  Copyrighted music without license
+-  Explicit/offensive content
 
 ### Technical Requirements
 
-- ✅ Ads clearly labeled
-- ✅ Not placed too close to interactive elements
-- ✅ Not more than 3 ads per page
-- ✅ Responsive design
-- ❌ Ads in pop-ups
-- ❌ Accidental clicks encouraged
+-  Ads clearly labeled
+-  Not placed too close to interactive elements
+-  Not more than 3 ads per page
+-  Responsive design
+-  Ads in pop-ups
+-  Accidental clicks encouraged
 
 ## 8. Revenue Optimization
 

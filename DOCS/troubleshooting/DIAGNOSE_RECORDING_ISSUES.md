@@ -1,12 +1,12 @@
 # Diagnose Recording & Redirect Issues
 
-## 🔍 Issues Reported
+##  Issues Reported
 
-1. ❌ `/recordings` redirects to home page with `callbackUrl=%2Frecordings`
-2. ❌ No success message appeared after recording
-3. ❌ No files in Supabase generated
+1.  `/recordings` redirects to home page with `callbackUrl=%2Frecordings`
+2.  No success message appeared after recording
+3.  No files in Supabase generated
 
-## 🎯 Root Causes
+##  Root Causes
 
 ### Issue 1: Recordings Page Redirect
 
@@ -27,7 +27,7 @@
 4. API call failed
 5. Supabase Storage upload failed
 
-## ✅ Step-by-Step Diagnosis
+##  Step-by-Step Diagnosis
 
 ### Step 1: Check Authentication Status
 
@@ -87,30 +87,30 @@ Recording saved successfully: {...}
 
 **If you see "Not saving recording: { hasSession: false, hasBeat: true }":**
 
-- ❌ **Problem**: User is not authenticated
-- ✅ **Solution**: Sign in first
+-  **Problem**: User is not authenticated
+-  **Solution**: Sign in first
 
 **If you see "Recording blob is empty":**
 
-- ❌ **Problem**: Recording stopped too quickly
-- ✅ **Solution**: Record for at least 3-5 seconds
+-  **Problem**: Recording stopped too quickly
+-  **Solution**: Record for at least 3-5 seconds
 
 **If you see "Failed to save recording":**
 
-- ❌ **Problem**: API call failed
-- ✅ **Solution**: Check server logs, check Supabase Storage config
+-  **Problem**: API call failed
+-  **Solution**: Check server logs, check Supabase Storage config
 
 **If you see "Unauthorized" error:**
 
-- ❌ **Problem**: Authentication issue
-- ✅ **Solution**: Sign in again, check NextAuth config
+-  **Problem**: Authentication issue
+-  **Solution**: Sign in again, check NextAuth config
 
 **If you see no logs at all:**
 
-- ❌ **Problem**: Recording didn't complete
-- ✅ **Solution**: Check if recording actually started (red dot should appear)
+-  **Problem**: Recording didn't complete
+-  **Solution**: Check if recording actually started (red dot should appear)
 
-## 🔧 Quick Fixes
+##  Quick Fixes
 
 ### Fix 1: Sign In First
 
@@ -142,7 +142,7 @@ Recording saved successfully: {...}
    - Database errors
    - Authentication errors
 
-## 📋 Verification Checklist
+##  Verification Checklist
 
 ### Authentication
 
@@ -168,7 +168,7 @@ Recording saved successfully: {...}
 - [ ] File size > 0
 - [ ] Recording appears in `/recordings` page
 
-## 🐛 Common Problems
+##  Common Problems
 
 ### Problem: "callbackUrl=%2Frecordings" in URL
 
@@ -194,7 +194,7 @@ Recording saved successfully: {...}
 - Verify Supabase Storage is configured correctly
 - Make sure you're signed in
 
-## 🧪 Test Flow
+##  Test Flow
 
 1. **Sign in** (if not already)
 2. **Go to Practice page**
@@ -207,24 +207,24 @@ Recording saved successfully: {...}
 9. **Go to `/recordings` page**
 10. **Check Supabase Storage**
 
-## 📊 Expected Results
+##  Expected Results
 
 ### When Everything Works:
 
-- ✅ Can access `/recordings` when signed in
-- ✅ Recording saves successfully
-- ✅ Success message appears
-- ✅ File appears in Supabase Storage
-- ✅ Recording appears in `/recordings` page
+-  Can access `/recordings` when signed in
+-  Recording saves successfully
+-  Success message appears
+-  File appears in Supabase Storage
+-  Recording appears in `/recordings` page
 
 ### When Something's Wrong:
 
-- ❌ Check console for error messages
-- ❌ Check server logs for errors
-- ❌ Verify authentication status
-- ❌ Verify Supabase Storage config
+-  Check console for error messages
+-  Check server logs for errors
+-  Verify authentication status
+-  Verify Supabase Storage config
 
-## 🎯 Next Steps
+##  Next Steps
 
 1. **Sign in** to your account
 2. **Test recording** (record for 10 seconds)

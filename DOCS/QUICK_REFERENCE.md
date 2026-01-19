@@ -1,4 +1,4 @@
-# Freestyla - Quick Reference Card 🚀
+# Freestyla - Quick Reference Card 
 
 ## Start Development Server
 
@@ -11,9 +11,9 @@ Visit: http://localhost:3000
 
 ## Database Status
 
-- ✅ **Connected**: Supabase PostgreSQL
-- ✅ **Seeded**: 15 beats, 45 words
-- ✅ **Working**: All API endpoints operational
+-  **Connected**: Supabase PostgreSQL
+-  **Seeded**: 15 beats, 45 words
+-  **Working**: All API endpoints operational
 
 ## API Endpoints
 

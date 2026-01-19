@@ -1,4 +1,4 @@
-# 🧪 FreeStyla v0.9.5 (Beta) - Professional QA Testing Plan V2
+#  FreeStyla v0.9.5 (Beta) - Professional QA Testing Plan V2
 
 **Version**: 2.0  
 **Last Updated**: January 12, 2026  
@@ -7,7 +7,7 @@
 
 ---
 
-## 📋 Pre-Test Setup
+##  Pre-Test Setup
 
 ### Environment Requirements
 - [ ] Chrome/Safari/Firefox (latest versions)
@@ -26,7 +26,7 @@
 
 ---
 
-## 🔐 Module 1: Authentication & Authorization (15 tests)
+##  Module 1: Authentication & Authorization (15 tests)
 
 ### 1.1 Sign-In/Sign-Up Flow
 | ID | Test Case | Steps | Expected Result |
@@ -57,7 +57,7 @@
 
 ---
 
-## 🎵 Module 2: Audio Engine & Beat Playback (20 tests)
+##  Module 2: Audio Engine & Beat Playback (20 tests)
 
 ### 2.1 Beat Library (`/tracks`)
 | ID | Test Case | Steps | Expected Result |
@@ -97,7 +97,7 @@
 
 ---
 
-## 📱 Module 3: Core User Flows (25 tests)
+##  Module 3: Core User Flows (25 tests)
 
 ### 3.1 Landing & Onboarding
 | ID | Test Case | Steps | Expected Result |
@@ -142,7 +142,7 @@
 
 ---
 
-## 👤 Module 4: Profile & Gamification (20 tests)
+##  Module 4: Profile & Gamification (20 tests)
 
 ### 4.1 Profile Page (`/profile`)
 | ID | Test Case | Steps | Expected Result |
@@ -182,7 +182,7 @@
 
 ---
 
-## 🛠 Module 5: Settings & Configuration (15 tests)
+##  Module 5: Settings & Configuration (15 tests)
 
 ### 5.1 Settings Menu
 | ID | Test Case | Steps | Expected Result |
@@ -213,7 +213,7 @@
 
 ---
 
-## 💎 Module 6: Premium & Monetization (12 tests)
+##  Module 6: Premium & Monetization (12 tests)
 
 ### 6.1 Subscription Modal
 | ID | Test Case | Steps | Expected Result |
@@ -237,7 +237,7 @@
 
 ---
 
-## 🔧 Module 7: Admin Panel (10 tests)
+##  Module 7: Admin Panel (10 tests)
 
 ### 7.1 Admin Dashboard (`/admin`)
 | ID | Test Case | Steps | Expected Result |
@@ -267,7 +267,7 @@
 
 ---
 
-## 📱 Module 8: Mobile & Responsiveness (10 tests)
+##  Module 8: Mobile & Responsiveness (10 tests)
 
 ### 8.1 Layout
 | ID | Test Case | Steps | Expected Result |
@@ -289,7 +289,7 @@
 
 ---
 
-## 🌐 Module 9: API & Network (10 tests)
+##  Module 9: API & Network (10 tests)
 
 ### 9.1 API Endpoints
 | ID | Test Case | Steps | Expected Result |
@@ -311,7 +311,7 @@
 
 ---
 
-## 🔒 Module 10: Security & Edge Cases (10 tests)
+##  Module 10: Security & Edge Cases (10 tests)
 
 ### 10.1 Security
 | ID | Test Case | Steps | Expected Result |
@@ -333,7 +333,7 @@
 
 ---
 
-## 📊 Execution & Reporting
+##  Execution & Reporting
 
 ### Test Execution Log
 | Module | Total Tests | Pass | Fail | Skip | Notes |

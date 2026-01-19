@@ -1,6 +1,6 @@
 # Quick Fix Guide - Common Issues
 
-## 📋 Quick Links
+##  Quick Links
 
 - [macOS Permission Issues](#macos-permission-issues) - EPERM, EMFILE errors
 - [Recording & Redirect Issues](#recording--redirect-issues)
@@ -33,13 +33,13 @@ npm run dev
 
 ## Recording & Redirect Issues
 
-### 🚨 Issues
+###  Issues
 
 1. `/recordings` redirects to home with `callbackUrl=%2Frecordings`
 2. No success message after recording
 3. No files in Supabase
 
-## ✅ Quick Fixes
+##  Quick Fixes
 
 ### Fix 1: Sign In First (CRITICAL)
 
@@ -85,7 +85,7 @@ Recording saved successfully: {...}
 - If you see `{}` → Not authenticated
 - If you see user data → Authenticated
 
-## 🔍 Debugging Steps
+##  Debugging Steps
 
 ### Step 1: Check if Signed In
 
@@ -109,7 +109,7 @@ Recording saved successfully: {...}
 - [ ] File in Supabase Storage?
 - [ ] Recording in `/recordings` page?
 
-## 🐛 Common Problems
+##  Common Problems
 
 ### Problem: "callbackUrl=%2Frecordings" in URL
 
@@ -134,27 +134,27 @@ Recording saved successfully: {...}
 - Server logs for Supabase errors
 - Supabase Storage configuration
 
-## 📋 Action Items
+##  Action Items
 
-1. ✅ **Sign in** (if not already)
-2. ✅ **Go to `/recordings`** (should work now)
-3. ✅ **Test recording** (record for 10 seconds)
-4. ✅ **Check console** for logs
-5. ✅ **Check Supabase Storage** for files
+1.  **Sign in** (if not already)
+2.  **Go to `/recordings`** (should work now)
+3.  **Test recording** (record for 10 seconds)
+4.  **Check console** for logs
+5.  **Check Supabase Storage** for files
 
-## 🎯 Expected Results
+##  Expected Results
 
 ### After Signing In:
 
-- ✅ Can access `/recordings` without redirect
-- ✅ Can access `/profile` without redirect
-- ✅ Recordings page loads
+-  Can access `/recordings` without redirect
+-  Can access `/profile` without redirect
+-  Recordings page loads
 
 ### After Recording:
 
-- ✅ Success message appears
-- ✅ File in Supabase Storage
-- ✅ Recording in `/recordings` page
+-  Success message appears
+-  File in Supabase Storage
+-  Recording in `/recordings` page
 
 ---
 

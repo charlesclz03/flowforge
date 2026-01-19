@@ -36,9 +36,9 @@ This session marked a significant shift in the **FreeStyla** user journey, trans
 
 ## Build Status
 
-- ✅ **npm run build**: Passed.
-- ✅ **git push**: Committed and pushed to `main`.
-- ✅ **Vercel**: Deployment successful.
+-  **npm run build**: Passed.
+-  **git push**: Committed and pushed to `main`.
+-  **Vercel**: Deployment successful.
 
 ---
 

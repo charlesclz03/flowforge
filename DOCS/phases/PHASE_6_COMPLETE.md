@@ -1,9 +1,9 @@
 # Phase 6 Complete: Social & PVP Features
 
 **Date:** December 14, 2025
-**Status:** ✅ Deployed
+**Status:**  Deployed
 
-## 🎯 Objectives Met
+##  Objectives Met
 
 The goal of this phase was to transform Freestyla from a solitary practice tool into a social platform.
 
@@ -27,14 +27,14 @@ The goal of this phase was to transform Freestyla from a solitary practice tool 
     - **Badges**: Logic implemented to award badges for specific behaviors (Night Shift, Founder, etc.).
     - **Stats**: Profile now tracks Total Score and Words Collected.
 
-## 🛠 Technical Implementation
+##  Technical Implementation
 
 - **Database**: Added `DuelVote`, `FreestyleSession(parentId)` relations.
 - **API**: New endpoints for Duels and Voting.
 - **Frontend**: Created `DuelView`, `LeaderboardRow`, `FeedItem` components.
 - **Type Safety**: Strictly typed all new Prisma relations.
 
-## 📝 Next Steps
+##  Next Steps
 
 - Monitor Duel creation rate in production.
 - tune "Trending" algorithm based on real click-through rates.

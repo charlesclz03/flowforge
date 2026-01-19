@@ -1,6 +1,6 @@
 # Supabase Storage Setup Checklist
 
-## ✅ Pre-Setup (Already Done)
+##  Pre-Setup (Already Done)
 
 - [x] Created `recordings` bucket in Supabase
 - [ ] Verified bucket is public
@@ -10,7 +10,7 @@
 
 ---
 
-## 📋 Setup Steps
+##  Setup Steps
 
 ### Step 1: Verify Bucket Configuration
 
@@ -28,7 +28,7 @@
 2. Copy the following:
    - [ ] **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - [ ] **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - [ ] **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` ⚠️ (Keep secret!)
+   - [ ] **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` ️ (Keep secret!)
 
 ### Step 3: Update .env.local
 
@@ -89,7 +89,7 @@ Or manually verify:
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: "Failed to upload recording"
 
@@ -131,7 +131,7 @@ Or manually verify:
 
 ---
 
-## ✅ Final Verification
+##  Final Verification
 
 Once everything is working:
 
@@ -147,7 +147,7 @@ Once everything is working:
 
 ---
 
-## 🎉 Setup Complete!
+##  Setup Complete!
 
 If all checks pass, your Supabase Storage is configured correctly!
 
@@ -160,7 +160,7 @@ If all checks pass, your Supabase Storage is configured correctly!
 
 ---
 
-## 📚 Resources
+##  Resources
 
 - [Setup Guide](SETUP_SUPABASE_STORAGE_NOW.md) - Detailed setup instructions
 - [Storage Setup Doc](DOCS/SUPABASE_STORAGE_SETUP.md) - Complete documentation

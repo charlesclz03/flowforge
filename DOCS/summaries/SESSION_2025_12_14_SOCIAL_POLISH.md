@@ -3,7 +3,7 @@
 **Date:** December 14, 2025
 **Phase:** Phase 6 (Social & Polish) -> Phase 7 (Testing/Launch)
 
-## 🎯 Objectives Achieved
+##  Objectives Achieved
 
 We successfully implemented the "missing pieces" from the original spec and the major Social/PVP features for v1.0.
 
@@ -33,7 +33,7 @@ We successfully implemented the "missing pieces" from the original spec and the 
 - **Build**: `npm run build` confirmed passing (Exit Code 0).
 - **Prisma**: Regenerated client to resolve "missing member" type errors.
 
-## 🛠 Technical Details
+##  Technical Details
 
 - **Environment**: Verified all `NEXT_PUBLIC_` and secret keys are correctly referenced.
 - **Deployment**: Deployed to Vercel (Commit: `feat: implement social, duel, and polish features (v1.0)`).
@@ -42,7 +42,7 @@ We successfully implemented the "missing pieces" from the original spec and the 
   - Manual curl validation of endpoints.
   - Static analysis (`tsc --noEmit`) confirmed clean.
 
-## 📝 Next Steps (Phase 7/8)
+##  Next Steps (Phase 7/8)
 
 - **Vercel Verification**: Confirm production deployment acts as expected.
 - **User Acceptance Testing**: Validate real-time usage of Duels.

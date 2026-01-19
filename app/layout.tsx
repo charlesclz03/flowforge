@@ -133,13 +133,17 @@ export default async function RootLayout({
           <PracticeSessionProvider>
             <SafeAreaWrapper>
               <ResponsiveLayout>
-                <a
-                  href="#main-content"
-                  className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-accent-orange text-black px-4 py-2 rounded z-50"
+                <main
+                  id="main-content"
+                  className="flex-1 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
                 >
-                  Skip to main content
-                </a>
-                {children}
+                  {children}
+                </main>
+                <div className="flex-none w-full relative z-50 pointer-events-none">
+                  <div className="pointer-events-auto">
+                    <BottomNav />
+                  </div>
+                </div>
               </ResponsiveLayout>
             </SafeAreaWrapper>
             {process.env.NEXT_PUBLIC_GA_ID ? (
@@ -169,7 +173,6 @@ export default async function RootLayout({
             ) : null}
             <AudioContextUnlock />
             <Toaster position="bottom-center" />
-            <BottomNav />
           </PracticeSessionProvider>
         </SessionProvider>
       </body>

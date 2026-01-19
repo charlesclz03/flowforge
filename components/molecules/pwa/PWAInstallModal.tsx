@@ -68,7 +68,7 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
 
                   {isIOS && (
                     <div className="mb-6 bg-accent-purple/10 border border-accent-purple/20 rounded-xl p-3 text-sm flex gap-3 text-left">
-                      <span className="text-xl">💡</span>
+                      <span className="text-xl font-bold text-accent-purple">!</span>
                       <span className="text-accent-purple/90">
                         <strong>Pro Tip:</strong> Installing fixes the
                         repetitive <strong>Microphone Permission</strong>{' '}

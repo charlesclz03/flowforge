@@ -37,15 +37,19 @@ export default function AdminPage() {
           </Card>
         </Link>
 
-        <Card className="p-6 opacity-50 cursor-not-allowed">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-full bg-accent-pink/20 text-accent-pink">
-              <Users size={24} />
+        <Link href="/admin/users">
+          <Card className="p-6 hover:border-accent-pink transition-all cursor-pointer group">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-3 rounded-full bg-accent-pink/20 text-accent-pink group-hover:scale-110 transition-transform">
+                <Users size={24} />
+              </div>
+              <h2 className="text-xl font-bold">Users</h2>
             </div>
-            <h2 className="text-xl font-bold">Users</h2>
-          </div>
-          <p className="text-text-secondary">User management coming soon.</p>
-        </Card>
+            <p className="text-text-secondary">
+              View all user accounts, stats, and subscription status.
+            </p>
+          </Card>
+        </Link>
 
         <Link href="/admin/feedback">
           <Card className="p-6 hover:border-accent-yellow transition-all cursor-pointer group">

@@ -1,14 +1,14 @@
 # Supabase Storage Setup - Step by Step
 
-## ✅ Step 1: Verify Bucket Configuration
+##  Step 1: Verify Bucket Configuration
 
 1. Go to your Supabase Dashboard
 2. Navigate to **Storage** > **recordings** bucket
 3. Verify the following settings:
-   - ✅ **Bucket name**: `recordings` (exactly)
-   - ✅ **Public bucket**: Should be **checked** (enabled)
-   - ✅ **File size limit**: Set to `50 MB` (or your preferred limit)
-   - ✅ **Allowed MIME types**: Optional, can leave empty or add `audio/webm,audio/ogg,audio/mp4`
+   -  **Bucket name**: `recordings` (exactly)
+   -  **Public bucket**: Should be **checked** (enabled)
+   -  **File size limit**: Set to `50 MB` (or your preferred limit)
+   -  **Allowed MIME types**: Optional, can leave empty or add `audio/webm,audio/ogg,audio/mp4`
 
 **If the bucket is not public:**
 
@@ -19,7 +19,7 @@
 
 ---
 
-## 🔑 Step 2: Get API Keys
+##  Step 2: Get API Keys
 
 1. Go to **Settings** > **API** in your Supabase Dashboard
 2. Copy the following values:
@@ -46,14 +46,14 @@
    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    ```
 
-   ⚠️ **IMPORTANT**: This is a secret key! Copy this → `SUPABASE_SERVICE_ROLE_KEY`
+   ️ **IMPORTANT**: This is a secret key! Copy this → `SUPABASE_SERVICE_ROLE_KEY`
    - Never commit this to git
    - Only use server-side
    - Keep it secure
 
 ---
 
-## 📝 Step 3: Update Environment Variables
+##  Step 3: Update Environment Variables
 
 1. Open your `.env.local` file (create it if it doesn't exist)
 2. Add the following variables:
@@ -69,7 +69,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 ---
 
-## 🔍 Step 4: Verify Environment Variables
+##  Step 4: Verify Environment Variables
 
 1. Make sure your `.env.local` file is in the project root
 2. Check that `.env.local` is in `.gitignore` (it should be)
@@ -80,7 +80,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 ---
 
-## 🧪 Step 5: Test the Setup
+##  Step 5: Test the Setup
 
 1. **Restart your development server** (if it's running):
 
@@ -108,7 +108,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: "Failed to upload recording"
 
@@ -151,7 +151,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 ---
 
-## ✅ Verification Checklist
+##  Verification Checklist
 
 - [ ] Bucket name is exactly `recordings`
 - [ ] Bucket is public (enabled)
@@ -167,7 +167,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 ---
 
-## 🎉 Next Steps
+##  Next Steps
 
 Once everything is working:
 
@@ -190,7 +190,7 @@ Once everything is working:
 
 ---
 
-## 📚 Additional Resources
+##  Additional Resources
 
 - [Supabase Storage Documentation](https://supabase.com/docs/guides/storage)
 - [Supabase Storage Policies](https://supabase.com/docs/guides/storage/security/access-control)

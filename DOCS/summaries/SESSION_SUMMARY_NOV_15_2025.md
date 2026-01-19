@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Goals for This Session
+##  Goals for This Session
 
 1. Clean up code style and remove TypeScript `any` usage where possible.
 2. Align the practice experience with the 3-step mobile game flow from the design assets.
@@ -17,7 +17,7 @@ All of these were achieved.
 
 ---
 
-## ✅ What Was Implemented
+##  What Was Implemented
 
 ### 1) Code Quality & Type Safety
 
@@ -112,7 +112,7 @@ All of these were achieved.
 
 ---
 
-## 🔭 Impact on the Product
+##  Impact on the Product
 
 - The practice experience now follows the **three-page mobile flow defined in the design JPGs**:
   1. Learn the loop.
@@ -140,7 +140,7 @@ Smoke tests:
 
 ---
 
-## 🎯 Suggested Next Steps for the Next Session
+##  Suggested Next Steps for the Next Session
 
 1. **Visual polish to match design assets more closely**
    - `/howitworks`: Replace the generic layout with the precise card stack from assets (0002, 0004), including icons and copy tweaks.

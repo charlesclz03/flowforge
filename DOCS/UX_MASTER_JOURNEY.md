@@ -5,7 +5,7 @@
 
 ---
 
-## 🚀 1. The Onboarding (First Impressions)
+##  1. The Onboarding (First Impressions)
 
 ### Guest Entry ("The Cold Start")
 
@@ -25,7 +25,7 @@
 
 ---
 
-## 🎙️ 2. The Core Loop (The Practice Session)
+## ️ 2. The Core Loop (The Practice Session)
 
 This is the heart of the application. Everything leads here.
 
@@ -61,7 +61,7 @@ This is the heart of the application. Everything leads here.
 
 ---
 
-## 🏆 3. Progression & Gamification
+##  3. Progression & Gamification
 
 We use "Invisible Gamification" — stats are tracked in the background but presented as premium achievements.
 
@@ -83,7 +83,7 @@ We use "Invisible Gamification" — stats are tracked in the background but pres
 
 ---
 
-## ⚔️ 4. Multiplayer ("The Cypher")
+## ️ 4. Multiplayer ("The Cypher")
 
 - **Concept**: Real-time, turn-based lobbies using Websockets (Socket.io).
 - **UX**:
@@ -93,7 +93,7 @@ We use "Invisible Gamification" — stats are tracked in the background but pres
 
 ---
 
-## 💎 5. The Economy (Free vs. Pro)
+##  5. The Economy (Free vs. Pro)
 
 Designed to give enough value to be useful for free, but enough power to be essential for pros.
 
@@ -107,7 +107,7 @@ Designed to give enough value to be useful for free, but enough power to be esse
 
 ---
 
-## 🎨 6. UI/UX System (The "Vibe")
+##  6. UI/UX System (The "Vibe")
 
 ### Visual Language
 

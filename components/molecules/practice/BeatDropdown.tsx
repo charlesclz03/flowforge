@@ -343,28 +343,35 @@ export function BeatDropdown(props: BeatDropdownProps) {
               className="m-0 p-0 max-h-[300px] overflow-y-auto custom-scrollbar"
             >
               <div className="p-1">
-                 {/* Random Beat Option */}
-                 <div
-                    onClick={() => {
-                       const availableBeats = beats.filter(b => isPro ? true : !b.isPremium);
-                       if (availableBeats.length > 0) {
-                          const randomBeat = availableBeats[Math.floor(Math.random() * availableBeats.length)];
-                          handleSelect(randomBeat);
-                          setIsExpanded(false);
-                       }
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left cursor-pointer hover:bg-white/5 mb-1"
-                  >
-                    <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/20">
-                          <span className="text-xl">🎲</span>
-                       </div>
-                       <div className="flex-1">
-                          <p className="text-sm font-bold text-white">Random Beat</p>
-                          <p className="text-xs text-text-tertiary">Surprise me!</p>
-                       </div>
+                {/* Random Beat Option */}
+                <div
+                  onClick={() => {
+                    const availableBeats = beats.filter((b) =>
+                      isPro ? true : !b.isPremium
+                    )
+                    if (availableBeats.length > 0) {
+                      const randomBeat =
+                        availableBeats[
+                          Math.floor(Math.random() * availableBeats.length)
+                        ]
+                      handleSelect(randomBeat)
+                      setIsExpanded(false)
+                    }
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left cursor-pointer hover:bg-white/5 mb-1"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/20">
+                      <span className="text-xl font-bold">?</span>
                     </div>
-                 </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-white">
+                        Random Beat
+                      </p>
+                      <p className="text-xs text-text-tertiary">Surprise me!</p>
+                    </div>
+                  </div>
+                </div>
 
                 {filteredBeats.map((beat: Beat) => (
                   <div

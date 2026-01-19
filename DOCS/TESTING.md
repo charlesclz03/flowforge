@@ -11,7 +11,7 @@
 DISABLE_DB=true NEXT_PUBLIC_SITE_URL=http://localhost:3000 npm run dev
 ```
 
-Wait for the message: `✓ Ready in X ms`
+Wait for the message: ` Ready in X ms`
 
 ### 2. Run the test script
 

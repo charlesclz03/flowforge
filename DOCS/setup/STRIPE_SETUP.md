@@ -504,11 +504,11 @@ export default function PricingPage() {
           $4.99<span className="text-lg text-text-secondary">/month</span>
         </div>
         <ul className="space-y-3 mb-8">
-          <li>✓ Unlimited recording time</li>
-          <li>✓ Full beat library</li>
-          <li>✓ Advanced AI features</li>
-          <li>✓ Upload your own beats</li>
-          <li>✓ Ad-free experience</li>
+          <li> Unlimited recording time</li>
+          <li> Full beat library</li>
+          <li> Advanced AI features</li>
+          <li> Upload your own beats</li>
+          <li> Ad-free experience</li>
         </ul>
         <UpgradeButton plan="monthly" />
       </div>
@@ -523,9 +523,9 @@ export default function PricingPage() {
         </div>
         <div className="text-sm text-accent-orange mb-6">Save $10/year</div>
         <ul className="space-y-3 mb-8">
-          <li>✓ All Monthly features</li>
-          <li>✓ 2 months free</li>
-          <li>✓ Priority support</li>
+          <li> All Monthly features</li>
+          <li> 2 months free</li>
+          <li> Priority support</li>
         </ul>
         <UpgradeButton plan="yearly" />
       </div>

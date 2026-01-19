@@ -1,6 +1,6 @@
 # Phase 4: Recording Management - Quick Start Guide
 
-## 🚀 **SETUP REQUIRED**
+##  **SETUP REQUIRED**
 
 ### **1. Supabase Storage Setup**
 
@@ -42,7 +42,7 @@ npm run dev
 
 ---
 
-## ✅ **TESTING THE FLOW**
+##  **TESTING THE FLOW**
 
 ### **Test 1: Record & Save**
 
@@ -86,46 +86,46 @@ npm run dev
 
 ---
 
-## 🐛 **TROUBLESHOOTING**
+##  **TROUBLESHOOTING**
 
 ### **"Failed to upload recording"**
 
-- ✅ Check Supabase Storage bucket exists: `recordings`
-- ✅ Check bucket is public
-- ✅ Check RLS policies are set correctly
-- ✅ Check `SUPABASE_SERVICE_ROLE_KEY` is set
-- ✅ Check user is authenticated
+-  Check Supabase Storage bucket exists: `recordings`
+-  Check bucket is public
+-  Check RLS policies are set correctly
+-  Check `SUPABASE_SERVICE_ROLE_KEY` is set
+-  Check user is authenticated
 
 ### **"Unauthorized" error**
 
-- ✅ Check user is signed in
-- ✅ Check NextAuth session is working
-- ✅ Check `NEXTAUTH_SECRET` is set
+-  Check user is signed in
+-  Check NextAuth session is working
+-  Check `NEXTAUTH_SECRET` is set
 
 ### **Recordings not appearing**
 
-- ✅ Check database for `FreestyleSession` records
-- ✅ Check Supabase Storage for files
-- ✅ Check API response in browser network tab
-- ✅ Check browser console for errors
+-  Check database for `FreestyleSession` records
+-  Check Supabase Storage for files
+-  Check API response in browser network tab
+-  Check browser console for errors
 
 ### **Download not working**
 
-- ✅ Check recording has `storageUrl`
-- ✅ Check Supabase Storage file exists
-- ✅ Check CORS settings on bucket (should allow public access)
-- ✅ Check browser console for CORS errors
+-  Check recording has `storageUrl`
+-  Check Supabase Storage file exists
+-  Check CORS settings on bucket (should allow public access)
+-  Check browser console for CORS errors
 
 ### **Delete not working**
 
-- ✅ Check user owns the recording
-- ✅ Check database record exists
-- ✅ Check storage file exists
-- ✅ Check API response for errors
+-  Check user owns the recording
+-  Check database record exists
+-  Check storage file exists
+-  Check API response for errors
 
 ---
 
-## 📊 **VERIFY SETUP**
+##  **VERIFY SETUP**
 
 ### **Check Database**
 
@@ -152,21 +152,21 @@ curl -H "Cookie: next-auth.session-token=YOUR_TOKEN" \
 
 ---
 
-## 🎉 **SUCCESS INDICATORS**
+##  **SUCCESS INDICATORS**
 
-✅ Recordings save automatically after session  
-✅ Recordings appear in library page  
-✅ Recordings can be played in browser  
-✅ Recordings can be downloaded  
-✅ Recordings can be deleted  
-✅ Statistics update correctly  
-✅ No errors in console  
-✅ Files appear in Supabase Storage  
-✅ Sessions appear in database
+ Recordings save automatically after session  
+ Recordings appear in library page  
+ Recordings can be played in browser  
+ Recordings can be downloaded  
+ Recordings can be deleted  
+ Statistics update correctly  
+ No errors in console  
+ Files appear in Supabase Storage  
+ Sessions appear in database
 
 ---
 
-## 🚀 **NEXT STEPS**
+##  **NEXT STEPS**
 
 After Phase 4 is working:
 
@@ -177,4 +177,4 @@ After Phase 4 is working:
 
 ---
 
-**Phase 4 is complete!** 🎉
+**Phase 4 is complete!** 

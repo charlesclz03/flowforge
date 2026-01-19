@@ -21,9 +21,38 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.41',
+    date: '2026-01-19',
+    title: 'The Storage & Polish Update',
+    codename: 'Cloud Native',
+    description:
+      'We introduced a sleek new Cloud Storage bar to tracking your recording capacity, opened up the Recordings page for everyone to preview, and performed a massive system-wide emoji cleanup for a cleaner professional look.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          '**Cloud Storage Bar**: Added an iCloud-style storage visualization on the Recordings page. Pro users can now see exactly how much studio time they have engaged.',
+          '**Open Access**: The Recordings page is now accessible to all users! Free users can browse the interface (with storage features locked behind Pro).',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Emoji Clean-up**: rigorously removed all emojis from the application UI and documentation for a more polished, app-native aesthetic.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Performance**: Optimized component rendering on the Recordings page.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.40',
     date: '2026-01-19',
-    title: 'The Master Bug Fix Update 🐛',
+    title: 'The Master Bug Fix Update ',
     codename: 'Polish & Progression',
     description:
       'We addressed the highest priority issues from our Master Bug Report, restoring your XP bars, fixing broken achievements, and finally adding that Random Beat button!',
@@ -31,15 +60,15 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'New Features',
         items: [
-          '🎲 **Random Beat**: Added a "Random Beat" option to the beat selector. Perfect for when you want the vibe to choose you.',
+          ' **Random Beat**: Added a "Random Beat" option to the beat selector. Perfect for when you want the vibe to choose you.',
         ],
       },
       {
         category: 'Fixes & Improvements',
         items: [
-          '📊 **Profile Stats Restored**: Fixed a bug where your XP Bar and Level indicator were invisible on the profile page. Your grind is visible again!',
-          '🏆 **Achievement Unlocked**: Fixed the "Word Smith" achievement logic. If you earned it, it should now unlock automatically.',
-          '🔒 **Premium Fix**: Verified that locked beats correctly trigger the upgrade modal.',
+          ' **Profile Stats Restored**: Fixed a bug where your XP Bar and Level indicator were invisible on the profile page. Your grind is visible again!',
+          ' **Achievement Unlocked**: Fixed the "Word Smith" achievement logic. If you earned it, it should now unlock automatically.',
+          ' **Premium Fix**: Verified that locked beats correctly trigger the upgrade modal.',
         ],
       },
     ],
@@ -47,7 +76,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.39',
     date: '2026-01-17',
-    title: 'The Pro Save Fix 💾',
+    title: 'The Pro Save Fix ',
     codename: 'Unblocked',
     description:
       'We fixed a critical bug where Pro users were blocked from saving their sessions by an incorrect "Get Pro" modal. Your flow is now unblocked!',
@@ -55,7 +84,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🔓 **Pro Save Unblocked**: Fixed a bug where the "REC" button would trigger the "Get Pro" modal even for subscribed users. Pro users can now toggle recording and save sessions freely.',
+          ' **Pro Save Unblocked**: Fixed a bug where the "REC" button would trigger the "Get Pro" modal even for subscribed users. Pro users can now toggle recording and save sessions freely.',
         ],
       },
     ],
@@ -63,7 +92,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.38',
     date: '2026-01-17',
-    title: 'The Guest Pass Hotfix 🎟️',
+    title: 'The Guest Pass Hotfix ️',
     codename: 'Open Mic',
     description:
       'We fixed a critical bug preventing guest users from starting a recording session. The "The Booth" is now open to everyone again!',
@@ -71,8 +100,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🎤 **Guest Recording Enabled**: Removed an incorrect check that blocked unauthenticated users from hitting record. Rap first, sign up later.',
-          '🔄 **Upgrade Trigger**: Fixed the "Get Pro" modal not appearing when requested.',
+          ' **Guest Recording Enabled**: Removed an incorrect check that blocked unauthenticated users from hitting record. Rap first, sign up later.',
+          ' **Upgrade Trigger**: Fixed the "Get Pro" modal not appearing when requested.',
         ],
       },
     ],
@@ -80,7 +109,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.37',
     date: '2026-01-17',
-    title: 'The True Shuffle Update 🎲',
+    title: 'The True Shuffle Update ',
     codename: 'Fair Game',
     description:
       'We fixed the word randomization logic to ensure you actually get new words in every session, and now your stats will finally track "Words Unlocked" correctly.',
@@ -88,8 +117,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🎲 **True Randomness**: Fixed a caching issue that caused the same words to appear repeatedly. Every session now pulls a fresh batch.',
-          '📈 **Stats Sync**: "Words Unlocked" stats now correctly track unique words encountered, fixing the discrepancy with "Total Words Generated".',
+          ' **True Randomness**: Fixed a caching issue that caused the same words to appear repeatedly. Every session now pulls a fresh batch.',
+          ' **Stats Sync**: "Words Unlocked" stats now correctly track unique words encountered, fixing the discrepancy with "Total Words Generated".',
         ],
       },
     ],
@@ -97,7 +126,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.36',
     date: '2026-01-16',
-    title: 'The Feedback Fix 🐛',
+    title: 'The Feedback Fix ',
     codename: 'Direct Line',
     description:
       'We fixed the "Report Bug" link in the settings menu to correctly redirect to the dedicated feedback page, and cleaned up the Patch Notes UI.',
@@ -105,8 +134,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🐛 **Report Bug Redirect**: The "Report Bug" button in Settings now correctly takes you to the Feedback page instead of the Patch Notes.',
-          '🧹 **UI Cleanup**: Removed the redundant "Feedback" form from the bottom of the Patch Notes page.',
+          ' **Report Bug Redirect**: The "Report Bug" button in Settings now correctly takes you to the Feedback page instead of the Patch Notes.',
+          ' **UI Cleanup**: Removed the redundant "Feedback" form from the bottom of the Patch Notes page.',
         ],
       },
     ],
@@ -114,7 +143,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.35',
     date: '2026-01-16',
-    title: 'The Flow State Update 🌊',
+    title: 'The Flow State Update ',
     codename: 'Seamless Upload',
     description:
       'We smoothed out the "My Tracks" experience. You can now upload beats directly from the difficulty menu and managing your library is easier than ever.',
@@ -122,14 +151,14 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'New Features',
         items: [
-          '📤 **Instant Upload**: Added a smart "Upload your first beat" prompt and a permanent "Upload new track" button right in the My Tracks dropdown.',
-          '🔄 **Seamless Flow**: Uploading from the difficulty menu now auto-redirects you to the upload vault.',
+          ' **Instant Upload**: Added a smart "Upload your first beat" prompt and a permanent "Upload new track" button right in the My Tracks dropdown.',
+          ' **Seamless Flow**: Uploading from the difficulty menu now auto-redirects you to the upload vault.',
         ],
       },
       {
         category: 'Fixes & Improvements',
         items: [
-          "🗑️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!",
+          "️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!",
         ],
       },
     ],
@@ -137,7 +166,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.34',
     date: '2026-01-16',
-    title: 'The Social Proof Update 🌟',
+    title: 'The Social Proof Update ',
     codename: 'Five Stars',
     description:
       'We enabled a seamless rating experience, polished beat card visuals, and finally solved audio looping for infinite flow.',
@@ -145,15 +174,15 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'New Features',
         items: [
-          '🌟 **Rate Us**: Added a sleek rating modal that appears after your 3rd session. Love the app? Let us know!',
+          ' **Rate Us**: Added a sleek rating modal that appears after your 3rd session. Love the app? Let us know!',
           '⭐ **Star Power**: You can now drop a star rating directly in the feedback form.',
         ],
       },
       {
         category: 'Fixes & Improvements',
         items: [
-          '♾️ **Perfect Loops**: Rewrote the audio engine to use Web Audio scheduling. Beats now loop seamlessly with zero gaps.',
-          '🎨 **Clean Cards**: Combined Artist and Producer names on beat cards for a cleaner look.',
+          '️ **Perfect Loops**: Rewrote the audio engine to use Web Audio scheduling. Beats now loop seamlessly with zero gaps.',
+          ' **Clean Cards**: Combined Artist and Producer names on beat cards for a cleaner look.',
         ],
       },
     ],
@@ -161,7 +190,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.33',
     date: '2026-01-16',
-    title: 'The Green Light Update 🟢',
+    title: 'The Green Light Update ',
     codename: 'Go Time',
     description:
       'We made sure your recordings always playback perfectly and gave the Practice Mode a clearer, punchier "START" button so you know exactly when to drop your bars.',
@@ -169,8 +198,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '📼 **Playback Rescued**: Fixed a "Failed to Play" bug caused by some beats having spaces in their cloud filenames. Your history is safe!',
-          '🟢 **Clearer Start**: Swapped the ambiguous mic icon for a big, bold, pulsing "START" button. Less guessing, more rapping.',
+          ' **Playback Rescued**: Fixed a "Failed to Play" bug caused by some beats having spaces in their cloud filenames. Your history is safe!',
+          ' **Clearer Start**: Swapped the ambiguous mic icon for a big, bold, pulsing "START" button. Less guessing, more rapping.',
         ],
       },
     ],
@@ -178,7 +207,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.32',
     date: '2026-01-16',
-    title: 'The Responsive Polish Update 📱',
+    title: 'The Responsive Polish Update ',
     codename: 'Liquid Flow',
     description:
       'We smoothed out the Admin experience and fine-tuned the mobile layout to feel even more native. Plus, difficulty settings now stick instantly!',
@@ -186,15 +215,15 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🖱️ **Admin Focus Fix**: Resolved an annoying bug where editing track details would lose focus after every character. Smooth typing is back!',
-          '🎚️ **Instant Difficulty**: Changing difficulty mid-session now instantly updates the word vibe for the rest of your session.',
+          '️ **Admin Focus Fix**: Resolved an annoying bug where editing track details would lose focus after every character. Smooth typing is back!',
+          '️ **Instant Difficulty**: Changing difficulty mid-session now instantly updates the word vibe for the rest of your session.',
         ],
       },
       {
         category: 'Visual Overhaul',
         items: [
-          '📏 **Compact Mobile Layout**: Optimized padding and scaling for small iPhones (SE, Mini) to ensure all controls fit on a single screen without scrolling.',
-          '🔄 **Responsive Practice controls**: The REC indicator and main buttons now scale aggressively to respect the viewport on smaller devices.',
+          ' **Compact Mobile Layout**: Optimized padding and scaling for small iPhones (SE, Mini) to ensure all controls fit on a single screen without scrolling.',
+          ' **Responsive Practice controls**: The REC indicator and main buttons now scale aggressively to respect the viewport on smaller devices.',
         ],
       },
     ],
@@ -202,7 +231,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.31',
     date: '2026-01-16',
-    title: 'The Quality of Life Update 🛡️',
+    title: 'The Quality of Life Update ️',
     codename: 'Safe Zone',
     description:
       'A massive polish update ensuring content never covers navigation, fixing audio glitches during review, and professionalizing the experience with better legal pages and feedback tools.',
@@ -210,17 +239,17 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Visual Overhaul',
         items: [
-          '🛑 **Bottom Nav Safety**: Implemented global padding logic so content is never hidden behind the bottom bar on any device.',
-          '📱 **Header Harmony**: Constrained header titles to prevent text overlapping with buttons on smaller screens.',
-          '✨ **Professional Polish**: Refined the look of legal pages and feedback forms with cleaner iconography.',
+          ' **Bottom Nav Safety**: Implemented global padding logic so content is never hidden behind the bottom bar on any device.',
+          ' **Header Harmony**: Constrained header titles to prevent text overlapping with buttons on smaller screens.',
+          ' **Professional Polish**: Refined the look of legal pages and feedback forms with cleaner iconography.',
         ],
       },
       {
         category: 'Fixes & Improvements',
         items: [
-          '🐛 **Audio Glitch Eradicated**: Fixed stuttering and popping during recording review playback.',
-          '🌊 **Smooth Waveform**: The playback indicator now smoothly glides across the track without jitter.',
-          '🗣️ **Feedback Center**: Launched a dedicated /feedback page for easier bug reporting.',
+          ' **Audio Glitch Eradicated**: Fixed stuttering and popping during recording review playback.',
+          ' **Smooth Waveform**: The playback indicator now smoothly glides across the track without jitter.',
+          '️ **Feedback Center**: Launched a dedicated /feedback page for easier bug reporting.',
         ],
       },
     ],
@@ -228,7 +257,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.30',
     date: '2026-01-16',
-    title: 'The Visual Polish Update 💅',
+    title: 'The Visual Polish Update ',
     codename: 'Neon Ring',
     description:
       'We gave the Cypher UI a major facelift with a new outer-ring layout and boosted the "Siren" intensity for maximum hype. Plus, a handy Help button in the header!',
@@ -236,10 +265,10 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Visual Overhaul',
         items: [
-          '💍 **Cypher Outer Ring**: The player segments now hug the outer edge of the main control button for a cleaner, futuristic look.',
-          '🚨 **Siren Boost**: The "Police Siren" effect before word switches is now 200% more intense. You can\'t miss it!',
+          ' **Cypher Outer Ring**: The player segments now hug the outer edge of the main control button for a cleaner, futuristic look.',
+          ' **Siren Boost**: The "Police Siren" effect before word switches is now 200% more intense. You can\'t miss it!',
           'ℹ️ **Header Help**: Added a quick-access Help button (?) to the global header that takes you straight to the "How it Works" guide.',
-          '🟣 **Glass Record Ring**: The central record button is now a consistent transparent glass ring with a purple border, ensuring the logo always shines through.',
+          ' **Glass Record Ring**: The central record button is now a consistent transparent glass ring with a purple border, ensuring the logo always shines through.',
         ],
       },
     ],
@@ -247,7 +276,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.29',
     date: '2026-01-15',
-    title: 'The Safe Resume & Admin Polish Update 💎',
+    title: 'The Safe Resume & Admin Polish Update ',
     codename: 'Smooth Operator',
     description:
       'We’ve ironed out the playback wrinkles in Practice Mode (resuming works perfectly now!) and gave the Admin Beat Upload experience a serious upgrade with better layouts and stricter data controls.',
@@ -256,16 +285,16 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           "⏯️ **Perfect Resume**: Fixed a bug where resuming a paused session wouldn't restart the beat. Now it picks up exactly where you left off.",
-          '🧼 **Safe Pausing**: Switching browser tabs now safely pauses your session instead of stopping it completely.',
-          '🎹 **Spacebar Safety**: Pressing Spacebar now gently pauses the session (with confirmation) instead of abruptly ending it.',
+          ' **Safe Pausing**: Switching browser tabs now safely pauses your session instead of stopping it completely.',
+          ' **Spacebar Safety**: Pressing Spacebar now gently pauses the session (with confirmation) instead of abruptly ending it.',
         ],
       },
       {
         category: 'New Features',
         items: [
-          '🎛️ **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.',
-          '🏷️ **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.',
-          '🔒 **Data Integrity**: Producer Name and Genre are now mandatory fields for new uploads.',
+          '️ **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.',
+          '️ **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.',
+          ' **Data Integrity**: Producer Name and Genre are now mandatory fields for new uploads.',
         ],
       },
     ],
@@ -273,7 +302,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.28',
     date: '2026-01-15',
-    title: 'Cypher Rings Restored 💍',
+    title: 'Cypher Rings Restored ',
     codename: 'The One Ring',
     description:
       'Fixed a regression where the player turn indicators in Cypher Mode were missing. The visual rings are back!',
@@ -281,8 +310,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '💍 **Cypher Mode**: Restored missing player turn rings.',
-          '🎨 **Visual Fix**: Corrected SVG rendering for player segments.',
+          ' **Cypher Mode**: Restored missing player turn rings.',
+          ' **Visual Fix**: Corrected SVG rendering for player segments.',
         ],
       },
     ],
@@ -299,9 +328,9 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           '⏰ **Accurate Timer**: Timer now counts at exactly 1 second per real second.',
-          '🛡️ **StrictMode Guard**: Added animation ref guard to prevent duplicate timing loops.',
-          '🧹 **Clean Exit Paths**: All animation loop exit points now properly clean up the frame reference.',
-          '🚫 **Silence on Save**: Fixed "Leave site?" warning appearing after successful session save.',
+          '️ **StrictMode Guard**: Added animation ref guard to prevent duplicate timing loops.',
+          ' **Clean Exit Paths**: All animation loop exit points now properly clean up the frame reference.',
+          ' **Silence on Save**: Fixed "Leave site?" warning appearing after successful session save.',
         ],
       },
     ],
@@ -316,8 +345,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '🎯 **Stable Dependencies**: Removed unstable object references from timer effect.',
-          '📐 **Layout Lock**: Added fixed height to control buttons row to prevent player circle from shifting when controls appear.',
+          ' **Stable Dependencies**: Removed unstable object references from timer effect.',
+          ' **Layout Lock**: Added fixed height to control buttons row to prevent player circle from shifting when controls appear.',
         ],
       },
     ],
@@ -325,7 +354,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.25',
     date: '2026-01-15',
-    title: 'The Mobile & Precision Update 📱',
+    title: 'The Mobile & Precision Update ',
     codename: 'Pocket Studio',
     description:
       'A comprehensive update focusing on mobile ergonomics and rigorous timing precision. We rebuilt the layout for small screens and locked the word intervals to the musical grid.',
@@ -333,16 +362,16 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'System Updates',
         items: [
-          '🔒 **Grid Lock Integrity**: Fixed a bug where changing bar frequency mid-session could freeze the timer. Timing is now reset instantly on change.',
-          '📲 **Smart PWA Installer**: The app now detects iOS vs Android and teaches iOS users how to bypass microphone permission prompts.',
+          ' **Grid Lock Integrity**: Fixed a bug where changing bar frequency mid-session could freeze the timer. Timing is now reset instantly on change.',
+          ' **Smart PWA Installer**: The app now detects iOS vs Android and teaches iOS users how to bypass microphone permission prompts.',
         ],
       },
       {
         category: 'Visual Overhaul',
         items: [
-          '📏 **Dynamic Scaling**: The practice ring now caps its height at 45% of the screen, ensuring buttons are never cut off on smaller IPhones.',
-          '🔄 **Split Layout**: Separated the Exit/Pause buttons into their own dedicated row to prevent overlap with the main player ring.',
-          '🧭 **Viewport Stability**: Enforced `100dvh` (Dynamic Viewport Height) to respect the Safari bottom bar, preventing navigation issues.',
+          ' **Dynamic Scaling**: The practice ring now caps its height at 45% of the screen, ensuring buttons are never cut off on smaller IPhones.',
+          ' **Split Layout**: Separated the Exit/Pause buttons into their own dedicated row to prevent overlap with the main player ring.',
+          ' **Viewport Stability**: Enforced `100dvh` (Dynamic Viewport Height) to respect the Safari bottom bar, preventing navigation issues.',
         ],
       },
     ],
@@ -350,7 +379,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.20',
     date: '2026-01-15',
-    title: 'The Precision Update 🎯',
+    title: 'The Precision Update ',
     codename: 'Grid Lock',
     description:
       'A major stability update introducing the "Grid Lock" timing engine for perfect musical synchronization, plus a polished "Satellite Layout" for the player controls.',
@@ -358,14 +387,14 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'System Updates',
         items: [
-          '🔒 **Grid Lock Timing**: Word switching is now mathematically locked to the beat grid. No more drifting!',
+          ' **Grid Lock Timing**: Word switching is now mathematically locked to the beat grid. No more drifting!',
         ],
       },
       {
         category: 'Visual Overhaul',
         items: [
-          '🛰️ **Satellite UI**: Redesigned player controls to prevent button cropping and improve reachability.',
-          '📱 **Layout Fixes**: Solved vertical scrolling issues on smaller screens across the app.',
+          '️ **Satellite UI**: Redesigned player controls to prevent button cropping and improve reachability.',
+          ' **Layout Fixes**: Solved vertical scrolling issues on smaller screens across the app.',
         ],
       },
     ],

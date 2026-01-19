@@ -1,10 +1,10 @@
 # Next Steps: Complete Supabase Storage Setup
 
-## 🎯 What You've Done
+##  What You've Done
 
-✅ Created the `recordings` bucket in Supabase
+ Created the `recordings` bucket in Supabase
 
-## 📋 What You Need to Do Now
+##  What You Need to Do Now
 
 ### 1. Verify Bucket is Public (2 minutes)
 
@@ -34,7 +34,7 @@
    **c) service_role key:**
    - In the same "Project API keys" section
    - Find the key labeled "service_role"
-   - ⚠️ **WARNING**: This is a secret key!
+   - ️ **WARNING**: This is a secret key!
    - Copy the entire key (starts with `eyJ...`)
    - This is your `SUPABASE_SERVICE_ROLE_KEY`
    - **Never share this key or commit it to git!**
@@ -64,10 +64,10 @@ npm run verify:storage
 
 This will check:
 
-- ✅ Environment variables are set
-- ✅ Can connect to Supabase
-- ✅ Recordings bucket exists
-- ✅ Bucket is accessible
+-  Environment variables are set
+-  Can connect to Supabase
+-  Recordings bucket exists
+-  Bucket is accessible
 
 ### 5. Test the Setup (5 minutes)
 
@@ -101,20 +101,20 @@ This will check:
 
 ---
 
-## ✅ Success Indicators
+##  Success Indicators
 
 You'll know it's working when:
 
-- ✅ Success message appears after recording
-- ✅ Recording appears in `/recordings` page
-- ✅ Can play, download, and delete recordings
-- ✅ Files appear in Supabase Storage
-- ✅ No errors in browser console
-- ✅ No errors in server logs
+-  Success message appears after recording
+-  Recording appears in `/recordings` page
+-  Can play, download, and delete recordings
+-  Files appear in Supabase Storage
+-  No errors in browser console
+-  No errors in server logs
 
 ---
 
-## 🐛 Common Issues
+##  Common Issues
 
 ### "Failed to upload recording"
 
@@ -137,7 +137,7 @@ You'll know it's working when:
 
 ---
 
-## 📚 Helpful Resources
+##  Helpful Resources
 
 - **Detailed Setup Guide**: `SETUP_SUPABASE_STORAGE_NOW.md`
 - **Setup Checklist**: `SETUP_CHECKLIST.md`
@@ -146,18 +146,18 @@ You'll know it's working when:
 
 ---
 
-## 🎉 Once Setup is Complete
+##  Once Setup is Complete
 
 After verifying everything works:
 
-1. ✅ Test all features (record, play, download, delete)
-2. ✅ Monitor storage usage in Supabase Dashboard
-3. ✅ Continue with Phase 5 development
-4. ✅ Set up production environment variables (when deploying)
+1.  Test all features (record, play, download, delete)
+2.  Monitor storage usage in Supabase Dashboard
+3.  Continue with Phase 5 development
+4.  Set up production environment variables (when deploying)
 
 ---
 
-## 💡 Quick Reference
+##  Quick Reference
 
 **Environment Variables Needed:**
 
@@ -179,4 +179,4 @@ npm run verify:storage
 
 ---
 
-**Ready to complete the setup?** Follow the steps above! 🚀
+**Ready to complete the setup?** Follow the steps above! 

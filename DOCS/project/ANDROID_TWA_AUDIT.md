@@ -14,7 +14,7 @@ The FreeStyla codebase is **highly compatible** with Android TWA deployment. No 
 
 ---
 
-## ✅ Green Flags (No Action Required)
+##  Green Flags (No Action Required)
 
 ### Audio Playback (`lib/audio/player.ts`)
 - Uses standard `HTMLAudioElement` API.
@@ -47,7 +47,7 @@ The FreeStyla codebase is **highly compatible** with Android TWA deployment. No 
 ### Legal Pages
 - `/legal/privacy` page exists with comprehensive GDPR-compliant content.
 - `/legal/terms` page exists with TOS including beat usage license.
-- **Verdict:** Play Store requirement met. ✔️
+- **Verdict:** Play Store requirement met. ️
 
 ### Authentication (`lib/auth.ts`)
 - Uses NextAuth with Google OAuth.
@@ -69,11 +69,11 @@ The FreeStyla codebase is **highly compatible** with Android TWA deployment. No 
 
 ### Bluetooth Audio Latency
 - Calibration slider already exists in Profile settings.
-- **Verdict:** Already mitigated. ✔️
+- **Verdict:** Already mitigated. ️
 
 ---
 
-## 🟡 Yellow Warnings (Minor UX Concerns)
+##  Yellow Warnings (Minor UX Concerns)
 
 ### 1. Social Sharing Opens External Browser
 **File:** `components/organisms/sharing/ShareMenu.tsx` (Line 50)
@@ -96,7 +96,7 @@ window.open(shareLink, '_blank', 'noopener,noreferrer')
 
 ---
 
-## 🔴 Action Required (Before TWA Build)
+##  Action Required (Before TWA Build)
 
 ### 1. Add `orientation` to `manifest.json`
 **File:** `public/manifest.json`
@@ -118,7 +118,7 @@ window.open(shareLink, '_blank', 'noopener,noreferrer')
 
 ---
 
-## ⚠️ Potential Runtime Issues (Test Before Launch)
+## ️ Potential Runtime Issues (Test Before Launch)
 
 ### 1. Microphone Permission Prompt
 **Why:** Android WebView handles permissions differently than desktop Chrome. First recording attempt triggers a system-level permission dialog.  
@@ -143,7 +143,7 @@ window.open(shareLink, '_blank', 'noopener,noreferrer')
 
 ---
 
-## 🟢 Edge Cases (Very Low Risk)
+##  Edge Cases (Very Low Risk)
 
 | Issue | Scenario | Likelihood |
 |-------|----------|------------|
@@ -153,7 +153,7 @@ window.open(shareLink, '_blank', 'noopener,noreferrer')
 
 ---
 
-## 📊 Distribution Strategy
+##  Distribution Strategy
 
 ### Why Both Web + Android?
 | Channel | Purpose |
@@ -185,18 +185,18 @@ window.open(shareLink, '_blank', 'noopener,noreferrer')
 
 | Category | Status |
 |----------|--------|
-| Audio APIs | ✅ Compatible |
-| Recording APIs | ✅ Compatible |
-| Storage (IndexedDB) | ✅ Compatible |
-| PWA/Service Worker | ✅ Compatible |
-| Authentication | ✅ Compatible |
-| Payments (Stripe) | ✅ Compatible |
-| Legal Pages | ✅ Ready |
-| Mobile UX (Safe Areas) | ✅ Ready |
-| Bluetooth Latency | ✅ Already mitigated |
-| Manifest Polish | 🟡 Needs `orientation` |
-| Play Store Assets | 🔴 Missing graphics |
-| Custom Domain | 🟡 Recommended |
+| Audio APIs |  Compatible |
+| Recording APIs |  Compatible |
+| Storage (IndexedDB) |  Compatible |
+| PWA/Service Worker |  Compatible |
+| Authentication |  Compatible |
+| Payments (Stripe) |  Compatible |
+| Legal Pages |  Ready |
+| Mobile UX (Safe Areas) |  Ready |
+| Bluetooth Latency |  Already mitigated |
+| Manifest Polish |  Needs `orientation` |
+| Play Store Assets |  Missing graphics |
+| Custom Domain |  Recommended |
 
 **Overall Readiness: 90%**
 

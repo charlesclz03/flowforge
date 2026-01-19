@@ -3,7 +3,7 @@
 **Date**: December 10, 2025
 **Focus**: System Audit, Build Stability, UI Polish
 
-## 🚀 Key Achievements
+##  Key Achievements
 
 ### 1. Full Codebase Audit Completed
 
@@ -21,7 +21,7 @@
 - **Beat Selection**: Replaced the large "Beat Grid" with a compact **Beat Dropdown** in the `DifficultySelection` page. This streamlines the setup flow and eliminates unnecessary scrolling.
 - **Practice Timer**: Updated the "Timer Ring" around the Play button to visualize the **Word Interval** (countdown to next word) instead of the total session duration, providing better rhythm feedback to the user.
 
-## 📝 Changed Files
+##  Changed Files
 
 - `lib/supabase.ts` (Build fix)
 - `components/molecules/practice/BeatDropdown.tsx` (New Component)

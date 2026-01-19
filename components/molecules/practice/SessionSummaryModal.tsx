@@ -215,7 +215,7 @@ export default function SessionSummaryModal({
               className="bg-white/5 p-3 rounded-xl text-center border border-white/5"
             >
               {/* TODO: Replace hardcoded streak with real user data */}
-              <div className="text-2xl font-black text-orange-400">🔥 7</div>
+              <div className="text-2xl font-black text-orange-400">7</div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
                 Consistency Streak
               </div>
