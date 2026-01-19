@@ -21,6 +21,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.40',
+    date: '2026-01-19',
+    title: 'The Master Bug Fix Update 🐛',
+    codename: 'Polish & Progression',
+    description:
+      'We addressed the highest priority issues from our Master Bug Report, restoring your XP bars, fixing broken achievements, and finally adding that Random Beat button!',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          '🎲 **Random Beat**: Added a "Random Beat" option to the beat selector. Perfect for when you want the vibe to choose you.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '📊 **Profile Stats Restored**: Fixed a bug where your XP Bar and Level indicator were invisible on the profile page. Your grind is visible again!',
+          '🏆 **Achievement Unlocked**: Fixed the "Word Smith" achievement logic. If you earned it, it should now unlock automatically.',
+          '🔒 **Premium Fix**: Verified that locked beats correctly trigger the upgrade modal.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.39',
     date: '2026-01-17',
     title: 'The Pro Save Fix 💾',

@@ -22,6 +22,7 @@ export class AchievementSystem {
       totalWordsResult,
       cypherCount,
       genreCounts,
+      collectedWordCount,
     ] = await Promise.all([
       // 1. Session Count
       prisma.freestyleSession.count({ where: { userId } }),
@@ -64,6 +65,8 @@ export class AchievementSystem {
         select: { beat: { select: { genre: true } } },
         distinct: ['beatId'], // Approximation for distinct genres visited
       }),
+      // 10. Collected Words (Word Vault)
+      prisma.collectedWord.count({ where: { userId } }),
     ])
 
     const distinctBeatCount = distinctBeats.length
@@ -159,6 +162,11 @@ export class AchievementSystem {
       { code: 'TIME_10H', condition: totalMinutes >= 600 },
       { code: 'TIME_24H', condition: totalMinutes >= 1440 },
       { code: 'TOTAL_WORDS_5K', condition: totalWords >= 5000 },
+
+      // --- WORD VAULT (Unique Collected Words) ---
+      { code: 'WORDS_50', condition: collectedWordCount >= 50 },
+      { code: 'WORDS_200', condition: collectedWordCount >= 200 },
+      { code: 'WORDS_1000', condition: collectedWordCount >= 1000 },
 
       // --- WAVE 2: EXPLORATION & SOCIAL ---
       { code: 'GENRE_3', condition: uniqueGenres >= 3 },

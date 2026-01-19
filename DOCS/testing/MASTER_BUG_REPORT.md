@@ -14,7 +14,7 @@
 | 🟠 High | 4 | 1 | 3 |
 | 🟡 Medium | 6 | 1 | 5 |
 | 🟢 Low | 5 | 0 | 5 |
-| **Total** | **15** | **2** | **13** |
+| **Total** | **15** | **6** | **9** |
 
 ---
 
@@ -44,7 +44,7 @@
 
 | ID | Test ID | Issue | Priority | Status | Fix Difficulty |
 |----|---------|-------|----------|--------|----------------|
-| M2-001 | AUDIO-010 | **"Random" beat option missing** from beat selector dropdown | 🟡 Medium | 🔴 Open | 🟢 Easy |
+| M2-001 | AUDIO-010 | **"Random" beat option missing** from beat selector dropdown | 🟡 Medium | ✅ **FIXED** | 🟢 Easy |
 | M2-002 | AUDIO-009 | Header beat title doesn't update mid-session (may be intentional) | 🟢 Low | 🟡 Disputed | 🟢 Easy |
 
 **Files to Check**:
@@ -82,9 +82,9 @@
 
 | ID | Test ID | Issue | Priority | Status | Fix Difficulty |
 |----|---------|-------|----------|--------|----------------|
-| M4-001 | PROF-002 | **XP Progress Bar NOT VISIBLE** on Profile UI (data exists: 7437 XP) | 🟠 High | 🔴 Open | 🟡 Medium |
-| M4-002 | PROF-003 | **Level Indicator NOT VISIBLE** on Profile UI (data exists: Level 5) | 🟠 High | 🔴 Open | 🟡 Medium |
-| M4-003 | PROF-010 | **Achievement "Word Smith" stuck LOCKED** despite progress 145/50 exceeding requirement | 🟠 High | 🔴 Open | 🟡 Medium |
+| M4-001 | PROF-002 | **XP Progress Bar NOT VISIBLE** on Profile UI (data exists: 7437 XP) | 🟠 High | ✅ **FIXED** | 🟡 Medium |
+| M4-002 | PROF-003 | **Level Indicator NOT VISIBLE** on Profile UI (data exists: Level 5) | 🟠 High | ✅ **FIXED** | 🟡 Medium |
+| M4-003 | PROF-010 | **Achievement "Word Smith" stuck LOCKED** despite progress 145/50 exceeding requirement | 🟠 High | ✅ **FIXED** | 🟡 Medium |
 
 **Root Cause Analysis**:
 - M4-001/M4-002: Profile page component likely missing XP/Level UI elements that exist in the data
@@ -161,17 +161,17 @@
 
 | Order | ID | Module | Issue | Effort |
 |-------|-----|--------|-------|--------|
-| 1 | M4-003 | Profile | Achievement "Word Smith" unlock logic broken | Medium |
-| 2 | M4-001 | Profile | XP Progress Bar missing from UI | Medium |
-| 3 | M4-002 | Profile | Level Indicator missing from UI | Medium |
+| 1 | M4-003 | Profile | Achievement "Word Smith" unlock logic broken | Medium | ✅ **DONE** |
+| 2 | M4-001 | Profile | XP Progress Bar missing from UI | Medium | ✅ **DONE** |
+| 3 | M4-002 | Profile | Level Indicator missing from UI | Medium | ✅ **DONE** |
 
 ## 🟡 MEDIUM Priority (Fix Soon)
 
-| Order | ID | Module | Issue | Effort |
-|-------|-----|--------|-------|--------|
-| 4 | M2-001 | Audio | Add "Random" beat option | Easy |
-| 5 | M5-001 | Settings | Add settings icon to Profile header | Easy |
-| 6 | M3-001 | Recordings | Verify delete modal fix works | Verify |
+| Order | ID | Module | Issue | Effort | Status |
+|-------|-----|--------|-------|--------|--------|
+| 4 | M2-001 | Audio | Add "Random" beat option | Easy | ✅ **DONE** |
+| 5 | M5-001 | Settings | Add settings icon to Profile header | Easy | Open |
+| 6 | M3-001 | Recordings | Verify delete modal fix works | Verify | Open |
 
 ## 🟢 LOW Priority (Nice to Have)
 

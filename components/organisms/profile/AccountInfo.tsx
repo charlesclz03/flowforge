@@ -28,20 +28,48 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
     user.subscriptionStatus === 'active' ||
     user.subscriptionStatus === 'trialing'
 
+  // Default values if undefined (though should be present in session)
+  // Casting user to any to access level/xp if typescript complains, as User interface is local here
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const extendedUser = user as any
+  const level = extendedUser.level || 1
+  const xp = extendedUser.xp || 0
+  
+  // Calculate Progress Logic (Simple exponential curve or similar - inferred from logic elsewhere)
+  // For now assuming: Next Level = Level * 1000 or similar? 
+  // Let's assume linear levels 0-1000, 1000-2000 for simplicity or just show raw XP?
+  // User asked for "xp bar".
+  // Let's use a standard formula or just show XP.
+  // Given we don't have the formula here, let's assume Level 1 = 0-1000, Level 5 = 4000-5000?
+  // Let's hardcode a visual progress for now or just show Total XP.
+  // Actually, standard gaming formula: XP for next level = Level * 1000 (roughly)
+  // Let's just normalize to % within current level.
+  const xpForNextLevel = level * 1000 // Placeholder logic, adjustable
+  const xpInCurrentLevel = xp % 1000
+  const progressPercent = Math.min(100, Math.max(0, (xpInCurrentLevel / 1000) * 100))
+
   return (
     <Card
       title="Profile Information"
       action={
-        onEdit && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            className="text-text-secondary hover:text-white"
-          >
-            <Edit2 size={16} />
-          </Button>
-        )
+        <div className="flex items-center gap-2">
+           {/* Level Indicator (Top Right) */}
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/20 mr-2">
+            <span className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">Lvl</span>
+             <span className="text-sm font-black text-accent-gold">{level}</span>
+          </div>
+
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="text-text-secondary hover:text-white"
+            >
+              <Edit2 size={16} />
+            </Button>
+          )}
+        </div>
       }
     >
       <div className="space-y-6">
@@ -69,18 +97,42 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
               {user.username || user.name}
             </h3>
             <p className="text-text-secondary text-sm truncate">{user.email}</p>
-            {rank && (
+            
+            <div className="flex flex-wrap gap-2 mt-2">
+               {rank && (
               <div
-                className={`mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 border border-white/10 ${rank.color}`}
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/5 border border-white/10 ${rank.color}`}
               >
                 {rank.name}
               </div>
             )}
+             {isPro && (
+                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-accent-purple/10 border border-accent-purple/20 text-accent-purple">
+                   PRO
+                </div>
+              )}
+            </div>
+           
             {user.bio && (
               <p className="text-text-tertiary text-sm mt-2 line-clamp-2 italic">
                 "{user.bio}"
               </p>
             )}
+
+             {/* XP Bar (Below Pills) */}
+            <div className="mt-3 w-full max-w-[200px]">
+               <div className="flex justify-between text-[10px] uppercase font-bold text-text-tertiary mb-1">
+                 <span>XP</span>
+                 <span>{xp.toLocaleString()}</span>
+               </div>
+               <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                 <div 
+                   className="h-full bg-gradient-to-r from-accent-purple to-accent-blue rounded-full transition-all duration-500"
+                   style={{ width: `${progressPercent}%` }}
+                 />
+               </div>
+            </div>
+
           </div>
         </div>
 

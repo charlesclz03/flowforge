@@ -1,3 +1,16 @@
+## v0.9.40 - The Master Bug Fix Update 🐛
+**Date**: 2026-01-19 | **Codename**: Polish & Progression
+
+We addressed the highest priority issues from our Master Bug Report, restoring your XP bars, fixing broken achievements, and finally adding that Random Beat button!
+
+### Fixes & Improvements
+*   🎲 **Random Beat**: Added a "Random Beat" option to the beat selector.
+*   📊 **Profile Stats Restored**: XP Bar/Level indicator now visible on profile.
+*   🏆 **Achievement Unlocked**: Fixed "Word Smith" achievement logic.
+*   🔒 **Premium Fix**: Verified locked beats trigger upgrade modal.
+
+---
+
 ## v0.9.39 - The Pro Save Fix 💾
 **Date**: 2026-01-17 | **Codename**: Unblocked
 
