@@ -5,7 +5,7 @@
 
 - **Build Status**:  Stable
 - **Vercel Deployment**: Pending (v0.9.41)
-- **Current Version:** v0.9.41 (Cloud Native)
+- **Current Version:** v0.9.41 (Full Roster)
 - **Status:** LIVE BETA
 - **Overall Progress:** 100%
 

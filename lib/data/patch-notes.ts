@@ -23,6 +23,23 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.41',
     date: '2026-01-19',
+    title: 'The Admin Visibility Update',
+    codename: 'Full Roster',
+    description:
+      'We introduced a comprehensive User List in the Admin panel, giving admins full visibility into the community. Track growth, subscription status, and engagement all in one place.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          ' **Admin User List**: A powerful new dashboard to view all registered users with real-time stats (Level, XP, Streaks) and subscription status.',
+          ' **Smart Badges**: Instantly spot PRO users and Superadmins with distinct visual badges in the user table.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.40.5',
+    date: '2026-01-19',
     title: 'The Storage & Polish Update',
     codename: 'Cloud Native',
     description:

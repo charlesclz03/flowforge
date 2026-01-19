@@ -1,4 +1,15 @@
-## v0.9.41 - The Storage & Polish Update
+## v0.9.41 - The Admin Visibility Update
+**Date**: 2026-01-19 | **Codename**: Full Roster
+
+We introduced a comprehensive User List in the Admin panel, giving admins full visibility into the community. Track growth, subscription status, and engagement all in one place.
+
+### New Features
+*   **Admin User List**: A powerful new dashboard to view all registered users with real-time stats.
+*   **Smart Badges**: Instantly spot PRO users and Superadmins.
+
+---
+
+## v0.9.40.5 - The Storage & Polish Update
 **Date**: 2026-01-19 | **Codename**: Cloud Native
 
 We introduced a sleek new Cloud Storage bar to tracking your recording capacity, opened up the Recordings page for everyone to preview, and performed a massive system-wide emoji cleanup for a cleaner professional look.
