@@ -1150,7 +1150,7 @@ export default function PracticePage() {
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
+      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
         {/* Combo / Vibe Overlay - Absolute Top Right */}
         <AnimatePresence>
           {combo > 1 && (
@@ -1186,7 +1186,7 @@ export default function PracticePage() {
         )}
 
         {/* Main Controls - Centered */}
-        <div className="w-full flex-none z-20 flex items-center justify-center">
+        <div className="w-full flex-1 z-20 flex flex-col min-h-0">
           {selectedBeat ? (
             <PracticeControls
               selectedBeat={selectedBeat}
