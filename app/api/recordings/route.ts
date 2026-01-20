@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     const fileSize = audioFile.size
 
     // STORAGE LIMIT CHECK (For Free Users)
-    const FREE_LIMIT_BYTES = 100 * 1024 * 1024 // 100MB
+    const FREE_LIMIT_BYTES = 0 // 0MB (Free users cannot save)
 
     // Fetch current usage if user is free
     if (session.user.subscriptionStatus === 'free') {

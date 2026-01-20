@@ -2,7 +2,7 @@
 **Description:** Free users now have storage limits (100MB) to ensure sustainability. Experience our perfectly centered player on any device.
 
 ### New Features
-- **Storage Limits**: Free users now have a 100MB (~1 hour) storage limit. Pro users remain unlimited.
+- **Storage Limits**: Free users are now "Read-Only". You must be Pro to save new recordings. Pro users remain unlimited.
 - **Legacy Estimation**: Old recordings are automatically estimated to ensure fair usage calculations.
 
 ### Visual Overhaul
