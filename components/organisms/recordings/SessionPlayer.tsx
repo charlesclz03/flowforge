@@ -79,7 +79,7 @@ export const SessionPlayer = forwardRef<
     ref
   ) => {
     const [isPlaying, setIsPlaying] = useState(false)
-    const [duration, setDuration] = useState(0)
+    const [duration, setDuration] = useState(sessionDuration || 0)
     const [currentTime, setCurrentTime] = useState(0)
     const [volume, setVolume] = useState(1)
     const [beatVolume, setBeatVolume] = useState(0.8)
@@ -244,7 +244,9 @@ export const SessionPlayer = forwardRef<
 
       audio.addEventListener('error', handleError)
       audio.addEventListener('loadedmetadata', () => {
-        setDuration(audio.duration)
+        if (Number.isFinite(audio.duration)) {
+          setDuration(audio.duration)
+        }
         setAudioError(null)
       })
 

@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.53',
+    date: '2026-01-21',
+    title: 'Duration Hotfix ⏱️',
+    codename: 'Time Lord',
+    description:
+      'Fixed a bug where the total time would show as "INFINITY:NAN" while the audio was loading. We now properly use the saved session duration for instant display.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Instant Duration**: Usage of saved session duration ensures the timer and progress bar are correct immediately on load.',
+          ' **Safety Net**: Added guards to prevent "NaN" or "Infinity" from ever appearing in the time display.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.52',
     date: '2026-01-21',
     title: 'The Visual Perfection Update 🎨',
