@@ -1,5 +1,14 @@
 # Patch Notes Master Log
 
+## v0.9.49 - Universal Center 🌐 (2026-01-21)
+**Codename:** Relative Flow
+**Description:** Dynamic layout calculations to ensure perfect centering on any device, taking into account safe areas and header height.
+*   **Universal Centering**: Implemented `calc()` based padding to mathematically balance the UI.
+*   **Glow Fix**: Restored `overflow-visible` to let the player breathe.
+*   **Header Polish**: Fixed z-indexing and overlap issues with the title.
+
+---
+
 ## v0.9.48 - Geometric Center 📐 (2026-01-21)
 **Codename:** Euclidean
 **Description:** We calculated the exact pixel values of the header and navigation bar to ensure the player floats in the true geometric center of the screen, correcting for a 12-28px shift on mobile devices.

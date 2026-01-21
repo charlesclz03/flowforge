@@ -21,6 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.49',
+    date: '2026-01-21',
+    title: 'Universal Center 🌐',
+    codename: 'Relative Flow',
+    description:
+      'We unlocked the physics of the layout. The player now adapts to any device notch or header size for true responsive centering.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Fluid Layout**: Calculated dynamic padding to counterbalance the header and safe-areas on iOS/Android.',
+          ' **Breathing Room**: Fixed an issue where the recording glow was getting clipped.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Header Fix**: Prevented the "FreeStyla" title from overlapping with the new Help button.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.48',
     date: '2026-01-21',
     title: 'Geometric Center 📐',

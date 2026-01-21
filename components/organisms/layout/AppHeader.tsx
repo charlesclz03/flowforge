@@ -106,7 +106,7 @@ export function AppHeader({
           {/* Centered Title - navigates to howitworks when logged in */}
           {/* max-width constraint prevents title from overlapping with absolutely positioned controls */}
           {showTitle && (
-            <div className="flex flex-col items-center justify-center pt-1 max-w-[calc(100%-160px)] sm:max-w-[calc(100%-200px)]">
+            <div className="flex flex-col items-center justify-center pt-1 max-w-[calc(100%-300px)] sm:max-w-[calc(100%-340px)]">
               <Link
                 href={homeLink}
                 className="flex items-center justify-center gap-2 rounded-full px-3 py-1"

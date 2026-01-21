@@ -176,8 +176,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
       padding="lg"
       className={cn(
         'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between',
-        // Responsive top padding - much less on small screens
-        'py-4 relative overflow-hidden'
+        // CENTERING MAGIC:
+        // Counterbalance AppHeader (h-14/h-20) + Safe Area Top to pull player to true geometric center.
+        'pt-4 pb-[calc(3.5rem+env(safe-area-inset-top))] sm:pb-[calc(5rem+env(safe-area-inset-top))] relative overflow-visible'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
@@ -299,7 +300,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </div>
 
       {/* CENTER STAGE: Just the Player */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20">
+      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20 overflow-visible">
         {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
         <div className="flex flex-col items-center w-full max-w-lg">
           {error && (
@@ -748,10 +749,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
       </div>
 
-      {/* Record Notifier / Bottom Control Area - Height adjusted to offset Header/Nav imbalance */
-      /* SM: Top(192) - Bottom(160) = 32px diff (Compensates for Nav(112) - Header(80) = 32px) */
-      /* XS: Top(160) - Bottom(104) = 56px diff (Compensates for Nav(112) - Header(56) = 56px) */}
-      <div className="flex-none h-[6.5rem] sm:h-40 flex items-center justify-center shrink-0 z-30 pb-4">
+      {/* Record Notifier / Bottom Control Area - SYMMETRICAL HEIGHT
+          Restored to h-40 sm:h-48 to match Top Controls.
+          Overflow visible ensures breathing effects aren't clipped.
+      */}
+      <div className="flex-none h-40 sm:h-48 flex items-center justify-center shrink-0 z-30 pb-4 overflow-visible">
         <button
           onClick={(e) => {
             e.stopPropagation()
