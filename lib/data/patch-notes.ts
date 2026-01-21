@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.50',
+    date: '2026-01-21',
+    title: 'Gravity Center 🎨',
+    codename: 'Visual Balance',
+    description: 'We removed the complex math and simply pushed the player down to visually balance it against the header. Sometimes simpler is better.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **True Centering**: Added top padding to push the player down, fixing the high bias.',
+          ' **No Clipping**: Ensured the glow effects are fully visible.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.49',
     date: '2026-01-21',
     title: 'Universal Center 🌐',

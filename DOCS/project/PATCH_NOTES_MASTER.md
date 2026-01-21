@@ -1,5 +1,15 @@
 # Patch Notes Master Log
 
+# Patch Notes Master Log
+
+## v0.9.50 - Gravity Center 🎨 (2026-01-21)
+**Codename:** Visual Balance
+**Description:** Corrected the vertical centering direction. Instead of squeezing from the bottom, we now push from the top to perfectly position the player.
+*   **Visual Centering**: Applied `pt-10` to balance the visual weight of the App Header.
+*   **Clipping Fix**: Removed constraints that were cutting off the recording glow.
+
+---
+
 ## v0.9.49 - Universal Center 🌐 (2026-01-21)
 **Codename:** Relative Flow
 **Description:** Dynamic layout calculations to ensure perfect centering on any device, taking into account safe areas and header height.

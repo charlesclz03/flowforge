@@ -176,9 +176,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
       padding="lg"
       className={cn(
         'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between',
-        // CENTERING MAGIC:
-        // Counterbalance AppHeader (h-14/h-20) + Safe Area Top to pull player to true geometric center.
-        'pt-4 pb-[calc(3.5rem+env(safe-area-inset-top))] sm:pb-[calc(5rem+env(safe-area-inset-top))] relative overflow-visible'
+        // CENTERING FIX V3:
+        // The previous "mathematical" bottom padding pushed content UP (bad).
+        // We want to push content DOWN to fix the "high bias".
+        // Adding top padding balances the visual weight of the Bottom Nav.
+        // overflow-visible ensures the glow/breathing effect is never clipped.
+        'pt-6 sm:pt-10 pb-4 relative overflow-visible'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
