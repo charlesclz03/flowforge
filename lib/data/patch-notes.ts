@@ -21,6 +21,21 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.47',
+    date: '2026-01-21',
+    title: 'Hotfix 🔧',
+    codename: 'True Center',
+    description: 'Layout corrections for true mathematical centering.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **True Center**: Adjusted top spacing to perfectly balance the player against the bottom navigation.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.46',
     date: '2026-01-21',
     title: 'The Balance Update ⚖️',

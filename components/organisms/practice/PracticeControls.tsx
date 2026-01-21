@@ -231,8 +231,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
-      {/* Top Controls Section - Beat & Info */}
-      <div className="w-full flex-none flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-30">
+      {/* Top Controls Section - Balanced with Bottom Controls + Header Offset */}
+      <div className="w-full flex-none h-[4.5rem] sm:h-24 flex flex-col items-center justify-center shrink-0 relative z-30">
         {/* Beat Selection Dropdown */}
         <BeatDropdown
           beats={beats}
@@ -660,20 +660,20 @@ export default function PracticeControls(props: PracticeControlsProps) {
                                 className="text-white/80 animate-pulse-slow"
                               />
                             ) : isRecording ? (
-                                formatTime(
-                                  Math.max(
-                                    0,
-                                    (isPro ? 600 : 120) - (recordingDuration || 0)
-                                  )
+                              formatTime(
+                                Math.max(
+                                  0,
+                                  (isPro ? 600 : 120) - (recordingDuration || 0)
                                 )
-                              ) : (
-                                formatTime(
-                                  Math.max(
-                                    0,
-                                    sessionDuration - (currentTime || 0)
-                                  )
+                              )
+                            ) : (
+                              formatTime(
+                                Math.max(
+                                  0,
+                                  sessionDuration - (currentTime || 0)
                                 )
-                              )}
+                              )
+                            )}
                           </span>
                         </>
                       )}
@@ -780,9 +780,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 className={cn(
                   'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
                   // Base State
-                  isPro && isRecordingEnabled
-                    ? 'bg-red-500'
-                    : 'bg-gray-700',
+                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-gray-700',
                   // Active State - Only Pulse Red if Pro
                   isRecording && isPro
                     ? 'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'

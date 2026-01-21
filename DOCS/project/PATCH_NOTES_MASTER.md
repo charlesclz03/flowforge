@@ -1,5 +1,11 @@
 # Patch Notes Master Log
 
+## v0.9.47 - Hotfix 🔧 (2026-01-21)
+**Codename:** True Center
+**Description:** Small layout adjustment to perfectly center the player by balancing top and bottom control weights.
+
+---
+
 ## v0.9.46 - The Balance Update ⚖️ (2026-01-21)
 **Codename:** Perfect Center
 **Description:** We fine-tuned the practice experience with focused layout improvements and expanded frequency options for veteran rappers.
