@@ -1,14 +1,15 @@
 # PATCH NOTES MASTER FILE
 
-## v0.9.55 - Third Time Charm (2026-01-21)
-**"Hotfix for the Hotfix (Again) 🙈"**
+## v0.9.56 - Clear Skies (2026-01-21)
+**"Storage Clarity Update"**
 
-Fixed the build error by properly destructuring the sessionDuration prop. We manually verified the file this time!
+Switched storage tracking from file size to duration (1-hour limit) and improved usage visualization for all users.
 
-### Fixes & Improvements
-- **Build Fix**: Officially exposed sessionDuration to the player scope.
+### Visual Overhaul
+- **Storage Bar**: Now displays usage based on recording duration (1h Cap).
+- **Visualization**: Removed "Unlimited" text; shows exact % used for everyone.
 
 ---
 
-## v0.9.54 - Patch Perfect (2026-01-21)
-**"Hotfix for the Hotfix 🛠️"**
+## v0.9.55 - Third Time Charm (2026-01-21)
+**"Hotfix for the Hotfix (Again) 🙈"**

@@ -143,14 +143,9 @@ export default function RecordingsPage() {
     session?.user?.subscriptionStatus === 'active' ||
     session?.user?.subscriptionStatus === 'trialing'
 
-  // Calculate Storage Usage (Bytes)
-  // Legacy files (null size) are estimated at ~1MB per minute (60 * 16384 bytes)
-  const totalUsedBytes = recordings.reduce((acc, curr) => {
-    if (curr.fileSizeBytes !== null && curr.fileSizeBytes !== undefined) {
-      return acc + curr.fileSizeBytes
-    }
-    // Estimation for legacy files based on duration
-    return acc + (curr.durationSeconds || 0) * 16384
+  // Calculate Storage Usage (Time in Seconds)
+  const totalUsedSeconds = recordings.reduce((acc, curr) => {
+    return acc + (curr.durationSeconds || 0)
   }, 0)
 
   // If free user, show list but with blocked access modal
@@ -183,8 +178,8 @@ export default function RecordingsPage() {
         {/* Storage Bar (Above List) */}
         {!isLoading && (
           <StorageBar
-            usedBytes={totalUsedBytes}
-            limitBytes={100 * 1024 * 1024} // 100MB
+            usedSeconds={totalUsedSeconds}
+            limitSeconds={3600} // 1 Hour (60m * 60s)
             isPro={isPro}
             onUpgradeClick={() => setShowPremiumModal(true)}
           />

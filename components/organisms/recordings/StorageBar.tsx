@@ -5,24 +5,24 @@ import { Cloud, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface StorageBarProps {
-  usedBytes: number
-  limitBytes?: number // Default 100MB
+  usedSeconds: number
+  limitSeconds?: number // Default 3600 (1 hour)
   isPro: boolean
   onUpgradeClick: () => void
 }
 
 export function StorageBar({
-  usedBytes,
-  limitBytes = 100 * 1024 * 1024, // 100 MB default
+  usedSeconds,
+  limitSeconds = 3600, // 1 hour default
   isPro,
   onUpgradeClick,
 }: StorageBarProps) {
   // Clamp percentage to 100%
-  // If limit is 0 (Free user), effectively 100% full immediately
+  // If limit is 0, effectively 100% full immediately
   const percentage =
-    limitBytes === 0
+    limitSeconds === 0
       ? 100
-      : Math.min(100, Math.max(0, (usedBytes / limitBytes) * 100))
+      : Math.min(100, Math.max(0, (usedSeconds / limitSeconds) * 100))
 
   return (
     <div
@@ -39,7 +39,7 @@ export function StorageBar({
           Cloud Storage
         </h3>
         <span className="text-xs text-text-tertiary">
-          {!isPro ? `${percentage.toFixed(0)}% Used` : 'Unlimited Storage'}
+          {percentage.toFixed(0)}% Used
         </span>
       </div>
 
@@ -51,7 +51,7 @@ export function StorageBar({
         {/* Fill Bar (Purple or Red) */}
         <motion.div
           initial={{ width: 0 }}
-          animate={{ width: `${isPro ? 0 : percentage}%` }}
+          animate={{ width: `${percentage}%` }}
           transition={{ duration: 1, ease: 'easeOut' }}
           className={cn(
             'absolute inset-y-0 left-0 h-full',

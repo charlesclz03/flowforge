@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.56',
+    date: '2026-01-21',
+    title: 'Storage Clarity Update',
+    codename: 'Clear Skies',
+    description:
+      'Switched storage tracking from file size to duration (1-hour limit) and improved usage visualization for all users.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Storage Bar**: Now displays usage based on recording duration (1h Cap).',
+          ' **Visualization**: Removed "Unlimited" text; shows exact % used for everyone.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.55',
     date: '2026-01-21',
     title: 'Hotfix for the Hotfix (Again) 🙈',
