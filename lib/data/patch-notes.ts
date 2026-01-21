@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.54',
+    date: '2026-01-21',
+    title: 'Hotfix for the Hotfix 🛠️',
+    codename: 'Patch Perfect',
+    description:
+      'Fixed a build error introduced in the previous hotfix. The duration display is now truly fixed and stable.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Build Fix**: Resolved a variable scope issue in the player component.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.53',
     date: '2026-01-21',
     title: 'Duration Hotfix ⏱️',
