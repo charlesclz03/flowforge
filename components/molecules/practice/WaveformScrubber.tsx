@@ -105,39 +105,39 @@ export function WaveformScrubber({
     const cuePointX = (initialOffset / duration) * containerWidth
 
     // --- Draw Data (Fit to Width) with two-tone coloring ---
+    // --- Draw Data (Fit to Width) ---
     const rawData = audioBuffer.getChannelData(0) // Mono
     const totalSamples = rawData.length
-
-    // Step size (samples per pixel)
     const step = Math.ceil(totalSamples / containerWidth)
 
-    // Draw bars with two colors based on position relative to splitX
-    for (let x = 0; x < containerWidth; x++) {
-      let max = 0
-      const startIndex = x * step
-
-      // Find max in chunk
-      for (let j = 0; j < step; j += 100) {
-        // optimization skippage
-        if (startIndex + j < totalSamples) {
-          const val = Math.abs(rawData[startIndex + j])
-          if (val > max) max = val
+    // Helper to draw the waveform bars
+    const drawBars = (drawColor: string) => {
+      ctx.fillStyle = drawColor
+      for (let x = 0; x < containerWidth; x++) {
+        let max = 0
+        const startIndex = x * step
+        for (let j = 0; j < step; j += 100) {
+          if (startIndex + j < totalSamples) {
+            const val = Math.abs(rawData[startIndex + j])
+            if (val > max) max = val
+          }
         }
+        const barHeight = Math.max(1, max * height * 0.9)
+        ctx.fillRect(x, centerY - barHeight / 2, 2, barHeight)
       }
+    }
 
-      const barHeight = Math.max(1, max * height * 0.9)
+    // 1. Draw Base Layer (Unplayed)
+    drawBars(color)
 
-      // Two-tone coloring: show playedColor for played portion when progress is provided
-      if (progress !== undefined && progress > 0) {
-        // Bars before progress position use playedColor (purple), after use color (white)
-        ctx.fillStyle = x < progressX ? playedColor : color
-      } else {
-        // No playback progress - all bars use the main color (white)
-        ctx.fillStyle = color
-      }
-
-      // Centered bar
-      ctx.fillRect(x, centerY - barHeight / 2, 2, barHeight) // width 2 for fuller look
+    // 2. Draw Active Layer (Played) - Clipped
+    if (progress !== undefined && progress > 0) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.rect(0, 0, progressX, height)
+      ctx.clip()
+      drawBars(playedColor)
+      ctx.restore()
     }
 
     // --- Draw Cursor (The Start Point) ---

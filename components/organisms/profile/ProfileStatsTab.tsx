@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { StatsSection, Recording } from '@/components/organisms/profile/StatsSection'
+import {
+  StatsSection,
+  Recording,
+} from '@/components/organisms/profile/StatsSection'
 import { useSession } from 'next-auth/react'
 
 export function ProfileStatsTab() {
@@ -13,7 +16,7 @@ export function ProfileStatsTab() {
   useEffect(() => {
     async function fetchStats() {
       if (!session?.user?.id) return
-      
+
       setIsLoading(true)
       try {
         const [recRes, statsRes] = await Promise.all([

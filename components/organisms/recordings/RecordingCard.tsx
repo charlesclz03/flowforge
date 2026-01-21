@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Modal } from '@/components/atoms/Modal'
@@ -38,6 +39,7 @@ export const RecordingCard = memo(function RecordingCard({
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackError, setPlaybackError] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
+  const router = useRouter() // Added for refreshing expired links
 
   const confirmDelete = useCallback(async () => {
     setIsDeleting(true)
@@ -120,9 +122,9 @@ export const RecordingCard = memo(function RecordingCard({
         // Only show error if we were actually trying to play
         if (playingId === recording.id) {
           console.error('Playback error:', e)
-          setPlaybackError(
-            'Failed to play recording. The file may be missing or corrupted.'
-          )
+          setPlaybackError('Link expired. Click refreshing...')
+          // Auto-refresh to get new link
+          router.refresh()
         }
         setIsPlaying(false)
       }
@@ -147,7 +149,7 @@ export const RecordingCard = memo(function RecordingCard({
         beatLooper.destroy()
       }
     }
-  }, [recording.storageUrl, recording.beat, playingId, recording.id])
+  }, [recording.storageUrl, recording.beat.storageUrl, recording.id])
 
   // Effect: Sync local state with global playingId
   useEffect(() => {
@@ -223,17 +225,28 @@ export const RecordingCard = memo(function RecordingCard({
       </Modal>
 
       {(error || playbackError) && (
-        <ErrorAlert
-          error={
-            error ||
-            createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
-          }
-          onDismiss={() => {
-            clearError()
-            setPlaybackError(null)
-          }}
-          className="mb-4"
-        />
+        <div className="mb-4">
+          <ErrorAlert
+            error={
+              error ||
+              createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+            }
+            onDismiss={() => {
+              clearError()
+              setPlaybackError(null)
+            }}
+          />
+          {playbackError && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.refresh()}
+              className="w-full mt-2 text-xs bg-white/5 hover:bg-white/10"
+            >
+              Reload Recording Links
+            </Button>
+          )}
+        </div>
       )}
 
       <div className="flex flex-col md:flex-row items-start justify-between gap-4 md:gap-6 p-4">

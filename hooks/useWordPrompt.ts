@@ -46,6 +46,7 @@ export function useWordPrompt({
       generatorRef.current = null
       schedulerRef.current = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words])
 
   // Update difficulty
@@ -62,10 +63,10 @@ export function useWordPrompt({
     if (schedulerRef.current) {
       schedulerRef.current.setBPM(bpm)
       schedulerRef.current.setFrequency(frequency)
-      
+
       // If NOT playing, update active immediately to match selection
       if (!isPlaying) {
-         setActiveFrequency(frequency)
+        setActiveFrequency(frequency)
       }
     }
   }, [bpm, frequency, isPlaying])
@@ -86,10 +87,10 @@ export function useWordPrompt({
       setCurrentWord(nextWordRef.current.wordText)
       setShowWord(true)
       setPromptCount((count) => count + 1)
-      
+
       // Sync active frequency from scheduler (it might have just changed)
       if (schedulerRef.current) {
-         setActiveFrequency(schedulerRef.current.getActiveFrequency())
+        setActiveFrequency(schedulerRef.current.getActiveFrequency())
       }
 
       // Preload next word
@@ -121,7 +122,7 @@ export function useWordPrompt({
         nextWordRef.current = generatorRef.current.getRandomWord()
       }
     }
-  }, [isPlaying])
+  }, [isPlaying, frequency])
 
   const reset = useCallback(() => {
     if (generatorRef.current) {

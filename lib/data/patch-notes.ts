@@ -21,6 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.52',
+    date: '2026-01-21',
+    title: 'The Visual Perfection Update 🎨',
+    codename: 'Pixel Perfect',
+    description:
+      'We polished the audio player with a pro-grade progress bar and stabilized the playback engine to ensure your sessions never skip a beat.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Audio Progress Bar**: Added a "SoundCloud-style" progress indicator. The waveform now fills with color as it plays!',
+          ' **Header Harmony**: Enforced single-line titles to prevent text wrapping from breaking the layout on small screens.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Playback Reliability**: Fixed the "Empty src" error by rewriting the audio player lifecycle. Playback is now rock solid.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.51',
     date: '2026-01-21',
     title: 'Pure Harmony ☯️',

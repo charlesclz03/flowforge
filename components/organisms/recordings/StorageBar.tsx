@@ -20,7 +20,9 @@ export function StorageBar({
   // Clamp percentage to 100%
   // If limit is 0 (Free user), effectively 100% full immediately
   const percentage =
-    limitBytes === 0 ? 100 : Math.min(100, Math.max(0, (usedBytes / limitBytes) * 100))
+    limitBytes === 0
+      ? 100
+      : Math.min(100, Math.max(0, (usedBytes / limitBytes) * 100))
 
   return (
     <div

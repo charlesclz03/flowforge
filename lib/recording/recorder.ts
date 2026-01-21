@@ -37,7 +37,7 @@ export class AudioRecorder {
   private onErrorCallback: ((error: Error) => void) | null = null
   private onMaxDurationCallback: (() => void) | null = null
 
-   /**
+  /**
    * Initialize and get microphone permission
    */
   async initialize(): Promise<void> {
@@ -83,17 +83,18 @@ export class AudioRecorder {
     if (!this.stream) {
       throw new Error('No audio stream available')
     }
-    
+
+    // AudioContext is now guaranteed by initialize()
     // AudioContext is now guaranteed by initialize()
     if (!this.audioContext) {
-        // Fallback or re-init if something weird happened
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.audioContext = new (
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext
-        )()
-        this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
+      // Fallback or re-init if something weird happened
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.audioContext = new (
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext
+      )()
+      this.watermarkGenerator = new WatermarkGenerator(this.audioContext)
     }
 
     // Set up Audio Graph: Mic -> Destination

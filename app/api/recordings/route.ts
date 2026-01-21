@@ -222,7 +222,10 @@ export async function POST(request: Request) {
 
       currentUser = (await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { xp: true, level: true, hasRated: true } as any,
+        select: { xp: true, level: true, hasRated: true } as Record<
+          string,
+          boolean
+        >,
       })) as UserWithRate | null
 
       if (currentUser) {

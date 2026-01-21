@@ -49,7 +49,10 @@ export class WordPromptScheduler {
    * Check if a prompt should trigger at current time
    */
   checkAndTrigger(currentTime: number, word: WordData): boolean {
-    const interval = calculatePromptInterval(this.bpm, this.activeFrequencyInBars)
+    const interval = calculatePromptInterval(
+      this.bpm,
+      this.activeFrequencyInBars
+    )
 
     // Calculate which interval we're in
     const currentInterval = Math.floor(currentTime / interval)
