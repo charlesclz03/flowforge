@@ -140,7 +140,7 @@ export const RECORDING_CONFIG = {
 
 // Session config constants
 export const SESSION_CONFIG = {
-  FREQUENCY_OPTIONS: [2, 4, 8] as const,
+  FREQUENCY_OPTIONS: [4, 8, 16] as const,
   DIFFICULTY_LEVELS: {
     EASY: 1,
     MEDIUM: 2,

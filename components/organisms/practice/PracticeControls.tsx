@@ -175,9 +175,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-start gap-2 sm:gap-4',
+        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between',
         // Responsive top padding - much less on small screens
-        'pt-4 sm:pt-16 pb-2 sm:py-4 relative'
+        'py-4 relative overflow-hidden'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
@@ -232,7 +232,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </AnimatePresence>
 
       {/* Top Controls Section - Beat & Info */}
-      <div className="w-full flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-20">
+      <div className="w-full flex-none flex flex-col items-center gap-2 sm:gap-4 shrink-0 relative z-30">
         {/* Beat Selection Dropdown */}
         <BeatDropdown
           beats={beats}
@@ -245,70 +245,67 @@ export default function PracticeControls(props: PracticeControlsProps) {
         />
       </div>
 
-      {/* CONTROL ROW: Satellites + Info Tags */}
-      {/* This guarantees no overlap by placing buttons in flow with the pills */}
-      {/* Row 1: Centered INFO PILLS */}
-      <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20">
-        {/* Difficulty Pill (Left) */}
-        <button
-          onClick={cycleDifficulty}
-          disabled={!handleDifficultyChange}
-          className={cn(
-            'flex-1 h-10 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
-            difficultyMeta.classes,
-            !handleDifficultyChange && 'cursor-default'
-          )}
-        >
-          <Gauge size={14} />
-          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
-            {difficultyMeta.label}
-          </span>
-        </button>
+      {/* CENTER GROUP: Pills + Player */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20 gap-4 sm:gap-8">
+        {/* Row 1: Centered INFO PILLS */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20">
+          {/* Difficulty Pill (Left) */}
+          <button
+            onClick={cycleDifficulty}
+            disabled={!handleDifficultyChange}
+            className={cn(
+              'flex-1 h-10 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+              difficultyMeta.classes,
+              !handleDifficultyChange && 'cursor-default'
+            )}
+          >
+            <Gauge size={14} />
+            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
+              {difficultyMeta.label}
+            </span>
+          </button>
 
-        {/* Mode Pill (Center - Wider) */}
-        <div className="flex-[1.5] h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
-          <User size={14} className="text-white/60" />
-          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
-            {mode}
-          </span>
+          {/* Mode Pill (Center - Wider) */}
+          <div className="flex-[1.5] h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
+            <User size={14} className="text-white/60" />
+            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
+              {mode}
+            </span>
+          </div>
+
+          {/* Bars Pill */}
+          <button
+            onClick={cycleFrequency}
+            disabled={!handleFrequencyChange}
+            className={cn(
+              'flex-1 h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+              !handleFrequencyChange && 'cursor-default opacity-50'
+            )}
+          >
+            <Zap
+              size={14}
+              className={
+                frequency === 4
+                  ? 'text-accent-red'
+                  : frequency === 8
+                    ? 'text-accent-yellow'
+                    : 'text-accent-blue'
+              }
+            />
+            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
+              {frequency} Bars
+            </span>
+          </button>
         </div>
 
-        {/* Bars Pill */}
-        <button
-          onClick={cycleFrequency}
-          disabled={!handleFrequencyChange}
-          className={cn(
-            'flex-1 h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
-            !handleFrequencyChange && 'cursor-default opacity-50'
-          )}
-        >
-          <Zap
-            size={14}
-            className={
-              frequency === 4
-                ? 'text-accent-red'
-                : frequency === 8
-                  ? 'text-accent-yellow'
-                  : 'text-accent-blue'
-            }
-          />
-          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
-            {frequency} Bars
-          </span>
-        </button>
-      </div>
-
-      {/* Center Stage - Main Controls Row */}
-      <div className="flex-1 w-full max-w-lg mx-auto relative min-h-0 mt-2 z-0 flex flex-col items-center justify-center">
-        {/* Main Center Button */}
-        <div className="flex-1 flex flex-col items-center justify-center relative min-h-0 w-full">
+        {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
+        <div className="flex flex-col items-center w-full max-w-lg">
           {error && (
             <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
               {error}
             </div>
           )}
 
-          {/* Hero Player Container with Flanking Satellites */}
           <div className="flex items-center justify-center gap-2 sm:gap-4 w-full px-2 relative z-10">
             {/* Left Satellite: RESTART */}
             <div className="w-12 sm:w-14 flex justify-end shrink-0">
@@ -663,20 +660,20 @@ export default function PracticeControls(props: PracticeControlsProps) {
                                 className="text-white/80 animate-pulse-slow"
                               />
                             ) : isRecording ? (
-                              formatTime(
-                                Math.max(
-                                  0,
-                                  (isPro ? 600 : 120) - (recordingDuration || 0)
+                                formatTime(
+                                  Math.max(
+                                    0,
+                                    (isPro ? 600 : 120) - (recordingDuration || 0)
+                                  )
                                 )
-                              )
-                            ) : (
-                              formatTime(
-                                Math.max(
-                                  0,
-                                  sessionDuration - (currentTime || 0)
+                              ) : (
+                                formatTime(
+                                  Math.max(
+                                    0,
+                                    sessionDuration - (currentTime || 0)
+                                  )
                                 )
-                              )
-                            )}
+                              )}
                           </span>
                         </>
                       )}
@@ -746,67 +743,67 @@ export default function PracticeControls(props: PracticeControlsProps) {
               </AnimatePresence>
             </div>
           </div>
-
-          {/* Record Notifier / Bottom Control Area */}
-          <div className="h-10 sm:h-14 flex items-center justify-center shrink-0 mt-2 sm:mt-12">
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-
-                // Prevent toggling during active session
-                if (isPlaying || isRecording) {
-                  return
-                }
-
-                if (isPro) {
-                  // Pro: Toggle Mode
-                  props.onToggleRecordingMode?.()
-                } else {
-                  // Non-Pro: Upsell
-                  handleUpgrade?.()
-                }
-              }}
-              className={cn(
-                'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',
-                !isRecordingEnabled && 'grayscale opacity-60'
-              )}
-            >
-              <div className="flex items-center gap-2 px-6 py-2">
-                {/* Left Bracket */}
-                <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
-
-                <div className="flex items-center gap-3 mx-1">
-                  {/* Dot */}
-                  <div
-                    className={cn(
-                      'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
-                      // Base State
-                      isPro && isRecordingEnabled
-                        ? 'bg-red-500'
-                        : 'bg-gray-700',
-                      // Active State - Only Pulse Red if Pro
-                      isRecording && isPro
-                        ? 'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
-                        : ''
-                    )}
-                  />
-                  {/* Text */}
-                  <span
-                    className={cn(
-                      'text-3xl font-black tracking-tighter drop-shadow-lg transition-colors',
-                      isPro ? 'text-white/90' : 'text-white/30'
-                    )}
-                  >
-                    REC
-                  </span>
-                </div>
-
-                {/* Right Bracket */}
-                <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
-              </div>
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* Record Notifier / Bottom Control Area */}
+      <div className="flex-none h-14 sm:h-20 flex items-center justify-center shrink-0 z-30 pb-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+
+            // Prevent toggling during active session
+            if (isPlaying || isRecording) {
+              return
+            }
+
+            if (isPro) {
+              // Pro: Toggle Mode
+              props.onToggleRecordingMode?.()
+            } else {
+              // Non-Pro: Upsell
+              handleUpgrade?.()
+            }
+          }}
+          className={cn(
+            'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',
+            !isRecordingEnabled && 'grayscale opacity-60'
+          )}
+        >
+          <div className="flex items-center gap-2 px-6 py-2">
+            {/* Left Bracket */}
+            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
+
+            <div className="flex items-center gap-3 mx-1">
+              {/* Dot */}
+              <div
+                className={cn(
+                  'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
+                  // Base State
+                  isPro && isRecordingEnabled
+                    ? 'bg-red-500'
+                    : 'bg-gray-700',
+                  // Active State - Only Pulse Red if Pro
+                  isRecording && isPro
+                    ? 'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                    : ''
+                )}
+              />
+              {/* Text */}
+              <span
+                className={cn(
+                  'text-3xl font-black tracking-tighter drop-shadow-lg transition-colors',
+                  isPro ? 'text-white/90' : 'text-white/30'
+                )}
+              >
+                REC
+              </span>
+            </div>
+
+            {/* Right Bracket */}
+            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
+          </div>
+        </button>
       </div>
     </Card>
   )

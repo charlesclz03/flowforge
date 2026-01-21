@@ -1,3 +1,18 @@
+# Patch Notes Master Log
+
+## v0.9.46 - The Balance Update ⚖️ (2026-01-21)
+**Codename:** Perfect Center
+**Description:** We fine-tuned the practice experience with focused layout improvements and expanded frequency options for veteran rappers.
+
+### New Features
+- **16-Bar Option**: You can now select "Every 16 Bars" for word switches. Perfect for long-form storytelling and endurance practice.
+
+### Visual Overhaul
+- **Refined Layout**: The Practice Player now floats perfectly in the center of your screen, with balanced spacing from top to bottom.
+- **UI Cleanup**: Removed redundant "Upload" prompts in the beat selector for a cleaner look.
+
+---
+
 ## v0.9.45 - Cloud Control ☁️ (2026-01-20)
 **Description:** Free users now have storage limits (100MB) to ensure sustainability. Experience our perfectly centered player on any device.
 

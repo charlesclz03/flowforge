@@ -21,6 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.46',
+    date: '2026-01-21',
+    title: 'The Balance Update ⚖️',
+    codename: 'Perfect Center',
+    description:
+      'We fine-tuned the practice experience with focused layout improvements and expanded frequency options for veteran rappers.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          ' **16-Bar Option**: You can now select "Every 16 Bars" for word switches. Perfect for long-form storytelling and endurance practice.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Refined Layout**: The Practice Player now floats perfectly in the center of your screen, with balanced spacing from top to bottom.',
+          ' **UI Cleanup**: Removed redundant "Upload" prompts in the beat selector for a cleaner look.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.45',
     date: '2026-01-20', // Same day, fast iteration
     title: 'Cloud Control ☁️',
@@ -90,7 +113,8 @@ export const PATCH_NOTES: PatchNote[] = [
     date: '2026-01-20',
     title: 'Unified Identity',
     codename: 'Unified Profile', // Added codename to match interface
-    description: 'Merging private profiles with public pages for a cohesive experience.',
+    description:
+      'Merging private profiles with public pages for a cohesive experience.',
     changes: [
       {
         category: 'New Features', // Structured changes to match PatchNoteItem interface

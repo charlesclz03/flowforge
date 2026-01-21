@@ -24,36 +24,6 @@ import {
 } from '@/components/atoms/Tabs'
 import { deleteLocalBeat } from '@/lib/beats/localBeats'
 
-// Empty state component for My Tracks tab - redirects to /tracks upload flow
-function UploadFirstBeatEmptyState() {
-  const router = useRouter()
-
-  const handleUploadClick = () => {
-    router.push('/tracks?tab=mine&upload=true')
-  }
-
-  return (
-    <div className="py-6 px-4">
-      <p className="text-sm font-medium text-text-secondary text-center mb-4">
-        Upload your first beat
-      </p>
-      <div
-        onClick={handleUploadClick}
-        className="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:bg-white/5 hover:border-accent-purple/30 transition-all cursor-pointer group"
-      >
-        <div className="flex flex-col items-center justify-center gap-2">
-          <Upload
-            className="text-accent-purple group-hover:scale-110 transition-transform"
-            size={32}
-          />
-          <p className="text-white font-medium text-sm">Click to Upload Beat</p>
-          <p className="text-xs text-text-tertiary">MP3, WAV supported</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // Compact upload row that appears after existing tracks
 function UploadNewTrackRow() {
   const router = useRouter()
@@ -478,85 +448,78 @@ export function BeatDropdown(props: BeatDropdownProps) {
                 className="m-0 p-0 max-h-[300px] overflow-y-auto custom-scrollbar"
               >
                 <div className="p-1">
-                  {allUserBeats.length === 0 ? (
-                    <UploadFirstBeatEmptyState />
-                  ) : (
-                    allUserBeats.map((beat) => (
+                  {allUserBeats.map((beat) => (
+                    <div
+                      key={beat.id}
+                      className="relative group p-1"
+                      onClick={() => {
+                        handleSelect(beat)
+                        setIsExpanded(false)
+                      }}
+                    >
                       <div
-                        key={beat.id}
-                        className="relative group p-1"
-                        onClick={() => {
-                          handleSelect(beat)
-                          setIsExpanded(false)
-                        }}
+                        className={cn(
+                          'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left cursor-pointer',
+                          selectedBeat?.id === beat.id
+                            ? 'bg-accent-purple/10'
+                            : 'hover:bg-white/5'
+                        )}
                       >
-                        <div
-                          className={cn(
-                            'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left cursor-pointer',
-                            selectedBeat?.id === beat.id
-                              ? 'bg-accent-purple/10'
-                              : 'hover:bg-white/5'
-                          )}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
-                              onClick={(e) => handlePreview(e, beat)}
-                              className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0 cursor-pointer group-hover:bg-accent-purple/20 transition-colors"
-                            >
-                              {playingId === beat.id ? (
-                                <Pause
-                                  size={16}
-                                  className="text-accent-purple"
-                                />
-                              ) : (
-                                <Upload
-                                  size={16}
-                                  className="text-accent-purple"
-                                />
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <p
-                                  className={cn(
-                                    'text-sm font-medium',
-                                    selectedBeat?.id === beat.id
-                                      ? 'text-accent-purple'
-                                      : 'text-white'
-                                  )}
-                                >
-                                  {beat.title}
-                                </p>
-                              </div>
-                              <p className="text-xs text-text-tertiary">
-                                {beat.bpm} BPM • Custom
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div
-                              onClick={(e) => handleToggleFavorite(beat.id, e)}
-                              className={cn(
-                                'transition-colors cursor-pointer p-2 -m-2',
-                                'text-text-tertiary hover:text-white'
-                              )}
-                            >
-                              <Heart size={16} />
-                            </div>
-                            <div
-                              onClick={(e) => handleDeleteBeat(beat.id, e)}
-                              className="p-2 text-text-tertiary hover:text-accent-red opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                            >
-                              <Trash2 size={16} />
-                            </div>
-                            {selectedBeat?.id === beat.id && (
-                              <Check size={16} className="text-accent-purple" />
+                        <div className="flex items-center gap-3">
+                          <div
+                            onClick={(e) => handlePreview(e, beat)}
+                            className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0 cursor-pointer group-hover:bg-accent-purple/20 transition-colors"
+                          >
+                            {playingId === beat.id ? (
+                              <Pause size={16} className="text-accent-purple" />
+                            ) : (
+                              <Upload
+                                size={16}
+                                className="text-accent-purple"
+                              />
                             )}
                           </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p
+                                className={cn(
+                                  'text-sm font-medium',
+                                  selectedBeat?.id === beat.id
+                                    ? 'text-accent-purple'
+                                    : 'text-white'
+                                )}
+                              >
+                                {beat.title}
+                              </p>
+                            </div>
+                            <p className="text-xs text-text-tertiary">
+                              {beat.bpm} BPM • Custom
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div
+                            onClick={(e) => handleToggleFavorite(beat.id, e)}
+                            className={cn(
+                              'transition-colors cursor-pointer p-2 -m-2',
+                              'text-text-tertiary hover:text-white'
+                            )}
+                          >
+                            <Heart size={16} />
+                          </div>
+                          <div
+                            onClick={(e) => handleDeleteBeat(beat.id, e)}
+                            className="p-2 text-text-tertiary hover:text-accent-red opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                          >
+                            <Trash2 size={16} />
+                          </div>
+                          {selectedBeat?.id === beat.id && (
+                            <Check size={16} className="text-accent-purple" />
+                          )}
                         </div>
                       </div>
-                    ))
-                  )}
+                    </div>
+                  ))}
                   {/* Upload new track row - always visible */}
                   <UploadNewTrackRow />
                 </div>
