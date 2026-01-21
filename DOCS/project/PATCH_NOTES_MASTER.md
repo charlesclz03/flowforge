@@ -1,5 +1,11 @@
 # Patch Notes Master Log
 
+## v0.9.48 - Geometric Center 📐 (2026-01-21)
+**Codename:** Euclidean
+**Description:** We calculated the exact pixel values of the header and navigation bar to ensure the player floats in the true geometric center of the screen, correcting for a 12-28px shift on mobile devices.
+
+---
+
 ## v0.9.47 - Hotfix 🔧 (2026-01-21)
 **Codename:** True Center
 **Description:** Small layout adjustment to perfectly center the player by balancing top and bottom control weights.

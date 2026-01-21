@@ -21,6 +21,28 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.48',
+    date: '2026-01-21',
+    title: 'Geometric Center 📐',
+    codename: 'Euclidean',
+    description:
+      'Mathematically perfect centering accounting for global UI chrome.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Euclidean Center**: Fixed a subtle 28px vertical offset on mobile. The player is now geometrically centered.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Grouped Controls**: Info pills are now grouped with the top controls for better visual hierarchy.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.47',
     date: '2026-01-21',
     title: 'Hotfix 🔧',

@@ -231,25 +231,24 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
-      {/* Top Controls Section - Balanced with Bottom Controls + Header Offset */}
-      <div className="w-full flex-none h-[4.5rem] sm:h-24 flex flex-col items-center justify-center shrink-0 relative z-30">
-        {/* Beat Selection Dropdown */}
-        <BeatDropdown
-          beats={beats}
-          selectedBeat={selectedBeat}
-          handleSelect={handleBeatSelect}
-          isPro={isPro}
-          disabled={false}
-          embedded={true}
-          defaultCollapsed={true}
-        />
-      </div>
+      {/* Top Controls Section - Balanced Height Container */}
+      <div className="w-full flex-none h-40 sm:h-48 flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-30 pointer-events-none">
+        {/* Beat Dropdown (Pointer Events Auto) */}
+        <div className="pointer-events-auto w-full flex justify-center">
+          <BeatDropdown
+            beats={beats}
+            selectedBeat={selectedBeat}
+            handleSelect={handleBeatSelect}
+            isPro={isPro}
+            disabled={false}
+            embedded={true}
+            defaultCollapsed={true}
+          />
+        </div>
 
-      {/* CENTER GROUP: Pills + Player */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20 gap-4 sm:gap-8">
-        {/* Row 1: Centered INFO PILLS */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20">
-          {/* Difficulty Pill (Left) */}
+        {/* Info Pills (Pointer Events Auto) - Moved from Center */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20 pointer-events-auto">
+          {/* Difficulty Pill */}
           <button
             onClick={cycleDifficulty}
             disabled={!handleDifficultyChange}
@@ -265,7 +264,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </span>
           </button>
 
-          {/* Mode Pill (Center - Wider) */}
+          {/* Mode Pill */}
           <div className="flex-[1.5] h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
             <User size={14} className="text-white/60" />
             <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
@@ -297,7 +296,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </span>
           </button>
         </div>
+      </div>
 
+      {/* CENTER STAGE: Just the Player */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20">
         {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
         <div className="flex flex-col items-center w-full max-w-lg">
           {error && (
@@ -746,8 +748,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
       </div>
 
-      {/* Record Notifier / Bottom Control Area */}
-      <div className="flex-none h-14 sm:h-20 flex items-center justify-center shrink-0 z-30 pb-4">
+      {/* Record Notifier / Bottom Control Area - Height adjusted to offset Header/Nav imbalance */
+      /* SM: Top(192) - Bottom(160) = 32px diff (Compensates for Nav(112) - Header(80) = 32px) */
+      /* XS: Top(160) - Bottom(104) = 56px diff (Compensates for Nav(112) - Header(56) = 56px) */}
+      <div className="flex-none h-[6.5rem] sm:h-40 flex items-center justify-center shrink-0 z-30 pb-4">
         <button
           onClick={(e) => {
             e.stopPropagation()
