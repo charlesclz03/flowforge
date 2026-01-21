@@ -2,6 +2,16 @@
 
 # Patch Notes Master Log
 
+# Patch Notes Master Log
+
+## v0.9.51 - Pure Harmony ☯️ (2026-01-21)
+**Codename:** Duplicate Removed
+**Description:** Identified a critical layout bug where the Bottom Navigation was being rendered twice (once globally, once in the page). Removing the duplicate removed the phantom "line" and allowed for pure mathematical centering without hacks.
+*   **Duplicate Nav Removed**: Fixed the root cause of the "line" and layout squeeze.
+*   **True Symmetry**: Layout relying on pure flexbox balancing again.
+
+---
+
 ## v0.9.50 - Gravity Center 🎨 (2026-01-21)
 **Codename:** Visual Balance
 **Description:** Corrected the vertical centering direction. Instead of squeezing from the bottom, we now push from the top to perfectly position the player.

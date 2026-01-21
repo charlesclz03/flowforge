@@ -21,11 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.51',
+    date: '2026-01-21',
+    title: 'Pure Harmony ☯️',
+    codename: 'Duplicate Removed',
+    description:
+      'We found a ghost in the machine! The navigation bar was being rendered twice, causing layout shifts and clipping. We removed the double-print and restored pure symmetrical balancing.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **De-Duplication**: Removed the duplicate Bottom Nav that was squeezing the layout.',
+          ' **Pure Centering**: Removed all manual offsets. The player now floats perfectly in the flex container.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.50',
     date: '2026-01-21',
     title: 'Gravity Center 🎨',
     codename: 'Visual Balance',
-    description: 'We removed the complex math and simply pushed the player down to visually balance it against the header. Sometimes simpler is better.',
+    description:
+      'We removed the complex math and simply pushed the player down to visually balance it against the header. Sometimes simpler is better.',
     changes: [
       {
         category: 'Visual Overhaul',

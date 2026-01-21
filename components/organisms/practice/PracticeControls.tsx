@@ -176,12 +176,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
       padding="lg"
       className={cn(
         'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between',
-        // CENTERING FIX V3:
-        // The previous "mathematical" bottom padding pushed content UP (bad).
-        // We want to push content DOWN to fix the "high bias".
-        // Adding top padding balances the visual weight of the Bottom Nav.
-        // overflow-visible ensures the glow/breathing effect is never clipped.
-        'pt-6 sm:pt-10 pb-4 relative overflow-visible'
+        // CENTERING FIX V4 (FINAL):
+        // Removed dynamic padding and duplicate BottomNav.
+        // Pure Flexbox Symmetrical Centering.
+        // overflow-visible ensures glow is not clipped.
+        'py-4 relative overflow-visible'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
