@@ -1,14 +1,14 @@
 # PATCH NOTES MASTER FILE
 
-## v0.9.54 - Patch Perfect (2026-01-21)
-**"Hotfix for the Hotfix 🛠️"**
+## v0.9.55 - Third Time Charm (2026-01-21)
+**"Hotfix for the Hotfix (Again) 🙈"**
 
-Fixed a build error introduced in the previous hotfix. The duration display is now truly fixed and stable.
+Fixed the build error by properly destructuring the sessionDuration prop. We manually verified the file this time!
 
 ### Fixes & Improvements
-- **Build Fix**: Resolved a variable scope issue in the player component.
+- **Build Fix**: Officially exposed sessionDuration to the player scope.
 
 ---
 
-## v0.9.53 - Time Lord (2026-01-21)
-**"Duration Hotfix ⏱️"**
+## v0.9.54 - Patch Perfect (2026-01-21)
+**"Hotfix for the Hotfix 🛠️"**

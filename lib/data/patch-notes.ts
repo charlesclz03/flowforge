@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.55',
+    date: '2026-01-21',
+    title: 'Hotfix for the Hotfix (Again) 🙈',
+    codename: 'Third Time Charm',
+    description:
+      'Fixed the build error by properly destructuring the sessionDuration prop. We manually verified the file this time!',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Build Fix**: Officially exposed sessionDuration to the player scope.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.54',
     date: '2026-01-21',
     title: 'Hotfix for the Hotfix 🛠️',

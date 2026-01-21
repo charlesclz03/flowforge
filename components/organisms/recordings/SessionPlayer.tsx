@@ -73,7 +73,7 @@ export const SessionPlayer = forwardRef<
       beatTitle,
       beatBpm,
       beatArtist,
-
+      sessionDuration,
       sessionDate,
     },
     ref
