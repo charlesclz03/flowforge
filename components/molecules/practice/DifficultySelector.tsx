@@ -50,6 +50,7 @@ export function DifficultySelector({
         value={value}
         onChange={handleSliderChange}
         disabled={disabled}
+        aria-valuetext={SESSION_CONFIG.DIFFICULTY_LABELS[value as 1 | 2 | 3 | 4]}
         className={cn(
           'w-full h-2 rounded-full appearance-none cursor-pointer',
           'bg-text-tertiary/20',

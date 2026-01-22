@@ -62,6 +62,7 @@ export function FrequencySelector({
         value={currentIndex}
         onChange={handleSliderChange}
         disabled={disabled}
+        aria-valuetext={frequencyLabels[value]}
         className={cn(
           'w-full h-2 rounded-full appearance-none cursor-pointer',
           'bg-text-tertiary/20',

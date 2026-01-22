@@ -119,6 +119,7 @@ export function AppHeader({
                       alt="FreeStyla Logo"
                       width={32}
                       height={32}
+                      priority
                       className="object-contain drop-shadow-[0_0_15px_rgba(125,122,255,0.5)]"
                     />
                   </div>

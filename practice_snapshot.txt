@@ -1,0 +1,25 @@
+uid=1_0 RootWebArea "FreeStyla: Freestyle Rap Coach" url="http://localhost:3000/difficultyselection"
+  uid=1_1 main
+    uid=1_2 button "Go back"
+    uid=1_3 link "How it works" url="http://localhost:3000/howitworks"
+    uid=1_4 button expandable haspopup="menu"
+    uid=1_5 link "Go to FreeStyla home" url="http://localhost:3000/"
+      uid=1_6 heading "SKILL CHECK" level="1"
+    uid=1_7 StaticText "Choose your challenge level"
+    uid=1_8 main
+      uid=1_9 StaticText "Difficulty"
+      uid=1_10 StaticText "Medium"
+      uid=1_11 slider orientation="horizontal" value="2" valuemax="4" valuemin="1" valuetext=""
+      uid=1_12 StaticText "Word Frequency"
+      uid=1_13 StaticText "Every 4 bars"
+      uid=1_14 slider orientation="horizontal" value="0" valuemax="2" valuemin="0" valuetext=""
+      uid=1_15 button "Choose a Beat"
+      uid=1_16 button "Advanced Settings"
+      uid=1_17 button "Select a beat to continue" disableable disabled
+  uid=1_18 navigation
+    uid=1_19 link "Beats" url="http://localhost:3000/tracks"
+    uid=1_20 link "Trophy" url="http://localhost:3000/achievements"
+    uid=1_21 link "Record" url="http://localhost:3000/difficultyselection"
+      uid=1_22 image "Logo" url="http://localhost:3000/_next/image?url=%2Flogo.png&w=3840&q=75"
+    uid=1_23 link "Recordings" url="http://localhost:3000/recordings"
+    uid=1_24 link "Profile" url="http://localhost:3000/profile"

@@ -157,6 +157,8 @@ export function BottomNav() {
                         src="/logo.png"
                         alt="Logo"
                         fill
+                        priority
+                        sizes="32px"
                         className={cn(
                           'object-contain transition-transform duration-300',
                           isActive ? 'scale-110' : 'group-hover:scale-110'
