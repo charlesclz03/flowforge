@@ -254,7 +254,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                 : selectedBeat?.title || 'Choose a Beat'}
             </p>
             {selectedBeat && (
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-secondary">
                 {selectedBeat.bpm} BPM • {selectedBeat.genre || 'Freestyle'}
               </p>
             )}
@@ -338,7 +338,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       <p className="text-sm font-bold text-white">
                         Random Beat
                       </p>
-                      <p className="text-xs text-text-tertiary">Surprise me!</p>
+                      <p className="text-xs text-text-secondary">Surprise me!</p>
                     </div>
                   </div>
                 </div>
@@ -492,7 +492,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                                 {beat.title}
                               </p>
                             </div>
-                            <p className="text-xs text-text-tertiary">
+                            <p className="text-xs text-text-secondary">
                               {beat.bpm} BPM • Custom
                             </p>
                           </div>
