@@ -87,7 +87,7 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   alternates: {
-    canonical: '/',
+    canonical: './',
   },
   category: 'music',
 }
@@ -95,8 +95,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#000000' },
     { media: '(prefers-color-scheme: dark)', color: '#000000' },

@@ -33,7 +33,7 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 1
               </span>
-              <h3 className="text-lg sm:text-xl">Secure Your Sound</h3>
+              <h2 className="text-lg sm:text-xl font-bold">Secure Your Sound</h2>
             </div>
             <p className="text-sm text-text-secondary">
               Select from a curated library of hip-hop instrumentals. Each beat
@@ -52,7 +52,7 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 2
               </span>
-              <h3 className="text-lg sm:text-xl">Architect Your Flow</h3>
+              <h2 className="text-lg sm:text-xl font-bold">Architect Your Flow</h2>
             </div>
             <p className="text-sm text-text-secondary">
               Set your difficulty level and word frequency. Start easy with 2-3
@@ -71,7 +71,7 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 3
               </span>
-              <h3 className="text-lg sm:text-xl">Immortalize Your Bars</h3>
+              <h2 className="text-lg sm:text-xl font-bold">Immortalize Your Bars</h2>
             </div>
             <p className="text-sm text-text-secondary">
               Hit play and start freestyling. Words appear in sync with the
@@ -87,7 +87,7 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Timer className="mt-1 h-6 w-6 flex-shrink-0 text-accent-purple" />
             <div>
-              <h4 className="mb-2 text-lg">Precision timing</h4>
+              <h2 className="mb-2 text-lg font-semibold">Precision timing</h4>
               <p className="text-sm text-text-secondary">
                 your session. Standard sessions run for 2 minutes, perfect for
                 daily practice.
@@ -100,9 +100,9 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Sparkles className="mt-1 h-6 w-6 flex-shrink-0 text-violet-400" />
             <div>
-              <h4 className="mb-2 text-lg">
+              <h2 className="mb-2 text-lg font-semibold">
                 Freestyle practice engine with beats
-              </h4>
+              </h2>
               <p className="text-sm text-text-secondary">
                 Our Beat Vault adapts to your skill level, helping you learn{' '}
                 <strong className="text-white">how to improve rap flow</strong>{' '}
@@ -116,7 +116,7 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Zap className="mt-1 h-6 w-6 flex-shrink-0 text-blue-400" />
             <div>
-              <h4 className="mb-2 text-lg">Beat synchronization</h4>
+              <h2 className="mb-2 text-lg font-semibold">Beat synchronization</h4>
               <p className="text-sm text-text-secondary">
                 Words appear precisely timed to musical bars. Choose between 2,
                 4, or 8 bar intervals.
@@ -129,7 +129,7 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Music className="mt-1 h-6 w-6 flex-shrink-0 text-green-400" />
             <div>
-              <h4 className="mb-2 text-lg">Auto-recording</h4>
+              <h2 className="mb-2 text-lg font-semibold">Auto-recording</h4>
               <p className="text-sm text-text-secondary">
                 Every session is captured automatically. Review your
                 performances and track your progress over time.

@@ -15,6 +15,7 @@ export function SettingsDropdown() {
       <div className="lg:hidden">
         <button
           onClick={() => setShowSheet(true)}
+          aria-label="Settings"
           className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
         >
           <Settings size={20} />
@@ -34,7 +35,10 @@ export function SettingsDropdown() {
       <div className="hidden lg:block">
         <Menu as="div" className="relative inline-block text-left">
           <div>
-            <Menu.Button className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5">
+            <Menu.Button
+              className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
+              aria-label="Settings"
+            >
               <Settings size={20} />
             </Menu.Button>
           </div>
