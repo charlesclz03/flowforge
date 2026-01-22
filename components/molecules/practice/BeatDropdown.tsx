@@ -42,7 +42,7 @@ function UploadNewTrackRow() {
           <p className="text-sm font-medium text-accent-purple">
             Upload new track
           </p>
-          <p className="text-xs text-text-tertiary">
+          <p className="text-xs text-text-secondary">
             Add another beat to your library
           </p>
         </div>
@@ -338,7 +338,9 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       <p className="text-sm font-bold text-white">
                         Random Beat
                       </p>
-                      <p className="text-xs text-text-secondary">Surprise me!</p>
+                      <p className="text-xs text-text-secondary">
+                        Surprise me!
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -409,7 +411,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             {beat.title}
                           </p>
                         </div>
-                        <p className="text-xs text-text-tertiary">
+                        <p className="text-xs text-text-secondary">
                           {beat.bpm} BPM • {beat.genre}
                         </p>
                       </div>
