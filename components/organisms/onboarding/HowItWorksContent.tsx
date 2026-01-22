@@ -3,13 +3,12 @@
 import { useRouter } from 'next/navigation'
 import { Music, Timer, Mic, Sparkles, Zap, Target } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { QASection } from '@/components/organisms/landing/QASection'
 
 interface HowItWorksContentProps {
   onStartPractice?: () => void
   beatCount?: number
 }
-
-import { QASection } from '@/components/organisms/landing/QASection'
 
 export function HowItWorksContent({
   onStartPractice,
@@ -33,7 +32,9 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 1
               </span>
-              <h2 className="text-lg sm:text-xl font-bold">Secure Your Sound</h2>
+              <h2 className="text-lg sm:text-xl font-bold">
+                Secure Your Sound
+              </h2>
             </div>
             <p className="text-sm text-text-secondary">
               Select from a curated library of hip-hop instrumentals. Each beat
@@ -52,7 +53,9 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 2
               </span>
-              <h2 className="text-lg sm:text-xl font-bold">Architect Your Flow</h2>
+              <h2 className="text-lg sm:text-xl font-bold">
+                Architect Your Flow
+              </h2>
             </div>
             <p className="text-sm text-text-secondary">
               Set your difficulty level and word frequency. Start easy with 2-3
@@ -71,7 +74,9 @@ export function HowItWorksContent({
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 3
               </span>
-              <h2 className="text-lg sm:text-xl font-bold">Immortalize Your Bars</h2>
+              <h2 className="text-lg sm:text-xl font-bold">
+                Immortalize Your Bars
+              </h2>
             </div>
             <p className="text-sm text-text-secondary">
               Hit play and start freestyling. Words appear in sync with the
@@ -87,7 +92,7 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Timer className="mt-1 h-6 w-6 flex-shrink-0 text-accent-purple" />
             <div>
-              <h2 className="mb-2 text-lg font-semibold">Precision timing</h4>
+              <h2 className="mb-2 text-lg font-semibold">Precision timing</h2>
               <p className="text-sm text-text-secondary">
                 your session. Standard sessions run for 2 minutes, perfect for
                 daily practice.
@@ -116,7 +121,9 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Zap className="mt-1 h-6 w-6 flex-shrink-0 text-blue-400" />
             <div>
-              <h2 className="mb-2 text-lg font-semibold">Beat synchronization</h4>
+              <h2 className="mb-2 text-lg font-semibold">
+                Beat synchronization
+              </h2>
               <p className="text-sm text-text-secondary">
                 Words appear precisely timed to musical bars. Choose between 2,
                 4, or 8 bar intervals.
@@ -129,7 +136,7 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Music className="mt-1 h-6 w-6 flex-shrink-0 text-green-400" />
             <div>
-              <h2 className="mb-2 text-lg font-semibold">Auto-recording</h4>
+              <h2 className="mb-2 text-lg font-semibold">Auto-recording</h2>
               <p className="text-sm text-text-secondary">
                 Every session is captured automatically. Review your
                 performances and track your progress over time.
