@@ -200,6 +200,7 @@ export default function RecordingsPage() {
             isOpen={showPremiumModal}
             onClose={() => setShowPremiumModal(false)}
             trigger="recording" // Context adjusted
+            beatCount={140} // Approximate premium count (Client-side page doesn't fetch beats)
           />
         </div>
       </div>

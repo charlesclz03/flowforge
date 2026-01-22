@@ -21,11 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.58',
+    date: '2026-01-22',
+    title: 'The Golden Polish Update 🏆',
+    codename: 'Gold Plated',
+    description:
+      'We fixed the "Word Smith" achievement logic and updated the Premium Beat count to show the real number of tracks available.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Achievement Fix**: "Word Smith" now unlocks correctly when you view your achievements.',
+          ' **Dynamic Counts**: The "Get Pro" modal now shows the actual number of premium beats available (140+) instead of a static "100+".',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.57',
     date: '2026-01-22',
     title: 'Identity & Access',
     codename: 'Identity Fix',
-    description: 'Critical fixes for user profiles, guest access, and authentication security.',
+    description:
+      'Critical fixes for user profiles, guest access, and authentication security.',
     changes: [
       {
         category: 'Fixes & Improvements',

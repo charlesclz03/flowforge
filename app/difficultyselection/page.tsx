@@ -314,6 +314,7 @@ export default function DifficultySelectionPage() {
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         trigger="beat"
+        beatCount={beats.length > 0 ? beats.length : 140}
       />
     </OnboardingLayout>
   )

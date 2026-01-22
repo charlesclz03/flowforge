@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import { AchievementSystem } from '@/lib/gamification/achievements'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,6 +24,15 @@ export async function GET() {
 
     if (session?.user?.id) {
       const userId = session.user.id
+
+      // LAZY UNLOCK: Check for missing achievements (Self-Healing)
+      try {
+        await AchievementSystem.checkAndUnlock(userId, {
+          type: 'SESSION_COMPLETE', // Generic context to trigger totals check
+        })
+      } catch (err) {
+        console.warn('Lazy unlock failed:', err)
+      }
 
       // Fetch achievements and progress counts in parallel
       const [

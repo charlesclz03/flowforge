@@ -383,6 +383,7 @@ export default function TracksPage() {
         isOpen={isPremiumModalOpen}
         onClose={() => setIsPremiumModalOpen(false)}
         trigger="beat"
+        beatCount={beats.length}
       />
     </ScreenPage>
   )
