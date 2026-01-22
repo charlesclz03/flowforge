@@ -115,6 +115,7 @@ export function BeatGridCard({
                 onLockedClick?.()
               }}
               className="flex flex-col items-center justify-center text-white/70 gap-2 hover:text-accent-purple hover:scale-105 transition-all cursor-pointer"
+              aria-label="Tap to unlock premium content"
             >
               <Lock size={24} />
               <span className="text-[10px] font-medium uppercase tracking-wider">
@@ -138,6 +139,9 @@ export function BeatGridCard({
                 title={
                   isFavorited ? 'Remove from favorites' : 'Add to favorites'
                 }
+                aria-label={
+                  isFavorited ? 'Remove from favorites' : 'Add to favorites'
+                }
               >
                 <Heart size={24} fill={isFavorited ? 'currentColor' : 'none'} />
               </button>
@@ -154,6 +158,7 @@ export function BeatGridCard({
                     ? 'bg-accent-purple text-white'
                     : 'bg-white text-black'
                 )}
+                aria-label={isPlaying ? 'Stop' : 'Play'}
               >
                 {isPlaying ? (
                   <Square size={32} fill="currentColor" />
@@ -171,6 +176,7 @@ export function BeatGridCard({
                   }}
                   className="flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all hover:scale-110 active:scale-95 bg-black/60 border border-accent-purple/40 text-accent-purple hover:bg-accent-purple/20 backdrop-blur-md shadow-[0_0_20px_rgba(125,122,255,0.2)]"
                   title="Use this track"
+                  aria-label="Use this track"
                 >
                   <ArrowRight size={28} strokeWidth={3} />
                 </button>
@@ -216,6 +222,7 @@ export function BeatGridCard({
                 }}
                 className="group/del p-2 text-text-tertiary hover:text-red-400 transition-colors"
                 title="Delete Beat"
+                aria-label="Delete Beat"
               >
                 <Trash2 size={16} />
               </button>

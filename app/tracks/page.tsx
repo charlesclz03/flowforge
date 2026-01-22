@@ -251,7 +251,7 @@ export default function TracksPage() {
               onClick={() => handleTabChange('public')}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center ${
                 activeTab === 'public'
-                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_15px_rgba(125,122,255,0.15)]'
+                  ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
                   : 'text-text-tertiary hover:text-white'
               }`}
             >
@@ -261,7 +261,7 @@ export default function TracksPage() {
               onClick={() => handleTabChange('mine')}
               className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeTab === 'mine'
-                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_15px_rgba(125,122,255,0.15)]'
+                  ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
                   : 'text-text-tertiary hover:text-white'
               }`}
             >
@@ -281,7 +281,7 @@ export default function TracksPage() {
           )}
           <button
             onClick={handleNewBeatClick}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-purple/10 text-accent-purple border border-accent-purple/20 rounded-lg font-medium text-sm hover:bg-accent-purple/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.15)]"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-purple text-white border border-accent-purple rounded-lg font-medium text-sm hover:bg-accent-purple/90 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.3)]"
           >
             {isPro ? <Plus size={16} /> : <Lock size={16} />}
             <span>New Beat</span>
@@ -360,9 +360,9 @@ export default function TracksPage() {
             <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
               <Music size={32} />
             </div>
-            <p className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-white">
               Capture your own sound.
-            </p>
+            </h2>
             <p className="max-w-xs mx-auto text-sm">
               Upload local tracks to practice rap improvisation offline. Build
               your personal library and flow to your own instrumentals,
