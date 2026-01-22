@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { AnimatePresence, motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
 
@@ -15,14 +16,45 @@ import { useSound } from '@/hooks/useSound'
 import { useOptimisticAction } from '@/hooks/useOptimisticAction'
 import { usePracticeSession } from '@/contexts/SessionContext'
 
-import { GuestLoginModal } from '@/components/molecules/auth/GuestLoginModal'
-import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
-import SessionSummaryModal from '@/components/molecules/practice/SessionSummaryModal'
+const GuestLoginModal = dynamic(
+  () =>
+    import('@/components/molecules/auth/GuestLoginModal').then(
+      (mod) => mod.GuestLoginModal
+    ),
+  { ssr: false }
+)
+const PremiumModal = dynamic(
+  () =>
+    import('@/components/molecules/monetization/PremiumModal').then(
+      (mod) => mod.PremiumModal
+    ),
+  { ssr: false }
+)
+const SessionSummaryModal = dynamic(
+  () => import('@/components/molecules/practice/SessionSummaryModal'),
+  { ssr: false }
+)
+const RateAppModal = dynamic(
+  () =>
+    import('@/components/organisms/feedback/RateAppModal').then(
+      (mod) => mod.RateAppModal
+    ),
+  { ssr: false }
+)
+const PracticeControls = dynamic(
+  () => import('@/components/organisms/practice/PracticeControls'),
+  {
+    loading: () => (
+      <div className="flex flex-col items-center justify-center space-y-4 py-8">
+        <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
+      </div>
+    ),
+    ssr: false,
+  }
+)
+
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { RateAppModal } from '@/components/organisms/feedback/RateAppModal'
-
-import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { Button } from '@/components/atoms/Button'
 import { Modal } from '@/components/atoms/Modal'
 
@@ -710,12 +742,6 @@ export default function PracticePage() {
       }
     }
     initSession()
-    // TTS Warmup
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      const u = new SpeechSynthesisUtterance('')
-      u.volume = 0
-      window.speechSynthesis.speak(u)
-    }
   }, [difficulty, handleError])
 
   // TTS Voice
