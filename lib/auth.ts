@@ -15,6 +15,83 @@ export const authOptions: NextAuthOptions = {
     signIn: '/',
     error: '/',
   },
+  events: {
+    async createUser({ user }) {
+      // @ts-expect-error - username is a custom field extended in Prisma adapter
+      if (user.email && !user.username) {
+        // Generate a username from the email slug
+        let baseUsername = user.email.split('@')[0].toLowerCase()
+        // Sanitize: allow only alphanumeric, underscores, and hyphens
+        baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
+
+        // Ensure uniqueness (simple retry mechanism)
+        let uniqueUsername = baseUsername
+        let counter = 1
+
+        while (true) {
+          const existing = await prisma.user.findUnique({
+            where: { username: uniqueUsername },
+          })
+          if (!existing) break
+
+          uniqueUsername = `${baseUsername}${counter}`
+          counter++
+        }
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { username: uniqueUsername },
+        })
+      }
+    },
+    async signIn({ user }) {
+      if (!user.email) return
+
+      // SUPERADMIN ENFORCEMENT
+      if (user.email === 'charles.cluzeaud@gmail.com') {
+        // @ts-expect-error - username is a custom field extended in Prisma adapter
+        if (user.username !== 'Admin1') {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { username: 'Admin1' },
+          })
+        }
+      } else if (user.email === 'triplyricist@gmail.com') {
+        // @ts-expect-error - username is a custom field extended in Prisma adapter
+        if (user.username !== 'Admin2') {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { username: 'Admin2' },
+          })
+        }
+      } else {
+        // GENERAL BACKFILL for legacy users
+        // @ts-expect-error - username is a custom field
+        if (!user.username) {
+          let baseUsername = user.email.split('@')[0].toLowerCase()
+          baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
+
+          let uniqueUsername = baseUsername
+          let counter = 1
+
+          while (true) {
+            const existing = await prisma.user.findUnique({
+              where: { username: uniqueUsername },
+            })
+            if (!existing) break
+
+            uniqueUsername = `${baseUsername}${counter}`
+            counter++
+          }
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { username: uniqueUsername },
+          })
+        }
+      }
+    },
+  },
   callbacks: {
     async session({ session, user }) {
       if (session.user) {

@@ -11,6 +11,7 @@ import {
 } from '@/components/atoms/Tabs'
 import { FreestyleSession, Beat } from '@prisma/client'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -32,15 +33,28 @@ interface ProfilePageProps {
 }
 
 async function getUser(username: string) {
-  // Try to find by ID first (primary method for now) or username
+  // Check if input is a valid UUID to prevent "invalid input syntax" errors
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      username
+    )
+
+  const orConditions: Prisma.UserWhereInput[] = [
+    { name: { equals: username, mode: 'insensitive' } },
+    { username: { equals: username, mode: 'insensitive' } },
+  ]
+
+  // Only check ID if it's a valid UUID
+  if (isUuid) {
+    orConditions.push({ id: username })
+  }
+
+  const whereClause: Prisma.UserWhereInput = {
+    OR: orConditions,
+  }
+
   const user = await prisma.user.findFirst({
-    where: {
-      OR: [
-        { id: username },
-        { name: { equals: username, mode: 'insensitive' } },
-        { username: { equals: username, mode: 'insensitive' } },
-      ],
-    },
+    where: whereClause,
     include: {
       _count: {
         select: {

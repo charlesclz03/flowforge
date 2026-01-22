@@ -24,7 +24,7 @@ export function EditProfileDialog({
   user,
   onSuccess,
 }: EditProfileDialogProps) {
-  const [username, setUsername] = useState(user.username || '')
+  // Username is locked, so we don't manage it in state
   const [bio, setBio] = useState(user.bio || '')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(
@@ -50,7 +50,7 @@ export function EditProfileDialog({
 
     try {
       const formData = new FormData()
-      formData.append('username', username)
+      // Username is excluded from updates
       formData.append('bio', bio)
       if (avatarFile) {
         formData.append('image', avatarFile)
@@ -94,7 +94,7 @@ export function EditProfileDialog({
               />
             ) : (
               <div className="w-full h-full bg-accent-purple/20 flex items-center justify-center text-accent-purple font-bold text-2xl group-hover:bg-accent-purple/30 transition-colors">
-                {username?.[0]?.toUpperCase() || 'U'}
+                {user.username?.[0]?.toUpperCase() || 'U'}
               </div>
             )}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
@@ -117,13 +117,9 @@ export function EditProfileDialog({
             <label className="text-sm font-medium text-text-secondary">
               Username
             </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-background/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-purple/50 transition-colors"
-              placeholder="Enter username"
-            />
+            <div className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-text-tertiary cursor-not-allowed">
+              @{user.username || 'No username set'}
+            </div>
           </div>
 
           <div className="space-y-2">

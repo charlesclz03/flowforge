@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.57',
+    date: '2026-01-22',
+    title: 'Identity & Access',
+    codename: 'Identity Fix',
+    description: 'Critical fixes for user profiles, guest access, and authentication security.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Profile Page**: Fixed Server Error on `/u/Admin` (UUID Logic).',
+          ' **Guest Access**: Audio previews now play correctly (Storage Policy Update).',
+          ' **Auth**: Enforced unique usernames and Admin handles.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.56',
     date: '2026-01-21',
     title: 'Storage Clarity Update',
