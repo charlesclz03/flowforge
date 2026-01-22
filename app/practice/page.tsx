@@ -41,17 +41,7 @@ const RateAppModal = dynamic(
     ),
   { ssr: false }
 )
-const PracticeControls = dynamic(
-  () => import('@/components/organisms/practice/PracticeControls'),
-  {
-    loading: () => (
-      <div className="flex flex-col items-center justify-center space-y-4 py-8">
-        <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
-      </div>
-    ),
-    ssr: false,
-  }
-)
+import PracticeControls from '@/components/organisms/practice/PracticeControls'
 
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
