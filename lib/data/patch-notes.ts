@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.62',
+    date: '2026-01-22',
+    title: 'The Accessibility Polish Update 🏆',
+    codename: 'Accessibility Polish',
+    description:
+      'We achieved a perfect 100/100 Accessibility score! This update brings crystal clear text contrast, massive performance gains by deferring audio engine startup, and a snappier feel thanks to lazy-loading.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **100% Accessibility**: Fixed color contrast on beat metadata text to ensure it is readable for everyone.',
+          ' **Performance Boost**: Deferred the audio engine warmup to when you actually start a session, eliminating page load lag.',
+          ' **Lazy Loading**: Heavy menus like the Session Summary and Guest Login now load only when needed, speeding up the app.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.58',
     date: '2026-01-22',
     title: 'The Golden Polish Update 🏆',
