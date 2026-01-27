@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.74',
+    date: '2026-01-27',
+    title: 'Stripe Checkout Fix',
+    codename: 'Stripe Fix',
+    description:
+      'Fixed Stripe integration to enable the subscription checkout flow.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Stripe API Fix**: Corrected invalid API version that was blocking checkout.',
+          '**Environment Cleanup**: Resolved trailing newline issues in Vercel env vars.',
+          '**Error Logging**: Added detailed error messages for debugging.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.73',
     date: '2026-01-27',
     title: 'Feature Labels Update',
