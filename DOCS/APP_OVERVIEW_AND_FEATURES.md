@@ -1,7 +1,7 @@
 # FreeStyla - Application Overview & Feature Guide
 
 **Date**: January 10, 2026  
-**Version**: 1.9.2 (Practice Player Polish)
+**Version**: 0.9.68 (Launch Ready)
 
 ---
 

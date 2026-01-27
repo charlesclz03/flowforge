@@ -86,10 +86,14 @@ export class SeamlessLooper {
     return source
   }
 
+  // Timeout ID for proactive scheduling
+  private scheduleTimeoutId: ReturnType<typeof setTimeout> | null = null
+
   /**
    * Schedule the next loop iteration
-   * This is the key to seamless looping - we schedule the next source to start
-   * exactly when the current one ends
+   * CRITICAL FIX: Pre-schedule 200ms before the current buffer ends using setTimeout.
+   * This avoids gaps caused by JavaScript's onended callback firing late.
+   * Web Audio API handles precise timing internally once scheduled.
    */
   private scheduleNextLoop(startAt: number): void {
     if (
@@ -104,23 +108,39 @@ export class SeamlessLooper {
     this.nextSource = this.createSource()
     if (!this.nextSource) return
 
-    // Schedule to start exactly when current ends
+    // Schedule to start exactly when current ends (Web Audio handles precision)
     this.nextSource.start(startAt)
 
-    // When this source ends, schedule the next one
-    this.nextSource.onended = () => {
-      if (this.isPlaying && !this.isDestroyed) {
-        // Rotate: next becomes current
-        this.currentSource = this.nextSource
-        this.nextSource = null
+    this.log('Scheduled next loop at:', startAt.toFixed(3))
 
-        // Schedule the next iteration
-        const nextStartTime = startAt + this.audioBuffer!.duration
-        this.scheduleNextLoop(nextStartTime)
-      }
+    // Calculate time until we need to schedule the NEXT iteration
+    // We schedule 200ms before the just-scheduled source ends
+    const bufferDuration = this.audioBuffer.duration
+    const nextStartTime = startAt + bufferDuration
+    const scheduleAheadMs = 200 // Schedule 200ms before needed
+
+    const msUntilNextSchedule =
+      (nextStartTime - this.audioContext.currentTime) * 1000 - scheduleAheadMs
+
+    // Clear any existing timeout
+    if (this.scheduleTimeoutId) {
+      clearTimeout(this.scheduleTimeoutId)
     }
 
-    this.log('Scheduled next loop at:', startAt.toFixed(3))
+    // Proactively schedule the next loop before the current one ends
+    this.scheduleTimeoutId = setTimeout(
+      () => {
+        if (this.isPlaying && !this.isDestroyed) {
+          // Rotate sources
+          this.currentSource = this.nextSource
+          this.nextSource = null
+
+          // Schedule the next iteration
+          this.scheduleNextLoop(nextStartTime)
+        }
+      },
+      Math.max(0, msUntilNextSchedule)
+    )
   }
 
   /**
@@ -159,16 +179,6 @@ export class SeamlessLooper {
     const remainingDuration = this.audioBuffer.duration - offset
     const nextLoopTime = now + remainingDuration
 
-    this.currentSource.onended = () => {
-      if (this.isPlaying && !this.isDestroyed) {
-        this.currentSource = this.nextSource
-        this.nextSource = null
-
-        const nextStartTime = nextLoopTime + this.audioBuffer!.duration
-        this.scheduleNextLoop(nextStartTime)
-      }
-    }
-
     // Pre-schedule the next loop
     this.scheduleNextLoop(nextLoopTime)
 
@@ -182,6 +192,12 @@ export class SeamlessLooper {
     if (!this.audioContext || !this.isPlaying) return
 
     this.isPlaying = false
+
+    // Clear the scheduling timeout
+    if (this.scheduleTimeoutId) {
+      clearTimeout(this.scheduleTimeoutId)
+      this.scheduleTimeoutId = null
+    }
 
     // Calculate current position
     const now = this.audioContext.currentTime
@@ -302,6 +318,12 @@ export class SeamlessLooper {
     this.isDestroyed = true
     this.isPlaying = false
     this.log('Destroying looper')
+
+    // Clear the scheduling timeout
+    if (this.scheduleTimeoutId) {
+      clearTimeout(this.scheduleTimeoutId)
+      this.scheduleTimeoutId = null
+    }
 
     this.stopSources()
 

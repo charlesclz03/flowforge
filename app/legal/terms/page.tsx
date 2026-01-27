@@ -141,6 +141,32 @@ export default function TermsPage() {
               Violation of this license may result in immediate account
               termination and legal action for copyright infringement.
             </p>
+
+            <h3 className="text-lg font-semibold text-white mt-4 mb-2">
+              4.4 Trademark and Identity
+            </h3>
+            <p>
+              &quot;FREESTYLA&quot; is a registered label and trademark utilized
+              by the Company. Unauthorized use of the FreeStyla brand, logo, or
+              associated label identity without express written permission is
+              strictly prohibited.
+            </p>
+
+            <h3 className="text-lg font-semibold text-white mt-4 mb-2">
+              4.5 Copyright Monitoring
+            </h3>
+            <p>
+              To protect the integrity of our System Beats and the rights of our
+              users, we utilize <strong>Identifyy</strong> (and other content ID
+              systems) to monitor content usage across digital platforms.
+            </p>
+            <p className="mt-2">
+              We reserve the right to claim monetization on videos or content
+              that utilize our System Beats outside of the permitted license
+              terms (e.g., unauthorized commercial use). While your original
+              vocal performances remain your property, the underlying beat
+              composition remains the exclusive property of FreeStyla/FlowForge.
+            </p>
           </section>
 
           <section>

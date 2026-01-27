@@ -19,15 +19,20 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
 
 4.  **Asset Verification**
     - Verify `public/favicon.ico`, `public/icon-192x192.png`, `public/icon-512x512.png`.
+    - **TWA Check**: Verify `public/.well-known/assetlinks.json` exists and is valid for Android App Links.
 
-5.  **Documentation Synchronization**
+5.  **Security Audit**
+    - Run `npm audit` to check for known vulnerabilities.
+    - **ACTION**: If critical or high severity vulnerabilities are found, run `npm audit fix` or manually update affected packages before proceeding.
+
+6.  **Documentation Synchronization**
     - Read `package.json` version.
     - **Update**: `lib/data/patch-notes.ts` (Ensure entry exists).
     - **Update**: `DOCS/project/PATCH_NOTES_MASTER.md`.
     - **Update**: `DOCS/project/PROJECT_STATUS.md` (Update "Last Updated" date).
     - **Update**: `components/organisms/settings/SettingsList.tsx` (Update displayed version).
 
-6.  **Deploy (Push to Vercel)**
+7.  **Deploy (Push to Vercel)**
     - Run `git add .`
     - Run `git commit -m "chore(release): vX.X.X - <Codename>"` (Use the version and codename from patch notes).
     - Run `git push origin main`.

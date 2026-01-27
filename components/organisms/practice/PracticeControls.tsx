@@ -24,6 +24,8 @@ const AudioVisualizer = dynamic(
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
+import * as Sentry from '@sentry/nextjs'
+import { useEffect } from 'react'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -100,6 +102,13 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
   // State for pause modal
   const [showPauseModal, setShowPauseModal] = useState(false)
+
+  // Sentry Error Logging
+  useEffect(() => {
+    if (error) {
+      Sentry.captureMessage(`Practice Session Error: ${error}`, 'error')
+    }
+  }, [error])
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || !isFinite(seconds)) {
@@ -263,7 +272,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             onClick={cycleDifficulty}
             disabled={!handleDifficultyChange}
             className={cn(
-              'flex-1 h-10 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+              'flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
               difficultyMeta.classes,
               !handleDifficultyChange && 'cursor-default'
             )}
@@ -275,7 +284,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
           </button>
 
           {/* Mode Pill */}
-          <div className="flex-[1.5] h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
+          <div className="flex-[1.5] h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
             <User size={14} className="text-white/60" />
             <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
               {mode}
@@ -287,7 +296,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             onClick={cycleFrequency}
             disabled={!handleFrequencyChange}
             className={cn(
-              'flex-1 h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+              'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
               !handleFrequencyChange && 'cursor-default opacity-50'
             )}
           >
@@ -331,7 +340,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       e.stopPropagation()
                       handleRestart()
                     }}
-                    className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
                     title="Restart Session"
                     aria-label="Restart Session"
                   >
@@ -743,7 +752,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                         setShowPauseModal(true)
                       }
                     }}
-                    className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
                     title="Pause Session"
                     aria-label="Pause Session"
                   >

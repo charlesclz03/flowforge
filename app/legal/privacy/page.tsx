@@ -126,9 +126,12 @@ export default function PrivacyPage() {
                 data.
               </li>
               <li>
-                <strong>Deletion:</strong> Request deletion of your account and
-                all associated data. You can perform this action directly in the
-                app via the Profile Settings page.
+                <strong>Deletion:</strong> Request permanent deletion of your
+                account and all associated data, including audio recordings,
+                session metadata, and profile information. You can perform this
+                action directly in the app via the Profile Settings page. Please
+                note that some anonymized, aggregated usage data may be retained
+                for analytical purposes.
               </li>
               <li>
                 <strong>Portability:</strong> Request to receive your data in a
@@ -211,7 +214,28 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-xl font-bold text-white mb-4">
-              11. Contact Us
+              11. App Permissions
+            </h2>
+            <p>
+              To provide the full FreeStyla experience, we request the following
+              permissions on your device:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 mt-2">
+              <li>
+                <strong>Microphone:</strong> Required to record your freestyle
+                sessions. Audio is processed locally and only uploaded to our
+                servers if you explicitly choose to save the recording.
+              </li>
+              <li>
+                <strong>Storage:</strong> Required to save temporary audio files
+                and cache beat assets for offline playback.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4">
+              12. Contact Us
             </h2>
             <p>
               If you have any questions about this Privacy Policy or our data

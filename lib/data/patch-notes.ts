@@ -21,9 +21,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.69',
+    date: '2026-01-27',
+    title: 'Security Hardening',
+    codename: 'Fort Knox',
+    description:
+      'Implemented industry-standard HTTP security headers, improved legal compliance, and enhanced mobile usability.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          ' **Security Headers**: Added CSP, HSTS, X-Frame-Options, and Permissions-Policy.',
+          ' **Legal Upgrade**: Terms now include Trademark and Copyright Monitoring clauses.',
+          ' **Privacy Update**: Added App Permissions section for Play Store compliance.',
+          ' **Mobile UX**: Increased touch targets to 48px minimum.',
+          ' **Monitoring**: Added Sentry tracking for playback errors.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.68',
     date: '2026-01-27',
-    title: 'Launch Readiness 🚀',
+    title: 'Launch Readiness',
     codename: 'Launch Ready',
     description:
       'Final polish for the public launch. Includes a massive SEO overhaul, smoother loading animations, and enhanced offline support.',
