@@ -32,7 +32,9 @@ interface ProfilePageProps {
   }
 }
 
-async function getUser(username: string) {
+import { cache } from 'react'
+
+const getUser = cache(async (username: string) => {
   // Check if input is a valid UUID to prevent "invalid input syntax" errors
   const isUuid =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -73,7 +75,7 @@ async function getUser(username: string) {
   })
 
   return user
-}
+})
 
 export async function generateMetadata({ params }: ProfilePageProps) {
   const user = await getUser(params.username)
@@ -141,6 +143,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             fallback={user.name?.[0]?.toUpperCase() || 'U'}
             size="xl"
             className="border-4 border-background-elevated shadow-xl"
+            priority={true}
           />
 
           <div className="flex-1 text-center md:text-left space-y-2">

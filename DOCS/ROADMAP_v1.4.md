@@ -1,21 +1,22 @@
 # FreeStyla Roadmap v1.4 - "The Habit Update"
 
-**Status**: Planned
+**Status**: Partially Complete
 **Focus**: Retention & Gamification
 
 This document outlines features deferred from v1.3.1 to maintain production stability, as well as new planned enhancements.
 
-##  Deferred Features (From v1.0 Spec)
+##  Implemented Features ✅
 
-These items were in the original "Bible" but not implemented in the v1.3.1 Universal Gateway release.
+### 1. Daily Streak System ✅
 
-### 1. Daily Streak System
+- **Status**: ✅ IMPLEMENTED
+- **Implementation**:
+  - `StreakSystem` class in `lib/gamification/streak.ts`
+  - `DailyStreakWidget` component with fire icon
+  - `currentStreak`, `longestStreak`, `lastPracticeDate` in User model
+  - Header display when streak > 0
 
-- **Missing**: Backend logic to track consecutive practice days.
-- **Requirements**:
-  - Add `currentStreak`, `longestStreak`, `lastPracticeDate` to `User` model.
-  - UI: "Fire" icon with counter in Header.
-  - Logic: Reset streak if `lastPracticeDate` < yesterday.
+##  Deferred Features (v1.4+)
 
 ### 2. "Panic Button" (Skip Word)
 

@@ -1,8 +1,8 @@
 # Project Status: Active
 
 **Last Updated:** 2026-01-27
-**Current Version:** v0.9.74
-**Codename:** Stripe Fix
+**Current Version:** v0.9.75
+**Codename:** Sonic Boost
 
 ## Recent Achievements
 - **Stripe Checkout Working**: Fixed API version and environment variable issues to enable subscriptions.
@@ -18,6 +18,7 @@
 ## Version History (Recent)
 | Version | Codename | Date | Summary |
 |---------|----------|------|---------|
+| v0.9.75 | Sonic Boost | 2026-01-27 | Performance & Security Hardening |
 | v0.9.74 | Stripe Fix | 2026-01-27 | Fixed Stripe API version and env vars |
 | v0.9.73 | Feature Labels | 2026-01-27 | Corrected subscription feature labels |
 | v0.9.72 | Price Fix | 2026-01-27 | Fixed €3.99→€4.99 price display |

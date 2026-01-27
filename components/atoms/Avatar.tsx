@@ -8,6 +8,7 @@ interface AvatarProps {
   fallback?: string
   className?: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  priority?: boolean
 }
 
 export function Avatar({
@@ -16,6 +17,7 @@ export function Avatar({
   fallback = '?',
   className,
   size = 'md',
+  priority = false,
 }: AvatarProps) {
   const sizeClasses = {
     sm: 'h-8 w-8 text-xs',
@@ -33,7 +35,13 @@ export function Avatar({
       )}
     >
       {src ? (
-        <Image src={src} alt={alt} fill className="object-cover" />
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          priority={priority}
+        />
       ) : (
         <span>{fallback}</span>
       )}

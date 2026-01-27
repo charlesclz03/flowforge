@@ -1,4 +1,4 @@
-# Stripe Launch Checklist: v1.0 Production Readiness
+# Stripe Launch Checklist: v0.9.74 Production Readiness
 
 This checklist covers the final steps required to transition your Stripe setup from "Development/Testing" to "Live Production" for FlowForge.
 

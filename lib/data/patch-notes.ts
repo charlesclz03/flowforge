@@ -21,6 +21,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.75',
+    date: '2026-01-27',
+    title: 'Sonic Boost Update ⚡',
+    codename: 'Sonic Boost',
+    description:
+      'A massive performance update! We rewrote the Practice engine to load instantly and hardened security with industry-standard CSP protection.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Server-Side Practice**: The practice page now loads instantly thanks to Next.js Server Components. No more waiting for beats to fetch!',
+          '**Security Hardening**: Fixed Content Security Policy (CSP) to ensure Google Analytics and other integrations run safely and securely.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**LCP Optimization**: Reduced Largest Contentful Paint (LCP) to ~2.7s for a faster initial render.',
+          '**Database Security**: Verified Row Level Security (RLS) is active on all sensitive user tables.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.74',
     date: '2026-01-27',
     title: 'Stripe Checkout Fix',

@@ -36,7 +36,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https://*.supabase.co https://lh3.googleusercontent.com https://storage.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://api.stripe.com https://*.sentry.io https://www.googletagmanager.com https://www.google-analytics.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://api.stripe.com https://*.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com",
       "frame-src 'self' https://accounts.google.com https://js.stripe.com https://www.youtube.com",
       "media-src 'self' blob: https://*.supabase.co",
       "worker-src 'self' blob:",

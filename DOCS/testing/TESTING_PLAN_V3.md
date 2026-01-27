@@ -1,4 +1,4 @@
-#  FreeStyla v1.0 (Candidate) - Professional QA Testing Plan V3
+#  FreeStyla v0.9.74 (Release Candidate) - Professional QA Testing Plan V3
 
 > [!IMPORTANT]
 > **Testing Environment Warning**

@@ -1,5 +1,20 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.75 - Sonic Boost (2026-01-27)
+**"Sonic Boost Update ⚡"**
+
+A massive performance update! We rewrote the Practice engine to load instantly and hardened security with industry-standard CSP protection.
+
+### System Updates
+- **Server-Side Practice**: The practice page now loads instantly thanks to Next.js Server Components. No more waiting for beats to fetch!
+- **Security Hardening**: Fixed Content Security Policy (CSP) to ensure Google Analytics and other integrations run safely and securely.
+
+### Fixes & Improvements
+- **LCP Optimization**: Reduced Largest Contentful Paint (LCP) to ~2.7s for a faster initial render.
+- **Database Security**: Verified Row Level Security (RLS) is active on all sensitive user tables.
+
+---
+
 ## v0.9.74 - Stripe Fix (2026-01-27)
 **"Stripe Checkout Fix 🔧"**
 

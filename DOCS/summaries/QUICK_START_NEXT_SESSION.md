@@ -1,14 +1,14 @@
 # Quick Start - Next Session
 
-**Last Updated**: December 18, 2025  
-**Project Status**:  Launch Ready (v0.9.68)
+**Last Updated**: January 27, 2026  
+**Project Status**: ✅ Launch Ready (v0.9.74)
 
 ---
 
 ##  Instant Start
 
 ```bash
-cd "c:\Projects\Freestyla - Freestyle"
+cd "c:\Projects\FlowForge - Freestyle"
 git pull origin main
 npm install
 npx prisma generate
@@ -23,9 +23,9 @@ Open: http://localhost:3000
 
 **Freestyla is COMPLETE.** All features from "The Bible" are implemented.
 
-- **Version**: v0.9.68-beta
+- **Version**: v0.9.74 (Stripe Fix)
 - **Status**: 100% Certified
-- **Live URL**: https://flowforge-pi.vercel.app
+- **Live URL**: https://freestyla.app
 
 ---
 

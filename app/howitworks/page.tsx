@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: 'The Blueprint',
 }
 
+export const revalidate = 3600 // Cache for 1 hour
+
 export default async function HowItWorksPage() {
   // Fetch beat count, defaulting to 10 if error
   const beatCount = await prisma.beat.count().catch(() => 10)
