@@ -934,8 +934,28 @@ export default function PracticePage() {
         return
       }
 
-      // Increment monotonic session time
-      sessionTimeRef.current += delta
+      // Sync Logic:
+      // If playing, strictly sync to the Audio Element time to prevent drift.
+      // If recording/practice (no beat), fall back to monotonic delta.
+      if (beatPlayer.isPlaying) {
+        // High-precision sync
+        const audioTime = beatPlayer.getPreciseTime()
+        // If the audio time is valid and moving, use it.
+        // We add a tiny epsilon check to ensure we don't jump back if audio loops/buffers weirdly,
+        // unless it's a true loop (detected by time drop).
+        if (sessionTimeRef.current > audioTime + 1) {
+          // Detected Loop or Seek? Let it snap.
+          sessionTimeRef.current = audioTime
+        } else {
+          // Normal playback: Snap to audio time
+          // We can use a simple smoothing if needed, but direct sync is best for rhythm accuracy.
+          sessionTimeRef.current = audioTime
+        }
+      } else {
+        // Fallback: Increment monotonic session time (Recording/Practice Mode)
+        sessionTimeRef.current += delta
+      }
+
       const sessionTime = sessionTimeRef.current
       setMonotonicTime(sessionTime)
 

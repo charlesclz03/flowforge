@@ -18,6 +18,7 @@ import {
   Crown,
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
@@ -125,9 +126,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           <div className="relative z-10 flex items-center gap-4">
             <div className="h-14 w-14 rounded-full bg-accent-purple flex items-center justify-center border-2 border-white/20 shadow-lg shrink-0">
               {session?.user?.image ? (
-                <img
+                <Image
                   src={session.user.image}
                   alt={session.user.name || 'User'}
+                  width={56}
+                  height={56}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (

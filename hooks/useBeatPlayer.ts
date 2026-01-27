@@ -154,8 +154,11 @@ export function useBeatPlayer() {
     () => ({
       // State
       isPlaying,
-      currentTime: timeRef.current, // Keep ref access cheap
-      getPreciseTime: () => timeRef.current,
+      currentTime: timeRef.current, // Keep ref access for legacy props
+      getPreciseTime: () => {
+        // Query the actual audio element for high-precision time (prevents drift)
+        return playerRef.current?.getState().currentTime || timeRef.current
+      },
       duration,
       isLoading,
       error,

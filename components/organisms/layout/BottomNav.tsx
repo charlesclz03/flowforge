@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 
 export function BottomNav() {
   const pathname = usePathname()
-  const { status } = useSession()
+  const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
   const { bump } = useHaptics()
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
@@ -60,9 +60,10 @@ export function BottomNav() {
     {
       name: 'Profile',
       // If we have a username, go direct. Otherwise fallback to the redirector.
-      href: isAuthenticated && session?.user?.username 
-        ? `/u/${session.user.username}` 
-        : '/profile',
+      href:
+        isAuthenticated && session?.user?.username
+          ? `/u/${session.user.username}`
+          : '/profile',
       icon: User,
       match: (path: string) =>
         path.startsWith('/profile') || path.startsWith('/u/'),
