@@ -72,6 +72,12 @@ export const RecordingCard = memo(function RecordingCard({
   // Use SeamlessLooper for gapless beat looping
   const beatLooperRef = useRef<SeamlessLooper | null>(null)
 
+  // Ref to track playingId without triggering audio re-creation
+  const playingIdRef = useRef(playingId)
+  useEffect(() => {
+    playingIdRef.current = playingId
+  }, [playingId])
+
   useEffect(() => {
     let createdAudio: HTMLAudioElement | null = null
     let beatLooper: SeamlessLooper | null = null
@@ -120,7 +126,7 @@ export const RecordingCard = memo(function RecordingCard({
 
       createdAudio.onerror = (e) => {
         // Only show error if we were actually trying to play
-        if (playingId === recording.id) {
+        if (playingIdRef.current === recording.id) {
           console.error('Playback error:', e)
           setPlaybackError('Link expired. Click refreshing...')
           // Auto-refresh to get new link
@@ -149,13 +155,15 @@ export const RecordingCard = memo(function RecordingCard({
         beatLooper.destroy()
       }
     }
-  }, [recording.storageUrl, recording.beat.storageUrl, recording.id])
+  }, [recording.storageUrl, recording.beat.storageUrl, recording.id, router])
 
   // Effect: Sync local state with global playingId
   useEffect(() => {
     if (playingId !== undefined) {
       if (playingId === recording.id) {
         // We SHOULD be playing - manual click starts playback, handled in click handler
+        // But if we wanted to auto-play when external state says so, we'd do it here.
+        // Currently handlePlay triggers the actual .play() call.
       } else {
         // We should NOT be playing
         if (isPlaying) {

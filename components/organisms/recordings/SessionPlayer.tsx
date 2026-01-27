@@ -338,7 +338,7 @@ export const SessionPlayer = forwardRef<
       }
     }
 
-    const resetPlayback = () => {
+    const resetPlayback = useCallback(() => {
       if (audioRef.current) {
         audioRef.current.currentTime = 0
         setCurrentTime(0)
@@ -347,7 +347,7 @@ export const SessionPlayer = forwardRef<
         // Reset to the original offset position
         beatLooperRef.current.seek((beatOffsetMs || 0) / 1000)
       }
-    }
+    }, [beatOffsetMs])
 
     // Keyboard Shortcuts - MOVED UP before early returns
     useEffect(() => {
@@ -378,7 +378,7 @@ export const SessionPlayer = forwardRef<
 
       window.addEventListener('keydown', handleKeyDown)
       return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [togglePlay, audioUrl])
+    }, [togglePlay, audioUrl, resetPlayback])
 
     if (!audioUrl) {
       return (

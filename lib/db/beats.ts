@@ -72,6 +72,7 @@ export async function getBeats(
 
     const beats = await prisma.beat.findMany({
       where,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] as any,
     })
 
