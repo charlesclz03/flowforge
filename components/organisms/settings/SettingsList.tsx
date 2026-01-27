@@ -486,9 +486,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             Sign In
           </button>
         )}
-        <p className="text-zinc-600 text-[10px] font-medium tracking-widest uppercase">
-          FreeStyla v0.9.75 (Sonic Boost)
-        </p>
+        <div className="mt-8 text-center">
+          <p className="text-xs text-text-tertiary">
+            FreeStyla v0.9.76 (Conversion Flow)
+          </p>
+        </div>
       </div>
       <SupportModal
         isOpen={isSupportOpen}

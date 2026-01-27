@@ -18,6 +18,7 @@ interface AppHeaderProps {
   customTitle?: string
   customSubtitle?: string
   hide?: boolean
+  backPath?: string
 }
 
 export function AppHeader({
@@ -28,6 +29,7 @@ export function AppHeader({
   customSubtitle,
   onBack,
   hide = false,
+  backPath,
 }: AppHeaderProps) {
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -39,6 +41,8 @@ export function AppHeader({
   const handleBack = () => {
     if (onBack) {
       onBack()
+    } else if (backPath) {
+      router.push(backPath)
     } else {
       router.back()
     }

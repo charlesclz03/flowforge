@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.76',
+    date: '2026-01-27',
+    title: 'Ad Conversion Update 🚀',
+    codename: 'Conversion Flow',
+    description:
+      'We launched a dedicated download landing page and a celebration screen for new Pro members to optimize our ad campaigns.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          '**New /download Page**: A smart landing page that detects your device (Android/iOS/Desktop) and serves the perfect download link.',
+          '**Order Confirmation**: A celebratory "You are now a Pro" page with confetti and feature recaps after successful payment.',
+          '**Homepage CTA**: Added a "Get the App" button to the main hero section.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.75',
     date: '2026-01-27',
     title: 'Sonic Boost Update ⚡',

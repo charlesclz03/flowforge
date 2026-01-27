@@ -147,7 +147,7 @@ export function HowItWorksContent({
       </div>
 
       {/* CTA Button */}
-      <div className="flex justify-center pt-2">
+      <div className="flex justify-center pt-2 space-x-4">
         <Button
           variant="primary"
           size="lg"
@@ -155,6 +155,14 @@ export function HowItWorksContent({
           onClick={handleStart}
         >
           Start
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          className="px-10 py-4 text-lg border-2 border-white/20 hover:bg-white/10 hover:border-white/40 transition-colors"
+          onClick={() => router.push('/download')}
+        >
+          Get the App
         </Button>
       </div>
 

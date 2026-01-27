@@ -1,6 +1,19 @@
 # PATCH NOTES MASTER FILE
 
-## v0.9.75 - Sonic Boost (2026-01-27)
+## v0.9.76 - Ad Conversion Update 🚀
+**Date:** 2026-01-27
+**Codename:** Conversion Flow
+
+We launched a dedicated download landing page and a celebration screen for new Pro members to optimize our ad campaigns.
+
+### New Features
+- **New /download Page**: A smart landing page that detects your device (Android/iOS/Desktop) and serves the perfect download link.
+- **Order Confirmation**: A celebratory "You are now a Pro" page with confetti and feature recaps after successful payment.
+- **Homepage CTA**: Added a "Get the App" button to the main hero section.
+
+---
+
+## v0.9.75 - Sonic Boost Update ⚡(2026-01-27)
 **"Sonic Boost Update ⚡"**
 
 A massive performance update! We rewrote the Practice engine to load instantly and hardened security with industry-standard CSP protection.

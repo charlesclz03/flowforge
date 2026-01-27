@@ -29,7 +29,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile?success=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/orderconfirmed?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
       customer_email: session.user.email!,
       client_reference_id: session.user.id,
