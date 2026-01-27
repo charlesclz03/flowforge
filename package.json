@@ -1,6 +1,6 @@
 {
   "name": "flowforge-freestyle",
-  "version": "0.9.71",
+  "version": "0.9.72",
   "private": true,
   "scripts": {
     "dev": "next dev",

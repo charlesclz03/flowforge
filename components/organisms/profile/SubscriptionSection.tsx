@@ -112,7 +112,7 @@ export function SubscriptionSection() {
                 </div>
                 <h3 className="text-lg font-medium text-white">Pro</h3>
                 <p className="mt-1 text-3xl font-light text-white">
-                  {billingInterval === 'monthly' ? '€3.99' : '€39.00'}
+                  {billingInterval === 'monthly' ? '€4.99' : '€49.00'}
                   <span className="text-base text-text-secondary">
                     /{billingInterval === 'monthly' ? 'mo' : 'yr'}
                   </span>

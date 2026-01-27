@@ -60,7 +60,7 @@ export function SubscriptionModal({
               <p className="text-text-secondary text-sm">Pay month-to-month</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-light text-text-primary">$4.99</div>
+              <div className="text-2xl font-light text-text-primary">€4.99</div>
               <div className="text-text-tertiary text-xs">/month</div>
             </div>
           </div>
@@ -84,7 +84,7 @@ export function SubscriptionModal({
             </div>
             <div className="text-right">
               <div className="text-2xl font-light text-text-primary">
-                $49.99
+                €49.00
               </div>
               <div className="text-text-tertiary text-xs">/year</div>
             </div>

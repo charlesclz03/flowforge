@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.72',
+    date: '2026-01-27',
+    title: 'Price Fix',
+    codename: 'Price Fix',
+    description:
+      'Corrected pricing display across all components to match Stripe configuration.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Price Sync**: Fixed €3.99 / €39 displaying instead of €4.99 / €49.',
+          '**Currency Alignment**: Converted remaining USD ($) prices to EUR (€).',
+          '**Affected Components**: SubscriptionSection, SubscriptionModal, LandingPricing.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.71',
     date: '2026-01-27',
     title: 'EUR Currency Update',

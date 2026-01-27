@@ -52,7 +52,7 @@ export function LandingPricing() {
           </div>
           <h3 className="text-2xl font-medium text-white">Premium</h3>
           <p className="mt-2 text-4xl font-light text-white">
-            $4.99<span className="text-lg text-text-secondary">/month</span>
+            €4.99<span className="text-lg text-text-secondary">/month</span>
           </p>
           <ul className="mt-6 space-y-3">
             {[
