@@ -1,8 +1,8 @@
 # Project Status: Active
 
 **Last Updated:** 2026-01-27
-**Current Version:** v0.9.63 (Release Candidate)
-**Codename:** Identity Restored
+**Current Version:** v0.9.64 (Hotfix)
+**Codename:** Crash Fix
 
 ## Recent Achievements
 - **Accessibility 100/100**: Fixed all contrast issues and maximized accessibility score.

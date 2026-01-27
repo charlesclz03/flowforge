@@ -119,7 +119,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <Container className="py-8 space-y-8">
-      <AppHeader showBackButton={true} onBack={() => {}} />
+      <AppHeader showBackButton={true} />
       {/* Profile Header */}
       <Card padding="lg" className="relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">

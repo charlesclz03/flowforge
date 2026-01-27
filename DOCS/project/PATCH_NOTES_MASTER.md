@@ -1,5 +1,15 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.64 - Crash Fix (2026-01-27)
+**"The Profile Hotfix 🔥"**
+
+We quickly squashed a bug that caused Public Profiles to crash. Visiting a user profile is now safe and smooth again!
+
+### Fixes & Improvements
+- **Crash Fix**: Resolved a Server Component error on the profile page caused by an illegal function prop. Simple fix, big impact.
+
+---
+
 ## v0.9.63 - Identity Restored (2026-01-27)
 **"The Public Profile Polish 👤"**
 

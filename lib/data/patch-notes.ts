@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.64',
+    date: '2026-01-27',
+    title: 'The Profile Hotfix 🔥',
+    codename: 'Crash Fix',
+    description:
+      'We quickly squashed a bug that caused Public Profiles to crash. Visiting a user profile is now safe and smooth again!',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Crash Fix**: Resolved a Server Component error on the profile page caused by an illegal function prop. Simple fix, big impact.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.63',
     date: '2026-01-27',
     title: 'The Public Profile Polish 👤',
