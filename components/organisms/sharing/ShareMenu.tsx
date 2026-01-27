@@ -81,6 +81,24 @@ export function ShareMenu({
     onClose()
   }
 
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title || 'FreeStyla',
+          text: text,
+          url: url,
+        })
+        onClose()
+      } catch (err) {
+        console.error('Error sharing:', err)
+      }
+    }
+  }
+
+  // Check if native share is available (client-side only)
+  const canNativeShare = typeof navigator !== 'undefined' && !!navigator.share
+
   return (
     <>
       {/* Backdrop - Only show if not embedded */}
@@ -100,6 +118,40 @@ export function ShareMenu({
         )}
       >
         <div className="space-y-1">
+          {canNativeShare && (
+            <button
+              onClick={handleNativeShare}
+              className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-background-elevated transition-colors text-left"
+            >
+              <div className="p-1 rounded-full bg-accent-purple/10">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-accent-purple"
+                >
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+              </div>
+              <span className="text-text-primary font-medium">
+                Share via...
+              </span>
+            </button>
+          )}
+
+          {canNativeShare && (
+            <div className="my-1 border-t border-text-tertiary/10" />
+          )}
+
           <button
             onClick={() => handleShare('twitter')}
             className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-background-elevated transition-colors text-left"
@@ -140,7 +192,7 @@ export function ShareMenu({
 
         <div className="mt-2 pt-2 border-t border-text-tertiary/10">
           <p className="text-text-tertiary text-xs px-3">
-            Social sharing coming in V2
+            Social sharing enabled
           </p>
         </div>
       </div>

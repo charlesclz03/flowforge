@@ -16,22 +16,20 @@
 | Authentication | ✅ Compatible |
 | Payments (Stripe) | ✅ Compatible |
 | Legal Pages | ✅ Ready |
-| Manifest Polish | ⬜ Needs `orientation` |
-| Play Store Assets | ⬜ Missing graphics |
+| Manifest Polish | ✅ Complete (orientation + maskable icon) |
+| Play Store Assets | ✅ Ready (Feature Graphic + Icons) |
 | Custom Domain | ✅ Done (`freestyla.app`) |
 
 ---
 
 ## 🔴 Action Required (Before TWA Build)
 
-### 1. Add `orientation` to `manifest.json`
+### 1. ~~Add `orientation` to `manifest.json`~~ ✅ DONE
 **File**: `public/manifest.json`
-```diff
-+ "orientation": "portrait",
-```
-> Locks the app to portrait mode — essential for the "coach" experience.
+> Already present. Also added `maskable` icon purpose for better Android adaptive icons.
 
-### 2. Create Feature Graphic (1024x500 PNG)
+### 2. ~~Create Feature Graphic (1024x500 PNG)~~ ✅ DONE
+- **Status**: ✅ **Ready for Upload**
 - **Required by**: Google Play Store
 - **Purpose**: Promotional banner on the Store page
 - **Tool**: Canva, Figma, or Photoshop
@@ -51,21 +49,9 @@ bubblewrap build
 ```
 > This creates `app-release-bundle.aab` (for Play Store) and `app-release-signed.apk` (for testing).
 
-### 5. Deploy `assetlinks.json`
+### 5. ~~Deploy `assetlinks.json`~~ ✅ CREATED
 **File**: `public/.well-known/assetlinks.json`
-```json
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.flowforge.freestyla",
-      "sha256_cert_fingerprints": ["REPLACE_WITH_YOUR_SHA256"]
-    }
-  }
-]
-```
-> Get the SHA256 fingerprint during `bubblewrap init`. Deploy to Vercel before Play Store upload.
+> File created with placeholder. **After running `bubblewrap init`, replace `REPLACE_WITH_YOUR_SHA256_FINGERPRINT_FROM_BUBBLEWRAP` with the actual fingerprint, then deploy to Vercel.**
 
 ### 6. Save Keystore Securely
 > ⚠️ **CRITICAL**: If you lose your keystore, you cannot update your app ever again.
@@ -94,14 +80,7 @@ bubblewrap build
 
 ### 1. Native Share Sheet
 **File**: `components/organisms/sharing/ShareMenu.tsx`
-```javascript
-// Replace window.open with:
-if (navigator.share) {
-  navigator.share({ title, url });
-} else {
-  window.open(shareLink, '_blank');
-}
-```
+> ✅ **Implemented**. Uses `navigator.share` (when available) for native Instagram/TikTok/Message share sheet integration.
 
 ### 2. Optimistic XP Animation
 - Calculate XP client-side, animate immediately

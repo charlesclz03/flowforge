@@ -34,8 +34,14 @@ export const PATCH_NOTES: PatchNote[] = [
           ' **Security Headers**: Added CSP, HSTS, X-Frame-Options, and Permissions-Policy.',
           ' **Legal Upgrade**: Terms now include Trademark and Copyright Monitoring clauses.',
           ' **Privacy Update**: Added App Permissions section for Play Store compliance.',
-          ' **Mobile UX**: Increased touch targets to 48px minimum.',
           ' **Monitoring**: Added Sentry tracking for playback errors.',
+        ],
+      },
+      {
+        category: 'New Features',
+        items: [
+          ' **Native Share**: Added a native share sheet for cleaner integration with Instagram, TikTok, and Messages.',
+          ' **Android Prep**: Locked orientation to portrait and added maskable icons for a native app feel.',
         ],
       },
     ],
