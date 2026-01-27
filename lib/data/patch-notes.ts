@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.68',
+    date: '2026-01-27',
+    title: 'Launch Readiness 🚀',
+    codename: 'Launch Ready',
+    description:
+      'Final polish for the public launch. Includes a massive SEO overhaul, smoother loading animations, and enhanced offline support.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          ' **SEO Overhaul**: Dynamic social cards, sitemaps, and structured data.',
+          ' **PWA Upgrade**: Added "Rich Install" support and a custom Offline page.',
+          ' **Performance**: New "Lifeline" loading animation and faster visualizer startup.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.67',
     date: '2026-01-27',
     title: 'Direct Support Update 🤝',
