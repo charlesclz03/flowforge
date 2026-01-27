@@ -40,9 +40,18 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
-    console.error('Stripe checkout error:', error)
+    // Enhanced error logging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorDetails = error instanceof Error ? error.stack : JSON.stringify(error)
+    console.error('Stripe checkout error:', {
+      message: errorMessage,
+      details: errorDetails,
+      priceIdMonthly: process.env.STRIPE_PRICE_ID_MONTHLY ? 'SET' : 'MISSING',
+      priceIdYearly: process.env.STRIPE_PRICE_ID_YEARLY ? 'SET' : 'MISSING',
+      stripeKey: process.env.STRIPE_SECRET_KEY ? 'SET' : 'MISSING',
+    })
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: `Failed to create checkout session: ${errorMessage}` },
       { status: 500 }
     )
   }
