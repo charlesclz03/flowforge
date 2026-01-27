@@ -136,6 +136,7 @@ export const RECORDING_CONFIG = {
   SAMPLE_RATE: 44100,
   CHANNELS: 2,
   MIME_TYPE: 'audio/wav',
+  TOTAL_STORAGE_LIMIT_SECONDS: 3600, // 1 Hour
 } as const
 
 // Session config constants

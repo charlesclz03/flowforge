@@ -19,6 +19,7 @@ import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 
 import { StorageBar } from '@/components/organisms/recordings/StorageBar'
+import { RECORDING_CONFIG } from '@/lib/constants/design'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -179,7 +180,7 @@ export default function RecordingsPage() {
         {!isLoading && (
           <StorageBar
             usedSeconds={totalUsedSeconds}
-            limitSeconds={3600} // 1 Hour (60m * 60s)
+            limitSeconds={RECORDING_CONFIG.TOTAL_STORAGE_LIMIT_SECONDS}
             isPro={isPro}
             onUpgradeClick={() => setShowPremiumModal(true)}
           />

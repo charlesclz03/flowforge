@@ -4,6 +4,7 @@ import { X, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
+import { PLANS } from '@/lib/stripe'
 
 export interface PremiumModalProps {
   isOpen: boolean
@@ -130,11 +131,16 @@ export function PremiumModal({
             }}
             className="w-full py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-gray-100 transition-transform active:scale-95 shadow-glow"
           >
-            Get Pro - 3.99€/mo
+            Get Pro -{' '}
+            {PLANS.monthly.price.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+            /mo
           </button>
 
           <p className="mt-4 text-center text-xs text-text-tertiary">
-            Cancel anytime. 7-day free trial included.
+            Cancel anytime.
           </p>
         </div>
       </div>

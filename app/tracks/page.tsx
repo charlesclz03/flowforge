@@ -14,6 +14,7 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { cn } from '@/lib/utils'
+import { FALLBACK_BEATS } from '@/lib/data/fallbacks'
 
 // Desktop responsiveness fix applied
 export default function TracksPage() {
@@ -65,30 +66,7 @@ export default function TracksPage() {
 
       // Client-side Fallback
       if (publicBeats.length === 0) {
-        publicBeats = [
-          {
-            id: 'fallback-1',
-            title: 'Classic Flow (Offline)',
-            bpm: 90,
-            storageUrl: '/beats/2-Naughty.mp3',
-            isPremium: false,
-            artistName: 'FreeStyla Default',
-            genre: 'Boom Bap',
-            duration: 180,
-            tags: ['offline', 'fallback'],
-          },
-          {
-            id: 'fallback-2',
-            title: 'Modern Trap (Offline)',
-            bpm: 140,
-            storageUrl: '/beats/2-Naughty.mp3',
-            isPremium: false,
-            artistName: 'FreeStyla Default',
-            genre: 'Trap',
-            duration: 180,
-            tags: ['offline', 'fallback'],
-          },
-        ]
+        publicBeats = FALLBACK_BEATS
       }
 
       setFavoriteIds(new Set(favs))

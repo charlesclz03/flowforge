@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
 import { useState } from 'react'
 import { SupportModal } from '@/components/organisms/support/SupportModal'
+import { getLevelInfo } from '@/lib/gamification/xp'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
@@ -150,7 +151,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                     Lvl
                   </span>
                   <span className="text-sm font-black text-accent-gold">
-                    {session?.user?.level || 1}
+                    {getLevelInfo(session?.user?.xp || 0).level}
                   </span>
                 </div>
               </div>
@@ -171,31 +172,32 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               </div>
 
               {/* XP Bar */}
-              <div className="mt-3 w-full">
-                <div className="flex justify-between text-[10px] font-bold text-zinc-400 mb-1">
-                  <span>XP</span>
-                  <span>
-                    {Math.round(session?.user?.xp || 0)} /{' '}
-                    {((session?.user?.level || 1) + 1) * 1000}
-                  </span>
+              {session?.user?.xp !== undefined && (
+                <div className="mt-3 w-full">
+                  {(() => {
+                    const levelInfo = getLevelInfo(session.user.xp || 0)
+                    return (
+                      <>
+                        <div className="flex justify-between text-[10px] font-bold text-zinc-400 mb-1">
+                          <span>XP</span>
+                          <span>
+                            {Math.round(levelInfo.currentXP).toLocaleString()} /{' '}
+                            {Math.round(levelInfo.maxXP).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/10">
+                          <div
+                            className="h-full bg-gradient-to-r from-accent-blue to-accent-purple rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${levelInfo.progress}%`,
+                            }}
+                          />
+                        </div>
+                      </>
+                    )
+                  })()}
                 </div>
-                <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/10">
-                  <div
-                    className="h-full bg-gradient-to-r from-accent-blue to-accent-purple rounded-full transition-all duration-500 ease-out"
-                    style={{
-                      width: `${Math.min(
-                        100,
-                        Math.max(
-                          0,
-                          ((session?.user?.xp || 0) /
-                            (((session?.user?.level || 1) + 1) * 1000)) *
-                            100
-                        )
-                      )}%`,
-                    }}
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </Link>
@@ -484,8 +486,8 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             Sign In
           </button>
         )}
-        <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v0.9.69 (Fort Knox)
+        <p className="text-zinc-600 text-[10px] font-medium tracking-widest uppercase">
+          FreeStyla v0.9.70 (Cleanup Edition)
         </p>
       </div>
       <SupportModal

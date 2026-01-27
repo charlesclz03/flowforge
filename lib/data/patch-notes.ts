@@ -21,6 +21,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.70',
+    date: '2026-01-27',
+    title: 'Cleanup & Sync',
+    codename: 'Cleanup Edition',
+    description:
+      'A foundational update focused on code health, monetization consistency, and centralized configuration for a smoother launch.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          ' **Dynamic Pricing**: Premium modal now reflects real-time Stripe pricing without hardcoded limits.',
+          ' **Centralized Config**: Unified session and storage limits into a single source of truth.',
+          ' **Data Health**: Moved large fallback data sets to dedicated modules, cleaning up core API and UI code.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Monetization Sync**: Removed outdated "trial" claims to align with the current Stripe setup.',
+          ' **Refactored Fallbacks**: Improved app reliability during network/database failure modes.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.69',
     date: '2026-01-27',
     title: 'Security Hardening',

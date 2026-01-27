@@ -7,6 +7,7 @@ import { Edit2 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 
 import { Rank } from '@/lib/gamification/ranks'
+import { getLevelInfo } from '@/lib/gamification/xp'
 
 interface User {
   name?: string | null
@@ -28,28 +29,14 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
     user.subscriptionStatus === 'active' ||
     user.subscriptionStatus === 'trialing'
 
-  // Default values if undefined (though should be present in session)
-  // Casting user to any to access level/xp if typescript complains, as User interface is local here
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const extendedUser = user as any
-  const level = extendedUser.level || 1
-  const xp = extendedUser.xp || 0
+  const xp = (user as any).xp || 0
 
-  // Calculate Progress Logic (Simple exponential curve or similar - inferred from logic elsewhere)
-  // For now assuming: Next Level = Level * 1000 or similar?
-  // Let's assume linear levels 0-1000, 1000-2000 for simplicity or just show raw XP?
-  // User asked for "xp bar".
-  // Let's use a standard formula or just show XP.
-  // Given we don't have the formula here, let's assume Level 1 = 0-1000, Level 5 = 4000-5000?
-  // Let's hardcode a visual progress for now or just show Total XP.
-  // Actually, standard gaming formula: XP for next level = Level * 1000 (roughly)
-  // Let's just normalize to % within current level.
-  // const xpForNextLevel = level * 1000 // Placeholder logic, adjustable
-  const xpInCurrentLevel = xp % 1000
-  const progressPercent = Math.min(
-    100,
-    Math.max(0, (xpInCurrentLevel / 1000) * 100)
-  )
+  // Use getLevelInfo for precise calculation
+  const levelInfo = getLevelInfo(xp)
+  const currentLevel = levelInfo.level
+  const xpInCurrentLevel = levelInfo.currentXP
+  const maxXPInLevel = levelInfo.maxXP
+  const progressPercent = levelInfo.progress
 
   return (
     <Card
@@ -61,7 +48,9 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
             <span className="text-[10px] font-bold text-accent-gold uppercase tracking-wider">
               Lvl
             </span>
-            <span className="text-sm font-black text-accent-gold">{level}</span>
+            <span className="text-sm font-black text-accent-gold">
+              {currentLevel}
+            </span>
           </div>
 
           {onEdit && (
@@ -128,7 +117,10 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
             <div className="mt-3 w-full max-w-[200px]">
               <div className="flex justify-between text-[10px] uppercase font-bold text-text-tertiary mb-1">
                 <span>XP</span>
-                <span>{xp.toLocaleString()}</span>
+                <span>
+                  {Math.round(xpInCurrentLevel).toLocaleString()} /{' '}
+                  {Math.round(maxXPInLevel).toLocaleString()}
+                </span>
               </div>
               <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                 <div
