@@ -134,7 +134,7 @@ export function PremiumModal({
             Get Pro -{' '}
             {PLANS.monthly.price.toLocaleString('en-US', {
               style: 'currency',
-              currency: 'USD',
+              currency: PLANS.monthly.currency,
             })}
             /mo
           </button>

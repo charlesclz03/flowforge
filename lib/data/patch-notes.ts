@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.71',
+    date: '2026-01-27',
+    title: 'EUR Currency Update',
+    codename: 'Euro Edition',
+    description:
+      'Aligned the application with our Euro-based Stripe setup for a seamless global launch.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**EUR Primary Currency**: All pricing now displayed in Euros (€4.99/mo).',
+          '**Stripe Sync**: Matched yearly plan price to the Stripe Dashboard (€49.00/yr).',
+          '**Multi-Currency Ready**: UK and other international users see their local currency at checkout via Stripe Adaptive Pricing.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.70',
     date: '2026-01-27',
     title: 'Cleanup & Sync',

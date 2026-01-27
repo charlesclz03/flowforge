@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.71 - Euro Edition (2026-01-27)
+**"EUR Currency Update 💶"**
+
+Aligned the application with our Euro-based Stripe setup for a seamless global launch.
+
+### System Updates
+- **EUR Primary Currency**: All pricing now displayed in Euros (€4.99/mo).
+- **Stripe Sync**: Matched yearly plan price to the Stripe Dashboard (€49.00/yr).
+- **Multi-Currency Ready**: UK and other international users see their local currency at checkout via Stripe Adaptive Pricing.
+
+---
+
 ## v0.9.70 - Cleanup Edition (2026-01-27)
 **"Cleanup & Sync 🧹"**
 
