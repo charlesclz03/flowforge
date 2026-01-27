@@ -12,7 +12,9 @@ import { authOptions } from '@/lib/auth'
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      'https://freestyla.app'
   ),
   title: {
     default: 'FreeStyla: Freestyle Rap Coach',
