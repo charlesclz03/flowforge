@@ -1,14 +1,13 @@
 ## FreeStyla 🎤
 
-**Status**: ✅ Production Ready - 100% (Certified Bible Aligned)  
-**Last Updated**: January 10, 2026  
-**Version**: v1.9.2 (Practice Player Polish)
-**Status**: Production Ready
-**Live URL**: [flowforge-freestyle.vercel.app](https://flowforge-freestyle.vercel.app)
+**Status**: ✅ Production Ready - Live & Monetized  
+**Last Updated**: January 27, 2026  
+**Version**: v0.9.74 (Stripe Fix)
+**Live URL**: [www.freestyla.app](https://www.freestyla.app)
 
 Your AI‑powered freestyle rap practice partner. This README gives new agents and developers complete context, roadmap, and working assumptions to get productive fast.
 
-> **✅ PROGRESS UPDATE**: **PROJECT COMPLETE & DEPLOYED**. Deployment pipeline is stable. Recent updates include **Mobile Single-Screen Layout**, **Studio Video Export**, **XP Persistence**, and **Mixed Audio Downloads**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
+> **✅ PROGRESS UPDATE**: **LIVE & MONETIZED**. Stripe subscriptions are active (€4.99/mo, €49.00/yr). Recent updates include **Stripe Checkout Fix**, **Price Alignment**, and **Feature Label Accuracy**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
 
 ## 1) TL;DR
 

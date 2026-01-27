@@ -1,5 +1,41 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.74 - Stripe Fix (2026-01-27)
+**"Stripe Checkout Fix 🔧"**
+
+Fixed Stripe integration to enable the subscription checkout flow.
+
+### Fixes & Improvements
+- **Stripe API Fix**: Corrected invalid API version (`2025-11-17.clover` → `2024-06-20`) that was blocking checkout.
+- **Environment Cleanup**: Resolved trailing newline issues in Vercel environment variables.
+- **Error Logging**: Added detailed error messages for debugging checkout failures.
+
+---
+
+## v0.9.73 - Feature Labels (2026-01-27)
+**"Feature Labels Update 🏷️"**
+
+Corrected subscription feature labels to accurately reflect actual capabilities.
+
+### Fixes & Improvements
+- **Free Tier Honesty**: Removed misleading "Session history" claim - free users cannot save recordings.
+- **Pro Tier Clarity**: Updated features to show uploads, 100+ beats, and save/download capabilities.
+- **Landing Page Sync**: Aligned pricing page with accurate feature lists.
+
+---
+
+## v0.9.72 - Price Fix (2026-01-27)
+**"Price Fix 💰"**
+
+Corrected pricing display across all components to match Stripe configuration.
+
+### Fixes & Improvements
+- **Price Sync**: Fixed €3.99 / €39 displaying instead of €4.99 / €49.
+- **Currency Alignment**: Converted remaining USD ($) prices to EUR (€).
+- **Affected Components**: SubscriptionSection, SubscriptionModal, LandingPricing.
+
+---
+
 ## v0.9.71 - Euro Edition (2026-01-27)
 **"EUR Currency Update 💶"**
 
@@ -56,3 +92,5 @@ Final polish for the public launch. Includes a massive SEO overhaul, smoother lo
 - **Performance**: New "Lifeline" loading animation and faster visualizer startup.
 
 ---
+
+*For complete historical patch notes, see the live `/patch-notes` page or `lib/data/patch-notes.ts`.*
