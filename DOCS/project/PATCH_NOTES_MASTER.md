@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.65 - Instant Access (2026-01-27)
+**"Instant Access Update ⚡"**
+
+Navigation is now blazing fast. Accessing your profile is instant, and we fixed some deployment stability issues.
+
+### Fixes & Improvements
+- **Instant Profile**: Clicking "Profile" now takes you there instantly without redirects.
+- **Smart Login**: Signing in now correctly returns you to your profile.
+- **Stability**: Fixed build errors ensuring a rock-solid experience.
+
+---
+
 ## v0.9.64 - Crash Fix (2026-01-27)
 **"The Profile Hotfix 🔥"**
 

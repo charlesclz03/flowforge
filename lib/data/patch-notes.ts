@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.65',
+    date: '2026-01-27',
+    title: 'Instant Access Update ⚡',
+    codename: 'Instant Access',
+    description:
+      'Navigation is now blazing fast. Accessing your profile is instant, and we fixed some deployment stability issues.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Instant Profile**: Clicking "Profile" now takes you there instantly without redirects.',
+          ' **Smart Login**: Signing in now correctly returns you to your profile.',
+          ' **Stability**: Fixed build errors ensuring a rock-solid experience.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.64',
     date: '2026-01-27',
     title: 'The Profile Hotfix 🔥',
