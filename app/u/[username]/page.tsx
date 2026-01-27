@@ -204,7 +204,16 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
 
           <div className="flex gap-3">
-            {isOwner && <ProfileOwnerControls user={user} />}
+            {isOwner && (
+              <ProfileOwnerControls
+                user={{
+                  username: user.username,
+                  bio: user.bio,
+                  image: user.image,
+                  name: user.name,
+                }}
+              />
+            )}
           </div>
         </div>
       </Card>

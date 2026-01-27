@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.63',
+    date: '2026-01-27',
+    title: 'The Public Profile Polish 👤',
+    codename: 'Identity Restored',
+    description:
+      'We fixed a critical issue where public profiles were failing to load for guests, and ensured our Superadmins always have the correct identity.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          ' **Profile Fix**: Resolved the "Something went wrong" error on public profiles. Your stats are visible to the world again!',
+          ' **Admin Identity**: Superadmins are now automatically assigned their correct handles (Admin1/Admin2) upon login.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.62',
     date: '2026-01-22',
     title: 'The Accessibility Polish Update 🏆',

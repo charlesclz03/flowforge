@@ -51,18 +51,31 @@ export const authOptions: NextAuthOptions = {
       if (user.email === 'charles.cluzeaud@gmail.com') {
         // @ts-expect-error - username is a custom field extended in Prisma adapter
         if (user.username !== 'Admin1') {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { username: 'Admin1' },
+          // Check if Admin1 is taken by someone else (unlikely given early stage, but safe)
+          const existing = await prisma.user.findUnique({
+            where: { username: 'Admin1' },
           })
+
+          if (!existing || existing.email === user.email) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { username: 'Admin1' },
+            })
+          }
         }
       } else if (user.email === 'triplyricist@gmail.com') {
         // @ts-expect-error - username is a custom field extended in Prisma adapter
         if (user.username !== 'Admin2') {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { username: 'Admin2' },
+          const existing = await prisma.user.findUnique({
+            where: { username: 'Admin2' },
           })
+
+          if (!existing || existing.email === user.email) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { username: 'Admin2' },
+            })
+          }
         }
       } else {
         // GENERAL BACKFILL for legacy users

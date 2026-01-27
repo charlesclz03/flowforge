@@ -1,5 +1,16 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.63 - Identity Restored (2026-01-27)
+**"The Public Profile Polish 👤"**
+
+We fixed a critical issue where public profiles were failing to load for guests, and ensured our Superadmins always have the correct identity.
+
+### Fixes & Improvements
+- **Profile Fix**: Resolved the "Something went wrong" error on public profiles. Your stats are visible to the world again!
+- **Admin Identity**: Superadmins are now automatically assigned their correct handles (Admin1/Admin2) upon login.
+
+---
+
 ## v0.9.62 - Accessibility Polish (2026-01-22)
 **"The Accessibility Polish Update 🏆"**
 
