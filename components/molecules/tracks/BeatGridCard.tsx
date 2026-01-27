@@ -114,7 +114,7 @@ export function BeatGridCard({
                 e.stopPropagation()
                 onLockedClick?.()
               }}
-              className="flex flex-col items-center justify-center text-white/70 gap-2 hover:text-accent-purple hover:scale-105 transition-all cursor-pointer"
+              className="flex flex-col items-center justify-center text-white/70 gap-2 hover:text-accent-purple hover:scale-105 transition-all cursor-pointer min-h-[44px] min-w-[44px] p-2"
               aria-label="Tap to unlock premium content"
             >
               <Lock size={24} />
@@ -220,7 +220,7 @@ export function BeatGridCard({
                   e.stopPropagation()
                   onDelete(e)
                 }}
-                className="group/del p-2 text-text-tertiary hover:text-red-400 transition-colors"
+                className="group/del text-text-tertiary hover:text-red-400 transition-colors touch-target"
                 title="Delete Beat"
                 aria-label="Delete Beat"
               >

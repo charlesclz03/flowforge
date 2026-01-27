@@ -56,7 +56,7 @@ export function AppHeader({
               <button
                 type="button"
                 onClick={handleBack}
-                className="mb-0 flex items-center gap-2 text-text-secondary transition-colors hover:text-text-primary"
+                className="mb-0 flex items-center gap-2 text-text-secondary transition-colors hover:text-text-primary min-h-[44px] min-w-[44px] justify-center"
                 aria-label="Go back"
               >
                 <ArrowLeft size={18} className="sm:w-6 sm:h-6" />
@@ -71,11 +71,11 @@ export function AppHeader({
               {/* Help Button - Redirects to How It Works */}
               <Link
                 href="/howitworks"
-                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
                 aria-label="How it works"
               >
                 <HelpCircle
-                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   strokeWidth={2.5}
                 />
               </Link>

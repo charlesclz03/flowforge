@@ -59,7 +59,10 @@ export function BottomNav() {
     },
     {
       name: 'Profile',
-      href: '/profile',
+      // If we have a username, go direct. Otherwise fallback to the redirector.
+      href: isAuthenticated && session?.user?.username 
+        ? `/u/${session.user.username}` 
+        : '/profile',
       icon: User,
       match: (path: string) =>
         path.startsWith('/profile') || path.startsWith('/u/'),
@@ -205,7 +208,8 @@ export function BottomNav() {
             </p>
             <button
               onClick={() =>
-                signIn('google', { callbackUrl: '/difficultyselection' })
+                // Redirect to profile after login, which will then bounce to /u/[username]
+                signIn('google', { callbackUrl: '/profile' })
               }
               className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
             >

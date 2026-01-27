@@ -110,13 +110,29 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     <div className="w-full space-y-6 pb-8">
       {/* Profile Card */}
       <div className="mx-4 mt-2">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/50 to-purple-900/50 p-6 border border-white/10 shadow-xl">
+        <Link
+          href={
+            session?.user?.username ? `/u/${session.user.username}` : '/profile'
+          }
+          className={cn(
+            'block relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/50 to-purple-900/50 p-6 border border-white/10 shadow-xl transition-transform active:scale-[0.98]',
+            session?.user?.username && 'cursor-pointer hover:border-white/20'
+          )}
+        >
           <div className="absolute top-0 right-0 p-3 opacity-20">
             <Sparkles size={64} className="text-white" />
           </div>
           <div className="relative z-10 flex items-center gap-4">
             <div className="h-14 w-14 rounded-full bg-accent-purple flex items-center justify-center border-2 border-white/20 shadow-lg shrink-0">
-              <User size={24} className="text-white" />
+              {session?.user?.image ? (
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || 'User'}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <User size={24} className="text-white" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -177,7 +193,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Studio Controls (Collapsible) */}
@@ -457,9 +473,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         ) : (
           <button
-            onClick={() =>
-              signIn('google', { callbackUrl: '/difficultyselection' })
-            }
+            onClick={() => signIn('google', { callbackUrl: '/profile' })}
             className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-blue text-white font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
           >
             <LogIn size={18} />

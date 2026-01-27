@@ -16,7 +16,7 @@ export function SettingsDropdown() {
         <button
           onClick={() => setShowSheet(true)}
           aria-label="Settings"
-          className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
+          className="flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5 min-w-[44px] min-h-[44px] p-2"
         >
           <Settings size={20} />
         </button>

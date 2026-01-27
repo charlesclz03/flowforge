@@ -81,6 +81,8 @@
     @apply px-4 py-3 text-text-primary placeholder:text-text-secondary;
     @apply focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent;
     @apply transition-all;
+    /* iOS Zoom Prevention: Must be at least 16px */
+    font-size: 16px !important; 
     user-select: text;
     -webkit-user-select: text;
   }
@@ -190,6 +192,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    touch-action: manipulation;
   }
 }
 
