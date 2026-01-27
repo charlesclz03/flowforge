@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.66',
+    date: '2026-01-27',
+    title: 'The Contact Update 📧',
+    codename: 'Direct Line',
+    description:
+      'We updated our support channels to ensure your feedback always reaches us. Plus, more polish for the public profile experience.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          ' **Contact Update**: Updated all support and legal contact emails to `contact@freestyla.app`.',
+          ' **Profile Polish**: Verified public profile stability.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.65',
     date: '2026-01-27',
     title: 'Instant Access Update ⚡',

@@ -218,10 +218,10 @@ export default function PrivacyPage() {
               practices, please contact us at:
               <br />
               <a
-                href="mailto:privacy@freestyla.com"
+                href="mailto:contact@freestyla.app"
                 className="text-accent-purple hover:underline"
               >
-                privacy@freestyla.com
+                contact@freestyla.app
               </a>
             </p>
           </section>

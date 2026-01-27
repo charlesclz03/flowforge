@@ -406,7 +406,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         <div className="grid grid-cols-2 gap-2">
           {/* Contact Support */}
           <Link
-            href="mailto:support@freestyla.app"
+            href="mailto:contact@freestyla.app"
             onClick={handleLinkClick}
             className="col-span-2 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
@@ -484,7 +484,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v0.9.65 (Optimization)
+          FreeStyla v0.9.66 (Direct Line)
         </p>
       </div>
     </div>

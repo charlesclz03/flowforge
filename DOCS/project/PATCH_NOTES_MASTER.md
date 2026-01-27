@@ -1,5 +1,16 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.66 - Direct Line (2026-01-27)
+**"The Contact Update 📧"**
+
+We updated our support channels to ensure your feedback always reaches us. Plus, more polish for the public profile experience.
+
+### Visual Overhaul
+- **Contact Update**: Updated all support and legal contact emails to `contact@freestyla.app`.
+- **Profile Polish**: Verified public profile stability.
+
+---
+
 ## v0.9.65 - Instant Access (2026-01-27)
 **"Instant Access Update ⚡"**
 

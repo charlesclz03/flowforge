@@ -309,10 +309,10 @@ export default function TermsPage() {
               If you have any questions about these Terms, please contact us at:
               <br />
               <a
-                href="mailto:legal@freestyla.com"
+                href="mailto:contact@freestyla.app"
                 className="text-accent-purple hover:underline"
               >
-                legal@freestyla.com
+                contact@freestyla.app
               </a>
             </p>
           </section>
