@@ -24,6 +24,7 @@ import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
 import { useState } from 'react'
+import { SupportModal } from '@/components/organisms/support/SupportModal'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
@@ -40,6 +41,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     setBeatVolume,
   } = usePracticeSession()
   const [isStudioOpen, setIsStudioOpen] = useState(false)
+  const [isSupportOpen, setIsSupportOpen] = useState(false)
 
   // Determine subscription status
   const isPro =
@@ -405,9 +407,8 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         </h3>
         <div className="grid grid-cols-2 gap-2">
           {/* Contact Support */}
-          <Link
-            href="mailto:contact@freestyla.app"
-            onClick={handleLinkClick}
+          <button
+            onClick={() => setIsSupportOpen(true)}
             className="col-span-2 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <div className="flex items-center gap-2">
@@ -416,7 +417,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 Contact Support
               </span>
             </div>
-          </Link>
+          </button>
 
           {/* Patch Notes */}
           <Link
@@ -484,9 +485,13 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-center text-[10px] text-text-tertiary mt-4 uppercase tracking-widest opacity-40">
-          FreeStyla v0.9.66 (Direct Line)
+          FreeStyla v0.9.67 (Direct Support)
         </p>
       </div>
+      <SupportModal
+        isOpen={isSupportOpen}
+        onClose={() => setIsSupportOpen(false)}
+      />
     </div>
   )
 }

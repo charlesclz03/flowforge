@@ -1,11 +1,15 @@
 {
   "name": "FreeStyla",
   "short_name": "FreeStyla",
+  "id": "freestyla-app",
+  "scope": "/",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
   "description": "The #1 AI Freestyle Coach. Dominate the cypher with instant beat sync and a smart Rhyme Dictionary AI.",
+  "categories": ["music", "education", "entertainment"],
   "icons": [
     {
       "src": "/icon-192x192.png",
@@ -16,6 +20,15 @@
       "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "FreeStyla Context"
     }
   ]
 }

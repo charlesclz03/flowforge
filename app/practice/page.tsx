@@ -324,7 +324,6 @@ export default function PracticePage() {
   const handleRecordingComplete = useCallback(
     async (blob: Blob, recordedDuration: number) => {
       if (!shouldSaveRef.current) {
-        console.log('Session discarded, skipping save')
         return
       }
 

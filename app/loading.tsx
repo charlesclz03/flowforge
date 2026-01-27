@@ -1,5 +1,11 @@
+import { LoadingWave } from '@/components/atoms/feedback/LoadingWave'
+
 export default function Loading() {
-  // Keep this file so Next.js can use route-level suspense,
-  // but render nothing so pages "just start" without a full-screen loading screen.
-  return null
+  return (
+    <div className="w-full h-[50vh] flex flex-col items-center justify-center gap-4">
+      <LoadingWave />
+      <p className="text-text-secondary text-sm animate-pulse">Loading...</p>
+    </div>
+  )
 }
+

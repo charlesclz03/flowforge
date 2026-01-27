@@ -1,5 +1,16 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.67 - Direct Support (2026-01-27)
+**"Direct Support Update 🤝"**
+
+We made it easier to get help. You can now contact support directly from the app without leaving to your email client.
+
+### New Features
+- **In-App Support**: Send messages directly to our team from the Settings menu.
+- **Faster Routing**: Profile links are now instant (no more redirects).
+
+---
+
 ## v0.9.66 - Direct Line (2026-01-27)
 **"The Contact Update 📧"**
 

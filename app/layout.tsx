@@ -7,6 +7,7 @@ import { PracticeSessionProvider } from '@/contexts/SessionContext'
 import { BottomNav } from '@/components/organisms/layout/BottomNav'
 import { AudioContextUnlock } from '@/components/atoms/utils/AudioContextUnlock'
 import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
+import { JsonLd } from '@/components/JsonLd'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
@@ -139,6 +140,7 @@ export default async function RootLayout({
                   id="main-content"
                   className="flex-1 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
                 >
+                  <JsonLd />
                   {children}
                 </main>
                 <div className="flex-none w-full relative z-50 pointer-events-none">

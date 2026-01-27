@@ -13,7 +13,14 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { TimerRing } from '@/components/atoms/TimerRing'
-import { AudioVisualizer } from '@/components/molecules/visuals/AudioVisualizer'
+import dynamic from 'next/dynamic'
+const AudioVisualizer = dynamic(
+  () =>
+    import('@/components/molecules/visuals/AudioVisualizer').then(
+      (mod) => mod.AudioVisualizer
+    ),
+  { ssr: false }
+)
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
@@ -326,6 +333,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     }}
                     className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
                     title="Restart Session"
+                    aria-label="Restart Session"
                   >
                     <RefreshCcw size={20} className="sm:w-6 sm:h-6" />
                   </motion.button>
@@ -737,6 +745,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     }}
                     className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
                     title="Pause Session"
+                    aria-label="Pause Session"
                   >
                     <Pause
                       size={20}
@@ -777,6 +786,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',
             !isRecordingEnabled && 'grayscale opacity-60'
           )}
+          aria-label={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
           <div className="flex items-center gap-2 px-6 py-2">
             {/* Left Bracket */}

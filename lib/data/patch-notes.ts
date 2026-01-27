@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.67',
+    date: '2026-01-27',
+    title: 'Direct Support Update 🤝',
+    codename: 'Direct Support',
+    description:
+      'We made it easier to get help. You can now contact support directly from the app without leaving to your email client.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          ' **In-App Support**: Send messages directly to our team from the Settings menu.',
+          ' **Faster Routing**: Profile links are now instant (no more redirects).',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.66',
     date: '2026-01-27',
     title: 'The Contact Update 📧',

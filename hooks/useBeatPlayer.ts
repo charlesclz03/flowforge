@@ -24,7 +24,6 @@ export function useBeatPlayer() {
     })
 
     playerRef.current.onEnded(() => {
-      console.log('Hook received onEnded')
       setIsPlaying(false)
     })
 
