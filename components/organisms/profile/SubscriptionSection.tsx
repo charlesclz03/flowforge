@@ -121,7 +121,7 @@ export function SubscriptionSection() {
                 <ul className="mt-5 space-y-3">
                   {[
                     'Unlimited practice sessions',
-                    'Access to all 100+ premium beats',
+                    'Access to all premium beats',
                     'Save & download recordings',
                     'Upload your own beats',
                     'Stats & history visualization',

@@ -57,7 +57,7 @@ export function LandingPricing() {
           <ul className="mt-6 space-y-3">
             {[
               'Unlimited practice sessions',
-              'All 100+ premium beats',
+              'All premium beats',
               'Save & download recordings',
               'Upload your own beats',
             ].map((feature) => (

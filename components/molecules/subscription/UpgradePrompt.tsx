@@ -49,7 +49,7 @@ export function UpgradePrompt({
         </div>
         <div className="flex items-center space-x-2 text-text-secondary text-sm">
           <Check size={16} className="text-accent-green" />
-          <span>100+ premium beats</span>
+          <span>All premium beats</span>
         </div>
         <div className="flex items-center space-x-2 text-text-secondary text-sm">
           <Check size={16} className="text-accent-green" />
