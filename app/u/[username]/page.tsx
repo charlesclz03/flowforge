@@ -122,6 +122,19 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       <AppHeader showBackButton={true} />
       {/* Profile Header */}
       <Card padding="lg" className="relative overflow-hidden">
+        {/* Edit Action (Top Right) */}
+        {isOwner && (
+          <div className="absolute top-4 right-4 z-20">
+            <ProfileOwnerControls
+              user={{
+                username: user.username,
+                bio: user.bio,
+                image: user.image,
+                name: user.name,
+              }}
+            />
+          </div>
+        )}
         <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
           <Avatar
             src={user.image}
@@ -200,19 +213,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   </a>
                 )}
               </div>
-            )}
-          </div>
-
-          <div className="flex gap-3">
-            {isOwner && (
-              <ProfileOwnerControls
-                user={{
-                  username: user.username,
-                  bio: user.bio,
-                  image: user.image,
-                  name: user.name,
-                }}
-              />
             )}
           </div>
         </div>
