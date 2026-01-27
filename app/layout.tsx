@@ -128,7 +128,10 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions)
 
   return (
-    <html lang="en">
+    <html lang="en" className="notranslate" translate="no">
+      <head>
+        <meta name="google" content="notranslate" />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-text-primary antialiased min-h-[100dvh]`}
       >
