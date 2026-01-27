@@ -171,6 +171,7 @@ model FreestyleSession {
   mode            String   @default("solo") // "solo"
   restarts        Int      @default(0)
   playbacks       Int      @default(0)
+  beatOffsetMs    Int      @default(0) @map("beat_offset_ms") // Beat position when recording started (for playback sync)
   createdAt       DateTime @default(now()) @map("created_at")
 
   // Relations

@@ -51,6 +51,7 @@ export interface SessionPlayerHandles {
 interface SessionPlayerProps {
   audioUrl: string | null
   beatUrl?: string | null
+  beatOffsetMs?: number // Beat position (ms) when recording started - for sync
   className?: string
   // Metadata props for integrated display
   beatTitle?: string
@@ -69,6 +70,7 @@ export const SessionPlayer = forwardRef<
     {
       audioUrl,
       beatUrl,
+      beatOffsetMs = 0,
       className,
       beatTitle,
       beatBpm,
@@ -285,10 +287,17 @@ export const SessionPlayer = forwardRef<
         setIsPlaying(false)
       } else {
         audioRef.current.play()
-        if (beatLooperRef.current) beatLooperRef.current.play()
+        if (beatLooperRef.current) {
+          // Sync beat to voice using the recorded offset
+          // Voice starts at t=0, beat should start at beatOffsetMs/1000
+          const beatStartTime =
+            (beatOffsetMs || 0) / 1000 + audioRef.current.currentTime
+          beatLooperRef.current.seek(beatStartTime)
+          beatLooperRef.current.play()
+        }
         setIsPlaying(true)
       }
-    }, [isPlaying])
+    }, [isPlaying, beatOffsetMs])
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!audioRef.current) return
@@ -313,14 +322,20 @@ export const SessionPlayer = forwardRef<
         audioRef.current.currentTime + 10
       )
       audioRef.current.currentTime = newTime
-      if (beatLooperRef.current) beatLooperRef.current.seek(newTime)
+      // Apply beat offset for sync
+      if (beatLooperRef.current) {
+        beatLooperRef.current.seek(newTime + (beatOffsetMs || 0) / 1000)
+      }
     }
 
     const skipBackward = () => {
       if (!audioRef.current) return
       const newTime = Math.max(0, audioRef.current.currentTime - 10)
       audioRef.current.currentTime = newTime
-      if (beatLooperRef.current) beatLooperRef.current.seek(newTime)
+      // Apply beat offset for sync
+      if (beatLooperRef.current) {
+        beatLooperRef.current.seek(newTime + (beatOffsetMs || 0) / 1000)
+      }
     }
 
     const resetPlayback = () => {
@@ -329,7 +344,8 @@ export const SessionPlayer = forwardRef<
         setCurrentTime(0)
       }
       if (beatLooperRef.current) {
-        beatLooperRef.current.seek(0)
+        // Reset to the original offset position
+        beatLooperRef.current.seek((beatOffsetMs || 0) / 1000)
       }
     }
 
@@ -494,14 +510,24 @@ export const SessionPlayer = forwardRef<
                 onChange={(time) => {
                   if (audioRef.current) {
                     audioRef.current.currentTime = time
-                    if (beatLooperRef.current) beatLooperRef.current.seek(time)
+                    // Apply beat offset for sync
+                    if (beatLooperRef.current) {
+                      beatLooperRef.current.seek(
+                        time + (beatOffsetMs || 0) / 1000
+                      )
+                    }
                     setCurrentTime(time)
                   }
                 }}
                 onSeek={(time) => {
                   if (audioRef.current) {
                     audioRef.current.currentTime = time
-                    if (beatLooperRef.current) beatLooperRef.current.seek(time)
+                    // Apply beat offset for sync
+                    if (beatLooperRef.current) {
+                      beatLooperRef.current.seek(
+                        time + (beatOffsetMs || 0) / 1000
+                      )
+                    }
                     setCurrentTime(time)
                   }
                 }}

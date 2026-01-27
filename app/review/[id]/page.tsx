@@ -157,6 +157,7 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
           ref={playerRef}
           audioUrl={recording.storageUrl}
           beatUrl={recording.beat?.storageUrl}
+          beatOffsetMs={(recording as any).beatOffsetMs}
           beatTitle={recording.beat?.title}
           beatBpm={recording.beat?.bpm}
           beatArtist={recording.beat?.artistName ?? undefined}

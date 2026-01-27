@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
+// v0.9.69 - Security Hardening (Fort Knox)
 
 // Security Headers Configuration
 const securityHeaders = [

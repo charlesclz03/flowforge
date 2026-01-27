@@ -40,6 +40,7 @@ export async function POST(request: Request) {
     const difficulty = parseInt(formData.get('difficulty') as string) || 2
     const restarts = parseInt(formData.get('restarts') as string) || 0
     const playbacks = parseInt(formData.get('playbacks') as string) || 0
+    const beatOffsetMs = parseInt(formData.get('beatOffsetMs') as string) || 0
 
     // Validate required fields
     if (!audioFile || !beatId || !title || !durationSeconds) {
@@ -132,6 +133,7 @@ export async function POST(request: Request) {
         restarts,
         playbacks,
         wordCount,
+        beatOffsetMs,
       } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
       supabase.storage
         .from(RECORDINGS_BUCKET)

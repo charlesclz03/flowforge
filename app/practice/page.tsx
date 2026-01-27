@@ -189,6 +189,7 @@ export default function PracticePage() {
   // Playback Control (Detached from hook to resolve circular deps)
   const sessionTimeRef = useRef(0)
   const lastSessionDurationRef = useRef(0) // Persist duration for callback
+  const beatOffsetRef = useRef(0) // Beat position when recording started (for sync)
   const animationFrameRef = useRef<number | null>(null) // StrictMode guard: prevents duplicate loops
   const [monotonicTime, setMonotonicTime] = useState(0)
   const [isSirenActive, setIsSirenActive] = useState(false)
@@ -394,6 +395,7 @@ export default function PracticePage() {
               formData.append('score', finalScore.toString())
               formData.append('vibe', vibe)
               formData.append('wordsUsed', JSON.stringify(usedWords))
+              formData.append('beatOffsetMs', beatOffsetRef.current.toString())
 
               // EXECUTE OPTIMISTIC SAVE
               await saveSessionOptimistic(formData)
@@ -574,6 +576,8 @@ export default function PracticePage() {
       if (isRecordingEnabled) {
         if (!isRecording) {
           await requestLock()
+          // Capture beat position BEFORE starting recording for sync
+          beatOffsetRef.current = Math.round(beatPlayer.getPreciseTime() * 1000) // Convert to ms
           if (isPro) {
             startRecording(true).catch(console.error)
           } else {
