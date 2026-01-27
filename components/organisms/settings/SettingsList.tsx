@@ -487,7 +487,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <p className="text-zinc-600 text-[10px] font-medium tracking-widest uppercase">
-          FreeStyla v0.9.72 (Price Fix)
+          FreeStyla v0.9.73 (Feature Labels)
         </p>
       </div>
       <SupportModal

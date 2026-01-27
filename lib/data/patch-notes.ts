@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.73',
+    date: '2026-01-27',
+    title: 'Feature Labels Update',
+    codename: 'Feature Labels',
+    description:
+      'Corrected subscription feature labels to accurately reflect actual capabilities.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Free Tier Honesty**: Removed misleading "Session history" claim - free users cannot save recordings.',
+          '**Pro Tier Clarity**: Updated features to show uploads, 100+ beats, and save/download capabilities.',
+          '**Landing Page Sync**: Aligned pricing page with accurate feature lists.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.72',
     date: '2026-01-27',
     title: 'Price Fix',

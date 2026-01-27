@@ -71,9 +71,9 @@ export function SubscriptionSection() {
 
                 <ul className="mt-5 space-y-3">
                   {[
-                    '2-minute practice sessions',
+                    'Practice mode (2 min max)',
                     'Access to free beats',
-                    'Session history (7 days)',
+                    'Word prompts (all difficulties)',
                   ].map((feature) => (
                     <li
                       key={feature}
@@ -121,10 +121,10 @@ export function SubscriptionSection() {
                 <ul className="mt-5 space-y-3">
                   {[
                     'Unlimited practice sessions',
-                    'Access to all premium beats',
-                    'Download recordings',
-                    'Advanced analytics',
-                    'Priority support',
+                    'Access to all 100+ premium beats',
+                    'Save & download recordings',
+                    'Upload your own beats',
+                    'Stats & history visualization',
                   ].map((feature) => (
                     <li
                       key={feature}
