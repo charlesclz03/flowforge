@@ -1,5 +1,15 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.77 - Visual Polish (2026-01-27)
+**"Visual Polish 🎨"**
+
+Minor layout improvements to ensure perfect alignment across all devices.
+
+### Visual Overhaul
+- **Step Alignment**: Fixed vertical alignment of step numbers in the "How It Works" section to handle multi-line titles gracefully.
+
+---
+
 ## v0.9.76 - Ad Conversion Update 🚀
 **Date:** 2026-01-27
 **Codename:** Conversion Flow

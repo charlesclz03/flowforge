@@ -28,7 +28,7 @@ export function HowItWorksContent({
             <Music className="h-7 w-7 text-blue-400" />
           </div>
           <div className="space-y-3">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 1
               </span>
@@ -49,7 +49,7 @@ export function HowItWorksContent({
             <Target className="h-7 w-7 text-accent-purple" />
           </div>
           <div className="space-y-3">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 2
               </span>
@@ -70,7 +70,7 @@ export function HowItWorksContent({
             <Mic className="h-7 w-7 text-violet-400" />
           </div>
           <div className="space-y-3">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
                 3
               </span>

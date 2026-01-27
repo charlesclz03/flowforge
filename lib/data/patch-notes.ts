@@ -21,6 +21,21 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.77',
+    date: '2026-01-27',
+    title: 'Visual Polish 🎨',
+    codename: 'Visual Polish',
+    description: 'Fixed alignment issues on the "How it Works" section.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Step Alignment**: Improved vertical alignment of step numbers for multi-line titles.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.76',
     date: '2026-01-27',
     title: 'Ad Conversion Update 🚀',
