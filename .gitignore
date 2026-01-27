@@ -52,3 +52,6 @@ DOCS_TEXT/
 .vercel
 .env.debug 
 .env.prod 
+
+# Android TWA
+/twa/

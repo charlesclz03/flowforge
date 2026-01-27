@@ -4,9 +4,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.flowforge.freestyla",
-      "sha256_cert_fingerprints": [
-        "REPLACE_WITH_YOUR_SHA256_FINGERPRINT_FROM_BUBBLEWRAP"
-      ]
+      "sha256_cert_fingerprints": ["BC:82:4C:3C:BD:E6:04:46:7D:0C:E1:51:5E:27:3F:5E:11:FF:3B:EB:65:00:CE:31:E6:96:31:13:7A:CE:81:97"]
     }
   }
 ]
