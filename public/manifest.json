@@ -35,6 +35,25 @@
       "type": "image/png",
       "form_factor": "wide",
       "label": "FreeStyla Context"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "FreeStyla Mobile"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Practice",
+      "short_name": "Practice",
+      "description": "Start a freestyle session immediately",
+      "url": "/practice",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

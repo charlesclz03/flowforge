@@ -488,7 +488,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         )}
         <div className="mt-8 text-center">
           <p className="text-xs text-text-tertiary">
-            FreeStyla v0.9.81 (Section Audit)
+            FreeStyla v0.9.82 (Monetization Audit)
           </p>
         </div>
       </div>

@@ -288,6 +288,36 @@ const achievements = [
     points: 200,
   },
 
+  // Performance (Context Sensitive)
+  {
+    code: 'SPITFIRE',
+    name: 'Spitfire',
+    description: 'Rapped over 150 words in a single session.',
+    icon: 'Flame',
+    points: 100,
+  },
+  {
+    code: 'RAP_GOD',
+    name: 'Rap God',
+    description: 'Rapped over 300 words in a single session.',
+    icon: 'Zap', // Or Crown
+    points: 500,
+  },
+  {
+    code: 'MARATHON',
+    name: 'Marathon',
+    description: 'Recorded a session longer than 5 minutes.',
+    icon: 'Timer',
+    points: 200,
+  },
+  {
+    code: 'ONE_TAKE',
+    name: 'One Take',
+    description: 'Recorded for over 30s with zero restarts.',
+    icon: 'CheckCircle',
+    points: 150,
+  },
+
   // Streaks
   {
     code: 'STREAK_3',
@@ -371,6 +401,20 @@ const achievements = [
     description: 'Completed sessions on both Saturday and Sunday.',
     icon: 'Calendar',
     points: 30,
+  },
+  {
+    code: 'LUNCH_BREAK',
+    name: 'Lunch Break',
+    description: 'Recorded a session between 12 PM and 2 PM.',
+    icon: 'Coffee',
+    points: 20,
+  },
+  {
+    code: 'MIDNIGHT',
+    name: 'Midnight Oil',
+    description: 'Recorded a session between 12 AM and 3 AM.',
+    icon: 'MoonStar',
+    points: 50,
   },
 ]
 

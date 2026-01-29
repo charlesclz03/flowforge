@@ -60,6 +60,12 @@ interface SessionPlayerProps {
   sessionDuration?: number
   sessionDifficulty?: number
   sessionDate?: string | Date
+  initialSettings?: {
+    voiceVolume?: number
+    beatVolume?: number
+    isStudioMode?: boolean
+    nudge?: number
+  }
 }
 
 export const SessionPlayer = forwardRef<
@@ -77,21 +83,26 @@ export const SessionPlayer = forwardRef<
       beatArtist,
       sessionDuration,
       sessionDate,
+      initialSettings,
     },
     ref
   ) => {
     const [isPlaying, setIsPlaying] = useState(false)
     const [duration, setDuration] = useState(sessionDuration || 0)
     const [currentTime, setCurrentTime] = useState(0)
-    const [volume, setVolume] = useState(1)
-    const [beatVolume, setBeatVolume] = useState(0.8)
+    const [volume, setVolume] = useState(initialSettings?.voiceVolume ?? 1)
+    const [beatVolume, setBeatVolume] = useState(
+      initialSettings?.beatVolume ?? 0.8
+    )
     const [isMuted, setIsMuted] = useState(false)
     const [audioError, setAudioError] = useState<string | null>(null)
 
     // Advanced Features
-    const [nudge, setNudge] = useState(0)
-    const nudgeRef = useRef(0) // Ref to avoid re-creating audio on nudge change
-    const [isStudioMode, setIsStudioMode] = useState(true)
+    const [nudge, setNudge] = useState(initialSettings?.nudge ?? 0)
+    const nudgeRef = useRef(initialSettings?.nudge ?? 0) // Ref to avoid re-creating audio on nudge change
+    const [isStudioMode, setIsStudioMode] = useState(
+      initialSettings?.isStudioMode ?? true
+    )
 
     // Expose settings to parent (e.g. for downloading mix)
     useImperativeHandle(ref, () => ({

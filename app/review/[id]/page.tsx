@@ -18,6 +18,7 @@ import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
 import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
+import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
 export default function ReviewPage({ params }: { params: { id: string } }) {
   const { status } = useSession()
@@ -188,6 +189,12 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
           >
             Delete
           </Button>
+          <ShareButton
+            title={recording.title}
+            text={`Check out my freestyle flow on FreeStyla!`}
+            url={`${window.location.origin}/s/${recording.id}`}
+            className="w-full sm:w-auto px-4 justify-center"
+          />
         </div>
       }
     />

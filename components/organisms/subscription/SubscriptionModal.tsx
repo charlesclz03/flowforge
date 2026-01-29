@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import { X, Check } from 'lucide-react'
 
 interface SubscriptionModalProps {
@@ -16,15 +18,41 @@ interface SubscriptionModalProps {
 export function SubscriptionModal({
   isOpen,
   onClose,
-  onSubscribe,
+  onSubscribe: _onSubscribe,
   beatCount = 100,
 }: SubscriptionModalProps) {
+  const [loading, setLoading] = useState<string | null>(null)
+
   if (!isOpen) return null
 
-  const handleSubscribe = (plan: 'monthly' | 'annual') => {
-    // Placeholder - will integrate Stripe in V2
-    alert(`${plan} subscription checkout will be implemented in V2`)
-    if (onSubscribe) onSubscribe(plan)
+  const handleSubscribe = async (plan: 'monthly' | 'annual') => {
+    setLoading(plan)
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ plan }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to start checkout')
+      }
+
+      const { url } = await response.json()
+      if (url) {
+        window.location.href = url
+        // Don't reset loading, we're redirecting
+      } else {
+        throw new Error('No checkout URL received')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert(error instanceof Error ? error.message : 'Failed to start checkout')
+      setLoading(null)
+    }
   }
 
   return (
@@ -53,7 +81,9 @@ export function SubscriptionModal({
         </div>
 
         {/* Monthly Plan */}
-        <div className="border-2 border-text-tertiary/20 rounded-xl p-4 hover:border-accent-orange/40 transition-colors">
+        <div
+          className={`border-2 border-text-tertiary/20 rounded-xl p-4 hover:border-accent-orange/40 transition-colors ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+        >
           <div className="flex items-start justify-between mb-3">
             <div>
               <h3 className="font-medium text-text-primary">Monthly</h3>
@@ -66,14 +96,17 @@ export function SubscriptionModal({
           </div>
           <button
             onClick={() => handleSubscribe('monthly')}
-            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90"
+            disabled={!!loading}
+            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Subscribe Monthly
+            {loading === 'monthly' ? 'Processing...' : 'Subscribe Monthly'}
           </button>
         </div>
 
         {/* Annual Plan */}
-        <div className="border-2 border-accent-orange rounded-xl p-4 bg-accent-orange/5 relative">
+        <div
+          className={`border-2 border-accent-orange rounded-xl p-4 bg-accent-orange/5 relative ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+        >
           <div className="absolute -top-3 left-4 px-2 py-1 bg-accent-orange text-black text-xs font-medium rounded-full">
             Save 17%
           </div>
@@ -91,9 +124,10 @@ export function SubscriptionModal({
           </div>
           <button
             onClick={() => handleSubscribe('annual')}
-            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90"
+            disabled={!!loading}
+            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Subscribe Annually
+            {loading === 'annual' ? 'Processing...' : 'Subscribe Annually'}
           </button>
         </div>
 

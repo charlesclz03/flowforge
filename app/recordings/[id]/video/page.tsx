@@ -17,7 +17,7 @@ export default function VideoExportPage({
 }: {
   params: { id: string }
 }) {
-  const { status } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
     null
@@ -60,6 +60,38 @@ export default function VideoExportPage({
   if (status === 'unauthenticated') {
     router.push('/')
     return null
+  }
+
+  // Access Control: Pro Only
+  const isPro = session?.user?.subscriptionStatus === 'active'
+  if (!isPro) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-center p-6 gap-6">
+        <div className="w-16 h-16 rounded-full bg-accent-purple/20 flex items-center justify-center mb-2">
+          <span className="text-3xl">🔒</span>
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-purple to-accent-pink mb-2">
+            Pro Feature Locked
+          </h1>
+          <p className="text-text-secondary max-w-md mx-auto">
+            Video export is exclusively available to Pro members. Upgrade to
+            create viral social clips of your freestyles.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <Button variant="ghost" onClick={handleBack}>
+            Back
+          </Button>
+          <Button
+            className="bg-accent-purple hover:bg-accent-purple/80 text-white px-8"
+            onClick={() => router.push('/settings')}
+          >
+            Upgrade to Pro
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   if (!recording || !recording.storageUrl) {

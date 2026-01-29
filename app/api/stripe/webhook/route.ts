@@ -25,6 +25,9 @@ export async function POST(request: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+        console.log(
+          `[Stripe] Checkout completed for user ${session.metadata?.userId}`
+        )
 
         // Update user subscription status
         await prisma.user.update({
@@ -40,6 +43,9 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
+        console.log(
+          `[Stripe] Subscription updated: ${subscription.id}, Status: ${subscription.status}`
+        )
 
         await prisma.user.update({
           where: { customerId: subscription.customer as string },
@@ -52,6 +58,7 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
+        console.log(`[Stripe] Subscription deleted: ${subscription.id}`)
 
         await prisma.user.update({
           where: { customerId: subscription.customer as string },
@@ -63,8 +70,18 @@ export async function POST(request: Request) {
         break
       }
 
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice
+        console.log(
+          `[Stripe] Invoice paid: ${invoice.id}, Amount: ${invoice.amount_paid}`
+        )
+        // Optional: Extend subscription expiry if we were tracking it locally
+        break
+      }
+
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
+        console.log(`[Stripe] Invoice payment failed: ${invoice.id}`)
 
         await prisma.user.update({
           where: { customerId: invoice.customer as string },

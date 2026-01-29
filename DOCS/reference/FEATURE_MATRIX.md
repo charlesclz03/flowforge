@@ -25,20 +25,22 @@
 
 | Feature             | Status | Description                                              | User Tier |
 | :------------------ | :----- | :------------------------------------------------------- | :-------- |
-| **Vocal Recording** |      | High-fidelity Web Audio capture.                         | All       |
-| **Studio FX**       |      | Post-process reverb and vocal timing adjustments.        | All       |
-| **Download**        |      | Export session as MP3.                                   | All       |
-| **Share**           |      | Native share sheet / Clipboard link for session reviews. | All       |
-| **Video Export**    |      | Generate visualizer video (In Beta).                     | Pro       |
+| Vocal Recording | [x] 1/29 | Core `MediaRecorder` robust. Mic access audited.         | Mixed     |
+| Microphone Access | [x] 1/29 | `MediaRecorder` API wrapper | Client |
+| Latency Fix | [x] 1/29 | Offset applied via AudioMixer | Client |
+| Studio FX | [x] 1/29 | Persistence fixed. Settings stored in DB. | All |
+| **Download**        | [x] 1/29 | Client-side mixing (Studio FX applied). WAV export. | All       |
+| **Share**           | [x] 1/29 | Public links (`/s/[id]`) allow anyone to listen. | All       |
+| **Video Export**    | [x] 1/29 | Generate visualizer video (WebM). Client-side only.      | Pro       |
 
 ##  Gamification & Profile
 
 | Feature           | Status | Description                                                   | User Tier |
 | :---------------- | :----- | :------------------------------------------------------------ | :-------- |
-| **XP System**     |      | Battle Pass style progress bar based on activity.             | All       |
-| **Badges**        |      | Unlockable achievements (e.g., "Night Shift", "Consistency"). | All       |
-| **Flow Density**  |      | Proprietary metric calculating rhyme density/syllables.       | All       |
-| **History Graph** |      | Visualization of practice habits over time.                   | Pro       |
+| **XP System**     | [x] 1/29 | Gain XP for time/words. Level up curve. Persisted.         | All       |
+| **Badges**        | [x] 1/29 | Unlockable achievements (e.g., "Night Shift"). Logic audited. | All       |
+| **Vocab Velocity**  | [x] 1/29 | Measures "Unique WPM" (Vocabulary Expansion Rate).            | All       |
+| **History Graph** | [x] 1/29 | Visualization of practice habits (Last 14 Days).              | Pro       |
 
 ##  Monetization (Stripe)
 
@@ -64,3 +66,15 @@
 | 2026-01-29 | Calibration     | ✅ PASS | No fixes required                                  |
 | 2026-01-29 | Beat Deletion   | ✅ PASS | No fixes required                                  |
 | 2026-01-29 | "My Beats"      | ✅ PASS | No fixes required                                  |
+| 2026-01-29 | Vocal Latency   | ✅ PASS | Engine/Mixer nudge implementation applied          |
+| 2026-01-29 | Microphone Access | ✅ PASS | Duplicate file identified (lib/audio vs lib/recording) |
+| 2026-01-29 | Studio FX       | ✅ PASS | Implemented persistence for Nudge, Vol, Reverb via DB/API. |
+| 2026-01-29 | Download        | ✅ PASS | Validated client-side mixing, integrity check, and FX application. |
+| 2026-01-29 | Share           | ✅ PASS | Implemented public shared page and access control. |
+| 2026-01-29 | Video Export    | ✅ PASS | Validated client-side Canvas+MediaRecorder implementation. |
+| 2026-01-29 | XP System       | ✅ PASS | Confirmed server-side calculation and persistence. |
+| 2026-01-29 | Badges          | ✅ PASS | Race condition fixed (await Streak). Seed data synced. |
+| 2026-01-29 | Vocab Velocity  | ✅ PASS | Renamed from "Flow Density" to match implementation. |
+| 2026-01-29 | History Graph   | ✅ PASS | Validated 14-day rolling window logic. Performance note added. |
+| 2026-01-29 | Monetization    | ✅ PASS | Validated Stripe webhook. Fixed missing Pro gate on History Graph. |
+

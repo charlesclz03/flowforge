@@ -172,6 +172,8 @@ model FreestyleSession {
   restarts        Int      @default(0)
   playbacks       Int      @default(0)
   beatOffsetMs    Int      @default(0) @map("beat_offset_ms") // Beat position when recording started (for playback sync)
+  fxConfig        Json?    @map("fx_config") // Studio FX settings: { voiceVolume, beatVolume, nudge, reverb }
+  isPublic        Boolean  @default(true) @map("is_public") // [SHARE] Allow public access via /s/[id]
   createdAt       DateTime @default(now()) @map("created_at")
 
   // Relations

@@ -21,6 +21,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.82',
+    date: '2026-01-29',
+    title: 'Monetization Audit 💰',
+    codename: 'Monetization Audit',
+    description:
+      'We performed a comprehensive audit of our monetization logic. The History Graph is now correctly gated for Pro users, preventing free access. We also confirmed the security of our Stripe webhooks and beat upload flows.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**History Graph Gating**: Fixed a permission issue where the activity graph was visible to free users. It is now properly locked.',
+          '**Header Cleanup**: Removed unused import in `VideoCreator` to keep the codebase clean.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Monetization Audit**: Verified security for Stripe Webhooks, Video Export, and Cloud Storage.',
+          '**Master MCP Audit**: Validated that our AI tools (`chrome-devtools`, `supabase-mcp`) are healthy and ready for autonomous testing.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.81',
     date: '2026-01-29',
     title: 'User Beat Management Audit 🥁',

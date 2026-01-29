@@ -1,9 +1,11 @@
-# Project Status: v0.9.81 ("Section Audit")
+# Project Status: v0.9.82 ("Monetization Audit")
 **Last Updated:** 2026-01-29
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
 
 ## Recent Achievements
+- **Monetization Audit**: Verified Stripe webhooks, beat uploads, and video export gating.
+- **History Graph Fixed**: Pro gating applied to `StatsSection`.
 - **User Beat Management Audit**: Fixed critical upload bug, added integration tests, and refactored selector logic.
 - **Stripe Checkout Working**: Fixed API version and environment variable issues to enable subscriptions.
 - **Pricing Unified**: All components now display correct €4.99/mo and €49.00/yr pricing.
@@ -19,6 +21,7 @@
 ## Version History (Recent)
 | Version | Codename | Date | Summary |
 |---------|----------|------|---------|
+| v0.9.82 | Monetization Audit | 2026-01-29 | History Graph Gating & Stripe Audit |
 | v0.9.81 | Section Audit | 2026-01-29 | User Beat Management Audit & Fixes |
 | v0.9.80 | Clean Slate | 2026-01-29 | Feature Audit (Solo, Cypher, Word Prompts) |
 | v0.9.79 | Pass the Phone | 2026-01-29 | Cypher Mode Activation |

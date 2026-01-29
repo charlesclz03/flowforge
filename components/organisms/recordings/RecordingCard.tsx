@@ -321,7 +321,7 @@ export const RecordingCard = memo(function RecordingCard({
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FreeStyla!"
-              url={`${window.location.origin}/review/${recording.id}`}
+              url={`${window.location.origin}/s/${recording.id}`}
               className="flex-1 md:flex-none justify-center w-auto border-none bg-transparent hover:bg-white/10 px-2"
               embedded={true}
             />

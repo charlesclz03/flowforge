@@ -5,12 +5,16 @@ import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { Card } from '@/components/atoms/Card'
 import { Play, Pause, RotateCcw, Volume2, Timer, Wand2 } from 'lucide-react'
-import { toast } from 'react-hot-toast'
 
 interface PostProcessingProps {
   audioUrl: string
   onClose: () => void
-  onSave: (processedBlob: Blob) => void
+  onSave: (config: {
+    voiceVolume: number
+    beatVolume: number
+    nudge: number
+    reverb: boolean
+  }) => void
 }
 
 export function PostProcessingModal({
@@ -280,11 +284,14 @@ export function PostProcessingModal({
           <Button
             className="flex-1 bg-white text-black"
             onClick={() => {
-              // Note: In a real production app, we would re-render the audio blob with these settings.
-              // For now, we simulate success and emit the blob.
-              onSave(new Blob())
-              toast.success('Settings applied to export!')
-              onClose()
+              // Emit config for saving
+              onSave({
+                voiceVolume: volume,
+                beatVolume: 0.8, // Default for now
+                nudge,
+                reverb,
+              })
+              // Note: Parent handles toast
             }}
           >
             Save & Close

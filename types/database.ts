@@ -16,7 +16,11 @@ export type BeatWithSessions = Beat & {
 // Force fileSizeBytes inclusion if Prisma types lag
 export type FreestyleSessionWithBeat = FreestyleSession & {
   beat: Beat
+  user?: any // Added for Share page
   fileSizeBytes?: number | null
+  beatOffsetMs?: number | null // [LATENCY FIX] Added manually
+  fxConfig?: any // [STUDIO FX] Added manually
+  isPublic?: boolean // [SHARE] Added manually
 }
 
 // API response types

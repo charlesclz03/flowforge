@@ -4,6 +4,7 @@ export const XP_CONFIG = {
   XP_PER_SESSION_BASE: 10, // Adjusted for short session balance
   LEVEL_base_XP: 1000,
   LEVEL_MULTIPLIER: 1.2, // Level 2 requires 1000 * 1.2 = 1200 XP
+  MAX_SESSION_XP: 2000, // Safety cap to prevent exploitation
 }
 
 /**
@@ -44,7 +45,10 @@ export function calculateSessionXP(data: {
   const achievementXP = data.achievementsUnlocked * 100 // Bonus for unlocking achievements
   const baseXP = XP_CONFIG.XP_PER_SESSION_BASE
 
-  const totalEarned = baseXP + durationXP + wordXP + achievementXP
+  const totalEarned = Math.min(
+    baseXP + durationXP + wordXP + achievementXP,
+    XP_CONFIG.MAX_SESSION_XP
+  )
 
   return {
     total: totalEarned,

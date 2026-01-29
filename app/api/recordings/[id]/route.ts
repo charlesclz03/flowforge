@@ -14,9 +14,10 @@ export async function GET(
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    // Allow public access - we check permissions later based on isPublic flag
+    // if (!session?.user?.email) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
 
     const { id } = params
 
@@ -33,6 +34,7 @@ export async function GET(
       },
       include: {
         beat: true,
+        user: true,
       },
     })
 
@@ -44,14 +46,26 @@ export async function GET(
     }
 
     // specific check: Does this recording belong to the user?
+    // OR is it public?
     // We get the user ID from the database using email to be safe, or assume session.user.id is correct if populated
-    // To be strictly safe, let's verify ownership.
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-    })
 
-    if (!user || recording.userId !== user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    // If public, allow access (skip ownership check)
+    // IMPORTANT: The `isPublic` field defaults to true for now
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isPublic = (recording as any).isPublic ?? true
+
+    if (!isPublic) {
+      if (!session?.user?.email) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      })
+
+      if (!user || recording.userId !== user.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+      }
     }
 
     // 3. Generate Signed URL if needed
@@ -75,6 +89,59 @@ export async function GET(
     })
   } catch (error) {
     console.error('Error fetching recording:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id } = params
+    const body = await request.json()
+    const { fxConfig } = body
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Recording ID is required' },
+        { status: 400 }
+      )
+    }
+
+    // Verify ownership
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    })
+
+    const recording = await prisma.freestyleSession.findUnique({
+      where: { id },
+    })
+
+    if (!recording || !user || recording.userId !== user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    // Update
+    const updated = await prisma.freestyleSession.update({
+      where: { id },
+      data: {
+        fxConfig: fxConfig ?? undefined,
+      } as any, // Cast to any to handle schema lag
+    })
+
+    return NextResponse.json({ success: true, recording: updated })
+  } catch (error) {
+    console.error('Error updating recording:', error)
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

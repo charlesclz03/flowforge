@@ -10,6 +10,7 @@ import confetti from 'canvas-confetti'
 import { PWAInstallModal } from '@/components/molecules/pwa/PWAInstallModal'
 
 interface SessionSummaryData {
+  id?: string // Added ID
   score: number
   vibe: string
   description: string
@@ -31,6 +32,9 @@ interface SessionSummaryData {
       words: number
       achievements: number
     }
+  }
+  meta?: {
+    currentStreak: number
   }
   isOptimistic?: boolean
 }
@@ -102,7 +106,27 @@ export default function SessionSummaryModal({
       <PostProcessingModal
         audioUrl={data.audioUrl}
         onClose={() => setShowStudio(false)}
-        onSave={(_blob) => {}}
+        onSave={async (config) => {
+          if (!data.id) {
+            console.error('Missing session ID, cannot save FX')
+            return
+          }
+          try {
+            await fetch(`/api/recordings/${data.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fxConfig: config }),
+            })
+            // Feedback is handled by parent or toast here
+            const { toast } = await import('react-hot-toast')
+            toast.success('Studio Settings Saved!')
+            setShowStudio(false)
+          } catch (e) {
+            console.error('Failed to save FX', e)
+            const { toast } = await import('react-hot-toast')
+            toast.error('Failed to save settings')
+          }
+        }}
       />
     )
   }
@@ -215,7 +239,9 @@ export default function SessionSummaryModal({
               className="bg-white/5 p-3 rounded-xl text-center border border-white/5"
             >
               {/* TODO: Replace hardcoded streak with real user data */}
-              <div className="text-2xl font-black text-orange-400">7</div>
+              <div className="text-2xl font-black text-orange-400">
+                {data.meta?.currentStreak || 0}
+              </div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
                 Consistency Streak
               </div>

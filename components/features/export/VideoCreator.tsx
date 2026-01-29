@@ -41,6 +41,37 @@ export function VideoCreator({
     }
   }, [videoUrl])
 
+  // Browser Compatibility Check
+  const [isSupported, setIsSupported] = useState(true)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasMediaRecorder = typeof MediaRecorder !== 'undefined'
+      // Check for webm support (most common for this implementation)
+      const hasWebM =
+        hasMediaRecorder &&
+        MediaRecorder.isTypeSupported('video/webm; codecs=vp9')
+      setIsSupported(hasWebM)
+    }
+  }, [])
+
+  if (!isSupported) {
+    return (
+      <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl text-center">
+        <h3 className="text-red-400 font-bold mb-2">Browser Not Supported</h3>
+        <p className="text-text-secondary text-sm">
+          Video export requires a browser that supports WebM recording (like
+          Chrome or Firefox on Desktop). Please switch browsers to use this
+          feature.
+        </p>
+        {onBack && (
+          <Button variant="ghost" onClick={onBack} className="mt-4">
+            Go Back
+          </Button>
+        )}
+      </div>
+    )
+  }
+
   const startExport = async () => {
     if (!canvasRef.current) return
 
@@ -267,6 +298,23 @@ export function VideoCreator({
               >
                 Create Another
               </Button>
+
+              <div className="text-xs text-text-tertiary text-center mt-2 p-3 bg-white/5 rounded-lg border border-white/5">
+                <span className="font-semibold text-accent-blue block mb-1">
+                  Format Note (WebM)
+                </span>
+                For Instagram/TikTok, you may need to convert this file to MP4.
+                We recommend using a free tool like{' '}
+                <a
+                  href="https://cloudconvert.com/webm-to-mp4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:underline"
+                >
+                  CloudConvert
+                </a>{' '}
+                for best results.
+              </div>
             </div>
           )}
 

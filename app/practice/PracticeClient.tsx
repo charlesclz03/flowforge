@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
@@ -55,6 +56,7 @@ interface PracticeClientProps {
 }
 
 interface SessionSummary {
+  id?: string // Added ID
   score: number
   vibe: string
   description: string
@@ -80,6 +82,7 @@ interface SessionSummary {
   }
   meta?: {
     totalSessions: number
+    currentStreak: number
     hasRated: boolean
   }
 }
@@ -186,6 +189,7 @@ export default function PracticeClient({
             prev
               ? {
                   ...prev,
+                  id: data.session.id, // Add ID
                   score: data.session.score,
                   newBadges: data.session.newBadges,
                   xp: data.session.xp,

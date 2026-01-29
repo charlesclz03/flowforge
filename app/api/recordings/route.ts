@@ -16,6 +16,7 @@ interface UserWithRate {
   xp: number
   level: number
   hasRated: boolean
+  currentStreak?: number
 }
 
 /**
@@ -41,6 +42,17 @@ export async function POST(request: Request) {
     const restarts = parseInt(formData.get('restarts') as string) || 0
     const playbacks = parseInt(formData.get('playbacks') as string) || 0
     const beatOffsetMs = parseInt(formData.get('beatOffsetMs') as string) || 0
+
+    // Parse Studio FX Config
+    const fxConfigRaw = formData.get('fxConfig') as string
+    let fxConfig = null
+    try {
+      if (fxConfigRaw) {
+        fxConfig = JSON.parse(fxConfigRaw)
+      }
+    } catch (e) {
+      console.warn('Failed to parse fxConfig', e)
+    }
 
     // Validate required fields
     if (!audioFile || !beatId || !title || !durationSeconds) {
@@ -134,6 +146,7 @@ export async function POST(request: Request) {
         playbacks,
         wordCount,
         beatOffsetMs,
+        fxConfig, // Save Studio FX Settings
       } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
       supabase.storage
         .from(RECORDINGS_BUCKET)
@@ -158,15 +171,26 @@ export async function POST(request: Request) {
         ...new Set(words.map((w) => w.toLowerCase().trim())),
       ].filter((w) => w.length > 0)
 
-      // Use explicit any for tasks to avoid complex type intersection issues in Promise.all
+      // 1. Update Streak FIRST (Blocking for Gamification Logic)
+      try {
+        const { StreakSystem } = await import('@/lib/gamification/streak')
+        await StreakSystem.checkAndUpdate(session.user.id)
+      } catch (e) {
+        console.error('[GAMIFICATION] Streak update failed:', e)
+      }
+
+      // 2. Check Achievements (Now that user stats are fresh)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tasks: Promise<any>[] = [
         AchievementSystem.checkAndUnlock(session.user.id, {
           type: 'RECORDING_SAVED',
+          meta: {
+            wordCount,
+            durationSeconds,
+            restarts,
+            frequency,
+          },
         }),
-        import('@/lib/gamification/streak').then(({ StreakSystem }) =>
-          StreakSystem.checkAndUpdate(session.user.id)
-        ),
       ]
 
       if (uniqueWords.length > 0) {
@@ -224,9 +248,14 @@ export async function POST(request: Request) {
 
       currentUser = (await prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { xp: true, level: true, hasRated: true } as Record<
+        select: {
+          xp: true,
+          level: true,
+          hasRated: true,
+          currentStreak: true,
+        } as Record<
           string,
-          boolean
+          any // eslint-disable-line @typescript-eslint/no-explicit-any
         >,
       })) as UserWithRate | null
 
@@ -281,6 +310,7 @@ export async function POST(request: Request) {
           totalSessions: await prisma.freestyleSession.count({
             where: { userId: session.user.id },
           }),
+          currentStreak: currentUser?.currentStreak || 0, // Pass actual streak
           hasRated: currentUser?.hasRated || false,
         },
       },

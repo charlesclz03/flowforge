@@ -19,6 +19,7 @@ interface AppHeaderProps {
   customSubtitle?: string
   hide?: boolean
   backPath?: string
+  action?: React.ReactNode // [SHARE] Optional right-side action
 }
 
 export function AppHeader({
@@ -30,6 +31,7 @@ export function AppHeader({
   onBack,
   hide = false,
   backPath,
+  action,
 }: AppHeaderProps) {
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -70,40 +72,47 @@ export function AppHeader({
           )}
 
           {/* Account section - top right */}
-          {showSettings && (
+          {(showSettings || action) && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2 sm:gap-3">
-              {/* Help Button - Redirects to How It Works */}
-              <Link
-                href="/howitworks"
-                className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
-                aria-label="How it works"
-              >
-                <HelpCircle
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  strokeWidth={2.5}
-                />
-              </Link>
-
-              {/* Streak Counter */}
-              {isAuthenticated && (session?.user?.currentStreak || 0) > 0 && (
-                <div className="group relative">
-                  <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
-                    <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse" />
-                    <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
-                      {session?.user?.currentStreak}
-                    </span>
-                  </div>
-
-                  {/* Hover Widget */}
-                  <div className="absolute top-full right-0 mt-4 w-72 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                    <DailyStreakWidget
-                      currentStreak={session?.user?.currentStreak || 0}
-                      hasPracticedToday={false}
+              {action ? (
+                action
+              ) : (
+                <>
+                  {/* Help Button - Redirects to How It Works */}
+                  <Link
+                    href="/howitworks"
+                    className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                    aria-label="How it works"
+                  >
+                    <HelpCircle
+                      className="w-5 h-5 sm:w-6 sm:h-6"
+                      strokeWidth={2.5}
                     />
-                  </div>
-                </div>
+                  </Link>
+
+                  {/* Streak Counter */}
+                  {isAuthenticated &&
+                    (session?.user?.currentStreak || 0) > 0 && (
+                      <div className="group relative">
+                        <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
+                          <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse" />
+                          <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
+                            {session?.user?.currentStreak}
+                          </span>
+                        </div>
+
+                        {/* Hover Widget */}
+                        <div className="absolute top-full right-0 mt-4 w-72 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                          <DailyStreakWidget
+                            currentStreak={session?.user?.currentStreak || 0}
+                            hasPracticedToday={false}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  <SettingsDropdown />
+                </>
               )}
-              <SettingsDropdown />
             </div>
           )}
 

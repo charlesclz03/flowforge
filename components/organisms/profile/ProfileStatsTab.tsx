@@ -1,16 +1,13 @@
-'use client'
-
 import { useEffect, useState } from 'react'
 import {
   StatsSection,
-  Recording,
+  UserStats,
 } from '@/components/organisms/profile/StatsSection'
 import { useSession } from 'next-auth/react'
 
 export function ProfileStatsTab() {
   const { data: session } = useSession()
-  const [recordings, setRecordings] = useState<Recording[]>([])
-  const [wordVaultCount, setWordVaultCount] = useState(0)
+  const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -19,19 +16,11 @@ export function ProfileStatsTab() {
 
       setIsLoading(true)
       try {
-        const [recRes, statsRes] = await Promise.all([
-          fetch('/api/recordings'),
-          fetch('/api/user/stats'),
-        ])
+        const res = await fetch('/api/user/stats')
 
-        if (recRes.ok) {
-          const data = await recRes.json()
-          setRecordings(data.recordings || [])
-        }
-
-        if (statsRes.ok) {
-          const data = await statsRes.json()
-          setWordVaultCount(data.wordVaultCount || 0)
+        if (res.ok) {
+          const data = await res.json()
+          setStats(data)
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error)
@@ -43,11 +32,7 @@ export function ProfileStatsTab() {
     fetchStats()
   }, [session?.user?.id])
 
-  return (
-    <StatsSection
-      recordings={recordings}
-      isLoading={isLoading}
-      wordVaultCount={wordVaultCount}
-    />
-  )
+  const isPro = session?.user?.subscriptionStatus === 'active'
+
+  return <StatsSection stats={stats} isLoading={isLoading} isPro={isPro} />
 }

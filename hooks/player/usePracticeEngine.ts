@@ -265,6 +265,12 @@ export function usePracticeEngine({
           // We need wordsUsed. Engine should probably track this or accept a getter.
           fd.append('wordsUsed', '[]')
 
+          // [LATENCY FIX] Inject beatOffsetMs from localStorage
+          const latencyMs = parseInt(
+            localStorage.getItem('flowforge_latency') || '0'
+          )
+          fd.append('beatOffsetMs', latencyMs.toString())
+
           // Execute Save
           submitSession(fd)
             .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
