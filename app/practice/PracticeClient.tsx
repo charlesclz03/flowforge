@@ -269,6 +269,7 @@ export default function PracticeClient({
       const interval = setInterval(() => setSirenPhase((p) => (p + 1) % 2), 150)
       return () => clearInterval(interval)
     }
+    return undefined
   }, [isSirenActive])
 
   // Beat Handling
