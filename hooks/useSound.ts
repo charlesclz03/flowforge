@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react'
 
-type SoundType = 'click' | 'hover' | 'success' | 'start' | 'stop'
+type SoundType = 'click' | 'hover' | 'success' | 'start' | 'stop' | 'tick'
 
 export function useSound() {
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -95,6 +95,16 @@ export function useSound() {
         playNote(659.25, now + 0.1) // E5
         playNote(783.99, now + 0.2) // G5
         playNote(1046.5, now + 0.3) // C6
+        break
+
+      case 'tick':
+        // Metronome style tick
+        osc.type = 'triangle'
+        osc.frequency.setValueAtTime(1000, now)
+        gain.gain.setValueAtTime(0.3, now)
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05)
+        osc.start(now)
+        osc.stop(now + 0.05)
         break
     }
   }, [])
