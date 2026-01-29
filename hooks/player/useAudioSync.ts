@@ -48,7 +48,7 @@ export function useAudioSync({
   bpm,
   isPlaying,
   onBeat,
-  onSubBeat,
+  _onSubBeat,
 }: UseAudioSyncProps) {
   // Audio Context is the master clock
   const audioContextRef = useRef<AudioContext | null>(null)
