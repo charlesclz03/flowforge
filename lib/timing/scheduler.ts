@@ -25,14 +25,19 @@ export class WordPromptScheduler {
   }
 
   /**
-   * Queue a frequency update for the next cycle
+   * Queue a frequency update for the next cycle.
+   * The new frequency will be applied when the current interval completes,
+   * ensuring smooth transitions without visual or audio jumps.
+   * @param frequencyInBars - Number of bars between word prompts (e.g., 2, 4, 8)
    */
   setFrequency(frequencyInBars: number): void {
     this.nextFrequencyInBars = frequencyInBars
   }
 
   /**
-   * Get the currently active frequency (what the beat is running on)
+   * Get the currently active frequency (what the beat is running on).
+   * This may differ from the queued frequency if a change is pending.
+   * @returns The active frequency in bars
    */
   getActiveFrequency(): number {
     return this.activeFrequencyInBars
@@ -46,7 +51,11 @@ export class WordPromptScheduler {
   }
 
   /**
-   * Check if a prompt should trigger at current time
+   * Check if a prompt should trigger at the current time and execute if so.
+   * This method also commits any queued frequency changes at the start of new intervals.
+   * @param currentTime - Current playback time in seconds
+   * @param word - The word to display if triggered
+   * @returns true if a prompt was triggered, false otherwise
    */
   checkAndTrigger(currentTime: number, word: WordData): boolean {
     const interval = calculatePromptInterval(

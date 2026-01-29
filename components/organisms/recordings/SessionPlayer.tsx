@@ -115,6 +115,13 @@ export const SessionPlayer = forwardRef<
 
     // Load latency from calibration
     useEffect(() => {
+      // Migrate legacy key if present (from old Latency Wizard)
+      const legacyKey = localStorage.getItem('flowforge_audio_latency_ms')
+      if (legacyKey && !localStorage.getItem('flowforge_latency')) {
+        localStorage.setItem('flowforge_latency', legacyKey)
+        localStorage.removeItem('flowforge_audio_latency_ms')
+      }
+
       const saved = localStorage.getItem('flowforge_latency')
       if (saved) {
         const val = parseInt(saved)

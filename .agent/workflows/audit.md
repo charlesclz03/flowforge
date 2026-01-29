@@ -78,9 +78,37 @@ Create the following files in the `brain` directory. Always include the Date/Fea
 -   **Steps**: Concrete engineering tasks (e.g., "Extract Hook", "Implement FSM").
 -   **Validation**: How to prove it's fixed.
 
-## 5. Execution (Optional)
+## 5. Execution (REQUIRED)
 -   Ask the user: "Do you want to proceed with the 'Forever Fix' for [FEATURE]?"
 -   If YES:
     -   Create a `task.md` entry specifically for this fix.
     -   Execute the plan using TDD (Test/Type Driven Development) where possible.
-    -   Update `DOCS/reference/FEATURE_MATRIX.md` to mark feature as `[x]` upon completion.
+-   If NO fixes needed (feature passes audit): Note "No fixes required" in the audit history.
+
+## 6. Feature Matrix Update (REQUIRED)
+-   **Always** update `DOCS/reference/FEATURE_MATRIX.md` at the end of the audit.
+-   Mark the audited feature with `[x] <date>` (e.g., `[x] 1/29`).
+-   This confirms the feature has been audited and is verified.
+-   *Example*:
+    ```diff
+    -| **Word Prompts**   |      | Synchronized words...
+    +| **Word Prompts**   | [x] 1/29 | Synchronized words...
+    ```
+
+## 7. Audit History Log (REQUIRED)
+-   **Always** add an entry to the **Audit History** section at the bottom of `FEATURE_MATRIX.md`.
+-   Include: Date, Feature Name, Status (PASS/FAIL), and any fixes applied.
+-   Format:
+    ```markdown
+    ## Audit History
+    
+    | Date       | Feature         | Status | Fixes Applied                                      |
+    |:-----------|:----------------|:------:|:---------------------------------------------------|
+    | 2026-01-29 | Word Prompts    | ✅ PASS | Added 8 unit tests, JSDoc, metrics logging         |
+    | 2026-01-29 | Beat Library    | ✅ PASS | Fixed `: any` type escape with `as const`          |
+    ```
+
+## 8. Report Date Requirement (REQUIRED)
+-   **All audit reports** must include the date in the report header.
+-   Format: `**Date:** YYYY-MM-DD` (e.g., `**Date:** 2026-01-29`).
+-   This provides log context for historical reference.

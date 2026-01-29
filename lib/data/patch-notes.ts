@@ -21,6 +21,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.80',
+    date: '2026-01-29',
+    title: 'The Feature Audit Update 🔍',
+    codename: 'Clean Slate',
+    description:
+      'We performed comprehensive audits on 7 core features, fixing bugs and adding polish. The Latency Wizard now correctly saves calibration data, and we added 8 new unit tests for the Word Prompt system.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Latency Fix**: Resolved a bug where the Latency Wizard calibration was not being applied during playback.',
+          '**Word Prompt Tests**: Added 8 unit tests covering anti-rhyme logic, fallback behavior, and difficulty filtering.',
+          '**JSDoc Comments**: Added detailed documentation to the scheduler and beat library modules.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**MCP Audit Workflow**: Added a new workflow for auditing MCP server integrations.',
+          '**Feature Matrix**: Verified 7 features: Solo Mode, Cypher Mode, Word Prompts, Beat Library, Orb Visualizer, Latency Fix.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.79',
     date: '2026-01-29',
     title: 'Cypher Mode Activated 🎤',

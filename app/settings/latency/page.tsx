@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { ChevronRight, Play, CheckCircle2 } from 'lucide-react'
 
-const LATENCY_KEY = 'flowforge_audio_latency_ms'
+const LATENCY_KEY = 'flowforge_latency'
 
 export default function LatencyWizard() {
   const router = useRouter()

@@ -88,6 +88,13 @@ export function useWordPrompt({
       setShowWord(true)
       setPromptCount((count) => count + 1)
 
+      // Development metrics logging
+      if (process.env.NODE_ENV === 'development') {
+        // Note: promptCount here shows the count BEFORE increment
+        // eslint-disable-next-line no-console
+        console.info('[WordPrompt] Delivered:', nextWordRef.current.wordText)
+      }
+
       // Sync active frequency from scheduler (it might have just changed)
       if (schedulerRef.current) {
         setActiveFrequency(schedulerRef.current.getActiveFrequency())

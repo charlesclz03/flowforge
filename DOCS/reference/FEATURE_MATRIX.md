@@ -6,10 +6,10 @@
 | :----------------- | :----- | :--------------------------------------------------------- | :-------- |
 | **Solo Mode**      | [x] 1/29 | Infinite instrumental loop with word prompts.              | All       |
 | **Cypher Mode**    | [x] 1/29 | Multiplayer lobby (Local Pass-the-Phone) with Auto-Rotation. | All       |
-| **Word Prompts**   |      | Synchronized words (Easy/Med/Hard) on 2/4/8 bar intervals. | All       |
-| **Beat Library**   |      | Curated selection of instrumentals with BPM detection.     | All       |
-| **Orb Visualizer** |      | Reactive visualizer that pulses to input gain.             | All       |
-| **Latency Fix**    |      | +/- 100ms calibration slider for wireless audio.           | All       |
+| **Word Prompts**   | [x] 1/29 | Synchronized words (Easy/Med/Hard) on 2/4/8 bar intervals. | All       |
+| **Beat Library**   | [x] 1/29 | Curated selection of instrumentals with BPM detection.     | All       |
+| **Orb Visualizer** | [x] 1/29 | Reactive visualizer that pulses to input gain.             | All       |
+| **Latency Fix**    | [x] 1/29 | +/- 100ms calibration slider for wireless audio.           | All       |
 
 ##  User Beat Management
 
@@ -46,3 +46,16 @@
 | :------- | :------- | :--------------------------------------------------------- |
 | **Free** | $0       | Basic Practice, 60s Recording Limit, Ads.                  |
 | **Pro**  | $4.99/mo | No Ads, Unlimited Recording, User Uploads, Advanced Stats. |
+
+---
+
+## Audit History
+
+| Date       | Feature         | Status | Fixes Applied                                      |
+|:-----------|:----------------|:------:|:---------------------------------------------------|
+| 2026-01-29 | Solo Mode       | ✅ PASS | Implemented `usePracticeEngine` (FSM + Atomic Clock) |
+| 2026-01-29 | Cypher Mode     | ✅ PASS | Implemented player rotation logic                  |
+| 2026-01-29 | Word Prompts    | ✅ PASS | Added 8 unit tests, JSDoc, dev metrics logging     |
+| 2026-01-29 | Beat Library    | ✅ PASS | Fixed `: any` type escape with `as const`          |
+| 2026-01-29 | Orb Visualizer  | ✅ PASS | No fixes required                                  |
+| 2026-01-29 | Latency Fix     | ✅ PASS | Fixed localStorage key mismatch + migration        |
