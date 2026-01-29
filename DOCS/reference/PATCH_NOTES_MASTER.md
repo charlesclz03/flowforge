@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.79 - Pass the Phone (2026-01-29)
+**"Cypher Mode Activated 🎤"**
+
+We activated the Cypher Mode! Gather your crew around a single device and trade bars. The ring now rotates automatically for up to 4 players.
+
+### New Features
+- **Local Multiplayer**: "Cypher Mode" is now live! Select 2-4 players and pass the phone.
+- **Auto-Rotation**: The beat engine now tracks whose turn it is and switches players automatically every 4/8/16 bars.
+- **Visual Feedback**: The Simon Ring visualizer now spins to match the active player.
+
+---
+
 ## v0.9.78 - Dewey Decimal (2026-01-29)
 **"The Library Update 📚"**
 

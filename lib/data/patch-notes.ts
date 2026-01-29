@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.79',
+    date: '2026-01-29',
+    title: 'Cypher Mode Activated 🎤',
+    codename: 'Pass the Phone',
+    description:
+      'We activated the Cypher Mode! Gather your crew around a single device and trade bars. The ring now rotates automatically for up to 4 players.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          '**Local Multiplayer**: "Cypher Mode" is now live! Select 2-4 players and pass the phone.',
+          '**Auto-Rotation**: The beat engine now tracks whose turn it is and switches players automatically every 4/8/16 bars.',
+          '**Visual Feedback**: The Simon Ring visualizer now spins to match the active player.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.78',
     date: '2026-01-29',
     title: 'The Library Update 📚',
