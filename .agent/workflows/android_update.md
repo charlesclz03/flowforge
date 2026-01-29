@@ -15,4 +15,4 @@ description: Update Android Trusted Web Activity (TWA) configurations and assets
     - These are critical for the Android Splash Screen.
 
 4.  **Documentation**
-    - Update `DOCS/deployment/ANDROID_DEPLOYMENT_GUIDE.md` if any configuration steps have changed.
+    - Update `DOCS/guides/ANDROID_DEPLOYMENT.md` if any configuration steps have changed.

@@ -271,8 +271,8 @@ Deployment                            [░░░░░░░░░░░░░�
  Dec 10, 2025  Phase 4 Complete (Recording Management)
  Dec 10, 2025  Phase 5 Complete (Review & Polish)
  Dec 10, 2025  MVP Build Complete
- Jan 09, 2026  v1.6.0 Studio Update (Platinum Record)
- Jan 10, 2026  v1.6.1 Waveform Overhaul (Visual Flow)
+ Jan 09, 2026  v0.9.60 Studio Update (Platinum Record)
+ Jan 10, 2026  v0.9.61 Waveform Overhaul (Visual Flow)
  TBD          Public Launch v1.0
 ```
 

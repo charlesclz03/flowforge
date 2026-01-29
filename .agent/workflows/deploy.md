@@ -28,7 +28,7 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
 6.  **Documentation Synchronization**
     - Read `package.json` version.
     - **Update**: `lib/data/patch-notes.ts` (Ensure entry exists).
-    - **Update**: `DOCS/project/PATCH_NOTES_MASTER.md`.
+    - **Update**: `DOCS/reference/PATCH_NOTES_MASTER.md`.
     - **Update**: `DOCS/project/PROJECT_STATUS.md` (Update "Last Updated" date).
     - **Update**: `components/organisms/settings/SettingsList.tsx` (Update displayed version).
 

@@ -53,13 +53,13 @@
 
 - **[REDESIGN_COMPLETE.md](REDESIGN_COMPLETE.md)** -  Purple-based design redesign (November 11, 2025)
 - **[DESIGN_SYSTEM_REFERENCE.md](DESIGN_SYSTEM_REFERENCE.md)** - Complete design system documentation
-- **[DOCS/Freestyla Design.md](DOCS/Freestyla%20Design.md)** - Original design document
-- **[DOCS/Freestyla Design Assets/](DOCS/Freestyla%20Design%20Assets/)** - Design screenshots (11 JPG files)
+- **[DOCS/architecture/Freestyla Design.md](architecture/Freestyla%20Design.md)** - Original design document
+- **[DOCS/architecture/Design Assets/](architecture/Freestyla%20Design%20Assets/)** - Design screenshots
 
 ###  Setup Guides (in DOCS/)
 
-- **[DOCS/SETUP.md](DOCS/SETUP.md)** - Initial setup
-- **[DOCS/VERCEL_DEPLOY.md](DOCS/VERCEL_DEPLOY.md)** - Deployment
+- **[DOCS/guides/DEVELOPER_SETUP.md](guides/DEVELOPER_SETUP.md)** - Initial setup
+- **[DOCS/guides/DEPLOYMENT.md](guides/DEPLOYMENT.md)** - Deployment
 - **[DOCS/SUPABASE_STORAGE_SETUP.md](DOCS/SUPABASE_STORAGE_SETUP.md)** - Recording storage
 - **[DOCS/STRIPE_SETUP.md](DOCS/STRIPE_SETUP.md)** - Payments
 - **[DOCS/GCS_UPLOAD_PLAN.md](DOCS/GCS_UPLOAD_PLAN.md)** - File uploads
@@ -94,7 +94,7 @@
 1. [AUTHENTICATION_COMPLETE.md](AUTHENTICATION_COMPLETE.md) - Auth setup
 2. [DATABASE_SETUP_COMPLETE.md](DATABASE_SETUP_COMPLETE.md) - Database
 3. [DOCS/SETUP.md](DOCS/SETUP.md) - General setup
-4. [DOCS/VERCEL_DEPLOY.md](DOCS/VERCEL_DEPLOY.md) - Deployment
+- **[DOCS/guides/DEPLOYMENT.md](guides/DEPLOYMENT.md)** - Deployment
 
 ---
 

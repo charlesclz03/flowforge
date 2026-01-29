@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.78',
+    date: '2026-01-29',
+    title: 'The Library Update 📚',
+    codename: 'Dewey Decimal',
+    description:
+      'We completely overhauled our documentation to be world-class. Added "How-to-Code" guides (TSDoc), rigorous Architecture Records, and automated link checking.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Docs 2.0**: Reorganized all documentation into a clean, industry-standard structure (Architecture, Guides, Reference).',
+          '**Code Integration**: Added detailed usage docs directly into the code for the Practice Engine.',
+          '**Automated Validation**: The documentation now self-checks for broken links on every update.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.77',
     date: '2026-01-27',
     title: 'Visual Polish 🎨',

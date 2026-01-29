@@ -1,6 +1,6 @@
 #  Freestyla Vercel Deployment Guide
 
-**Status**:  Deployed (v1.1.1)  
+**Status**:  Deployed (v0.9.77)  
 **Date**: December 18, 2025
 **Quick Reference**: See `VERCEL_DEPLOY.md` for specific troubleshooting.
 

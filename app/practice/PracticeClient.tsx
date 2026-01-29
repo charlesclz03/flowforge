@@ -1,33 +1,34 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { AnimatePresence, motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
 
-import { useBeatPlayer } from '@/hooks/useBeatPlayer'
-import { useRecording } from '@/hooks/useRecording'
-import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { useForceUpdate } from '@/hooks/useForceUpdate'
-import { useWakeLock } from '@/hooks/useWakeLock'
+import { usePracticeSession } from '@/contexts/SessionContext'
+import { usePracticeEngine } from '@/hooks/player/usePracticeEngine'
 import { useSound } from '@/hooks/useSound'
 import { useOptimisticAction } from '@/hooks/useOptimisticAction'
-import { usePracticeSession } from '@/contexts/SessionContext'
+import { Beat } from '@/types/database'
+import { SESSION_CONFIG } from '@/lib/constants/design'
+import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 
+// Components
+import PracticeControls from '@/components/organisms/practice/PracticeControls'
+import { ScreenPage } from '@/components/layout/ScreenPage'
+import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { Button } from '@/components/atoms/Button'
+import { Modal } from '@/components/atoms/Modal'
+
+// Dynamic Imports
 const GuestLoginModal = dynamic(
-  () =>
-    import('@/components/molecules/auth/GuestLoginModal').then(
-      (mod) => mod.GuestLoginModal
-    ),
+  () => import('@/components/molecules/auth/GuestLoginModal').then(m => m.GuestLoginModal),
   { ssr: false }
 )
 const PremiumModal = dynamic(
-  () =>
-    import('@/components/molecules/monetization/PremiumModal').then(
-      (mod) => mod.PremiumModal
-    ),
+  () => import('@/components/molecules/monetization/PremiumModal').then(m => m.PremiumModal),
   { ssr: false }
 )
 const SessionSummaryModal = dynamic(
@@ -35,18 +36,14 @@ const SessionSummaryModal = dynamic(
   { ssr: false }
 )
 const RateAppModal = dynamic(
-  () =>
-    import('@/components/organisms/feedback/RateAppModal').then(
-      (mod) => mod.RateAppModal
-    ),
+  () => import('@/components/organisms/feedback/RateAppModal').then(m => m.RateAppModal),
   { ssr: false }
 )
-import PracticeControls from '@/components/organisms/practice/PracticeControls'
 
-import { ScreenPage } from '@/components/layout/ScreenPage'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { Button } from '@/components/atoms/Button'
-import { Modal } from '@/components/atoms/Modal'
+interface PracticeClientProps {
+  initialBeats: Beat[]
+  initialWords: string[]
+}
 
 interface SessionSummary {
   score: number
@@ -78,31 +75,12 @@ interface SessionSummary {
   }
 }
 
-import { Beat } from '@/types/database'
-import { SESSION_CONFIG } from '@/lib/constants/design'
-import { ErrorCodes } from '@/lib/errors'
-import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
-
-interface PracticeClientProps {
-  initialBeats: Beat[]
-  initialWords: string[]
-}
-
-export default function PracticeClient({
-  initialBeats,
-  initialWords,
-}: PracticeClientProps) {
-  // Ring animation logic updated to track word duration
+export default function PracticeClient({ initialBeats, initialWords }: PracticeClientProps) {
   const router = useRouter()
   const { data: session } = useSession()
-  const [isInfiniteMode] = useState(false)
-
-  // Audio Feedback
   const { play } = useSound()
 
-  // Accessibility
-
-  // Session State
+  // 1. Context State
   const {
     selectedBeat,
     setBeat,
@@ -110,117 +88,26 @@ export default function PracticeClient({
     difficulty,
     setDifficulty,
     setFrequency,
-    beatVolume,
-    isTTSEnabled,
-    ttsVolume,
     isLoaded,
     isRecordingEnabled,
     mode,
     cypherPlayers,
-    startSession,
-    stopSession,
     setIsRecordingEnabled,
   } = usePracticeSession()
 
-  // Local State
-  const [currentWord, setCurrentWord] = useState<string>('')
-  const [wordList, setWordList] = useState<string[]>(initialWords)
-  const [wordIndex, setWordIndex] = useState(0)
-  const [sessionDuration] = useState(SESSION_CONFIG.DEFAULT_DURATION_SECONDS)
-  /* saveMessage removed */
-  const [combo, setCombo] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
-  const shouldSaveRef = useRef(true)
-  const isStoppingRef = useRef(false) // Guard against race conditions
-
+  // 2. Local UI State
+  const [beats] = useState<Beat[]>(initialBeats)
+  const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(null)
+  
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [showExitConfirmation, setShowExitConfirmation] = useState(false)
-  const [premiumTrigger, setPremiumTrigger] = useState<
-    'recording' | 'beat' | 'history'
-  >('beat')
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(
-    null
-  )
   const [showRateModal, setShowRateModal] = useState(false)
+  const [premiumTrigger, setPremiumTrigger] = useState<'recording' | 'beat'>('beat')
+  const [pendingAction, setPendingAction] = useState<'exit' | 'restart' | 'finish' | null>(null)
 
-  // Derived state
-  const usedWords = wordList.slice(0, wordIndex + 1)
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
-
-  // Hooks
-  const { error, handleError, clearError } = useErrorHandler()
-  const forceUpdate = useForceUpdate()
-  const { requestLock, releaseLock } = useWakeLock()
-  const beatPlayer = useBeatPlayer()
-
-  // Beats Loading State
-  const [beats] = useState<Beat[]>(initialBeats) // Local state for dropdown
-  const [loadingText, setLoadingText] = useState(
-    'Building Studio Environment...'
-  )
-
-  // Loading Text Effect
-  useEffect(() => {
-    const texts = [
-      'Building Studio Environment...',
-      'Syncing Word Bank...',
-      'Dropping the Beat...',
-    ]
-    let i = 0
-    const interval = setInterval(() => {
-      i = (i + 1) % texts.length
-      setLoadingText(texts[i])
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Playback Control (Detached from hook to resolve circular deps)
-  const sessionTimeRef = useRef(0)
-  const lastSessionDurationRef = useRef(0) // Persist duration for callback
-  const beatOffsetRef = useRef(0) // Beat position when recording started (for sync)
-  const animationFrameRef = useRef<number | null>(null) // StrictMode guard: prevents duplicate loops
-  const [monotonicTime, setMonotonicTime] = useState(0)
-  const [isSirenActive, setIsSirenActive] = useState(false)
-  const [sirenPhase, setSirenPhase] = useState(0) // 0 or 1 for red/blue
-
-  const [_countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
-    null
-  )
-  // Pending Action State for Safety Modal
-  // 'exit' -> Go to difficulty selection
-  // 'restart' -> Stop and restart session (countwodn)
-  // 'finish' -> Stop and save session
-  const [pendingAction, setPendingAction] = useState<
-    'exit' | 'restart' | 'finish' | null
-  >(null)
-
-  // Track relative timing for the UI ring
-  const [wordTiming, setWordTiming] = useState({ start: 0, duration: 0 })
-
-  const stopTTS = useCallback(() => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.pause()
-      window.speechSynthesis.cancel()
-    }
-  }, [])
-
-  const stopPlayback = useCallback(() => {
-    beatPlayer.stop()
-    stopTTS()
-    releaseLock()
-    sessionTimeRef.current = 0
-    setMonotonicTime(0)
-    setCurrentWord('')
-    forceUpdate() // Ensure UI updates
-  }, [beatPlayer, forceUpdate, releaseLock, stopTTS])
-
-  // Optimistic Action Hook
+  // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
     async (formData: FormData) => {
       const response = await fetch('/api/recordings', {
@@ -228,48 +115,41 @@ export default function PracticeClient({
         body: formData,
       })
       const data = await response.json()
-      if (!response.ok)
-        throw new Error(data.error || 'Failed to save recording')
+      if (!response.ok) throw new Error(data.error || 'Failed to save recording')
       return data
     },
     {
       onOptimistic: (formData: FormData) => {
-        // 1. Immediate Feedback: Play Success Sound & Mark Saved
         play('success')
-        markAsSaved()
-
-        // 2. Predict Session Summary
-        // Parse basic values back from FormData for immediate display
-        const difficulty = formData.get('difficulty') as string
-        const frequency = parseFloat(formData.get('frequency') as string)
-        const duration = parseFloat(formData.get('durationSeconds') as string)
-        const wordCount = JSON.parse(formData.get('wordsUsed') as string).length
+        
+        // Parse prediction
+        const diffStr = formData.get('difficulty') as string
+        const freqVal = parseFloat(formData.get('frequency') as string)
+        const durVal = parseFloat(formData.get('durationSeconds') as string)
+        const wordCount = JSON.parse(formData.get('wordsUsed') as string || '[]').length
         const beatBpm = selectedBeat?.bpm || 0
 
-        // 3. OPTIMISTIC XP PREDICTION - Client-side calculation for instant feedback
         const predictedXP = calculateSessionXP({
-          durationSeconds: duration,
-          wordCount: wordCount,
-          achievementsUnlocked: 0, // Can't predict badges
+          durationSeconds: durVal,
+          wordCount,
+          achievementsUnlocked: 0,
         })
 
-        // Get user's current XP from session (if available)
         const currentUserXP = session?.user?.xp || 0
-        const newTotalXP = currentUserXP + predictedXP.total
-        const levelInfo = getLevelInfo(newTotalXP)
+        const levelInfo = getLevelInfo(currentUserXP + predictedXP.total)
 
         setSessionSummary({
-          score: 0, // Removed
+          score: 0,
           vibe: 'Freestyle Flow',
           description: 'Nice session!',
-          wordCount: wordCount,
-          duration: duration,
-          audioUrl: URL.createObjectURL(formData.get('audio') as Blob), // Instant playback
-          newBadges: [], // Can't predict without server logic, leave empty
-          difficulty: difficulty,
+          wordCount,
+          duration: durVal,
+          audioUrl: URL.createObjectURL(formData.get('audio') as Blob),
+          newBadges: [],
+          difficulty: diffStr,
           bpm: beatBpm,
-          frequency: frequency,
-          isOptimistic: false, // Show the predicted XP immediately (no skeleton)
+          frequency: freqVal,
+          isOptimistic: false, // Show immediately
           xp: {
             gained: predictedXP.total,
             newLevel: levelInfo.level,
@@ -280,1059 +160,304 @@ export default function PracticeClient({
         })
       },
       onSuccess: (data) => {
-        // 3. Reconcile with Server Data
         if (data.session) {
-          setSessionSummary((prev: SessionSummary | null) => {
-            if (!prev) return null // Guard against closed modal
-            return {
-              ...prev,
-              score: data.session.score, // Correct score from server
-              newBadges: data.session.newBadges,
-              xp: data.session.xp, // Crucial: Update XP data from server
-              meta: data.session.meta, // Store metadata for Rate App trigger
-              isOptimistic: false,
-            }
-          })
-
-          // Toast Badges
-          if (data.session.newBadges && Array.isArray(data.session.newBadges)) {
-            data.session.newBadges.forEach((badge: string) => {
-              toast.success(`Achievement Unlocked: ${badge}!`)
-            })
+          setSessionSummary(prev => prev ? ({
+            ...prev,
+            score: data.session.score,
+            newBadges: data.session.newBadges,
+            xp: data.session.xp,
+            meta: data.session.meta,
+          }) : null)
+          
+          if (data.session.newBadges?.length) {
+            data.session.newBadges.forEach((b: string) => toast.success(`Unlocked: ${b}!`))
           }
         }
-      },
-      onError: (err) => {
-        handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
-        // Note: We don't null out sessionSummary here as per user UX flow,
-        // but we ensure the "recording" state is dead so navigation works.
-      },
+      }
     }
   )
 
-  // Volume Sync
-  useEffect(() => {
-    beatPlayer.setVolume(beatVolume)
-  }, [beatVolume, beatPlayer])
-
-  // Recording Complete Handler
-  const handleRecordingComplete = useCallback(
-    async (blob: Blob, recordedDuration: number) => {
-      if (!shouldSaveRef.current) {
-        return
-      }
-
-      // Infinite Mode Check
-      if (isInfiniteMode) {
-        toast('Session Completed (Practice Mode)')
-        // handleStop logic inlined to avoid circular dependency
-        play('stop')
-        shouldSaveRef.current = true
-        stopPlayback()
-        setIsPaused(false)
-        return
-      }
-
-      // Fallback to internal timer if recorder duration is missing (Practice Mode)
-      const actualRecordedDuration = Math.max(
-        recordedDuration,
-        lastSessionDurationRef.current
-      )
-
-      if (actualRecordedDuration < 3) {
-        // Only show error to Pros who actually expected a recording
-        if (isPro) {
-          toast.error('Recording too short to save (min 3s)')
-        }
-        return
-      }
-
-      // Size Check
-      // For Pros: Must have audio data.
-      // For Guests: Practice mode produces empty blobs, so we allow them IF duration was sufficient.
-      if (blob.size < 1000) {
-        // If it's a non-Pro (Guest or Free) and they practiced long enough, proceed (Simulated Save Flow)
-        if (!isPro && actualRecordedDuration >= 3) {
-          // Pass through
-        } else {
-          console.warn('Recording too small', blob.size)
-          return
-        }
-      }
-
-      if (selectedBeat) {
-        if (session?.user) {
-          // Authenticated User Logic
-          if (isPro) {
-            try {
-              const measuredDuration = Math.round(recordedDuration)
-              const fallbackDuration =
-                blob.size > 0 ? Math.max(1, Math.round(blob.size / 16000)) : 1
-              const actualDuration = Math.max(
-                1,
-                measuredDuration > 0 ? measuredDuration : fallbackDuration
-              )
-
-              const vibe = 'Freestyle Flow'
-              const finalScore = 0 // Server calculates real score
-
-              const formData = new FormData()
-              formData.append('audio', blob, 'recording.webm')
-              formData.append('beatId', selectedBeat.id)
-              formData.append(
-                'title',
-                `${selectedBeat.title} - ${new Date().toLocaleDateString()}`
-              )
-              formData.append('durationSeconds', actualDuration.toString())
-              formData.append('frequency', frequency.toString())
-              formData.append('difficulty', difficulty.toString())
-              formData.append('score', finalScore.toString())
-              formData.append('vibe', vibe)
-              formData.append('wordsUsed', JSON.stringify(usedWords))
-              formData.append('beatOffsetMs', beatOffsetRef.current.toString())
-
-              // EXECUTE OPTIMISTIC SAVE
-              await saveSessionOptimistic(formData)
-            } catch (err) {
-              handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
-            }
-          } else {
-            // Authenticated but FREE -> Practice Mode End
-            // No save, no upsell, just redirect
-            toast('Practice Session Completed')
-            router.push('/difficultyselection')
-          }
-        } else {
-          // Guest Mode -> Practice Mode End
-          // No save, just redirect
-          toast('Practice Session Completed')
-          router.push('/difficultyselection')
-        }
-      }
-    },
-    [
-      selectedBeat,
-      session?.user,
-      frequency,
-      difficulty,
-      handleError,
-      usedWords,
-      isInfiniteMode,
-      saveSessionOptimistic,
-      shouldSaveRef,
-      stopPlayback,
-      play,
-      setIsPaused,
-      isPro,
-      router,
-    ]
-  )
-
-  // Recording Hook
-  const {
-    isRecording,
-    duration,
-    start: startRecording,
-    practice,
-    stop: stopRecording,
-    pause: pauseRecording,
-    resume: resumeRecording,
-    markAsSaved,
-  } = useRecording({
-    maxDuration: isPro ? null : 120,
-    onComplete: handleRecordingComplete,
-    onMaxDurationReached: () => {
-      handleStop()
-      if (!isPro) {
-        setPremiumTrigger('recording')
-        setShowPremiumModal(true)
-      }
-    },
+  // 4. Initialize The Engine
+  const engine = usePracticeEngine({
+    initialBeats,
+    initialWords,
+    frequency,
+    difficulty,
+    submitSession: saveSessionOptimistic,
   })
 
-  // Handler for Manual Recording Toggle (REC Button)
-  const handleToggleRecordingMode = useCallback(() => {
-    // Only allow toggle if session is NOT active
-    if (beatPlayer.isPlaying || isRecording) {
-      toast.error('Cannot change settings during active session')
-      return
-    }
+  // 5. Visual Effects & Glue Logic
+  const isPro = session?.user?.subscriptionStatus === 'active' || session?.user?.subscriptionStatus === 'trialing'
 
-    const newState = !isRecordingEnabled
-    setIsRecordingEnabled(newState)
-
-    // Toast Feedback
-    if (newState) {
-      toast.success('Audio Capture Enabled')
-    } else {
-      toast.success('Audio Capture Disabled')
-    }
-  }, [
-    beatPlayer.isPlaying,
-    isRecording,
-    isRecordingEnabled,
-    setIsRecordingEnabled,
-  ])
-
-  // Pause Logic
-  const togglePause = useCallback(async () => {
-    if (isPaused) {
-      // Resume
-      try {
-        await beatPlayer.play()
-        if (isRecording) resumeRecording()
-        setIsPaused(false)
-      } catch (e) {
-        console.error('Resume failed', e)
-        toast.error('Failed to resume playback')
-      }
-    } else {
-      // Pause
-      beatPlayer.pause()
-      if (isRecording) pauseRecording() // Handled by hook
-      setIsPaused(true)
-    }
-  }, [isPaused, isRecording, beatPlayer, resumeRecording, pauseRecording])
-
-  // Handlers
-
-  const startCountdown = useCallback(async () => {
-    if (!selectedBeat) return
-
-    // Shuffle words for a fresh start every time we begin
-    setWordList((prev) => [...prev].sort(() => Math.random() - 0.5))
-
-    // Final check for loading errors
-    if (beatPlayer.error) {
-      toast.error(`Cannot start: ${beatPlayer.error}`)
-      return
-    }
-
-    // Reset Stopping Guard
-    isStoppingRef.current = false
-
-    // COUNTDOWN LOGIC
-    // User requested stable countdown speed regardless of BPM.
-    // We use a fixed 800ms tick for a consistent "Ready, Set, Go" pace.
-    const tickMs = 800
-    const offsetMs = (selectedBeat.offset || 0) * 1000
-
-    const playBeep = (freq: number, type: OscillatorType) => {
-      const AudioContext =
-        window.AudioContext ||
-        (
-          window as unknown as {
-            webkitAudioContext: typeof window.AudioContext
-          }
-        ).webkitAudioContext
-      if (!AudioContext) return
-      const ctx = new AudioContext()
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = type
-      osc.frequency.setValueAtTime(freq, ctx.currentTime)
-      gain.gain.setValueAtTime(0.1, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start()
-      osc.stop(ctx.currentTime + 0.5)
-    }
-
-    const sequence = [3, 2, 1, 'GO']
-    for (const val of sequence) {
-      setCountdownValue(val as number | 'GO' | null)
-      if (val === 'GO') playBeep(880, 'square')
-      else playBeep(440, 'sine')
-      await new Promise((r) => setTimeout(r, tickMs))
-    }
-
-    // THE DROP (GO) logic
-    try {
-      // Unmute and seek to start
-      const seekTime = offsetMs < 0 ? Math.abs(offsetMs) / 1000 : 0
-      beatPlayer.setVolume(1)
-      beatPlayer.seek(seekTime)
-
-      // Single authoritative play call
-      beatPlayer.setLoop(true) // Ensure track loops seamlessly
-      await beatPlayer.play()
-      startSession()
-    } catch (e) {
-      handleError(e, ErrorCodes.AUDIO_PLAYBACK_FAILED)
-    }
-
-    // THE DROP (GO) logic
-    clearError()
-
-    // Start Recorder
-    try {
-      if (isRecordingEnabled) {
-        if (!isRecording) {
-          await requestLock()
-          // Capture beat position BEFORE starting recording for sync
-          beatOffsetRef.current = Math.round(beatPlayer.getPreciseTime() * 1000) // Convert to ms
-          if (isPro) {
-            startRecording(true).catch(console.error)
-          } else {
-            // Non-Pro (Guest & Free): Practice mode (Mic on, no recording)
-            practice().catch(console.error)
-          }
+  // Countdown Logic (UI Side)
+  const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(null)
+  
+  useEffect(() => {
+    if (engine.status === 'COUNTDOWN') {
+      let count = 3
+      setCountdownValue(count)
+      const interval = setInterval(() => {
+        count--
+        if (count > 0) {
+          setCountdownValue(count)
+          play('tick') // Assuming hook has this, or use standard beep
+        } else if (count === 0) {
+          setCountdownValue('GO')
+          play('start') // Assuming hook has this
         } else {
-          resumeRecording()
+          clearInterval(interval)
+          setCountdownValue(null)
+          engine.completeCountdown()
         }
-      }
-    } catch (err) {
-      console.error('Recording start failed', err)
-    }
-
-    setTimeout(() => setCountdownValue(null), 1000)
-
-    return () => {
-      // No timer to clear
-    }
-  }, [
-    selectedBeat,
-    beatPlayer,
-    isRecording,
-    isRecordingEnabled,
-    requestLock,
-    startRecording,
-    isPro,
-    resumeRecording,
-    handleError,
-    clearError,
-    startSession,
-    practice,
-  ])
-
-  const handleStop = useCallback(() => {
-    isStoppingRef.current = true // Sync Guard
-    play('stop')
-    shouldSaveRef.current = true // Default to save
-    lastSessionDurationRef.current = sessionTimeRef.current // Capture duration BEFORE reset
-    stopTTS()
-    stopSession()
-    stopPlayback()
-    stopRecording() // This will trigger handleRecordingComplete
-    setIsPaused(false)
-  }, [play, stopRecording, stopPlayback, stopSession, stopTTS])
-
-  const handleDiscard = useCallback(() => {
-    if (confirm('Discard this session? It will not be saved.')) {
-      isStoppingRef.current = true // Sync Guard
-      play('click')
-      shouldSaveRef.current = false // Prevent save
-      stopTTS() // Immediate silence
-      stopSession() // Mark session as inactive
-      stopPlayback()
-      stopRecording()
-      setIsPaused(false)
-      toast('Session Discarded')
-      router.push('/difficultyselection')
-    }
-  }, [play, stopRecording, stopPlayback, router, stopTTS, stopSession])
-
-  const handleBackNavigation = useCallback(() => {
-    if (isRecording || beatPlayer.isPlaying) {
-      // Pause playback while deciding
-      if (beatPlayer.isPlaying) beatPlayer.pause()
-      setPendingAction('exit')
-      setShowExitConfirmation(true)
+      }, 1000)
+      return () => clearInterval(interval)
     } else {
-      router.push('/difficultyselection')
+      setCountdownValue(null)
     }
-  }, [isRecording, beatPlayer, router])
+  }, [engine.status, engine.completeCountdown, play])
 
-  const confirmExit = useCallback(() => {
-    isStoppingRef.current = true // Sync Guard
-    stopTTS()
-    setShowExitConfirmation(false)
+  // Siren Logic
+  const isSirenActive = useMemo(() => {
+    if (engine.status !== 'PLAYING') return false
+    if (!engine.wordTiming.duration) return false
+    
+    // Siren triggers when < 40% of time remains (or < 4s), mimicking old logic roughly
+    // Old logic: min(4, wordDuration * 0.6) was the threshold.
+    // Let's use simpler: last 30% of the bar.
+    const elapsed = engine.beatPlayer.currentTime - engine.wordTiming.start
+    const remaining = engine.wordTiming.duration - elapsed
+    const threshold = Math.min(4, engine.wordTiming.duration * 0.4)
+    
+    return remaining > 0 && remaining <= threshold
+  }, [engine.status, engine.wordTiming, engine.beatPlayer.currentTime])
 
-    if (pendingAction === 'restart') {
-      // Cleanest way is to stop everything, then effectively "press start" again
-      // handleStop clears session state
-      play('click')
-      shouldSaveRef.current = false // Don't save abandoned session
-      stopSession()
-      stopPlayback()
-      stopRecording()
-      setIsPaused(false)
+  // Siren Phase (Fast toggle for visuals)
+  const [sirenPhase, setSirenPhase] = useState(0)
+  useEffect(() => {
+    if (isSirenActive) {
+      const interval = setInterval(() => setSirenPhase(p => (p + 1) % 2), 150)
+      return () => clearInterval(interval)
+    }
+  }, [isSirenActive])
 
-      // Short delay to allow state to settle before restarting
-      setTimeout(() => {
-        startCountdown()
-      }, 100)
-    } else if (pendingAction === 'finish') {
-      // User chose to Finish and Save
-      handleStop() // This saves by default (shouldSaveRef defaults true in handleStop)
+  // Beat Handling
+  // Automatically load selected beat when it changes in context
+  useEffect(() => {
+    if (selectedBeat && engine.status === 'IDLE') {
+      engine.beatPlayer.loadBeat({
+        ...selectedBeat,
+        storageUrl: selectedBeat.storageUrl,
+        isPremium: selectedBeat.isPremium ?? false,
+        artistName: selectedBeat.artistName || 'Unknown',
+        duration: selectedBeat.duration || 0,
+      }).catch(err => toast.error('Failed to load beat'))
+    }
+  }, [selectedBeat?.id, engine.status]) // Only re-run if ID changes
+
+  // Navigation handlers
+  const handleBack = () => router.back()
+  const handleBeatSelect = (beat: Beat) => {
+    if (engine.status === 'PLAYING' || engine.status === 'PAUSED') {
+       if (confirm('Stop current session to change beat?')) {
+          engine.stopSession()
+          setBeat(beat)
+       }
     } else {
-      // Default: Exit
-      handleStop()
-      router.push('/difficultyselection')
+      setBeat(beat)
     }
-    setPendingAction(null)
-  }, [
-    handleStop,
-    router,
-    stopTTS,
-    pendingAction,
-    play,
-    stopPlayback,
-    stopRecording,
-    stopSession,
-    startCountdown,
-  ])
+  }
 
-  // Warn on browser refresh/close if recording
+  // Loading Animation
+  const [loadingText, setLoadingText] = useState('Initializing Studio...')
   useEffect(() => {
-    if (!isRecording) return
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = ''
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [isRecording])
-
-  // Initialization Effect
-  useEffect(() => {
-    // Only fetch random words if we absolutely have to (fallback) or if initial words were empty?
-    // Actually, Server Component provides initial words. But the original logic refreshed words on difficulty change.
-    // For now, let's keep the difficulty change logic but ensure it doesn't overwrite initial words on mount.
-    // We can rely on the server provided words initially.
-    // However, if the user changes difficulty client-side, we might still need to fetch new words?
-    // The original logic re-fetched on difficulty change.
-    // Let's keep the difficulty watcher but prevent it running on initial mount if we have words?
-    // Or just let it run if difficulty changes.
-    // But initially, difficulty is set from context or default.
-  }, [difficulty, handleError])
-
-  // TTS Voice
-  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null)
-  useEffect(() => {
-    const getBestVoice = () => {
-      if (typeof window === 'undefined' || !window.speechSynthesis) return null
-      const voices = window.speechSynthesis.getVoices()
-      return (
-        voices.find((v) => v.name === 'Google US English') ||
-        voices.find((v) => v.name === 'Samantha') ||
-        voices.find((v) => v.lang.startsWith('en-US')) ||
-        voices[0] ||
-        null
-      )
-    }
-    const setBest = () => {
-      const v = getBestVoice()
-      if (v) setVoice(v)
-    }
-    setBest()
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = setBest
-    }
-    return () => {
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.onvoiceschanged = null
-        // Cleanup TTS on unmount to prevent double speech on re-entry
-        window.speechSynthesis.cancel()
-      }
-    }
+    const texts = ['Initializing Studio...', 'Syncing Audio...', 'Ready to Record']
+    let i = 0
+    const interval = setInterval(() => setLoadingText(texts[++i % 3]), 2000)
+    return () => clearInterval(interval)
   }, [])
 
-  const speak = useCallback(
-    (text: string, force = false) => {
-      if (typeof window === 'undefined' || !window.speechSynthesis) return
-      if (!isTTSEnabled && !force) return
-      // Safety: Don't speak if playback is stopped (unless forced e.g. test)
-      if (!force && !beatPlayer.isPlaying && !isRecording) return
-      // Safety: Strict Ref Check for race conditions
-      if (isStoppingRef.current && !force) return
+  if (!isLoaded) return null // Or skeleton
 
-      try {
-        const u = new SpeechSynthesisUtterance(text)
-        u.rate = 1.1
-        u.volume = ttsVolume
-        if (voice) u.voice = voice
-        window.speechSynthesis.speak(u)
-      } catch (err) {
-        console.error('TTS Error', err)
-      }
-    },
-    [isTTSEnabled, ttsVolume, voice, beatPlayer.isPlaying, isRecording]
-  )
-
-  const handlePlayPause = useCallback(async () => {
-    if (!selectedBeat) return
-
-    if (beatPlayer.isPlaying) {
-      play('stop')
-      stopTTS() // Immediate silence
-      if (isRecording) {
-        handleStop()
-      } else {
-        beatPlayer.pause()
-      }
-    } else {
-      // PRIME AUDIO: This is the critical fix for mobile/browser autoplay restrictions.
-      // We call prime() immediately on the user gesture (click).
-      if (beatPlayer.currentTime === 0) {
-        await beatPlayer.prime()
-      }
-
-      play('start')
-
-      // Check mic permission or audio context state
-      if (beatPlayer.currentTime > 0) {
-        // Resume
-        await beatPlayer.play()
-      } else {
-        startCountdown()
-      }
-    }
-  }, [
-    play,
-    selectedBeat,
-    beatPlayer,
-    isRecording,
-    handleStop,
-    startCountdown,
-    stopTTS,
-  ])
-
-  const handleBeatSelection = useCallback(
-    (beat: Beat) => {
-      if (isRecording) {
-        if (
-          confirm(
-            'Recording in progress. Do you want to stop this session and change tracks?'
-          )
-        ) {
-          handleStop()
-          setBeat(beat)
-        }
-      } else {
-        setBeat(beat)
-      }
-    },
-    [isRecording, handleStop, setBeat]
-  )
-
-  const handleRestart = useCallback(() => {
-    if (isRecording || beatPlayer.isPlaying) {
-      if (beatPlayer.isPlaying) beatPlayer.pause()
-      setPendingAction('restart')
-      setShowExitConfirmation(true)
-    } else {
-      // Just start over if not running (rare)
-      startCountdown()
-    }
-  }, [isRecording, beatPlayer, startCountdown])
-
-  const handleCenterStop = useCallback(() => {
-    if (isRecording) {
-      if (beatPlayer.isPlaying) beatPlayer.pause()
-      setPendingAction('finish')
-      setShowExitConfirmation(true)
-    } else {
-      handlePlayPause()
-    }
-  }, [isRecording, beatPlayer, handlePlayPause])
-
-  // Sync Logic
-  const sessionStateRef = useRef({
-    lastWordIndex: -1,
-    isActive: false,
-    nextWordChangeTime: 0,
-    activeFrequency: 0, // Track the ACTUAL frequency currently playing
-  })
-  const paramsRef = useRef({
-    frequency,
-    wordList,
-    selectedBeat,
-    sessionDuration,
-    isTTSEnabled,
-  })
-
-  useEffect(() => {
-    paramsRef.current = {
-      frequency,
-      wordList,
-      selectedBeat,
-      sessionDuration,
-      isTTSEnabled,
-    }
-  }, [frequency, wordList, selectedBeat, sessionDuration, isTTSEnabled])
-
-  useEffect(() => {
-    if (!beatPlayer.isPlaying) {
-      sessionStateRef.current.isActive = false
-      // Clean up any stray animation loop
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-        animationFrameRef.current = null
-      }
-      return
-    }
-
-    // StrictMode Guard: If loop is already running, don't start another
-    if (animationFrameRef.current !== null) {
-      return
-    }
-
-    const state = sessionStateRef.current
-
-    // Only reset state if we are just starting (isActive was false)
-    if (!state.isActive) {
-      state.isActive = true
-      // Only reset index if we are at the very beginning
-      if (beatPlayer.currentTime < 0.5) {
-        state.lastWordIndex = -1
-        sessionTimeRef.current = 0
-        state.nextWordChangeTime = 0 // Force immediate first word
-      }
-    }
-
-    let lastFrameTime = performance.now()
-    const updateLoop = () => {
-      const now = performance.now()
-      const delta = (now - lastFrameTime) / 1000
-      lastFrameTime = now
-
-      if (!state.isActive) {
-        animationFrameRef.current = null
-        return
-      }
-      const params = paramsRef.current
-      if (!params.selectedBeat || params.wordList.length === 0) {
-        animationFrameRef.current = null
-        return
-      }
-
-      // Sync Logic:
-      // If playing, strictly sync to the Audio Element time to prevent drift.
-      // If recording/practice (no beat), fall back to monotonic delta.
-      if (beatPlayer.isPlaying) {
-        // High-precision sync
-        const audioTime = beatPlayer.getPreciseTime()
-        // If the audio time is valid and moving, use it.
-        // We add a tiny epsilon check to ensure we don't jump back if audio loops/buffers weirdly,
-        // unless it's a true loop (detected by time drop).
-        if (sessionTimeRef.current > audioTime + 1) {
-          // Detected Loop or Seek? Let it snap.
-          sessionTimeRef.current = audioTime
-        } else {
-          // Normal playback: Snap to audio time
-          // We can use a simple smoothing if needed, but direct sync is best for rhythm accuracy.
-          sessionTimeRef.current = audioTime
-        }
-      } else {
-        // Fallback: Increment monotonic session time (Recording/Practice Mode)
-        sessionTimeRef.current += delta
-      }
-
-      const sessionTime = sessionTimeRef.current
-      setMonotonicTime(sessionTime)
-
-      // GRACE PERIOD: Ignore stop conditions for the first 1.5 seconds
-      if (sessionTime > 1.5) {
-        if (sessionTime >= params.sessionDuration) {
-          handleStop()
-          animationFrameRef.current = null
-          return
-        }
-      }
-
-      // Pause Check
-      if (isPaused) {
-        lastFrameTime = now // Keep updating lastFrameTime to avoid jump
-        animationFrameRef.current = requestAnimationFrame(updateLoop)
-        return
-      }
-
-      // Timing Logic - GRID LOCK IMPLEMENTATION
-      // Calculates strictly based on Bar Count to prevent drift
-      const secondsPerBeat = 60 / params.selectedBeat.bpm
-      const secondsPerBar = secondsPerBeat * 4
-
-      // Initialize activeFrequency if unset
-      if (!state.activeFrequency) {
-        state.activeFrequency = Number(params.frequency) || 4
-      }
-
-      // Check if we reached the Target Time for the next word
-      // Note: We use > instead of >= to avoid double-triggering on the exact frame if deltas are small
-      if (sessionTime >= state.nextWordChangeTime) {
-        // --- TRIGGER WORD SWITCH ---
-
-        // 1. Commit Target Frequency -> Active Frequency
-        // This is the "Smart Switch": We only adopt the new speed AT the boundary.
-        const targetFreq = Number(params.frequency) || 4
-        state.activeFrequency = targetFreq
-
-        // 2. Calculate NEXT Target Time
-        // Anchor to previous target to prevent drift (Grid Lock)
-        // If we are starting (time 0), anchor to 0.
-        const lastTarget =
-          state.nextWordChangeTime < 0.1 ? 0 : state.nextWordChangeTime
-        const intervalDuration = state.activeFrequency * secondsPerBar
-        state.nextWordChangeTime = lastTarget + intervalDuration
-
-        // 3. Update Content
-        state.lastWordIndex++ // Simple incrementer now
-
-        // Get Next Word (using simple incrementing index)
-        const actualIndex = state.lastWordIndex % params.wordList.length
-        const newWord = params.wordList[actualIndex]
-
-        if (newWord) {
-          setCurrentWord(newWord)
-          setWordIndex(state.lastWordIndex)
-
-          // Visual Timer Setup
-          // Start time is checking frame time (approx) or purely calculated?
-          // Using 'lastTarget' gives us the PERFECT theoretical start time
-          setWordTiming({ start: lastTarget, duration: intervalDuration })
-
-          if (params.isTTSEnabled) speak(newWord)
-        }
-      }
-
-      // Siren Logic: Dynamic threshold
-      // Either 4 seconds OR 60% of the duration (whichever is smaller)
-      // This prevents the siren from being "always on" for short durations
-      const wordDuration = secondsPerBar * params.frequency
-      const sirenThreshold = Math.min(4, wordDuration * 0.6)
-      const timeUntilNext = state.nextWordChangeTime - sessionTime
-      const sirenActive = timeUntilNext <= sirenThreshold && timeUntilNext > 0
-
-      setIsSirenActive(sirenActive)
-
-      // sirenPhase toggles every 150ms during siren
-      if (sirenActive) {
-        setSirenPhase(Math.floor(sessionTime / 0.15) % 2)
-      }
-
-      forceUpdate()
-      animationFrameRef.current = requestAnimationFrame(updateLoop)
-    }
-
-    // Start the loop and store frame ID
-    animationFrameRef.current = requestAnimationFrame(updateLoop)
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-        animationFrameRef.current = null
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beatPlayer.isPlaying, handleStop, speak, forceUpdate, isPaused])
-
-  // Watch for audio errors
-  useEffect(() => {
-    if (beatPlayer.error) {
-      toast.error(`Audio Error: ${beatPlayer.error}`)
-      handleStop()
-    }
-  }, [beatPlayer.error, handleStop])
-
-  // Shortcuts & Events
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-        return
-      if (e.code === 'Space') {
-        e.preventDefault()
-        handleCenterStop()
-      }
-      if (e.code === 'KeyR' && !isRecording && beatPlayer.isPlaying)
-        startRecording(!isPro)
-
-      // Mock Combo Trigger for Testing
-      if (e.code === 'KeyC') {
-        setCombo((p) => p + 1)
-        play('click')
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [
-    handleCenterStop,
-    isRecording,
-    beatPlayer.isPlaying,
-    startRecording,
-    isPro,
-    play,
-  ])
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      // If hidden and playing, Pause (don't Stop/Finish)
-      if (document.hidden && beatPlayer.isPlaying) {
-        beatPlayer.pause()
-        // We can't easily call togglePause here because it toggles, and we want explicit PAUSE.
-        // But we DO want to update proper state if possible.
-        // For now, pausing audio is the critical part to stop noise.
-        // Ideally, we'd invoke the pause logic from togglePause.
-      }
-    }
-    window.addEventListener('visibilitychange', handleVisibilityChange)
-    return () =>
-      window.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [beatPlayer])
-
-  useEffect(() => {
-    if (isLoaded && !selectedBeat) router.push('/difficultyselection')
-  }, [isLoaded, selectedBeat, router])
-
-  useEffect(() => {
-    if (selectedBeat) {
-      // Ensure clean slate
-      beatPlayer.stop()
-
-      beatPlayer
-        .loadBeat({
-          ...selectedBeat,
-          storageUrl: selectedBeat.storageUrl,
-          isPremium: selectedBeat.isPremium ?? false,
-          artistName: selectedBeat.artistName ?? 'Unknown Artist',
-          duration: selectedBeat.duration ?? 0,
-        })
-        .catch((err) => {
-          console.error('[Practice] Failed to load beat:', err)
-          toast.error('Failed to load beat. The audio file may be missing.')
-        })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBeat?.id]) // ONLY reload when the beat ID changes
-
-  // Calculate Active Player for Cypher Mode
-  const beatsElapsed = (monotonicTime * (selectedBeat?.bpm || 0)) / 60
-  const barsElapsed = beatsElapsed / 4
-  const safeFrequency = frequency > 0 ? frequency : 8
-  const currentTurn = Math.floor(barsElapsed / safeFrequency)
-  const activePlayer = (currentTurn % (cypherPlayers || 1)) + 1
-
-  // Bento Grid Render
   return (
     <ScreenPage
       header={
         <AppHeader
           showBackButton
-          onBack={handleBackNavigation}
+          onBack={handleBack}
           customTitle="THE BOOTH"
           customSubtitle="Step up and drop your bars"
         />
       }
       className="bg-background h-full min-h-full overflow-hidden"
     >
-      {/* Schema.org - App Metadata */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'FreeStyla',
-            applicationCategory: 'LifestyleApplication',
-            operatingSystem: 'Web',
-            offers: {
-              '@type': 'Offer',
-              price: '0',
-              priceCurrency: 'USD',
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              reviewCount: '1024',
-            },
-            description:
-              'Interactive freestyle practice environment. Select beats, control word frequency, and improve your flow.',
-          }),
-        }}
-      />
       {/* Background Ambience */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-accent-purple/20 rounded-full blur-[128px] animate-pulse-slow" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
-        {/* Combo / Vibe Overlay - Absolute Top Right */}
+       <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
+        {/* Siren Overlay */}
         <AnimatePresence>
-          {combo > 1 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: -20 }}
-              className="absolute top-4 right-4 z-20 pointer-events-none"
-            >
-              <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent-purple/30 shadow-glow-sm">
-                <span className="font-bold font-mono text-accent-purple">
-                  {combo}x
-                </span>
-              </div>
-            </motion.div>
+          {isSirenActive && (
+             <motion.div
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 0.15 }}
+               exit={{ opacity: 0 }}
+               className="absolute inset-0 pointer-events-none rounded-3xl z-0"
+               style={{
+                 background: sirenPhase === 0 
+                   ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)' 
+                   : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)'
+               }}
+             />
           )}
         </AnimatePresence>
 
-        {/* Siren Overlay (Global Background Flash) */}
-        {isSirenActive && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.15 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 pointer-events-none rounded-3xl z-0"
-            style={{
-              background:
-                sirenPhase === 0
-                  ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
-                  : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-            }}
-          />
-        )}
-
-        {/* Main Controls - Centered */}
         <div className="w-full flex-1 z-20 flex flex-col min-h-0">
           {selectedBeat ? (
             <PracticeControls
+              // Data
               selectedBeat={selectedBeat}
               beats={beats}
-              isPlaying={beatPlayer.isPlaying}
-              isLoading={!isLoaded || beatPlayer.isLoading}
-              currentTime={monotonicTime}
-              sessionDuration={sessionDuration}
-              handleToggle={handleCenterStop}
-              handleRestart={handleRestart}
-              handleBeatSelect={handleBeatSelection}
-              difficulty={difficulty}
-              frequency={frequency}
-              isRecording={isRecording}
-              mode={mode}
-              activePlayer={activePlayer}
-              cypherPlayers={cypherPlayers}
+              currentWord={engine.currentWord}
+              wordTiming={engine.wordTiming}
+              
+              // Status
+              isPlaying={engine.status === 'PLAYING' || engine.status === 'COUNTDOWN'}
+              isPaused={engine.status === 'PAUSED'}
+              isRecording={engine.recorder.isRecording}
+              isLoading={engine.beatPlayer.isLoading}
               isSirenActive={isSirenActive}
               sirenPhase={sirenPhase}
-              recordingDuration={duration}
-              error={error?.message || null}
+              countdownValue={countdownValue}
+              error={engine.error || engine.beatPlayer.error}
+              
+              // Time
+              currentTime={engine.beatPlayer.currentTime}
+              sessionDuration={SESSION_CONFIG.DEFAULT_DURATION_SECONDS}
+              recordingDuration={engine.recorder.duration}
+              
+              // Settings
+              difficulty={difficulty}
+              frequency={frequency}
+              mode={mode}
               isPro={isPro}
-              currentWord={currentWord}
-              countdownValue={_countdownValue}
               isRecordingEnabled={isRecordingEnabled}
+              
+              // Handlers
+              handleToggle={() => {
+                if (engine.status === 'IDLE' || engine.status === 'COMPLETED') {
+                  engine.startSession()
+                } else {
+                  // Stop/Pause logic managed via modal usually
+                   setPendingAction('finish')
+                   setShowExitConfirmation(true)
+                }
+              }}
+              handleRestart={() => {
+                 engine.stopSession() // logic to restart?
+                 // Usually restart means "Stop then Start again immediately"
+                 // For now let's just confirm stop
+                 setPendingAction('restart')
+                 setShowExitConfirmation(true)
+              }}
+              handleBeatSelect={handleBeatSelect}
               handleDifficultyChange={setDifficulty}
               handleFrequencyChange={setFrequency}
-              handleUpgrade={() => {
-                setPremiumTrigger('recording')
-                setShowPremiumModal(true)
+              onTogglePause={engine.togglePause}
+              onDiscard={() => {
+                if (confirm('Discard session?')) {
+                   engine.discardSession()
+                }
               }}
-              isGolden={false}
-              isPaused={isPaused}
-              onTogglePause={togglePause}
-              onDiscard={handleDiscard}
-              onToggleRecordingMode={handleToggleRecordingMode}
-              wordTiming={wordTiming}
+              handleUpgrade={() => {
+                 setPremiumTrigger('recording')
+                 setShowPremiumModal(true)
+              }}
+              onToggleRecordingMode={() => setIsRecordingEnabled(!isRecordingEnabled)}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center space-y-4 py-8">
-              <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
-              <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
+             <div className="flex flex-col items-center justify-center space-y-4 py-8">
+               <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
+               <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
                 {loadingText}
-              </span>
-            </div>
+               </span>
+             </div>
           )}
         </div>
-      </div>
+       </div>
 
-      <SessionSummaryModal
-        data={sessionSummary}
-        onClose={() => {
-          const meta = sessionSummary?.meta
-          // Trigger Logic: 3+ recordings and hasn't rated yet
-          if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
-            setSessionSummary(null)
-            setShowRateModal(true)
-          } else {
-            setSessionSummary(null)
-            router.push('/recordings')
-          }
-        }}
-      />
-
-      <RateAppModal
-        isOpen={showRateModal}
-        onClose={() => {
-          setShowRateModal(false)
-          router.push('/recordings')
-        }}
-        onRate={() => {
-          // Optimistic update locally if needed
-          setShowRateModal(false)
-          // Redirect to feedback with rating mode
-          router.push('/feedback?mode=rate')
-        }}
-      />
-
-      <GuestLoginModal
-        isOpen={showGuestModal}
-        onClose={() => {
-          setShowGuestModal(false)
-          router.push('/')
-        }}
-      />
-
-      <PremiumModal
-        isOpen={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        trigger={premiumTrigger}
-        beatCount={beats.length || 100}
-      />
-
-      <Modal
+       {/* Modals */}
+       <SessionSummaryModal
+         data={sessionSummary}
+         onClose={() => {
+            const meta = sessionSummary?.meta
+            if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
+              setSessionSummary(null)
+              setShowRateModal(true)
+            } else {
+              setSessionSummary(null)
+              router.push('/recordings')
+            }
+         }}
+       />
+       <RateAppModal
+         isOpen={showRateModal}
+         onClose={() => {
+           setShowRateModal(false)
+           router.push('/recordings')
+         }}
+         onRate={() => {
+            setShowRateModal(false)
+            router.push('/feedback?mode=rate')
+         }}
+       />
+       <GuestLoginModal
+         isOpen={showGuestModal}
+         onClose={() => {
+            setShowGuestModal(false)
+            router.push('/')
+         }}
+       />
+       <PremiumModal
+         isOpen={showPremiumModal}
+         onClose={() => setShowPremiumModal(false)}
+         trigger={premiumTrigger}
+         beatCount={beats.length}
+       />
+       
+       <Modal
         isOpen={showExitConfirmation}
         onClose={() => setShowExitConfirmation(false)}
         title="End Session?"
         showCloseButton={false}
-      >
-        <div className="space-y-4">
-          <p className="text-text-secondary">
-            {pendingAction === 'restart'
-              ? 'Are you sure you want to restart? Current progress will be lost.'
-              : pendingAction === 'finish'
-                ? 'Stop recording and save your session?'
-                : 'Your recording is in progress. Leaving now will discard this session.'}
-          </p>
-          <div className="flex gap-3 justify-end">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setShowExitConfirmation(false)
-                setPendingAction(null)
-                // Resume playback if it was paused
-                if (!beatPlayer.isPlaying) {
-                  beatPlayer.play().catch(console.error)
-                }
-              }}
-            >
-              Resume
-            </Button>
-            <Button
-              variant={pendingAction === 'finish' ? 'primary' : 'danger'}
-              onClick={confirmExit}
-            >
-              {pendingAction === 'restart'
-                ? 'Restart'
-                : pendingAction === 'finish'
-                  ? isPro
-                    ? 'Finish & Save'
-                    : 'Finish'
-                  : 'Stop & Exit'}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+       >
+         <div className="space-y-4">
+           <p className="text-text-secondary">
+             {pendingAction === 'restart' 
+               ? 'Restarting will discard the current recording. Continue?' 
+               : 'Stop and save your session?'}
+           </p>
+           <div className="flex gap-3 justify-end">
+             <Button variant="ghost" onClick={() => setShowExitConfirmation(false)}>Cancel</Button>
+             <Button 
+               variant="primary" 
+               onClick={() => {
+                 setShowExitConfirmation(false)
+                 if (pendingAction === 'restart') {
+                   engine.discardSession()
+                   setTimeout(() => engine.startSession(), 500)
+                 } else {
+                   engine.stopSession() // This triggers 'FINISHING' -> 'SAVING'
+                 }
+               }}
+             >
+               Confirm
+             </Button>
+           </div>
+         </div>
+       </Modal>
     </ScreenPage>
   )
 }

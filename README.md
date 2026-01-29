@@ -154,11 +154,11 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 ### ✅ What's Complete (Production Ready)
 
 - **Core Engine**: Beat Dropdown, synchronized Word Prompts, visual Timer Ring, and Frequency/Difficulty controls.
-- **Visuals**: "Single-Screen" mobile layout (v1.9.1), SoundCloud-style waveforms with tap-to-seek, and Video Export Studio (v1.7.2).
+- **Visuals**: "Single-Screen" mobile layout (v0.9.49), SoundCloud-style waveforms with tap-to-seek, and Video Export Studio (Planned).
 - **Audio System**: High-fidelity recording with "Studio FX" (Reverb) defaults, mixed audio downloads (WAV), and "Mute-Play-Unmute" reliability for Safari.
 - **Social Ecosystem**: Public Profiles, Feed, Follow/Like/Comment systems, and "Duel Mode" with community voting.
 - **Monetization**: Active Stripe Subscriptions (Pro Tier) with feature gating and webhooks. Pro users access the **Beat Vault** uploads.
-- **Gamification**: Real XP Persistence (v1.8.0) with Leveling, Badges (8+), Session Count Tracking, and Word Vault (Bag System).
+- **Gamification**: Real XP Persistence (v0.9.40) with Leveling, Badges (8+), Session Count Tracking, and Word Vault (Bag System).
 - **Viral Growth**: Stat Card sharing (PNG), Public Duel links, and SEO-optimized profiles.
 - **Infrastructure**: NextAuth (Google), Prisma/Postgres, Supabase Storage, Sentry Logging, Auto-cleanup Cron.
 

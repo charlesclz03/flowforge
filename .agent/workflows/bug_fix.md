@@ -19,7 +19,7 @@ description: Systematically investigate, fix, and document bugs while keeping th
 
 4.  **Documentation**
     - **Patch Notes**: Update `lib/data/patch-notes.ts` with a bullet point for the fix.
-    - **Master Doc**: Update `DOCS/project/PATCH_NOTES_MASTER.md`.
+    - **Master Doc**: Update `DOCS/reference/PATCH_NOTES_MASTER.md`.
 
 5.  **Final Git Status**
     - Run `git status` to prepare for commit.

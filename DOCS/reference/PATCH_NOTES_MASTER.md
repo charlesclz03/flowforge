@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.78 - Dewey Decimal (2026-01-29)
+**"The Library Update 📚"**
+
+We completely overhauled our documentation to be world-class. Added "How-to-Code" guides (TSDoc), rigorous Architecture Records, and automated link checking.
+
+### System Updates
+- **Docs 2.0**: Reorganized all documentation into a clean, industry-standard structure (Architecture, Guides, Reference).
+- **Code Integration**: Added detailed usage docs directly into the code for the Practice Engine.
+- **Automated Validation**: The documentation now self-checks for broken links on every update.
+
+---
+
 ## v0.9.77 - Visual Polish (2026-01-27)
 **"Visual Polish 🎨"**
 

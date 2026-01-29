@@ -44,16 +44,16 @@ Visit: http://localhost:3000
 
 ### 1. Product Vision
 
-- **[Freestyla V1.0: The Bible](DOCS/Freestyla%20V1.0_%20The%20Bible.md)**: The core requirements—now 100% complete.
+- **[Freestyla V0.9: The Bible](architecture/PRODUCT_SPEC.md)**: The core requirements—now 100% complete.
 
 ### 2. Feature Guide
 
-- **[APP_OVERVIEW_AND_FEATURES.md](DOCS/APP_OVERVIEW_AND_FEATURES.md)**: Full breakdown of implemented features.
+- **[APP_OVERVIEW.md](architecture/APP_OVERVIEW.md)**: Full breakdown of implemented features.
 
 ### 3. Status & Roadmap
 
-- **[CURRENT_STATUS_SUMMARY.md](DOCS/summaries/CURRENT_STATUS_SUMMARY.md)**: Current project health.
-- **[PHASE_8_FUTURE_ROADMAP.md](DOCS/phases/PHASE_8_FUTURE_ROADMAP.md)**: Mobile and AI vision.
+- **[CURRENT_STATUS_SUMMARY.md](summaries/CURRENT_STATUS_SUMMARY.md)**: Current project health.
+- **[ROADMAP.md](project/ROADMAP.md)**: Mobile and AI vision.
 
 ---
 

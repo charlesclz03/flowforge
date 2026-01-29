@@ -23,7 +23,7 @@ Open: http://localhost:3000
 
 **Freestyla is COMPLETE.** All features from "The Bible" are implemented.
 
-- **Version**: v0.9.74 (Stripe Fix)
+- **Version**: v0.9.77 (Visual Polish)
 - **Status**: 100% Certified
 - **Live URL**: https://freestyla.app
 
@@ -34,7 +34,7 @@ Open: http://localhost:3000
 | Document                                           | Purpose                              |
 | -------------------------------------------------- | ------------------------------------ |
 | [README.md](../../README.md)                       | Project Overview                     |
-| [The Bible](../Freestyla%20V1.0_%20The%20Bible.md) | Product Requirements (100% Complete) |
+| [The Bible](../FlowForge%20V1.0_%20The%20Bible.md) | Product Requirements (100% Complete) |
 | [Features Guide](../APP_OVERVIEW_AND_FEATURES.md)  | Full Feature List                    |
 | [Status Summary](./CURRENT_STATUS_SUMMARY.md)      | Project Health                       |
 

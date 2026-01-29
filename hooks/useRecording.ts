@@ -35,6 +35,17 @@ export function useRecording({
     onMaxDurationRef.current = onMaxDurationReached
   }, [onComplete, onMaxDurationReached])
 
+  const setOnComplete = useCallback(
+    (cb: (blob: Blob, duration: number) => void) => {
+      onCompleteRef.current = cb
+    },
+    []
+  )
+
+  const setOnMaxDurationReached = useCallback((cb: () => void) => {
+    onMaxDurationRef.current = cb
+  }, [])
+
   // Initialize recorder
   useEffect(() => {
     recorderRef.current = new AudioRecorder()
@@ -300,5 +311,7 @@ export function useRecording({
     reset,
     download,
     markAsSaved, // Call after successful save to disable beforeunload guard
+    setOnComplete, // Dynamic FSM binding
+    setOnMaxDurationReached,
   }
 }
