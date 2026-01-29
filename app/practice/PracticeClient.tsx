@@ -101,8 +101,9 @@ export default function PracticeClient({
     setDifficulty,
     setFrequency,
     isLoaded,
-    isRecordingEnabled,
     mode,
+    cypherPlayers,
+    isRecordingEnabled,
     setIsRecordingEnabled,
   } = usePracticeSession()
 
@@ -210,6 +211,8 @@ export default function PracticeClient({
     frequency,
     difficulty,
     submitSession: saveSessionOptimistic,
+    mode,
+    cypherPlayers,
   })
 
   // 5. Visual Effects & Glue Logic
@@ -392,6 +395,9 @@ export default function PracticeClient({
                   setShowExitConfirmation(true)
                 }
               }}
+              // Beat Handling
+              activePlayer={engine.activePlayer}
+              cypherPlayers={cypherPlayers}
               handleRestart={() => {
                 engine.stopSession() // logic to restart?
                 // Usually restart means "Stop then Start again immediately"

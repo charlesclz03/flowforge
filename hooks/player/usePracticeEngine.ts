@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
-import { usePlayerState, PlayerState, PlayerStatus } from './usePlayerState'
+import { usePlayerState, PlayerStatus } from './usePlayerState'
 import { useAudioSync } from './useAudioSync'
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
@@ -39,6 +39,10 @@ interface UsePracticeEngineProps {
    * Injected to keep the engine decoupled from network logic.
    */
   submitSession: (formData: FormData) => Promise<any>
+  /** Session Mode */
+  mode?: 'solo' | 'cypher'
+  /** Number of players for Cypher mode (2-4) */
+  cypherPlayers?: number
 }
 
 /**
@@ -59,6 +63,8 @@ export function usePracticeEngine({
   frequency,
   difficulty,
   submitSession,
+  mode = 'solo',
+  cypherPlayers = 4,
 }: UsePracticeEngineProps) {
   // 1. The Reducer (State Machine)
   const { state, dispatch } = usePlayerState()
@@ -70,6 +76,7 @@ export function usePracticeEngine({
   // 3. Audio Clock (The Heartbeat)
   // Word Management State
   const [currentWord, setCurrentWord] = useState<string>('')
+  const [activePlayer, setActivePlayer] = useState(1) // Cypher Mode State
   const [wordTiming, setWordTiming] = useState<{
     start: number
     duration: number
@@ -130,6 +137,11 @@ export function usePracticeEngine({
         if (next) {
           setCurrentWord(next.wordText)
           setWordTiming({ start: time, duration })
+
+          // Cypher Mode Rotation
+          if (mode === 'cypher') {
+            setActivePlayer((prev) => (prev % cypherPlayers) + 1)
+          }
         }
       }
     },
@@ -307,7 +319,9 @@ export function usePracticeEngine({
     recorder,
 
     // Word Data
+    // Word Data
     currentWord,
     wordTiming,
+    activePlayer,
   }
 }
