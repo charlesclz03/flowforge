@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
-import { usePlayerState, PlayerStatus } from './usePlayerState'
+import { usePlayerState } from './usePlayerState'
 import { useAudioSync } from './useAudioSync'
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
