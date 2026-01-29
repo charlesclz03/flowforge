@@ -243,6 +243,7 @@ export default function PracticeClient({
       return () => clearInterval(interval)
     } else {
       setCountdownValue(null)
+      return undefined
     }
   }, [engine.status, engine.completeCountdown, play])
 

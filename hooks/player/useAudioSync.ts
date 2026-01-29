@@ -68,7 +68,12 @@ export function useAudioSync({
     }
     // Resume if suspended (browser autoplay policy)
     if (audioContextRef.current.state === 'suspended') {
-      audioContextRef.current.resume()
+      audioContextRef.current.resume().catch((err) => {
+        console.error(
+          '[AudioSync] AudioContext resume failed (Autoplay policy?):',
+          err
+        )
+      })
     }
     return audioContextRef.current
   }, [])

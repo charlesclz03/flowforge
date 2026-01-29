@@ -5,7 +5,7 @@
 | Feature            | Status | Description                                                | User Tier |
 | :----------------- | :----- | :--------------------------------------------------------- | :-------- |
 | **Solo Mode**      | [x] 1/29 | Infinite instrumental loop with word prompts.              | All       |
-| **Cypher Mode**    |      | Multiplayer lobby (Socket.io) for turn-based sessions.     | All       |
+| **Cypher Mode**    | [x] 1/29 | (STUB) Multiplayer lobby (Socket.io) for turn-based sessions. | All       |
 | **Word Prompts**   |      | Synchronized words (Easy/Med/Hard) on 2/4/8 bar intervals. | All       |
 | **Beat Library**   |      | Curated selection of instrumentals with BPM detection.     | All       |
 | **Orb Visualizer** |      | Reactive visualizer that pulses to input gain.             | All       |
