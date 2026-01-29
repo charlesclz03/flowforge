@@ -21,6 +21,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.81',
+    date: '2026-01-29',
+    title: 'User Beat Management Audit 🥁',
+    codename: 'Section Audit',
+    description:
+      'A deep dive into the User Beat Management system. We fixed a critical upload bug, added integration tests, and refactored the beat selector for better performance.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Upload Beats**: Fixed a critical bug where beat metadata failed to save due to an incorrect API endpoint.',
+          '**Beat Deletion**: Verified secure deletion flow for both cloud and database records.',
+          '**Code Health**: Extracted complex dropdown logic into a reusable `useBeatDropdown` hook.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**API Tests**: Added a new integration test suite for `/api/user/beats` to prevent future regressions.',
+          '**Audit History**: Officially audited and verified: Upload Beats, Cloud Storage, Calibration, Beat Deletion, and "My Beats".',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.80',
     date: '2026-01-29',
     title: 'The Feature Audit Update 🔍',

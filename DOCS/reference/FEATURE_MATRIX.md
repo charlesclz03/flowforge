@@ -15,11 +15,11 @@
 
 | Feature           | Status | Description                                             | User Tier |
 | :---------------- | :----- | :------------------------------------------------------ | :-------- |
-| **Upload Beats**  |      | Upload MP3/WAV files to personal library.               | **Pro**   |
-| **Cloud Storage** |      | Secure bucket storage for user assets.                  | **Pro**   |
-| **Calibration**   |      | Set custom "Start Points" and offset for perfect loops. | **Pro**   |
-| **Beat Deletion** |      | Permanently remove uploaded tracks.                     | **Pro**   |
-| **"My Beats"**    |      | Dedicated tab in Beat Selector for uploads.             | **Pro**   |
+| **Upload Beats**  | [x] 1/29 | Upload MP3/WAV files to personal library.               | **Pro**   |
+| **Cloud Storage** | [x] 1/29 | Secure bucket storage for user assets.                  | **Pro**   |
+| **Calibration**   | [x] 1/29 | Set custom "Start Points" and offset for perfect loops. | **Pro**   |
+| **Beat Deletion** | [x] 1/29 | Permanently remove uploaded tracks.                     | **Pro**   |
+| **"My Beats"**    | [x] 1/29 | Dedicated tab in Beat Selector for uploads.             | **Pro**   |
 
 ##  Recording & Studio
 
@@ -59,3 +59,8 @@
 | 2026-01-29 | Beat Library    | ✅ PASS | Fixed `: any` type escape with `as const`          |
 | 2026-01-29 | Orb Visualizer  | ✅ PASS | No fixes required                                  |
 | 2026-01-29 | Latency Fix     | ✅ PASS | Fixed localStorage key mismatch + migration        |
+| 2026-01-29 | Upload Beats    | ✅ PASS | Fixed broken API endpoint + added tests + hook     |
+| 2026-01-29 | Cloud Storage   | ✅ PASS | No fixes required                                  |
+| 2026-01-29 | Calibration     | ✅ PASS | No fixes required                                  |
+| 2026-01-29 | Beat Deletion   | ✅ PASS | No fixes required                                  |
+| 2026-01-29 | "My Beats"      | ✅ PASS | No fixes required                                  |

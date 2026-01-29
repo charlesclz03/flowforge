@@ -146,7 +146,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
       }
 
       // Step 3: Register in DB
-      const res = await fetch('/api/user/beats/upload', {
+      const res = await fetch('/api/user/beats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

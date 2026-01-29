@@ -1,5 +1,21 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.81 - Section Audit (2026-01-29)
+**"User Beat Management Audit 🥁"**
+
+A deep dive into the User Beat Management system. We fixed a critical upload bug, added integration tests, and refactored the beat selector for better performance.
+
+### Fixes & Improvements
+- **Upload Beats**: Fixed a critical bug where beat metadata failed to save due to an incorrect API endpoint.
+- **Beat Deletion**: Verified secure deletion flow for both cloud and database records.
+- **Code Health**: Extracted complex dropdown logic into a reusable `useBeatDropdown` hook.
+
+### System Updates
+- **API Tests**: Added a new integration test suite for `/api/user/beats` to prevent future regressions.
+- **Audit History**: Officially audited and verified: Upload Beats, Cloud Storage, Calibration, Beat Deletion, and "My Beats".
+
+---
+
 ## v0.9.79 - Pass the Phone (2026-01-29)
 **"Cypher Mode Activated 🎤"**
 
