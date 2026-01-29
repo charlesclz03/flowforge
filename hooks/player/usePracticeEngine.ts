@@ -3,7 +3,7 @@ import { usePlayerState } from './usePlayerState'
 import { useAudioSync } from './useAudioSync'
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
-import { useWordPrompt } from '@/hooks/useWordPrompt'
+
 import { Beat } from '@/types/database'
 import { toast } from 'react-hot-toast'
 
