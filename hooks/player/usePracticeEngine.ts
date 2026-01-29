@@ -5,10 +5,8 @@ import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
 
 import { Beat } from '@/types/database'
-import { toast } from 'react-hot-toast'
 
 import { WordGenerator } from '@/lib/words/generator'
-import { WordData } from '@/lib/words/types' // Assuming types import needed or we use generator's return type automatically
 
 /**
  * usePracticeEngine
@@ -58,7 +56,7 @@ interface UsePracticeEngineProps {
  * @returns The engine state and control methods.
  */
 export function usePracticeEngine({
-  initialBeats,
+  initialBeats: _initialBeats,
   initialWords,
   frequency,
   difficulty,
@@ -112,7 +110,7 @@ export function usePracticeEngine({
     frequencyRef.current = frequency
   }, [frequency])
 
-  const { initAudio, getPreciseTime } = useAudioSync({
+  const { initAudio } = useAudioSync({
     bpm: beatPlayer.currentBeat?.bpm || 90,
     isPlaying: state.status === 'PLAYING',
     onBeat: (beatIndex, time) => {
@@ -299,6 +297,8 @@ export function usePracticeEngine({
     dispatch,
     beatPlayer.currentBeat,
     stopSession,
+    difficulty,
+    frequency,
   ])
 
   return {
