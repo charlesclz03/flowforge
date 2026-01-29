@@ -103,7 +103,6 @@ export default function PracticeClient({
     isLoaded,
     isRecordingEnabled,
     mode,
-    mode,
     setIsRecordingEnabled,
   } = usePracticeSession()
 
