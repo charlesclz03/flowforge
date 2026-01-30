@@ -7,7 +7,7 @@ A visual enhancement update focusing on the Profile Card aesthetics and roadmap 
 
 ### Visual Overhaul
 - **Profile Card**: Replaced the "Star" background with a premium soft glow effect for better readability and aesthetics.
-- **Roadmap**: Added `FUTURE_FEATURES.md` to track upcoming Gamification and AI features.
+- **Roadmap**: Updated `ROADMAP_v1.4.md` with upcoming Gamification and AI features.
 
 ### System Updates
 - **MCP Audit**: Completed full audit of AI tools for 2026-01-30.

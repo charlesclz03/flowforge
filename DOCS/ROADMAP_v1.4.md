@@ -30,12 +30,18 @@ This document outlines features deferred from v1.3.1 to maintain production stab
 - **Status**: Partially replaced by Video Export.
 - **Requirement**: Lightweight social sharing image (Open Graph style) for users who don't want to share a full video.
 
+### 4. Gamification & Rewards
+
+- **XP Rewards System**: Visual display of "Next Reward" progress on the profile card to drive engagement.
+- **Unlockable Themes**: Skins for the practice interface based on level/XP milestones.
+
 ##  New Objectives (v1.4)
 
 ### AI Voice Coaching (V2 Prep)
 
 - Investigate VTT (Voice-to-Text) for real-time rhyme density scoring.
 - "Smart Prompts": Context-aware words based on previous rhymes.
+- "Generative Beats": AI-created custom beats based on user preference and tempo.
 
 
 ### Native Mobile Wrappers

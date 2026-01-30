@@ -32,7 +32,7 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Visual Overhaul',
         items: [
           '**Profile Card**: Replaced the "Star" background with a premium soft glow effect for better readability and aesthetics.',
-          '**Roadmap**: Added `FUTURE_FEATURES.md` to track upcoming Gamification and AI features.',
+          '**Roadmap**: Updated `ROADMAP_v1.4.md` with upcoming Gamification and AI features.',
         ],
       },
       {
