@@ -1,5 +1,20 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.83 - Visual Polish (2026-01-30)
+**"Visual Polish ✨"**
+
+A visual enhancement update focusing on the Profile Card aesthetics and roadmap planning. We implemented a softer, more modern glow effect and outlined future features.
+
+### Visual Overhaul
+- **Profile Card**: Replaced the "Star" background with a premium soft glow effect for better readability and aesthetics.
+- **Roadmap**: Added `FUTURE_FEATURES.md` to track upcoming Gamification and AI features.
+
+### System Updates
+- **MCP Audit**: Completed full audit of AI tools for 2026-01-30.
+- **Fixes**: Resolved build warnings in ProfileStatsTab.
+
+---
+
 ## v0.9.82 - Monetization Audit (2026-01-29)
 **"Monetization Audit 💰"**
 

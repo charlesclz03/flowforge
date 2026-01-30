@@ -21,6 +21,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.83',
+    date: '2026-01-30',
+    title: 'Visual Polish ✨',
+    codename: 'Visual Polish',
+    description:
+      'A visual enhancement update focusing on the Profile Card aesthetics and roadmap planning. We implemented a softer, more modern glow effect and outlined future features.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Profile Card**: Replaced the "Star" background with a premium soft glow effect for better readability and aesthetics.',
+          '**Roadmap**: Added `FUTURE_FEATURES.md` to track upcoming Gamification and AI features.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**MCP Audit**: Completed full audit of AI tools for 2026-01-30.',
+          '**Fixes**: Resolved build warnings in ProfileStatsTab.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.82',
     date: '2026-01-29',
     title: 'Monetization Audit 💰',

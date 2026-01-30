@@ -13,7 +13,6 @@ import {
   LogIn,
   ChevronRight,
   ChevronDown,
-  Sparkles,
   Zap,
   Crown,
 } from 'lucide-react'
@@ -123,9 +122,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             session?.user?.username && 'cursor-pointer hover:border-white/20'
           )}
         >
-          <div className="absolute top-0 right-0 p-3 opacity-20">
-            <Sparkles size={64} className="text-white" />
-          </div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-accent-purple/20 blur-[50px] rounded-full pointer-events-none" />
           <div className="relative z-10 flex items-center gap-4">
             <div className="h-14 w-14 rounded-full bg-accent-purple flex items-center justify-center border-2 border-white/20 shadow-lg shrink-0">
               {session?.user?.image ? (
@@ -488,7 +485,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         )}
         <div className="mt-8 text-center">
           <p className="text-xs text-text-tertiary">
-            FreeStyla v0.9.82 (Monetization Audit)
+            FreeStyla v0.9.83 (Visual Polish)
           </p>
         </div>
       </div>
