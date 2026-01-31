@@ -29,6 +29,7 @@
 | Microphone Access | [x] 1/29 | `MediaRecorder` API wrapper | Client |
 | Latency Fix | [x] 1/29 | Offset applied via AudioMixer | Client |
 | Studio FX | [x] 1/29 | Persistence fixed. Settings stored in DB. | All |
+| **Recording Playback** | [x] 1/31 | Hybrid engine (HTML5 + WebAudio) for gapless review.   | All       |
 | **Download**        | [x] 1/29 | Client-side mixing (Studio FX applied). WAV export. | All       |
 | **Share**           | [x] 1/29 | Public links (`/s/[id]`) allow anyone to listen. | All       |
 | **Video Export**    | [x] 1/29 | Generate visualizer video (WebM). Client-side only.      | Pro       |
@@ -55,6 +56,7 @@
 
 | Date       | Feature         | Status | Fixes Applied                                      |
 |:-----------|:----------------|:------:|:---------------------------------------------------|
+| 2026-01-31 | Recording Review | ✅ PASS | Verified hybrid audio engine (HTML5 + SeamlessLooper) |
 | 2026-01-29 | Solo Mode       | ✅ PASS | Implemented `usePracticeEngine` (FSM + Atomic Clock) |
 | 2026-01-29 | Cypher Mode     | ✅ PASS | Implemented player rotation logic                  |
 | 2026-01-29 | Word Prompts    | ✅ PASS | Added 8 unit tests, JSDoc, dev metrics logging     |

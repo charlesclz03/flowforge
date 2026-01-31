@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.86',
+    date: '2026-01-31',
+    title: 'Engine Stabilization',
+    codename: 'Engine Stabilization',
+    description: 'Hotfix for Practice Mode restart loop.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Crucial Fix**: Resolved circular dependency causing Practice Engine to loop/reset.',
+          '**Audio**: Stabilized Word Scheduler logic.',
+          '**Performance**: Optimized hook dependencies to reduce re-renders.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.85',
     date: '2026-01-31',
     title: 'Voice & Verification 🎙️',
@@ -33,7 +50,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Smart Voice Selection**: The app now automatically picks the highest quality voice (Google US English, Samantha) instead of the robotic system default.',
           '**Player Audit**: Verified the stability of the Audio Player and Seamless Looping engine.',
-          '**Mobile TTS**: Fixed issues where voice wouldn\'t play on iOS/Android without direct interaction.',
+          "**Mobile TTS**: Fixed issues where voice wouldn't play on iOS/Android without direct interaction.",
         ],
       },
     ],

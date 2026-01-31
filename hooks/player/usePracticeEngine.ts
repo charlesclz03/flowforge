@@ -149,10 +149,9 @@ export function usePracticeEngine({
     frequencyRef.current = frequency
   }, [frequency])
 
-  const { initAudio, audioState } = useAudioSync({
-    bpm: beatPlayer.currentBeat?.bpm || 90,
-    isPlaying: state.status === 'PLAYING',
-    onBeat: (beatIndex, time) => {
+  // Memoize onBeat to prevent useAudioSync restarts
+  const onBeat = useCallback(
+    (beatIndex: number, time: number) => {
       // EVENT DRIVEN WORD LOGIC
       // Frequency = Bars per Word. 1 Bar = 4 Beats.
       const beatsPerWord = 4 * (frequencyRef.current || 4)
@@ -176,6 +175,13 @@ export function usePracticeEngine({
         }
       }
     },
+    [beatPlayer.currentBeat?.bpm, mode, cypherPlayers]
+  )
+
+  const { initAudio, audioState } = useAudioSync({
+    bpm: beatPlayer.currentBeat?.bpm || 90,
+    isPlaying: state.status === 'PLAYING',
+    onBeat,
   })
 
   // 4. Controller Actions (The Public API)
@@ -233,28 +239,32 @@ export function usePracticeEngine({
   }, [dispatch])
 
   // Effect: PLAYING Entry/Exit
+  // Effect: PLAYING Entry/Exit
+  const { play: beatPlay, pause: beatPause, stop: beatStop } = beatPlayer
+  const { start: recStart, pause: recPause, stop: recStop } = recorder
+
   useEffect(() => {
     if (state.status === 'PLAYING') {
       // ENTER PLAYING
-      beatPlayer.play()
+      beatPlay()
       // Start recording/mic
       // Check if Guest or Pro logic needed here?
       // recorder.start/practice logic can be handled inside recorder hook or here.
       // For now, assume generic start, we handle save logic later.
-      recorder.start()
+      recStart()
     } else if (state.status === 'PAUSED') {
-      beatPlayer.pause()
-      recorder.pause()
+      beatPause()
+      recPause()
     } else if (
       state.status === 'FINISHING' ||
       state.status === 'EXITING' ||
       state.status === 'IDLE'
     ) {
       // EXIT PLAYING (STOP EVERYTHING)
-      beatPlayer.stop()
-      recorder.stop()
+      beatStop()
+      recStop()
     }
-  }, [state.status, beatPlayer, recorder])
+  }, [state.status, beatPlay, beatPause, beatStop, recStart, recPause, recStop])
 
   // Effect: FINISHING -> SAVING (The Save Flow)
   useEffect(() => {

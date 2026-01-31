@@ -12,6 +12,16 @@ We significantly upgraded the Text-to-Speech engine with smart voice selection a
 
 ---
 
+## v0.9.86 - Engine Stabilization (2026-01-31)
+**Hotfix for Practice Mode restart loop.**
+
+### Fixes & Improvements
+- **Crucial Fix**: Resolved circular dependency causing Practice Engine to loop/reset.
+- **Audio**: Stabilized Word Scheduler logic.
+- **Performance**: Optimized hook dependencies to reduce re-renders.
+
+---
+
 ## v0.9.84 - Voice Restoration (2026-01-31)
 **"Voice Restoration 🗣️"**
 
