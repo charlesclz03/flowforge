@@ -4,9 +4,8 @@ import { useAudioSync } from './useAudioSync'
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
 import { usePracticeSession } from '@/contexts/SessionContext'
-
+import { useTTS } from '@/hooks/useTTS'
 import { Beat } from '@/types/database'
-
 import { WordGenerator } from '@/lib/words/generator'
 
 /**
@@ -129,22 +128,20 @@ export function usePracticeEngine({
   }, [initialWords, difficulty]) // Added difficulty dependency to re-init if needed, though usually dynamic
 
   // TTS Integration (Restored)
+  // TTS Integration (Restored & Upgraded)
   const { isTTSEnabled, ttsVolume } = usePracticeSession()
+  const { speak } = useTTS({
+    enabled: isTTSEnabled,
+    volume: ttsVolume,
+    rate: 1.0,
+    pitch: 1.0,
+  })
 
   useEffect(() => {
-    if (!currentWord || !isTTSEnabled) return
-    if (typeof window === 'undefined' || !window.speechSynthesis) return
-
-    // Cancel previous
-    window.speechSynthesis.cancel()
-
-    const u = new SpeechSynthesisUtterance(currentWord)
-    u.rate = 1.0
-    u.pitch = 1.0
-    u.volume = ttsVolume
-
-    window.speechSynthesis.speak(u)
-  }, [currentWord, isTTSEnabled, ttsVolume])
+    if (currentWord) {
+      speak(currentWord)
+    }
+  }, [currentWord, speak])
 
   // Refs for audio callback access
   const frequencyRef = useRef(frequency)
@@ -152,7 +149,7 @@ export function usePracticeEngine({
     frequencyRef.current = frequency
   }, [frequency])
 
-  const { initAudio } = useAudioSync({
+  const { initAudio, audioState } = useAudioSync({
     bpm: beatPlayer.currentBeat?.bpm || 90,
     isPlaying: state.status === 'PLAYING',
     onBeat: (beatIndex, time) => {
@@ -167,12 +164,6 @@ export function usePracticeEngine({
           beatsPerWord * (60 / (beatPlayer.currentBeat?.bpm || 90))
 
         // Update State (in valid React way)
-        // Since this runs in a callback, we can set state.
-        // Note: setting state here triggers render.
-        // For smoother visuals, we might want to schedule this?
-        // Actually, onBeat is called slightly ahead (100ms).
-        // If we set state NOW, the word appears 100ms early. This is GOOD for human reaction time.
-
         const next = wordGeneratorRef.current?.getRandomWord()
         if (next) {
           setCurrentWord(next.wordText)
@@ -194,8 +185,17 @@ export function usePracticeEngine({
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     // 1. Prime Audio Engine (Mobile fix)
+    // We call init (which attempts resume)
     const ctx = initAudio()
-    if (ctx?.state === 'suspended') await ctx.resume()
+    // Double check specific resume for this user interaction event
+    if (ctx?.state === 'suspended') {
+      try {
+        await ctx.resume()
+      } catch (e) {
+        console.warn('Manual resume failed', e)
+      }
+    }
+
     beatPlayer.prime()
 
     // 2. Enter Countdown
@@ -354,6 +354,7 @@ export function usePracticeEngine({
     status: state.status,
     isGuest: state.isGuest,
     error: state.error,
+    audioState,
 
     // Actions
     startSession,

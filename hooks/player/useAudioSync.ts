@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 
 /**
  * Atomic Audio Sync Hook
@@ -59,14 +59,24 @@ export function useAudioSync({
   const isRunningRef = useRef(false)
   const requestRef = useRef<number | null>(null)
 
+  // Expose the raw audio state for advanced handling (e.g. stalled detection)
+  const [audioState, setAudioState] = useState<AudioContextState>('closed')
+
   // Initialize AudioContext lazily (must be user interaction triggered normally, but we prep it)
   const initAudio = useCallback(() => {
     if (!audioContextRef.current) {
       const AudioContext =
         window.AudioContext || (window as any).webkitAudioContext
       audioContextRef.current = new AudioContext()
+
+      // Listen for state changes
+      audioContextRef.current.onstatechange = () => {
+        setAudioState(audioContextRef.current?.state || 'closed')
+      }
     }
+
     // Resume if suspended (browser autoplay policy)
+    // Fire-and-forget the resume attempt
     if (audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume().catch((err) => {
         console.error(
@@ -75,6 +85,10 @@ export function useAudioSync({
         )
       })
     }
+
+    // Sync state immediately
+    setAudioState(audioContextRef.current.state)
+
     return audioContextRef.current
   }, [])
 
@@ -158,5 +172,7 @@ export function useAudioSync({
   return {
     initAudio,
     getPreciseTime,
+    audioState,
+    isSuspended: audioState === 'suspended',
   }
 }

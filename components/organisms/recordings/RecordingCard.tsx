@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, memo } from 'react'
+import { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
@@ -8,13 +8,13 @@ import { Card } from '@/components/atoms/Card'
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
-import { useErrorHandler } from '@/hooks/useErrorHandler'
+
 import { createAppError, ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
-import { SeamlessLooper } from '@/lib/audio/seamless-looper'
+import { useRecordingPlayback } from '@/hooks/useRecordingPlayback'
 
 interface RecordingCardProps {
   recording: FreestyleSessionWithBeat
@@ -33,172 +33,75 @@ export const RecordingCard = memo(function RecordingCard({
   playingId,
   onPlay,
 }: RecordingCardProps) {
+  // Hooks
+  const router = useRouter()
+  // const { handleError } = useErrorHandler() // Unused
+
+  // State
   const [isDeleting, setIsDeleting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [playbackError, setPlaybackError] = useState<string | null>(null)
-  const { error, handleError, clearError } = useErrorHandler()
-  const router = useRouter() // Added for refreshing expired links
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
-  const confirmDelete = useCallback(async () => {
+  const {
+    isPlaying,
+    error: playbackError,
+    toggle,
+    play,
+    pause,
+  } = useRecordingPlayback({
+    recordingUrl: recording.storageUrl,
+    beatUrl: recording.beat?.storageUrl || null,
+    recordingId: recording.id,
+    onPlayStateChange: (_) => {
+      // clear global playingId if we stop?
+      // actually the hook manages local state perfectly.
+      // we just need to sync with parent if needed.
+    },
+  })
+
+  // Handlers
+  const confirmDelete = async () => {
     setIsDeleting(true)
-    clearError()
-
+    setError(null)
     try {
       await onDelete(recording.id)
+      setShowDeleteConfirm(false)
     } catch (err) {
-      handleError(err, ErrorCodes.SESSION_DELETE_FAILED)
+      setError(err instanceof Error ? err : new Error('Failed to delete'))
     } finally {
       setIsDeleting(false)
-      setShowDeleteConfirm(false)
     }
-  }, [recording.id, onDelete, handleError, clearError])
+  }
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = async () => {
     setIsDownloading(true)
-    clearError()
-
+    setError(null)
     try {
       await onDownload(recording)
     } catch (err) {
-      handleError(err, ErrorCodes.RECORDING_DOWNLOAD_FAILED)
+      setError(err instanceof Error ? err : new Error('Failed to download'))
     } finally {
       setIsDownloading(false)
     }
-  }, [recording, onDownload, handleError, clearError])
+  }
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  // Use SeamlessLooper for gapless beat looping
-  const beatLooperRef = useRef<SeamlessLooper | null>(null)
+  const clearError = () => setError(null)
 
-  // Ref to track playingId without triggering audio re-creation
-  const playingIdRef = useRef(playingId)
+  // Effect: Global Play/Pause Check
   useEffect(() => {
-    playingIdRef.current = playingId
-  }, [playingId])
-
-  useEffect(() => {
-    let createdAudio: HTMLAudioElement | null = null
-    let beatLooper: SeamlessLooper | null = null
-
-    if (recording.storageUrl && recording.storageUrl.startsWith('http')) {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.src = ''
-      }
-      if (beatLooperRef.current) {
-        beatLooperRef.current.destroy()
-        beatLooperRef.current = null
-      }
-
-      createdAudio = new Audio(recording.storageUrl)
-      audioRef.current = createdAudio
-
-      // Initialize beat with SeamlessLooper for gapless playback
-      if (recording.beat?.storageUrl) {
-        beatLooper = new SeamlessLooper()
-        beatLooper.setVolume(0.8) // Default mix volume
-        beatLooper.load(recording.beat.storageUrl).catch((err) => {
-          console.error('Failed to load beat for seamless looping:', err)
-        })
-        beatLooperRef.current = beatLooper
-      }
-
-      createdAudio.onended = () => {
-        setIsPlaying(false)
-        if (beatLooperRef.current) {
-          beatLooperRef.current.stop()
-        }
-      }
-
-      createdAudio.onpause = () => {
-        setIsPlaying(false)
-        if (beatLooperRef.current) beatLooperRef.current.pause()
-      }
-
-      createdAudio.onplay = () => {
-        setIsPlaying(true)
-        if (beatLooperRef.current) {
-          beatLooperRef.current.play()
-        }
-      }
-
-      createdAudio.onerror = (e) => {
-        // Only show error if we were actually trying to play
-        if (playingIdRef.current === recording.id) {
-          console.error('Playback error:', e)
-          setPlaybackError('Link expired. Click refreshing...')
-          // Auto-refresh to get new link
-          router.refresh()
-        }
-        setIsPlaying(false)
-      }
+    if (playingId === recording.id && !isPlaying) {
+      play()
+    } else if (playingId !== recording.id && isPlaying) {
+      pause()
     }
+  }, [playingId, recording.id, isPlaying, play, pause])
 
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.src = ''
-        audioRef.current = null
-      }
-      if (beatLooperRef.current) {
-        beatLooperRef.current.destroy()
-        beatLooperRef.current = null
-      }
-
-      if (createdAudio) {
-        createdAudio.pause()
-        createdAudio.src = ''
-      }
-      if (beatLooper) {
-        beatLooper.destroy()
-      }
-    }
-  }, [recording.storageUrl, recording.beat.storageUrl, recording.id, router])
-
-  // Effect: Sync local state with global playingId
-  useEffect(() => {
-    if (playingId !== undefined) {
-      if (playingId === recording.id) {
-        // We SHOULD be playing - manual click starts playback, handled in click handler
-        // But if we wanted to auto-play when external state says so, we'd do it here.
-        // Currently handlePlay triggers the actual .play() call.
-      } else {
-        // We should NOT be playing
-        if (isPlaying) {
-          setIsPlaying(false)
-          if (audioRef.current) audioRef.current.pause()
-          if (beatLooperRef.current) beatLooperRef.current.pause()
-        }
-      }
-    }
-  }, [playingId, recording.id, isPlaying])
-
-  const handlePlay = useCallback(() => {
-    if (!audioRef.current) return
-
-    if (isPlaying) {
-      audioRef.current.pause()
-      // Optional: onPlay() to toggle off?
-      // For now we just pause locally, playingId remains set in list until another plays
-      // But if we want consistent state, we could call onPlay() which might toggle it off in parent
-      if (onPlay && playingId === recording.id) onPlay()
-    } else {
-      if (onPlay) onPlay()
-
-      const playPromise = audioRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.error('Error playing audio:', err)
-          setIsPlaying(false)
-          if (err.name !== 'AbortError') {
-            setPlaybackError('Failed to play. Please try again.')
-          }
-        })
-      }
-    }
-  }, [isPlaying, onPlay, playingId, recording.id])
+  const displayError = error
+    ? createAppError(error, ErrorCodes.UNKNOWN_ERROR)
+    : playbackError
+      ? createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
+      : null
 
   return (
     <Card className={cn('relative', className)}>
@@ -232,16 +135,12 @@ export const RecordingCard = memo(function RecordingCard({
         </div>
       </Modal>
 
-      {(error || playbackError) && (
+      {displayError && (
         <div className="mb-4">
           <ErrorAlert
-            error={
-              error ||
-              createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
-            }
+            error={displayError}
             onDismiss={() => {
               clearError()
-              setPlaybackError(null)
             }}
           />
           {playbackError && (
@@ -300,7 +199,10 @@ export const RecordingCard = memo(function RecordingCard({
             <Button
               variant="secondary"
               size="sm"
-              onClick={handlePlay}
+              onClick={() => {
+                if (onPlay) onPlay()
+                toggle()
+              }}
               leftIcon={isPlaying ? <Pause size={16} /> : <Play size={16} />}
               className="flex-1 md:flex-none justify-center bg-white/5 hover:bg-white/10 border-white/10"
             >

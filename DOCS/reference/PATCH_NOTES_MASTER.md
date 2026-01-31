@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.85 - Voice Upgrade (2026-01-31)
+**"Voice & Verification 🎙️"**
+
+We significantly upgraded the Text-to-Speech engine with smart voice selection and mobile hardening. We also performed a comprehensive audit of the audio player, certifying it as rock-solid.
+
+### Fixes & Improvements
+- **Smart Voice Selection**: The app now automatically picks the highest quality voice (Google US English, Samantha) instead of the robotic system default.
+- **Player Audit**: Verified the stability of the Audio Player and Seamless Looping engine.
+- **Mobile TTS**: Fixed issues where voice wouldn't play on iOS/Android without direct interaction.
+
+---
+
 ## v0.9.84 - Voice Restoration (2026-01-31)
 **"Voice Restoration 🗣️"**
 

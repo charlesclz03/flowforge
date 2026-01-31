@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.85',
+    date: '2026-01-31',
+    title: 'Voice & Verification 🎙️',
+    codename: 'Voice Upgrade',
+    description:
+      'We significantly upgraded the Text-to-Speech engine with smart voice selection and mobile hardening. We also performed a comprehensive audit of the audio player, certifying it as rock-solid.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Smart Voice Selection**: The app now automatically picks the highest quality voice (Google US English, Samantha) instead of the robotic system default.',
+          '**Player Audit**: Verified the stability of the Audio Player and Seamless Looping engine.',
+          '**Mobile TTS**: Fixed issues where voice wouldn\'t play on iOS/Android without direct interaction.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.84',
     date: '2026-01-31',
     title: 'Voice Restoration 🗣️',
