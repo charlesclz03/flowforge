@@ -7,6 +7,7 @@ import { usePracticeSession } from '@/contexts/SessionContext'
 import { useTTS } from '@/hooks/useTTS'
 import { Beat } from '@/types/database'
 import { WordGenerator } from '@/lib/words/generator'
+import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
 
 /**
  * usePracticeEngine
@@ -107,13 +108,17 @@ export function usePracticeEngine({
     }
 
     // Map string[] to WordData[] structure expected by generator
-    const mockWordData = wordsToUse.map((w, i) => ({
-      wordText: w,
-      difficulty: 1,
-      id: String(i),
-      syllableCount: 1,
-      difficultyLevel: 1,
-    }))
+    const mockWordData = wordsToUse.map((w, i) => {
+      const syllables = countSyllables(w)
+      const diff = getDifficultyFromSyllables(syllables)
+      return {
+        wordText: w,
+        difficulty: diff,
+        id: String(i),
+        syllableCount: syllables,
+        difficultyLevel: diff,
+      }
+    })
 
     wordGeneratorRef.current = new WordGenerator(mockWordData)
 

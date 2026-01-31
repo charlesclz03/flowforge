@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.89',
+    date: '2026-01-31',
+    title: "Wordsmith's Return",
+    codename: "Wordsmith's Return",
+    description:
+      'Fixed a critical issue where words were not displaying on Medium/Hard difficulties due to a logic error in the previous optimization.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Word Logic Restored**: Fixed an issue where words were missing on Medium/Hard difficulties.',
+          '**TTS Fix**: Resolved voice consistency issues.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.88',
     date: '2026-01-31',
     title: 'Practice Perfected 💎',
