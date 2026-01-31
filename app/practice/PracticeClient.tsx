@@ -230,7 +230,7 @@ export default function PracticeClient({
     if (engine.status === 'PLAYING') {
       let rafId: number
       const loop = () => {
-        const time = engine.beatPlayer.getPreciseTime()
+        const time = engine.getAudioTime()
         setUiTime(time)
         rafId = requestAnimationFrame(loop)
       }
@@ -238,7 +238,7 @@ export default function PracticeClient({
       return () => cancelAnimationFrame(rafId)
     } else {
       // When not playing, ensure we show the static time (e.g. 0 or pause time)
-      setUiTime(engine.beatPlayer.getPreciseTime())
+      setUiTime(engine.getAudioTime())
       return undefined
     }
   }, [engine.status, engine.beatPlayer])
@@ -400,6 +400,7 @@ export default function PracticeClient({
               error={engine.error || engine.beatPlayer.error}
               // Time
               currentTime={uiTime}
+              startTime={engine.startTime}
               sessionDuration={SESSION_CONFIG.DEFAULT_DURATION_SECONDS}
               recordingDuration={engine.recorder.duration}
               // Settings
@@ -432,11 +433,6 @@ export default function PracticeClient({
               handleDifficultyChange={setDifficulty}
               handleFrequencyChange={setFrequency}
               onTogglePause={engine.togglePause}
-              onDiscard={() => {
-                if (confirm('Discard session?')) {
-                  engine.discardSession()
-                }
-              }}
               handleUpgrade={() => {
                 setPremiumTrigger('recording')
                 setShowPremiumModal(true)

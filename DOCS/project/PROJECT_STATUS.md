@@ -1,5 +1,5 @@
-# Project Status: v0.9.90 ("Timekeeper's Redemption")
-**Current Version**: `v0.9.90`
+# Project Status: v0.9.91 ("The Master Clock")
+**Current Version**: `v0.9.91`
 **Last Updated**: 2026-01-31
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
@@ -8,6 +8,8 @@
 - **Voice Upgrade**: Implemented smart TTS voice selection (Premium voices).
 - **Player Audit**: Confirmed stability of gapless audio engine.
 - **Voice Restoration**: Fixed critical regression where words and TTS were missing in practice mode.
+- **Master Clock**: Unified all Practice Mode UI elements under a single high-precision monotonic clock (v0.9.91).
+- **UI Synchronization**: Resolved issues with frozen timer rings and missing visual countdowns.
 - **Visual Polish**: Enhanced Profile Card with soft glow aesthetics.
 - **Roadmap Update**: Created `FUTURE_FEATURES.md` for AI/Gamification tracking.
 - **MCP Audit**: Verified toolchain health for 2026-01-30.

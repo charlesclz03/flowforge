@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.91 - The Master Clock (2026-01-31)
+- **FEAT**: Standardized Monotonic Master Clock for all UI synchronization.
+- **FIX**: Resolved frozen timer ring by unifying time units.
+- **FIX**: Guaranteed countdown visibility during word pre-loading.
+
 ## v0.9.90 - Timekeeper's Redemption (2026-01-31)
 - **FIX**: Resolved frozen timer and missing countdown.
 - **FIX**: Restored Siren visual effect.

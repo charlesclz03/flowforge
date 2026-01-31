@@ -58,7 +58,7 @@ interface PracticeControlsProps {
   cypherPlayers?: number
   isPaused?: boolean
   onTogglePause?: () => void
-  onDiscard?: () => void
+  startTime?: number
   onToggleRecordingMode?: () => void
   wordTiming?: { start: number; duration: number }
   activeFrequency?: number
@@ -97,6 +97,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     cypherPlayers = 4,
     isPaused = false,
     onTogglePause,
+    startTime,
     wordTiming,
   } = props
 
@@ -584,7 +585,22 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
                   {isPlaying ? (
                     <div className="flex flex-col items-center justify-center space-y-2">
-                      {currentWord ? (
+                      {countdownValue ? (
+                        <motion.div
+                          key={countdownValue}
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1.2 }}
+                          exit={{ opacity: 0, scale: 1.5 }}
+                          className="flex flex-col items-center justify-center"
+                        >
+                          <span className="text-7xl sm:text-8xl font-black text-white drop-shadow-neon">
+                            {countdownValue}
+                          </span>
+                          <span className="text-xl font-bold text-accent-purple tracking-widest uppercase mt-2">
+                            Get Ready
+                          </span>
+                        </motion.div>
+                      ) : currentWord ? (
                         // Display Word if Active
                         <motion.div
                           key={currentWord}
@@ -630,23 +646,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           {/* Session Timer Below Word */}
                           <span className="text-3xl font-medium text-white/60 tabular-nums mt-4 drop-shadow-md">
                             {formatTime(
-                              Math.max(0, sessionDuration - (currentTime || 0))
+                              Math.max(
+                                0,
+                                sessionDuration -
+                                  (currentTime - (startTime || 0))
+                              )
                             )}
-                          </span>
-                        </motion.div>
-                      ) : countdownValue ? (
-                        <motion.div
-                          key={countdownValue}
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          animate={{ opacity: 1, scale: 1.2 }}
-                          exit={{ opacity: 0, scale: 1.5 }}
-                          className="flex flex-col items-center justify-center"
-                        >
-                          <span className="text-7xl sm:text-8xl font-black text-white drop-shadow-neon">
-                            {countdownValue}
-                          </span>
-                          <span className="text-xl font-bold text-accent-purple tracking-widest uppercase mt-2">
-                            Get Ready
                           </span>
                         </motion.div>
                       ) : (
@@ -692,7 +697,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                               formatTime(
                                 Math.max(
                                   0,
-                                  sessionDuration - (currentTime || 0)
+                                  sessionDuration -
+                                    (currentTime - (startTime || 0))
                                 )
                               )
                             )}

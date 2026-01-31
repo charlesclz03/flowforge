@@ -37,7 +37,7 @@ interface UsePracticeEngineProps {
    * Callback to submit the finalized session data.
    * Injected to keep the engine decoupled from network logic.
    */
-  submitSession: (formData: FormData) => Promise<any>
+  submitSession: (formData: FormData) => Promise<unknown>
   /** Session Mode */
   mode?: 'solo' | 'cypher'
   /** Number of players for Cypher mode (2-4) */
@@ -76,6 +76,7 @@ export function usePracticeEngine({
   // Word Management State
   const [currentWord, setCurrentWord] = useState<string>('')
   const [activePlayer, setActivePlayer] = useState(1) // Cypher Mode State
+  const [startTime, setStartTime] = useState(0)
   const [wordTiming, setWordTiming] = useState<{
     start: number
     duration: number
@@ -183,11 +184,12 @@ export function usePracticeEngine({
     [beatPlayer.currentBeat?.bpm, mode, cypherPlayers]
   )
 
-  const { initAudio, audioState } = useAudioSync({
+  const audioSync = useAudioSync({
     bpm: beatPlayer.currentBeat?.bpm || 90,
     isPlaying: state.status === 'PLAYING',
     onBeat,
   })
+  const { initAudio, audioState } = audioSync
 
   const startSession = useCallback(async () => {
     // Only allowed from IDLE
@@ -246,10 +248,11 @@ export function usePracticeEngine({
   // We explicitly trigger the "Drop" here to ensure tight timing.
   const completeCountdown = useCallback(() => {
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
+    setStartTime(audioSync.getPreciseTime())
     // [COMMAND-BASED] Immediate Start "The Drop"
     beatPlayer.play()
     recorder.start()
-  }, [dispatch, beatPlayer, recorder])
+  }, [dispatch, beatPlayer, recorder, audioSync])
 
   // REMOVED: Circular Dependency Effect (was lines 246-267)
   // The logic is now distributed to the commands above.
@@ -317,11 +320,17 @@ export function usePracticeEngine({
           // Execute Save
           submitSession(fd)
             .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
-            .catch((err) =>
-              dispatch({ type: 'SAVE_ERROR', error: err.message })
+            .catch((err: unknown) =>
+              dispatch({
+                type: 'SAVE_ERROR',
+                error: err instanceof Error ? err.message : 'Unknown error',
+              })
             )
-        } catch (e: any) {
-          dispatch({ type: 'SAVE_ERROR', error: e.message })
+        } catch (e: unknown) {
+          dispatch({
+            type: 'SAVE_ERROR',
+            error: e instanceof Error ? e.message : 'Unknown error',
+          })
         }
       } else if (state.status === 'EXITING' || !state.shouldSave) {
         // Just reset
@@ -367,9 +376,12 @@ export function usePracticeEngine({
     recorder,
 
     // Word Data
-    // Word Data
     currentWord,
     wordTiming,
     activePlayer,
+
+    // Time Logic (Monotonic)
+    startTime,
+    getAudioTime: audioSync.getPreciseTime,
   }
 }

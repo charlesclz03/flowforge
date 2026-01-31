@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.91',
+    date: '2026-01-31',
+    title: 'The Master Clock',
+    codename: 'The Master Clock',
+    description:
+      'Standardized all Practice Mode UI elements on a single high-precision monotonic master clock. This permanently fixes the frozen timer ring, countdown visibility, and session timer jumps.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Master Clock**: Implemented monotonic time sync across all UI components.',
+          '**Countdown Fixed**: Ensured the visual countdown remains visible even when words are pre-loaded.',
+          '**Ring Sync**: Fixed the frozen timer ring issue by standardizing on absolute audio time units.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.90',
     date: '2026-01-31',
     title: "Timekeeper's Redemption",
