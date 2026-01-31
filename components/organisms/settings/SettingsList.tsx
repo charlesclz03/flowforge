@@ -485,7 +485,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         )}
         <div className="mt-8 text-center">
           <p className="text-xs text-white/20 ml-2">
-            v0.9.88 (Practice Perfected)
+            v0.9.90 (Timekeeper&apos;s Redemption)
           </p>
         </div>
       </div>

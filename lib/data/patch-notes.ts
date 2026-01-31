@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.90',
+    date: '2026-01-31',
+    title: "Timekeeper's Redemption",
+    codename: "Timekeeper's Redemption",
+    description:
+      'Fixed the frozen timer and missing countdown by implementing a high-performance UI polling loop. The Siren effect is also fully restored.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**UI Reactivity**: Implemented `requestAnimationFrame` polling to ensure the timer and countdown update smoothly without re-rendering the audio engine.',
+          '**Siren Effect**: Restored the red/blue flashing warning before word changes.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.89',
     date: '2026-01-31',
     title: "Wordsmith's Return",

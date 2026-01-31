@@ -1,5 +1,13 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.90 - Timekeeper's Redemption (2026-01-31)
+- **FIX**: Resolved frozen timer and missing countdown.
+- **FIX**: Restored Siren visual effect.
+
+## v0.9.89 - Wordsmith's Return (2026-01-31)
+- **FIX**: Restored word difficulty logic (Fixes missing words).
+- **FIX**: Resolved TTS voice synthesis matching.
+
 ## v0.9.88 - Practice Perfected (2026-01-31)
 **"Practice Perfected 💎"**
 

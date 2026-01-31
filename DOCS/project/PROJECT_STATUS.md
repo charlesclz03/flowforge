@@ -1,5 +1,5 @@
-# Project Status: v0.9.87 ("Voice Upgrade")
-**Current Version**: `v0.9.88`
+# Project Status: v0.9.90 ("Timekeeper's Redemption")
+**Current Version**: `v0.9.90`
 **Last Updated**: 2026-01-31
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization

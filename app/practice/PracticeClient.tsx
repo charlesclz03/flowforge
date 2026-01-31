@@ -115,6 +115,7 @@ export default function PracticeClient({
   const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(
     null
   )
+  const [uiTime, setUiTime] = useState(0)
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -224,6 +225,24 @@ export default function PracticeClient({
     session?.user?.subscriptionStatus === 'active' ||
     session?.user?.subscriptionStatus === 'trialing'
 
+  // Polling Loop for UI (Timer/Siren) to avoid Audio Engine re-renders
+  useEffect(() => {
+    if (engine.status === 'PLAYING') {
+      let rafId: number
+      const loop = () => {
+        const time = engine.beatPlayer.getPreciseTime()
+        setUiTime(time)
+        rafId = requestAnimationFrame(loop)
+      }
+      rafId = requestAnimationFrame(loop)
+      return () => cancelAnimationFrame(rafId)
+    } else {
+      // When not playing, ensure we show the static time (e.g. 0 or pause time)
+      setUiTime(engine.beatPlayer.getPreciseTime())
+      return undefined
+    }
+  }, [engine.status, engine.beatPlayer])
+
   // Countdown Logic (UI Side)
   const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
     null
@@ -262,12 +281,12 @@ export default function PracticeClient({
     // Siren triggers when < 40% of time remains (or < 4s), mimicking old logic roughly
     // Old logic: min(4, wordDuration * 0.6) was the threshold.
     // Let's use simpler: last 30% of the bar.
-    const elapsed = engine.beatPlayer.currentTime - engine.wordTiming.start
+    const elapsed = uiTime - engine.wordTiming.start
     const remaining = engine.wordTiming.duration - elapsed
     const threshold = Math.min(4, engine.wordTiming.duration * 0.4)
 
     return remaining > 0 && remaining <= threshold
-  }, [engine.status, engine.wordTiming, engine.beatPlayer.currentTime])
+  }, [engine.status, engine.wordTiming, uiTime])
 
   // Siren Phase (Fast toggle for visuals)
   const [sirenPhase, setSirenPhase] = useState(0)
@@ -380,7 +399,7 @@ export default function PracticeClient({
               countdownValue={countdownValue}
               error={engine.error || engine.beatPlayer.error}
               // Time
-              currentTime={engine.beatPlayer.currentTime}
+              currentTime={uiTime}
               sessionDuration={SESSION_CONFIG.DEFAULT_DURATION_SECONDS}
               recordingDuration={engine.recorder.duration}
               // Settings
