@@ -21,6 +21,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.88',
+    date: '2026-01-31',
+    title: 'Practice Perfected 💎',
+    codename: 'Practice Perfected',
+    description:
+      'We completely rebuilt the Practice Engine core to eliminate infinite loops and ensure perfect timing. The countdown, word generation, and TTS are now glitch-free.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Forever Fix**: Refactored `usePracticeEngine` to use the Command Pattern, permanently fixing the infinite loop regression.',
+          '**Engine Stability**: Removed circular dependencies between the Audio Player and the Engine State.',
+          '**Reliable Countdown**: The 3-2-1-GO sequence is now silky smooth and perfectly synced with the drop.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.87',
     date: '2026-01-31',
     title: 'Core Stability Patch',

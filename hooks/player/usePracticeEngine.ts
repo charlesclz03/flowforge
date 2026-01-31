@@ -184,16 +184,12 @@ export function usePracticeEngine({
     onBeat,
   })
 
-  // 4. Controller Actions (The Public API)
-
   const startSession = useCallback(async () => {
     // Only allowed from IDLE
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     // 1. Prime Audio Engine (Mobile fix)
-    // We call init (which attempts resume)
     const ctx = initAudio()
-    // Double check specific resume for this user interaction event
     if (ctx?.state === 'suspended') {
       try {
         await ctx.resume()
@@ -206,65 +202,52 @@ export function usePracticeEngine({
 
     // 2. Enter Countdown
     dispatch({ type: 'START' })
-
-    // 3. Countdown Side Effect managed by Effect or explicit logic?
-    // Let's keep it explicit here for "The Drop" control.
-    // Actually, separating side-effects into useEffect is safer for state pairing.
-    // But for the Countdown->Play transition, we might want explicit control.
   }, [state.status, dispatch, initAudio, beatPlayer])
 
   const stopSession = useCallback(() => {
     dispatch({ type: 'STOP', shouldSave: true })
-  }, [dispatch])
+    // [COMMAND-BASED] Immediate Stop
+    beatPlayer.stop()
+    recorder.stop()
+  }, [dispatch, beatPlayer, recorder])
 
   const discardSession = useCallback(() => {
     if (confirm('Discard this session?')) {
       dispatch({ type: 'DISCARD' })
+      // [COMMAND-BASED] Immediate Stop
+      beatPlayer.stop()
+      recorder.stop()
     }
-  }, [dispatch])
+  }, [dispatch, beatPlayer, recorder])
 
   const togglePause = useCallback(() => {
-    if (state.status === 'PLAYING') dispatch({ type: 'PAUSE' })
-    else if (state.status === 'PAUSED') dispatch({ type: 'RESUME' })
-  }, [state.status, dispatch])
+    if (state.status === 'PLAYING') {
+      dispatch({ type: 'PAUSE' })
+      // [COMMAND-BASED] Immediate Pause
+      beatPlayer.pause()
+      recorder.pause()
+    } else if (state.status === 'PAUSED') {
+      dispatch({ type: 'RESUME' })
+      // [COMMAND-BASED] Immediate Resume
+      beatPlayer.play()
+      recorder.resume()
+    }
+  }, [state.status, dispatch, beatPlayer, recorder])
 
   // 5. Reactive Side Effects (The Muscles)
   // This is where "StateMachine -> Real World" happens.
 
-  // Effect: Handle COUNTDOWN -> PLAYING transition automatically?
-  // Or UI drives countdown and calls finishCountdown?
-  // Let's let UI drive countdown visualization, but Engine owns the transition.
+  // Effect: Handle COUNTDOWN -> PLAYING transition
+  // We explicitly trigger the "Drop" here to ensure tight timing.
   const completeCountdown = useCallback(() => {
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
-  }, [dispatch])
+    // [COMMAND-BASED] Immediate Start "The Drop"
+    beatPlayer.play()
+    recorder.start()
+  }, [dispatch, beatPlayer, recorder])
 
-  // Effect: PLAYING Entry/Exit
-  // Effect: PLAYING Entry/Exit
-  const { play: beatPlay, pause: beatPause, stop: beatStop } = beatPlayer
-  const { start: recStart, pause: recPause, stop: recStop } = recorder
-
-  useEffect(() => {
-    if (state.status === 'PLAYING') {
-      // ENTER PLAYING
-      beatPlay()
-      // Start recording/mic
-      // Check if Guest or Pro logic needed here?
-      // recorder.start/practice logic can be handled inside recorder hook or here.
-      // For now, assume generic start, we handle save logic later.
-      recStart()
-    } else if (state.status === 'PAUSED') {
-      beatPause()
-      recPause()
-    } else if (
-      state.status === 'FINISHING' ||
-      state.status === 'EXITING' ||
-      state.status === 'IDLE'
-    ) {
-      // EXIT PLAYING (STOP EVERYTHING)
-      beatStop()
-      recStop()
-    }
-  }, [state.status, beatPlay, beatPause, beatStop, recStart, recPause, recStop])
+  // REMOVED: Circular Dependency Effect (was lines 246-267)
+  // The logic is now distributed to the commands above.
 
   // Effect: FINISHING -> SAVING (The Save Flow)
   useEffect(() => {

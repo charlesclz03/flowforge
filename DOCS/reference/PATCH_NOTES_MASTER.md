@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.88 - Practice Perfected (2026-01-31)
+**"Practice Perfected 💎"**
+
+We completely rebuilt the Practice Engine core to eliminate infinite loops and ensure perfect timing. The countdown, word generation, and TTS are now glitch-free.
+
+### Fixes & Improvements
+- **Forever Fix**: Refactored `usePracticeEngine` to use the Command Pattern, permanently fixing the infinite loop regression.
+- **Engine Stability**: Removed circular dependencies between the Audio Player and the Engine State.
+- **Reliable Countdown**: The 3-2-1-GO sequence is now silky smooth and perfectly synced with the drop.
+
+---
+
 ## v0.9.85 - Voice Upgrade (2026-01-31)
 **"Voice & Verification 🎙️"**
 
