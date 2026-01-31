@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { AudioRecorder } from '@/lib/recording/recorder'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
 import * as Sentry from '@sentry/nextjs'
@@ -291,27 +291,47 @@ export function useRecording({
     [recordingBlob]
   )
 
-  return {
-    // State
-    isRecording,
-    isPaused,
-    duration,
-    recordingBlob,
-    error,
-    isInitializing,
-    hasRecording: recordingBlob !== null,
-    stream: recorderRef.current?.getStream() || null,
+  return useMemo(
+    () => ({
+      // State
+      isRecording,
+      isPaused,
+      duration,
+      recordingBlob,
+      error,
+      isInitializing,
+      hasRecording: recordingBlob !== null,
+      stream: recorderRef.current?.getStream() || null,
 
-    // Actions
-    start,
-    practice,
-    stop,
-    pause,
-    resume,
-    reset,
-    download,
-    markAsSaved, // Call after successful save to disable beforeunload guard
-    setOnComplete, // Dynamic FSM binding
-    setOnMaxDurationReached,
-  }
+      // Actions
+      start,
+      practice,
+      stop,
+      pause,
+      resume,
+      reset,
+      download,
+      markAsSaved,
+      setOnComplete,
+      setOnMaxDurationReached,
+    }),
+    [
+      isRecording,
+      isPaused,
+      duration,
+      recordingBlob,
+      error,
+      isInitializing,
+      start,
+      practice,
+      stop,
+      pause,
+      resume,
+      reset,
+      download,
+      markAsSaved,
+      setOnComplete,
+      setOnMaxDurationReached,
+    ]
+  )
 }

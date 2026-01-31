@@ -280,9 +280,12 @@ export function usePracticeEngine({
 
   // 6. External Recorder Callback Wiring
   // 6. External Recorder Callback Wiring
+
+  const { setOnComplete, setOnMaxDurationReached } = recorder
+
   useEffect(() => {
     // We overwrite the recorder's onComplete to hook into our FSM
-    recorder.setOnComplete((blob, duration) => {
+    setOnComplete((blob, duration) => {
       // Only proceed if we are in FINISHING state (avoids phantom saves)
       if (state.status === 'FINISHING' && state.shouldSave) {
         dispatch({ type: 'START_SAVE' })
@@ -339,18 +342,16 @@ export function usePracticeEngine({
     })
 
     // Wire up Max Duration (Premium/Guest Limits)
-    recorder.setOnMaxDurationReached(() => {
+    setOnMaxDurationReached(() => {
       // Stop everything
       stopSession()
-      // Trigger specific UI or Toast?
-      // The UI can react to state.status === 'FINISHING' and show modal if user is not pro.
-      // However, we might want a specific error or flag in state.
-      // For now, standard stop is safer.
     })
   }, [
     state.status,
     state.shouldSave,
-    recorder,
+    // recorder, // Removed unstable object dependency
+    setOnComplete, // Stable action
+    setOnMaxDurationReached, // Stable action
     submitSession,
     dispatch,
     beatPlayer.currentBeat,

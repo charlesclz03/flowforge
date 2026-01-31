@@ -46,7 +46,6 @@ export const RecordingCard = memo(function RecordingCard({
   const {
     isPlaying,
     error: playbackError,
-    toggle,
     play,
     pause,
   } = useRecordingPlayback({
@@ -199,10 +198,7 @@ export const RecordingCard = memo(function RecordingCard({
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => {
-                if (onPlay) onPlay()
-                toggle()
-              }}
+              onClick={() => onPlay?.()}
               leftIcon={isPlaying ? <Pause size={16} /> : <Play size={16} />}
               className="flex-1 md:flex-none justify-center bg-white/5 hover:bg-white/10 border-white/10"
             >

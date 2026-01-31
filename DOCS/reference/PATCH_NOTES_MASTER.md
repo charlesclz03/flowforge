@@ -12,6 +12,20 @@ We significantly upgraded the Text-to-Speech engine with smart voice selection a
 
 ---
 
+## v0.9.87 - Core Stability Patch
+**Date:** 2026-01-31
+**Codename:** Iron Core
+
+**Description**
+Critical stability updates to the Recording Engine and Practice Mode to prevent infinite loops and ensure reliable session handling.
+
+**Changes**
+*   **Fixed**: Resolved a critical reference instability in `useRecording` causing repeated effect triggers.
+*   **Fixed**: Fixed an issue where the Practice Engine could enter a play/pause loop.
+*   **Improved**: Stabilized recorder dependencies to prevent unnecessary re-rendering.
+
+---
+
 ## v0.9.86 - Engine Stabilization (2026-01-31)
 **Hotfix for Practice Mode restart loop.**
 

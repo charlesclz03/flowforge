@@ -21,18 +21,36 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '0.9.86',
+    version: '0.9.87',
     date: '2026-01-31',
-    title: 'Engine Stabilization',
-    codename: 'Engine Stabilization',
-    description: 'Hotfix for Practice Mode restart loop.',
+    title: 'Core Stability Patch',
+    codename: 'Iron Core',
+    description:
+      'Critical stability updates to the Recording Engine and Practice Mode to prevent infinite loops and ensure reliable session handling.',
     changes: [
       {
         category: 'Fixes & Improvements',
         items: [
-          '**Crucial Fix**: Resolved circular dependency causing Practice Engine to loop/reset.',
-          '**Audio**: Stabilized Word Scheduler logic.',
-          '**Performance**: Optimized hook dependencies to reduce re-renders.',
+          'Resolved a critical reference instability in `useRecording` causing repeated effect triggers.',
+          'Fixed an issue where the Practice Engine could enter a play/pause loop.',
+          'Stabilized recorder dependencies to prevent unnecessary re-rendering.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.86',
+    date: '2026-01-31',
+    title: 'Engine Stabilization',
+    codename: 'Loop Breaker',
+    description: 'Hotfix for Practice Mode regression causing infinite loops.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          'Resolved circular dependency in Practice Engine.',
+          'Fixed infinite loop where player would stall on start.',
+          'Optimized audio scheduler synchronization.',
         ],
       },
     ],
