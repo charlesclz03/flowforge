@@ -13,10 +13,18 @@ export default async function PracticePage() {
   const wordsResult = await getRandomWords(100)
   
   // Flatten words to simple string array as expected by client
-  const initialWords =
+  let initialWords =
     wordsResult.success && wordsResult.data
       ? wordsResult.data.map((w) => w.wordText)
       : []
+
+  // Server-Side Fallback (Double Safety)
+  if (initialWords.length === 0) {
+    initialWords = [
+      'Flow', 'Rhythm', 'Power', 'Spirit', 'Vision', 'Create', 'Inspire', 
+      'Energy', 'Focus', 'Elevate', 'Master', 'Legend', 'Hustle', 'Grind'
+    ]
+  }
 
   return (
     <PracticeClient

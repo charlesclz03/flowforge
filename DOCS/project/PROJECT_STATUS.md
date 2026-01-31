@@ -1,9 +1,10 @@
-# Project Status: v0.9.83 ("Visual Polish")
-**Last Updated:** 2026-01-30
+# Project Status: v0.9.84 ("Voice Restoration")
+**Last Updated:** 2026-01-31
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
 
 ## Recent Achievements
+- **Voice Restoration**: Fixed critical regression where words and TTS were missing in practice mode.
 - **Visual Polish**: Enhanced Profile Card with soft glow aesthetics.
 - **Roadmap Update**: Created `FUTURE_FEATURES.md` for AI/Gamification tracking.
 - **MCP Audit**: Verified toolchain health for 2026-01-30.
@@ -20,6 +21,7 @@
 ## Version History (Recent)
 | Version | Codename | Date | Summary |
 |---------|----------|------|---------|
+| v0.9.84 | Voice Restoration | 2026-01-31 | TTS Implemented & Word Gen Hardened |
 | v0.9.83 | Visual Polish | 2026-01-30 | Profile Card Glow & Feature Roadmap |
 | v0.9.82 | Monetization Audit | 2026-01-29 | History Graph Gating & Stripe Audit |
 | v0.9.81 | Section Audit | 2026-01-29 | User Beat Management Audit & Fixes |

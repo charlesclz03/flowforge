@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.84',
+    date: '2026-01-31',
+    title: 'Voice Restoration 🗣️',
+    codename: 'Voice Restoration',
+    description:
+      'We restored the Practice Mode voice engine! Words are now spoken aloud again, and we hardened the word generator to ensure you never run out of rhymes.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**TTS Restoration**: The text-to-speech engine is back online. It now speaks every word prompt.',
+          '**Word Generator Safety**: Added a double-layer failsafe (Client + Server) to ensure words always appear, even if the database is sleepy.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.83',
     date: '2026-01-30',
     title: 'Visual Polish ✨',

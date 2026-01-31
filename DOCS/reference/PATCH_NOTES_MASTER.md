@@ -1,5 +1,16 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.84 - Voice Restoration (2026-01-31)
+**"Voice Restoration 🗣️"**
+
+We restored the Practice Mode voice engine! Words are now spoken aloud again, and we hardened the word generator to ensure you never run out of rhymes.
+
+### Fixes & Improvements
+- **TTS Restoration**: The text-to-speech engine is back online. It now speaks every word prompt.
+- **Word Generator Safety**: Added a double-layer failsafe (Client + Server) to ensure words always appear, even if the database is sleepy.
+
+---
+
 ## v0.9.83 - Visual Polish (2026-01-30)
 **"Visual Polish ✨"**
 

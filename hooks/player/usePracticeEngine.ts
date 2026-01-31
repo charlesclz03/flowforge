@@ -3,6 +3,7 @@ import { usePlayerState } from './usePlayerState'
 import { useAudioSync } from './useAudioSync'
 import { useBeatPlayer } from '@/hooks/useBeatPlayer'
 import { useRecording } from '@/hooks/useRecording'
+import { usePracticeSession } from '@/contexts/SessionContext'
 
 import { Beat } from '@/types/database'
 
@@ -83,26 +84,67 @@ export function usePracticeEngine({
 
   // Initialize Generator
   useEffect(() => {
-    // Map string[] to WordData[] structure expected by generator if needed,
-    // or just assume strings if we simplify generator interactions.
-    // The existing generator expects WordData[].
-    // Let's assume initialWords is mapped properly or we mock it.
-    // Wait, initialWords is string[]. DB returns WordData.
-    // PracticePage currently flattens it (line 18 of page.tsx).
-    // effectively we need to reconstruct objects or adjust generator.
-    // For now, let's map strings back to mock WordData to satisfy the Class.
-    const mockWordData = initialWords.map((w, i) => ({
+    let wordsToUse = initialWords || []
+
+    // SAFETY FALLBACK: If DB returns empty (or fetch failed), use local backup
+    if (wordsToUse.length === 0) {
+      console.warn('[PracticeEngine] No words provided, using fallback list.')
+      wordsToUse = [
+        'Flow',
+        'Rhythm',
+        'Power',
+        'Spirit',
+        'Vision',
+        'Create',
+        'Inspire',
+        'Energy',
+        'Focus',
+        'Elevate',
+        'Master',
+        'Legend',
+        'Hustle',
+        'Grind',
+      ]
+    }
+
+    // Map string[] to WordData[] structure expected by generator
+    const mockWordData = wordsToUse.map((w, i) => ({
       wordText: w,
       difficulty: 1,
       id: String(i),
-      syllableCount: 1, // Fallback
-      difficultyLevel: 1, // Fallback (number)
+      syllableCount: 1,
+      difficultyLevel: 1,
     }))
+
     wordGeneratorRef.current = new WordGenerator(mockWordData)
+
+    // Config Generator
+    if (wordGeneratorRef.current) {
+      wordGeneratorRef.current.setDifficulty(difficulty)
+    }
+
     // Preload first word
     const first = wordGeneratorRef.current.getRandomWord()
     if (first) setCurrentWord(first.wordText)
-  }, [initialWords])
+  }, [initialWords, difficulty]) // Added difficulty dependency to re-init if needed, though usually dynamic
+
+  // TTS Integration (Restored)
+  const { isTTSEnabled, ttsVolume } = usePracticeSession()
+
+  useEffect(() => {
+    if (!currentWord || !isTTSEnabled) return
+    if (typeof window === 'undefined' || !window.speechSynthesis) return
+
+    // Cancel previous
+    window.speechSynthesis.cancel()
+
+    const u = new SpeechSynthesisUtterance(currentWord)
+    u.rate = 1.0
+    u.pitch = 1.0
+    u.volume = ttsVolume
+
+    window.speechSynthesis.speak(u)
+  }, [currentWord, isTTSEnabled, ttsVolume])
 
   // Refs for audio callback access
   const frequencyRef = useRef(frequency)
