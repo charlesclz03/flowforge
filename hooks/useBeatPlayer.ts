@@ -173,6 +173,7 @@ export function useBeatPlayer() {
       setVolume,
       setLoop,
       prime: () => playerRef.current?.prime(),
+      connectTo: (ctx: AudioContext) => playerRef.current?.connectToContext(ctx),
     }),
     [
       isPlaying,
@@ -190,3 +191,4 @@ export function useBeatPlayer() {
     ]
   )
 }
+

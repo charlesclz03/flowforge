@@ -22,6 +22,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.98',
+    date: '2026-02-01',
+    title: 'Audio Shield 🛡️',
+    codename: 'Audio Shield',
+    description:
+      'Critical stability fixes for the Profile Page and Practice Audio. We resolved a 500 Global Error caused by audio player race conditions and fixed CSP violations for image uploads.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Profile Crash Fix**: Hardened Audio Player to fail silently when destroyed, preventing 500 errors during navigation.',
+          '**CSP Update**: Allowed `blob:` images in Content Security Policy to fix profile picture previews.',
+          '**Audio Core**: Unified Playback and Context engines for gapless synchronization.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.96',
     date: '2026-02-01',
     title: 'Profile Polish & Header Fix',

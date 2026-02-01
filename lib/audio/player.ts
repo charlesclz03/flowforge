@@ -156,19 +156,30 @@ export class AudioPlayer {
    * Pause the audio
    */
   pause(): void {
-    if (!this.audio) throw new Error('Audio not initialized')
+    if (this.isDestroyed || !this.audio) {
+      return // Fail silently
+    }
     this.log('Pause requested')
-    this.audio.pause()
+    if (this.audio) {
+      this.audio.pause()
+    }
   }
 
   /**
    * Stop the audio and reset to beginning
    */
   stop(): void {
-    if (!this.audio) throw new Error('Audio not initialized')
+    if (this.isDestroyed || !this.audio) {
+      // Fail silently if already destroyed (prevents navigation race conditions)
+      return
+    }
     this.log('Stop requested')
-    this.audio.pause()
-    this.audio.currentTime = 0
+
+    // Defensive check again for strict safety
+    if (this.audio) {
+      this.audio.pause()
+      this.audio.currentTime = 0
+    }
   }
 
   /**
@@ -248,5 +259,29 @@ export class AudioPlayer {
     }
     this.onTimeUpdateCallback = null
     this.onEndedCallback = null
+  }
+
+  /**
+   * Connects the audio element to a Web Audio API Context.
+   * This bridges the HTMLAudioElement into the audio graph, allowing
+   * synchronization with the AudioContext clock and visualizers.
+   */
+  connectToContext(context: AudioContext): void {
+    if (!this.audio) return
+
+    try {
+      // @ts-expect-error - We are checking if we already attached a node
+      if (this.audio._sourceNode) return
+
+      const source = context.createMediaElementSource(this.audio)
+      source.connect(context.destination)
+
+      // @ts-expect-error - Monkey-patching source node onto element for tracking
+      this.audio._sourceNode = source
+
+      this.log('Connected to AudioContext')
+    } catch (e) {
+      console.warn('[AudioPlayer] Connection to context failed:', e)
+    }
   }
 }

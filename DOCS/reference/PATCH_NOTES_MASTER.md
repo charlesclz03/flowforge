@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.98 - Audio Shield (2026-02-01)
+- **FIX**: Resolved 500 Global Error on Profile Page (Audio Player race condition).
+- **FIX**: Added `blob:` to CSP to fix profile picture previews.
+- **FIX**: Consolidated Audio Context for Practice Mode (Audio Sync).
+
 ## v0.9.95 - Dashboard Upgrade (2026-02-01)
 - **FEAT**: Transformed Profile page into a 2-column desktop dashboard.
 - **FIX**: Resolved AppHeader title overlap on mobile by relocating Help button.

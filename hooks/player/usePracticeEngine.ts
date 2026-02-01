@@ -209,20 +209,33 @@ export function usePracticeEngine({
     // Only allowed from IDLE
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
-    // 1. Prime Audio Engine (Mobile fix)
-    const ctx = initAudio()
-    if (ctx?.state === 'suspended') {
-      try {
-        await ctx.resume()
-      } catch (e) {
-        console.warn('Manual resume failed', e)
+    try {
+      // 1. Prime Audio Engine - ATOMIC START
+      // The "Forever Fix": Unify AudioContext and HTMLAudioElement
+      // This MUST happen in the user-initiated event loop.
+      const ctx = initAudio()
+
+      // A. Ensure Master Clock is Running
+      if (ctx) {
+        if (ctx.state === 'suspended') {
+          await ctx.resume()
+        }
+
+        // B. Bridge the Track (Prevent independent failures)
+        beatPlayer.connectTo(ctx)
       }
+
+      // C. Prime the Element (Unlock Autoplay)
+      await beatPlayer.prime()
+
+      // 2. Enter Countdown (Only if Audio is confirmed ready)
+      dispatch({ type: 'START' })
+    } catch (err) {
+      console.error('[PracticeEngine] Start failed:', err)
+      // Optional: Dispatch error state if we had a persistent error banner
+      // dispatch({ type: 'ERROR', error: 'Failed to initialize audio' })
+      alert('Could not start audio engine. Please tap again.')
     }
-
-    beatPlayer.prime()
-
-    // 2. Enter Countdown
-    dispatch({ type: 'START' })
   }, [state.status, dispatch, initAudio, beatPlayer])
 
   const stopSession = useCallback(() => {
@@ -334,7 +347,10 @@ export function usePracticeEngine({
             console.warn('[PracticeEngine] No beat URL found, skipping mix.')
           }
         } catch (mixErr) {
-          console.error('[PracticeEngine] Mixing failed, using raw vocal:', mixErr)
+          console.error(
+            '[PracticeEngine] Mixing failed, using raw vocal:',
+            mixErr
+          )
           // Fallback to raw blob is automatic since finalBlob = blob initially
         } finally {
           if (cleanupUrl) URL.revokeObjectURL(cleanupUrl)
