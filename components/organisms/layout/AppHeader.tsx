@@ -60,9 +60,9 @@ export function AppHeader({
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
         <div className="relative flex h-14 sm:h-20 items-center justify-center">
-          {/* Back button - top left */}
-          {showBackButton && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4">
+          {/* Left Zone: Back Button + Help Button */}
+          <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4 gap-2">
+            {showBackButton && (
               <button
                 type="button"
                 onClick={handleBack}
@@ -72,8 +72,21 @@ export function AppHeader({
                 <ArrowLeft size={18} className="sm:w-6 sm:h-6" />
                 <span className="hidden text-sm sm:inline">Back</span>
               </button>
-            </div>
-          )}
+            )}
+            {/* Help Button - Now on the left */}
+            {!action && showSettings && (
+              <ProtectedLink
+                href="/howitworks"
+                className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                aria-label="How it works"
+              >
+                <HelpCircle
+                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  strokeWidth={2.5}
+                />
+              </ProtectedLink>
+            )}
+          </div>
 
           {/* Account section - top right */}
           {(showSettings || action) && (
@@ -82,18 +95,6 @@ export function AppHeader({
                 action
               ) : (
                 <>
-                  {/* Help Button - Redirects to How It Works */}
-                  <ProtectedLink
-                    href="/howitworks"
-                    className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
-                    aria-label="How it works"
-                  >
-                    <HelpCircle
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                      strokeWidth={2.5}
-                    />
-                  </ProtectedLink>
-
                   {/* Streak Counter */}
                   {isAuthenticated &&
                     (session?.user?.currentStreak || 0) > 0 && (

@@ -1,10 +1,12 @@
-# Project Status: v0.9.94 ("Studio Fix")
-**Current Version**: `v0.9.94`
+# Project Status: v0.9.95 ("Dashboard Upgrade")
+**Current Version**: `v0.9.95`
 **Last Updated**: 2026-02-01
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
 
 ## Recent Achievements
+- **Dashboard Upgrade**: Implemented responsive 2-column layout for User Profiles (v0.9.95).
+- **Header Fix**: Resolved mobile layout overlaps (v0.9.95).
 - **Voice Upgrade**: Implemented smart TTS voice selection (Premium voices).
 - **Player Audit**: Confirmed stability of gapless audio engine.
 - **Voice Restoration**: Fixed critical regression where words and TTS were missing in practice mode.

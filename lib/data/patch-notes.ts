@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.95',
+    date: '2026-02-01',
+    title: 'Dashboard Upgrade',
+    codename: 'Dashboard Upgrade',
+    description:
+      'Transformed the Profile page into a responsive desktop dashboard and fixed AppHeader overlap issues on mobile.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Desktop Dashboard**: The Profile page is now a wide 2-column dashboard on desktop with sticky sidebar.',
+          '**Mobile Header**: Moved Help button to the left to prevent title overlap.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.94',
     date: '2026-02-01',
     title: 'Studio Fix',

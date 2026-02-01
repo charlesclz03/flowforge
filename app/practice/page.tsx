@@ -7,11 +7,12 @@ export const revalidate = 3600 // Cache for 1 hour
 export default async function PracticePage() {
   // Fetch beats directly from DB (Server Side)
   const beatsResult = await getBeats()
-  const initialBeats = beatsResult.success && beatsResult.data ? beatsResult.data : []
+  const initialBeats =
+    beatsResult.success && beatsResult.data ? beatsResult.data : []
 
   // Fetch initial words (Server Side) - Default count 100
   const wordsResult = await getRandomWords(100)
-  
+
   // Flatten words to simple string array as expected by client
   let initialWords =
     wordsResult.success && wordsResult.data
@@ -21,15 +22,24 @@ export default async function PracticePage() {
   // Server-Side Fallback (Double Safety)
   if (initialWords.length === 0) {
     initialWords = [
-      'Flow', 'Rhythm', 'Power', 'Spirit', 'Vision', 'Create', 'Inspire', 
-      'Energy', 'Focus', 'Elevate', 'Master', 'Legend', 'Hustle', 'Grind'
+      'Flow',
+      'Rhythm',
+      'Power',
+      'Spirit',
+      'Vision',
+      'Create',
+      'Inspire',
+      'Energy',
+      'Focus',
+      'Elevate',
+      'Master',
+      'Legend',
+      'Hustle',
+      'Grind',
     ]
   }
 
   return (
-    <PracticeClient
-      initialBeats={initialBeats}
-      initialWords={initialWords}
-    />
+    <PracticeClient initialBeats={initialBeats} initialWords={initialWords} />
   )
 }

@@ -9,7 +9,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/atoms/Tabs'
-import { FreestyleSession, Beat } from '@prisma/client'
+// import { FreestyleSession, Beat } from '@prisma/client'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
@@ -24,7 +24,7 @@ interface SocialLinks {
   tiktok?: string
 }
 
-type ProfileSession = FreestyleSession & { beat: Beat }
+// type ProfileSession = FreestyleSession & { beat: Beat }
 
 interface ProfilePageProps {
   params: {
@@ -33,6 +33,7 @@ interface ProfilePageProps {
 }
 
 import { cache } from 'react'
+import { Trophy } from 'lucide-react'
 
 const getUser = cache(async (username: string) => {
   // Check if input is a valid UUID to prevent "invalid input syntax" errors
@@ -61,6 +62,8 @@ const getUser = cache(async (username: string) => {
       _count: {
         select: {
           freestyleSessions: true,
+          // followedBy/following not in schema yet
+          collectedWords: true,
         },
       },
       freestyleSessions: {
@@ -97,12 +100,6 @@ export async function generateMetadata({ params }: ProfilePageProps) {
       description,
       images: user.image ? [{ url: user.image }] : [],
     },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-      images: user.image ? [user.image] : [],
-    },
   }
 }
 
@@ -116,170 +113,215 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     notFound()
   }
 
-  // Check if the current viewer is the owner of this profile
-  const isOwner = session?.user?.id === user.id
+  const currentUserId = session?.user?.id
+  const isOwner = currentUserId === user.id
+
+  const socials = user.socials as SocialLinks | null
+
+  // Format Join Date
+  const joinDate = new Date(user.createdAt).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+  })
 
   return (
-    <Container className="py-8 space-y-8">
+    <Container className="py-8 space-y-8" size="lg">
+      {' '}
+      {/* Using lg to be safe */}
       <AppHeader showBackButton={true} />
       {/* Profile Header */}
-      <Card padding="lg" className="relative overflow-hidden">
-        {/* Edit Action (Top Right) */}
-        {isOwner && (
-          <div className="absolute top-4 right-4 z-20">
-            <ProfileOwnerControls
-              user={{
-                username: user.username,
-                bio: user.bio,
-                image: user.image,
-                name: user.name,
-              }}
-            />
-          </div>
-        )}
-        <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
-          <Avatar
-            src={user.image}
-            fallback={user.name?.[0]?.toUpperCase() || 'U'}
-            size="xl"
-            className="border-4 border-background-elevated shadow-xl"
-            priority={true}
-          />
-
-          <div className="flex-1 text-center md:text-left space-y-2">
-            <h1 className="text-3xl font-bold text-white">
-              {user.name || 'Anonymous User'}
-            </h1>
-            {/* Display username if available */}
-            {user.username && session?.user && (
-              <p className="text-text-secondary">@{user.username}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Fixed Stats / Info */}
+        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+          <Card padding="lg" className="relative overflow-hidden w-full">
+            {/* Edit Action (Top Right) */}
+            {isOwner && (
+              <div className="absolute top-4 right-4 z-20">
+                <ProfileOwnerControls
+                  user={{
+                    username: user.username,
+                    bio: user.bio,
+                    image: user.image,
+                    name: user.name,
+                  }}
+                />
+              </div>
             )}
+            <div className="flex flex-col items-center gap-6 relative z-10">
+              <Avatar
+                src={user.image}
+                alt={user.name || 'User'}
+                size="xl"
+                className="border-4 border-background shadow-xl"
+              />
 
-            <div className="flex items-center justify-center md:justify-start gap-6 text-sm text-text-tertiary pt-2">
-              <div>
-                <span className="font-bold text-white block text-lg">
-                  {user._count.freestyleSessions}
-                </span>
-                <span>Flows</span>
+              <div className="text-center space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight text-white">
+                  {user.name}
+                </h1>
+                <p className="text-accent-purple font-medium">
+                  @{user.username || 'freestyler'}
+                </p>
+              </div>
+
+              {/* Bio */}
+              {user.bio && (
+                <p className="text-center text-text-secondary text-sm max-w-xs leading-relaxed">
+                  {user.bio}
+                </p>
+              )}
+
+              {/* Social Stats */}
+              <div className="grid grid-cols-2 gap-4 w-full pt-4 border-t border-stroke-subtle">
+                <div className="text-center p-3 rounded-lg bg-surface-highlight/30">
+                  <span className="block text-2xl font-bold text-white mb-1">
+                    {user._count.freestyleSessions}
+                  </span>
+                  <span className="text-xs text-text-tertiary uppercase tracking-wider">
+                    Flows
+                  </span>
+                </div>
+                <div className="text-center p-3 rounded-lg bg-surface-highlight/30">
+                  <span className="block text-2xl font-bold text-white mb-1">
+                    {user._count.collectedWords}
+                  </span>
+                  <span className="text-xs text-text-tertiary uppercase tracking-wider">
+                    Vault
+                  </span>
+                </div>
+              </div>
+
+              {/* Join Date */}
+              <div className="text-xs text-text-tertiary pt-2">
+                Joined {joinDate}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 w-full pt-2">
+                {/* Follow Button Removed as it is not supported by backend yet */}
               </div>
             </div>
+          </Card>
 
-            {/* Socials */}
-            {(user.socials as unknown as SocialLinks) && (
-              <div className="flex gap-4 pt-4 justify-center md:justify-start">
-                {(user.socials as unknown as SocialLinks).instagram && (
+          {/* Social Links Block */}
+          {(socials?.instagram || socials?.tiktok) && (
+            <Card padding="md" className="w-full">
+              <div className="flex justify-center gap-6">
+                {socials.instagram && (
                   <a
-                    href={`https://instagram.com/${(user.socials as unknown as SocialLinks).instagram}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-text-secondary hover:text-accent-pink transition-colors"
-                  >
-                    <span className="sr-only">Instagram</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                    </svg>
-                  </a>
-                )}
-                {(user.socials as unknown as SocialLinks).tiktok && (
-                  <a
-                    href={`https://tiktok.com/@${(user.socials as unknown as SocialLinks).tiktok}`}
+                    href={`https://instagram.com/${socials.instagram}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-text-secondary hover:text-accent-purple transition-colors"
                   >
-                    <span className="sr-only">TikTok</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-                    </svg>
+                    IG
+                  </a>
+                )}
+                {socials.tiktok && (
+                  <a
+                    href={`https://tiktok.com/@${socials.tiktok}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-text-secondary hover:text-accent-purple transition-colors"
+                  >
+                    TikTok
                   </a>
                 )}
               </div>
-            )}
-          </div>
+            </Card>
+          )}
         </div>
-      </Card>
 
-      {/* Content Tabs */}
-      <Tabs defaultValue="flows" className="w-full">
-        <TabsList
-          className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} lg:w-[${isOwner ? '600px' : '400px'}]`}
-        >
-          <TabsTrigger value="flows">Flows</TabsTrigger>
-          {isOwner && <TabsTrigger value="stats">Stats</TabsTrigger>}
-          <TabsTrigger value="about">About</TabsTrigger>
-          {isOwner && <TabsTrigger value="settings">Settings</TabsTrigger>}
-        </TabsList>
-        <TabsContent value="flows" className="mt-6 space-y-4">
-          {user.freestyleSessions.length === 0 ? (
-            <div className="text-center py-12 text-text-tertiary">
-              No flows recorded yet.
-            </div>
-          ) : (
-            user.freestyleSessions.map((session: ProfileSession) => (
-              <Card
-                key={session.id}
-                className="p-4 flex items-center justify-between"
-              >
-                <div>
-                  <h3 className="font-bold text-white">{session.title}</h3>
-                  <p className="text-sm text-text-secondary">
-                    {session.beat.title} •{' '}
-                    {session.durationSeconds
-                      ? Math.floor(session.durationSeconds)
-                      : 0}
-                    s
-                  </p>
+        {/* Right Column: Content Tabs */}
+        <div className="lg:col-span-8 w-full">
+          <Tabs defaultValue="flows" className="w-full">
+            <TabsList
+              className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} lg:w-[${isOwner ? '600px' : '400px'}]`}
+            >
+              <TabsTrigger value="flows">Flows</TabsTrigger>
+              {isOwner && <TabsTrigger value="stats">Stats</TabsTrigger>}
+              <TabsTrigger value="about">About</TabsTrigger>
+              {isOwner && <TabsTrigger value="settings">Settings</TabsTrigger>}
+            </TabsList>
+            <TabsContent value="flows" className="mt-6 space-y-4">
+              {user.freestyleSessions.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4">
+                  {user.freestyleSessions.map((session: any) => (
+                    <a
+                      key={session.id}
+                      href={`/s/${session.id}`}
+                      className="group block p-4 rounded-xl bg-surface-base border border-surface-highlight hover:border-accent-purple/50 transition-all hover:translate-x-1"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-surface-highlight flex items-center justify-center text-accent-purple group-hover:scale-110 transition-transform">
+                            <Trophy size={20} />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-white group-hover:text-accent-purple transition-colors">
+                              {session.title}
+                            </h3>
+                            <p className="text-xs text-text-tertiary">
+                              {session.beat.title} •{' '}
+                              {new Date(session.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-sm font-mono text-text-secondary">
+                            {Math.floor(session.durationSeconds / 60)}:
+                            {(session.durationSeconds % 60)
+                              .toString()
+                              .padStart(2, '0')}
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
-                <div className="text-xs text-text-tertiary">
-                  {new Date(session.createdAt).toLocaleDateString()}
+              ) : (
+                <div className="text-center py-12 text-text-disabled">
+                  <p>No flows recorded yet.</p>
+                  {isOwner && (
+                    <p className="text-sm mt-2 text-accent-purple">
+                      Record your first track to see it here.
+                    </p>
+                  )}
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="about">
+              <Card padding="md">
+                <div className="prose prose-invert max-w-none">
+                  <h3 className="text-lg font-bold">About {user.name}</h3>
+                  <p className="text-text-secondary">
+                    {user.bio || 'No bio yet.'}
+                  </p>
+                  <div className="pt-4 border-t border-stroke-subtle mt-4">
+                    <p className="text-xs text-text-tertiary">
+                      Member since{' '}
+                      <span className="text-white">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </Card>
-            ))
-          )}
-        </TabsContent>
-        <TabsContent value="about">
-          <Card className="p-6 text-text-secondary">
-            <h3 className="text-lg font-bold text-white mb-2">About</h3>
-            <p className="mb-4">{user.bio || 'No bio yet.'}</p>
-            <div className="text-sm text-text-tertiary">
-              Member since {new Date(user.createdAt).toLocaleDateString()}
-            </div>
-          </Card>
-        </TabsContent>
+            </TabsContent>
 
-        {isOwner && (
-          <>
-            <TabsContent value="stats">
-              <ProfileStatsTab />
-            </TabsContent>
-            <TabsContent value="settings">
-              <ProfileSettingsTab />
-            </TabsContent>
-          </>
-        )}
-      </Tabs>
+            {isOwner && (
+              <>
+                <TabsContent value="stats">
+                  <ProfileStatsTab />
+                </TabsContent>
+                <TabsContent value="settings">
+                  <ProfileSettingsTab />
+                </TabsContent>
+              </>
+            )}
+          </Tabs>
+        </div>
+      </div>
     </Container>
   )
 }

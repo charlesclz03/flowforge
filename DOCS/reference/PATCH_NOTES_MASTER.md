@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.95 - Dashboard Upgrade (2026-02-01)
+- **FEAT**: Transformed Profile page into a 2-column desktop dashboard.
+- **FIX**: Resolved AppHeader title overlap on mobile by relocating Help button.
+
 ## v0.9.94 - Studio Fix (2026-02-01)
 - **FIX**: Resolved Play/Pause button state de-sync in Recordings Playback.
 - **FIX**: Stabilized audio engine initialization.

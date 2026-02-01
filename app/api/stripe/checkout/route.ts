@@ -41,8 +41,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
     // Enhanced error logging
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const errorDetails = error instanceof Error ? error.stack : JSON.stringify(error)
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    const errorDetails =
+      error instanceof Error ? error.stack : JSON.stringify(error)
     console.error('Stripe checkout error:', {
       message: errorMessage,
       details: errorDetails,
