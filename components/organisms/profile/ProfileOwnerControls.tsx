@@ -32,11 +32,11 @@ export function ProfileOwnerControls({ user }: ProfileOwnerControlsProps) {
         variant="ghost"
         size="sm"
         onClick={() => setIsEditProfileOpen(true)}
-        className="text-text-secondary hover:text-white"
+        className="text-white bg-white/10 hover:bg-white/20"
         aria-label="Edit Profile"
       >
         <Edit2 size={16} />
-        <span className="ml-2 hidden sm:inline">Edit Profile</span>
+        <span className="ml-2">Edit Profile</span>
       </Button>
 
       <EditProfileDialog

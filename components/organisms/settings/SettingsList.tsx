@@ -489,7 +489,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="text-xs text-white/20 ml-2">v0.9.95 (Dashboard Upgrade)</p>
+          <p className="text-xs text-white/20 ml-2">v0.9.96 (Profile Polish)</p>
         </div>
       </div>
       <SupportModal

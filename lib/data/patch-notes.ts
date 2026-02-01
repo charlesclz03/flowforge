@@ -16,10 +16,19 @@ export interface PatchNote {
   codename: string
   date: string
   description: string
-  changes: PatchNoteItem[]
+  changes?: PatchNoteItem[]
+  type?: 'patch' | 'minor' | 'major'
 }
 
 export const PATCH_NOTES: PatchNote[] = [
+  {
+    version: '0.9.96',
+    date: '2026-02-01',
+    title: 'Profile Polish & Header Fix',
+    description:
+      'UI Consistency update. Fixed profile page layout scale, google image loading, and mobile header overlap.',
+    type: 'patch',
+  },
   {
     version: '0.9.95',
     date: '2026-02-01',
