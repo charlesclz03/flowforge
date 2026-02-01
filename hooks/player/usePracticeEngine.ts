@@ -144,10 +144,10 @@ export function usePracticeEngine({
   })
 
   useEffect(() => {
-    if (currentWord) {
+    if (currentWord && state.status === 'PLAYING') {
       speak(currentWord)
     }
-  }, [currentWord, speak])
+  }, [currentWord, speak, state.status])
 
   // Refs for audio callback access
   const frequencyRef = useRef(frequency)

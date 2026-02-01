@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.92 - Sync Guard (2026-02-01)
+- **FIX**: Memoized AudioSync to fix stuck countdown loop.
+- **FIX**: Guarded TTS to prevent premature word playback.
+
 ## v0.9.91 - The Master Clock (2026-01-31)
 - **FEAT**: Standardized Monotonic Master Clock for all UI synchronization.
 - **FIX**: Resolved frozen timer ring by unifying time units.

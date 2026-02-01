@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.92',
+    date: '2026-02-01',
+    title: 'Sync Guard',
+    codename: 'Sync Guard',
+    description:
+      'Hotfix for regressions introduced in the Master Clock update. Fixed the stuck countdown and premature word playback.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Stuck Countdown**: Memoized `useAudioSync` to prevent high-frequency UI polling from resetting the countdown state.',
+          '**Premature Words**: Guarded the TTS engine to strictly wait for the session to be in `PLAYING` state before speaking.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.91',
     date: '2026-01-31',
     title: 'The Master Clock',

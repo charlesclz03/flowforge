@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from 'react'
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react'
 
 /**
  * Atomic Audio Sync Hook
@@ -169,10 +169,13 @@ export function useAudioSync({
     return audioContextRef.current.currentTime
   }, [])
 
-  return {
-    initAudio,
-    getPreciseTime,
-    audioState,
-    isSuspended: audioState === 'suspended',
-  }
+  return useMemo(
+    () => ({
+      initAudio,
+      getPreciseTime,
+      audioState,
+      isSuspended: audioState === 'suspended',
+    }),
+    [initAudio, getPreciseTime, audioState]
+  )
 }
