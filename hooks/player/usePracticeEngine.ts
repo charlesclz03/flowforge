@@ -250,6 +250,7 @@ export function usePracticeEngine({
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
     setStartTime(audioSync.getPreciseTime())
     // [COMMAND-BASED] Immediate Start "The Drop"
+    beatPlayer.setLoop(true)
     beatPlayer.play()
     recorder.start()
   }, [dispatch, beatPlayer, recorder, audioSync])

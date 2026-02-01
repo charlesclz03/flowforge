@@ -21,6 +21,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.93',
+    date: '2026-02-01',
+    title: 'Infinity Loop',
+    codename: 'Infinity Loop',
+    description:
+      'Hotfix for loop regression. Restored seamless track looping during practice sessions.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Audio Loop**: Explicitly enabled looping on the audio player to prevent tracks from stopping at the end.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.92',
     date: '2026-02-01',
     title: 'Sync Guard',

@@ -1,5 +1,8 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.93 - Infinity Loop (2026-02-01)
+- **FIX**: Restored seamless track looping.
+
 ## v0.9.92 - Sync Guard (2026-02-01)
 - **FIX**: Memoized AudioSync to fix stuck countdown loop.
 - **FIX**: Guarded TTS to prevent premature word playback.
