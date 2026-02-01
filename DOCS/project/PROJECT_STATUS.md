@@ -1,5 +1,5 @@
-# Project Status: v0.9.93 ("Infinity Loop")
-**Current Version**: `v0.9.93`
+# Project Status: v0.9.94 ("Studio Fix")
+**Current Version**: `v0.9.94`
 **Last Updated**: 2026-02-01
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
@@ -8,6 +8,7 @@
 - **Voice Upgrade**: Implemented smart TTS voice selection (Premium voices).
 - **Player Audit**: Confirmed stability of gapless audio engine.
 - **Voice Restoration**: Fixed critical regression where words and TTS were missing in practice mode.
+- **Hotfix v0.9.94**: Fixed Play/Pause button de-sync and stabilized audio engine.
 - **Hotfix v0.9.93**: Restored seamless track looping (Infinity Loop).
 - **Hotfix v0.9.92**: Fixed stuck countdown and premature word playback (Sync Guard).
 - **Master Clock**: Unified all Practice Mode UI elements under a single high-precision monotonic clock (v0.9.91).

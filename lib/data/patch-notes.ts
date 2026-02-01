@@ -21,6 +21,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.94',
+    date: '2026-02-01',
+    title: 'Studio Fix',
+    codename: 'Studio Fix',
+    description:
+      'Fixed the Play/Pause button state in Playback mode and stabilized the audio engine.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Playback Control**: Fixed Play/Pause button de-sync using stable refs.',
+          '**Audio Stability**: Prevented unnecessary audio engine re-initializations.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.93',
     date: '2026-02-01',
     title: 'Infinity Loop',

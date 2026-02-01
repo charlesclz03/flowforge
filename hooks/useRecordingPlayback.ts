@@ -23,6 +23,11 @@ export function useRecordingPlayback({
 
   // Track if we are currently trying to refresh a link to avoid infinite loops
   const isRetryingRef = useRef(false)
+  const onPlayStateChangeRef = useRef(onPlayStateChange)
+
+  useEffect(() => {
+    onPlayStateChangeRef.current = onPlayStateChange
+  }, [onPlayStateChange])
 
   const cleanup = useCallback(() => {
     if (audioRef.current) {
@@ -69,19 +74,19 @@ export function useRecordingPlayback({
       audio.addEventListener('ended', () => {
         setIsPlaying(false)
         beatLooperRef.current?.stop()
-        onPlayStateChange?.(false)
+        onPlayStateChangeRef.current?.(false)
       })
 
       audio.addEventListener('pause', () => {
         setIsPlaying(false)
         beatLooperRef.current?.pause()
-        onPlayStateChange?.(false)
+        onPlayStateChangeRef.current?.(false)
       })
 
       audio.addEventListener('play', () => {
         setIsPlaying(true)
         beatLooperRef.current?.play()
-        onPlayStateChange?.(true)
+        onPlayStateChangeRef.current?.(true)
       })
 
       // Error Handling (The Critical Part)
@@ -101,7 +106,7 @@ export function useRecordingPlayback({
         }
 
         setIsPlaying(false)
-        onPlayStateChange?.(false)
+        onPlayStateChangeRef.current?.(false)
       })
 
       // Wait for playable?
@@ -117,7 +122,7 @@ export function useRecordingPlayback({
       setIsLoading(false)
       return false
     }
-  }, [recordingUrl, beatUrl, cleanup, onPlayStateChange])
+  }, [recordingUrl, beatUrl, cleanup])
 
   const play = useCallback(async () => {
     if (!audioRef.current) {

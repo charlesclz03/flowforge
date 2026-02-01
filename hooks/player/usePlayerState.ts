@@ -6,6 +6,7 @@ export type PlayerStatus =
   | 'PLAYING' // Session active
   | 'PAUSED' // Session paused
   | 'FINISHING' // Calculating duration / processing
+  | 'MIXING' // [NEW] Client-side mixing (Voice + Beat)
   | 'SAVING' // Async save in progress
   | 'COMPLETED' // Session done, summary shown
   | 'EXITING' // Redirecting
@@ -28,6 +29,7 @@ export type PlayerAction =
   | { type: 'PAUSE' }
   | { type: 'RESUME' }
   | { type: 'STOP'; shouldSave?: boolean }
+  | { type: 'START_MIXING' } // [NEW]
   | { type: 'START_SAVE' }
   | { type: 'SAVE_SUCCESS' }
   | { type: 'SAVE_ERROR'; error: string }
@@ -112,8 +114,16 @@ function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
         shouldSave: false,
       }
 
-    case 'START_SAVE':
+    case 'START_MIXING':
       if (state.status !== 'FINISHING') return state
+      return {
+        ...state,
+        status: 'MIXING',
+      }
+
+    case 'START_SAVE':
+      // Can start save from FINISHING (old way) or MIXING (new way)
+      if (state.status !== 'FINISHING' && state.status !== 'MIXING') return state
       return {
         ...state,
         status: 'SAVING',

@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils'
 import { useSession, signIn } from 'next-auth/react'
 import { useHaptics } from '@/hooks/useHaptics'
 import { usePracticeSession } from '@/contexts/SessionContext'
-import { useRouter } from 'next/navigation'
 
 export function BottomNav() {
   const pathname = usePathname()
@@ -17,12 +16,10 @@ export function BottomNav() {
   const isAuthenticated = status === 'authenticated'
   const { bump } = useHaptics()
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
-  const [showExitPrompt, setShowExitPrompt] = useState(false)
-  const [pendingTab, setPendingTab] = useState<string | null>(null)
+  // Navigation guard logic is now handled by SessionContext via attemptNavigation
 
   // Use the session context to check if a session is currently active
-  const { isActive, stopSession } = usePracticeSession()
-  const router = useRouter()
+  const { isActive, attemptNavigation } = usePracticeSession()
 
   // Define tabs
   // Order: Beats (Home), Rankings, PRACTICE (Center), Recordings, Profile
@@ -75,13 +72,10 @@ export function BottomNav() {
     bump()
 
     // 1. Check for Active Session Interruption
-    // If a session is active and we are navigating away (even to the same tab if it resets), warn the user.
-    // Exception: If we are already on 'Record' (difficultyselection) and clicking 'Record' again, it typically does nothing or resets.
-    // Ideally, we warn on ANY navigation away from the active session.
+    // Use centralized navigation guard
     if (isActive) {
       e.preventDefault()
-      setPendingTab(tab.href)
-      setShowExitPrompt(true)
+      attemptNavigation(tab.href)
       return
     }
 
@@ -95,22 +89,7 @@ export function BottomNav() {
     // Default navigation handled by Link
   }
 
-  const confirmExit = () => {
-    // 1. Explicitly cancel TTS
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
-    }
-
-    // 2. Stop Session Logic (resets state)
-    stopSession()
-
-    // 3. Navigate
-    if (pendingTab) {
-      router.push(pendingTab)
-    }
-    setShowExitPrompt(false)
-    setPendingTab(null)
-  }
+  // confirmExit Logic moved to SessionContext/GlobalSessionGuard
 
   return (
     <>
@@ -240,41 +219,6 @@ export function BottomNav() {
             >
               Maybe later
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Exit Confirmation Modal */}
-      {showExitPrompt && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setShowExitPrompt(false)}
-        >
-          <div
-            className="bg-background-elevated border border-white/10 rounded-2xl p-6 max-w-sm mx-4 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-xl font-bold text-white text-center">
-              Discard active session?
-            </h2>
-            <p className="text-text-secondary text-center text-sm">
-              You are currently in a session. Leaving now will discard your
-              progress.
-            </p>
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => setShowExitPrompt(false)}
-                className="flex-1 py-3 px-4 bg-white/5 text-white font-medium rounded-xl hover:bg-white/10 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmExit}
-                className="flex-1 py-3 px-4 bg-accent-red text-white font-medium rounded-xl hover:bg-red-600 transition-colors"
-              >
-                Discard
-              </button>
-            </div>
           </div>
         </div>
       )}

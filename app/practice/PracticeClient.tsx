@@ -243,6 +243,25 @@ export default function PracticeClient({
     }
   }, [engine.status, engine.beatPlayer])
 
+  // Browser Navigation Guard (Refresh/Close prevention)
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // status check: PLAYING, PAUSED, COUNTDOWN, RECORDING
+      // Basically anything active.
+      if (
+        engine.status !== 'IDLE' &&
+        engine.status !== 'COMPLETED' &&
+        engine.status !== 'SAVING'
+      ) {
+        e.preventDefault()
+        e.returnValue = '' // Required for Chrome
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [engine.status])
+
   // Countdown Logic (UI Side)
   const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
     null
@@ -393,7 +412,18 @@ export default function PracticeClient({
               }
               isPaused={engine.status === 'PAUSED'}
               isRecording={engine.recorder.isRecording}
-              isLoading={engine.beatPlayer.isLoading}
+              isLoading={
+                engine.beatPlayer.isLoading ||
+                engine.status === 'MIXING' ||
+                engine.status === 'SAVING'
+              }
+              loadingText={
+                engine.status === 'MIXING'
+                  ? 'Mixing Audio...'
+                  : engine.status === 'SAVING'
+                    ? 'Saving Session...'
+                    : 'Preparing Studio'
+              }
               isSirenActive={isSirenActive}
               sirenPhase={sirenPhase}
               countdownValue={countdownValue}

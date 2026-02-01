@@ -8,6 +8,7 @@ import {
   ReactNode,
   useCallback,
 } from 'react'
+import { useRouter } from 'next/navigation'
 import { Beat } from '@/types/database'
 
 export interface PracticeSessionState {
@@ -23,6 +24,9 @@ export interface PracticeSessionState {
   isRecordingEnabled: boolean
   isStudioFXEnabled: boolean
   beatVolume: number
+  // Navigation Guard State
+  showExitPrompt: boolean
+  pendingNavigation: string | (() => void) | null
 }
 
 interface PracticeSessionContextValue extends PracticeSessionState {
@@ -40,6 +44,10 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   startSession: () => void
   stopSession: () => void
   resetSession: () => void
+  // Navigation Guard Actions
+  attemptNavigation: (target: string | (() => void)) => void
+  confirmNavigation: () => void
+  cancelNavigation: () => void
 }
 
 const PracticeSessionContext = createContext<
@@ -47,6 +55,7 @@ const PracticeSessionContext = createContext<
 >(undefined)
 
 export function PracticeSessionProvider({ children }: { children: ReactNode }) {
+  const router = useRouter()
   const [state, setState] = useState<PracticeSessionState>({
     selectedBeat: null,
     frequency: 4,
@@ -60,6 +69,8 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     isRecordingEnabled: false,
     isStudioFXEnabled: true,
     beatVolume: 0.7,
+    showExitPrompt: false,
+    pendingNavigation: null,
   })
 
   // Load state from localStorage on mount
@@ -176,6 +187,62 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     }))
   }, [])
 
+  // Navigation Guard Logic
+  const attemptNavigation = useCallback(
+    (target: string | (() => void)) => {
+      // If session is active, block and prompt
+      if (state.isActive) {
+        setState((prev) => ({
+          ...prev,
+          showExitPrompt: true,
+          pendingNavigation: target, // Store the target for later
+        }))
+      } else {
+        // If not active, just go immediately
+        if (typeof target === 'string') {
+          router.push(target)
+        } else if (typeof target === 'function') {
+          target()
+        }
+      }
+    },
+    [state.isActive, router]
+  )
+
+  const cancelNavigation = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      showExitPrompt: false,
+      pendingNavigation: null,
+    }))
+  }, [])
+
+  const confirmNavigation = useCallback(() => {
+    // 1. Stop audio / session (optimistic local state update)
+    // We rely on effects or consumers to handle the "Real" drop logic if needed,
+    // but primarily we just want to kill the active flag so we can leave.
+
+    // Explicitly cancel TTS
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel()
+    }
+
+    setState((prev) => ({ ...prev, isActive: false, showExitPrompt: false }))
+
+    // 2. Perform pending action
+    const target = state.pendingNavigation
+    if (target) {
+      if (typeof target === 'string') {
+        router.push(target)
+      } else if (typeof target === 'function') {
+        target()
+      }
+    }
+
+    // Reset pending
+    setState((prev) => ({ ...prev, pendingNavigation: null }))
+  }, [state.pendingNavigation, router])
+
   return (
     <PracticeSessionContext.Provider
       value={{
@@ -203,6 +270,9 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         startSession,
         stopSession,
         resetSession,
+        attemptNavigation,
+        confirmNavigation,
+        cancelNavigation,
       }}
     >
       {children}

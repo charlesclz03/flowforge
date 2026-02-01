@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
@@ -52,11 +52,9 @@ export const RecordingCard = memo(function RecordingCard({
     recordingUrl: recording.storageUrl,
     beatUrl: recording.beat?.storageUrl || null,
     recordingId: recording.id,
-    onPlayStateChange: (_) => {
-      // clear global playingId if we stop?
-      // actually the hook manages local state perfectly.
-      // we just need to sync with parent if needed.
-    },
+    onPlayStateChange: useCallback((_isPlaying: boolean) => {
+      // hook manages local state perfectly
+    }, []),
   })
 
   // Handlers

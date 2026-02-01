@@ -7,6 +7,7 @@ import { PracticeSessionProvider } from '@/contexts/SessionContext'
 import { BottomNav } from '@/components/organisms/layout/BottomNav'
 import { AudioContextUnlock } from '@/components/atoms/utils/AudioContextUnlock'
 import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
+import { GlobalSessionGuard } from '@/components/organisms/practice/GlobalSessionGuard'
 import { JsonLd } from '@/components/JsonLd'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -203,6 +204,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             ) : null}
             <AudioContextUnlock />
             <Toaster position="bottom-center" />
+            <GlobalSessionGuard />
           </PracticeSessionProvider>
         </SessionProvider>
       </body>

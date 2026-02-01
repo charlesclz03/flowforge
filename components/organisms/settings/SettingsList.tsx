@@ -16,8 +16,9 @@ import {
   Zap,
   Crown,
 } from 'lucide-react'
-import Link from 'next/link'
+
 import Image from 'next/image'
+import { ProtectedLink } from '@/components/atoms/ProtectedLink'
 import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
@@ -96,9 +97,13 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
     if (href) {
       return (
-        <Link href={href} onClick={handleLinkClick} className="block w-full">
+        <ProtectedLink
+          href={href}
+          onClick={handleLinkClick}
+          className="block w-full"
+        >
           {content}
-        </Link>
+        </ProtectedLink>
       )
     }
 
@@ -113,7 +118,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     <div className="w-full space-y-6 pb-8">
       {/* Profile Card */}
       <div className="mx-4 mt-2">
-        <Link
+        <ProtectedLink
           href={
             session?.user?.username ? `/u/${session.user.username}` : '/profile'
           }
@@ -197,7 +202,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               )}
             </div>
           </div>
-        </Link>
+        </ProtectedLink>
       </div>
 
       {/* Studio Controls (Collapsible) */}
@@ -419,7 +424,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
 
           {/* Patch Notes */}
-          <Link
+          <ProtectedLink
             href="/patch-notes"
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
@@ -428,10 +433,10 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <span className="text-xs font-medium text-zinc-300">
               Patch Notes
             </span>
-          </Link>
+          </ProtectedLink>
 
           {/* Report Bug */}
-          <Link
+          <ProtectedLink
             href="/feedback"
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
@@ -440,27 +445,27 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <span className="text-xs font-medium text-zinc-300">
               Report Bug
             </span>
-          </Link>
+          </ProtectedLink>
 
           {/* Terms */}
-          <Link
+          <ProtectedLink
             href="/legal/terms"
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <Scale size={18} className="text-zinc-500" />
             <span className="text-xs font-medium text-zinc-400">Terms</span>
-          </Link>
+          </ProtectedLink>
 
           {/* Privacy */}
-          <Link
+          <ProtectedLink
             href="/legal/privacy"
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <Shield size={18} className="text-zinc-500" />
             <span className="text-xs font-medium text-zinc-400">Privacy</span>
-          </Link>
+          </ProtectedLink>
         </div>
       </div>
 
@@ -484,7 +489,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="text-xs text-white/20 ml-2">v0.9.93 (Infinity Loop)</p>
+          <p className="text-xs text-white/20 ml-2">v0.9.94 (Studio Fix)</p>
         </div>
       </div>
       <SupportModal

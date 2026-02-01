@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.94 - Studio Fix (2026-02-01)
+- **FIX**: Resolved Play/Pause button state de-sync in Recordings Playback.
+- **FIX**: Stabilized audio engine initialization.
+
 ## v0.9.93 - Infinity Loop (2026-02-01)
 - **FIX**: Restored seamless track looping.
 

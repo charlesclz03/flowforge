@@ -13,8 +13,10 @@ import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
  * usePracticeEngine
  *
  * The "Brain" of the Practice Mode.
- * Orchestrates: State Machine <-> Audio Audio <-> Recording <-> Word Prompts
+ * Orchestrates: State Machine <-> Audio Audio <-> Recording <-> Word Prompts <-> Audio Mixing
  */
+
+import { AudioMixer } from '@/lib/audio/mixer'
 
 /**
  * Configuration properties for the Practice Engine.
@@ -71,6 +73,17 @@ export function usePracticeEngine({
   // 2. The Sub-Systems
   const beatPlayer = useBeatPlayer()
   const recorder = useRecording()
+
+  // 0. SAFETY NET: Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      // If we unmount while playing (e.g. Navigation), stop everything.
+      if (state.status !== 'IDLE' && state.status !== 'COMPLETED') {
+        beatPlayer.stop()
+        recorder.stop()
+      }
+    }
+  }, [state.status, beatPlayer, recorder])
 
   // 3. Audio Clock (The Heartbeat)
   // Word Management State
@@ -135,7 +148,8 @@ export function usePracticeEngine({
 
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
-  const { isTTSEnabled, ttsVolume } = usePracticeSession()
+  const { isTTSEnabled, ttsVolume, beatVolume, isStudioFXEnabled } =
+    usePracticeSession()
   const { speak } = useTTS({
     enabled: isTTSEnabled,
     volume: ttsVolume,
@@ -277,9 +291,56 @@ export function usePracticeEngine({
 
   useEffect(() => {
     // We overwrite the recorder's onComplete to hook into our FSM
-    setOnComplete((blob, duration) => {
+    setOnComplete(async (blob, duration) => {
       // Only proceed if we are in FINISHING state (avoids phantom saves)
-      if (state.status === 'FINISHING' && state.shouldSave) {
+      if (
+        (state.status === 'FINISHING' || state.status === 'MIXING') &&
+        state.shouldSave
+      ) {
+        // 1. Enter Mixing State (UI Feedback)
+        dispatch({ type: 'START_MIXING' })
+
+        let finalBlob = blob
+        let cleanupUrl: string | null = null
+
+        try {
+          // 2. Client-Side Mixing
+          console.log('[PracticeEngine] Starting audio mix...')
+          const mixer = new AudioMixer()
+          const voiceUrl = URL.createObjectURL(blob)
+          cleanupUrl = voiceUrl
+
+          // Get User Latency Calibration (Nudge)
+          const latencyMs = parseInt(
+            localStorage.getItem('flowforge_latency') || '0'
+          )
+
+          // Perform Mix
+          if (beatPlayer.currentBeat?.storageUrl) {
+            finalBlob = await mixer.mix(
+              voiceUrl,
+              beatPlayer.currentBeat.storageUrl,
+              {
+                voiceVolume: 1.0, // Vocals always max (normalized)
+                beatVolume: beatVolume, // User setting
+                isStudioMode: isStudioFXEnabled, // User setting
+                nudge: latencyMs,
+              }
+            )
+            console.log(
+              `[PracticeEngine] Mix complete. Size: ${finalBlob.size} bytes`
+            )
+          } else {
+            console.warn('[PracticeEngine] No beat URL found, skipping mix.')
+          }
+        } catch (mixErr) {
+          console.error('[PracticeEngine] Mixing failed, using raw vocal:', mixErr)
+          // Fallback to raw blob is automatic since finalBlob = blob initially
+        } finally {
+          if (cleanupUrl) URL.revokeObjectURL(cleanupUrl)
+        }
+
+        // 3. Begin Upload
         dispatch({ type: 'START_SAVE' })
 
         // Construct FormData using Ref to avoid closure staleness if needed,
@@ -288,7 +349,7 @@ export function usePracticeEngine({
 
         try {
           const fd = new FormData()
-          fd.append('audio', blob, 'recording.webm')
+          fd.append('audio', finalBlob, 'recording.wav') // Note: Mixer returns WAV
 
           // We need current session state.
           // Since we don't have access to Session contexts directly here (we are a hook),
@@ -356,6 +417,8 @@ export function usePracticeEngine({
     stopSession,
     difficulty,
     frequency,
+    beatVolume, // Added dependency
+    isStudioFXEnabled, // Added dependency (for mix)
   ])
 
   return {

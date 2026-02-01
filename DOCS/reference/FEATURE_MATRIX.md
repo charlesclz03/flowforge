@@ -25,7 +25,7 @@
 
 | Feature             | Status | Description                                              | User Tier |
 | :------------------ | :----- | :------------------------------------------------------- | :-------- |
-| Vocal Recording | [x] 1/29 | Core `MediaRecorder` robust. Mic access audited.         | Mixed     |
+| Vocal Recording | [x] 2/01 | **FIXED**: Client-side mixing implemented (Beat + Vocal + FX) | Mixed     |
 | Microphone Access | [x] 1/29 | `MediaRecorder` API wrapper | Client |
 | Latency Fix | [x] 1/29 | Offset applied via AudioMixer | Client |
 | Studio FX | [x] 1/29 | Persistence fixed. Settings stored in DB. | All |
@@ -79,4 +79,6 @@
 | 2026-01-29 | Vocab Velocity  | ✅ PASS | Renamed from "Flow Density" to match implementation. |
 | 2026-01-29 | History Graph   | ✅ PASS | Validated 14-day rolling window logic. Performance note added. |
 | 2026-01-29 | Monetization    | ✅ PASS | Validated Stripe webhook. Fixed missing Pro gate on History Graph. |
+| 2026-02-01 | Recording & Studio | 🔴 FAIL | Missing client-side mixing of beat + vocals. Fix Plan Created. |
+| 2026-02-01 | Recording & Studio | ✅ PASS | **FIXED**: AudioMixer verified & integrated. Latency nudge applied. |
 

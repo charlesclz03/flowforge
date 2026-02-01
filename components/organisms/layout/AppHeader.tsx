@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -8,6 +7,8 @@ import { ArrowLeft, Flame, HelpCircle } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
+import { ProtectedLink } from '@/components/atoms/ProtectedLink'
+import { usePracticeSession } from '@/contexts/SessionContext'
 
 // Interface for the global app header
 interface AppHeaderProps {
@@ -39,15 +40,18 @@ export function AppHeader({
 
   // Link to howitworks for logged-in users, landing for guests
   const homeLink = isAuthenticated ? '/howitworks' : '/'
+  const { attemptNavigation } = usePracticeSession()
 
   const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else if (backPath) {
-      router.push(backPath)
-    } else {
-      router.back()
-    }
+    attemptNavigation(() => {
+      if (onBack) {
+        onBack()
+      } else if (backPath) {
+        router.push(backPath)
+      } else {
+        router.back()
+      }
+    })
   }
 
   if (hide) return null
@@ -79,7 +83,7 @@ export function AppHeader({
               ) : (
                 <>
                   {/* Help Button - Redirects to How It Works */}
-                  <Link
+                  <ProtectedLink
                     href="/howitworks"
                     className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
                     aria-label="How it works"
@@ -88,7 +92,7 @@ export function AppHeader({
                       className="w-5 h-5 sm:w-6 sm:h-6"
                       strokeWidth={2.5}
                     />
-                  </Link>
+                  </ProtectedLink>
 
                   {/* Streak Counter */}
                   {isAuthenticated &&
@@ -120,7 +124,7 @@ export function AppHeader({
           {/* max-width constraint prevents title from overlapping with absolutely positioned controls */}
           {showTitle && (
             <div className="flex flex-col items-center justify-center pt-1 max-w-[calc(100%-200px)] sm:max-w-[calc(100%-340px)]">
-              <Link
+              <ProtectedLink
                 href={homeLink}
                 className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
                 aria-label="Go to FreeStyla home"
@@ -147,7 +151,7 @@ export function AppHeader({
                     </>
                   )}
                 </h1>
-              </Link>
+              </ProtectedLink>
               {customSubtitle && (
                 <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5">
                   {customSubtitle}

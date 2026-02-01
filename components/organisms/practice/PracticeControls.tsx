@@ -62,6 +62,7 @@ interface PracticeControlsProps {
   onToggleRecordingMode?: () => void
   wordTiming?: { start: number; duration: number }
   activeFrequency?: number
+  loadingText?: string // [NEW]
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -99,6 +100,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     onTogglePause,
     startTime,
     wordTiming,
+    loadingText = 'Preparing Studio', // Default
   } = props
 
   // State for pause modal
@@ -710,7 +712,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     <div className="flex flex-col items-center justify-center space-y-4">
                       <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
                       <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest">
-                        Preparing Studio
+                        {loadingText}
                       </span>
                     </div>
                   ) : (
