@@ -28,6 +28,7 @@ export const PATCH_NOTES: PatchNote[] = [
     description:
       'UI Consistency update. Fixed profile page layout scale, google image loading, and mobile header overlap.',
     type: 'patch',
+    codename: 'Profile Polish',
   },
   {
     version: '0.9.95',
