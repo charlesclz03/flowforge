@@ -1,6 +1,6 @@
 # PATCH NOTES MASTER FILE
 
-## v0.9.99 - Sonic Unbound (2026-02-02)
+## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.
 - **AUDIT**: Completed deep audit of AppHeader, BottomNav, and Practice Controls.
 - **FIX**: Verified build integrity and type safety across the stack.

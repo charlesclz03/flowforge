@@ -22,9 +22,9 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '0.9.99',
+    version: '0.9.991',
     date: '2026-02-02',
-    title: 'Sonic Unbound 🔓',
+    title: 'Sonic Unbound (Hotfix) 🔓',
     codename: 'Sonic Unbound',
     description:
       'We fixed a critical CORS issue in the audio engine that was silencing tracks, and performed a comprehensive audit of our UI layout components to ensure pixel-perfect stability.',
