@@ -40,12 +40,6 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Performance**: Verified build stability and type safety.',
         ],
       },
-      {
-        category: 'Fixes & Improvements',
-        items: [
-           '**Previous Fix**: Resolved 500 Global Error on Profile Page (Audio Player race condition).',
-           "**Previous Fix**: Added `blob:` to CSP to fix profile picture previews.",
-      },
     ],
   },
   {
