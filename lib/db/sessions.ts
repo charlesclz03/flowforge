@@ -12,16 +12,30 @@ import {
 const inMemorySessions: FreestyleSession[] = []
 
 export async function createSession(
-  data: Omit<FreestyleSession, 'id' | 'createdAt'>
+  data: Prisma.FreestyleSessionUncheckedCreateInput
 ): Promise<DatabaseResult<FreestyleSession>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
       const created: FreestyleSession = {
         id: 'local-' + Date.now().toString(36),
         createdAt: new Date(),
-        // @ts-expect-error - type sync
-        wordCount: 0,
-        ...data,
+        userId: data.userId,
+        beatId: data.beatId,
+        title: data.title,
+        storageUrl: data.storageUrl || null,
+        fileSizeBytes: data.fileSizeBytes || 0,
+        durationSeconds: data.durationSeconds,
+        frequency: data.frequency || 0,
+        difficulty: data.difficulty || 0,
+        score: data.score || 0,
+        vibe: data.vibe || null,
+        mode: data.mode || 'solo',
+        restarts: data.restarts || 0,
+        playbacks: data.playbacks || 0,
+        wordCount: data.wordCount || 0,
+        beatOffsetMs: data.beatOffsetMs || 0,
+        fxConfig: (data.fxConfig as any) || null, // JSON type workaround
+        isPublic: true,
       }
       inMemorySessions.unshift(created)
       return { success: true, data: created }

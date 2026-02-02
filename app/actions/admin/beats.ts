@@ -4,8 +4,10 @@ import { prisma } from '@/lib/prisma'
 import { Beat } from '@/types/database'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { verifySuperAdmin } from '@/lib/auth/admin'
 
 export async function getAdminBeats() {
+  await verifySuperAdmin()
   return await prisma.beat.findMany({
     where: {
       uploaderId: null, // Only fetch public beats for admin management
@@ -18,6 +20,7 @@ export async function getAdminBeats() {
 }
 
 export async function updateBeat(id: string, data: Partial<Beat>) {
+  await verifySuperAdmin()
   const result = await prisma.beat.update({
     where: { id },
     data,
@@ -28,6 +31,7 @@ export async function updateBeat(id: string, data: Partial<Beat>) {
 }
 
 export async function deleteBeat(id: string) {
+  await verifySuperAdmin()
   await prisma.beat.delete({
     where: { id },
   })
@@ -36,6 +40,7 @@ export async function deleteBeat(id: string) {
 }
 
 export async function reorderBeat(id: string, direction: 'up' | 'down') {
+  await verifySuperAdmin()
   // 1. Fetch ALL admin beats in current sorted order
   const allBeats = await prisma.beat.findMany({
     where: { uploaderId: null },

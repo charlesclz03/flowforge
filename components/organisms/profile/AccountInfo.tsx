@@ -16,6 +16,9 @@ interface User {
   username?: string | null
   bio?: string | null
   subscriptionStatus?: string | null
+  xp?: number
+  level?: number
+  createdAt?: Date
 }
 
 interface AccountInfoProps {
@@ -29,7 +32,7 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
     user.subscriptionStatus === 'active' ||
     user.subscriptionStatus === 'trialing'
 
-  const xp = (user as any).xp || 0
+  const xp = user.xp || 0
 
   // Use getLevelInfo for precise calculation
   const levelInfo = getLevelInfo(xp)

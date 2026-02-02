@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.92 - Achievements Fix (2026-02-02)
+- **Fix (Critical)**: Resolved "0/0" achievements display by manually seeding database (47 items).
+- **Core**: Verified database connectivity and environment variable consistency.
+
 ## v0.9.74 - Stripe Checkout Fix (2026-01-27)
 - **Fix (Critical)**: Corrected invalid Stripe API version (`2025-11-17.clover` → `2024-06-20`).
 - **Fix (Infra)**: Resolved trailing newline issues in Vercel environment variables.

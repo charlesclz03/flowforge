@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { isSuperAdmin } from '@/lib/auth/admin'
 
 // POST: Submit new feedback
 export async function POST(req: NextRequest) {
@@ -45,16 +46,7 @@ export async function POST(req: NextRequest) {
 // GET: Retrieve feedback (Admin only)
 export async function GET(_req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-
-    // Check for superadmin status
-    // TODO: Ideally use a robust RBAC check, but strict email check works for now as per app convention
-    const isSuperAdmin = [
-      'triplyricist@gmail.com',
-      'charles.cluzeaud@gmail.com',
-    ].includes(session?.user?.email || '')
-
-    if (!isSuperAdmin) {
+    if (!(await isSuperAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

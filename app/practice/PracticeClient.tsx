@@ -132,13 +132,37 @@ export default function PracticeClient({
   // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
     async (formData: FormData) => {
-      const response = await fetch('/api/recordings', {
+      const hasAudio = formData.has('audio')
+      const endpoint = hasAudio ? '/api/recordings' : '/api/session/complete'
+
+      const options: RequestInit = {
         method: 'POST',
-        body: formData,
-      })
+      }
+
+      if (hasAudio) {
+        options.body = formData
+      } else {
+        // Convert FormData to JSON for lightweight endpoint
+        const json: Record<string, any> = {}
+        formData.forEach((value, key) => {
+          // Handle arrays like 'wordsUsed' if needed, though FormData usually gives strings
+          if (key === 'wordsUsed' && typeof value === 'string') {
+            try {
+              json[key] = JSON.parse(value)
+            } catch {
+              json[key] = []
+            }
+          } else {
+            json[key] = value
+          }
+        })
+        options.body = JSON.stringify(json)
+        options.headers = { 'Content-Type': 'application/json' }
+      }
+
+      const response = await fetch(endpoint, options)
       const data = await response.json()
-      if (!response.ok)
-        throw new Error(data.error || 'Failed to save recording')
+      if (!response.ok) throw new Error(data.error || 'Failed to save session')
       return data
     },
     {

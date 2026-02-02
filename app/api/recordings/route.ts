@@ -5,19 +5,12 @@ import { createSession } from '@/lib/db/sessions'
 import { randomUUID } from 'crypto'
 import { AchievementSystem } from '@/lib/gamification/achievements'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
 const SIGNED_URL_TTL_SECONDS = 60 * 60
-
-// Temp interface to handle Prisma type lag
-interface UserWithRate {
-  xp: number
-  level: number
-  hasRated: boolean
-  currentStreak?: number
-}
 
 /**
  * POST /api/recordings
@@ -146,8 +139,8 @@ export async function POST(request: Request) {
         playbacks,
         wordCount,
         beatOffsetMs,
-        fxConfig, // Save Studio FX Settings
-      } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
+        fxConfig: fxConfig || Prisma.DbNull,
+      }),
       supabase.storage
         .from(RECORDINGS_BUCKET)
         .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS),
@@ -246,18 +239,15 @@ export async function POST(request: Request) {
       // Fetch current user XP
       console.log(`[XP_UPDATE] Starting update for user: ${session.user.id}`)
 
-      currentUser = (await prisma.user.findUnique({
+      currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
         select: {
           xp: true,
           level: true,
           hasRated: true,
           currentStreak: true,
-        } as Record<
-          string,
-          any // eslint-disable-line @typescript-eslint/no-explicit-any
-        >,
-      })) as UserWithRate | null
+        },
+      })
 
       if (currentUser) {
         console.log(

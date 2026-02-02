@@ -1,0 +1,5 @@
+interface:
+  display_name: "FlowForge"
+  short_description: "Build and ship the FlowForge app (workflows + MCP)"
+  default_prompt: "Use $flowforge to follow the repo workflows and ship a safe change."
+

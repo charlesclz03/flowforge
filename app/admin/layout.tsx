@@ -1,5 +1,4 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { isSuperAdmin } from '@/lib/auth/admin'
 import { redirect } from 'next/navigation'
 
 export default async function AdminLayout({
@@ -7,13 +6,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions)
-  const adminEmail = process.env.ADMIN_EMAIL
-
-  const isSuperAdmin = session?.user?.role === 'SUPERADMIN'
-  const isEmailAdmin = session?.user?.email === adminEmail
-
-  if (!session || (!isSuperAdmin && !isEmailAdmin)) {
+  if (!(await isSuperAdmin())) {
     redirect('/')
   }
 

@@ -19,6 +19,8 @@ export function Avatar({
   size = 'md',
   priority = false,
 }: AvatarProps) {
+  const [hasError, setHasError] = React.useState(false)
+
   const sizeClasses = {
     sm: 'h-8 w-8 text-xs',
     md: 'h-10 w-10 text-sm',
@@ -34,13 +36,14 @@ export function Avatar({
         className
       )}
     >
-      {src ? (
+      {src && !hasError ? (
         <Image
           src={src}
           alt={alt}
           fill
           className="object-cover"
           priority={priority}
+          onError={() => setHasError(true)}
         />
       ) : (
         <span>{fallback}</span>

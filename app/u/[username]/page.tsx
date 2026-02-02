@@ -127,7 +127,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <>
       <AppHeader showBackButton={true} />
-      <Container className="py-8 space-y-8" size="lg">
+      <Container className="py-8 space-y-8" size="xl">
         {/* Profile Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Fixed Stats / Info */}
@@ -245,7 +245,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <div className="lg:col-span-8 w-full">
             <Tabs defaultValue="flows" className="w-full">
               <TabsList
-                className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} lg:w-[${isOwner ? '600px' : '400px'}]`}
+                className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} ${isOwner ? 'lg:w-[600px]' : 'lg:w-[400px]'}`}
               >
                 <TabsTrigger value="flows">Flows</TabsTrigger>
                 {isOwner && <TabsTrigger value="stats">Stats</TabsTrigger>}

@@ -22,6 +22,48 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.92',
+    date: '2026-02-02',
+    title: 'Achievements Fix 🏆',
+    codename: 'Trophy Hunter',
+    description:
+      'Resolved a critical issue where achievements were not seeding correctly. We validated the database and verified that all 47 trophies are now attainable.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Seeding Fix**: Manually populated the achievements table to ensure consistent data.',
+          '**DB Verification**: Confirmed database connectivity and validated the fix with debug tools.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.992',
+    date: '2026-02-02',
+    title: 'Profile Perfected 🖼️',
+    codename: 'Profile Perfected',
+    description:
+      'We polished the Profile experience by widening the layout for desktop and adding smart fallbacks for user avatars. We also enabled metadata-only saves for sessions without microphone input.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Profile Layout**: Widened the profile page container (lg → xl) to fully utilize desktop screen real estate.',
+          '**Avatar Safe Mode**: Added smart error handling to user avatars. If an image fails to load (e.g., expired Google URL), it now gracefully falls back to your initials.',
+          '**Tab Styling**: Fixed dynamic Tailwind classes to ensure tabs look correct on all screen sizes.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Silent Saves**: Added support for saving session metadata even if audio recording is disabled or fails (Metadata-Only Mode).',
+          '**Build Hardening**: Verified build integrity for recent layout changes.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.991',
     date: '2026-02-02',
     title: 'Sonic Unbound (Hotfix) 🔓',

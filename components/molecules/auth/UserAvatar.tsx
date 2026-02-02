@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 interface UserAvatarProps {
   className?: string
@@ -11,6 +12,7 @@ interface UserAvatarProps {
 
 export function UserAvatar({ className = '', mode = 'full' }: UserAvatarProps) {
   const { data: session } = useSession()
+  const [hasError, setHasError] = useState(false)
 
   if (!session?.user) {
     return null
@@ -33,8 +35,14 @@ export function UserAvatar({ className = '', mode = 'full' }: UserAvatarProps) {
   return (
     <div className={wrapperClasses}>
       <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-cyan-500">
-        {image ? (
-          <Image src={image} alt={displayName} fill className="object-cover" />
+        {image && !hasError ? (
+          <Image
+            src={image}
+            alt={displayName}
+            fill
+            className="object-cover"
+            onError={() => setHasError(true)}
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">
             {initials}

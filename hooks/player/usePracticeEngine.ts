@@ -227,15 +227,18 @@ export function usePracticeEngine({
 
       // C. Prime the Element (Unlock Autoplay)
       await beatPlayer.prime()
-      
+
       // D. Sync Volume (Crucial Fix)
       beatPlayer.setVolume(beatVolume)
 
       // E. Debug Context State
       if (ctx?.state !== 'running') {
-         console.warn('[PracticeEngine] AudioContext is not running:', ctx?.state)
+        console.warn(
+          '[PracticeEngine] AudioContext is not running:',
+          ctx?.state
+        )
       } else {
-         console.log('[PracticeEngine] AudioContext Verified: RUNNING')
+        console.log('[PracticeEngine] AudioContext Verified: RUNNING')
       }
 
       // 2. Enter Countdown (Only if Audio is confirmed ready)
@@ -426,6 +429,47 @@ export function usePracticeEngine({
       }
     })
 
+    // Handle Metadata-Only Saves (No Recording)
+    // This triggers if recording was disabled or failed to start
+    if (
+      state.status === 'FINISHING' &&
+      state.shouldSave &&
+      !recorder.isRecording && // Not recording now
+      recorder.duration === 0 // And didn't record anything
+    ) {
+      console.log(
+        '[PracticeEngine] No recording detected. Submitting metadata only.'
+      )
+      dispatch({ type: 'START_SAVE' })
+
+      const fd = new FormData()
+      // No 'audio' file appended
+
+      if (beatPlayer.currentBeat) {
+        fd.append('beatId', beatPlayer.currentBeat.id)
+        fd.append(
+          'title',
+          `${beatPlayer.currentBeat.title} - ${new Date().toLocaleDateString()}`
+        )
+      }
+      // Use startTime to calculate duration if recorder duration is 0
+      const duration = audioSync.getPreciseTime() - startTime
+      fd.append('durationSeconds', Math.max(1, Math.round(duration)).toString())
+      fd.append('frequency', frequency.toString())
+      fd.append('difficulty', difficulty.toString())
+      fd.append('score', '0')
+      fd.append('wordsUsed', '[]') // TODO: Wire up actual words
+
+      submitSession(fd)
+        .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
+        .catch((err) =>
+          dispatch({
+            type: 'SAVE_ERROR',
+            error: err instanceof Error ? err.message : 'Unknown error',
+          })
+        )
+    }
+
     // Wire up Max Duration (Premium/Guest Limits)
     setOnMaxDurationReached(() => {
       // Stop everything
@@ -444,7 +488,11 @@ export function usePracticeEngine({
     difficulty,
     frequency,
     beatVolume, // Added dependency
-    isStudioFXEnabled, // Added dependency (for mix)
+    isStudioFXEnabled,
+    audioSync,
+    recorder.duration,
+    recorder.isRecording,
+    startTime,
   ])
 
   // 7. Live Volume Sync (The Missing Link)
