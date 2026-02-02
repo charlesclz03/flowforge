@@ -227,6 +227,16 @@ export function usePracticeEngine({
 
       // C. Prime the Element (Unlock Autoplay)
       await beatPlayer.prime()
+      
+      // D. Sync Volume (Crucial Fix)
+      beatPlayer.setVolume(beatVolume)
+
+      // E. Debug Context State
+      if (ctx?.state !== 'running') {
+         console.warn('[PracticeEngine] AudioContext is not running:', ctx?.state)
+      } else {
+         console.log('[PracticeEngine] AudioContext Verified: RUNNING')
+      }
 
       // 2. Enter Countdown (Only if Audio is confirmed ready)
       dispatch({ type: 'START' })
@@ -436,6 +446,13 @@ export function usePracticeEngine({
     beatVolume, // Added dependency
     isStudioFXEnabled, // Added dependency (for mix)
   ])
+
+  // 7. Live Volume Sync (The Missing Link)
+  useEffect(() => {
+    if (beatPlayer) {
+      beatPlayer.setVolume(beatVolume)
+    }
+  }, [beatVolume, beatPlayer])
 
   return {
     // State

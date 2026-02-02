@@ -37,6 +37,8 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Audio Core**: Unified Playback and Context engines for gapless synchronization.',
           '**Audio Fix**: Uncommented critical `crossOrigin` setting in Audio Player to fix silent playback.',
           '**UI Audit**: Verified and hardened 6+ layout components (AppHeader, BottomNav, etc.).',
+          '**Volume Sync**: Fixed regression where player volume desynchronized from session settings (Live Sync V2).',
+          '**CSP Expansion**: Whitelisted Google Analytics/Ads domains to silence browser console errors.',
           '**Performance**: Verified build stability and type safety.',
         ],
       },

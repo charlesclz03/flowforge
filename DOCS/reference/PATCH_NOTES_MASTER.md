@@ -3,6 +3,8 @@
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.
 - **AUDIT**: Completed deep audit of AppHeader, BottomNav, and Practice Controls.
+- **FIX**: Implemented "Live Volume Sync" in Practice Engine to fix potential silence.
+- **FIX**: Expanded CSP to allow Google Analytics/Ads domains.
 - **FIX**: Verified build integrity and type safety across the stack.
 
 ## v0.9.98 - Audio Shield (2026-02-01)
