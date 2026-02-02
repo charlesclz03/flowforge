@@ -59,9 +59,9 @@ export function AppHeader({
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
-        <div className="relative flex h-14 sm:h-20 items-center justify-center">
+        <div className="grid grid-cols-[1fr_auto_1fr] h-14 sm:h-20 items-center justify-center">
           {/* Left Zone: Back Button + Help Button */}
-          <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4 gap-2">
+          <div className="flex items-center justify-start pl-2 sm:pl-4 gap-2">
             {showBackButton && (
               <button
                 type="button"
@@ -88,50 +88,17 @@ export function AppHeader({
             )}
           </div>
 
-          {/* Account section - top right */}
-          {(showSettings || action) && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 gap-2 sm:gap-3">
-              {action ? (
-                action
-              ) : (
-                <>
-                  {/* Streak Counter */}
-                  {isAuthenticated &&
-                    (session?.user?.currentStreak || 0) > 0 && (
-                      <div className="group relative">
-                        <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
-                          <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse" />
-                          <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
-                            {session?.user?.currentStreak}
-                          </span>
-                        </div>
-
-                        {/* Hover Widget */}
-                        <div className="absolute top-full right-0 mt-4 w-72 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                          <DailyStreakWidget
-                            currentStreak={session?.user?.currentStreak || 0}
-                            hasPracticedToday={false}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  <SettingsDropdown />
-                </>
-              )}
-            </div>
-          )}
-
           {/* Centered Title - navigates to howitworks when logged in */}
-          {/* max-width constraint prevents title from overlapping with absolutely positioned controls */}
+          {/* Grid centering automatically handles spacing without magic numbers */}
           {showTitle && (
-            <div className="flex flex-col items-center justify-center pt-1 max-w-[calc(100%-200px)] sm:max-w-[calc(100%-340px)]">
+            <div className="flex flex-col items-center justify-center pt-1 min-w-0">
               <ProtectedLink
                 href={homeLink}
-                className="flex items-center justify-center gap-2 rounded-full px-3 py-1"
+                className="flex items-center justify-center gap-2 rounded-full px-3 py-1 max-w-full"
                 aria-label="Go to FreeStyla home"
               >
                 {!customTitle && (
-                  <div className="relative h-6 w-6 sm:h-8 sm:w-8">
+                  <div className="relative h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0">
                     <Image
                       src="/logo.png"
                       alt="FreeStyla Logo"
@@ -154,12 +121,47 @@ export function AppHeader({
                 </h1>
               </ProtectedLink>
               {customSubtitle && (
-                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5">
+                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5 truncate max-w-full px-2">
                   {customSubtitle}
                 </p>
               )}
             </div>
           )}
+
+          {/* Account section - top right */}
+          <div className="flex items-center justify-end pr-2 sm:pr-4 gap-2 sm:gap-3">
+            {(showSettings || action) && (
+              <>
+                {action ? (
+                  action
+                ) : (
+                  <>
+                    {/* Streak Counter */}
+                    {isAuthenticated &&
+                      (session?.user?.currentStreak || 0) > 0 && (
+                        <div className="group relative">
+                          <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 bg-accent-orange/10 rounded-full border border-accent-orange/20 cursor-help">
+                            <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-accent-orange fill-accent-orange animate-pulse" />
+                            <span className="text-[10px] sm:text-sm font-bold text-accent-orange tabular-nums">
+                              {session?.user?.currentStreak}
+                            </span>
+                          </div>
+
+                          {/* Hover Widget */}
+                          <div className="absolute top-full right-0 mt-4 w-72 z-50 invisible opacity-0 translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                            <DailyStreakWidget
+                              currentStreak={session?.user?.currentStreak || 0}
+                              hasPracticedToday={false}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    <SettingsDropdown />
+                  </>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </Container>
     </header>

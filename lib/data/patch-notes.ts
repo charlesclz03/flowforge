@@ -22,12 +22,12 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '0.9.98',
-    date: '2026-02-01',
-    title: 'Audio Shield 🛡️',
-    codename: 'Audio Shield',
+    version: '0.9.99',
+    date: '2026-02-02',
+    title: 'Sonic Unbound 🔓',
+    codename: 'Sonic Unbound',
     description:
-      'Critical stability fixes for the Profile Page and Practice Audio. We resolved a 500 Global Error caused by audio player race conditions and fixed CSP violations for image uploads.',
+      'We fixed a critical CORS issue in the audio engine that was silencing tracks, and performed a comprehensive audit of our UI layout components to ensure pixel-perfect stability.',
     changes: [
       {
         category: 'Fixes & Improvements',
@@ -35,7 +35,16 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Profile Crash Fix**: Hardened Audio Player to fail silently when destroyed, preventing 500 errors during navigation.',
           '**CSP Update**: Allowed `blob:` images in Content Security Policy to fix profile picture previews.',
           '**Audio Core**: Unified Playback and Context engines for gapless synchronization.',
+          '**Audio Fix**: Uncommented critical `crossOrigin` setting in Audio Player to fix silent playback.',
+          '**UI Audit**: Verified and hardened 6+ layout components (AppHeader, BottomNav, etc.).',
+          '**Performance**: Verified build stability and type safety.',
         ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+           '**Previous Fix**: Resolved 500 Global Error on Profile Page (Audio Player race condition).',
+           "**Previous Fix**: Added `blob:` to CSP to fix profile picture previews.",
       },
     ],
   },

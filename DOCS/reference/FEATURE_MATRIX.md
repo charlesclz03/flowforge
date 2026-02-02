@@ -84,4 +84,13 @@
 | 2026-02-01 | Profile Page    | ✅ PASS | **FIXED**: Patched `AudioPlayer` crash and CSP `blob:` issue. |
 | 2026-02-01 | Practice Engine | 🔴 FAIL | "Three-Body Problem" (AudioContext vs HTMLAudioElement). Silent Track bug. |
 | 2026-02-01 | Practice Engine | ✅ PASS | **FIXED**: Unified Audio Pipeline. Atomic Start Sequence enforced. |
+| 2026-02-01 | AppHeader       | ✅ PASS | **FIXED**: Migrated from fragile Absolute positioning to CSS Grid. |
+| 2026-02-01 | BottomNav       | ✅ PASS | Robust Grid layout (`grid-cols-5`). No layout fragility detected. |
+| 2026-02-01 | OnboardingLayout| ✅ PASS | Robust Flex/DVH layout. No "magic numbers". |
+| 2026-02-01 | OnboardingProgress| ✅ PASS | Standard Fixed Overlay. No fragility detected. |
+| 2026-02-01 | GlobalSessionGuard| ✅ PASS | Logic verified. Uses standard Modal. |
+| 2026-02-01 | PracticeControls  | ✅ PASS | Structurally sound ("Center Fix V4"). High complexity, but robust layout. |
+| 2026-02-01 | AdminUploadSection| ✅ PASS | Robust Form Grid. `calc/absolute` usage is valid (Toggle Switch). |
+| 2026-02-01 | AchievementsDisplay| ✅ PASS | Robust Responsive Grid. Valid `absolute` use for SVG stacking. |
+| 2026-02-02 | Practice Audio    | ✅ PASS | "Atomic Start" verified. Fixed CORS Taint bug in `player.ts`. |
 

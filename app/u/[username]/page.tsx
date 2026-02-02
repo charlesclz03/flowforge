@@ -150,6 +150,16 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <Avatar
                   src={user.image}
                   alt={user.name || 'User'}
+                  fallback={
+                    user.name
+                      ? user.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .substring(0, 2)
+                          .toUpperCase()
+                      : user.username?.[0]?.toUpperCase() || 'U'
+                  }
                   size="xl"
                   className="border-4 border-background shadow-xl"
                 />

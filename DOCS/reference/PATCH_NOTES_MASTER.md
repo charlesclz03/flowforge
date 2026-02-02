@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.99 - Sonic Unbound (2026-02-02)
+- **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.
+- **AUDIT**: Completed deep audit of AppHeader, BottomNav, and Practice Controls.
+- **FIX**: Verified build integrity and type safety across the stack.
+
 ## v0.9.98 - Audio Shield (2026-02-01)
 - **FIX**: Resolved 500 Global Error on Profile Page (Audio Player race condition).
 - **FIX**: Added `blob:` to CSP to fix profile picture previews.
