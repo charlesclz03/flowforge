@@ -1,30 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@supabase/supabase-js'
+import { verifySuperAdmin } from '@/lib/auth/admin'
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    // 1. Auth + Admin Check
+    await verifySuperAdmin()
 
-    // 1. Auth Check
-    if (!session || !session.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // 2. Admin Check
-    const adminEmail = process.env.ADMIN_EMAIL
-    if (session.user.email !== adminEmail) {
-      return NextResponse.json(
-        { error: 'Forbidden: Admin access only' },
-        { status: 403 }
-      )
-    }
-
-    // 3. Parse Form Data
+    // 2. Parse Form Data
     const formData = await req.formData()
-    const file = formData.get('file') as File
+    const file = (formData.get('file') || formData.get('audio')) as File
     const title = formData.get('title') as string
     const artistName = formData.get('artistName') as string
     const bpm = parseInt(formData.get('bpm') as string)
@@ -40,7 +26,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 4. Upload to Supabase Storage
+    // 3. Upload to Supabase Storage
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role for admin bypass
     const supabase = createClient(supabaseUrl, supabaseKey)
@@ -64,12 +50,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
     }
 
-    // 5. Get Public URL
+    // 4. Get Public URL
     const {
       data: { publicUrl },
     } = supabase.storage.from('beats').getPublicUrl(fileName)
 
-    // 6. Save to DB
+    // 5. Save to DB
     const beat = await prisma.beat.create({
       data: {
         title,
@@ -85,6 +71,15 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, beat })
   } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === 'Unauthorized') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      if (error.message === 'Forbidden') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     console.error('API Error:', error)
     return NextResponse.json(
       { error: 'Internal Server Error' },

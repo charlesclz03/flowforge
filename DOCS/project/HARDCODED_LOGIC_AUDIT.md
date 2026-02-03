@@ -27,8 +27,8 @@ These findings directly impact revenue and user trust.
 
 | Location | Finding | Impact | Recommendation |
 | :--- | :--- | :--- | :--- |
-| `lib/auth.ts:116` & `lib/constants/auth.ts:1` | Hardcoded: `charles.cluzeaud@gmail.com`, `triplyricist@gmail.com` | Account dependency. If emails change, admin access is lost. | Use a `SUPERADMIN_EMAILS` environment variable. |
-| `lib/auth.ts:51-79` | Hardcoded: `Admin1`, `Admin2` usernames for specific emails. | Rigid Identity. Admins cannot change their usernames easily. | Remove forced username override after initial setup. |
+| (Resolved) `lib/auth.ts`, `lib/auth/admin.ts` | Hardcoded superadmin emails removed. | Account dependency eliminated; admin access no longer tied to literals in code. | Use DB roles (`user.role === 'SUPERADMIN'`) and optionally bootstrap via `SUPERADMIN_EMAILS` env allowlist (server-side only). |
+| (Resolved) `lib/auth.ts` | Forced `Admin1`/`Admin2` username overrides removed. | Admin usernames can be changed normally. | Use one-time backfill tooling if you need to set specific admin usernames. |
 
 ## **4. Data & Content Fallbacks (Offline Safety)**
 

@@ -15,6 +15,7 @@ import { useOptimisticAction } from '@/hooks/useOptimisticAction'
 import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
+import { isProUser } from '@/lib/subscription/isPro'
 
 // Components
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
@@ -116,6 +117,16 @@ export default function PracticeClient({
     null
   )
   const [uiTime, setUiTime] = useState(0)
+
+  // If the user lands directly on /practice (no prior selection), auto-pick a safe default.
+  useEffect(() => {
+    if (!isLoaded) return
+    if (selectedBeat) return
+    if (beats.length === 0) return
+
+    const defaultBeat = beats.find((b) => !b.isPremium) || beats[0]
+    if (defaultBeat) setBeat(defaultBeat)
+  }, [isLoaded, selectedBeat, beats, setBeat])
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -263,9 +274,7 @@ export default function PracticeClient({
   })
 
   // 5. Visual Effects & Glue Logic
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   // Polling Loop for UI (Timer/Siren) to avoid Audio Engine re-renders
   useEffect(() => {

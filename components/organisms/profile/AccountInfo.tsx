@@ -8,6 +8,7 @@ import { Button } from '@/components/atoms/Button'
 
 import { Rank } from '@/lib/gamification/ranks'
 import { getLevelInfo } from '@/lib/gamification/xp'
+import { isProUser } from '@/lib/subscription/isPro'
 
 interface User {
   name?: string | null
@@ -16,6 +17,7 @@ interface User {
   username?: string | null
   bio?: string | null
   subscriptionStatus?: string | null
+  role?: string | null
   xp?: number
   level?: number
   createdAt?: Date
@@ -28,9 +30,7 @@ interface AccountInfoProps {
 }
 
 export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
-  const isPro =
-    user.subscriptionStatus === 'active' ||
-    user.subscriptionStatus === 'trialing'
+  const isPro = isProUser(user)
 
   const xp = user.xp || 0
 

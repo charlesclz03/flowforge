@@ -3,6 +3,25 @@ import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 
+function getSuperadminEmailAllowlist(): Set<string> {
+  const allowlist = new Set<string>()
+
+  const rawList = process.env.SUPERADMIN_EMAILS
+  if (rawList) {
+    rawList
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean)
+      .forEach((e) => allowlist.add(e))
+  }
+
+  // Back-compat (deprecated): single admin email
+  const legacyAdmin = process.env.ADMIN_EMAIL
+  if (legacyAdmin) allowlist.add(legacyAdmin.trim().toLowerCase())
+
+  return allowlist
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -17,7 +36,6 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async createUser({ user }) {
-      // @ts-expect-error - username is a custom field extended in Prisma adapter
       if (user.email && !user.username) {
         // Generate a username from the email slug
         let baseUsername = user.email.split('@')[0].toLowerCase()
@@ -47,61 +65,39 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }) {
       if (!user.email) return
 
-      // SUPERADMIN ENFORCEMENT
-      if (user.email === 'charles.cluzeaud@gmail.com') {
-        // @ts-expect-error - username is a custom field extended in Prisma adapter
-        if (user.username !== 'Admin1') {
-          // Check if Admin1 is taken by someone else (unlikely given early stage, but safe)
+      const allowlist = getSuperadminEmailAllowlist()
+      const email = user.email.toLowerCase()
+
+      // Bootstrap SUPERADMIN role from server-side allowlist (transitional)
+      if (allowlist.has(email) && user.role !== 'SUPERADMIN') {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { role: 'SUPERADMIN' },
+        })
+      }
+
+      // GENERAL BACKFILL for legacy users
+      if (!user.username) {
+        let baseUsername = user.email.split('@')[0].toLowerCase()
+        baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
+
+        let uniqueUsername = baseUsername
+        let counter = 1
+
+        while (true) {
           const existing = await prisma.user.findUnique({
-            where: { username: 'Admin1' },
+            where: { username: uniqueUsername },
           })
+          if (!existing) break
 
-          if (!existing || existing.email === user.email) {
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { username: 'Admin1' },
-            })
-          }
+          uniqueUsername = `${baseUsername}${counter}`
+          counter++
         }
-      } else if (user.email === 'triplyricist@gmail.com') {
-        // @ts-expect-error - username is a custom field extended in Prisma adapter
-        if (user.username !== 'Admin2') {
-          const existing = await prisma.user.findUnique({
-            where: { username: 'Admin2' },
-          })
 
-          if (!existing || existing.email === user.email) {
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { username: 'Admin2' },
-            })
-          }
-        }
-      } else {
-        // GENERAL BACKFILL for legacy users
-        // @ts-expect-error - username is a custom field
-        if (!user.username) {
-          let baseUsername = user.email.split('@')[0].toLowerCase()
-          baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
-
-          let uniqueUsername = baseUsername
-          let counter = 1
-
-          while (true) {
-            const existing = await prisma.user.findUnique({
-              where: { username: uniqueUsername },
-            })
-            if (!existing) break
-
-            uniqueUsername = `${baseUsername}${counter}`
-            counter++
-          }
-
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { username: uniqueUsername },
-          })
-        }
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { username: uniqueUsername },
+        })
       }
     },
   },
@@ -112,45 +108,44 @@ export const authOptions: NextAuthOptions = {
         // Ensure profile image from OAuth is passed to session
         session.user.image = user.image
 
-        // Superadmin Override
-        const SUPERADMIN_EMAILS = [
-          'charles.cluzeaud@gmail.com',
-          'triplyricist@gmail.com',
-        ]
-        if (
-          session.user.email &&
-          SUPERADMIN_EMAILS.includes(session.user.email)
-        ) {
-          // Force active subscription for superadmin
-          session.user.subscriptionStatus = 'active'
-          session.user.role = 'SUPERADMIN'
-        } else {
-          // @ts-expect-error - user object from adapter has additional fields
-          session.user.subscriptionStatus = user.subscriptionStatus
-          // @ts-expect-error - role is custom field
-          session.user.role = user.role || 'USER'
-        }
-
-        // @ts-expect-error - user object from adapter has additional fields
-        session.user.socials = user.socials
-        // @ts-expect-error - user object from adapter has additional fields
-        session.user.username = user.username
-        // @ts-expect-error - user object from adapter has additional fields
-        session.user.bio = user.bio
-
-        // Fetch latest streak & stats from DB to ensure accuracy
+        // Fetch latest profile + role/subscription from DB to ensure accuracy
         const latestUser = await prisma.user.findUnique({
           where: { id: user.id },
           select: {
+            subscriptionStatus: true,
+            role: true,
+            socials: true,
+            username: true,
+            bio: true,
             currentStreak: true,
             xp: true,
             level: true,
           },
         })
         if (latestUser) {
+          session.user.subscriptionStatus = latestUser.subscriptionStatus
+          session.user.role = latestUser.role
+          session.user.socials = latestUser.socials
+          session.user.username = latestUser.username
+          session.user.bio = latestUser.bio
           session.user.currentStreak = latestUser.currentStreak
           session.user.xp = latestUser.xp
           session.user.level = latestUser.level
+        } else {
+          session.user.subscriptionStatus = user.subscriptionStatus ?? null
+          session.user.role = user.role || 'USER'
+          session.user.socials = user.socials
+          session.user.username = user.username ?? null
+          session.user.bio = user.bio ?? null
+        }
+
+        // Superadmin Override (transitional allowlist)
+        if (session.user.email) {
+          const allowlist = getSuperadminEmailAllowlist()
+          if (allowlist.has(session.user.email.toLowerCase())) {
+            session.user.subscriptionStatus = 'active'
+            session.user.role = 'SUPERADMIN'
+          }
         }
       }
       return session

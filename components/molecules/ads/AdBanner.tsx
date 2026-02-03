@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useInView } from 'react-intersection-observer'
+import { isProUser } from '@/lib/subscription/isPro'
 
 interface AdBannerProps {
   slot: string
@@ -31,9 +32,7 @@ export function AdBanner({
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
 
   // Logic to hide for Pro users
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   useEffect(() => {
     if (inView) {

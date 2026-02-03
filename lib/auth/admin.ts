@@ -1,26 +1,36 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-const ADMIN_EMAILS = ['triplyricist@gmail.com', 'charles.cluzeaud@gmail.com']
+function getSuperadminEmailAllowlist(): Set<string> {
+  const allowlist = new Set<string>()
+
+  const rawList = process.env.SUPERADMIN_EMAILS
+  if (rawList) {
+    rawList
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean)
+      .forEach((e) => allowlist.add(e))
+  }
+
+  // Back-compat (deprecated): single admin email
+  const legacyAdmin = process.env.ADMIN_EMAIL
+  if (legacyAdmin) allowlist.add(legacyAdmin.trim().toLowerCase())
+
+  return allowlist
+}
 
 /**
  * Checks if the current session user is a Super Admin.
  * Returns boolean. Does not throw.
  */
 export async function isSuperAdmin(): Promise<boolean> {
-  const session = await getServerSession(authOptions)
-  const envAdmin = process.env.ADMIN_EMAIL
-
-  if (!session?.user?.email) return false
-
-  // Check Role
-  if (session.user.role === 'SUPERADMIN') return true
-
-  // Check Email Whitelist
-  if (ADMIN_EMAILS.includes(session.user.email)) return true
-  if (envAdmin && session.user.email === envAdmin) return true
-
-  return false
+  try {
+    await verifySuperAdmin()
+    return true
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -30,11 +40,20 @@ export async function isSuperAdmin(): Promise<boolean> {
  */
 export async function verifySuperAdmin() {
   const session = await getServerSession(authOptions)
-  const allowed = await isSuperAdmin()
 
-  if (!allowed) {
-    throw new Error('Unauthorized: Super Admin access required')
+  if (!session?.user?.email) {
+    throw new Error('Unauthorized')
   }
 
-  return session
+  if (session.user.role === 'SUPERADMIN') {
+    return session
+  }
+
+  // Transitional: email allowlist (server-side only)
+  const allowlist = getSuperadminEmailAllowlist()
+  if (allowlist.has(session.user.email.toLowerCase())) {
+    return session
+  }
+
+  throw new Error('Forbidden')
 }

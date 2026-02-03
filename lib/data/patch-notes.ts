@@ -40,6 +40,11 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Practice Stability**: Metadata-only session saves no longer crash or 500 when no recording is present.',
           '**Beat Vault UX**: Guests no longer trigger noisy 401s by calling `/api/user/beats`.',
           '**Audio Privacy**: Production no longer logs full storage URLs; debug is opt-in via `NEXT_PUBLIC_AUDIO_DEBUG` (non-prod).',
+          '**Auth Roles**: Superadmin access is role-based with optional bootstrap via `SUPERADMIN_EMAILS` (no hardcoded emails).',
+          '**Type Safety**: Added NextAuth type augmentation and removed `@ts-expect-error` suppressions in auth callbacks.',
+          '**Security**: CSP tightened (removes `unsafe-eval` in production) and Supabase image host allowlist is narrowed.',
+          '**Practice UX**: Direct visits to `/practice` auto-select a default beat instead of showing a stuck loader.',
+          '**Audio Type Safety**: `_sourceNode` tracking is now typed (no HTMLAudioElement monkey-patch suppressions).',
         ],
       },
       {
@@ -47,7 +52,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Versioning**: Standardized “Type Safe” to `v0.9.993` (avoids collision with `v0.9.93`).',
           '**Testing**: Vitest now runs only `__tests__` (excludes Playwright `e2e/`).',
-          '**E2E**: Updated Playwright smoke tests to match current routing and enabled `webServer` for local runs.',
+          '**E2E**: Updated Playwright smoke tests and added a `/practice` startability smoke test (with `webServer`).',
           '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
         ],
       },

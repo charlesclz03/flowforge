@@ -2,6 +2,22 @@
 /** @type {import('next').NextConfig} */
 // v0.9.69 - Security Hardening (Fort Knox)
 
+const isDev = process.env.NODE_ENV === 'development'
+
+let supabaseHostname
+try {
+  supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+    : undefined
+} catch {
+  supabaseHostname = undefined
+}
+
+const supabaseHttps = supabaseHostname
+  ? `https://${supabaseHostname}`
+  : 'https://*.supabase.co'
+const supabaseWss = supabaseHostname ? `wss://${supabaseHostname}` : 'wss://*.supabase.co'
+
 // Security Headers Configuration
 const securityHeaders = [
   {
@@ -32,13 +48,20 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://js.stripe.com https://*.sentry.io",
+      [
+        "script-src 'self'",
+        "'unsafe-inline'",
+        ...(isDev ? ["'unsafe-eval'"] : []),
+        'https://www.googletagmanager.com',
+        'https://js.stripe.com',
+        'https://*.sentry.io',
+      ].join(' '),
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https://*.supabase.co https://lh3.googleusercontent.com https://storage.googleapis.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.google.com https://*.google.pt",
+      `img-src 'self' data: blob: ${supabaseHttps} https://lh3.googleusercontent.com https://storage.googleapis.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.google.com https://*.google.pt`,
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' blob: https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://api.stripe.com https://*.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net",
+      `connect-src 'self' blob: ${supabaseHttps} ${supabaseWss} https://accounts.google.com https://api.stripe.com https://*.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net`,
       "frame-src 'self' https://accounts.google.com https://js.stripe.com https://www.youtube.com",
-      "media-src 'self' blob: https://*.supabase.co",
+      `media-src 'self' blob: ${supabaseHttps}`,
       "worker-src 'self' blob:",
       "manifest-src 'self'",
       "base-uri 'self'",
@@ -61,10 +84,19 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.googleusercontent.com',
       },
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-      },
+      ...(supabaseHostname
+        ? [
+            {
+              protocol: 'https',
+              hostname: supabaseHostname,
+            },
+          ]
+        : [
+            {
+              protocol: 'https',
+              hostname: '**.supabase.co',
+            },
+          ]),
     ],
   },
   async headers() {

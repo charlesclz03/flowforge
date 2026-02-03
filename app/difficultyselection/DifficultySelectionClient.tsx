@@ -17,6 +17,7 @@ import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
+import { isProUser } from '@/lib/subscription/isPro'
 
 type Frequency = 4 | 8 | 16
 
@@ -48,9 +49,7 @@ export function DifficultySelectionClient({
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
 
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   // Use initial beats passed from server
   const [beats] = useState<Beat[]>(initialBeats)

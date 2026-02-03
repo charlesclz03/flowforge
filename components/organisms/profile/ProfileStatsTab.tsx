@@ -6,6 +6,7 @@ import {
   UserStats,
 } from '@/components/organisms/profile/StatsSection'
 import { useSession } from 'next-auth/react'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export function ProfileStatsTab() {
   const { data: session } = useSession()
@@ -34,7 +35,7 @@ export function ProfileStatsTab() {
     fetchStats()
   }, [session?.user?.id])
 
-  const isPro = session?.user?.subscriptionStatus === 'active'
+  const isPro = isProUser(session?.user)
 
   return <StatsSection stats={stats} isLoading={isLoading} isPro={isPro} />
 }

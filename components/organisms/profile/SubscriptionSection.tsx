@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { Card } from '@/components/atoms/Card'
 import { UpgradeButton } from '@/components/molecules/subscription/UpgradeButton'
 import { ManageSubscriptionButton } from '@/components/molecules/subscription/ManageSubscriptionButton'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export function SubscriptionSection() {
   const { data: session } = useSession()
@@ -12,9 +13,7 @@ export function SubscriptionSection() {
     'monthly'
   )
 
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   return (
     <Card title="Manage Subscription">

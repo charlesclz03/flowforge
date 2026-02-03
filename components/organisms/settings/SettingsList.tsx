@@ -26,6 +26,7 @@ import { toast } from 'react-hot-toast'
 import { useState } from 'react'
 import { SupportModal } from '@/components/organisms/support/SupportModal'
 import { getLevelInfo } from '@/lib/gamification/xp'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
@@ -45,9 +46,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const [isSupportOpen, setIsSupportOpen] = useState(false)
 
   // Determine subscription status
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   const handleLinkClick = () => {
     if (onItemClick) onItemClick()
@@ -371,9 +370,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </div>
 
           {/* Admin Only: Test Voice */}
-          {['triplyricist@gmail.com', 'charles.cluzeaud@gmail.com'].includes(
-            session?.user?.email || ''
-          ) && (
+          {session?.user?.role === 'SUPERADMIN' && (
             <button
               onClick={(e) => {
                 e.preventDefault()

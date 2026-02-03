@@ -19,6 +19,11 @@ declare namespace NodeJS {
     NEXTAUTH_URL?: string
     NEXTAUTH_SECRET?: string
 
+    // Admin / Roles
+    SUPERADMIN_EMAILS?: string
+    // Back-compat (deprecated): use SUPERADMIN_EMAILS instead
+    ADMIN_EMAIL?: string
+
     // Google Cloud Storage
     GCS_BUCKET_NAME?: string
     GCS_PROJECT_ID?: string
@@ -39,6 +44,9 @@ declare namespace NodeJS {
 
     // Google AdSense
     NEXT_PUBLIC_ADSENSE_CLIENT_ID?: string
+
+    // Google Analytics
+    NEXT_PUBLIC_GA_ID?: string
 
     // App Configuration
     NEXT_PUBLIC_APP_URL: string

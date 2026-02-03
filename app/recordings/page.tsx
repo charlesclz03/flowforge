@@ -20,6 +20,7 @@ import { toast } from 'react-hot-toast'
 
 import { StorageBar } from '@/components/organisms/recordings/StorageBar'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -147,9 +148,7 @@ export default function RecordingsPage() {
   }
 
   // Determine if user is pro
-  const isPro =
-    session?.user?.subscriptionStatus === 'active' ||
-    session?.user?.subscriptionStatus === 'trialing'
+  const isPro = isProUser(session?.user)
 
   // Calculate Storage Usage (Time in Seconds)
   const totalUsedSeconds = recordings.reduce((acc, curr) => {

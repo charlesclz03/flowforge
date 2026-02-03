@@ -11,6 +11,7 @@ import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
 import { VideoCreator } from '@/components/features/export/VideoCreator'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export default function VideoExportPage({
   params,
@@ -63,7 +64,7 @@ export default function VideoExportPage({
   }
 
   // Access Control: Pro Only
-  const isPro = session?.user?.subscriptionStatus === 'active'
+  const isPro = isProUser(session?.user)
   if (!isPro) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-black text-center p-6 gap-6">

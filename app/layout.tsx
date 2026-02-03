@@ -11,6 +11,7 @@ import { GlobalSessionGuard } from '@/components/organisms/practice/GlobalSessio
 import { JsonLd } from '@/components/JsonLd'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -135,7 +136,9 @@ export default async function RootLayout({
       <head>
         <meta name="google" content="notranslate" />
         {/* Google Tag Manager */}
-        <script
+        <Script
+          id="gtm-init"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -179,9 +182,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </SafeAreaWrapper>
             {process.env.NEXT_PUBLIC_GA_ID ? (
               <>
-                <script
-                  async
+                <Script
                   src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                  strategy="afterInteractive"
                 />
                 <link
                   rel="preconnect"
@@ -191,7 +194,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   rel="dns-prefetch"
                   href="https://www.googletagmanager.com"
                 />
-                <script
+                <Script
+                  id="ga-init"
+                  strategy="afterInteractive"
                   dangerouslySetInnerHTML={{
                     __html: `
                   window.dataLayer = window.dataLayer || [];

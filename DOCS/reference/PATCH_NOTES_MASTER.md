@@ -9,7 +9,12 @@
 - **FIX**: Practice session completion is hardened for metadata-only saves (no Prisma error leakage / 500s when no recording exists).
 - **FIX**: Guests no longer trigger noisy 401s on `/tracks` by calling `/api/user/beats`.
 - **FIX**: Audio debug logs are disabled in production and storage URLs are sanitized (opt-in via `NEXT_PUBLIC_AUDIO_DEBUG` in non-prod).
-- **TEST**: Updated Playwright smoke tests to match current routing and enabled `webServer` for local runs.
+- **FIX**: Removed hardcoded superadmin emails; roles are enforced via DB role with optional bootstrap via `SUPERADMIN_EMAILS`.
+- **FIX**: Added NextAuth type augmentation and removed `@ts-expect-error` suppressions in auth callbacks.
+- **SEC**: Tightened CSP (removes `unsafe-eval` in production) and narrowed Supabase image host allowlist.
+- **FIX**: `/practice` no longer gets stuck when opened directly (auto-selects a default beat).
+- **TEST**: Updated Playwright smoke tests and added a `/practice` startability smoke test (with `webServer`).
+- **FIX**: AudioPlayer `_sourceNode` tracking is now typed and cleaned up on destroy.
 - **DOCS**: Standardized “Type Safe” version to `v0.9.993` and redacted deployment/database credentials.
 
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)

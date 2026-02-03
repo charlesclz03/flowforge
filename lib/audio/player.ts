@@ -265,6 +265,15 @@ export class AudioPlayer {
     this.log('Destroying player instance')
     if (this.audio) {
       try {
+        if (this.audio._sourceNode) {
+          try {
+            this.audio._sourceNode.disconnect()
+          } catch {
+            // ignore disconnect errors during cleanup
+          }
+          this.audio._sourceNode = undefined
+        }
+
         this.audio.pause()
         this.audio.src = ''
         this.audio.load() // help browser release resources
@@ -286,13 +295,11 @@ export class AudioPlayer {
     if (!this.audio) return
 
     try {
-      // @ts-expect-error - We are checking if we already attached a node
       if (this.audio._sourceNode) return
 
       const source = context.createMediaElementSource(this.audio)
       source.connect(context.destination)
 
-      // @ts-expect-error - Monkey-patching source node onto element for tracking
       this.audio._sourceNode = source
 
       this.log('Connected to AudioContext')

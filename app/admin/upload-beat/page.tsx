@@ -15,7 +15,7 @@ export default function AdminUploadPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  if (!session || !isAdmin(session.user?.email)) {
+  if (!session || !isAdmin(session.user?.role)) {
     return (
       <Container size="sm" className="py-20 text-center">
         <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>
