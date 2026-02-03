@@ -34,6 +34,9 @@ declare namespace NodeJS {
     // Site URL (used for absolute redirect URLs)
     NEXT_PUBLIC_SITE_URL?: string
 
+    // Audio debugging (client-side, opt-in)
+    NEXT_PUBLIC_AUDIO_DEBUG?: string
+
     // Google AdSense
     NEXT_PUBLIC_ADSENSE_CLIENT_ID?: string
 

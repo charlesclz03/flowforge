@@ -37,6 +37,9 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Checkout Stability**: Reuses existing Stripe customers to avoid duplicates.',
           '**Subscription Status API**: Added `GET /api/subscription/status` for client polling.',
           '**Redirect URL Safety**: Standardized Stripe base URL resolution across routes.',
+          '**Practice Stability**: Metadata-only session saves no longer crash or 500 when no recording is present.',
+          '**Beat Vault UX**: Guests no longer trigger noisy 401s by calling `/api/user/beats`.',
+          '**Audio Privacy**: Production no longer logs full storage URLs; debug is opt-in via `NEXT_PUBLIC_AUDIO_DEBUG` (non-prod).',
         ],
       },
       {
@@ -44,6 +47,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Versioning**: Standardized “Type Safe” to `v0.9.993` (avoids collision with `v0.9.93`).',
           '**Testing**: Vitest now runs only `__tests__` (excludes Playwright `e2e/`).',
+          '**E2E**: Updated Playwright smoke tests to match current routing and enabled `webServer` for local runs.',
           '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
         ],
       },

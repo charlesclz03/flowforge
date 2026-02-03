@@ -6,6 +6,10 @@
 - **FIX**: Hardened Stripe webhook handling (idempotent updates, no 500 on unknown customers/users).
 - **FIX**: Checkout reuses existing Stripe customers to avoid duplicates.
 - **TEST**: Added Vitest coverage for Stripe routes and excluded Playwright `e2e/` from unit tests.
+- **FIX**: Practice session completion is hardened for metadata-only saves (no Prisma error leakage / 500s when no recording exists).
+- **FIX**: Guests no longer trigger noisy 401s on `/tracks` by calling `/api/user/beats`.
+- **FIX**: Audio debug logs are disabled in production and storage URLs are sanitized (opt-in via `NEXT_PUBLIC_AUDIO_DEBUG` in non-prod).
+- **TEST**: Updated Playwright smoke tests to match current routing and enabled `webServer` for local runs.
 - **DOCS**: Standardized “Type Safe” version to `v0.9.993` and redacted deployment/database credentials.
 
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)

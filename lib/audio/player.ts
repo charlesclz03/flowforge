@@ -7,14 +7,30 @@ export class AudioPlayer {
   private audio: HTMLAudioElement | null = null
   private onTimeUpdateCallback: ((time: number) => void) | null = null
   private onEndedCallback: (() => void) | null = null
-  private debug: boolean = true
+  private debug: boolean = false
   private isDestroyed: boolean = false
 
   constructor() {
+    // Debug logs are opt-in and disabled in production for privacy.
+    this.debug =
+      process.env.NODE_ENV !== 'production' &&
+      process.env.NEXT_PUBLIC_AUDIO_DEBUG === 'true'
+
     if (typeof window !== 'undefined') {
       this.audio = new Audio()
       this.audio.crossOrigin = 'anonymous' // Required for Web Audio API Bridge
       this.setupEventListeners()
+    }
+  }
+
+  private sanitizeUrlForLog(url: string) {
+    try {
+      const parsed = new URL(url)
+      const filename = parsed.pathname.split('/').filter(Boolean).pop() || ''
+      return `${parsed.protocol}//${parsed.host}/.../${filename}`
+    } catch {
+      // Not a valid URL (or already a safe local path)
+      return url
     }
   }
 
@@ -73,7 +89,7 @@ export class AudioPlayer {
   async load(url: string): Promise<void> {
     if (!this.audio) throw new Error('Audio not initialized')
 
-    this.log('Loading beat:', url)
+    this.log('Loading beat:', this.sanitizeUrlForLog(url))
 
     // Stop current playback before loading new
     this.audio.pause()

@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const isWindows = process.platform === 'win32'
+const npmRunner = isWindows ? '"C:/Program Files/nodejs/npm.cmd"' : 'npm'
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -21,9 +24,9 @@ export default defineConfig({
     //   use: { ...devices['Pixel 5'] },
     // },
   ],
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: `${npmRunner} run dev`,
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
 })

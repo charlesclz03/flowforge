@@ -43,21 +43,32 @@ export default function TracksPage() {
     router.push(`/difficultyselection?beatId=${beat.id}`)
   }
 
+  const userId = session?.user?.id
+
   const fetchBeats = useCallback(async () => {
     setIsLoading(true)
     try {
+      const userBeatsPromise = userId
+        ? fetch('/api/user/beats')
+            .then((res) => {
+              // Guests will 401: treat as expected and return no user beats
+              if (res.status === 401) return { beats: [] }
+
+              return res.ok &&
+                res.headers
+                  .get('content-type')
+                  ?.includes('application/json')
+                ? res.json()
+                : { beats: [] }
+            })
+            .catch(() => ({ beats: [] }))
+        : Promise.resolve({ beats: [] })
+
       const [beatsRes, userBeatsRes, favs] = await Promise.all([
         fetch('/api/beats')
           .then((res) => (res.ok ? res.json() : { beats: [] }))
           .catch(() => ({ beats: [] })),
-        fetch('/api/user/beats')
-          .then((res) =>
-            res.ok &&
-            res.headers.get('content-type')?.includes('application/json')
-              ? res.json()
-              : { beats: [] }
-          )
-          .catch(() => ({ beats: [] })),
+        userBeatsPromise,
         getFavoriteBeatIds().catch(() => []),
       ])
 
@@ -83,11 +94,13 @@ export default function TracksPage() {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [userId])
 
   useEffect(() => {
     fetchBeats()
+  }, [fetchBeats])
 
+  useEffect(() => {
     const audio = audioRef.current
     return () => {
       if (audio) {
@@ -95,7 +108,7 @@ export default function TracksPage() {
         audio.currentTime = 0
       }
     }
-  }, [fetchBeats])
+  }, [])
 
   const handlePlay = (beat: Beat) => {
     const audio = audioRef.current
