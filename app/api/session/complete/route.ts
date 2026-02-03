@@ -15,6 +15,24 @@ interface UserWithRate {
   currentStreak?: number
 }
 
+function parseOptionalInt(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.trunc(value)
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) return null
+
+    const parsed = Number(trimmed)
+    if (!Number.isFinite(parsed)) return null
+
+    return Math.trunc(parsed)
+  }
+
+  return null
+}
+
 /**
  * POST /api/session/complete
  * Submit a session result without a recording (metadata only).
@@ -29,21 +47,30 @@ export async function POST(request: Request) {
     }
 
     // Parse JSON body
-    const body = await request.json()
-    const {
-      beatId,
-      title,
-      durationSeconds,
-      baseWordCount, // Renamed from wordCount to be explicit
-      wordsUsed, // Array of strings
-      frequency = 8,
-      difficulty = 2,
-      restarts = 0,
-      mode = 'solo',
-    } = body
+    const body = (await request.json()) as Record<string, unknown>
+
+    const beatId = typeof body.beatId === 'string' ? body.beatId : ''
+    const title = typeof body.title === 'string' ? body.title : undefined
+    const mode = typeof body.mode === 'string' ? body.mode : 'solo'
+
+    const durationSeconds = parseOptionalInt(body.durationSeconds)
+    const frequencyRaw = parseOptionalInt(body.frequency)
+    const difficultyRaw = parseOptionalInt(body.difficulty)
+    const restartsRaw = parseOptionalInt(body.restarts)
+    const baseWordCountRaw = parseOptionalInt(body.baseWordCount)
+
+    const frequency = frequencyRaw ?? 8
+    const difficulty = difficultyRaw ?? 2
+    const restarts = Math.max(0, restartsRaw ?? 0)
+    const baseWordCount = Math.max(0, baseWordCountRaw ?? 0)
+
+    const wordsUsedRaw = body.wordsUsed
+    const wordsUsed = Array.isArray(wordsUsedRaw)
+      ? wordsUsedRaw.filter((w): w is string => typeof w === 'string')
+      : []
 
     // Validate required fields
-    if (!beatId || !durationSeconds) {
+    if (!beatId || durationSeconds === null || durationSeconds <= 0) {
       return NextResponse.json(
         { error: 'Missing required fields: beatId, durationSeconds' },
         { status: 400 }
@@ -52,7 +79,7 @@ export async function POST(request: Request) {
 
     // Calculate Word Count
     const words = Array.isArray(wordsUsed) ? wordsUsed : []
-    const wordCount = words.length > 0 ? words.length : baseWordCount || 0
+    const wordCount = words.length > 0 ? words.length : baseWordCount
 
     // Calculate Server Score (for validation/anti-cheat)
     const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
@@ -78,8 +105,9 @@ export async function POST(request: Request) {
     })
 
     if (!sessRes.success) {
+      console.error('[SESSION_COMPLETE] Failed to create session:', sessRes.error)
       return NextResponse.json(
-        { error: sessRes.error || 'Failed to save session' },
+        { error: 'Failed to save session' },
         { status: 500 }
       )
     }

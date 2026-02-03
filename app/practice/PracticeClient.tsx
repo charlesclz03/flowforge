@@ -62,7 +62,7 @@ interface SessionSummary {
   description: string
   wordCount: number
   duration: number
-  audioUrl: string
+  audioUrl?: string
   newBadges: string[]
   difficulty: string
   bpm: number
@@ -144,6 +144,18 @@ export default function PracticeClient({
       } else {
         // Convert FormData to JSON for lightweight endpoint
         const json: Record<string, unknown> = {}
+        const numericKeys = new Set([
+          'durationSeconds',
+          'frequency',
+          'difficulty',
+          'restarts',
+          'playbacks',
+          'score',
+          'beatOffsetMs',
+          'baseWordCount',
+          'wordCount',
+          'fileSizeBytes',
+        ])
         formData.forEach((value, key) => {
           // Handle arrays like 'wordsUsed' if needed, though FormData usually gives strings
           if (key === 'wordsUsed' && typeof value === 'string') {
@@ -152,6 +164,9 @@ export default function PracticeClient({
             } catch {
               json[key] = []
             }
+          } else if (numericKeys.has(key) && typeof value === 'string') {
+            const parsed = Number(value)
+            json[key] = Number.isFinite(parsed) ? parsed : value
           } else {
             json[key] = value
           }
@@ -177,6 +192,9 @@ export default function PracticeClient({
           (formData.get('wordsUsed') as string) || '[]'
         ).length
         const beatBpm = selectedBeat?.bpm || 0
+        const audioValue = formData.get('audio')
+        const audioUrl =
+          audioValue instanceof Blob ? URL.createObjectURL(audioValue) : undefined
 
         const predictedXP = calculateSessionXP({
           durationSeconds: durVal,
@@ -193,7 +211,7 @@ export default function PracticeClient({
           description: 'Nice session!',
           wordCount,
           duration: durVal,
-          audioUrl: URL.createObjectURL(formData.get('audio') as Blob),
+          audioUrl,
           newBadges: [],
           difficulty: diffStr,
           bpm: beatBpm,
