@@ -67,6 +67,8 @@ git push -u origin main
 
 Click "Environment Variables" and add these:
 
+> **Security**: Never commit or paste real secrets (DB URLs, API keys, webhook secrets) into the repo. If a credential was ever exposed, rotate it immediately.
+
 #### Required Variables
 
 ```bash
@@ -74,9 +76,9 @@ Click "Environment Variables" and add these:
 NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
 
 # Database (Supabase)
-DATABASE_URL=postgresql://postgres.xwfyycspigomivevvnqw:Aannuubbiiss036973%2A@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10
+DATABASE_URL=postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10
 
-DIRECT_URL=postgresql://postgres:Aannuubbiiss036973%2A@db.xwfyycspigomivevvnqw.supabase.co:5432/postgres
+DIRECT_URL=postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres
 ```
 
 #### Optional Variables (Add When Ready)

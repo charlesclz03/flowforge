@@ -1,9 +1,12 @@
 # PATCH NOTES MASTER FILE
 
-## v0.9.93 - Type Safe (2026-02-03)
-- **FIX**: Resolved critical build errors and improved TypeScript coverage.
-- **FIX**: Removed `any` types in SessionPlayer and PracticeClient.
-- **FIX**: Corrected syntax errors in API routes.
+## v0.9.993 - Type Safe (2026-02-03)
+- **FIX**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.
+- **FEAT**: Added `GET /api/subscription/status` for safe client polling.
+- **FIX**: Hardened Stripe webhook handling (idempotent updates, no 500 on unknown customers/users).
+- **FIX**: Checkout reuses existing Stripe customers to avoid duplicates.
+- **TEST**: Added Vitest coverage for Stripe routes and excluded Playwright `e2e/` from unit tests.
+- **DOCS**: Standardized “Type Safe” version to `v0.9.993` and redacted deployment/database credentials.
 
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.

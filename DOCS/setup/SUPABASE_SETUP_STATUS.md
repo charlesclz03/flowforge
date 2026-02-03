@@ -9,7 +9,7 @@
    - Allowed MIME types:  audio/webm, audio/ogg, audio/mp4
    - Policies: 0 (OK - we use service role key)
 3.  **Environment Variables Added** to `.env.local`:
-   - `NEXT_PUBLIC_SUPABASE_URL`:  https://xwfyycspigomivevvnqw.supabase.co
+   - `NEXT_PUBLIC_SUPABASE_URL`:  https://<PROJECT_REF>.supabase.co
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`:  Added (JWT token format - correct)
    - `SUPABASE_SERVICE_ROLE_KEY`: ️ Added but **VERIFY** (looks too short)
 
@@ -46,7 +46,7 @@ Length: 200+ characters  (This is the correct format)
 ### Step 1: Get the Correct Service Role Key
 
 1. Go to Supabase Dashboard:
-   - **URL**: https://supabase.com/dashboard/project/xwfyycspigomivevvnqw/settings/api
+   - **URL**: https://supabase.com/dashboard/project/<PROJECT_REF>/settings/api
 
 2. Find the Service Role Key:
    - Look for "Project API keys" section
@@ -132,7 +132,7 @@ This will check:
 ### Environment Variables (in .env.local)
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://xwfyycspigomivevvnqw.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://<PROJECT_REF>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ( Correct)
 SUPABASE_SERVICE_ROLE_KEY=Ssuuppaabbaassee036973 (️ Verify - too short)
 ```
@@ -209,7 +209,7 @@ SUPABASE_SERVICE_ROLE_KEY=Ssuuppaabbaassee036973 (️ Verify - too short)
 
  **Bucket**: Configured correctly  
  **Environment Variables**: Added to `.env.local`  
- **Project URL**: Correct (https://xwfyycspigomivevvnqw.supabase.co)  
+ **Project URL**: Correct (https://<PROJECT_REF>.supabase.co)  
  **Anon Key**: Correct format  
 ️ **Service Role Key**: **VERIFY** - looks too short (should be 200+ characters)
 

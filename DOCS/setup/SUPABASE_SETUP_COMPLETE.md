@@ -16,7 +16,7 @@
    - Allowed MIME types:  audio/webm, audio/ogg, audio/mp4
    - Policies: 0 (OK - we use service role key)
 3.  **Environment Variables**: All set in `.env.local`:
-   - `NEXT_PUBLIC_SUPABASE_URL`:  https://xwfyycspigomivevvnqw.supabase.co
+   - `NEXT_PUBLIC_SUPABASE_URL`:  https://<PROJECT_REF>.supabase.co
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`:  Correct JWT token format
    - `SUPABASE_SERVICE_ROLE_KEY`:  Correct JWT token format (220 chars)
 
@@ -27,7 +27,7 @@
 ### Environment Variables
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://xwfyycspigomivevvnqw.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://<PROJECT_REF>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ( Verified)
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ( Verified - 220 chars)
 ```

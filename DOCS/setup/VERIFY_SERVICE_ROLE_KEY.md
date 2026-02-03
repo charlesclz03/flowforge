@@ -27,7 +27,7 @@ Ssuuppaabbaassee036973
 ##  How to Get the Correct Service Role Key
 
 1. **Go to Supabase Dashboard:**
-   - Navigate to: https://supabase.com/dashboard/project/xwfyycspigomivevvnqw/settings/api
+   - Navigate to: https://supabase.com/dashboard/project/<PROJECT_REF>/settings/api
 
 2. **Find the Service Role Key:**
    - Look for the "Project API keys" section
@@ -108,7 +108,7 @@ Once you have the correct service role key, you can verify it by:
 
 ##  Reference
 
-- **Supabase Dashboard**: https://supabase.com/dashboard/project/xwfyycspigomivevvnqw/settings/api
+- **Supabase Dashboard**: https://supabase.com/dashboard/project/<PROJECT_REF>/settings/api
 - **Service Role Key Location**: Settings > API > Project API keys > service_role
 - **Documentation**: See `DOCS/SUPABASE_STORAGE_SETUP.md`
 

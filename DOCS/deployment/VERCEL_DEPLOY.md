@@ -48,12 +48,19 @@ Deploy Freestyla to Vercel with proper environment variables and configuration.
 ### Required Variables (set in Vercel Dashboard):
 
 ```bash
-# Site URL
+# Site URL (used for absolute redirect URLs)
 NEXT_PUBLIC_SITE_URL=https://flowforge-freestyle.vercel.app
+# (Optional but recommended) Canonical app URL used by sitemap/robots + some metadata
+NEXT_PUBLIC_APP_URL=https://flowforge-freestyle.vercel.app
 
 # Database (Supabase)
 DATABASE_URL=postgresql://...
 DIRECT_URL=postgresql://...
+
+# Supabase (client + server)
+NEXT_PUBLIC_SUPABASE_URL=https://<PROJECT_REF>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
 
 # NextAuth
 NEXTAUTH_URL=https://flowforge-freestyle.vercel.app
@@ -64,13 +71,11 @@ GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 
 # Stripe
-STRIPE_SECRET_KEY=...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=...
-STRIPE_WEBHOOK_SECRET=...
-
-# Supabase Storage
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_ID_MONTHLY=price_...
+STRIPE_PRICE_ID_YEARLY=price_...
 ```
 
 ---
@@ -85,6 +90,12 @@ npm run build
 git add .
 git commit -m "Your message"
 git push origin main
+```
+
+### Windows PowerShell (this repo environment)
+
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run build
 ```
 
 ---
@@ -111,4 +122,4 @@ git push origin main
 
 ---
 
-**Last Updated**: January 10, 2026
+**Last Updated**: February 3, 2026

@@ -2,9 +2,9 @@
 
 ## Start Development Server
 
-```bash
-cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
-npm run dev
+```powershell
+cd "c:\Projects\FlowForge - Freestyle"
+& "C:/Program Files/nodejs/npm.cmd" run dev
 ```
 
 Visit: http://localhost:3000
@@ -50,9 +50,11 @@ curl http://localhost:3000/api/sessions
 
 ```bash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-DATABASE_URL="postgresql://postgres.xwfyycspigomivevvnqw:Aannuubbiiss036973%2A@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10"
-DIRECT_URL="postgresql://postgres:Aannuubbiiss036973%2A@db.xwfyycspigomivevvnqw.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10"
+DIRECT_URL="postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres"
 ```
+
+> **Security**: Never commit real secrets. Rotate credentials if they were ever exposed.
 
 ### Optional (When Ready)
 
@@ -65,26 +67,26 @@ NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-XXXXXXXXXXXXXXXX
 
 ### Generate Prisma Client
 
-```bash
-npx prisma generate
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" prisma generate
 ```
 
 ### Run Migrations
 
-```bash
-npx prisma migrate dev
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" prisma migrate dev
 ```
 
 ### Seed Database
 
-```bash
-npx tsx prisma/seed.ts
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" tsx prisma/seed.ts
 ```
 
 ### Reset Database
 
-```bash
-npx prisma migrate reset
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" prisma migrate reset
 ```
 
 ### Open Prisma Studio
@@ -167,13 +169,13 @@ Freestyla - Freestyle/
 
 ## Supabase Dashboard
 
-https://supabase.com/dashboard/project/xwfyycspigomivevvnqw
+https://supabase.com/dashboard/project/<PROJECT_REF>
 
 ## Common Issues
 
 ### "Tenant or user not found"
 
-- Check hostname has double 'v': `xwfyycspigomivevvnqw`
+- Check hostname has double 'v': `<PROJECT_REF>`
 - Verify password is URL-encoded
 
 ### Connection pool timeout

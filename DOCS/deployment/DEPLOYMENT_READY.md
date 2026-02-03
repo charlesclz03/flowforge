@@ -1,83 +1,90 @@
-# Freestyla Deployment Status
+# Deployment Readiness: v0.9.993 ("Type Safe")
 
-**Date**: December 18, 2025  
-**Status**:  **PRODUCTION CERTIFIED & DEPLOYED**  
-**Version**: v0.9.77
-
----
-
-##  Deployment Summary
-
-Freestyla has achieved **100% Bible Alignment** and is fully deployed to production.
-
-### What's Live:
-
--  **Full Application**: Practice, Recording, Review, Social, Gamification
--  **Authentication**: Google OAuth with guest mode sync
--  **Premium Features**: Stripe subscriptions, feature gating
--  **Social Ecosystem**: Duels, Feeds, Public Profiles, Voting
--  **Gamification**: 8+ Badges, Word Vault, Flow Density Scoring
--  **Viral Growth**: Stat Card PNG sharing, SEO optimization
-
-**Live URL**: https://flowforge-pi.vercel.app
+**Date**: 2026-02-03  
+**Target**: Vercel project `flowforge-freestyle` (auto-deploys from `main`)  
+**Status**: Ready to deploy (pending commit + push)
 
 ---
 
-##  Completion Status
+## Release Summary (v0.9.993)
 
-```
-Component                Status              Completion
-───────────────────────────────────────────────────────
-Backend & Database        Done             100%
-API Endpoints             Done             100%
-Authentication            Done             100%
-Practice Page UI          Done             100%
-Audio System              Done             100%
-Recording & Library       Done             100%
-Premium Features          Done             100%
-Social / Sharing          Done             100%
-Gamification              Done             100%
-Perfection Phase          Done             100%
-───────────────────────────────────────────────────────
-OVERALL                   CERTIFIED        100%
+- **Stripe reliability**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.
+- **Webhook hardening**: Stripe webhook handler is idempotent and won’t 500 for unknown customers/users.
+- **Version/docs alignment**: Standardized “Type Safe” to `v0.9.993` to avoid collision with `v0.9.93` (Infinity Loop).
+
+---
+
+## Pre-Deploy Checklist (Local)
+
+### Windows-safe commands (PowerShell)
+
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" install
+& "C:/Program Files/nodejs/npm.cmd" run lint
+& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
+& "C:/Program Files/nodejs/npm.cmd" run test -- --run
+
+# Build requires Supabase env vars even for static analysis; set safe dummy values locally:
+$env:NEXT_PUBLIC_SUPABASE_URL='https://test.supabase.co'
+$env:NEXT_PUBLIC_SUPABASE_ANON_KEY='test-anon-key'
+$env:NEXTAUTH_URL='http://localhost:3000'
+& "C:/Program Files/nodejs/npm.cmd" run build
 ```
 
----
-
-##  Post-Deployment Checklist
-
-- [x] Site loads successfully
-- [x] Database connection works
-- [x] Authentication works (Google Sign-In)
-- [x] API endpoints respond
-- [x] Stripe checkout works
-- [x] Recording/playback works
-- [x] Duels and voting work
-- [x] Badges award correctly
-- [x] Mobile responsive
-- [x] SEO meta tags correct
+**Pass criteria**: no lint/type/test/build errors (warnings OK).
 
 ---
 
-##  Deployment Commands
+## Database / Prisma Check (Critical)
+
+- Confirm `prisma/schema.prisma` has **not** changed since the last deploy.
+- If schema changed: run the `.agent/workflows/database_migration.md` workflow before deploying.
+
+---
+
+## Asset Verification (PWA/TWA)
+
+- `public/favicon.ico` exists
+- `public/icon-192x192.png` exists
+- `public/icon-512x512.png` exists
+- `public/.well-known/assetlinks.json` exists and is valid JSON
+
+---
+
+## Stripe Validation (Live, no new charges by default)
+
+1. In Vercel env vars (no values pasted into docs/PRs):
+   - `STRIPE_SECRET_KEY` is `sk_live_...`
+   - `STRIPE_WEBHOOK_SECRET` is set for the production webhook endpoint
+   - `STRIPE_PRICE_ID_MONTHLY` / `STRIPE_PRICE_ID_YEARLY` match your live catalog
+2. In Stripe Dashboard:
+   - Locate a recent `checkout.session.completed` for a Pro purchase
+   - Use **Resend** / **Send to webhook** to hit production `/api/stripe/webhook`
+3. Verify:
+   - User becomes Pro (`subscriptionStatus` active/trialing) and `/api/subscription/status` returns `isPro: true`
+   - `/orderconfirmed` waits until activation before celebrating
+
+---
+
+## Security Audit (Known Issue)
+
+`npm audit --audit-level=high` currently reports **high** vulnerabilities whose automated fix requires breaking upgrades (e.g., `next@16`, `eslint@9`, `vitest@4`). These were **not** applied as part of this release; schedule an upgrade pass separately.
+
+---
+
+## Deploy Steps (Vercel)
 
 ```bash
-# Local build test
-npm run build
-
-# Push to Vercel (auto-deploys from main)
 git add .
-git commit -m "v0.9.77 - Visual Polish"
+git commit -m "chore(release): v0.9.993 - Type Safe"
 git push origin main
 ```
 
----
-
-##  Future Vision
-
-Phase 8 features (Mobile App, AI Transcription) are documented in `PHASE_8_FUTURE_ROADMAP.md`.
+After push:
+- Monitor the Vercel build logs for the `flowforge-freestyle` project.
+- Smoke-test key flows: upgrade → `/orderconfirmed`, billing portal, `/practice` audio playback.
 
 ---
 
-**Last Updated**: December 18, 2025  
-**Document Version**: 2.0 (Production Certified)
+**Last Updated**: 2026-02-03  
+**Document Version**: 3.0 (Release Checklist)

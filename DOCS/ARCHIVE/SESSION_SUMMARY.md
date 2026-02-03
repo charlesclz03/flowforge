@@ -5,7 +5,7 @@
 ###  Database Connection & Setup
 
 1. **Connected to Supabase**
-   - Fixed hostname typo (`xwfyycspigomivevvnqw` with double 'v')
+   - Fixed hostname typo (`<PROJECT_REF>` with double 'v')
    - URL-encoded password for special characters
    - Configured both pooled and direct connections
 

@@ -13,10 +13,12 @@
 
 Created `.env.local` with:
 
+> **Security**: Keep all real connection strings out of git. Use placeholders in docs and rotate credentials if they were ever exposed.
+
 ```bash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-DATABASE_URL="postgresql://postgres.xwfyycspigomivevvnqw:Aannuubbiiss036973%2A@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10"
-DIRECT_URL="postgresql://postgres:Aannuubbiiss036973%2A@db.xwfyycspigomivevvnqw.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10"
+DIRECT_URL="postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres"
 ```
 
 **Note**: Password is URL-encoded (`*` becomes `%2A`)
@@ -141,7 +143,7 @@ Add these environment variables in Vercel dashboard:
 
 ### If you get "Tenant or user not found"
 
-- Check hostname has double 'v': `xwfyycspigomivevvnqw` (not `xwfyycspigomivevynqw`)
+- Check hostname has double 'v': `<PROJECT_REF>` (not `xwfyycspigomivevynqw`)
 - Verify password is URL-encoded
 - Check database is not paused in Supabase dashboard
 

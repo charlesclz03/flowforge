@@ -22,19 +22,29 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '0.9.93',
+    version: '0.9.993',
     date: '2026-02-03',
-    title: 'Type Safety Update 🛡️',
+    title: 'Reliability Pass 🛡️',
     codename: 'Type Safe',
     description:
-      'We fixed critical build errors and improved type safety across the application to ensure a stable deployment.',
+      'Hardened Stripe subscription activation to eliminate the “paid but not Pro yet” race, improved webhook resilience, and aligned versioning/docs for v0.9.993.',
     changes: [
       {
         category: 'Fixes & Improvements',
         items: [
-          '**Build Fix**: Resolved TypeScript errors preventing Vercel deployment.',
-          '**Type Safety**: Removed `any` types in critical components (SessionPlayer, PracticeClient) for better reliability.',
-          '**Linting**: Fixed unused imports and syntax errors in API routes.',
+          '**Stripe Activation**: `/orderconfirmed` now waits for Pro activation before celebrating.',
+          '**Webhook Reliability**: Stripe webhooks are idempotent and won’t 500 on unknown customers/users.',
+          '**Checkout Stability**: Reuses existing Stripe customers to avoid duplicates.',
+          '**Subscription Status API**: Added `GET /api/subscription/status` for client polling.',
+          '**Redirect URL Safety**: Standardized Stripe base URL resolution across routes.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Versioning**: Standardized “Type Safe” to `v0.9.993` (avoids collision with `v0.9.93`).',
+          '**Testing**: Vitest now runs only `__tests__` (excludes Playwright `e2e/`).',
+          '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
         ],
       },
     ],

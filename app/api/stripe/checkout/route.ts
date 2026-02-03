@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { stripe, PLANS } from '@/lib/stripe'
+import { prisma } from '@/lib/prisma'
+import { getBaseUrl } from '@/lib/url'
 
 export async function POST(request: Request) {
   try {
@@ -11,6 +13,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (!session.user.email) {
+      return NextResponse.json(
+        { error: 'Missing user email' },
+        { status: 400 }
+      )
+    }
+
     const { plan } = await request.json()
 
     if (!plan || !PLANS[plan as keyof typeof PLANS]) {
@@ -18,6 +27,14 @@ export async function POST(request: Request) {
     }
 
     const priceId = PLANS[plan as keyof typeof PLANS].priceId
+    const baseUrl = getBaseUrl()
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { customerId: true },
+    })
+
+    const customerId = user?.customerId || undefined
 
     // Create Stripe Checkout Session
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -29,9 +46,11 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/orderconfirmed?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
-      customer_email: session.user.email!,
+      success_url: `${baseUrl}/orderconfirmed?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/profile`,
+      ...(customerId
+        ? { customer: customerId }
+        : { customer_email: session.user.email }),
       client_reference_id: session.user.id,
       metadata: {
         userId: session.user.id,

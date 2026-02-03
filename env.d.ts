@@ -28,6 +28,11 @@ declare namespace NodeJS {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?: string
     STRIPE_SECRET_KEY?: string
     STRIPE_WEBHOOK_SECRET?: string
+    STRIPE_PRICE_ID_MONTHLY?: string
+    STRIPE_PRICE_ID_YEARLY?: string
+
+    // Site URL (used for absolute redirect URLs)
+    NEXT_PUBLIC_SITE_URL?: string
 
     // Google AdSense
     NEXT_PUBLIC_ADSENSE_CLIENT_ID?: string

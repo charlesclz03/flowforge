@@ -1,81 +1,80 @@
 # Quick Start - Next Session
 
-**Last Updated**: January 27, 2026  
-**Project Status**: ✅ Launch Ready (v0.9.74)
+**Last Updated**: 2026-02-03  
+**Project Status**: Active Development (v0.9.993)
 
 ---
 
-##  Instant Start
+## Instant Start (Windows-Safe)
 
-```bash
+```powershell
 cd "c:\Projects\FlowForge - Freestyle"
-git pull origin main
-npm install
-npx prisma generate
-npm run dev
+git pull --rebase
+& "C:/Program Files/nodejs/npm.cmd" install
+& "C:/Program Files/nodejs/npx.cmd" prisma generate
+& "C:/Program Files/nodejs/npm.cmd" run dev
 ```
 
 Open: http://localhost:3000
 
----
-
-##  Current State
-
-**Freestyla is COMPLETE.** All features from "The Bible" are implemented.
-
-- **Version**: v0.9.77 (Visual Polish)
-- **Status**: 100% Certified
-- **Live URL**: https://freestyla.app
+> Note: Local dev requires a valid `.env.local` (Supabase, NextAuth, Stripe if testing payments locally).
 
 ---
 
-##  Key Docs
+## Current Focus
 
-| Document                                           | Purpose                              |
-| -------------------------------------------------- | ------------------------------------ |
-| [README.md](../../README.md)                       | Project Overview                     |
-| [The Bible](../FlowForge%20V1.0_%20The%20Bible.md) | Product Requirements (100% Complete) |
-| [Features Guide](../APP_OVERVIEW_AND_FEATURES.md)  | Full Feature List                    |
-| [Status Summary](./CURRENT_STATUS_SUMMARY.md)      | Project Health                       |
+- Stripe: subscription activation + webhook reliability (live)
+- Mobile: audio reliability smoke + CSP/CORS sanity
+- Quality: keep lint/types/tests/build green
 
 ---
 
-## ️ Common Tasks
+## Key Docs
+
+| Document | Purpose |
+| --- | --- |
+| `DOCS/project/PROJECT_STATUS.md` | Current state and priorities |
+| `DOCS/reference/PATCH_NOTES_MASTER.md` | Canonical release history |
+| `DOCS/guides/DEVELOPER_SETUP.md` | Local setup + env vars |
+| `DOCS/guides/DEPLOYMENT.md` | Deployment workflow |
+
+---
+
+## Common Tasks (Windows-Safe)
 
 ### Run Dev Server
 
-```bash
-npm run dev
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run dev
 ```
 
-### Build for Production
+### Lint
 
-```bash
-npm run build
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run lint
 ```
 
-### Lint & Fix
+### Typecheck
 
-```bash
-npm run lint
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 ```
 
-### Open DB GUI
+### Tests (single run)
 
-```bash
-npx prisma studio
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run test -- --run
 ```
 
----
+### Build
 
-##  What to Do
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run build
+```
 
-The project is complete. Options:
+### Prisma Studio
 
-1.  **Launch**: Begin marketing.
-2.  **Monitor**: Use Vercel/Sentry.
-3.  **Future Work**: See `PHASE_8_FUTURE_ROADMAP.md`.
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" prisma studio
+```
 
----
-
-**Good luck!** 
