@@ -7,6 +7,7 @@ import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import {
   SessionPlayer,
   SessionPlayerHandles,
+  AudioSettings,
 } from '@/components/organisms/recordings/SessionPlayer'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
@@ -123,7 +124,7 @@ export default function SharedRecordingPage({
           // Enforce read-only / studio defaults if needed, or let player handle it
           initialSettings={
             recording.fxConfig
-              ? (recording.fxConfig as any)
+              ? (recording.fxConfig as unknown as AudioSettings)
               : {
                   voiceVolume: 1.0,
                   beatVolume: 0.8,

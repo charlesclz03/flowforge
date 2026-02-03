@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -135,8 +136,8 @@ export async function PATCH(
     const updated = await prisma.freestyleSession.update({
       where: { id },
       data: {
-        fxConfig: fxConfig ?? undefined,
-      } as any, // Cast to any to handle schema lag
+        fxConfig: (fxConfig as Prisma.InputJsonValue) ?? Prisma.JsonNull,
+      },
     })
 
     return NextResponse.json({ success: true, recording: updated })

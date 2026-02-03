@@ -1,5 +1,5 @@
 
-import { randomUUID } from 'crypto';
+
 
 async function testSessionComplete() {
   const endpoint = 'http://localhost:3000/api/session/complete';

@@ -1,6 +1,6 @@
 # MCP Server Matrix
 
-**Last Update:** 2026-01-30
+**Last Update:** 2026-02-03
 
 ## MCP Servers
 
@@ -13,6 +13,8 @@
 
 | Date       | Server              | Status | Changes Applied |
 |:-----------|:--------------------|:------:|:----------------|
+| 2026-02-03 | chrome-devtools     | OK     | Configured Codex MCP (isolated Chrome) and verified tool calls. |
+| 2026-02-03 | supabase-mcp-server | OK     | Moved token to env var; configured Codex env passthrough; verified project listing. |
 | 2026-01-30 | chrome-devtools     | ✅ OK  | Verified connectivity (Manual Launch required). |
 | 2026-01-30 | supabase-mcp-server | ✅ OK  | Confirmed project list and documentation access. |
 | 2026-01-29 | chrome-devtools     | ✅ OK  | Fixed connection via `Start-Process chrome`. |

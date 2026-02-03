@@ -48,7 +48,14 @@ export interface SessionPlayerHandles {
   }
 }
 
-interface SessionPlayerProps {
+export interface AudioSettings {
+  voiceVolume?: number
+  beatVolume?: number
+  isStudioMode?: boolean
+  nudge?: number
+}
+
+export interface SessionPlayerProps {
   audioUrl: string | null
   beatUrl?: string | null
   beatOffsetMs?: number // Beat position (ms) when recording started - for sync
@@ -60,12 +67,7 @@ interface SessionPlayerProps {
   sessionDuration?: number
   sessionDifficulty?: number
   sessionDate?: string | Date
-  initialSettings?: {
-    voiceVolume?: number
-    beatVolume?: number
-    isStudioMode?: boolean
-    nudge?: number
-  }
+  initialSettings?: AudioSettings
 }
 
 export const SessionPlayer = forwardRef<

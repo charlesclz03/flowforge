@@ -143,7 +143,7 @@ export default function PracticeClient({
         options.body = formData
       } else {
         // Convert FormData to JSON for lightweight endpoint
-        const json: Record<string, any> = {}
+        const json: Record<string, unknown> = {}
         formData.forEach((value, key) => {
           // Handle arrays like 'wordsUsed' if needed, though FormData usually gives strings
           if (key === 'wordsUsed' && typeof value === 'string') {

@@ -257,7 +257,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <TabsContent value="flows" className="mt-6 space-y-4">
                 {user.freestyleSessions.length > 0 ? (
                   <div className="grid grid-cols-1 gap-4">
-                    {user.freestyleSessions.map((session: any) => (
+                    {user.freestyleSessions.map((session) => (
                       <a
                         key={session.id}
                         href={`/s/${session.id}`}

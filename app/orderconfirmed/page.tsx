@@ -106,7 +106,13 @@ export default function OrderConfirmedPage() {
   )
 }
 
-function FeatureItem({ icon: Icon, text }: { icon: any; text: string }) {
+function FeatureItem({
+  icon: Icon,
+  text,
+}: {
+  icon: React.ElementType
+  text: string
+}) {
   return (
     <div className="flex items-center gap-4 rounded-xl bg-white/5 p-3 transition-colors hover:bg-white/10">
       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent-purple/20">

@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.93 - Type Safe (2026-02-03)
+- **FIX**: Resolved critical build errors and improved TypeScript coverage.
+- **FIX**: Removed `any` types in SessionPlayer and PracticeClient.
+- **FIX**: Corrected syntax errors in API routes.
+
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.
 - **AUDIT**: Completed deep audit of AppHeader, BottomNav, and Practice Controls.

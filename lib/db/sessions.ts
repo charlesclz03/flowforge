@@ -34,6 +34,7 @@ export async function createSession(
         playbacks: data.playbacks || 0,
         wordCount: data.wordCount || 0,
         beatOffsetMs: data.beatOffsetMs || 0,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fxConfig: (data.fxConfig as any) || null, // JSON type workaround
         isPublic: true,
       }

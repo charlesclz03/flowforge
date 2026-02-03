@@ -22,6 +22,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.93',
+    date: '2026-02-03',
+    title: 'Type Safety Update 🛡️',
+    codename: 'Type Safe',
+    description:
+      'We fixed critical build errors and improved type safety across the application to ensure a stable deployment.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Build Fix**: Resolved TypeScript errors preventing Vercel deployment.',
+          '**Type Safety**: Removed `any` types in critical components (SessionPlayer, PracticeClient) for better reliability.',
+          '**Linting**: Fixed unused imports and syntax errors in API routes.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.92',
     date: '2026-02-02',
     title: 'Achievements Fix 🏆',
