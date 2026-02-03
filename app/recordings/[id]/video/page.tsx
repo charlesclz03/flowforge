@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Spinner } from '@/components/atoms/Spinner'
@@ -13,11 +13,9 @@ import { ErrorCodes } from '@/lib/errors'
 import { VideoCreator } from '@/components/features/export/VideoCreator'
 import { isProUser } from '@/lib/subscription/isPro'
 
-export default function VideoExportPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default function VideoExportPage() {
+  const routeParams = useParams<{ id: string }>()
+  const recordingId = routeParams?.id
   const { data: session, status } = useSession()
   const router = useRouter()
   const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
@@ -27,8 +25,9 @@ export default function VideoExportPage({
   const { error, handleError, clearError } = useErrorHandler()
 
   const fetchRecording = useCallback(async () => {
+    if (!recordingId) return
     try {
-      const response = await fetch(`/api/recordings/${params.id}`)
+      const response = await fetch(`/api/recordings/${recordingId}`)
       if (!response.ok) {
         if (response.status === 404) throw new Error('Recording not found')
         throw new Error('Failed to fetch recording')
@@ -40,13 +39,13 @@ export default function VideoExportPage({
     } finally {
       setIsLoading(false)
     }
-  }, [params.id, handleError])
+  }, [recordingId, handleError])
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === 'authenticated' && recordingId) {
       fetchRecording()
     }
-  }, [status, fetchRecording])
+  }, [status, recordingId, fetchRecording])
 
   const handleBack = () => router.push('/recordings')
 

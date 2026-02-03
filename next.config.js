@@ -16,7 +16,9 @@ try {
 const supabaseHttps = supabaseHostname
   ? `https://${supabaseHostname}`
   : 'https://*.supabase.co'
-const supabaseWss = supabaseHostname ? `wss://${supabaseHostname}` : 'wss://*.supabase.co'
+const supabaseWss = supabaseHostname
+  ? `wss://${supabaseHostname}`
+  : 'wss://*.supabase.co'
 
 // Security Headers Configuration
 const securityHeaders = [
@@ -73,7 +75,6 @@ const securityHeaders = [
 const nextConfig = {
   // DISABLED: StrictMode causes effects to run twice, breaking the timer animation loop
   reactStrictMode: false,
-  swcMinify: true,
   images: {
     remotePatterns: [
       {

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import {
@@ -20,7 +20,9 @@ import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
-export default function ReviewPage({ params }: { params: { id: string } }) {
+export default function ReviewPage() {
+  const routeParams = useParams<{ id: string }>()
+  const recordingId = routeParams?.id
   const { status } = useSession()
   const router = useRouter()
   const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
@@ -34,8 +36,9 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
   const playerRef = useRef<SessionPlayerHandles>(null)
 
   const fetchRecording = useCallback(async () => {
+    if (!recordingId) return
     try {
-      const response = await fetch(`/api/recordings/${params.id}`)
+      const response = await fetch(`/api/recordings/${recordingId}`)
       if (!response.ok) {
         if (response.status === 404) throw new Error('Recording not found')
         throw new Error('Failed to fetch recording')
@@ -47,15 +50,16 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
     } finally {
       setIsLoading(false)
     }
-  }, [params.id, handleError])
+  }, [recordingId, handleError])
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === 'authenticated' && recordingId) {
       fetchRecording()
     }
-  }, [status, fetchRecording])
+  }, [status, recordingId, fetchRecording])
 
   const handleDelete = async () => {
+    if (!recordingId) return
     if (
       !confirm(
         'Are you sure you want to delete this recording? This cannot be undone.'
@@ -65,7 +69,7 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
 
     setIsDeleting(true)
     try {
-      const response = await fetch(`/api/recordings/${params.id}`, {
+      const response = await fetch(`/api/recordings/${recordingId}`, {
         method: 'DELETE',
       })
       if (!response.ok) throw new Error('Failed to delete')
@@ -130,6 +134,15 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
   if (status === 'unauthenticated') {
     router.push('/')
     return null
+  }
+
+  if (!recordingId) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <h1 className="text-xl text-white">Recording not found</h1>
+        <Button onClick={handleBack}>Back to Recordings</Button>
+      </div>
+    )
   }
 
   if (!recording) {

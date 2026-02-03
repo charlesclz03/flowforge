@@ -27,9 +27,9 @@ interface SocialLinks {
 // type ProfileSession = FreestyleSession & { beat: Beat }
 
 interface ProfilePageProps {
-  params: {
+  params: Promise<{
     username: string
-  }
+  }>
 }
 
 import { cache } from 'react'
@@ -81,7 +81,8 @@ const getUser = cache(async (username: string) => {
 })
 
 export async function generateMetadata({ params }: ProfilePageProps) {
-  const user = await getUser(params.username)
+  const { username } = await params
+  const user = await getUser(username)
 
   if (!user) {
     return {
@@ -104,8 +105,9 @@ export async function generateMetadata({ params }: ProfilePageProps) {
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
+  const { username } = await params
   const [user, session] = await Promise.all([
-    getUser(params.username),
+    getUser(username),
     getServerSession(authOptions),
   ])
 

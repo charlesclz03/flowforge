@@ -19,6 +19,7 @@
 - **FIX**: Removed stale “Stripe V2” placeholder messaging from premium upgrade UI.
 - **DOCS**: Updated Feature Matrix, App Overview, Testing Plans, and Developer Setup to match production reality.
 - **CHORE**: Normalized line endings to eliminate Prettier warnings in `npm run lint`.
+- **SEC**: Upgraded Next.js and eslint-config-next to clear `npm audit --audit-level=high` (includes Next 15 async request API updates).
 
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.

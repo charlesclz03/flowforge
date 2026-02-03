@@ -18,9 +18,10 @@ async function getSession(id: string) {
 export default async function SessionPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const sessionData = await getSession(params.id)
+  const { id } = await params
+  const sessionData = await getSession(id)
 
   if (!sessionData) return notFound()
 

@@ -3,10 +3,10 @@ import { createServerClient } from '@/lib/supabase/server'
 
 export async function GET(
   _request: Request,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    const filename = params.filename
+    const { filename } = await params
     const supabase = createServerClient()
 
     // Using 'avatars' bucket as defined in upload route

@@ -57,6 +57,7 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
           '**Docs Alignment**: Updated Feature Matrix, App Overview, Testing Plans, and Developer Setup to match production reality.',
           '**Lint Hygiene**: Normalized line endings to eliminate Prettier warnings in `npm run lint`.',
+          '**Dependencies**: Upgraded Next.js and eslint-config-next to clear `npm audit --audit-level=high` (Next 15 async request APIs included).',
         ],
       },
     ],

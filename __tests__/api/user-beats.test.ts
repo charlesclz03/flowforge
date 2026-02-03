@@ -190,7 +190,7 @@ describe('DELETE /api/user/beats/[id]', () => {
       method: 'DELETE',
     })
 
-    const res = await DELETE(req, { params: { id: 'beat-999' } })
+    const res = await DELETE(req, { params: Promise.resolve({ id: 'beat-999' }) })
     expect(res.status).toBe(403)
   })
 
@@ -207,7 +207,7 @@ describe('DELETE /api/user/beats/[id]', () => {
       method: 'DELETE',
     })
 
-    const res = await DELETE(req, { params: { id: 'beat-123' } })
+    const res = await DELETE(req, { params: Promise.resolve({ id: 'beat-123' }) })
     expect(res.status).toBe(200)
   })
 })

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react'
 // import { useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import {
@@ -19,11 +20,9 @@ import { ErrorCodes } from '@/lib/errors'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 
-export default function SharedRecordingPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default function SharedRecordingPage() {
+  const routeParams = useParams<{ id: string }>()
+  const recordingId = routeParams?.id
   // const router = useRouter()
   const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
     null
@@ -33,9 +32,10 @@ export default function SharedRecordingPage({
   const playerRef = useRef<SessionPlayerHandles>(null)
 
   const fetchRecording = useCallback(async () => {
+    if (!recordingId) return
     try {
       // Public API access (bypass auth check if isPublic=true)
-      const response = await fetch(`/api/recordings/${params.id}`)
+      const response = await fetch(`/api/recordings/${recordingId}`)
       if (!response.ok) {
         if (response.status === 404) throw new Error('Recording not found')
         if (response.status === 403)
@@ -49,11 +49,13 @@ export default function SharedRecordingPage({
     } finally {
       setIsLoading(false)
     }
-  }, [params.id, handleError])
+  }, [recordingId, handleError])
 
   useEffect(() => {
-    fetchRecording()
-  }, [fetchRecording])
+    if (recordingId) {
+      fetchRecording()
+    }
+  }, [recordingId, fetchRecording])
 
   if (isLoading) {
     return (
