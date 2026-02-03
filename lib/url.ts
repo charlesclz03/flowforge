@@ -20,4 +20,3 @@ export function getBaseUrl(): string {
 
   return normalizeBaseUrl(candidate)
 }
-

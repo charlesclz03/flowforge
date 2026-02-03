@@ -203,17 +203,15 @@ export default function OrderConfirmedPage() {
               <div className="text-sm text-text-secondary leading-relaxed">
                 {activationState === 'timeout' ? (
                   <>
-                    If you already paid, your Pro access should activate shortly.
-                    You can also open your Profile and refresh.
+                    If you already paid, your Pro access should activate
+                    shortly. You can also open your Profile and refresh.
                   </>
                 ) : activationState === 'unauthorized' ? (
-                  <>
-                    Sign in again to sync your account status after checkout.
-                  </>
+                  <>Sign in again to sync your account status after checkout.</>
                 ) : (
                   <>
-                    Weâ€™ll automatically unlock Pro as soon as the payment webhook
-                    confirms your subscription.
+                    Weâ€™ll automatically unlock Pro as soon as the payment
+                    webhook confirms your subscription.
                   </>
                 )}
               </div>

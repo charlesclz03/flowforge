@@ -12,8 +12,7 @@ interface SubscriptionModalProps {
 }
 
 /**
- * Subscription modal placeholder component
- * TODO: Implement real Stripe checkout in production
+ * Subscription modal for upgrading to Pro (redirects to Stripe Checkout).
  */
 export function SubscriptionModal({
   isOpen,
@@ -141,7 +140,7 @@ export function SubscriptionModal({
             `Access to ${beatCount}+ premium beats`,
             'Ad-free experience',
             'Upload your own beats',
-            'Smart features (V2)',
+            'New features as they ship',
           ].map((feature, index) => (
             <div
               key={index}
@@ -154,25 +153,9 @@ export function SubscriptionModal({
         </div>
 
         <p className="text-text-tertiary text-xs text-center pt-2">
-          Stripe integration coming in V2
+          Secure checkout powered by Stripe.
         </p>
       </div>
     </div>
   )
 }
-
-/**
- * Comment for future implementation:
- *
- * To implement Stripe subscriptions:
- * 1. Create products and prices in Stripe Dashboard
- * 2. Install @stripe/stripe-js
- * 3. Create checkout session API route
- * 4. Redirect to Stripe Checkout
- * 5. Handle webhook for subscription events
- * 6. Store subscription status in database
- * 7. Implement subscription management portal
- *
- * API Route: /api/stripe/checkout
- * Webhook Route: /api/stripe/webhook
- */

@@ -72,6 +72,16 @@ $env:NEXTAUTH_URL='http://localhost:3000'
 
 ---
 
+## Known Build Warning (Expected)
+
+`npm run build` may emit:
+
+> `Critical dependency: require function is used in a way in which dependencies cannot be statically extracted`
+
+This currently comes from `require-in-the-middle` via Sentry/OpenTelemetry imports and is non-fatal (build succeeds). Track it as upgrade/observability debt.
+
+---
+
 ## Deploy Steps (Vercel)
 
 ```bash

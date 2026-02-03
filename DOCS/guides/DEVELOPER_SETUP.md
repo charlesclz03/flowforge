@@ -12,8 +12,10 @@ This guide will help you set up the development environment for Freestyla.
 
 ### 1. Install Dependencies
 
-```bash
-npm install
+**Windows (PowerShell, recommended in this repo):**
+
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" install
 ```
 
 ### 2. Database Setup (Supabase)
@@ -49,8 +51,8 @@ Notes:
 
 #### Create `.env.local`:
 
-```bash
-cp .env.local.example .env.local
+```powershell
+Copy-Item env.example .env.local
 ```
 
 Edit `.env.local` and add your Supabase database URL:
@@ -67,29 +69,22 @@ DIRECT_URL="postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/p
 
 ### 3. Initialize Database
 
-````bash
+```powershell
 # Generate Prisma client
-npx prisma generate
+& "C:/Program Files/nodejs/npx.cmd" prisma generate
 
 # Run migrations
-npx prisma migrate dev
+& "C:/Program Files/nodejs/npx.cmd" prisma migrate dev
 
-# Seed the database
-# (If PgBouncer interferes, force Prisma to use DIRECT_URL)
-DIRECT_URL from .env.local will be used if you run:
-
-```bash
-export $(grep -E '^(DIRECT_URL)=' .env | xargs)
-DATABASE_URL="$DIRECT_URL" npx prisma db seed
-````
-
-````
+# Optional: seed the database
+& "C:/Program Files/nodejs/npx.cmd" prisma db seed
+```
 
 ### 4. Run Development Server
 
-```bash
-npm run dev
-````
+```powershell
+& "C:/Program Files/nodejs/npm.cmd" run dev
+```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -125,20 +120,15 @@ The database includes the following tables:
 
 Run tests:
 
-```bash
-npm test
+```powershell
+# Unit tests (Vitest)
+& "C:/Program Files/nodejs/npm.cmd" run test -- --run
 ```
 
-Run tests with UI:
+Run E2E tests (Playwright):
 
-```bash
-npm run test:ui
-```
-
-Run tests with coverage:
-
-```bash
-npm run test:coverage
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" playwright test
 ```
 
 ## Common Issues
@@ -151,8 +141,10 @@ npm run test:coverage
 
 ### Build Errors
 
-- Clear `.next` folder: `rm -rf .next`
-- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+- Clear `.next` folder: `Remove-Item -Recurse -Force .next`
+- Clear node_modules and reinstall:
+  - `Remove-Item -Recurse -Force node_modules`
+  - `& "C:/Program Files/nodejs/npm.cmd" install`
 
 ### TypeScript Errors
 
@@ -163,14 +155,15 @@ npm run test:coverage
 
 ```
 flowforge/
-├── app/                    # Next.js App Router pages
-├── components/             # React components
-├── lib/                    # Utility functions and helpers
-├── prisma/                 # Database schema and migrations
-├── public/                 # Static assets (beats, images)
-├── styles/                 # Global styles
-├── types/                  # TypeScript type definitions
-└── __tests__/              # Test files
+  app/                    # Next.js App Router pages
+  components/             # React components
+  lib/                    # Utility functions and helpers
+  prisma/                 # Database schema and migrations
+  public/                 # Static assets (beats, images)
+  styles/                 # Global styles
+  types/                  # TypeScript type definitions
+  __tests__/              # Unit tests (Vitest)
+  e2e/                    # E2E tests (Playwright)
 ```
 
 ## Development Workflow

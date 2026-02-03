@@ -16,6 +16,9 @@
 - **TEST**: Updated Playwright smoke tests and added a `/practice` startability smoke test (with `webServer`).
 - **FIX**: AudioPlayer `_sourceNode` tracking is now typed and cleaned up on destroy.
 - **DOCS**: Standardized “Type Safe” version to `v0.9.993` and redacted deployment/database credentials.
+- **FIX**: Removed stale “Stripe V2” placeholder messaging from premium upgrade UI.
+- **DOCS**: Updated Feature Matrix, App Overview, Testing Plans, and Developer Setup to match production reality.
+- **CHORE**: Normalized line endings to eliminate Prettier warnings in `npm run lint`.
 
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.

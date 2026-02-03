@@ -1,12 +1,12 @@
-#  Freestyla Vercel Deployment Guide
+# Freestyla Vercel Deployment Guide
 
-**Status**:  Deployed (v0.9.77)  
-**Date**: December 18, 2025
-**Quick Reference**: See `VERCEL_DEPLOY.md` for specific troubleshooting.
+**Status**: Deployed (v0.9.993)  
+**Date**: 2026-02-03  
+**Quick Reference**: See `DOCS/deployment/DEPLOYMENT_READY.md` and `DOCS/deployment/VERCEL_DEPLOY.md`.
 
 ---
 
-##  Pre-Deployment Checklist
+## Pre-Deployment Checklist
 
 - [x] Build succeeds locally (`npm run build`)
 - [x] Database connected and seeded (Supabase)
@@ -20,15 +20,13 @@
 
 ---
 
-##  Step-by-Step Deployment
+## Step-by-Step Deployment
 
 ### Step 1: Prepare GitHub Repository
 
 If you haven't already pushed to GitHub:
 
 ```bash
-cd "/Users/c0369/Documents/AI BUSINESS/Freestyla - Freestyle"
-
 # Initialize git (if not already done)
 git init
 
@@ -65,20 +63,40 @@ git push -u origin main
 
 ### Step 4: Configure Environment Variables
 
-Click "Environment Variables" and add these:
+Use `env.example` as the canonical list of required variables, then set the real values in Vercel.
 
 > **Security**: Never commit or paste real secrets (DB URLs, API keys, webhook secrets) into the repo. If a credential was ever exposed, rotate it immediately.
 
 #### Required Variables
 
 ```bash
-# Site URL (update after first deploy with your Vercel URL)
+# Base URLs
 NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
+NEXTAUTH_URL=https://your-app.vercel.app
+NEXTAUTH_SECRET=your-nextauth-secret
 
-# Database (Supabase)
+# Auth (Google OAuth)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Supabase (client)
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Database (Supabase / Prisma)
 DATABASE_URL=postgresql://postgres.<PROJECT_REF>:<PASSWORD>@aws-1-eu-north-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&pool_timeout=10
 
 DIRECT_URL=postgresql://postgres:<PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres
+
+# Supabase (server)
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+# Stripe (live)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_ID_MONTHLY=price_...
+STRIPE_PRICE_ID_YEARLY=price_...
 ```
 
 #### Optional Variables (Add When Ready)
@@ -117,7 +135,7 @@ After first deployment:
 
 ---
 
-##  Post-Deployment Configuration
+## Post-Deployment Configuration
 
 ### Update robots.txt
 
@@ -150,7 +168,7 @@ Commit and push these changes to trigger a new deployment.
 
 ---
 
-##  Custom Domain (Optional)
+## Custom Domain (Optional)
 
 ### Add Custom Domain
 
@@ -183,7 +201,7 @@ NEXT_PUBLIC_SITE_URL=https://flowforge.app
 
 ---
 
-##  Post-Deployment Verification
+## Post-Deployment Verification
 
 ### 1. Test Homepage
 
@@ -234,7 +252,7 @@ Enter your Vercel URL and verify OG image displays correctly.
 
 ---
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Build Fails
 
@@ -278,7 +296,7 @@ prisma generate && next build
 
 ---
 
-##  Monitoring & Analytics
+## Monitoring & Analytics
 
 ### Vercel Analytics
 
@@ -309,7 +327,7 @@ Monitor in Supabase Dashboard:
 
 ---
 
-##  Security Checklist
+## Security Checklist
 
 - [x] HTTPS enabled (automatic with Vercel)
 - [x] Environment variables encrypted
@@ -321,7 +339,7 @@ Monitor in Supabase Dashboard:
 
 ---
 
-##  Cost Estimation
+## Cost Estimation
 
 ### Vercel (Free Tier)
 
@@ -355,11 +373,11 @@ Monitor in Supabase Dashboard:
 
 - **Vercel**: $0
 - **Supabase**: $0
-- **Total**: **$0/month** 
+- **Total**: **$0/month**
 
 ---
 
-##  Next Steps After Deployment
+## Next Steps After Deployment
 
 ### Immediate (Week 1)
 
@@ -379,15 +397,15 @@ Monitor in Supabase Dashboard:
 
 ### Medium-term (Months 2-3)
 
-1. [ ] Implement V2 features (Pro tier)
-2. [ ] Add authentication (NextAuth.js)
-3. [ ] Integrate Stripe for payments
-4. [ ] Develop native mobile apps
+1. [x] Pro subscriptions (Stripe) implemented
+2. [x] Authentication (NextAuth.js) implemented
+3. [ ] Clear `npm audit` highs (breaking upgrade sprint)
+4. [ ] Develop native mobile apps (TWA/PWA)
 5. [ ] Scale infrastructure as needed
 
 ---
 
-##  Support Resources
+## Support Resources
 
 - **Vercel Documentation**: https://vercel.com/docs
 - **Next.js Deployment**: https://nextjs.org/docs/deployment
@@ -397,9 +415,9 @@ Monitor in Supabase Dashboard:
 
 ---
 
-##  Congratulations!
+## Congratulations!
 
-Your Freestyla app is now live on Vercel! 
+Your Freestyla app is now live on Vercel!
 
 **Production URL**: https://flowforge-freestyle.vercel.app
 
@@ -407,5 +425,5 @@ Share it with the world and start gathering user feedback!
 
 ---
 
-**Last Updated**: November 6, 2025  
-**Status**: Ready for Production Deployment 
+**Last Updated**: 2026-02-03  
+**Status**: Deployed (living document)

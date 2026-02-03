@@ -45,6 +45,7 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Security**: CSP tightened (removes `unsafe-eval` in production) and Supabase image host allowlist is narrowed.',
           '**Practice UX**: Direct visits to `/practice` auto-select a default beat instead of showing a stuck loader.',
           '**Audio Type Safety**: `_sourceNode` tracking is now typed (no HTMLAudioElement monkey-patch suppressions).',
+          '**Premium UI**: Removed stale “Stripe V2” placeholder copy; upgrade prompts reflect the live Stripe checkout flow.',
         ],
       },
       {
@@ -54,6 +55,8 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Testing**: Vitest now runs only `__tests__` (excludes Playwright `e2e/`).',
           '**E2E**: Updated Playwright smoke tests and added a `/practice` startability smoke test (with `webServer`).',
           '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
+          '**Docs Alignment**: Updated Feature Matrix, App Overview, Testing Plans, and Developer Setup to match production reality.',
+          '**Lint Hygiene**: Normalized line endings to eliminate Prettier warnings in `npm run lint`.',
         ],
       },
     ],

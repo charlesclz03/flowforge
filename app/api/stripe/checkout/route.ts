@@ -14,10 +14,7 @@ export async function POST(request: Request) {
     }
 
     if (!session.user.email) {
-      return NextResponse.json(
-        { error: 'Missing user email' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing user email' }, { status: 400 })
     }
 
     const { plan } = await request.json()

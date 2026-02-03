@@ -105,7 +105,10 @@ export async function POST(request: Request) {
     })
 
     if (!sessRes.success) {
-      console.error('[SESSION_COMPLETE] Failed to create session:', sessRes.error)
+      console.error(
+        '[SESSION_COMPLETE] Failed to create session:',
+        sessRes.error
+      )
       return NextResponse.json(
         { error: 'Failed to save session' },
         { status: 500 }

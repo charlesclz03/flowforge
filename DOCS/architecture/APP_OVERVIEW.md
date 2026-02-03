@@ -1,11 +1,11 @@
 # FreeStyla - Application Overview & Feature Guide
 
-**Date**: January 10, 2026  
-**Version**: 0.9.68 (Launch Ready)
+**Date**: 2026-02-03  
+**Version**: 0.9.993 (Type Safe)
 
 ---
 
-##  Application Overview
+## Application Overview
 
 **FreeStyla** is a specialized web application designed to help rappers, poets, and vocalists practice their freestyle skills. It creates a focused, high-pressure environment by combining instrumental beats with timed word prompts, forcing users to improvise and improve their lyrical adaptability.
 
@@ -20,9 +20,9 @@ The app follows a simple but powerful "Hook Model" loop:
 
 ---
 
-##  Implemented Features (Universal Gateway Phase)
+## Implemented Features (Universal Gateway Phase)
 
-All features listed here are currently live and functional in the production environment.
+This document describes the intended product surface. For the current truth, defer to `DOCS/reference/FEATURE_MATRIX.md` and recent patch notes.
 
 ### 1. Core Practice Engine
 
@@ -30,7 +30,7 @@ The heart of the application, designed for zero-latency performance and maximum 
 
 - **Universal Access**:
   - **Guest Flow**: Practice is unlocked for all users. No login required to select beats or enter the practice room.
-  - **Instant Redirects**: Root URL `/` directs users straight to onboarding for a seamless start.
+  - **Instant Redirects**: Root URL `/` redirects to `/howitworks` for a seamless start.
 - **Session Modes**:
   - **Solo Mode**: Traditional practice with consistent word prompts.
   - **Cypher Mode**: Multi-player practice mode with a dedicated player selector (2, 3, or 4 players) and visual mode indicator.
@@ -74,7 +74,7 @@ The heart of the application, designed for zero-latency performance and maximum 
 
 - **XP Battle Pass Bar**: Dynamic progress bar in the Leaderboard header visualizing level progression (1 sec flow = 1 XP).
 - **Badges**: Unlockable achievements (e.g., "Night Shift", "Consistency", "Machine Gun").
-- **Flow Density**: Proprietary metric calculating rhyme density and syllable usage.
+- **Vocab Velocity**: Measures unique word usage over time (vocabulary expansion rate).
 - **History Graph**: Visual representation of practice habits over time (Pro).
 
 ### 5. Social Ecosystem & Sharing
@@ -82,7 +82,7 @@ The heart of the application, designed for zero-latency performance and maximum 
 - **Share Functionality**: Native share sheet integration for recordings (Mobile/Desktop).
 - **Cypher Mode**: Multiplayer lobbies with real-time turn-based visuals.
 - **Duel Mode**: Competitive challenges on the same seed.
-- **Feed**: Community-driven stream with Likes and Comments.
+- **Feed**: Not currently live (production `/feed` returns 404).
 
 ### 6. Monetization (Stripe)
 
@@ -91,7 +91,7 @@ The heart of the application, designed for zero-latency performance and maximum 
 
 ---
 
-##  Technical Stack
+## Technical Stack
 
 - **Framework**: Next.js 14 (App Router)
 - **Database**: PostgreSQL (Supabase) + Prisma ORM

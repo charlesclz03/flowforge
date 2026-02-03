@@ -55,9 +55,7 @@ export default function TracksPage() {
               if (res.status === 401) return { beats: [] }
 
               return res.ok &&
-                res.headers
-                  .get('content-type')
-                  ?.includes('application/json')
+                res.headers.get('content-type')?.includes('application/json')
                 ? res.json()
                 : { beats: [] }
             })

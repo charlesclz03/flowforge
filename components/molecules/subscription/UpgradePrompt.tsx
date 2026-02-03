@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Zap, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -11,8 +13,8 @@ interface UpgradePromptProps {
 }
 
 /**
- * Upgrade prompt placeholder component
- * TODO: Implement real Stripe integration in production
+ * Upgrade prompt card used to upsell Pro features.
+ * Defaults to starting Stripe Checkout (monthly) unless `onUpgrade` is provided.
  */
 export function UpgradePrompt({
   feature,
@@ -20,10 +22,36 @@ export function UpgradePrompt({
   onDismiss,
   className,
 }: UpgradePromptProps) {
-  const handleUpgrade = () => {
-    // Placeholder - will integrate Stripe in V2
-    alert('Stripe checkout will be implemented in V2')
-    if (onUpgrade) onUpgrade()
+  const [loading, setLoading] = useState(false)
+
+  const handleUpgrade = async () => {
+    if (onUpgrade) {
+      onUpgrade()
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'monthly' }),
+      })
+
+      const data = (await response.json().catch(() => ({}))) as { url?: string }
+      if (response.ok && data.url) {
+        window.location.href = data.url
+        return
+      }
+
+      console.error('[UpgradePrompt] Failed to start checkout', {
+        status: response.status,
+      })
+    } catch (error) {
+      console.error('[UpgradePrompt] Failed to start checkout', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -64,9 +92,13 @@ export function UpgradePrompt({
       <div className="space-y-2">
         <button
           onClick={handleUpgrade}
-          className="w-full py-3 rounded-xl bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90"
+          disabled={loading}
+          className={cn(
+            'w-full py-3 rounded-xl bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90',
+            loading && 'opacity-60 cursor-not-allowed'
+          )}
         >
-          Upgrade for €4.99/month
+          {loading ? 'Starting checkout...' : 'Upgrade for €4.99/month'}
         </button>
         {onDismiss && (
           <button
@@ -79,7 +111,7 @@ export function UpgradePrompt({
       </div>
 
       <p className="text-text-tertiary text-xs text-center">
-        Stripe checkout coming in V2
+        Secure checkout powered by Stripe.
       </p>
     </div>
   )

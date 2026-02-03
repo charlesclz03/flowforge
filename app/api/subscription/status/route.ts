@@ -26,4 +26,3 @@ export async function GET() {
 
   return NextResponse.json({ subscriptionStatus: status, isPro })
 }
-

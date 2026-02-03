@@ -8,4 +8,3 @@ export function isProUser(user?: {
     user?.subscriptionStatus === 'trialing'
   )
 }
-

@@ -54,9 +54,12 @@ export async function POST(request: Request) {
         // If Stripe didn't include the ids (or they were not expanded), retrieve for safety.
         if (!customerId || !subscriptionId) {
           try {
-            const expanded = await stripe.checkout.sessions.retrieve(session.id, {
-              expand: ['customer', 'subscription'],
-            })
+            const expanded = await stripe.checkout.sessions.retrieve(
+              session.id,
+              {
+                expand: ['customer', 'subscription'],
+              }
+            )
             customerId = customerId || getId(expanded.customer)
             subscriptionId = subscriptionId || getId(expanded.subscription)
           } catch (err) {

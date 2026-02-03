@@ -205,7 +205,9 @@ export default function PracticeClient({
         const beatBpm = selectedBeat?.bpm || 0
         const audioValue = formData.get('audio')
         const audioUrl =
-          audioValue instanceof Blob ? URL.createObjectURL(audioValue) : undefined
+          audioValue instanceof Blob
+            ? URL.createObjectURL(audioValue)
+            : undefined
 
         const predictedXP = calculateSessionXP({
           durationSeconds: durVal,
