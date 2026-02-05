@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.994',
+    date: '2026-02-05',
+    title: 'Achievements Fix 🏆',
+    codename: 'Self-Heal',
+    description:
+      'Fixed a critical bug where users saw "0/0" achievements. We implemented a "Self-Healing" API that automatically repairs missing data, ensuring your trophies always load correctly.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Achievements Repaired**: Implemented API self-healing to automatically seed missing achievements if the database returns an empty list.',
+          '**Zero-State Fix**: Users will no longer see "0/0" stats due to hydration failures.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.993',
     date: '2026-02-03',
     title: 'Reliability Pass 🛡️',

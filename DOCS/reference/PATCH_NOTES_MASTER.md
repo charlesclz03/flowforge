@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.994 - Self-Heal (2026-02-05)
+- **FIX**: Implemented API self-healing for Achievements to prevent "0/0" empty state.
+- **FIX**: Auto-seeds achievement data if missing from the database.
+
 ## v0.9.993 - Type Safe (2026-02-03)
 - **FIX**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.
 - **FEAT**: Added `GET /api/subscription/status` for safe client polling.
