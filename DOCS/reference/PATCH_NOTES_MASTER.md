@@ -19,6 +19,11 @@
 - **FIX**: Yearly Stripe checkout now supports legacy `STRIPE_PRICE_ID_ANNUAL` fallback while standardizing on `STRIPE_PRICE_ID_YEARLY`.
 - **DOCS**: Removed active references to the retired social discovery route from current product docs.
 - **FIX**: Cleaned mojibake text artifacts on `/patch-notes` and `/orderconfirmed`.
+- **FIX**: Restored `/u/[username]` profile stability for users with DiceBear avatars by allowing `api.dicebear.com` in Next image configuration.
+- **FIX**: Search results now link to `/u/<username>` when available, with ID fallback only when username is missing.
+- **FIX**: Practice engine cleanup now runs only on unmount, preventing accidental playback stops during countdown -> play transitions.
+- **FIX**: Cypher starts on Player 1 and rotates only on real interval boundaries; timer ring remains aligned with prompt timing.
+- **FIX**: Practice save payloads now include actual `wordsUsed` values instead of always sending an empty array.
 
 ## v0.9.993 - Type Safe (2026-02-03)
 - **FIX**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.

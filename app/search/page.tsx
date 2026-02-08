@@ -97,8 +97,10 @@ export default async function SearchPage({
               {users.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {users.map((user) => (
-                    <Link key={user.id} href={`/u/${user.id}`}>
-                      {/* Using ID for now as per Profile Page logic */}
+                    <Link
+                      key={user.id}
+                      href={`/u/${encodeURIComponent(user.username || user.id)}`}
+                    >
                       <div className="group bg-background-elevated hover:bg-white/5 border border-white/5 rounded-xl p-4 flex items-center gap-4 transition-colors">
                         <Avatar
                           src={user.image}

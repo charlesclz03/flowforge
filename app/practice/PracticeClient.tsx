@@ -536,9 +536,6 @@ export default function PracticeClient({
               activePlayer={engine.activePlayer}
               cypherPlayers={cypherPlayers}
               handleRestart={() => {
-                engine.stopSession() // logic to restart?
-                // Usually restart means "Stop then Start again immediately"
-                // For now let's just confirm stop
                 setPendingAction('restart')
                 setShowExitConfirmation(true)
               }}

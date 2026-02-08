@@ -89,17 +89,35 @@ export function usePracticeEngine({
   // 2. The Sub-Systems
   const beatPlayer = useBeatPlayer()
   const recorder = useRecording()
+  const latestStatusRef = useRef(state.status)
+  const beatPlayerRef = useRef(beatPlayer)
+  const recorderRef = useRef(recorder)
 
   // 0. SAFETY NET: Cleanup on unmount
   useEffect(() => {
+    latestStatusRef.current = state.status
+  }, [state.status])
+
+  useEffect(() => {
+    beatPlayerRef.current = beatPlayer
+  }, [beatPlayer])
+
+  useEffect(() => {
+    recorderRef.current = recorder
+  }, [recorder])
+
+  useEffect(() => {
     return () => {
       // If we unmount while playing (e.g. Navigation), stop everything.
-      if (state.status !== 'IDLE' && state.status !== 'COMPLETED') {
-        beatPlayer.stop()
-        recorder.stop()
+      const status = latestStatusRef.current
+      if (status !== 'IDLE' && status !== 'COMPLETED') {
+        beatPlayerRef.current.stop()
+        if (recorderRef.current.isRecording) {
+          recorderRef.current.stop()
+        }
       }
     }
-  }, [state.status, beatPlayer, recorder])
+  }, [])
 
   // 3. Audio Clock (The Heartbeat)
   // Word Management State
@@ -111,6 +129,7 @@ export function usePracticeEngine({
     duration: number
   }>({ start: 0, duration: 0 })
   const wordGeneratorRef = useRef<WordGenerator | null>(null)
+  const wordsUsedRef = useRef<string[]>([])
 
   // Initialize Generator
   useEffect(() => {
@@ -164,8 +183,14 @@ export function usePracticeEngine({
 
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
-  const { isTTSEnabled, ttsVolume, beatVolume, isStudioFXEnabled } =
-    usePracticeSession()
+  const {
+    isTTSEnabled,
+    ttsVolume,
+    beatVolume,
+    isStudioFXEnabled,
+    startSession: markSessionActive,
+    stopSession: markSessionInactive,
+  } = usePracticeSession()
   const { speak } = useTTS({
     enabled: isTTSEnabled,
     volume: ttsVolume,
@@ -185,6 +210,12 @@ export function usePracticeEngine({
     frequencyRef.current = frequency
   }, [frequency])
 
+  const trackWordUsage = useCallback((word: string) => {
+    const trimmed = word.trim()
+    if (!trimmed) return
+    wordsUsedRef.current.push(trimmed)
+  }, [])
+
   // Memoize onBeat to prevent useAudioSync restarts
   const onBeat = useCallback(
     (beatIndex: number, time: number) => {
@@ -203,29 +234,66 @@ export function usePracticeEngine({
         if (next) {
           setCurrentWord(next.wordText)
           setWordTiming({ start: time, duration })
+          trackWordUsage(next.wordText)
 
           // Cypher Mode Rotation
-          if (mode === 'cypher') {
+          if (mode === 'cypher' && beatIndex > 0) {
             setActivePlayer((prev) => (prev % cypherPlayers) + 1)
           }
         }
       }
     },
-    [beatPlayer.currentBeat?.bpm, mode, cypherPlayers]
+    [beatPlayer.currentBeat?.bpm, mode, cypherPlayers, trackWordUsage]
   )
 
   const audioSync = useAudioSync({
     bpm: beatPlayer.currentBeat?.bpm || 90,
-    isPlaying: state.status === 'PLAYING',
+    isPlaying: state.status === 'PLAYING' && beatPlayer.isPlaying,
     onBeat,
   })
   const { initAudio, audioState } = audioSync
+
+  useEffect(() => {
+    const activeStatuses = new Set([
+      'COUNTDOWN',
+      'PLAYING',
+      'PAUSED',
+      'FINISHING',
+      'MIXING',
+      'SAVING',
+    ])
+
+    if (activeStatuses.has(state.status)) {
+      markSessionActive()
+    } else {
+      markSessionInactive()
+    }
+  }, [state.status, markSessionActive, markSessionInactive])
+
+  useEffect(() => {
+    if (state.status === 'PLAYING' && !beatPlayer.isPlaying) {
+      dispatch({ type: 'PAUSE' })
+      if (isRecordingEnabled) {
+        recorder.pause()
+      }
+    }
+  }, [
+    state.status,
+    beatPlayer.isPlaying,
+    dispatch,
+    isRecordingEnabled,
+    recorder,
+  ])
 
   const startSession = useCallback(async () => {
     // Only allowed from IDLE
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     try {
+      wordsUsedRef.current = []
+      setActivePlayer(1)
+      setWordTiming({ start: 0, duration: 0 })
+
       // 1. Prime Audio Engine - ATOMIC START
       // The "Forever Fix": Unify AudioContext and HTMLAudioElement
       // This MUST happen in the user-initiated event loop.
@@ -453,8 +521,7 @@ export function usePracticeEngine({
           fd.append('difficulty', difficulty.toString()) // Default fallback, should be prop
           fd.append('score', '0')
           fd.append('vibe', 'Freestyle Flow')
-          // We need wordsUsed. Engine should probably track this or accept a getter.
-          fd.append('wordsUsed', '[]')
+          fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
           // [LATENCY FIX] Inject beatOffsetMs from localStorage
           const latencyMs = parseInt(
@@ -512,7 +579,7 @@ export function usePracticeEngine({
       fd.append('frequency', frequency.toString())
       fd.append('difficulty', difficulty.toString())
       fd.append('score', '0')
-      fd.append('wordsUsed', '[]') // TODO: Wire up actual words
+      fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
       submitSession(fd)
         .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
