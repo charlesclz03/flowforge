@@ -22,6 +22,13 @@ function getSuperadminEmailAllowlist(): Set<string> {
   return allowlist
 }
 
+function resolveNextAuthDebug(): boolean {
+  const raw = process.env.NEXTAUTH_DEBUG?.trim().toLowerCase()
+  if (raw === 'true') return true
+  if (raw === 'false') return false
+  return process.env.NODE_ENV === 'development'
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -162,5 +169,5 @@ export const authOptions: NextAuthOptions = {
     strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: resolveNextAuthDebug(),
 }

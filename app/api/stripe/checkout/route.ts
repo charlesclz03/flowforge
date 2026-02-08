@@ -66,6 +66,7 @@ export async function POST(request: Request) {
       details: errorDetails,
       priceIdMonthly: process.env.STRIPE_PRICE_ID_MONTHLY ? 'SET' : 'MISSING',
       priceIdYearly: process.env.STRIPE_PRICE_ID_YEARLY ? 'SET' : 'MISSING',
+      priceIdAnnual: process.env.STRIPE_PRICE_ID_ANNUAL ? 'SET' : 'MISSING',
       stripeKey: process.env.STRIPE_SECRET_KEY ? 'SET' : 'MISSING',
     })
     return NextResponse.json(

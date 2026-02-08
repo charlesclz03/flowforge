@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -95,6 +95,14 @@ export default function PracticeClient({
   const router = useRouter()
   const { data: session } = useSession()
   const { play } = useSound()
+  const sessionDurationLimit = useMemo(() => {
+    const raw = process.env.NEXT_PUBLIC_SESSION_DURATION_SECONDS
+    const parsed = raw ? Number(raw) : NaN
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return Math.trunc(parsed)
+    }
+    return SESSION_CONFIG.DEFAULT_DURATION_SECONDS
+  }, [])
 
   // 1. Context State
   const {
@@ -117,6 +125,7 @@ export default function PracticeClient({
     null
   )
   const [uiTime, setUiTime] = useState(0)
+  const didAutoStopRef = useRef(false)
 
   // If the user lands directly on /practice (no prior selection), auto-pick a safe default.
   useEffect(() => {
@@ -273,6 +282,8 @@ export default function PracticeClient({
     submitSession: saveSessionOptimistic,
     mode,
     cypherPlayers,
+    isRecordingEnabled,
+    shouldSaveSessions: Boolean(session?.user?.id),
   })
 
   // 5. Visual Effects & Glue Logic
@@ -295,6 +306,25 @@ export default function PracticeClient({
       return undefined
     }
   }, [engine.status, engine.beatPlayer])
+
+  useEffect(() => {
+    if (engine.status !== 'PLAYING') {
+      didAutoStopRef.current = false
+      return
+    }
+
+    const elapsed = Math.max(0, uiTime - (engine.startTime || 0))
+    if (elapsed >= sessionDurationLimit && !didAutoStopRef.current) {
+      didAutoStopRef.current = true
+      engine.stopSession()
+    }
+  }, [
+    engine.status,
+    uiTime,
+    engine.startTime,
+    engine.stopSession,
+    sessionDurationLimit,
+  ])
 
   // Browser Navigation Guard (Refresh/Close prevention)
   useEffect(() => {
@@ -484,7 +514,7 @@ export default function PracticeClient({
               // Time
               currentTime={uiTime}
               startTime={engine.startTime}
-              sessionDuration={SESSION_CONFIG.DEFAULT_DURATION_SECONDS}
+              sessionDuration={sessionDurationLimit}
               recordingDuration={engine.recorder.duration}
               // Settings
               difficulty={difficulty}

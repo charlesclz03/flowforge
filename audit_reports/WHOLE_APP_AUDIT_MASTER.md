@@ -1,6 +1,6 @@
-# Whole‑App Audit Master (FlowForge ‑ Freestyle)
+﻿# Wholeâ€‘App Audit Master (FlowForge â€‘ Freestyle)
 
-**Purpose:** Canonical, repeatable “whole app” audit that covers code health, routes, tests, docs drift, and MCP usage—plus live smoke checks (when possible).
+**Purpose:** Canonical, repeatable â€œwhole appâ€ audit that covers code health, routes, tests, docs drift, and MCP usageâ€”plus live smoke checks (when possible).
 
 **Audit rule (default):** Prefer **no repo changes** during an audit run. Generate the report in-chat first. Only write/update audit files if explicitly requested.
 
@@ -8,12 +8,12 @@
 
 ## How to Run This Audit (Agent Workflow)
 
-> This is the expanded “whole‑app” version of `.agent/workflows/audit.md` + `.agent/workflows/MCP_audits.md`.
+> This is the expanded â€œwholeâ€‘appâ€ version of `.agent/workflows/audit.md` + `.agent/workflows/MCP_audits.md`.
 
 ### 0) Preconditions
 - Clean working tree: `git status -sb`
 - No secrets in output: never paste keys/tokens/DB URLs in the report. Use placeholders and redact identifiers where needed.
-- Use Windows‑safe commands (`npm.cmd` / `npx.cmd`) when running via PowerShell.
+- Use Windowsâ€‘safe commands (`npm.cmd` / `npx.cmd`) when running via PowerShell.
 
 ### 1) Local automated checks
 Run (single run, no watch):
@@ -25,7 +25,7 @@ Run (single run, no watch):
 & "C:/Program Files/nodejs/npm.cmd" run build
 ```
 
-Record PASS/FAIL + any warnings (do not “fix” anything during audit).
+Record PASS/FAIL + any warnings (do not â€œfixâ€ anything during audit).
 
 ### 2) Dependency security scan
 
@@ -60,8 +60,8 @@ Get-ChildItem -Recurse -File app\\api -Filter route.ts |
   Select-Object -First 10
 ```
 
-### 4) Type‑safety + complexity sweep
-Goal: quantify type escapes + identify the “regression gravity wells”.
+### 4) Typeâ€‘safety + complexity sweep
+Goal: quantify type escapes + identify the â€œregression gravity wellsâ€.
 
 ```powershell
 # Type escape hatches (exclude docs/tests)
@@ -82,16 +82,16 @@ Run the existing audit script against top risk zones (at minimum):
 & "C:/Program Files/nodejs/npx.cmd" ts-node scripts/audit-feature.ts "STRIPE" "app/api/stripe/**/*" "lib/stripe.ts" "components/molecules/monetization/**/*"
 ```
 
-Read the generated reports in `audit_reports/` and summarize the “why we keep refactoring this” pattern.
+Read the generated reports in `audit_reports/` and summarize the â€œwhy we keep refactoring thisâ€ pattern.
 
-Optional deep dive (audit.md “Hall of Fame” / circular refactor analysis):
-- Identify 5–10 checkpoints (tags or commit hashes) for the highest-risk zone.
-- Score each checkpoint (0–100) using:
+Optional deep dive (audit.md â€œHall of Fameâ€ / circular refactor analysis):
+- Identify 5â€“10 checkpoints (tags or commit hashes) for the highest-risk zone.
+- Score each checkpoint (0â€“100) using:
   - **Stability (40%)**: time until next hotfix in that area
   - **Cleanliness (30%)**: fewer `any` / `@ts-*` / TODOs
   - **Performance (30%)**: subjective loop/latency correctness
-- For the top 1–2 suspect functions, use line-history tracing:
-  - `git log -L :<functionName>:<filePath>` to detect “we fixed this before, then removed it”.
+- For the top 1â€“2 suspect functions, use line-history tracing:
+  - `git log -L :<functionName>:<filePath>` to detect â€œwe fixed this before, then removed itâ€.
 
 ### 6) MCP audit + live smoke (when tools are available)
 If MCP tools are available:
@@ -100,12 +100,12 @@ If MCP tools are available:
 
 Minimum live smoke checklist (production URL):
 - `/` redirect behavior (record the final landing URL)
-- `/feed` existence (record if 404)
-- `/tracks` as signed-out user: confirm no “error” noise for expected unauth states
+- Retired social discovery route remains removed (expect 404).
+- `/tracks` as signed-out user: confirm no â€œerrorâ€ noise for expected unauth states
 - `/practice`: start a session, confirm audio plays, confirm no CORS/CSP violations, confirm no privacy leaks in logs
 
 ### 7) Report + scoring
-Produce a report using the same section headings as the “Latest Report” below:
+Produce a report using the same section headings as the â€œLatest Reportâ€ below:
 - Automated checks
 - Routes
 - Live smoke + navigation correctness
@@ -113,11 +113,11 @@ Produce a report using the same section headings as the “Latest Report” belo
 - Forensics hotspots
 - Type safety/complexity
 - Security/privacy
-- Scorecard (0–100)
-- “Forever Fix” backlog (P0/P1/P2)
+- Scorecard (0â€“100)
+- â€œForever Fixâ€ backlog (P0/P1/P2)
 
 ### 8) Remediation plan
-Produce a decision‑complete fix plan (P0 → P1 → P2) with:
+Produce a decisionâ€‘complete fix plan (P0 â†’ P1 â†’ P2) with:
 - exact files to touch
 - acceptance criteria
 - tests to run (unit/e2e/manual)
@@ -126,22 +126,22 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 ---
 
 ## Latest Report (No Repo Changes)
-# Whole‑App Audit Report (No Repo Changes)
+# Wholeâ€‘App Audit Report (No Repo Changes)
 **Date:** 2026-02-03  
 **Scope:** End-to-end health (code + routes + testing + docs + MCP usage), plus live smoke checks via `chrome-devtools`. No files were edited.
 
 ---
 
 ## 1) Automated Checks (Local)
-**Status:** ✅ PASS (no errors)
+**Status:** âœ… PASS (no errors)
 
-- **Lint:** `npm run lint` → **0 errors**, warnings only (mostly `prettier/prettier` CRLF + `@next/next/next-script-for-ga` in `app/layout.tsx`).
-- **Types:** `npx tsc --noEmit` → **PASS**
-- **Unit tests:** `npm run test -- --run` → **PASS** (27 tests)
-- **Build:** `npm run build` → **PASS** (warnings only; Sentry/otel “require function…” warning + the same prettier warnings).
+- **Lint:** `npm run lint` â†’ **0 errors**, warnings only (mostly `prettier/prettier` CRLF + `@next/next/next-script-for-ga` in `app/layout.tsx`).
+- **Types:** `npx tsc --noEmit` â†’ **PASS**
+- **Unit tests:** `npm run test -- --run` â†’ **PASS** (27 tests)
+- **Build:** `npm run build` â†’ **PASS** (warnings only; Sentry/otel â€œrequire functionâ€¦â€ warning + the same prettier warnings).
 
 ### Security scan (dependency audit)
-**Status:** 🔴 RISK (requires follow-up)
+**Status:** ðŸ”´ RISK (requires follow-up)
 - `npm audit --audit-level=high` reports **15 vulnerabilities** (**4 high**, **11 moderate**).  
 - Auto-fix path requires breaking upgrades (it suggests `next@16`, `eslint@9`, `vitest@4`). This needs a dedicated upgrade sprint.
 
@@ -156,17 +156,17 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 ---
 
 ## 3) Live Smoke (MCP `chrome-devtools`, production site)
-**Status:** 🟡 Mixed (core pages load; a few correctness/UX issues surfaced)
+**Status:** ðŸŸ¡ Mixed (core pages load; a few correctness/UX issues surfaced)
 
 ### Navigation correctness
 - `/` **redirects to** `/howitworks` (production behavior).  
-  - **Impact:** current Playwright `e2e/basic.spec.ts` assumptions for `/` likely don’t match production.
-- `/feed` returns **404** in production.
-  - **Impact:** `e2e/basic.spec.ts` test “navigate to feed” is stale (would fail against reality).
+  - **Impact:** current Playwright `e2e/basic.spec.ts` assumptions for `/` likely donâ€™t match production.
+- Retired social discovery route returns **404** in production.
+  - **Impact:** `e2e/basic.spec.ts` test â€œnavigate to retired social routeâ€ is stale (would fail against reality).
 
 ### Tracks page behavior
 - `/tracks` loads and shows the Beat Vault correctly.
-- The client performs `GET /api/user/beats` even when not signed in → **401** shows up as a console/network error.
+- The client performs `GET /api/user/beats` even when not signed in â†’ **401** shows up as a console/network error.
   - **Forever-fix candidate:** only request user beats when a session exists, or treat 401 as an expected state without logging as an error.
 
 ### Practice audio behavior (important)
@@ -179,22 +179,22 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 
 ## 4) MCP Audit (per `.agent/workflows/MCP_audits.md`)
 **chrome-devtools**
-- **Status:** ✅ Healthy
+- **Status:** âœ… Healthy
 - **Connectivity:** confirmed (list pages, navigate, snapshots, network/console inspection all worked).
-- **Opportunity:** use it as an official “smoke harness” (public routes + console/network assertions) to prevent regressions like `/feed` drift and unauth 401 noise.
+- **Opportunity:** use it as an official â€œsmoke harnessâ€ (public routes + console/network assertions) to prevent regressions like retired-route drift and unauth 401 noise.
 
 **supabase-mcp-server**
-- **Status in this Codex session:** ⚠️ Not available as an executable tool (can’t run SQL/log queries here).  
+- **Status in this Codex session:** âš ï¸ Not available as an executable tool (canâ€™t run SQL/log queries here).  
 - **Repo usage:** no code uses MCP; only docs reference MCP commands (expected).
 
 ---
 
-## 5) Code Forensics (Churn + “Circular Refactor” risk)
+## 5) Code Forensics (Churn + â€œCircular Refactorâ€ risk)
 ### Hotspots since 2026-01-04 (most touched paths)
 - Practice/audio stack churn is highest: `app/practice/page.tsx`, `components/organisms/practice/PracticeControls.tsx`, `hooks/player/usePracticeEngine.ts`, `app/practice/PracticeClient.tsx`.
 - Settings also churny: `components/organisms/settings/SettingsList.tsx`.
 
-**Interpretation:** the practice/audio engine is historically the highest regression-risk zone. This aligns with prior audits noting repeated “fixed” loops.
+**Interpretation:** the practice/audio engine is historically the highest regression-risk zone. This aligns with prior audits noting repeated â€œfixedâ€ loops.
 
 ---
 
@@ -212,8 +212,8 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 - `app/api/recordings/route.ts` ~334 LOC.
 
 **Forever-fix candidates**
-- Split `PracticeControls` into smaller “dumb” UI + a single orchestration layer.
-- Introduce an explicit state machine boundary for practice lifecycle (loaded → primed → running → paused → stopped) and make it the single source of truth.
+- Split `PracticeControls` into smaller â€œdumbâ€ UI + a single orchestration layer.
+- Introduce an explicit state machine boundary for practice lifecycle (loaded â†’ primed â†’ running â†’ paused â†’ stopped) and make it the single source of truth.
 
 ---
 
@@ -230,7 +230,7 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 
 ---
 
-## 8) Scorecard (0–100)
+## 8) Scorecard (0â€“100)
 - **Stripe reliability:** 85 (race mitigation + idempotent webhook logic exists; still watch env/observability)
 - **Audio reliability:** 80 (works live; needs production log hardening + regression harness)
 - **Auth/roles robustness:** 60 (hardcoded superadmin emails + type escapes)
@@ -241,11 +241,11 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 
 ---
 
-## 9) “Forever Fix” Backlog (Prioritized, no implementation here)
+## 9) â€œForever Fixâ€ Backlog (Prioritized, no implementation here)
 **P0 (do next)**
 1. **Kill/sanitize production audio logs** (no user URLs/IDs in console; debug behind env flag).
-2. **Fix `/tracks` unauth 401 noise** (don’t call `/api/user/beats` unless signed in; handle 401 as expected).
-3. **Update Playwright to match reality** (replace `/feed` test; align `/` redirect behavior; enable `webServer` in config or add a documented test harness).
+2. **Fix `/tracks` unauth 401 noise** (donâ€™t call `/api/user/beats` unless signed in; handle 401 as expected).
+3. **Update Playwright to match reality** (replace retired-route test; align `/` redirect behavior; enable `webServer` in config or add a documented test harness).
 
 **P1**
 4. **NextAuth type augmentation + remove `@ts-expect-error` pile** (single canonical session/user type surface).
@@ -253,19 +253,19 @@ Produce a decision‑complete fix plan (P0 → P1 → P2) with:
 6. **Practice engine refactor boundary**: state machine + smaller components + one integration smoke test.
 
 **P2**
-7. Remove/replace dead or misleading TODO components (e.g., unused upgrade prompt that still alerts “Stripe in V2”).
+7. Remove/replace dead or misleading TODO components (e.g., unused upgrade prompt that still alerts â€œStripe in V2â€).
 
-If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspot area (Practice Engine vs Recordings vs Auth) and produce a ranked Hall-of-Fame version table + exact “lost code / circular refactor” suspects — still without changing any files.
+If you want, I can also do a deeper â€œaudit.md-styleâ€ drilldown on ONE hotspot area (Practice Engine vs Recordings vs Auth) and produce a ranked Hall-of-Fame version table + exact â€œlost code / circular refactorâ€ suspects â€” still without changing any files.
 
 ---
 
-## Remediation Plan (Decision‑Complete, P0 → P2)
+## Remediation Plan (Decisionâ€‘Complete, P0 â†’ P2)
 
 > This is the concrete engineering plan to resolve every item in Section 9, plus the high-signal risks called out in Sections 1 and 7.
 
-### P0 — Must Fix Next (Privacy + Correctness + Test Signal)
+### P0 â€” Must Fix Next (Privacy + Correctness + Test Signal)
 
-#### P0.1 — Kill/sanitize production audio logs (privacy)
+#### P0.1 â€” Kill/sanitize production audio logs (privacy)
 **Goal:** No production console output contains user-scoped Supabase storage paths, beat URLs, user IDs, or other PII-ish identifiers.
 
 **Root cause:** `lib/audio/player.ts` defaults `debug = true` and logs the full beat URL in `AudioPlayer.load()`.
@@ -291,7 +291,7 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P0.2 — Fix `/tracks` unauth 401 noise (UX correctness)
+#### P0.2 â€” Fix `/tracks` unauth 401 noise (UX correctness)
 **Goal:** Signed-out users do not trigger a 401 request to `/api/user/beats` from `/tracks`.
 
 **Root cause:** `app/tracks/page.tsx` calls `/api/user/beats` unconditionally in `fetchBeats()`.
@@ -305,7 +305,7 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 - `app/tracks/page.tsx`
 
 **Tests/validation:**
-- Manual: open `/tracks` in an incognito browser → verify no `/api/user/beats` request is made.
+- Manual: open `/tracks` in an incognito browser â†’ verify no `/api/user/beats` request is made.
 - Unit (optional): none required; this is a fetch gating change.
 
 **Acceptance criteria:**
@@ -313,17 +313,17 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P0.3 — Update Playwright to match production reality (tests become trustworthy)
+#### P0.3 â€” Update Playwright to match production reality (tests become trustworthy)
 **Goal:** Playwright smoke tests reflect real routes and can run locally/CI without manual server start.
 
 **Root cause:**
-- `e2e/basic.spec.ts` assumes `/` is the landing page with title “FlowForge” and that `/feed` exists.
+- `e2e/basic.spec.ts` assumes `/` is the landing page with title â€œFlowForgeâ€ and that a retired social route exists.
 - `playwright.config.ts` has `webServer` commented out.
 
 **Implementation (forever-fix):**
 1. Update `e2e/basic.spec.ts`:
    - Test 1: `page.goto('/')` then assert final URL contains `/howitworks` (or assert the onboarding headline).
-   - Test 2: replace `/feed` with an actually supported public page (recommend: `/tracks`).
+   - Test 2: replace the retired-route assertion with an actually supported public page (recommend: `/tracks`).
 2. Enable `webServer` in `playwright.config.ts`:
    - Use `command: 'npm run dev'` for local, or `npm run start` for CI.
    - Ensure `reuseExistingServer: !process.env.CI`.
@@ -340,16 +340,16 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 - Confirm it passes against a local dev server and matches production routing assumptions.
 
 **Acceptance criteria:**
-- Playwright run is green and asserts correct landing flow (`/` → `/howitworks`) and at least one stable public route.
+- Playwright run is green and asserts correct landing flow (`/` â†’ `/howitworks`) and at least one stable public route.
 
 ---
 
-### P1 — High ROI Hardening (Auth Types + Security + Practice Engine Boundary)
+### P1 â€” High ROI Hardening (Auth Types + Security + Practice Engine Boundary)
 
-#### P1.1 — NextAuth module augmentation (remove `@ts-expect-error` pile)
+#### P1.1 â€” NextAuth module augmentation (remove `@ts-expect-error` pile)
 **Goal:** Remove the need for repeated `@ts-expect-error` in `lib/auth.ts` and ensure `session.user` is correctly typed across the app.
 
-**Root cause:** NextAuth’s default `Session` / `User` types don’t include custom Prisma fields (`role`, `subscriptionStatus`, `username`, etc.).
+**Root cause:** NextAuthâ€™s default `Session` / `User` types donâ€™t include custom Prisma fields (`role`, `subscriptionStatus`, `username`, etc.).
 
 **Implementation (forever-fix):**
 1. Add NextAuth type augmentation:
@@ -370,7 +370,7 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P1.2 — Remove hardcoded superadmin emails (auth/roles robustness)
+#### P1.2 â€” Remove hardcoded superadmin emails (auth/roles robustness)
 **Goal:** Role enforcement is based on DB state (or explicit env allowlist), not hard-coded email literals.
 
 **Root cause:** `lib/auth.ts` has hard-coded email strings for SUPERADMIN override and username assignment.
@@ -379,7 +379,7 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 1. Replace hard-coded lists with one of:
    - Preferred: DB roles (`user.role === 'SUPERADMIN'`) only.
    - Transitional: `SUPERADMIN_EMAILS` env var (comma-separated), used only for bootstrap and documented.
-2. Move “Admin1/Admin2 username enforcement” into an admin-only tooling path (one-time script), not on every sign-in.
+2. Move â€œAdmin1/Admin2 username enforcementâ€ into an admin-only tooling path (one-time script), not on every sign-in.
 3. Add a one-time backfill/migration step (manual procedure) to set `role` for the intended accounts.
 
 **Files to change:**
@@ -388,12 +388,12 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 - Docs: deployment/env templates if introducing `SUPERADMIN_EMAILS`
 
 **Tests/validation:**
-- Manual: sign in as known superadmin → role remains SUPERADMIN via DB.
+- Manual: sign in as known superadmin â†’ role remains SUPERADMIN via DB.
 - Automated: unit test for `isPro` checks should treat SUPERADMIN as pro (already pattern).
 
 ---
 
-#### P1.3 — Security tightening (CSP + image host allowlist)
+#### P1.3 â€” Security tightening (CSP + image host allowlist)
 **Goal:** Reduce attack surface without breaking analytics, Stripe, or Sentry.
 
 **Root causes:**
@@ -405,7 +405,7 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 2. Attempt removal of `'unsafe-eval'` first; verify runtime.
 3. Tighten `images.remotePatterns` to only the known Supabase project host(s) and known Google hosts:
    - Derive hostname from `NEXT_PUBLIC_SUPABASE_URL` in `next.config.js` and add that hostname specifically.
-4. Add a “CSP regression smoke” check to the MCP smoke harness: ensure no CSP violations on `/practice` and `/tracks`.
+4. Add a â€œCSP regression smokeâ€ check to the MCP smoke harness: ensure no CSP violations on `/practice` and `/tracks`.
 
 **Files to change:**
 - `app/layout.tsx`
@@ -418,14 +418,14 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P1.4 — Practice engine boundary refactor (reduce circular refactor risk)
+#### P1.4 â€” Practice engine boundary refactor (reduce circular refactor risk)
 **Goal:** Lower regression risk by introducing a single explicit lifecycle/state boundary and splitting mega-components.
 
 **Root cause:** High churn + large LOC in practice UI and engine; complex side-effects can regress easily.
 
 **Implementation (forever-fix):**
-1. Introduce a small explicit “practice lifecycle” state machine (can be plain TS, no new deps):
-   - States: `idle` → `loadingBeat` → `primed` → `countdown` → `running` → `paused` → `stopped` → `error`
+1. Introduce a small explicit â€œpractice lifecycleâ€ state machine (can be plain TS, no new deps):
+   - States: `idle` â†’ `loadingBeat` â†’ `primed` â†’ `countdown` â†’ `running` â†’ `paused` â†’ `stopped` â†’ `error`
    - Events: `SELECT_BEAT`, `LOAD_OK`, `LOAD_FAIL`, `START`, `PAUSE`, `RESUME`, `STOP`, `RESET`
 2. Split `PracticeControls.tsx`:
    - UI-only components (dumb): buttons, sliders, timers, meters.
@@ -445,8 +445,8 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P1.5 — Type-safe AudioPlayer source node tracking (remove monkey-patching)
-**Goal:** Remove `@ts-expect-error` and the implicit `audio._sourceNode` monkey-patch while keeping the “connect HTMLAudioElement to AudioContext” behavior.
+#### P1.5 â€” Type-safe AudioPlayer source node tracking (remove monkey-patching)
+**Goal:** Remove `@ts-expect-error` and the implicit `audio._sourceNode` monkey-patch while keeping the â€œconnect HTMLAudioElement to AudioContextâ€ behavior.
 
 **Root cause:** `lib/audio/player.ts` stores a non-standard property (`_sourceNode`) on `HTMLAudioElement` to prevent double-attaching `MediaElementAudioSourceNode`.
 
@@ -462,11 +462,11 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 **Tests/validation:**
 - `npx tsc --noEmit` passes.
-- Manual: `/practice` start/stop/navigation does not throw “createMediaElementSource” errors.
+- Manual: `/practice` start/stop/navigation does not throw â€œcreateMediaElementSourceâ€ errors.
 
 ---
 
-#### P1.6 — Vulnerability remediation sprint (npm audit highs)
+#### P1.6 â€” Vulnerability remediation sprint (npm audit highs)
 **Goal:** Remove high severity vulnerabilities with controlled upgrades and regression testing.
 
 **Implementation (forever-fix):**
@@ -480,9 +480,9 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-### P2 — Cleanup (Dead TODOs + Doc Drift)
+### P2 â€” Cleanup (Dead TODOs + Doc Drift)
 
-#### P2.1 — Remove/replace dead upgrade prompts (“Stripe V2”)
+#### P2.1 â€” Remove/replace dead upgrade prompts (â€œStripe V2â€)
 **Goal:** No UI text/alerts refer to obsolete flows that confuse users.
 
 **Implementation:**
@@ -493,28 +493,28 @@ If you want, I can also do a deeper “audit.md-style” drilldown on ONE hotspo
 
 ---
 
-#### P2.2 — Documentation drift cleanup (feature matrix + testing plan + deployment docs)
+#### P2.2 â€” Documentation drift cleanup (feature matrix + testing plan + deployment docs)
 **Goal:** Docs match production reality (routes, versions, commands, and current behavior).
 
 **Targets (examples):**
 - `DOCS/reference/FEATURE_MATRIX.md` header version and encoding/formatting cleanup.
-- `DOCS/architecture/APP_OVERVIEW.md` remove/adjust claims about `/feed` if it’s not live.
+- `DOCS/architecture/APP_OVERVIEW.md` remove/adjust claims about the retired social route if itâ€™s not live.
 - `DOCS/testing/TESTING_PLAN_V3.md` update version display expectation + route expectations.
 - `DOCS/guides/DEVELOPER_SETUP.md` align Windows-safe commands.
 
 **Acceptance criteria:**
-- No docs claim `/feed` exists if production returns 404.
+- No docs claim the retired social route exists if production returns 404.
 - Current version references align to `v0.9.993`.
 
 ---
 
-#### P2.3 — Warning cleanup (lint + build)
-**Goal:** Reduce “warning fatigue” so CI signal stays meaningful.
+#### P2.3 â€” Warning cleanup (lint + build)
+**Goal:** Reduce â€œwarning fatigueâ€ so CI signal stays meaningful.
 
 **Targets:**
 - Resolve `@next/next/next-script-for-ga` by completing the `next/script` migration (covered in P1.3).
 - Normalize line endings to LF for files that trigger `prettier/prettier` CRLF warnings.
-- Investigate and either fix or explicitly document any recurring build warnings (e.g., Sentry/otel “require function…” warning).
+- Investigate and either fix or explicitly document any recurring build warnings (e.g., Sentry/otel â€œrequire functionâ€¦â€ warning).
 
 **Acceptance criteria:**
 - `npm run lint` output is clean or limited to acknowledged, documented warnings.

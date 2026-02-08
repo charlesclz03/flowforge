@@ -21,7 +21,7 @@
 │  • Practice Page (Beats, Prompts, Timer)                    │
 │  • Audio System (Mobile Optimized)                          │
 │  • Recording, Storage, Review                               │
-│  • Social Feed & Leaderboards                               │
+│  • Social Duels & Leaderboards                              │
 │                                                             │
 │   UNIVERSAL GATEWAY (COMPLETE)                            │
 │  ═════════════════════════════                              │
@@ -115,7 +115,7 @@
 │ □ Add on-beat word timing           │
 │ □ Implement audio mixing            │
 │ □ Add recording save                │
-│ □ Enforce 2-minute limit            │
+│ □ Enforce 10-minute limit           │
 └─────────────────────────────────────┘
 ```
 
@@ -274,7 +274,7 @@ Total: 8-10 weeks
 - [ ] Microphone records
 - [ ] Word prompts appear on-beat
 - [ ] Timer counts down accurately
-- [ ] Recording stops at 2 minutes
+- [ ] Recording stops at 10 minutes
 
 ### Milestone 4: Session Save Working 
 
@@ -404,7 +404,7 @@ Total to MVP:   50-85 hours
 
 **Business**:
 
-- [ ] 2-minute recording limit enforced
+- [ ] 10-minute recording limit enforced
 - [ ] Free tier restrictions work
 - [ ] Analytics tracking works
 - [ ] Can collect user feedback

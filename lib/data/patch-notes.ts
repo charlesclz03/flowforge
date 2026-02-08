@@ -24,7 +24,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.994',
     date: '2026-02-05',
-    title: 'Achievements Fix 🏆',
+    title: 'Achievements Fix Ã°Å¸Ââ€ ',
     codename: 'Self-Heal',
     description:
       'Fixed a critical bug where users saw "0/0" achievements. We implemented a "Self-Healing" API that automatically repairs missing data, ensuring your trophies always load correctly.',
@@ -34,6 +34,22 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Achievements Repaired**: Implemented API self-healing to automatically seed missing achievements if the database returns an empty list.',
           '**Zero-State Fix**: Users will no longer see "0/0" stats due to hydration failures.',
+          '**Practice Audio Guard**: Practice mode now confirms beat playback before switching to `PLAYING`, preventing silent-state sessions.',
+          '**Playback Resume Guard**: Resume from pause now stays paused if audio playback cannot restart.',
+          '**Session Timer Enforcement**: Practice sessions now auto-finish when the session timer reaches 10:00 for all users.',
+          '**Recorder Mode Respect**: Practice now honors recording mode and no longer force-starts recorder flow when recording is disabled.',
+          '**Copy Alignment**: Pricing and upgrade surfaces now consistently describe 10-minute sessions.',
+          '**E2E Stability**: Playwright smoke suite now runs in a serialized mode to reduce local dev-server cold-start flakiness.',
+          '**Guest End-State Guard**: Guest practice sessions now avoid auth-only save endpoints and reset cleanly without lingering in finishing states.',
+          '**Timeout Verification**: Added local E2E coverage for auto-finish behavior and guest session completion without 401 save calls.',
+          '**Release Gate Utility**: Added `npm run check:release-env` to validate required production environment variables before deployment.',
+          '**Strict Env Validation**: `check:release-env` now validates formats, rejects placeholder values, and enforces live Stripe keys in production mode.',
+          '**Local Env Health Check**: Added `npm run check:release-env:local` for local CI/dev verification without weakening production checks.',
+          '**Vercel Env Gate**: Added `npm run check:release-env:vercel` to verify required production variable names directly in Vercel.',
+          '**Auth Debug Control**: NextAuth debug now respects `NEXTAUTH_DEBUG`, eliminating noisy debug warnings during local automation runs.',
+          '**Stripe Yearly Alias Support**: Runtime and env checks now accept legacy `STRIPE_PRICE_ID_ANNUAL` as a fallback for yearly checkout pricing.',
+          '**Legacy Route Cleanup**: Active docs now reflect the retired social discovery route and current live product surface.',
+          '**UI Encoding Cleanup**: Fixed mojibake artifacts on `/patch-notes` and `/orderconfirmed`.',
         ],
       },
     ],
@@ -41,16 +57,16 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.993',
     date: '2026-02-03',
-    title: 'Reliability Pass 🛡️',
+    title: 'Reliability Pass Ã°Å¸â€ºÂ¡Ã¯Â¸Â',
     codename: 'Type Safe',
     description:
-      'Hardened Stripe subscription activation to eliminate the “paid but not Pro yet” race, improved webhook resilience, and aligned versioning/docs for v0.9.993.',
+      'Hardened Stripe subscription activation to eliminate the Ã¢â‚¬Å“paid but not Pro yetÃ¢â‚¬Â race, improved webhook resilience, and aligned versioning/docs for v0.9.993.',
     changes: [
       {
         category: 'Fixes & Improvements',
         items: [
           '**Stripe Activation**: `/orderconfirmed` now waits for Pro activation before celebrating.',
-          '**Webhook Reliability**: Stripe webhooks are idempotent and won’t 500 on unknown customers/users.',
+          '**Webhook Reliability**: Stripe webhooks are idempotent and wonÃ¢â‚¬â„¢t 500 on unknown customers/users.',
           '**Checkout Stability**: Reuses existing Stripe customers to avoid duplicates.',
           '**Subscription Status API**: Added `GET /api/subscription/status` for client polling.',
           '**Redirect URL Safety**: Standardized Stripe base URL resolution across routes.',
@@ -62,13 +78,13 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Security**: CSP tightened (removes `unsafe-eval` in production) and Supabase image host allowlist is narrowed.',
           '**Practice UX**: Direct visits to `/practice` auto-select a default beat instead of showing a stuck loader.',
           '**Audio Type Safety**: `_sourceNode` tracking is now typed (no HTMLAudioElement monkey-patch suppressions).',
-          '**Premium UI**: Removed stale “Stripe V2” placeholder copy; upgrade prompts reflect the live Stripe checkout flow.',
+          '**Premium UI**: Removed stale Ã¢â‚¬Å“Stripe V2Ã¢â‚¬Â placeholder copy; upgrade prompts reflect the live Stripe checkout flow.',
         ],
       },
       {
         category: 'System Updates',
         items: [
-          '**Versioning**: Standardized “Type Safe” to `v0.9.993` (avoids collision with `v0.9.93`).',
+          '**Versioning**: Standardized Ã¢â‚¬Å“Type SafeÃ¢â‚¬Â to `v0.9.993` (avoids collision with `v0.9.93`).',
           '**Testing**: Vitest now runs only `__tests__` (excludes Playwright `e2e/`).',
           '**E2E**: Updated Playwright smoke tests and added a `/practice` startability smoke test (with `webServer`).',
           '**Docs Safety**: Redacted deployment/database credentials and expanded Stripe env templates.',
@@ -82,7 +98,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.92',
     date: '2026-02-02',
-    title: 'Achievements Fix 🏆',
+    title: 'Achievements Fix Ã°Å¸Ââ€ ',
     codename: 'Trophy Hunter',
     description:
       'Resolved a critical issue where achievements were not seeding correctly. We validated the database and verified that all 47 trophies are now attainable.',
@@ -99,7 +115,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.992',
     date: '2026-02-02',
-    title: 'Profile Perfected 🖼️',
+    title: 'Profile Perfected Ã°Å¸â€“Â¼Ã¯Â¸Â',
     codename: 'Profile Perfected',
     description:
       'We polished the Profile experience by widening the layout for desktop and adding smart fallbacks for user avatars. We also enabled metadata-only saves for sessions without microphone input.',
@@ -107,7 +123,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Visual Overhaul',
         items: [
-          '**Profile Layout**: Widened the profile page container (lg → xl) to fully utilize desktop screen real estate.',
+          '**Profile Layout**: Widened the profile page container (lg Ã¢â€ â€™ xl) to fully utilize desktop screen real estate.',
           '**Avatar Safe Mode**: Added smart error handling to user avatars. If an image fails to load (e.g., expired Google URL), it now gracefully falls back to your initials.',
           '**Tab Styling**: Fixed dynamic Tailwind classes to ensure tabs look correct on all screen sizes.',
         ],
@@ -124,7 +140,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.991',
     date: '2026-02-02',
-    title: 'Sonic Unbound (Hotfix) 🔓',
+    title: 'Sonic Unbound (Hotfix) Ã°Å¸â€â€œ',
     codename: 'Sonic Unbound',
     description:
       'We fixed a critical CORS issue in the audio engine that was silencing tracks, and performed a comprehensive audit of our UI layout components to ensure pixel-perfect stability.',
@@ -275,7 +291,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.88',
     date: '2026-01-31',
-    title: 'Practice Perfected 💎',
+    title: 'Practice Perfected Ã°Å¸â€™Å½',
     codename: 'Practice Perfected',
     description:
       'We completely rebuilt the Practice Engine core to eliminate infinite loops and ensure perfect timing. The countdown, word generation, and TTS are now glitch-free.',
@@ -328,7 +344,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.85',
     date: '2026-01-31',
-    title: 'Voice & Verification 🎙️',
+    title: 'Voice & Verification Ã°Å¸Å½â„¢Ã¯Â¸Â',
     codename: 'Voice Upgrade',
     description:
       'We significantly upgraded the Text-to-Speech engine with smart voice selection and mobile hardening. We also performed a comprehensive audit of the audio player, certifying it as rock-solid.',
@@ -346,7 +362,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.84',
     date: '2026-01-31',
-    title: 'Voice Restoration 🗣️',
+    title: 'Voice Restoration Ã°Å¸â€”Â£Ã¯Â¸Â',
     codename: 'Voice Restoration',
     description:
       'We restored the Practice Mode voice engine! Words are now spoken aloud again, and we hardened the word generator to ensure you never run out of rhymes.',
@@ -363,7 +379,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.83',
     date: '2026-01-30',
-    title: 'Visual Polish ✨',
+    title: 'Visual Polish Ã¢Å“Â¨',
     codename: 'Visual Polish',
     description:
       'A visual enhancement update focusing on the Profile Card aesthetics and roadmap planning. We implemented a softer, more modern glow effect and outlined future features.',
@@ -387,7 +403,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.82',
     date: '2026-01-29',
-    title: 'Monetization Audit 💰',
+    title: 'Monetization Audit Ã°Å¸â€™Â°',
     codename: 'Monetization Audit',
     description:
       'We performed a comprehensive audit of our monetization logic. The History Graph is now correctly gated for Pro users, preventing free access. We also confirmed the security of our Stripe webhooks and beat upload flows.',
@@ -411,7 +427,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.81',
     date: '2026-01-29',
-    title: 'User Beat Management Audit 🥁',
+    title: 'User Beat Management Audit Ã°Å¸Â¥Â',
     codename: 'Section Audit',
     description:
       'A deep dive into the User Beat Management system. We fixed a critical upload bug, added integration tests, and refactored the beat selector for better performance.',
@@ -436,7 +452,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.80',
     date: '2026-01-29',
-    title: 'The Feature Audit Update 🔍',
+    title: 'The Feature Audit Update Ã°Å¸â€Â',
     codename: 'Clean Slate',
     description:
       'We performed comprehensive audits on 7 core features, fixing bugs and adding polish. The Latency Wizard now correctly saves calibration data, and we added 8 new unit tests for the Word Prompt system.',
@@ -461,7 +477,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.79',
     date: '2026-01-29',
-    title: 'Cypher Mode Activated 🎤',
+    title: 'Cypher Mode Activated Ã°Å¸Å½Â¤',
     codename: 'Pass the Phone',
     description:
       'We activated the Cypher Mode! Gather your crew around a single device and trade bars. The ring now rotates automatically for up to 4 players.',
@@ -479,7 +495,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.78',
     date: '2026-01-29',
-    title: 'The Library Update 📚',
+    title: 'The Library Update Ã°Å¸â€œÅ¡',
     codename: 'Dewey Decimal',
     description:
       'We completely overhauled our documentation to be world-class. Added "How-to-Code" guides (TSDoc), rigorous Architecture Records, and automated link checking.',
@@ -497,7 +513,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.77',
     date: '2026-01-27',
-    title: 'Visual Polish 🎨',
+    title: 'Visual Polish Ã°Å¸Å½Â¨',
     codename: 'Visual Polish',
     description: 'Fixed alignment issues on the "How it Works" section.',
     changes: [
@@ -512,7 +528,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.76',
     date: '2026-01-27',
-    title: 'Ad Conversion Update 🚀',
+    title: 'Ad Conversion Update Ã°Å¸Å¡â‚¬',
     codename: 'Conversion Flow',
     description:
       'We launched a dedicated download landing page and a celebration screen for new Pro members to optimize our ad campaigns.',
@@ -530,7 +546,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.75',
     date: '2026-01-27',
-    title: 'Sonic Boost Update ⚡',
+    title: 'Sonic Boost Update Ã¢Å¡Â¡',
     codename: 'Sonic Boost',
     description:
       'A massive performance update! We rewrote the Practice engine to load instantly and hardened security with industry-standard CSP protection.',
@@ -598,8 +614,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '**Price Sync**: Fixed €3.99 / €39 displaying instead of €4.99 / €49.',
-          '**Currency Alignment**: Converted remaining USD ($) prices to EUR (€).',
+          '**Price Sync**: Fixed Ã¢â€šÂ¬3.99 / Ã¢â€šÂ¬39 displaying instead of Ã¢â€šÂ¬4.99 / Ã¢â€šÂ¬49.',
+          '**Currency Alignment**: Converted remaining USD ($) prices to EUR (Ã¢â€šÂ¬).',
           '**Affected Components**: SubscriptionSection, SubscriptionModal, LandingPricing.',
         ],
       },
@@ -616,8 +632,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'System Updates',
         items: [
-          '**EUR Primary Currency**: All pricing now displayed in Euros (€4.99/mo).',
-          '**Stripe Sync**: Matched yearly plan price to the Stripe Dashboard (€49.00/yr).',
+          '**EUR Primary Currency**: All pricing now displayed in Euros (Ã¢â€šÂ¬4.99/mo).',
+          '**Stripe Sync**: Matched yearly plan price to the Stripe Dashboard (Ã¢â€šÂ¬49.00/yr).',
           '**Multi-Currency Ready**: UK and other international users see their local currency at checkout via Stripe Adaptive Pricing.',
         ],
       },
@@ -695,7 +711,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.67',
     date: '2026-01-27',
-    title: 'Direct Support Update 🤝',
+    title: 'Direct Support Update Ã°Å¸Â¤Â',
     codename: 'Direct Support',
     description:
       'We made it easier to get help. You can now contact support directly from the app without leaving to your email client.',
@@ -712,7 +728,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.66',
     date: '2026-01-27',
-    title: 'The Contact Update 📧',
+    title: 'The Contact Update Ã°Å¸â€œÂ§',
     codename: 'Direct Line',
     description:
       'We updated our support channels to ensure your feedback always reaches us. Plus, more polish for the public profile experience.',
@@ -729,7 +745,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.65',
     date: '2026-01-27',
-    title: 'Instant Access Update ⚡',
+    title: 'Instant Access Update Ã¢Å¡Â¡',
     codename: 'Instant Access',
     description:
       'Navigation is now blazing fast. Accessing your profile is instant, and we fixed some deployment stability issues.',
@@ -747,7 +763,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.64',
     date: '2026-01-27',
-    title: 'The Profile Hotfix 🔥',
+    title: 'The Profile Hotfix Ã°Å¸â€Â¥',
     codename: 'Crash Fix',
     description:
       'We quickly squashed a bug that caused Public Profiles to crash. Visiting a user profile is now safe and smooth again!',
@@ -763,7 +779,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.63',
     date: '2026-01-27',
-    title: 'The Public Profile Polish 👤',
+    title: 'The Public Profile Polish Ã°Å¸â€˜Â¤',
     codename: 'Identity Restored',
     description:
       'We fixed a critical issue where public profiles were failing to load for guests, and ensured our Superadmins always have the correct identity.',
@@ -780,7 +796,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.62',
     date: '2026-01-22',
-    title: 'The Accessibility Polish Update 🏆',
+    title: 'The Accessibility Polish Update Ã°Å¸Ââ€ ',
     codename: 'Accessibility Polish',
     description:
       'We achieved a perfect 100/100 Accessibility score! This update brings crystal clear text contrast, massive performance gains by deferring audio engine startup, and a snappier feel thanks to lazy-loading.',
@@ -798,7 +814,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.58',
     date: '2026-01-22',
-    title: 'The Golden Polish Update 🏆',
+    title: 'The Golden Polish Update Ã°Å¸Ââ€ ',
     codename: 'Gold Plated',
     description:
       'We fixed the "Word Smith" achievement logic and updated the Premium Beat count to show the real number of tracks available.',
@@ -850,7 +866,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.55',
     date: '2026-01-21',
-    title: 'Hotfix for the Hotfix (Again) 🙈',
+    title: 'Hotfix for the Hotfix (Again) Ã°Å¸â„¢Ë†',
     codename: 'Third Time Charm',
     description:
       'Fixed the build error by properly destructuring the sessionDuration prop. We manually verified the file this time!',
@@ -866,7 +882,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.54',
     date: '2026-01-21',
-    title: 'Hotfix for the Hotfix 🛠️',
+    title: 'Hotfix for the Hotfix Ã°Å¸â€ºÂ Ã¯Â¸Â',
     codename: 'Patch Perfect',
     description:
       'Fixed a build error introduced in the previous hotfix. The duration display is now truly fixed and stable.',
@@ -882,7 +898,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.53',
     date: '2026-01-21',
-    title: 'Duration Hotfix ⏱️',
+    title: 'Duration Hotfix Ã¢ÂÂ±Ã¯Â¸Â',
     codename: 'Time Lord',
     description:
       'Fixed a bug where the total time would show as "INFINITY:NAN" while the audio was loading. We now properly use the saved session duration for instant display.',
@@ -899,7 +915,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.52',
     date: '2026-01-21',
-    title: 'The Visual Perfection Update 🎨',
+    title: 'The Visual Perfection Update Ã°Å¸Å½Â¨',
     codename: 'Pixel Perfect',
     description:
       'We polished the audio player with a pro-grade progress bar and stabilized the playback engine to ensure your sessions never skip a beat.',
@@ -922,7 +938,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.51',
     date: '2026-01-21',
-    title: 'Pure Harmony ☯️',
+    title: 'Pure Harmony Ã¢ËœÂ¯Ã¯Â¸Â',
     codename: 'Duplicate Removed',
     description:
       'We found a ghost in the machine! The navigation bar was being rendered twice, causing layout shifts and clipping. We removed the double-print and restored pure symmetrical balancing.',
@@ -939,7 +955,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.50',
     date: '2026-01-21',
-    title: 'Gravity Center 🎨',
+    title: 'Gravity Center Ã°Å¸Å½Â¨',
     codename: 'Visual Balance',
     description:
       'We removed the complex math and simply pushed the player down to visually balance it against the header. Sometimes simpler is better.',
@@ -956,7 +972,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.49',
     date: '2026-01-21',
-    title: 'Universal Center 🌐',
+    title: 'Universal Center Ã°Å¸Å’Â',
     codename: 'Relative Flow',
     description:
       'We unlocked the physics of the layout. The player now adapts to any device notch or header size for true responsive centering.',
@@ -979,7 +995,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.48',
     date: '2026-01-21',
-    title: 'Geometric Center 📐',
+    title: 'Geometric Center Ã°Å¸â€œÂ',
     codename: 'Euclidean',
     description:
       'Mathematically perfect centering accounting for global UI chrome.',
@@ -1001,7 +1017,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.47',
     date: '2026-01-21',
-    title: 'Hotfix 🔧',
+    title: 'Hotfix Ã°Å¸â€Â§',
     codename: 'True Center',
     description: 'Layout corrections for true mathematical centering.',
     changes: [
@@ -1016,7 +1032,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.46',
     date: '2026-01-21',
-    title: 'The Balance Update ⚖️',
+    title: 'The Balance Update Ã¢Å¡â€“Ã¯Â¸Â',
     codename: 'Perfect Center',
     description:
       'We fine-tuned the practice experience with focused layout improvements and expanded frequency options for veteran rappers.',
@@ -1039,7 +1055,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.45',
     date: '2026-01-20', // Same day, fast iteration
-    title: 'Cloud Control ☁️',
+    title: 'Cloud Control Ã¢ËœÂÃ¯Â¸Â',
     codename: 'Cloud Control',
     description:
       'We are introducing smart storage limits to keep the platform sustainable while ensuring Pro users get the premium experience.',
@@ -1063,7 +1079,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.44',
     date: '2026-01-20',
-    title: 'The Smart Flow Update 🧠',
+    title: 'The Smart Flow Update Ã°Å¸Â§Â ',
     codename: 'Smart Flow',
     description:
       'We made the practice engine smarter! No more repeated words, and we now prevent simple rhymes from appearing back-to-back to force you to think harder.',
@@ -1209,7 +1225,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.38',
     date: '2026-01-17',
-    title: 'The Guest Pass Hotfix ️',
+    title: 'The Guest Pass Hotfix Ã¯Â¸Â',
     codename: 'Open Mic',
     description:
       'We fixed a critical bug preventing guest users from starting a recording session. The "The Booth" is now open to everyone again!',
@@ -1275,7 +1291,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          "️ **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!",
+          "Ã¯Â¸Â **Delete Fixed**: Resolved an issue where deleting server-side tracks from the dropdown wasn't working. Clean up your library with confidence!",
         ],
       },
     ],
@@ -1292,13 +1308,13 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'New Features',
         items: [
           ' **Rate Us**: Added a sleek rating modal that appears after your 3rd session. Love the app? Let us know!',
-          '⭐ **Star Power**: You can now drop a star rating directly in the feedback form.',
+          'Ã¢Â­Â **Star Power**: You can now drop a star rating directly in the feedback form.',
         ],
       },
       {
         category: 'Fixes & Improvements',
         items: [
-          '️ **Perfect Loops**: Rewrote the audio engine to use Web Audio scheduling. Beats now loop seamlessly with zero gaps.',
+          'Ã¯Â¸Â **Perfect Loops**: Rewrote the audio engine to use Web Audio scheduling. Beats now loop seamlessly with zero gaps.',
           ' **Clean Cards**: Combined Artist and Producer names on beat cards for a cleaner look.',
         ],
       },
@@ -1332,8 +1348,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '️ **Admin Focus Fix**: Resolved an annoying bug where editing track details would lose focus after every character. Smooth typing is back!',
-          '️ **Instant Difficulty**: Changing difficulty mid-session now instantly updates the word vibe for the rest of your session.',
+          'Ã¯Â¸Â **Admin Focus Fix**: Resolved an annoying bug where editing track details would lose focus after every character. Smooth typing is back!',
+          'Ã¯Â¸Â **Instant Difficulty**: Changing difficulty mid-session now instantly updates the word vibe for the rest of your session.',
         ],
       },
       {
@@ -1348,7 +1364,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.31',
     date: '2026-01-16',
-    title: 'The Quality of Life Update ️',
+    title: 'The Quality of Life Update Ã¯Â¸Â',
     codename: 'Safe Zone',
     description:
       'A massive polish update ensuring content never covers navigation, fixing audio glitches during review, and professionalizing the experience with better legal pages and feedback tools.',
@@ -1366,7 +1382,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           ' **Audio Glitch Eradicated**: Fixed stuttering and popping during recording review playback.',
           ' **Smooth Waveform**: The playback indicator now smoothly glides across the track without jitter.',
-          '️ **Feedback Center**: Launched a dedicated /feedback page for easier bug reporting.',
+          'Ã¯Â¸Â **Feedback Center**: Launched a dedicated /feedback page for easier bug reporting.',
         ],
       },
     ],
@@ -1384,7 +1400,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           ' **Cypher Outer Ring**: The player segments now hug the outer edge of the main control button for a cleaner, futuristic look.',
           ' **Siren Boost**: The "Police Siren" effect before word switches is now 200% more intense. You can\'t miss it!',
-          'ℹ️ **Header Help**: Added a quick-access Help button (?) to the global header that takes you straight to the "How it Works" guide.',
+          'Ã¢â€žÂ¹Ã¯Â¸Â **Header Help**: Added a quick-access Help button (?) to the global header that takes you straight to the "How it Works" guide.',
           ' **Glass Record Ring**: The central record button is now a consistent transparent glass ring with a purple border, ensuring the logo always shines through.',
         ],
       },
@@ -1396,12 +1412,12 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'The Safe Resume & Admin Polish Update ',
     codename: 'Smooth Operator',
     description:
-      'We’ve ironed out the playback wrinkles in Practice Mode (resuming works perfectly now!) and gave the Admin Beat Upload experience a serious upgrade with better layouts and stricter data controls.',
+      'WeÃ¢â‚¬â„¢ve ironed out the playback wrinkles in Practice Mode (resuming works perfectly now!) and gave the Admin Beat Upload experience a serious upgrade with better layouts and stricter data controls.',
     changes: [
       {
         category: 'Fixes & Improvements',
         items: [
-          "⏯️ **Perfect Resume**: Fixed a bug where resuming a paused session wouldn't restart the beat. Now it picks up exactly where you left off.",
+          "Ã¢ÂÂ¯Ã¯Â¸Â **Perfect Resume**: Fixed a bug where resuming a paused session wouldn't restart the beat. Now it picks up exactly where you left off.",
           ' **Safe Pausing**: Switching browser tabs now safely pauses your session instead of stopping it completely.',
           ' **Spacebar Safety**: Pressing Spacebar now gently pauses the session (with confirmation) instead of abruptly ending it.',
         ],
@@ -1409,8 +1425,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'New Features',
         items: [
-          '️ **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.',
-          '️ **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.',
+          'Ã¯Â¸Â **Admin Upload 2.0**: Completely redesigned the beat upload card. Added a sleek "Free/Premium" toggle switch and optimized the layout.',
+          'Ã¯Â¸Â **Smart Genre Filter**: The Beat Vault filter now dynamically updates to show only relevant genres for the tracks you are viewing.',
           ' **Data Integrity**: Producer Name and Genre are now mandatory fields for new uploads.',
         ],
       },
@@ -1436,7 +1452,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.27',
     date: '2026-01-15',
-    title: 'The True Timer Fix ⏱️',
+    title: 'The True Timer Fix Ã¢ÂÂ±Ã¯Â¸Â',
     codename: 'StrictMode Safe',
     description:
       'The session timer now runs at the correct speed! We discovered React StrictMode was causing the timer to run 2x faster by spawning duplicate animation loops.',
@@ -1444,8 +1460,8 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '⏰ **Accurate Timer**: Timer now counts at exactly 1 second per real second.',
-          '️ **StrictMode Guard**: Added animation ref guard to prevent duplicate timing loops.',
+          'Ã¢ÂÂ° **Accurate Timer**: Timer now counts at exactly 1 second per real second.',
+          'Ã¯Â¸Â **StrictMode Guard**: Added animation ref guard to prevent duplicate timing loops.',
           ' **Clean Exit Paths**: All animation loop exit points now properly clean up the frame reference.',
           ' **Silence on Save**: Fixed "Leave site?" warning appearing after successful session save.',
         ],
@@ -1455,7 +1471,7 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.26',
     date: '2026-01-15',
-    title: 'The Metronome Fix ⏱️',
+    title: 'The Metronome Fix Ã¢ÂÂ±Ã¯Â¸Â',
     codename: 'True Time',
     description: 'Minor timer stability improvements and layout polish.',
     changes: [
@@ -1510,7 +1526,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Visual Overhaul',
         items: [
-          '️ **Satellite UI**: Redesigned player controls to prevent button cropping and improve reachability.',
+          'Ã¯Â¸Â **Satellite UI**: Redesigned player controls to prevent button cropping and improve reachability.',
           ' **Layout Fixes**: Solved vertical scrolling issues on smaller screens across the app.',
         ],
       },
@@ -1596,7 +1612,7 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'Mobile Experience',
     codename: 'One Screen',
     description:
-      'Practice sessions now fit perfectly on your mobile screen. No scrolling, no distractions—just you and the booth.',
+      'Practice sessions now fit perfectly on your mobile screen. No scrolling, no distractionsÃ¢â‚¬â€just you and the booth.',
     changes: [
       {
         category: 'Fixes & Improvements',
@@ -2030,7 +2046,7 @@ export const PATCH_NOTES: PatchNote[] = [
     version: '0.7.2',
     date: '2026-01-10',
     title: 'The Video Studio',
-    codename: 'Cinema Verité',
+    codename: 'Cinema VeritÃƒÂ©',
     description:
       'Introduced a dedicated Video Export Studio page and refined the gamification UI for clarity.',
     changes: [

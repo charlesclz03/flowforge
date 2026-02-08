@@ -15,6 +15,10 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
     - **Linting**: Run `npm run lint`.
     - **Types**: Run `tsc --noEmit`.
     - **Build**: Run `npm run build`.
+    - **Env Contract**:
+      - Run `npm run check:release-env:local` (local contract).
+      - Run `npm run check:release-env` (strict production contract).
+      - Run `npm run check:release-env:vercel` (remote Vercel variable presence).
     - **ACTION**: You MUST fix ALL errors reported by these commands before proceeding. Do not push code that fails the build.
 
 4.  **Asset Verification**

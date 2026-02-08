@@ -18,7 +18,7 @@ The goal of this phase was to transform Freestyla from a solitary practice tool 
     - Third-party users can vote on preferred takes in a Duel.
     - Real-time vote counts displayed.
 
-3.  **Social Discovery** (`/feed`)
+3.  **Social Discovery** (`/tracks`)
     - **Trending Battles**: Algorithmic display of active duels.
     - **Fresh Drops**: Recent community recordings.
     - **Leaderboard**: Ranked by "Flow Points".

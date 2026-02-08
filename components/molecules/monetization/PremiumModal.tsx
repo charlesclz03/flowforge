@@ -42,7 +42,7 @@ export function PremiumModal({
         return {
           title: 'Conquer the Studio: Unlimited Access',
           description:
-            'Free users are limited to 2-minute sessions. Upgrade to record full studio-length tracks.',
+            'Sessions run up to 10 minutes. Upgrade to save, download, and polish full studio-length tracks.',
         }
       case 'beat':
         return {
@@ -68,7 +68,7 @@ export function PremiumModal({
   const content = getContent()
 
   const benefits = [
-    'Record full tracks. No limits. Total freedom.',
+    'Save and export full 10-minute tracks.',
     `Unlock access to ${beatCount || 100}+ premium beats`,
     'Analyze your evolution with advanced stats',
     'Download studio-quality audio',

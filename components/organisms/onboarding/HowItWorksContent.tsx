@@ -94,7 +94,7 @@ export function HowItWorksContent({
             <div>
               <h2 className="mb-2 text-lg font-semibold">Precision timing</h2>
               <p className="text-sm text-text-secondary">
-                your session. Standard sessions run for 2 minutes, perfect for
+                your session. Standard sessions run for 10 minutes, perfect for
                 daily practice.
               </p>
             </div>
@@ -184,7 +184,7 @@ export function HowItWorksContent({
         <div className="h-12 w-px bg-white/10" />
         <div>
           <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
-            2 min+
+            10 min
           </div>
           <div>Session time</div>
         </div>

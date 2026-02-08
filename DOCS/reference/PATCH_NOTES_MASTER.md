@@ -3,6 +3,22 @@
 ## v0.9.994 - Self-Heal (2026-02-05)
 - **FIX**: Implemented API self-healing for Achievements to prevent "0/0" empty state.
 - **FIX**: Auto-seeds achievement data if missing from the database.
+- **FIX**: Practice mode now waits for confirmed beat playback before entering `PLAYING`, preventing silent-state sessions.
+- **FIX**: Resume from pause now stays paused if playback cannot restart.
+- **FIX**: Practice now auto-finishes exactly at the 10-minute session mark for all users.
+- **FIX**: Practice now respects recording mode and does not force recorder startup when recording is disabled.
+- **FIX**: Updated pricing/upgrade copy to consistently state 10-minute sessions.
+- **TEST**: Stabilized local Playwright smoke runs by serializing execution against the dev server.
+- **FIX**: Guest practice completion no longer hits auth-only save endpoints and now resets cleanly.
+- **TEST**: Added timeout smoke coverage and guest completion assertions (no unauthorized save calls) across desktop/mobile Playwright projects.
+- **CHORE**: Added `npm run check:release-env` for pre-release environment validation.
+- **CHORE**: Hardened release env validation with strict format checks, placeholder rejection, and live Stripe key enforcement in production mode.
+- **TEST**: Added `npm run check:release-env:local` for local env contract checks without weakening production release gates.
+- **TEST**: Added `npm run check:release-env:vercel` to verify required production variable names directly in Vercel.
+- **FIX**: NextAuth now respects `NEXTAUTH_DEBUG`, reducing noisy debug warnings during local automation.
+- **FIX**: Yearly Stripe checkout now supports legacy `STRIPE_PRICE_ID_ANNUAL` fallback while standardizing on `STRIPE_PRICE_ID_YEARLY`.
+- **DOCS**: Removed active references to the retired social discovery route from current product docs.
+- **FIX**: Cleaned mojibake text artifacts on `/patch-notes` and `/orderconfirmed`.
 
 ## v0.9.993 - Type Safe (2026-02-03)
 - **FIX**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.

@@ -16,7 +16,7 @@ export function LandingPricing() {
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              'Practice mode (2 min max)',
+              'Practice mode (10 min sessions)',
               'Access to free beats',
               'Word prompts',
             ].map((feature) => (

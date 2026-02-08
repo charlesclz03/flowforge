@@ -24,6 +24,7 @@ const AudioVisualizer = dynamic(
 import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
+import { RECORDING_CONFIG } from '@/lib/constants/design'
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
 
@@ -623,9 +624,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
                             filter: 'blur(20px)',
                           }}
                           transition={{
-                            type: 'spring',
+                            type: 'tween',
                             duration: 0.4,
-                            bounce: 0.4,
+                            ease: 'easeOut',
                           }}
                           className="flex flex-col items-center justify-center w-full max-w-[85%] px-2"
                         >
@@ -692,7 +693,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                               formatTime(
                                 Math.max(
                                   0,
-                                  (isPro ? 600 : 120) - (recordingDuration || 0)
+                                  (isPro
+                                    ? RECORDING_CONFIG.PRO_TIER_LIMIT_SECONDS
+                                    : RECORDING_CONFIG.FREE_TIER_LIMIT_SECONDS) -
+                                    (recordingDuration || 0)
                                 )
                               )
                             ) : (
@@ -748,7 +752,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             {/* Right Satellite: PAUSE */}
             <div className="w-12 sm:w-14 flex justify-start shrink-0">
               <AnimatePresence>
-                {isPlaying && onTogglePause && (
+                {isPlaying && onTogglePause && !countdownValue && (
                   <motion.button
                     initial={{ opacity: 0, scale: 0.8, x: -20 }}
                     animate={{ opacity: 1, scale: 1, x: 0 }}

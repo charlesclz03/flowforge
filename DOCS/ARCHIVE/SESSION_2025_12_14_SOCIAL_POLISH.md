@@ -20,7 +20,7 @@ We successfully implemented the "missing pieces" from the original spec and the 
   - **API**: `/api/duels` (Create) and `/api/duels/[id]/vote` (Vote).
   - **UI**: Split-screen `DuelView` showing Defender vs. Challenger.
 - **Social Feed**:
-  - **Page**: `/feed` displaying Trending Battles and Fresh Drops.
+  - **Page**: community discovery surface displaying Trending Battles and Fresh Drops.
   - **Discovery**: Leaderboard logic refined.
 - **Profile**:
   - Enhanced to show Badges and Social Links.

@@ -9,6 +9,9 @@ export const stripe = new Stripe(
   }
 )
 
+const yearlyPriceId =
+  process.env.STRIPE_PRICE_ID_YEARLY || process.env.STRIPE_PRICE_ID_ANNUAL
+
 export const PLANS = {
   monthly: {
     priceId: process.env.STRIPE_PRICE_ID_MONTHLY!,
@@ -17,7 +20,8 @@ export const PLANS = {
     interval: 'month' as const,
   },
   yearly: {
-    priceId: process.env.STRIPE_PRICE_ID_YEARLY!,
+    // Backward-compat: keep annual alias support while standardizing on *_YEARLY.
+    priceId: yearlyPriceId!,
     price: 49.0, // Corrected from 49.99 to match Stripe Catalog screenshot
     currency: 'EUR',
     interval: 'year' as const,

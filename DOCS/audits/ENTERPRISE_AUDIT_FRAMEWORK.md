@@ -79,7 +79,7 @@ Meta uses **Pysa** (Python Static Analyzer) to detect "taint flow"—tracing how
 
 #### The FlowForge Standard Checklist:
 - [ ] **Error Boundary Coverage**:
-    - Does every major route (Practice, Profile, Feed) have a "Grade B" failure mode where the UI doesn't crash entirely?
+    - Does every major route (Practice, Profile, Tracks) have a "Grade B" failure mode where the UI doesn't crash entirely?
 - [ ] **Logging Standardization**:
     - Ensure all logs follow a structured JSON format with `level`, `context`, and `trace_id` for easy debugging in production.
 

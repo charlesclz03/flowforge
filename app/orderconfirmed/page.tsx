@@ -182,7 +182,7 @@ export default function OrderConfirmedPage() {
             </div>
 
             <h1 className="mb-2 text-3xl font-black uppercase tracking-tight text-white sm:text-4xl">
-              Activating Proâ€¦
+              Activating Pro...
             </h1>
 
             <p className="mb-8 text-base text-text-secondary">
@@ -190,7 +190,7 @@ export default function OrderConfirmedPage() {
                 ? 'Please sign in to finish activation.'
                 : activationState === 'timeout'
                   ? 'Still processing. This can take up to a minute.'
-                  : 'Hang tightâ€”your payment is processing and weâ€™re upgrading your account.'}
+                  : "Hang tight - your payment is processing and we're upgrading your account."}
             </p>
 
             <div className="mb-10 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:p-8 text-left">
@@ -210,7 +210,7 @@ export default function OrderConfirmedPage() {
                   <>Sign in again to sync your account status after checkout.</>
                 ) : (
                   <>
-                    Weâ€™ll automatically unlock Pro as soon as the payment
+                    We'll automatically unlock Pro as soon as the payment
                     webhook confirms your subscription.
                   </>
                 )}

@@ -68,7 +68,7 @@ Optional (audit.md “Hall of Fame”):
 ### B) chrome-devtools smoke harness (production)
 Minimum checks:
 - `/` redirect final URL
-- `/feed` existence
+- Retired social discovery route remains removed (expect 404)
 - `/tracks` (guest): no unauth 401 noise
 - `/practice` (guest): audio plays on Start; no CSP/CORS; no privacy-leaking logs
 

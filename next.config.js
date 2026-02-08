@@ -109,6 +109,26 @@ const nextConfig = {
       },
     ]
   },
+  webpack: (config) => {
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      (warning) => {
+        const message = warning?.message || ''
+        const resource = warning?.module?.resource?.replace(/\\/g, '/') || ''
+
+        return (
+          message.includes(
+            'Critical dependency: the request of a dependency is an expression'
+          ) &&
+          resource.includes(
+            '@prisma/instrumentation/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js'
+          )
+        )
+      },
+    ]
+
+    return config
+  },
 }
 
 // Injected content via Sentry Wizard

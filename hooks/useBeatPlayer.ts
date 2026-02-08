@@ -62,8 +62,8 @@ export function useBeatPlayer() {
   /**
    * Play the current beat
    */
-  const play = useCallback(async () => {
-    if (!playerRef.current) return
+  const play = useCallback(async (): Promise<boolean> => {
+    if (!playerRef.current) return false
 
     try {
       // Optimistic update
@@ -72,18 +72,27 @@ export function useBeatPlayer() {
 
       await playerRef.current.play()
 
-      // Verification after await
-      const state = playerRef.current.getState()
+      // Verification after await (plus a short second check for browsers that
+      // resolve play() before paused state settles).
+      let state = playerRef.current.getState()
+      if (!state.isPlaying) {
+        await new Promise((resolve) => setTimeout(resolve, 75))
+        state = playerRef.current.getState()
+      }
       if (!state.isPlaying) {
         console.warn(
           'Play resolved but player is not playing (likely ended immediately or failed silently)'
         )
         setIsPlaying(false)
+        return false
       }
+
+      return true
     } catch (err) {
       console.error('Error playing beat:', err)
       setError('Failed to play beat')
       setIsPlaying(false)
+      return false
     }
   }, [])
 
@@ -115,8 +124,9 @@ export function useBeatPlayer() {
   const toggle = useCallback(async () => {
     if (isPlaying) {
       pause()
+      return true
     } else {
-      await play()
+      return play()
     }
   }, [isPlaying, play, pause])
 

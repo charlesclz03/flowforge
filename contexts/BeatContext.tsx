@@ -12,10 +12,10 @@ interface BeatContextValue {
   error: string | null
   currentBeat: BeatMetadata | null
   loadBeat: (beat: BeatMetadata) => Promise<void>
-  play: () => Promise<void>
+  play: () => Promise<boolean>
   pause: () => void
   stop: () => void
-  toggle: () => Promise<void>
+  toggle: () => Promise<boolean>
   seek: (time: number) => void
   setVolume: (volume: number) => void
   setLoop: (loop: boolean) => void

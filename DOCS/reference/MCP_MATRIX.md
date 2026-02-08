@@ -1,33 +1,31 @@
 # MCP Server Matrix
 
-**Last Update:** 2026-02-03
+**Last Update:** 2026-02-08
 
-## MCP Servers
+## Server Status
 
-| Server              | Status | Last Audit | Tools | Notes |
-|:--------------------|:------:|:-----------|------:|:------|
-| chrome-devtools     | ✅     | 2026-01-30 | 9     | Connected via Manual Launch. |
-| supabase-mcp-server | ✅     | 2026-01-30 | 6+    | Connected to `FlowForge`. |
+| Server | Status | Last Audit | Notes |
+|---|---|---|---|
+| `chrome-devtools` | OK | 2026-02-08 | Used for browser-control workflows and UI verification. |
+| `supabase-mcp-server` | OK | 2026-02-08 | Used for database/admin/doc workflows. |
 
-## Audit History
+## Recent Audit History
 
-| Date       | Server              | Status | Changes Applied |
-|:-----------|:--------------------|:------:|:----------------|
-| 2026-02-03 | chrome-devtools     | OK     | Configured Codex MCP (isolated Chrome) and verified tool calls. |
-| 2026-02-03 | supabase-mcp-server | OK     | Moved token to env var; configured Codex env passthrough; verified project listing. |
-| 2026-01-30 | chrome-devtools     | ✅ OK  | Verified connectivity (Manual Launch required). |
-| 2026-01-30 | supabase-mcp-server | ✅ OK  | Confirmed project list and documentation access. |
-| 2026-01-29 | chrome-devtools     | ✅ OK  | Fixed connection via `Start-Process chrome`. |
-| 2026-01-29 | supabase-mcp-server | ✅ OK  | Validated connection, project listing, and doc search. |
+| Date | Server | Status | Notes |
+|---|---|---|---|
+| 2026-02-08 | `chrome-devtools` | PASS | Confirmed availability during local release-hardening pass. |
+| 2026-02-08 | `supabase-mcp-server` | PASS | Confirmed availability during local release-hardening pass. |
+| 2026-02-03 | `chrome-devtools` | PASS | Verified Codex MCP setup and tool calls. |
+| 2026-02-03 | `supabase-mcp-server` | PASS | Verified env-token setup and project listing. |
 
-## Tool Reference
+## Primary Tools
 
-### Supabase
-- **Query**: `mcp_supabase-mcp-server_execute_sql`
-- **Docs**: `mcp_supabase-mcp-server_search_docs`
-- **Projects**: `mcp_supabase-mcp-server_list_projects`
+### Chrome DevTools MCP
+- `mcp__chrome-devtools__navigate_page`
+- `mcp__chrome-devtools__take_snapshot`
+- `mcp__chrome-devtools__take_screenshot`
 
-### Chrome
-- **Screenshot**: `mcp_chrome-devtools_take_screenshot`
-- **Navigate**: `mcp_chrome-devtools_navigate_page`
-- **Inspect**: `mcp_chrome-devtools_take_snapshot`
+### Supabase MCP
+- `mcp__supabase-mcp-server__list_projects`
+- `mcp__supabase-mcp-server__execute_sql`
+- `mcp__supabase-mcp-server__search_docs`

@@ -44,6 +44,10 @@ interface UsePracticeEngineProps {
   mode?: 'solo' | 'cypher'
   /** Number of players for Cypher mode (2-4) */
   cypherPlayers?: number
+  /** Whether recording is enabled for this run */
+  isRecordingEnabled?: boolean
+  /** Whether completed sessions should be persisted via API */
+  shouldSaveSessions?: boolean
 }
 
 /**
@@ -66,7 +70,19 @@ export function usePracticeEngine({
   submitSession,
   mode = 'solo',
   cypherPlayers = 4,
+  isRecordingEnabled = false,
+  shouldSaveSessions = true,
 }: UsePracticeEngineProps) {
+  const isAudioDebug =
+    process.env.NODE_ENV !== 'production' &&
+    process.env.NEXT_PUBLIC_AUDIO_DEBUG === 'true'
+
+  const debugLog = (...args: unknown[]) => {
+    if (isAudioDebug) {
+      console.log(...args)
+    }
+  }
+
   // 1. The Reducer (State Machine)
   const { state, dispatch } = usePlayerState()
 
@@ -238,7 +254,7 @@ export function usePracticeEngine({
           ctx?.state
         )
       } else {
-        console.log('[PracticeEngine] AudioContext Verified: RUNNING')
+        debugLog('[PracticeEngine] AudioContext Verified: RUNNING')
       }
 
       // 2. Enter Countdown (Only if Audio is confirmed ready)
@@ -249,51 +265,75 @@ export function usePracticeEngine({
       // dispatch({ type: 'ERROR', error: 'Failed to initialize audio' })
       alert('Could not start audio engine. Please tap again.')
     }
-  }, [state.status, dispatch, initAudio, beatPlayer])
+  }, [state.status, dispatch, initAudio, beatPlayer, beatVolume])
 
   const stopSession = useCallback(() => {
-    dispatch({ type: 'STOP', shouldSave: true })
+    dispatch({ type: 'STOP', shouldSave: shouldSaveSessions })
     // [COMMAND-BASED] Immediate Stop
     beatPlayer.stop()
-    recorder.stop()
-  }, [dispatch, beatPlayer, recorder])
+    if (isRecordingEnabled) {
+      recorder.stop()
+    }
+  }, [dispatch, beatPlayer, recorder, isRecordingEnabled, shouldSaveSessions])
 
   const discardSession = useCallback(() => {
     if (confirm('Discard this session?')) {
       dispatch({ type: 'DISCARD' })
       // [COMMAND-BASED] Immediate Stop
       beatPlayer.stop()
-      recorder.stop()
+      if (isRecordingEnabled) {
+        recorder.stop()
+      }
     }
-  }, [dispatch, beatPlayer, recorder])
+  }, [dispatch, beatPlayer, recorder, isRecordingEnabled])
 
-  const togglePause = useCallback(() => {
+  const togglePause = useCallback(async () => {
     if (state.status === 'PLAYING') {
       dispatch({ type: 'PAUSE' })
       // [COMMAND-BASED] Immediate Pause
       beatPlayer.pause()
-      recorder.pause()
+      if (isRecordingEnabled) {
+        recorder.pause()
+      }
     } else if (state.status === 'PAUSED') {
+      // [COMMAND-BASED] Resume only if playback truly restarted.
+      const resumed = await beatPlayer.play()
+      if (!resumed) {
+        alert('Could not resume playback. Please try again.')
+        return
+      }
       dispatch({ type: 'RESUME' })
-      // [COMMAND-BASED] Immediate Resume
-      beatPlayer.play()
-      recorder.resume()
+      if (isRecordingEnabled) {
+        recorder.resume()
+      }
     }
-  }, [state.status, dispatch, beatPlayer, recorder])
+  }, [state.status, dispatch, beatPlayer, recorder, isRecordingEnabled])
 
   // 5. Reactive Side Effects (The Muscles)
   // This is where "StateMachine -> Real World" happens.
 
   // Effect: Handle COUNTDOWN -> PLAYING transition
   // We explicitly trigger the "Drop" here to ensure tight timing.
-  const completeCountdown = useCallback(() => {
+  const completeCountdown = useCallback(async () => {
+    // [COMMAND-BASED] Start "The Drop" before entering PLAYING state.
+    beatPlayer.setLoop(true)
+    const started = await beatPlayer.play()
+
+    if (!started) {
+      beatPlayer.stop()
+      dispatch({ type: 'RESET' })
+      alert('Could not start playback. Please try again.')
+      return
+    }
+
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
     setStartTime(audioSync.getPreciseTime())
-    // [COMMAND-BASED] Immediate Start "The Drop"
-    beatPlayer.setLoop(true)
-    beatPlayer.play()
-    recorder.start()
-  }, [dispatch, beatPlayer, recorder, audioSync])
+    if (isRecordingEnabled) {
+      recorder.start().catch((err) => {
+        console.error('[PracticeEngine] Recorder start failed:', err)
+      })
+    }
+  }, [dispatch, beatPlayer, recorder, audioSync, isRecordingEnabled])
 
   // REMOVED: Circular Dependency Effect (was lines 246-267)
   // The logic is now distributed to the commands above.
@@ -309,6 +349,20 @@ export function usePracticeEngine({
       // Or rely on recorder.onComplete callback to dispatch 'START_SAVE'
     }
   }, [state.status])
+
+  // Guarantee non-save paths do not linger in FINISHING.
+  useEffect(() => {
+    if (state.status === 'FINISHING' && !state.shouldSave) {
+      dispatch({ type: 'RESET' })
+    }
+  }, [state.status, state.shouldSave, dispatch])
+
+  // Guarantee EXITING paths always settle back to IDLE.
+  useEffect(() => {
+    if (state.status === 'EXITING' && !recorder.isRecording) {
+      dispatch({ type: 'RESET' })
+    }
+  }, [state.status, recorder.isRecording, dispatch])
 
   // 6. External Recorder Callback Wiring
   // 6. External Recorder Callback Wiring
@@ -331,7 +385,7 @@ export function usePracticeEngine({
 
         try {
           // 2. Client-Side Mixing
-          console.log('[PracticeEngine] Starting audio mix...')
+          debugLog('[PracticeEngine] Starting audio mix...')
           const mixer = new AudioMixer()
           const voiceUrl = URL.createObjectURL(blob)
           cleanupUrl = voiceUrl
@@ -353,7 +407,7 @@ export function usePracticeEngine({
                 nudge: latencyMs,
               }
             )
-            console.log(
+            debugLog(
               `[PracticeEngine] Mix complete. Size: ${finalBlob.size} bytes`
             )
           } else {
@@ -437,7 +491,7 @@ export function usePracticeEngine({
       !recorder.isRecording && // Not recording now
       recorder.duration === 0 // And didn't record anything
     ) {
-      console.log(
+      debugLog(
         '[PracticeEngine] No recording detected. Submitting metadata only.'
       )
       dispatch({ type: 'START_SAVE' })
@@ -471,10 +525,12 @@ export function usePracticeEngine({
     }
 
     // Wire up Max Duration (Premium/Guest Limits)
-    setOnMaxDurationReached(() => {
-      // Stop everything
-      stopSession()
-    })
+    if (isRecordingEnabled) {
+      setOnMaxDurationReached(() => {
+        // Stop everything
+        stopSession()
+      })
+    }
   }, [
     state.status,
     state.shouldSave,
@@ -493,6 +549,7 @@ export function usePracticeEngine({
     recorder.duration,
     recorder.isRecording,
     startTime,
+    isRecordingEnabled,
   ])
 
   // 7. Live Volume Sync (The Missing Link)

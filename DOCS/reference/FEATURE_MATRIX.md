@@ -1,4 +1,4 @@
-# FreeStyla Feature Matrix (v0.9.993)
+# FreeStyla Feature Matrix (v0.9.994)
 
 ## Core Practice Engine
 
@@ -47,8 +47,8 @@
 
 | Plan     | Price       | Key Benefits                                               |
 | :------- | :---------- | :--------------------------------------------------------- |
-| **Free** | $0          | Basic Practice, 60s Recording Limit, Ads.                  |
-| **Pro**  | EUR 4.99/mo | No Ads, Unlimited Recording, User Uploads, Advanced Stats. |
+| **Free** | $0          | Basic Practice, 10-minute Sessions, Ads.                   |
+| **Pro**  | EUR 4.99/mo | No Ads, Save/Download, User Uploads, Advanced Stats.       |
 
 ---
 

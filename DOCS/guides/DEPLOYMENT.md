@@ -20,6 +20,31 @@
 
 ---
 
+## Automated Env Validation (Required)
+
+Run both checks before pushing a release commit:
+
+```bash
+# Local/dev contract (allows localhost + test-mode values)
+npm run check:release-env:local
+
+# Production contract (strict validation for public release)
+npm run check:release-env
+
+# Vercel production variable-name presence check
+npm run check:release-env:vercel
+```
+
+`check:release-env` fails on:
+- missing required keys
+- placeholder/example values
+- invalid URL formats
+- non-live Stripe keys in production mode
+
+Only proceed when all three commands pass in the intended release context.
+
+---
+
 ## Step-by-Step Deployment
 
 ### Step 1: Prepare GitHub Repository

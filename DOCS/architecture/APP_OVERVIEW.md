@@ -1,7 +1,7 @@
 # FreeStyla - Application Overview & Feature Guide
 
-**Date**: 2026-02-03  
-**Version**: 0.9.993 (Type Safe)
+**Date**: 2026-02-07  
+**Version**: 0.9.994 (Self-Heal)
 
 ---
 
@@ -82,12 +82,12 @@ The heart of the application, designed for zero-latency performance and maximum 
 - **Share Functionality**: Native share sheet integration for recordings (Mobile/Desktop).
 - **Cypher Mode**: Multiplayer lobbies with real-time turn-based visuals.
 - **Duel Mode**: Competitive challenges on the same seed.
-- **Feed**: Not currently live (production `/feed` returns 404).
+- **Public Profiles**: Shareable profile pages and public recording links.
 
 ### 6. Monetization (Stripe)
 
-- **Pro Subscription**: $4.99/mo tier unlocking Uploads, Unlimited Recording, and Advanced Stats.
-- **Calculated Limitations**: Free tier capped at 60s recordings with ads; Pro is unlimited and ad-free.
+- **Pro Subscription**: EUR 4.99/mo tier unlocking Uploads, Premium Beats, Save/Download tools, and Advanced Stats.
+- **Calculated Limitations**: Practice sessions currently run up to 10 minutes for all users.
 
 ---
 

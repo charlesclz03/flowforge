@@ -40,7 +40,7 @@ export default function PatchNotesPage() {
                     className={`mb-4 md:mb-0 ${index % 2 === 0 ? 'md:text-right md:pr-4' : 'md:col-start-2 md:pl-4 order-2'}`}
                   >
                     <div className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-400 font-mono mb-2">
-                      v{note.version} â€¢ {note.date}
+                      v{note.version} - {note.date}
                     </div>
                     {/* Max width constraint to prevent overlap with timeline on tiny screens */}
                     <div className="max-w-[calc(100vw-5rem)] md:max-w-none">
@@ -75,7 +75,7 @@ export default function PatchNotesPage() {
                                 className="text-sm text-zinc-400 flex items-start gap-2"
                               >
                                 <span className="text-purple-500 mt-1.5 text-[6px] shrink-0">
-                                  â—
+                                  -
                                 </span>
                                 <span className="break-words">{item}</span>
                               </li>
@@ -95,7 +95,7 @@ export default function PatchNotesPage() {
               href="/profile"
               className="text-zinc-500 hover:text-white text-sm transition-colors"
             >
-              â† Return to Profile
+              {'<-'} Return to Profile
             </Link>
           </div>
         </div>

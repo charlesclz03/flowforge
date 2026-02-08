@@ -51,11 +51,11 @@
 
 ## Priority 3: Social Ecosystem (Phase 6)
 
-### 3.1 Profile & Feed
+### 3.1 Profile & Discovery
 
 - [ ] **Public Profile**: Visit `/u/[username]` as unauthenticated user -> See stats/tracks.
-- [ ] **Follow System**: Follow user -> Verify count increments -> Verify "Following" feed updates.
-- [ ] **Global Feed**: Not currently live (production `/feed` returns 404). Skip or remove from scope.
+- [ ] **Follow System**: Follow user -> Verify count increments -> Verify profile follow metrics update.
+- [ ] **Discovery Routes**: Verify `/tracks` and public profile pages load for signed-out users.
 
 ### 3.2 Interaction
 
