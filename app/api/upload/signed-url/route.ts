@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { createClient } from '@supabase/supabase-js'
-import { RECORDINGS_BUCKET, BEATS_BUCKET } from '@/lib/supabase/server'
+import {
+  createServerClient,
+  RECORDINGS_BUCKET,
+  BEATS_BUCKET,
+} from '@/lib/supabase/server'
 
 /**
  * Generates a signed URL for direct-to-Supabase uploads.
@@ -45,9 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Initialize Supabase with service role key for signed URL generation
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createServerClient()
 
     // Determine bucket (default to recordings, allow 'beats' for admins)
     const effectiveRole = user?.role || session.user.role

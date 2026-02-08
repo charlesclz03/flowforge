@@ -1,13 +1,14 @@
-# Project Status: v0.9.995 ("Turbo Charge")
-**Current Version**: `0.9.996`
+# Project Status: v0.9.997 ("Silent Night Fix")
+**Current Version**: `0.9.997`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-08
 
 ## Quick Status
-> **Latest Release**: v0.9.996 (Studio Restoration) - Fixed missing practice buttons.
+> **Latest Release**: v0.9.997 (Silent Night Fix) - Resolved empty recordings issue.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
+- **Silent Night Fix**: Prevented empty recordings in Practice Mode and optimized Free tier UX (2026-02-08).
 - **Turbo Charge**: Optimized Achievements API to reduce DB load by 60% (v0.9.995).
 - **Upload Shield Release**: Deprecated legacy `/api/admin/beats` upload endpoint (410 + migration guidance), fully standardizing signed direct upload flow for admin beat publishing (2026-02-08).
 - **Upload Transport Hardening**: Migrated all admin beat upload surfaces (`/admin/beats/new`, `/admin/upload`, `/admin/upload-beat`) to signed direct uploads to eliminate server body-size `413` failures (2026-02-08).

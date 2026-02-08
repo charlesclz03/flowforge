@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.997',
+    date: '2026-02-08',
+    title: 'Silent Night Fix 🌙',
+    codename: 'Silent Night Fix',
+    description:
+      'We resolved a critical issue where empty recordings were being saved in Practice Mode. We also optimized the experience for Free users by ensuring they only save session metadata without triggering upload errors.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Empty Recording Fix**: Prevented "Practice Mode" sessions from uploading 0-byte audio files.',
+          '**Free Tier Optimization**: Practice sessions for free users now automatically skip audio uploads, preventing 403 errors and saving metadata only.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.996',
     date: '2026-02-08',
     title: 'Button Fix 🔧',

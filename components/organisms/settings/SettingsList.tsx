@@ -487,7 +487,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
         )}
         <div className="mt-8 text-center">
           <p className="ml-2 text-xs text-white/20">
-            v0.9.996 (Studio Restoration)
+            v0.9.997 (Silent Night Fix)
           </p>
         </div>
       </div>
