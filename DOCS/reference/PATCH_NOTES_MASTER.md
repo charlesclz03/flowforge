@@ -1,5 +1,12 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.995 - Upload Shield (2026-02-08)
+- **FIX**: Deprecated `POST /api/admin/beats` with `410 Gone` + migration guidance to signed upload flow (`/api/upload/signed-url` + `/api/admin/beats/upload`).
+- **FIX**: Completed migration of admin upload surfaces so no first-party route posts large audio bodies to `/api/admin/beats`.
+- **VERIFY**: Ran production browser smoke checks on `/difficultyselection`, `/admin`, `/admin/beats/new`, `/practice`, and `/recordings` with no reproduced CSP/413/504 console errors.
+- **VERIFY**: Queried Vercel production logs; no new `413` or `504` entries detected after deployment window.
+- **CHORE**: Advanced release metadata to `v0.9.995 (Upload Shield)` in `package.json`, project status, and in-app settings version label.
+
 ## v0.9.994 - Self-Heal (2026-02-05)
 - **FIX**: Implemented API self-healing for Achievements to prevent "0/0" empty state.
 - **FIX**: Auto-seeds achievement data if missing from the database.

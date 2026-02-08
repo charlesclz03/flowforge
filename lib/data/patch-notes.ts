@@ -22,6 +22,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.995',
+    date: '2026-02-08',
+    title: 'Upload Shield',
+    codename: 'Upload Shield',
+    description:
+      'This release locks in the new admin upload transport by retiring the legacy large-body endpoint and validating production behavior after deployment.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Admin API Deprecation**: `POST /api/admin/beats` now returns `410 Gone` with migration instructions to the signed direct upload flow.',
+          '**Upload Path Standardization**: Admin upload surfaces now consistently use `POST /api/upload/signed-url` + `POST /api/admin/beats/upload`.',
+          '**Production Smoke Validation**: Verified key routes on production with no reproduced CSP/413/504 browser-console errors.',
+          '**Production Log Validation**: Checked Vercel production logs and confirmed no new `413` or `504` entries after deploy.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Release Metadata**: Bumped app metadata to `v0.9.995 (Upload Shield)` across package version, project status, and in-app settings label.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.994',
     date: '2026-02-05',
     title: 'Achievements Fix Ã°Å¸Ââ€ ',

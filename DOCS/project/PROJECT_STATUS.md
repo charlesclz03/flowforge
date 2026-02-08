@@ -1,10 +1,11 @@
-# Project Status: v0.9.994 ("Self-Heal")
-**Current Version**: `v0.9.994`
+# Project Status: v0.9.995 ("Upload Shield")
+**Current Version**: `v0.9.995`
 **Last Updated**: 2026-02-08
 **Status:** Active Development
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
 
 ## Recent Achievements
+- **Upload Shield Release**: Deprecated legacy `/api/admin/beats` upload endpoint (410 + migration guidance), fully standardizing signed direct upload flow for admin beat publishing (2026-02-08).
 - **Upload Transport Hardening**: Migrated all admin beat upload surfaces (`/admin/beats/new`, `/admin/upload`, `/admin/upload-beat`) to signed direct uploads to eliminate server body-size `413` failures (2026-02-08).
 - **Practice Engine Sync Guard**: Fixed countdown->play cleanup regression that could silently stop playback; cypher player rotation and timer-ring prompt sync are now stable (2026-02-08).
 - **Achievements Fixed**: Implemented API self-healing to resolve "0/0" empty state (v0.9.994).
@@ -37,6 +38,7 @@
 ## Version History (Recent)
 | Version | Codename | Date | Summary |
 |---------|----------|------|---------|
+| v0.9.995 | Upload Shield | 2026-02-08 | Admin Upload Endpoint Deprecation + Production Error Hardening |
 | v0.9.993 | Type Safe | 2026-02-03 | Stripe Reliability + Version/Docs Alignment |
 | v0.9.85 | Voice Upgrade | 2026-01-31 | Smart TTS & Audio Audit |
 | v0.9.84 | Voice Restoration | 2026-01-31 | TTS Implemented & Word Gen Hardened |
