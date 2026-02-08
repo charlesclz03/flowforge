@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+
+import { verifySuperAdmin } from '@/lib/auth/admin'
 import { prisma } from '@/lib/prisma'
 
 // Initialize Supabase Client
@@ -10,12 +10,8 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-
     // 1. Authorization Check
-    if (session?.user?.role !== 'SUPERADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
-    }
+    await verifySuperAdmin()
 
     const {
       title,

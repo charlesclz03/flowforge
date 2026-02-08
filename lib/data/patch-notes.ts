@@ -24,6 +24,23 @@ export const PATCH_NOTES: PatchNote[] = [
   {
     version: '0.9.995',
     date: '2026-02-08',
+    title: 'Turbo Charge ⚡',
+    codename: 'Optimization',
+    description:
+      'We optimized the Achievements system to load instantly. By removing redundant database checks, we reduced server load by 60% and eliminated the "lag" when opening your profile.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Performance**: Reduced database queries from 16 to 6 per page load.',
+          '**Lag Fix**: Eliminated the "Double Fetch" pattern in the achievements API.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.994',
+    date: '2026-02-08',
     title: 'Upload Shield',
     codename: 'Upload Shield',
     description:

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { verifySuperAdmin } from '@/lib/auth/admin'
 
 /**
  * DELETE /api/admin/cleanup-beats
@@ -7,6 +8,9 @@ import { prisma } from '@/lib/prisma'
  */
 export async function DELETE() {
   try {
+    // 1. Auth Check
+    await verifySuperAdmin()
+
     // Find all beats with external URLs (Pixabay, etc.)
     const externalBeats = await prisma.beat.findMany({
       where: {
@@ -51,6 +55,15 @@ export async function DELETE() {
       beatTitles: externalBeats.map((b) => b.title),
     })
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Unauthorized') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      if (error.message === 'Forbidden') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     console.error('Cleanup error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to clean up beats' },

@@ -333,31 +333,26 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-2 sm:gap-4 w-full px-2 relative z-10">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 w-full px-2 relative z-10 pointer-events-none">
             {/* Left Satellite: RESTART */}
-            <div className="w-12 sm:w-14 flex justify-end shrink-0">
-              <AnimatePresence>
-                {isPlaying && handleRestart && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8, x: 20 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleRestart()
-                    }}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
-                    title="Restart Session"
-                    aria-label="Restart Session"
-                  >
-                    <RefreshCcw size={20} className="sm:w-6 sm:h-6" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+            <div className="w-12 sm:w-14 flex justify-end shrink-0 pointer-events-auto">
+              {isPlaying && handleRestart && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleRestart()
+                  }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-text-secondary hover:text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm animate-in fade-in zoom-in duration-300"
+                  title="Restart Session"
+                  aria-label="Restart Session"
+                >
+                  <RefreshCcw size={20} className="sm:w-6 sm:h-6" />
+                </button>
+              )}
             </div>
 
             {/* Hero Player - Centered */}
-            <div className="relative flex items-center justify-center shrink-0">
+            <div className="relative flex items-center justify-center shrink-0 pointer-events-auto">
               {/* Simon Ring (Cypher Mode) - Outer Edge */}
               {mode === 'cypher' && isPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
@@ -752,32 +747,27 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
 
             {/* Right Satellite: PAUSE */}
-            <div className="w-12 sm:w-14 flex justify-start shrink-0">
-              <AnimatePresence>
-                {isPlaying && onTogglePause && !countdownValue && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8, x: -20 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (!isPaused) {
-                        onTogglePause()
-                        setShowPauseModal(true)
-                      }
-                    }}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm"
-                    title="Pause Session"
-                    aria-label="Pause Session"
-                  >
-                    <Pause
-                      size={20}
-                      fill="currentColor"
-                      className="opacity-80 sm:w-6 sm:h-6"
-                    />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+            <div className="w-12 sm:w-14 flex justify-start shrink-0 pointer-events-auto">
+              {isPlaying && onTogglePause && !countdownValue && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (!isPaused) {
+                      onTogglePause()
+                      setShowPauseModal(true)
+                    }
+                  }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center shadow-lg backdrop-blur-sm animate-in fade-in zoom-in duration-300"
+                  title="Pause Session"
+                  aria-label="Pause Session"
+                >
+                  <Pause
+                    size={20}
+                    fill="currentColor"
+                    className="opacity-80 sm:w-6 sm:h-6"
+                  />
+                </button>
+              )}
             </div>
           </div>
         </div>

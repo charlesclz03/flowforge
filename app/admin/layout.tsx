@@ -1,5 +1,5 @@
 import { isSuperAdmin } from '@/lib/auth/admin'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export default async function AdminLayout({
   children,
@@ -7,7 +7,7 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   if (!(await isSuperAdmin())) {
-    redirect('/')
+    notFound()
   }
 
   return <div className="min-h-screen bg-background text-white">{children}</div>

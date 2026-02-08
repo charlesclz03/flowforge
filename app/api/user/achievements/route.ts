@@ -25,44 +25,91 @@ export async function GET() {
     if (session?.user?.id) {
       const userId = session.user.id
 
-      // LAZY UNLOCK: Check for missing achievements (Self-Healing)
-      try {
-        await AchievementSystem.checkAndUnlock(userId, {
-          type: 'SESSION_COMPLETE', // Generic context to trigger totals check
-        })
-      } catch (err) {
-        console.warn('Lazy unlock failed:', err)
-      }
-
-      // Fetch achievements and progress counts in parallel
+      // UNIFIED DATA FETCH: Fetch everything needed for both display and achievement checking
       const [
-        achievements,
         sessionCount,
         recordingCount,
         distinctBeats,
+        achievements,
         userStats,
+        totalDurationResult,
+        totalWordsResult,
+        cypherCount,
+        genreCounts,
         collectedWordsCount,
       ] = await Promise.all([
+        // 1. Session Count
+        prisma.freestyleSession.count({ where: { userId } }),
+        // 2. Recording Count
+        prisma.freestyleSession.count({
+          where: { userId, storageUrl: { not: null } },
+        }),
+        // 3. Distinct Beats
+        prisma.freestyleSession.groupBy({
+          by: ['beatId'],
+          where: { userId },
+        }),
+        // 4. Existing Achievements (Full object for display)
         prisma.userAchievement.findMany({
           where: { userId },
           include: { achievement: true },
           orderBy: { unlockedAt: 'desc' },
         }),
-        prisma.freestyleSession.count({ where: { userId } }),
-        prisma.freestyleSession.count({
-          where: { userId, storageUrl: { not: null } },
-        }),
-        prisma.freestyleSession.groupBy({
-          by: ['beatId'],
-          where: { userId },
-        }),
+        // 5. User Stats
         prisma.user.findUnique({
           where: { id: userId },
-          select: { currentStreak: true },
+          select: { xp: true, level: true, currentStreak: true, createdAt: true },
         }),
+        // 6. Total Duration
+        prisma.freestyleSession.aggregate({
+          where: { userId },
+          _sum: { durationSeconds: true },
+        }),
+        // 7. Total Words
+        prisma.freestyleSession.aggregate({
+          where: { userId },
+          _sum: { wordCount: true },
+        }),
+        // 8. Cypher Count
+        prisma.freestyleSession.count({
+          where: { userId, mode: 'cypher' },
+        }),
+        // 9. Genre Counts
+        prisma.freestyleSession.findMany({
+          where: { userId },
+          select: { beat: { select: { genre: true } } },
+          distinct: ['beatId'],
+        }),
+        // 10. Collected Words
         prisma.collectedWord.count({ where: { userId } }),
       ])
 
+      // LAZY UNLOCK: Check for missing achievements using PRE-FETCHED data
+      try {
+        await AchievementSystem.checkAndUnlock(
+          userId,
+          {
+            type: 'SESSION_COMPLETE', // Generic context to trigger totals check
+          },
+          // Optimization: Pass pre-fetched stats to avoid re-querying
+          {
+            sessionCount,
+            recordingCount,
+            distinctBeats,
+            userAchievements: achievements,
+            userStats,
+            totalDuration: totalDurationResult._sum.durationSeconds || 0,
+            totalWords: totalWordsResult._sum.wordCount || 0,
+            cypherCount,
+            genreCounts,
+            collectedWordCount: collectedWordsCount,
+          }
+        )
+      } catch (err) {
+        console.warn('Lazy unlock failed:', err)
+      }
+
+      // Populate response with the already fetched data
       userAchievements = achievements
       progress = {
         sessions: sessionCount,

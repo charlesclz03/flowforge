@@ -7,6 +7,10 @@
 - **VERIFY**: Queried Vercel production logs; no new `413` or `504` entries detected after deployment window.
 - **CHORE**: Advanced release metadata to `v0.9.995 (Upload Shield)` in `package.json`, project status, and in-app settings version label.
 
+## v0.9.995 - Optimization (2026-02-08)
+- **PERF**: Reduced DB queries from 16 to 6 in Achievements API.
+- **FIX**: Eliminated redundant "Double Fetch" logic.
+
 ## v0.9.994 - Self-Heal (2026-02-05)
 - **FIX**: Implemented API self-healing for Achievements to prevent "0/0" empty state.
 - **FIX**: Auto-seeds achievement data if missing from the database.

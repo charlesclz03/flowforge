@@ -7,67 +7,120 @@ export class AchievementSystem {
     context: {
       type: 'SESSION_COMPLETE' | 'RECORDING_SAVED'
       meta?: Record<string, unknown>
+    },
+    // Optional pre-fetched stats to avoid DB hits
+    preLoadedStats?: {
+      sessionCount: number
+      recordingCount: number
+      distinctBeats: { beatId: string }[]
+      userAchievements: { achievement: { code: string } }[]
+      userStats: {
+        xp: number
+        level: number
+        currentStreak: number
+        createdAt: Date
+      } | null
+      totalDuration: number
+      totalWords: number
+      cypherCount: number
+      genreCounts: { beat: { genre: string | null } }[]
+      collectedWordCount: number
     }
   ) {
     const newlyUnlocked: string[] = []
 
-    // PARALLEL STATS FETCHING
-    const [
+    // PARALLEL STATS FETCHING (Only if not provided)
+    let stats = preLoadedStats
+
+    if (!stats) {
+      const [
+        sessionCount,
+        recordingCount,
+        distinctBeats,
+        userAchievements,
+        userStats,
+        totalDurationResult,
+        totalWordsResult,
+        cypherCount,
+        genreCounts,
+        collectedWordCount,
+      ] = await Promise.all([
+        // 1. Session Count
+        prisma.freestyleSession.count({ where: { userId } }),
+        // 2. Recording Count
+        prisma.freestyleSession.count({
+          where: { userId, storageUrl: { not: null } },
+        }),
+        // 3. Distinct Beats
+        prisma.freestyleSession.groupBy({
+          by: ['beatId'],
+          where: { userId },
+        }),
+        // 4. Existing Achievements
+        prisma.userAchievement.findMany({
+          where: { userId },
+          select: { achievement: { select: { code: true } } },
+        }),
+        // 5. User Stats (XP, Level, Streak)
+        prisma.user.findUnique({
+          where: { id: userId },
+          select: {
+            xp: true,
+            level: true,
+            currentStreak: true,
+            createdAt: true,
+          },
+        }),
+        // 6. Total Duration
+        prisma.freestyleSession.aggregate({
+          where: { userId },
+          _sum: { durationSeconds: true },
+        }),
+        // 7. Total Words (using wordCount on Session)
+        prisma.freestyleSession.aggregate({
+          where: { userId },
+          _sum: { wordCount: true },
+        }),
+        // 8. Cypher Count
+        prisma.freestyleSession.count({
+          where: { userId, mode: 'cypher' },
+        }),
+        // 9. Genre Counts (requires joining with Beat)
+        prisma.freestyleSession.findMany({
+          where: { userId },
+          select: { beat: { select: { genre: true } } },
+          distinct: ['beatId'], // Approximation for distinct genres visited
+        }),
+        // 10. Collected Words (Word Vault)
+        prisma.collectedWord.count({ where: { userId } }),
+      ])
+
+      stats = {
+        sessionCount,
+        recordingCount,
+        distinctBeats,
+        userAchievements,
+        userStats,
+        totalDuration: totalDurationResult._sum.durationSeconds || 0,
+        totalWords: totalWordsResult._sum.wordCount || 0,
+        cypherCount,
+        genreCounts,
+        collectedWordCount,
+      }
+    }
+
+    const {
       sessionCount,
       recordingCount,
       distinctBeats,
       userAchievements,
       userStats,
-      totalDurationResult,
-      totalWordsResult,
+      totalDuration,
+      totalWords,
       cypherCount,
       genreCounts,
       collectedWordCount,
-    ] = await Promise.all([
-      // 1. Session Count
-      prisma.freestyleSession.count({ where: { userId } }),
-      // 2. Recording Count
-      prisma.freestyleSession.count({
-        where: { userId, storageUrl: { not: null } },
-      }),
-      // 3. Distinct Beats
-      prisma.freestyleSession.groupBy({
-        by: ['beatId'],
-        where: { userId },
-      }),
-      // 4. Existing Achievements
-      prisma.userAchievement.findMany({
-        where: { userId },
-        select: { achievement: { select: { code: true } } },
-      }),
-      // 5. User Stats (XP, Level, Streak)
-      prisma.user.findUnique({
-        where: { id: userId },
-        select: { xp: true, level: true, currentStreak: true, createdAt: true },
-      }),
-      // 6. Total Duration
-      prisma.freestyleSession.aggregate({
-        where: { userId },
-        _sum: { durationSeconds: true },
-      }),
-      // 7. Total Words (using wordCount on Session)
-      prisma.freestyleSession.aggregate({
-        where: { userId },
-        _sum: { wordCount: true },
-      }),
-      // 8. Cypher Count
-      prisma.freestyleSession.count({
-        where: { userId, mode: 'cypher' },
-      }),
-      // 9. Genre Counts (requires joining with Beat)
-      prisma.freestyleSession.findMany({
-        where: { userId },
-        select: { beat: { select: { genre: true } } },
-        distinct: ['beatId'], // Approximation for distinct genres visited
-      }),
-      // 10. Collected Words (Word Vault)
-      prisma.collectedWord.count({ where: { userId } }),
-    ])
+    } = stats
 
     const distinctBeatCount = distinctBeats.length
     const unlockedCodes = new Set(
@@ -78,10 +131,7 @@ export class AchievementSystem {
     const xp = userStats?.xp || 0
     const level = userStats?.level || 1
     const streak = userStats?.currentStreak || 0
-    const totalMinutes = Math.floor(
-      (totalDurationResult._sum.durationSeconds || 0) / 60
-    )
-    const totalWords = totalWordsResult._sum.wordCount || 0
+    const totalMinutes = Math.floor(totalDuration / 60)
     const uniqueGenres = new Set(
       genreCounts.map((s) => s.beat.genre).filter(Boolean)
     ).size
