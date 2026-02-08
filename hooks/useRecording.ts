@@ -219,6 +219,7 @@ export function useRecording({
     if (!state.isRecording && isRecording) {
       if (onCompleteRef.current) {
         // Create empty blob to signify "Practice Session"
+        // This MUST be 0-bytes to trigger the metadata-only save flow in usePracticeEngine.ts
         onCompleteRef.current(new Blob([], { type: 'audio/webm' }), duration)
       }
       setIsRecording(false)

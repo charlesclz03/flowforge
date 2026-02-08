@@ -126,6 +126,7 @@ export default function PracticeClient({
   )
   const [uiTime, setUiTime] = useState(0)
   const didAutoStopRef = useRef(false)
+  const isPro = isProUser(session?.user)
 
   // If the user lands directly on /practice (no prior selection), auto-pick a safe default.
   useEffect(() => {
@@ -152,6 +153,11 @@ export default function PracticeClient({
   // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
     async (formData: FormData) => {
+      // [FIX] Prevent 403 for Free Users by skipping audio upload
+      if (!isPro && formData.has('audio')) {
+        formData.delete('audio')
+      }
+
       const hasAudio = formData.has('audio')
       const numericKeys = new Set([
         'durationSeconds',
@@ -332,7 +338,7 @@ export default function PracticeClient({
   })
 
   // 5. Visual Effects & Glue Logic
-  const isPro = isProUser(session?.user)
+  // const isPro moved up to hook start
 
   // Polling Loop for UI (Timer/Siren) to avoid Audio Engine re-renders
   useEffect(() => {

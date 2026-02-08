@@ -22,6 +22,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.996',
+    date: '2026-02-08',
+    title: 'Button Fix 🔧',
+    codename: 'Studio Restoration',
+    description:
+      'We restored the missing Pause and Restart buttons in Practice Mode. The controls are now robust and always visible during your sessions.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Practice Controls**: Restored visibility of Pause and Restart buttons by removing unstable animation logic and fixing layout z-index issues.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.995',
     date: '2026-02-08',
     title: 'Turbo Charge ⚡',

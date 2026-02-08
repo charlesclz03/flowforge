@@ -86,11 +86,14 @@ export function usePracticeEngine({
     process.env.NODE_ENV !== 'production' &&
     process.env.NEXT_PUBLIC_AUDIO_DEBUG === 'true'
 
-  const debugLog = (...args: unknown[]) => {
-    if (isAudioDebug) {
-      console.log(...args)
-    }
-  }
+  const debugLog = useCallback(
+    (...args: unknown[]) => {
+      if (isAudioDebug) {
+        console.log(...args)
+      }
+    },
+    [isAudioDebug]
+  )
 
   // 1. The Reducer (State Machine)
   const { state, dispatch } = usePlayerState()
@@ -384,7 +387,7 @@ export function usePracticeEngine({
       // dispatch({ type: 'ERROR', error: 'Failed to initialize audio' })
       alert('Could not start audio engine. Please tap again.')
     }
-  }, [state.status, dispatch, initAudio, beatPlayer, beatVolume])
+  }, [state.status, dispatch, initAudio, beatPlayer, beatVolume, debugLog])
 
   const stopSession = useCallback(() => {
     dispatch({ type: 'STOP', shouldSave: shouldSaveSessions })
@@ -496,6 +499,47 @@ export function usePracticeEngine({
         (state.status === 'FINISHING' || state.status === 'MIXING') &&
         state.shouldSave
       ) {
+        // [FIX] Prevent 0-byte uploads (Practice Mode or Microphone Failures)
+        if (blob.size === 0) {
+          debugLog(
+            '[PracticeEngine] Empty blob detected. Skipping upload, saving metadata only.'
+          )
+          // Redirect to metadata-only flow below
+          // We can't easily "jump" to the other if-block, so we execute it here.
+          dispatch({ type: 'START_SAVE' })
+
+          const fd = new FormData()
+          // No 'audio' file appended
+
+          if (beatPlayer.currentBeat) {
+            fd.append('beatId', beatPlayer.currentBeat.id)
+            fd.append(
+              'title',
+              `${beatPlayer.currentBeat.title} - ${new Date().toLocaleDateString()}`
+            )
+          }
+          // Use startTime to calculate duration if recorder duration is 0
+          const duration = audioSync.getPreciseTime() - startTime
+          fd.append(
+            'durationSeconds',
+            Math.max(1, Math.round(duration)).toString()
+          )
+          fd.append('frequency', frequency.toString())
+          fd.append('difficulty', difficulty.toString())
+          fd.append('score', '0')
+          fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
+
+          submitSession(fd)
+            .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
+            .catch((err) =>
+              dispatch({
+                type: 'SAVE_ERROR',
+                error: err instanceof Error ? err.message : 'Unknown error',
+              })
+            )
+          return
+        }
+
         // 1. Enter Mixing State (UI Feedback)
         dispatch({ type: 'START_MIXING' })
 
@@ -668,6 +712,7 @@ export function usePracticeEngine({
     recorder.isRecording,
     startTime,
     isRecordingEnabled,
+    debugLog,
   ])
 
   // 7. Live Volume Sync (The Missing Link)

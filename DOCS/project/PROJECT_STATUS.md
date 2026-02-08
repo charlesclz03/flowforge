@@ -1,8 +1,11 @@
 # Project Status: v0.9.995 ("Turbo Charge")
-**Current Version**: `v0.9.995`
+**Current Version**: `0.9.996`
+**Phase**: Beta Polish
 **Last Updated**: 2026-02-08
-**Status:** Active Development
-**Current Phase:** Phase 6.5 - Post-Launch Optimization
+
+## Quick Status
+> **Latest Release**: v0.9.996 (Studio Restoration) - Fixed missing practice buttons.
+> **Focus**: Stability & Polish.
 
 ## Recent Achievements
 - **Turbo Charge**: Optimized Achievements API to reduce DB load by 60% (v0.9.995).

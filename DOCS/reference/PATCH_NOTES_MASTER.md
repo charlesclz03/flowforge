@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.996 - Studio Restoration (2026-02-08)
+- **FIX**: Restored visibility of Pause and Restart buttons in Practice Mode by removing unstable animation logic.
+- **FIX**: Resolved layout conflicts causing buttons to be hidden behind z-index layers.
+
+
 ## v0.9.995 - Upload Shield (2026-02-08)
 - **FIX**: Deprecated `POST /api/admin/beats` with `410 Gone` + migration guidance to signed upload flow (`/api/upload/signed-url` + `/api/admin/beats/upload`).
 - **FIX**: Completed migration of admin upload surfaces so no first-party route posts large audio bodies to `/api/admin/beats`.

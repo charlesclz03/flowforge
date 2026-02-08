@@ -486,7 +486,9 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="text-xs text-white/20 ml-2">v0.9.995 (Turbo Charge)</p>
+          <p className="ml-2 text-xs text-white/20">
+            v0.9.996 (Studio Restoration)
+          </p>
         </div>
       </div>
       <SupportModal

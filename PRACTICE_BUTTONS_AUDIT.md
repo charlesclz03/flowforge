@@ -1,11 +1,17 @@
 # Audit: Missing Practice Control Buttons
 
 **Date**: 2026-02-08
-**Status**: Investigating
+**Status**: Resolved
 **Component**: `PracticeControls.tsx`
 
 ## Overview
 The user reports that the **Pause** and **Restart** buttons have disappeared from the `/practice` page during active sessions.
+
+## Resolution
+The issue was identified as a combination of complex `AnimatePresence` logic and potential layout/pointer-event conflicts.
+- **Action**: Removed `AnimatePresence` and simplified the buttons to use standard CSS `animate-in` classes.
+- **Action**: Added `pointer-events-auto` to the button containers to ensure they are clickable even if the parent container has `pointer-events-none`.
+- **Action**: Added explicit `z-10` and `relative` positioning to the button container.
 
 ## Component Analysis (`PracticeControls.tsx`)
 
