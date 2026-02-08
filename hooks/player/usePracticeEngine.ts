@@ -18,6 +18,15 @@ import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
 
 import { AudioMixer } from '@/lib/audio/mixer'
 
+const ACTIVE_SESSION_STATUSES = new Set([
+  'COUNTDOWN',
+  'PLAYING',
+  'PAUSED',
+  'FINISHING',
+  'MIXING',
+  'SAVING',
+])
+
 /**
  * Configuration properties for the Practice Engine.
  */
@@ -130,6 +139,9 @@ export function usePracticeEngine({
   }>({ start: 0, duration: 0 })
   const wordGeneratorRef = useRef<WordGenerator | null>(null)
   const wordsUsedRef = useRef<string[]>([])
+  const [activeDifficulty, setActiveDifficulty] = useState(difficulty)
+  const activeDifficultyRef = useRef(difficulty)
+  const pendingDifficultyRef = useRef<number | null>(null)
 
   // Initialize Generator
   useEffect(() => {
@@ -172,14 +184,41 @@ export function usePracticeEngine({
     wordGeneratorRef.current = new WordGenerator(mockWordData)
 
     // Config Generator
-    if (wordGeneratorRef.current) {
-      wordGeneratorRef.current.setDifficulty(difficulty)
-    }
+    const initialDifficulty =
+      pendingDifficultyRef.current ?? activeDifficultyRef.current
+    wordGeneratorRef.current.setDifficulty(initialDifficulty)
+    pendingDifficultyRef.current = null
+    activeDifficultyRef.current = initialDifficulty
+    setActiveDifficulty(initialDifficulty)
 
     // Preload first word
     const first = wordGeneratorRef.current.getRandomWord()
     if (first) setCurrentWord(first.wordText)
-  }, [initialWords, difficulty]) // Added difficulty dependency to re-init if needed, though usually dynamic
+  }, [initialWords])
+
+  useEffect(() => {
+    const generator = wordGeneratorRef.current
+    if (!generator) return
+
+    if (difficulty === activeDifficultyRef.current) {
+      return
+    }
+
+    if (ACTIVE_SESSION_STATUSES.has(state.status)) {
+      pendingDifficultyRef.current = difficulty
+      return
+    }
+
+    generator.setDifficulty(difficulty)
+    pendingDifficultyRef.current = null
+    activeDifficultyRef.current = difficulty
+    setActiveDifficulty(difficulty)
+
+    const next = generator.getRandomWord()
+    if (next) {
+      setCurrentWord(next.wordText)
+    }
+  }, [difficulty, state.status])
 
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
@@ -224,6 +263,18 @@ export function usePracticeEngine({
       const beatsPerWord = 4 * (frequencyRef.current || 4)
 
       if (beatIndex % beatsPerWord === 0) {
+        const pendingDifficulty = pendingDifficultyRef.current
+        if (
+          pendingDifficulty !== null &&
+          pendingDifficulty !== activeDifficultyRef.current &&
+          wordGeneratorRef.current
+        ) {
+          wordGeneratorRef.current.setDifficulty(pendingDifficulty)
+          pendingDifficultyRef.current = null
+          activeDifficultyRef.current = pendingDifficulty
+          setActiveDifficulty(pendingDifficulty)
+        }
+
         // Trigger Word Change
         // We use the time passed from audio scheduler for precise future timing
         const duration =
@@ -648,6 +699,7 @@ export function usePracticeEngine({
     currentWord,
     wordTiming,
     activePlayer,
+    activeDifficulty,
 
     // Time Logic (Monotonic)
     startTime,

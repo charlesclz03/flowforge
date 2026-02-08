@@ -518,6 +518,7 @@ export default function PracticeClient({
               recordingDuration={engine.recorder.duration}
               // Settings
               difficulty={difficulty}
+              activeDifficulty={engine.activeDifficulty}
               frequency={frequency}
               mode={mode}
               isPro={isPro}

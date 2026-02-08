@@ -21,6 +21,9 @@
 - **FIX**: Cleaned mojibake text artifacts on `/patch-notes` and `/orderconfirmed`.
 - **FIX**: Restored `/u/[username]` profile stability for users with DiceBear avatars by allowing `api.dicebear.com` in Next image configuration.
 - **FIX**: Search results now link to `/u/<username>` when available, with ID fallback only when username is missing.
+- **FIX**: Google sign-ins now backfill missing `users.image` values for legacy accounts while preserving custom uploaded avatars.
+- **FIX**: Session callback now syncs avatar rendering from the latest database `image` value.
+- **FIX**: Difficulty changes during an active word cycle now defer to the next prompt boundary, preventing mid-ring word/difficulty swaps.
 - **FIX**: Practice engine cleanup now runs only on unmount, preventing accidental playback stops during countdown -> play transitions.
 - **FIX**: Cypher starts on Player 1 and rotates only on real interval boundaries; timer ring remains aligned with prompt timing.
 - **FIX**: Practice save payloads now include actual `wordsUsed` values instead of always sending an empty array.

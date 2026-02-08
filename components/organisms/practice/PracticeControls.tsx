@@ -39,6 +39,7 @@ interface PracticeControlsProps {
   handleRestart?: () => void
   handleBeatSelect: (beat: Beat) => void
   difficulty: number
+  activeDifficulty?: number
   frequency: number
   isGolden?: boolean
   isRecording?: boolean
@@ -78,6 +79,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleRestart,
     handleBeatSelect,
     difficulty,
+    activeDifficulty = difficulty,
     frequency, // Target frequency (User Selection)
     activeFrequency = frequency, // Active frequency (Audio Engine) - defaults to target if not provided
     isGolden = false,
@@ -124,21 +126,21 @@ export default function PracticeControls(props: PracticeControlsProps) {
   }
 
   const getDifficultyMeta = () => {
-    if (difficulty <= 1) {
+    if (activeDifficulty <= 1) {
       return {
         label: 'Easy',
         classes:
           'bg-accent-green/10 text-accent-green border-accent-green/20 hover:bg-accent-green/20',
       }
     }
-    if (difficulty === 2) {
+    if (activeDifficulty === 2) {
       return {
         label: 'Medium',
         classes:
           'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20 hover:bg-accent-yellow/20',
       }
     }
-    if (difficulty === 3) {
+    if (activeDifficulty === 3) {
       return {
         label: 'Hard',
         classes:

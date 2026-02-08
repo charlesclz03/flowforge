@@ -29,6 +29,36 @@ function resolveNextAuthDebug(): boolean {
   return process.env.NODE_ENV === 'development'
 }
 
+function getGoogleProfileImage(profile: unknown): string | null {
+  if (!profile || typeof profile !== 'object') return null
+
+  const p = profile as Record<string, unknown>
+  const candidates = [p.picture, p.image, p.avatar_url]
+
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate.trim()
+    }
+  }
+
+  return null
+}
+
+function canBackfillOAuthImage(
+  currentImage: string | null | undefined
+): boolean {
+  if (!currentImage) return true
+  const trimmed = currentImage.trim()
+  if (!trimmed) return true
+
+  // Preserve explicitly uploaded custom avatars.
+  if (trimmed.startsWith('/api/avatars/')) {
+    return false
+  }
+
+  return false
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -69,7 +99,7 @@ export const authOptions: NextAuthOptions = {
         })
       }
     },
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
       if (!user.email) return
 
       const allowlist = getSuperadminEmailAllowlist()
@@ -106,6 +136,18 @@ export const authOptions: NextAuthOptions = {
           data: { username: uniqueUsername },
         })
       }
+
+      // Backfill missing avatar from Google profile payload for legacy users.
+      if (account?.provider === 'google') {
+        const googleImage = getGoogleProfileImage(profile)
+        if (googleImage && canBackfillOAuthImage(user.image)) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { image: googleImage },
+          })
+          user.image = googleImage
+        }
+      }
     },
   },
   callbacks: {
@@ -124,6 +166,7 @@ export const authOptions: NextAuthOptions = {
             socials: true,
             username: true,
             bio: true,
+            image: true,
             currentStreak: true,
             xp: true,
             level: true,
@@ -135,6 +178,7 @@ export const authOptions: NextAuthOptions = {
           session.user.socials = latestUser.socials
           session.user.username = latestUser.username
           session.user.bio = latestUser.bio
+          session.user.image = latestUser.image ?? session.user.image
           session.user.currentStreak = latestUser.currentStreak
           session.user.xp = latestUser.xp
           session.user.level = latestUser.level
