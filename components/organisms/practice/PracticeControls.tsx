@@ -79,7 +79,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleRestart,
     handleBeatSelect,
     difficulty,
-    activeDifficulty = difficulty,
+    // activeDifficulty = difficulty, // [UI TWEAK] Unused for now, we show target difficulty immediately
     frequency, // Target frequency (User Selection)
     activeFrequency = frequency, // Active frequency (Audio Engine) - defaults to target if not provided
     isGolden = false,
@@ -126,21 +126,23 @@ export default function PracticeControls(props: PracticeControlsProps) {
   }
 
   const getDifficultyMeta = () => {
-    if (activeDifficulty <= 1) {
+    // [UI TWEAK] Use 'difficulty' (target) instead of 'activeDifficulty' (engine)
+    // to provide instant visual feedback to the user.
+    if (difficulty <= 1) {
       return {
         label: 'Easy',
         classes:
           'bg-accent-green/10 text-accent-green border-accent-green/20 hover:bg-accent-green/20',
       }
     }
-    if (activeDifficulty === 2) {
+    if (difficulty === 2) {
       return {
         label: 'Medium',
         classes:
           'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20 hover:bg-accent-yellow/20',
       }
     }
-    if (activeDifficulty === 3) {
+    if (difficulty === 3) {
       return {
         label: 'Hard',
         classes:

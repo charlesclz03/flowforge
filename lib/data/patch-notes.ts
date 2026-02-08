@@ -34,6 +34,9 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Empty Recording Fix**: Prevented "Practice Mode" sessions from uploading 0-byte audio files.',
           '**Free Tier Optimization**: Practice sessions for free users now automatically skip audio uploads, preventing 403 errors and saving metadata only.',
+          '**Signed Upload Recovery**: `/api/upload/signed-url` now self-heals missing storage buckets and returns actionable errors instead of opaque failures.',
+          '**Admin Auth Status Codes**: `/api/admin/beats/upload` now returns `401/403` correctly for unauthorized/forbidden access.',
+          '**Achievement Freshness**: `/api/user/achievements` now refreshes unlocked achievements immediately after lazy unlock checks.',
         ],
       },
     ],
@@ -72,7 +75,7 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    version: '0.9.994',
+    version: '0.9.995',
     date: '2026-02-08',
     title: 'Upload Shield',
     codename: 'Upload Shield',

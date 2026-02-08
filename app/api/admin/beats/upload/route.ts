@@ -78,6 +78,15 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, beat })
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Unauthorized') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      if (error.message === 'Forbidden') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     console.error('Admin Beat Upload Metadata Error:', error)
     return NextResponse.json(
       { error: 'Internal Server Error' },

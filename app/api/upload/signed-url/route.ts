@@ -7,6 +7,12 @@ import {
   BEATS_BUCKET,
 } from '@/lib/supabase/server'
 
+export const runtime = 'nodejs'
+export const maxDuration = 30
+
+const looksLikeMissingBucket = (message?: string) =>
+  Boolean(message && /bucket.+(not found|does not exist)/i.test(message))
+
 /**
  * Generates a signed URL for direct-to-Supabase uploads.
  * This bypasses the Vercel serverless function body size limit.
@@ -65,16 +71,50 @@ export async function POST(req: NextRequest) {
         : `users/${session.user.id}/${Date.now()}-${safeName}`
 
     // Create a signed URL valid for 5 minutes (300 seconds)
-    const { data, error } = await supabase.storage
+    let { data, error } = await supabase.storage
       .from(targetBucket)
       .createSignedUploadUrl(storagePath)
+
+    // Self-heal: create bucket on demand if missing, then retry once.
+    if (error && looksLikeMissingBucket(error.message)) {
+      const { error: bucketError } = await supabase.storage.createBucket(
+        targetBucket,
+        {
+          public: true,
+        }
+      )
+
+      if (
+        bucketError &&
+        !/already exists|duplicate/i.test(bucketError.message ?? '')
+      ) {
+        console.error('Bucket create error:', bucketError)
+      } else {
+        const retry = await supabase.storage
+          .from(targetBucket)
+          .createSignedUploadUrl(storagePath)
+        data = retry.data
+        error = retry.error
+      }
+    }
 
     if (error) {
       console.error('Signed URL Error:', error)
       return NextResponse.json(
         {
-          error: 'Failed to create upload URL',
-          details: error.message,
+          error: error.message || 'Failed to create upload URL',
+          code: 'SIGNED_URL_CREATE_FAILED',
+          bucket: targetBucket,
+        },
+        { status: 500 }
+      )
+    }
+
+    if (!data) {
+      return NextResponse.json(
+        {
+          error: 'Signed URL provider returned an empty response',
+          code: 'SIGNED_URL_EMPTY_RESPONSE',
           bucket: targetBucket,
         },
         { status: 500 }
@@ -94,8 +134,12 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     console.error('Signed URL Generation Error:', error)
+
+    const message =
+      error instanceof Error ? error.message : 'Internal Server Error'
+
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: message, code: 'SIGNED_URL_ROUTE_FAILED' },
       { status: 500 }
     )
   }

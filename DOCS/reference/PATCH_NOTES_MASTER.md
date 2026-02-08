@@ -4,6 +4,9 @@
 - **FIX**: Prevented "Practice Mode" sessions from uploading 0-byte audio files, resolving empty recordings in the database.
 - **FIX**: Optimized Practice Mode for Free users to automatically skip audio uploads, preventing `403 Forbidden` errors and saving metadata only.
 - **VERIFY**: Confirmed that `usePracticeEngine` strictly checks `blob.size > 0` before attempting upload.
+- **FIX**: Hardened `POST /api/upload/signed-url` with bucket self-healing and improved error reporting for failed signed URL generation.
+- **FIX**: Restored correct `401/403` semantics on `POST /api/admin/beats/upload` when superadmin checks fail.
+- **FIX**: `GET /api/user/achievements` now refreshes achievement records after lazy unlock, so newly unlocked badges appear immediately.
 
 ## v0.9.996 - Studio Restoration (2026-02-08)
 - **FIX**: Restored visibility of Pause and Restart buttons in Practice Mode by removing unstable animation logic.

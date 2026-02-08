@@ -58,7 +58,12 @@ export async function GET() {
         // 5. User Stats
         prisma.user.findUnique({
           where: { id: userId },
-          select: { xp: true, level: true, currentStreak: true, createdAt: true },
+          select: {
+            xp: true,
+            level: true,
+            currentStreak: true,
+            createdAt: true,
+          },
         }),
         // 6. Total Duration
         prisma.freestyleSession.aggregate({
@@ -84,9 +89,11 @@ export async function GET() {
         prisma.collectedWord.count({ where: { userId } }),
       ])
 
+      let currentAchievements = achievements
+
       // LAZY UNLOCK: Check for missing achievements using PRE-FETCHED data
       try {
-        await AchievementSystem.checkAndUnlock(
+        const newlyUnlocked = await AchievementSystem.checkAndUnlock(
           userId,
           {
             type: 'SESSION_COMPLETE', // Generic context to trigger totals check
@@ -105,12 +112,21 @@ export async function GET() {
             collectedWordCount: collectedWordsCount,
           }
         )
+
+        // Refresh achievements only if we just unlocked new ones.
+        if (newlyUnlocked.length > 0) {
+          currentAchievements = await prisma.userAchievement.findMany({
+            where: { userId },
+            include: { achievement: true },
+            orderBy: { unlockedAt: 'desc' },
+          })
+        }
       } catch (err) {
         console.warn('Lazy unlock failed:', err)
       }
 
       // Populate response with the already fetched data
-      userAchievements = achievements
+      userAchievements = currentAchievements
       progress = {
         sessions: sessionCount,
         recordings: recordingCount,
