@@ -7,6 +7,7 @@ import { Prisma } from '@prisma/client'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60
 
 interface UserWithRate {
   xp: number
@@ -31,6 +32,29 @@ function parseOptionalInt(value: unknown): number | null {
   }
 
   return null
+}
+
+async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  label: string
+): Promise<T | null> {
+  const safePromise: Promise<T | null> = promise.catch((error) => {
+    console.error(`[SESSION_COMPLETE] Failed: ${label}`, error)
+    return null
+  })
+
+  const TIMEOUT = Symbol('timeout')
+  const timeout = new Promise<typeof TIMEOUT>((resolve) => {
+    setTimeout(() => resolve(TIMEOUT), timeoutMs)
+  })
+
+  const result = await Promise.race([safePromise, timeout])
+  if (result === TIMEOUT) {
+    console.warn(`[SESSION_COMPLETE] Timed out: ${label}`)
+    return null
+  }
+  return result as T | null
 }
 
 /**
@@ -115,6 +139,10 @@ export async function POST(request: Request) {
       )
     }
 
+    const totalSessionsPromise = prisma.freestyleSession.count({
+      where: { userId: session.user.id },
+    })
+
     // 2. Gamification Logic (Mirrors /recordings route)
     let newBadges: string[] = []
     try {
@@ -125,7 +153,11 @@ export async function POST(request: Request) {
       // A. Update Streak
       try {
         const { StreakSystem } = await import('@/lib/gamification/streak')
-        await StreakSystem.checkAndUpdate(session.user.id)
+        await withTimeout(
+          StreakSystem.checkAndUpdate(session.user.id),
+          1500,
+          'streak update'
+        )
       } catch (e) {
         console.error('[GAMIFICATION] Streak update failed:', e)
       }
@@ -156,8 +188,12 @@ export async function POST(request: Request) {
         )
       }
 
-      const results = await Promise.all(tasks)
-      newBadges = (results[0] as string[]) || []
+      const results = await withTimeout(
+        Promise.all(tasks),
+        3000,
+        'achievement + word ingestion'
+      )
+      newBadges = (results?.[0] as string[]) || []
     } catch (e) {
       console.error('Gamification update failed:', e)
     }
@@ -230,9 +266,7 @@ export async function POST(request: Request) {
         newBadges,
         xp: xpData,
         meta: {
-          totalSessions: await prisma.freestyleSession.count({
-            where: { userId: session.user.id },
-          }),
+          totalSessions: (await totalSessionsPromise.catch(() => 0)) || 0,
           currentStreak: currentUser?.currentStreak || 0,
           hasRated: currentUser?.hasRated || false,
         },

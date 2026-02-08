@@ -167,32 +167,54 @@ export default function ReviewPage() {
       pageHeader={null}
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
-        <SessionPlayer
-          ref={playerRef}
-          audioUrl={recording.storageUrl}
-          beatUrl={recording.beat?.storageUrl}
-          beatOffsetMs={
-            (recording as FreestyleSessionWithBeat & { beatOffsetMs?: number })
-              .beatOffsetMs
-          }
-          beatTitle={recording.beat?.title}
-          beatBpm={recording.beat?.bpm}
-          beatArtist={recording.beat?.artistName ?? undefined}
-          sessionDuration={recording.durationSeconds}
-          sessionDifficulty={recording.difficulty}
-          sessionDate={recording.createdAt}
-        />
+        recording.storageUrl ? (
+          <SessionPlayer
+            ref={playerRef}
+            audioUrl={recording.storageUrl}
+            beatUrl={recording.beat?.storageUrl}
+            beatOffsetMs={
+              (
+                recording as FreestyleSessionWithBeat & {
+                  beatOffsetMs?: number
+                }
+              ).beatOffsetMs
+            }
+            beatTitle={recording.beat?.title}
+            beatBpm={recording.beat?.bpm}
+            beatArtist={recording.beat?.artistName ?? undefined}
+            sessionDuration={recording.durationSeconds}
+            sessionDifficulty={recording.difficulty}
+            sessionDate={recording.createdAt}
+          />
+        ) : (
+          <div className="rounded-2xl border border-white/10 bg-background-card/60 p-8 text-center space-y-3">
+            <h3 className="text-lg font-semibold text-white">
+              No audio was captured for this session
+            </h3>
+            <p className="text-sm text-text-secondary">
+              This run was saved as stats-only metadata, so waveform review is
+              unavailable.
+            </p>
+            <div className="pt-2">
+              <Button onClick={() => router.push('/practice')}>
+                Start New Recording
+              </Button>
+            </div>
+          </div>
+        )
       }
       actions={
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <Button
-            variant="secondary"
-            onClick={handleDownload}
-            leftIcon={<Download size={18} />}
-            className="w-full sm:w-auto"
-          >
-            Download
-          </Button>
+          {recording.storageUrl && (
+            <Button
+              variant="secondary"
+              onClick={handleDownload}
+              leftIcon={<Download size={18} />}
+              className="w-full sm:w-auto"
+            >
+              Download
+            </Button>
+          )}
           <Button
             variant="danger"
             onClick={handleDelete}
@@ -202,12 +224,14 @@ export default function ReviewPage() {
           >
             Delete
           </Button>
-          <ShareButton
-            title={recording.title}
-            text={`Check out my freestyle flow on FreeStyla!`}
-            url={`${window.location.origin}/s/${recording.id}`}
-            className="w-full sm:w-auto px-4 justify-center"
-          />
+          {recording.storageUrl && (
+            <ShareButton
+              title={recording.title}
+              text={`Check out my freestyle flow on FreeStyla!`}
+              url={`${window.location.origin}/s/${recording.id}`}
+              className="w-full sm:w-auto px-4 justify-center"
+            />
+          )}
         </div>
       }
     />

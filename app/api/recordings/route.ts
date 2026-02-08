@@ -12,6 +12,23 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
 const SIGNED_URL_TTL_SECONDS = 60 * 60
 
+function parseOptionalInt(value: unknown, fallback = 0): number {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.trunc(value)
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) return fallback
+    const parsed = Number(trimmed)
+    if (Number.isFinite(parsed)) {
+      return Math.trunc(parsed)
+    }
+  }
+
+  return fallback
+}
+
 /**
  * POST /api/recordings
  * Upload a recording and create a session
@@ -24,53 +41,128 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Parse form data
-    const formData = await request.formData()
-    const audioFile = formData.get('audio') as File
-    const beatId = formData.get('beatId') as string
-    const title = formData.get('title') as string
-    const durationSeconds = parseInt(formData.get('durationSeconds') as string)
-    const frequency = parseInt(formData.get('frequency') as string) || 8
-    const difficulty = parseInt(formData.get('difficulty') as string) || 2
-    const restarts = parseInt(formData.get('restarts') as string) || 0
-    const playbacks = parseInt(formData.get('playbacks') as string) || 0
-    const beatOffsetMs = parseInt(formData.get('beatOffsetMs') as string) || 0
+    const contentType = request.headers.get('content-type') || ''
+    const isJsonPayload = contentType.includes('application/json')
 
-    // Parse Studio FX Config
-    const fxConfigRaw = formData.get('fxConfig') as string
-    let fxConfig = null
-    try {
-      if (fxConfigRaw) {
-        fxConfig = JSON.parse(fxConfigRaw)
+    let audioFile: File | null = null
+    let beatId = ''
+    let title = ''
+    let durationSeconds = 0
+    let frequency = 8
+    let difficulty = 2
+    let restarts = 0
+    let playbacks = 0
+    let beatOffsetMs = 0
+    let fileSize = 0
+    let storagePath = ''
+    let fxConfig: unknown = null
+    let words: string[] = []
+
+    if (isJsonPayload) {
+      const body = (await request.json()) as Record<string, unknown>
+
+      beatId = typeof body.beatId === 'string' ? body.beatId : ''
+      title = typeof body.title === 'string' ? body.title : ''
+      durationSeconds = parseOptionalInt(body.durationSeconds)
+      frequency = parseOptionalInt(body.frequency, 8)
+      difficulty = parseOptionalInt(body.difficulty, 2)
+      restarts = parseOptionalInt(body.restarts, 0)
+      playbacks = parseOptionalInt(body.playbacks, 0)
+      beatOffsetMs = parseOptionalInt(body.beatOffsetMs, 0)
+      fileSize = parseOptionalInt(body.fileSizeBytes, 0)
+      storagePath =
+        typeof body.storagePath === 'string' ? body.storagePath.trim() : ''
+
+      if (Array.isArray(body.wordsUsed)) {
+        words = body.wordsUsed.filter(
+          (value): value is string => typeof value === 'string'
+        )
+      } else if (typeof body.wordsUsed === 'string') {
+        try {
+          const parsedWords = JSON.parse(body.wordsUsed) as unknown
+          words = Array.isArray(parsedWords)
+            ? parsedWords.filter(
+                (value): value is string => typeof value === 'string'
+              )
+            : []
+        } catch {
+          words = []
+        }
       }
-    } catch (e) {
-      console.warn('Failed to parse fxConfig', e)
+
+      if (body.fxConfig && typeof body.fxConfig === 'object') {
+        fxConfig = body.fxConfig
+      }
+    } else {
+      const formData = await request.formData()
+      audioFile = formData.get('audio') as File
+      beatId = (formData.get('beatId') as string) || ''
+      title = (formData.get('title') as string) || ''
+      durationSeconds = parseOptionalInt(formData.get('durationSeconds'))
+      frequency = parseOptionalInt(formData.get('frequency'), 8)
+      difficulty = parseOptionalInt(formData.get('difficulty'), 2)
+      restarts = parseOptionalInt(formData.get('restarts'), 0)
+      playbacks = parseOptionalInt(formData.get('playbacks'), 0)
+      beatOffsetMs = parseOptionalInt(formData.get('beatOffsetMs'), 0)
+      fileSize = audioFile?.size ?? 0
+
+      const fxConfigRaw = formData.get('fxConfig') as string
+      if (fxConfigRaw) {
+        try {
+          fxConfig = JSON.parse(fxConfigRaw)
+        } catch (e) {
+          console.warn('Failed to parse fxConfig', e)
+        }
+      }
+
+      const wordsUsedRaw = formData.get('wordsUsed') as string
+      if (wordsUsedRaw) {
+        try {
+          const parsedWords = JSON.parse(wordsUsedRaw) as unknown
+          words = Array.isArray(parsedWords)
+            ? parsedWords.filter(
+                (value): value is string => typeof value === 'string'
+              )
+            : []
+        } catch {
+          words = []
+        }
+      }
     }
 
     // Validate required fields
-    if (!audioFile || !beatId || !title || !durationSeconds) {
+    if (!beatId || !title || durationSeconds <= 0) {
       return NextResponse.json(
-        {
-          error:
-            'Missing required fields: audio, beatId, title, durationSeconds',
-        },
+        { error: 'Missing required fields: beatId, title, durationSeconds' },
+        { status: 400 }
+      )
+    }
+
+    if (isJsonPayload) {
+      if (!storagePath || fileSize <= 0) {
+        return NextResponse.json(
+          { error: 'Missing required fields: storagePath, fileSizeBytes' },
+          { status: 400 }
+        )
+      }
+
+      const expectedPrefix = `users/${session.user.id}/`
+      if (!storagePath.startsWith(expectedPrefix)) {
+        return NextResponse.json(
+          { error: 'Invalid storagePath for current user' },
+          { status: 400 }
+        )
+      }
+    } else if (!audioFile) {
+      return NextResponse.json(
+        { error: 'Missing required field: audio' },
         { status: 400 }
       )
     }
 
     // PRE-CALCULATE SCORE & PREP DATA
-    const wordsUsedRaw = formData.get('wordsUsed') as string
-    let words: string[] = []
-    try {
-      words = wordsUsedRaw ? (JSON.parse(wordsUsedRaw) as string[]) : []
-    } catch {
-      words = []
-    }
     const wordCount = Array.isArray(words) ? words.length : 0
     const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
-
-    // Calculate File Size
-    const fileSize = audioFile.size
 
     // STORAGE LIMIT CHECK (For Free Users)
     const FREE_LIMIT_BYTES = 0 // 0MB (Free users cannot save)
@@ -100,25 +192,27 @@ export async function POST(request: Request) {
       }
     }
 
-    // Generate recording ID
-    const recordingId = randomUUID()
-    const filePath = `${session.user.id}/${recordingId}.webm`
-
-    // Upload to Supabase Storage (Blocking)
     const supabase = createServerClient()
-    const { error: uploadError } = await supabase.storage
-      .from(RECORDINGS_BUCKET)
-      .upload(filePath, audioFile, {
-        contentType: audioFile.type,
-        upsert: false,
-      })
+    let uploadedStoragePath = storagePath
 
-    if (uploadError) {
-      console.error('Storage upload error:', uploadError)
-      return NextResponse.json(
-        { error: `Failed to upload recording: ${uploadError.message}` },
-        { status: 500 }
-      )
+    if (!isJsonPayload && audioFile) {
+      // Legacy multipart flow: upload server-side
+      const recordingId = randomUUID()
+      uploadedStoragePath = `users/${session.user.id}/${recordingId}.webm`
+      const { error: uploadError } = await supabase.storage
+        .from(RECORDINGS_BUCKET)
+        .upload(uploadedStoragePath, audioFile, {
+          contentType: audioFile.type,
+          upsert: false,
+        })
+
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError)
+        return NextResponse.json(
+          { error: `Failed to upload recording: ${uploadError.message}` },
+          { status: 500 }
+        )
+      }
     }
 
     // PARALLEL OPERATIONS: DB Creation + Signed URL
@@ -127,7 +221,7 @@ export async function POST(request: Request) {
         userId: session.user.id,
         beatId,
         title,
-        storageUrl: filePath,
+        storageUrl: uploadedStoragePath,
         fileSizeBytes: fileSize, // Save file size
         durationSeconds,
         frequency,
@@ -143,12 +237,14 @@ export async function POST(request: Request) {
       }),
       supabase.storage
         .from(RECORDINGS_BUCKET)
-        .createSignedUrl(filePath, SIGNED_URL_TTL_SECONDS),
+        .createSignedUrl(uploadedStoragePath, SIGNED_URL_TTL_SECONDS),
     ])
 
     if (!sessRes.success) {
       // Cleanup storage if DB fails
-      await supabase.storage.from(RECORDINGS_BUCKET).remove([filePath])
+      await supabase.storage
+        .from(RECORDINGS_BUCKET)
+        .remove([uploadedStoragePath])
       return NextResponse.json(
         { error: sessRes.error || 'Failed to save session' },
         { status: 500 }
@@ -321,7 +417,7 @@ export async function POST(request: Request) {
  * GET /api/recordings
  * Get all recordings for the current user
  */
-export async function GET() {
+export async function GET(request: Request) {
   try {
     // Check authentication
     const session = await getServerSessionWithUserId()
@@ -339,9 +435,16 @@ export async function GET() {
       )
     }
 
+    const includeMetadata =
+      new URL(request.url).searchParams.get('includeMetadata') === 'true'
+
+    const sourceRecordings = includeMetadata
+      ? result.data || []
+      : (result.data || []).filter((recording) => Boolean(recording.storageUrl))
+
     const supabase = createServerClient()
     const recordingsWithSignedUrls = await Promise.all(
-      (result.data || []).map(async (recording) => {
+      sourceRecordings.map(async (recording) => {
         if (!recording.storageUrl) return recording
 
         if (recording.storageUrl.startsWith('http')) {

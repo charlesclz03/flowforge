@@ -100,6 +100,11 @@ export const RecordingCard = memo(function RecordingCard({
       ? createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
       : null
 
+  const hasAudio = Boolean(recording.storageUrl)
+  const hasStreamableAudio =
+    typeof recording.storageUrl === 'string' &&
+    recording.storageUrl.startsWith('http')
+
   return (
     <Card className={cn('relative', className)}>
       <Modal
@@ -161,16 +166,28 @@ export const RecordingCard = memo(function RecordingCard({
               <Music size={24} className="text-accent-orange" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-white truncate hover:text-accent-purple transition-colors">
-                <Link href={`/review/${recording.id}`} className="block">
-                  {recording.title}
-                </Link>
+              <h3 className="text-lg font-bold text-white truncate">
+                {hasAudio ? (
+                  <Link
+                    href={`/review/${recording.id}`}
+                    className="block hover:text-accent-purple transition-colors"
+                  >
+                    {recording.title}
+                  </Link>
+                ) : (
+                  recording.title
+                )}
               </h3>
               <p className="text-sm font-medium text-text-secondary flex items-center gap-2">
                 <span>{recording.beat.title}</span>
                 <span className="w-1 h-1 rounded-full bg-white/20" />
                 <span>{recording.beat.bpm} BPM</span>
               </p>
+              {!hasAudio && (
+                <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide">
+                  Stats-only session (no audio captured)
+                </p>
+              )}
             </div>
           </div>
 
@@ -192,7 +209,7 @@ export const RecordingCard = memo(function RecordingCard({
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
-          {recording.storageUrl && recording.storageUrl.startsWith('http') && (
+          {hasStreamableAudio && (
             <Button
               variant="secondary"
               size="sm"
@@ -203,17 +220,19 @@ export const RecordingCard = memo(function RecordingCard({
               {isPlaying ? 'Pause' : 'Play'}
             </Button>
           )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDownload}
-            isLoading={isDownloading}
-            className="flex-1 md:flex-none justify-center px-2"
-          >
-            <Download size={20} className="text-text-secondary" />
-          </Button>
+          {hasAudio && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDownload}
+              isLoading={isDownloading}
+              className="flex-1 md:flex-none justify-center px-2"
+            >
+              <Download size={20} className="text-text-secondary" />
+            </Button>
+          )}
 
-          {recording.storageUrl && recording.storageUrl.startsWith('http') && (
+          {hasStreamableAudio && (
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FreeStyla!"
@@ -223,18 +242,20 @@ export const RecordingCard = memo(function RecordingCard({
             />
           )}
 
-          <Link
-            href={`/recordings/${recording.id}/video`}
-            className="flex-1 md:flex-none"
-          >
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-center px-2"
+          {hasAudio && (
+            <Link
+              href={`/recordings/${recording.id}/video`}
+              className="flex-1 md:flex-none"
             >
-              <Video size={20} className="text-text-secondary" />
-            </Button>
-          </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-center px-2"
+              >
+                <Video size={20} className="text-text-secondary" />
+              </Button>
+            </Link>
+          )}
 
           <Button
             variant="ghost"

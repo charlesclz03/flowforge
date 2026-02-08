@@ -28,7 +28,7 @@ const UploadBeatPage = (): React.JSX.Element => {
   const [artist, setArtist] = useState('Triplyricist') // Default
   const [bpm, setBpm] = useState('')
   const [genre, setGenre] = useState('Trap')
-  const [difficulty, setDifficulty] = useState('Medium')
+  const [beatLabel, setBeatLabel] = useState('')
   const [isPremium, setIsPremium] = useState(false)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +41,10 @@ const UploadBeatPage = (): React.JSX.Element => {
       const audio = new Audio(url)
       audio.onloadedmetadata = () => {
         setDuration(Math.round(audio.duration))
+        URL.revokeObjectURL(url)
+      }
+      audio.onerror = () => {
+        URL.revokeObjectURL(url)
       }
     }
   }
@@ -53,23 +57,55 @@ const UploadBeatPage = (): React.JSX.Element => {
     setStatus('idle')
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('title', title)
-      formData.append('artistName', artist)
-      formData.append('bpm', bpm)
-      formData.append('genre', genre)
-      formData.append('difficulty', difficulty)
-      formData.append('isPremium', String(isPremium))
-      formData.append('duration', String(duration))
-
-      const res = await fetch('/api/admin/beats', {
+      const signedUrlRes = await fetch('/api/upload/signed-url', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          bucket: 'beats',
+        }),
       })
 
-      if (!res.ok) {
-        throw new Error('Upload failed')
+      const signedUrlData = await signedUrlRes.json().catch(() => ({}))
+      if (!signedUrlRes.ok || !signedUrlData?.signedUrl) {
+        throw new Error(
+          signedUrlData?.error || signedUrlData?.details || 'Upload failed'
+        )
+      }
+
+      const uploadRes = await fetch(signedUrlData.signedUrl as string, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type || 'audio/mpeg',
+        },
+        body: file,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error(`Cloud upload failed (${uploadRes.status})`)
+      }
+
+      const metadataRes = await fetch('/api/admin/beats/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          artistName: artist,
+          bpm: parseFloat(bpm),
+          genre,
+          label: beatLabel,
+          isPremium,
+          duration,
+          storageUrl: signedUrlData.publicUrl,
+          storagePath: signedUrlData.storagePath,
+          difficulty: 'Medium',
+        }),
+      })
+
+      if (!metadataRes.ok) {
+        const metadataError = await metadataRes.json().catch(() => ({}))
+        throw new Error(metadataError?.error || 'Metadata save failed')
       }
 
       setStatus('success')
@@ -78,7 +114,9 @@ const UploadBeatPage = (): React.JSX.Element => {
     } catch (err) {
       console.error(err)
       setStatus('error')
-      setErrorMessage('Failed to upload beat. Check console.')
+      setErrorMessage(
+        err instanceof Error ? err.message : 'Failed to upload beat.'
+      )
     } finally {
       setIsUploading(false)
     }
@@ -120,7 +158,7 @@ const UploadBeatPage = (): React.JSX.Element => {
                   </p>
                   <p className="text-sm text-text-tertiary">
                     {file
-                      ? `${duration}s • ${(file.size / 1024 / 1024).toFixed(2)} MB`
+                      ? `${duration}s - ${(file.size / 1024 / 1024).toFixed(2)} MB`
                       : 'MP3, WAV, OGG supported'}
                   </p>
                 </div>
@@ -178,25 +216,18 @@ const UploadBeatPage = (): React.JSX.Element => {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex-1 space-y-2">
-                <label className="text-sm text-text-secondary">
-                  Difficulty
-                </label>
-                <div className="flex gap-2">
-                  {['Easy', 'Medium', 'Hard'].map((d) => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => setDifficulty(d)}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${difficulty === d ? 'bg-accent-purple text-white' : 'bg-background-elevated text-text-secondary hover:bg-white/5'}`}
-                    >
-                      {d}
-                    </button>
-                  ))}
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm text-text-secondary">Label</label>
+                <input
+                  type="text"
+                  value={beatLabel}
+                  onChange={(e) => setBeatLabel(e.target.value)}
+                  className="w-full bg-background-elevated border border-white/10 rounded-lg px-4 py-3 focus:border-accent-purple outline-none"
+                  placeholder="Ex: FreeStyla Originals"
+                />
               </div>
-              <div className="flex items-center gap-3 pt-6">
+              <div className="flex items-center gap-3 pt-8">
                 <input
                   type="checkbox"
                   id="premium"
@@ -208,7 +239,7 @@ const UploadBeatPage = (): React.JSX.Element => {
                   htmlFor="premium"
                   className="text-sm font-medium cursor-pointer"
                 >
-                  Premium Only (Gold)
+                  Premium Only (Pro)
                 </label>
               </div>
             </div>

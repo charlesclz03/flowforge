@@ -153,49 +153,94 @@ export default function PracticeClient({
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
     async (formData: FormData) => {
       const hasAudio = formData.has('audio')
-      const endpoint = hasAudio ? '/api/recordings' : '/api/session/complete'
+      const numericKeys = new Set([
+        'durationSeconds',
+        'frequency',
+        'difficulty',
+        'restarts',
+        'playbacks',
+        'score',
+        'beatOffsetMs',
+        'baseWordCount',
+        'wordCount',
+        'fileSizeBytes',
+      ])
 
-      const options: RequestInit = {
-        method: 'POST',
-      }
-
-      if (hasAudio) {
-        options.body = formData
-      } else {
-        // Convert FormData to JSON for lightweight endpoint
+      const formDataToJson = (skipBinary: boolean): Record<string, unknown> => {
         const json: Record<string, unknown> = {}
-        const numericKeys = new Set([
-          'durationSeconds',
-          'frequency',
-          'difficulty',
-          'restarts',
-          'playbacks',
-          'score',
-          'beatOffsetMs',
-          'baseWordCount',
-          'wordCount',
-          'fileSizeBytes',
-        ])
         formData.forEach((value, key) => {
-          // Handle arrays like 'wordsUsed' if needed, though FormData usually gives strings
+          if (skipBinary && value instanceof Blob) return
+
           if (key === 'wordsUsed' && typeof value === 'string') {
             try {
               json[key] = JSON.parse(value)
             } catch {
               json[key] = []
             }
-          } else if (numericKeys.has(key) && typeof value === 'string') {
+            return
+          }
+
+          if (numericKeys.has(key) && typeof value === 'string') {
             const parsed = Number(value)
             json[key] = Number.isFinite(parsed) ? parsed : value
-          } else {
-            json[key] = value
+            return
           }
+
+          json[key] = value
         })
-        options.body = JSON.stringify(json)
-        options.headers = { 'Content-Type': 'application/json' }
+        return json
       }
 
-      const response = await fetch(endpoint, options)
+      let endpoint = '/api/session/complete'
+      let bodyJson = formDataToJson(true)
+
+      if (hasAudio) {
+        const audioValue = formData.get('audio')
+        if (!(audioValue instanceof Blob)) {
+          throw new Error('Recording payload missing audio blob')
+        }
+
+        const uploadUrlResponse = await fetch('/api/upload/signed-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: `recording-${Date.now()}.wav`,
+            contentType: audioValue.type || 'audio/wav',
+          }),
+        })
+
+        const uploadUrlData = await uploadUrlResponse.json().catch(() => ({}))
+        if (!uploadUrlResponse.ok || !uploadUrlData?.signedUrl) {
+          throw new Error(uploadUrlData?.error || 'Failed to create upload URL')
+        }
+
+        const uploadResponse = await fetch(uploadUrlData.signedUrl as string, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': audioValue.type || 'audio/wav',
+          },
+          body: audioValue,
+        })
+
+        if (!uploadResponse.ok) {
+          throw new Error(
+            `Failed to upload recording audio (${uploadResponse.status})`
+          )
+        }
+
+        bodyJson = {
+          ...bodyJson,
+          storagePath: uploadUrlData.storagePath,
+          fileSizeBytes: audioValue.size,
+        }
+        endpoint = '/api/recordings'
+      }
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyJson),
+      })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Failed to save session')
       return data

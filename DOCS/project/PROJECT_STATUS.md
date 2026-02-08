@@ -5,6 +5,7 @@
 **Current Phase:** Phase 6.5 - Post-Launch Optimization
 
 ## Recent Achievements
+- **Upload Transport Hardening**: Migrated all admin beat upload surfaces (`/admin/beats/new`, `/admin/upload`, `/admin/upload-beat`) to signed direct uploads to eliminate server body-size `413` failures (2026-02-08).
 - **Practice Engine Sync Guard**: Fixed countdown->play cleanup regression that could silently stop playback; cypher player rotation and timer-ring prompt sync are now stable (2026-02-08).
 - **Achievements Fixed**: Implemented API self-healing to resolve "0/0" empty state (v0.9.994).
 - **Release Hardening**: Added strict env validation and stabilized local automation debug behavior (2026-02-08).

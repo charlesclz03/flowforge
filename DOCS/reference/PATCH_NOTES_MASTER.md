@@ -27,6 +27,17 @@
 - **FIX**: Practice engine cleanup now runs only on unmount, preventing accidental playback stops during countdown -> play transitions.
 - **FIX**: Cypher starts on Player 1 and rotates only on real interval boundaries; timer ring remains aligned with prompt timing.
 - **FIX**: Practice save payloads now include actual `wordsUsed` values instead of always sending an empty array.
+- **FIX**: Recordings list now filters out stats-only sessions without captured audio by default, preventing broken `/review` routes for metadata-only runs.
+- **FIX**: Recording and review UIs now show explicit stats-only messaging and hide playback actions when no audio track exists.
+- **FIX**: Session review waveform now uses app-aligned colors (purple played, dark grey unplayed, red playhead).
+- **FIX**: Restored a SUPERADMIN-only `Upload Public Beats` shortcut in profile navigation directly after `Settings`, routed to `/admin/beats/new`.
+- **FIX**: Updated `/admin/beats/new` to use a `Label` text input instead of `Difficulty`, while preserving the `Premium Only (Pro)` option.
+- **FIX**: Added `www.google.co.uk`, `www.google.com`, and `www.google.fr` to CSP `img-src` to stop Google Ads audience pixel image violations.
+- **FIX**: Practice audio saves now upload via signed Supabase URL and submit JSON metadata to `/api/recordings`, preventing `413 Content Too Large` payload failures.
+- **FIX**: Added timeout guards and a route `maxDuration` hint on `/api/session/complete` to reduce `504 Gateway Timeout` failures under load.
+- **FIX**: `/admin/beats/new` now uses signed direct upload + `/api/admin/beats/upload` metadata persistence, eliminating `/api/admin/beats` `413` failures for large files.
+- **FIX**: Migrated `/admin/upload` and `/admin/upload-beat` to the same signed direct upload flow so no legacy large-body beat upload path remains.
+- **FIX**: Recording deletion now supports both legacy public URLs and path-based storage references to prevent orphaned files.
 
 ## v0.9.993 - Type Safe (2026-02-03)
 - **FIX**: Eliminated “paid but not Pro yet” race by having `/orderconfirmed` wait for confirmed activation.

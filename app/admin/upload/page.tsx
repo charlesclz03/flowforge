@@ -20,6 +20,20 @@ export default function AdminUploadPage() {
     isPremium: false,
   })
 
+  const getAudioDurationSeconds = (audioFile: File): Promise<number> =>
+    new Promise((resolve) => {
+      const objectUrl = URL.createObjectURL(audioFile)
+      const audio = new Audio(objectUrl)
+      audio.onloadedmetadata = () => {
+        resolve(Math.max(0, Math.round(audio.duration || 0)))
+        URL.revokeObjectURL(objectUrl)
+      }
+      audio.onerror = () => {
+        resolve(0)
+        URL.revokeObjectURL(objectUrl)
+      }
+    })
+
   // Validate Admin (Client-side fail-fast, real check on server)
   // complicated to check session here without hook, assume Server Component redirects or API fails
 
@@ -40,24 +54,61 @@ export default function AdminUploadPage() {
     const toastId = toast.loading('Uploading beat...')
 
     try {
-      // 1. Upload File & Metadata to API
-      const data = new FormData()
-      data.append('file', file)
-      data.append('title', formData.title)
-      data.append('artistName', formData.artistName)
-      data.append('bpm', formData.bpm)
-      data.append('genre', formData.genre)
-      data.append('difficulty', formData.difficulty)
-      data.append('isPremium', formData.isPremium.toString())
+      const bpm = Number(formData.bpm)
+      if (!Number.isFinite(bpm) || bpm <= 0) {
+        throw new Error('Please provide a valid BPM')
+      }
 
-      const res = await fetch('/api/admin/beats', {
+      const duration = await getAudioDurationSeconds(file)
+
+      const signedUrlRes = await fetch('/api/upload/signed-url', {
         method: 'POST',
-        body: data,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type,
+          bucket: 'beats',
+        }),
       })
 
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Upload failed')
+      const signedUrlData = await signedUrlRes.json().catch(() => ({}))
+      if (!signedUrlRes.ok || !signedUrlData?.signedUrl) {
+        throw new Error(
+          signedUrlData?.error || signedUrlData?.details || 'Upload failed'
+        )
+      }
+
+      const uploadRes = await fetch(signedUrlData.signedUrl as string, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type || 'audio/mpeg',
+        },
+        body: file,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error(`Cloud upload failed (${uploadRes.status})`)
+      }
+
+      const metadataRes = await fetch('/api/admin/beats/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          artistName: formData.artistName,
+          bpm,
+          genre: formData.genre,
+          difficulty: formData.difficulty,
+          isPremium: formData.isPremium,
+          duration,
+          storageUrl: signedUrlData.publicUrl,
+          storagePath: signedUrlData.storagePath,
+        }),
+      })
+
+      if (!metadataRes.ok) {
+        const err = await metadataRes.json().catch(() => ({}))
+        throw new Error(err.error || 'Metadata save failed')
       }
 
       toast.success('Beat uploaded successfully!', { id: toastId })

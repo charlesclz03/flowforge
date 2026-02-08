@@ -403,7 +403,7 @@ export const SessionPlayer = forwardRef<
     if (!audioUrl) {
       return (
         <div className="p-8 text-center text-text-tertiary bg-background-card rounded-xl border border-white/5">
-          Audio not available
+          No audio track available for this session
         </div>
       )
     }
@@ -527,6 +527,8 @@ export const SessionPlayer = forwardRef<
               <WaveformScrubber
                 url={audioUrl}
                 progress={duration > 0 ? currentTime / duration : 0}
+                color="#27272a"
+                playedColor="#a855f7"
                 onChange={(time) => {
                   if (audioRef.current) {
                     audioRef.current.currentTime = time

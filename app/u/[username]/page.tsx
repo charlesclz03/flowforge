@@ -18,6 +18,7 @@ import { authOptions } from '@/lib/auth'
 import { ProfileOwnerControls } from '@/components/organisms/profile/ProfileOwnerControls'
 import { ProfileSettingsTab } from '@/components/organisms/profile/ProfileSettingsTab'
 import { ProfileStatsTab } from '@/components/organisms/profile/ProfileStatsTab'
+import { SuperAdminUploadTabTrigger } from '@/components/organisms/profile/SuperAdminUploadTabTrigger'
 
 interface SocialLinks {
   instagram?: string
@@ -117,6 +118,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   const currentUserId = session?.user?.id
   const isOwner = currentUserId === user.id
+  const isSuperAdminOwner = isOwner && session?.user?.role === 'SUPERADMIN'
 
   const socials = user.socials as SocialLinks | null
 
@@ -247,7 +249,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <div className="lg:col-span-8 w-full">
             <Tabs defaultValue="flows" className="w-full">
               <TabsList
-                className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-2'} ${isOwner ? 'lg:w-[600px]' : 'lg:w-[400px]'}`}
+                className={`grid w-full ${isSuperAdminOwner ? 'grid-cols-5' : isOwner ? 'grid-cols-4' : 'grid-cols-2'} ${isSuperAdminOwner ? 'lg:w-[760px]' : isOwner ? 'lg:w-[600px]' : 'lg:w-[400px]'}`}
               >
                 <TabsTrigger value="flows">Flows</TabsTrigger>
                 {isOwner && <TabsTrigger value="stats">Stats</TabsTrigger>}
@@ -255,6 +257,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 {isOwner && (
                   <TabsTrigger value="settings">Settings</TabsTrigger>
                 )}
+                {isSuperAdminOwner && <SuperAdminUploadTabTrigger />}
               </TabsList>
               <TabsContent value="flows" className="mt-6 space-y-4">
                 {user.freestyleSessions.length > 0 ? (
@@ -275,7 +278,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 {session.title}
                               </h3>
                               <p className="text-xs text-text-tertiary">
-                                {session.beat.title} •{' '}
+                                {session.beat.title} -{' '}
                                 {new Date(
                                   session.createdAt
                                 ).toLocaleDateString()}

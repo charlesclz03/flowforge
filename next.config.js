@@ -59,7 +59,7 @@ const securityHeaders = [
         'https://*.sentry.io',
       ].join(' '),
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      `img-src 'self' data: blob: ${supabaseHttps} https://lh3.googleusercontent.com https://storage.googleapis.com https://api.dicebear.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.google.com https://*.google.pt`,
+      `img-src 'self' data: blob: ${supabaseHttps} https://lh3.googleusercontent.com https://storage.googleapis.com https://api.dicebear.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.google.com https://*.google.pt https://www.google.co.uk https://www.google.com https://www.google.fr`,
       "font-src 'self' https://fonts.gstatic.com",
       `connect-src 'self' blob: ${supabaseHttps} ${supabaseWss} https://accounts.google.com https://api.stripe.com https://*.sentry.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net`,
       "frame-src 'self' https://accounts.google.com https://js.stripe.com https://www.youtube.com",

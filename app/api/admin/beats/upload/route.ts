@@ -23,11 +23,32 @@ export async function POST(req: NextRequest) {
       artistName,
       genre,
       storageUrl,
+      label: labelRaw,
+      duration: durationRaw,
+      difficulty: difficultyRaw,
       tags: tagsRaw,
       isPremium,
     } = await req.json()
 
-    if (!storageUrl || !title || !bpm) {
+    const parsedBpm =
+      typeof bpm === 'number' ? Math.round(bpm) : parseInt(String(bpm), 10)
+    const parsedDuration =
+      typeof durationRaw === 'number'
+        ? Math.max(0, Math.round(durationRaw))
+        : Math.max(0, parseInt(String(durationRaw ?? 0), 10) || 0)
+    const difficulty =
+      typeof difficultyRaw === 'string' && difficultyRaw.trim()
+        ? difficultyRaw.trim().slice(0, 20)
+        : 'Medium'
+    const label =
+      typeof labelRaw === 'string' ? labelRaw.trim().slice(0, 80) : ''
+
+    if (
+      !storageUrl ||
+      !title ||
+      !Number.isFinite(parsedBpm) ||
+      parsedBpm <= 0
+    ) {
       return NextResponse.json(
         { error: 'Missing required fields (title, bpm, storageUrl)' },
         { status: 400 }
@@ -47,13 +68,14 @@ export async function POST(req: NextRequest) {
     const beat = await prisma.beat.create({
       data: {
         title,
-        bpm: parseInt(bpm),
+        bpm: parsedBpm,
         artistName: artistName || 'Unknown Producer',
         genre: genre || 'Freestyle',
-        difficulty: 'Medium',
+        label: label || null,
+        difficulty,
         storageUrl,
         isPremium: !!isPremium, // Use provided value or false
-        duration: 0, // Placeholder
+        duration: parsedDuration,
         tags: tags,
       },
     })

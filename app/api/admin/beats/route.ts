@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
     const artistName = formData.get('artistName') as string
     const bpm = parseInt(formData.get('bpm') as string)
     const genre = formData.get('genre') as string
-    const difficulty = formData.get('difficulty') as string
+    const difficulty = ((formData.get('difficulty') as string) || 'Medium')
+      .trim()
+      .slice(0, 20)
+    const label = ((formData.get('label') as string) || '').trim()
     const isPremium = formData.get('isPremium') === 'true'
     const duration = parseInt(formData.get('duration') as string) || 0
 
@@ -62,6 +65,7 @@ export async function POST(req: NextRequest) {
         artistName,
         bpm,
         genre,
+        label: label || null,
         difficulty,
         isPremium,
         storageUrl: publicUrl,

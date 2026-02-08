@@ -15,6 +15,20 @@ export default function AdminUploadPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
+  const getAudioDurationSeconds = (audioFile: File): Promise<number> =>
+    new Promise((resolve) => {
+      const objectUrl = URL.createObjectURL(audioFile)
+      const audio = new Audio(objectUrl)
+      audio.onloadedmetadata = () => {
+        resolve(Math.max(0, Math.round(audio.duration || 0)))
+        URL.revokeObjectURL(objectUrl)
+      }
+      audio.onerror = () => {
+        resolve(0)
+        URL.revokeObjectURL(objectUrl)
+      }
+    })
+
   if (!session || !isAdmin(session.user?.role)) {
     return (
       <Container size="sm" className="py-20 text-center">
@@ -39,13 +53,74 @@ export default function AdminUploadPage() {
 
     try {
       const formData = new FormData(e.currentTarget)
-      const res = await fetch('/api/admin/beats', {
+
+      const audioFile = formData.get('audio')
+      if (!(audioFile instanceof File) || audioFile.size <= 0) {
+        throw new Error('Audio file is required')
+      }
+
+      const title = String(formData.get('title') || '').trim()
+      const artistName = String(formData.get('producer') || '').trim()
+      const genre = String(formData.get('genre') || 'Trap').trim()
+      const difficulty = String(formData.get('difficulty') || 'Medium').trim()
+      const label = String(formData.get('mood') || '').trim()
+      const bpm = Number(formData.get('bpm'))
+
+      if (!title || !artistName || !Number.isFinite(bpm) || bpm <= 0) {
+        throw new Error('Missing required fields (title, producer, bpm)')
+      }
+
+      const duration = await getAudioDurationSeconds(audioFile)
+
+      const signedUrlRes = await fetch('/api/upload/signed-url', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: audioFile.name,
+          contentType: audioFile.type,
+          bucket: 'beats',
+        }),
       })
 
-      if (!res.ok) {
-        throw new Error(await res.text())
+      const signedUrlData = await signedUrlRes.json().catch(() => ({}))
+      if (!signedUrlRes.ok || !signedUrlData?.signedUrl) {
+        throw new Error(
+          signedUrlData?.error || signedUrlData?.details || 'Upload failed'
+        )
+      }
+
+      const uploadRes = await fetch(signedUrlData.signedUrl as string, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': audioFile.type || 'audio/mpeg',
+        },
+        body: audioFile,
+      })
+
+      if (!uploadRes.ok) {
+        throw new Error(`Cloud upload failed (${uploadRes.status})`)
+      }
+
+      const metadataRes = await fetch('/api/admin/beats/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          artistName,
+          bpm,
+          genre,
+          difficulty,
+          label,
+          isPremium: false,
+          duration,
+          storageUrl: signedUrlData.publicUrl,
+          storagePath: signedUrlData.storagePath,
+        }),
+      })
+
+      if (!metadataRes.ok) {
+        const err = await metadataRes.json().catch(() => ({}))
+        throw new Error(err.error || 'Metadata save failed')
       }
 
       toast.custom(() => (

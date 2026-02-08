@@ -189,13 +189,19 @@ export async function DELETE(
 
     // 2. Delete from Supabase Storage
     if (recording.storageUrl) {
-      // Extract file path from URL
-      // storageUrl format: https://[project].supabase.co/storage/v1/object/public/recordings/[userId]/[filename]
-      // We need: [userId]/[filename]
+      // Support both legacy public URLs and current path-based storage values.
+      let filePath: string | null = null
 
-      const parts = recording.storageUrl.split('/recordings/')
-      if (parts.length === 2) {
-        const filePath = parts[1]
+      if (recording.storageUrl.startsWith('http')) {
+        const parts = recording.storageUrl.split('/recordings/')
+        if (parts.length === 2) {
+          filePath = parts[1].split('?')[0]
+        }
+      } else {
+        filePath = recording.storageUrl.replace(/^\/+/, '')
+      }
+
+      if (filePath) {
         const supabase = createServerClient()
         const { error: storageError } = await supabase.storage
           .from(RECORDINGS_BUCKET)
@@ -203,8 +209,7 @@ export async function DELETE(
 
         if (storageError) {
           console.error('Error deleting file from Supabase:', storageError)
-          // Continue to delete from DB even if storage fails, to keep DB clean?
-          // Usually yes, or warn. Let's log it but proceed.
+          // Continue to delete from DB even if storage fails, to keep DB clean.
         }
       }
     }
