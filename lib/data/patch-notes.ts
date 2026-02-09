@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1000',
+    date: '2026-02-09',
+    title: 'Achievements Fastpath',
+    codename: 'Achievements Fastpath',
+    description:
+      'Resolved production profile load failures caused by Achievements API timeouts. Achievements now load reliably for large accounts.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Achievements API Timeout Fix**: `GET /api/user/achievements` now avoids Vercel function timeouts (504) by batching unlock writes and removing redundant query work.',
+          '**Achievement Unlock Perf**: `AchievementSystem.checkAndUnlock` now batches user achievement inserts via `createMany` and avoids duplicate beat/genre scans.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.999',
     date: '2026-02-09',
     title: 'PWA Install Fix',

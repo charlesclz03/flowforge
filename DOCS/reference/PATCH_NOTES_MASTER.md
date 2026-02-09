@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1000 - Achievements Fastpath (2026-02-09)
+
+- **FIX**: `GET /api/user/achievements` no longer hits Vercel function timeouts (504) for large accounts; unlock writes are batched and redundant queries were removed.
+
 ## v0.9.999 - PWA Install Fix (2026-02-09)
 
 - **FIX**: PWA service worker no longer precaches Next.js `/_next/app-build-manifest.json`, preventing Workbox `bad-precaching-response` install failures (404).

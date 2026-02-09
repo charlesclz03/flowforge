@@ -29,13 +29,11 @@ export async function GET() {
       const [
         sessionCount,
         recordingCount,
-        distinctBeats,
+        distinctBeatsWithGenres,
         achievements,
         userStats,
-        totalDurationResult,
-        totalWordsResult,
+        totals,
         cypherCount,
-        genreCounts,
         collectedWordsCount,
       ] = await Promise.all([
         // 1. Session Count
@@ -44,10 +42,11 @@ export async function GET() {
         prisma.freestyleSession.count({
           where: { userId, storageUrl: { not: null } },
         }),
-        // 3. Distinct Beats
-        prisma.freestyleSession.groupBy({
-          by: ['beatId'],
+        // 3. Distinct Beats (+ Genre)
+        prisma.freestyleSession.findMany({
           where: { userId },
+          select: { beatId: true, beat: { select: { genre: true } } },
+          distinct: ['beatId'],
         }),
         // 4. Existing Achievements (Full object for display)
         prisma.userAchievement.findMany({
@@ -65,29 +64,25 @@ export async function GET() {
             createdAt: true,
           },
         }),
-        // 6. Total Duration
+        // 6. Totals (Duration + Words)
         prisma.freestyleSession.aggregate({
           where: { userId },
-          _sum: { durationSeconds: true },
+          _sum: { durationSeconds: true, wordCount: true },
         }),
-        // 7. Total Words
-        prisma.freestyleSession.aggregate({
-          where: { userId },
-          _sum: { wordCount: true },
-        }),
-        // 8. Cypher Count
+        // 7. Cypher Count
         prisma.freestyleSession.count({
           where: { userId, mode: 'cypher' },
         }),
-        // 9. Genre Counts
-        prisma.freestyleSession.findMany({
-          where: { userId },
-          select: { beat: { select: { genre: true } } },
-          distinct: ['beatId'],
-        }),
-        // 10. Collected Words
+        // 8. Collected Words
         prisma.collectedWord.count({ where: { userId } }),
       ])
+
+      const distinctBeats = distinctBeatsWithGenres.map((b) => ({
+        beatId: b.beatId,
+      }))
+      const genreCounts = distinctBeatsWithGenres.map((b) => ({
+        beat: b.beat,
+      }))
 
       let currentAchievements = achievements
 
@@ -105,8 +100,8 @@ export async function GET() {
             distinctBeats,
             userAchievements: achievements,
             userStats,
-            totalDuration: totalDurationResult._sum.durationSeconds || 0,
-            totalWords: totalWordsResult._sum.wordCount || 0,
+            totalDuration: totals._sum.durationSeconds || 0,
+            totalWords: totals._sum.wordCount || 0,
             cypherCount,
             genreCounts,
             collectedWordCount: collectedWordsCount,

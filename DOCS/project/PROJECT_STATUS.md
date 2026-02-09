@@ -1,16 +1,17 @@
-# Project Status: v0.9.999 ("PWA Install Fix")
+# Project Status: v0.9.1000 ("Achievements Fastpath")
 
-**Current Version**: `0.9.999`
+**Current Version**: `0.9.1000`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-09
 
 ## Quick Status
 
-> **Latest Release**: v0.9.999 (PWA Install Fix) - Fixed a Workbox precache 404 that prevented PWA service worker install.
+> **Latest Release**: v0.9.1000 (Achievements Fastpath) - Fixed production Achievements API timeouts (504) on profile load.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **Achievements Fastpath**: Eliminated production `GET /api/user/achievements` 504 timeouts by batching unlock writes and removing redundant DB queries (2026-02-09).
 - **PWA Install Fix**: Service worker no longer fails to install due to precaching `/_next/app-build-manifest.json` (404) in production (2026-02-09).
 - **Session Guard**: Fixed stale active-session navigation guard state that could show "End Session?" on non-practice routes like `/recordings` (2026-02-09).
 - **Silent Night Fix**: Prevented empty recordings in Practice Mode and optimized Free tier UX (2026-02-08).
@@ -48,6 +49,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1000 | Achievements Fastpath | 2026-02-09 | Eliminated profile Achievements API 504 timeouts by batching unlock writes          |
 | v0.9.999 | PWA Install Fix    | 2026-02-09 | Prevented Workbox precache 404 from breaking PWA service worker install            |
 | v0.9.998 | Session Guard      | 2026-02-09 | Scoped global exit guard to practice routes and fixed stale active-session cleanup |
 | v0.9.995 | Upload Shield      | 2026-02-08 | Admin Upload Endpoint Deprecation + Production Error Hardening                     |

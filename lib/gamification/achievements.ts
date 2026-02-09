@@ -36,13 +36,11 @@ export class AchievementSystem {
       const [
         sessionCount,
         recordingCount,
-        distinctBeats,
+        distinctBeatsWithGenres,
         userAchievements,
         userStats,
-        totalDurationResult,
-        totalWordsResult,
+        totals,
         cypherCount,
-        genreCounts,
         collectedWordCount,
       ] = await Promise.all([
         // 1. Session Count
@@ -51,10 +49,11 @@ export class AchievementSystem {
         prisma.freestyleSession.count({
           where: { userId, storageUrl: { not: null } },
         }),
-        // 3. Distinct Beats
-        prisma.freestyleSession.groupBy({
-          by: ['beatId'],
+        // 3. Distinct Beats (+ Genre)
+        prisma.freestyleSession.findMany({
           where: { userId },
+          select: { beatId: true, beat: { select: { genre: true } } },
+          distinct: ['beatId'],
         }),
         // 4. Existing Achievements
         prisma.userAchievement.findMany({
@@ -71,29 +70,25 @@ export class AchievementSystem {
             createdAt: true,
           },
         }),
-        // 6. Total Duration
+        // 6. Totals (Duration + Words)
         prisma.freestyleSession.aggregate({
           where: { userId },
-          _sum: { durationSeconds: true },
+          _sum: { durationSeconds: true, wordCount: true },
         }),
-        // 7. Total Words (using wordCount on Session)
-        prisma.freestyleSession.aggregate({
-          where: { userId },
-          _sum: { wordCount: true },
-        }),
-        // 8. Cypher Count
+        // 7. Cypher Count
         prisma.freestyleSession.count({
           where: { userId, mode: 'cypher' },
         }),
-        // 9. Genre Counts (requires joining with Beat)
-        prisma.freestyleSession.findMany({
-          where: { userId },
-          select: { beat: { select: { genre: true } } },
-          distinct: ['beatId'], // Approximation for distinct genres visited
-        }),
-        // 10. Collected Words (Word Vault)
+        // 8. Collected Words (Word Vault)
         prisma.collectedWord.count({ where: { userId } }),
       ])
+
+      const distinctBeats = distinctBeatsWithGenres.map((b) => ({
+        beatId: b.beatId,
+      }))
+      const genreCounts = distinctBeatsWithGenres.map((b) => ({
+        beat: b.beat,
+      }))
 
       stats = {
         sessionCount,
@@ -101,8 +96,8 @@ export class AchievementSystem {
         distinctBeats,
         userAchievements,
         userStats,
-        totalDuration: totalDurationResult._sum.durationSeconds || 0,
-        totalWords: totalWordsResult._sum.wordCount || 0,
+        totalDuration: totals._sum.durationSeconds || 0,
+        totalWords: totals._sum.wordCount || 0,
         cypherCount,
         genreCounts,
         collectedWordCount,
@@ -269,21 +264,13 @@ export class AchievementSystem {
         select: { id: true, code: true, name: true },
       })
 
-      // Create user achievement records in parallel or batch
-      await Promise.all(
-        achievements.map((a) =>
-          prisma.userAchievement
-            .create({
-              data: {
-                userId,
-                achievementId: a.id,
-              },
-            })
-            .catch((err) =>
-              console.warn(`Silent failure unlocking ${a.code}:`, err)
-            )
-        )
-      )
+      await prisma.userAchievement.createMany({
+        data: achievements.map((a) => ({
+          userId,
+          achievementId: a.id,
+        })),
+        skipDuplicates: true,
+      })
 
       // Return achievement names (not codes) for user-friendly display
       newlyUnlocked.push(...achievements.map((a) => a.name))
