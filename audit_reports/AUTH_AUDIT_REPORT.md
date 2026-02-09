@@ -1,10 +1,10 @@
-# PRACTICE_AUDIO - Forensic Audit Report
+# AUTH - Forensic Audit Report
 **Date**: 2/9/2026
-**Scope**: `app/practice hooks/player lib/audio`
+**Scope**: `lib/auth.ts app/api/auth middleware.ts types`
 
 ## 1. Executive Summary
-- **Total Commits**: 167
-- **Hotfix Ratio**: 82/167 (49.1%)
+- **Total Commits**: 33
+- **Hotfix Ratio**: 8/33 (24.2%)
 - **Churn Validation**: 🔴 HIGH CHURN DETECTED
 
 ## 2. Forensic Analysis
@@ -12,30 +12,27 @@
 ### A. Activity Heatmap (Commits per Month)
 | Month | Commits | Status |
 |-------|---------|--------|
-| 2026-02 | 20 | 🔥 Hotspot |
-| 2026-01 | 107 | 🔥 Hotspot |
-| 2025-12 | 36 | 🔥 Hotspot |
-| 2025-11 | 4 | Normal |
+| 2026-02 | 3 | Normal |
+| 2026-01 | 15 | 🔥 Hotspot |
+| 2025-12 | 13 | 🔥 Hotspot |
+| 2025-11 | 2 | Normal |
 
 ### B. "Circular Refactoring" Suspects
 *Topics that appear consistently in commit messages:*
 | Topic | Occurrences | Risk |
 |-------|-------------|------|
-| sync | 7 | 🔴 CRITICAL |
-| timer | 3 | 🟡 Warning |
-| save | 3 | 🟡 Warning |
 | auth | 3 | 🟡 Warning |
-| upload | 2 | 🟡 Warning |
-| drift | 1 | 🟡 Warning |
+| sync | 1 | 🟡 Warning |
+| upload | 1 | 🟡 Warning |
 
 ## 3. Version History (Hall of Fame Candidates)
 | Hash | Date | Message |
 |------|------|---------|
-| 9af01aa3 | 2026-02-09 | chore(release): v0.9.998 - Session Guard |
-| f88fbce1 | 2026-02-09 | fix(practice): restore random difficulty prompts and ring sync |
-| c317f80d | 2026-02-08 | chore(release): v0.9.996 - Studio Restoration |
-| 7cf9be5b | 2026-02-08 | chore(release): v0.9.994 - Self-Heal |
 | f47a6517 | 2026-02-08 | chore(release): v0.9.994 - Self-Heal |
+| d670e1ff | 2026-02-08 | chore(release): v0.9.994 - Self-Heal |
+| 296eba3c | 2026-02-03 | fix(audit): ship P1 hardening fixes |
+| 6a98cf82 | 2026-01-29 | chore(release): v0.9.82 - Monetization Audit |
+| 39f2bc30 | 2026-01-27 | chore(release): v0.9.63 - Identity Restored |
 
 
 ## 4. Recommendations

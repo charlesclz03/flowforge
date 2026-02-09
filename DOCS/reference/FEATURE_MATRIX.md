@@ -1,4 +1,4 @@
-# FreeStyla Feature Matrix (v0.9.994)
+# FreeStyla Feature Matrix (v0.9.999)
 
 ## Core Practice Engine
 
@@ -56,6 +56,7 @@
 
 | Date       | Feature             | Status | Fixes Applied                                                               |
 | :--------- | :------------------ | :----: | :-------------------------------------------------------------------------- |
+| 2026-02-09 | Launch Matrix Audit |  WARN  | Guest + automated checks PASS. Google OAuth sign-in is blocked in webdriver-controlled browsers; use `scripts/prod-launch-audit.mjs` with a real Chrome profile (CDP) + manual login to validate Free/Pro/SUPERADMIN UX. |
 | 2026-01-31 | Recording Review    |  PASS  | Verified hybrid audio engine (HTML5 + SeamlessLooper)                       |
 | 2026-01-29 | Solo Mode           |  PASS  | Implemented `usePracticeEngine` (FSM + Atomic Clock)                        |
 | 2026-01-29 | Cypher Mode         |  PASS  | Implemented player rotation logic                                           |

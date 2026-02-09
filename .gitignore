@@ -50,6 +50,8 @@ prisma/migrations/
 # Temporary files
 DOCS_TEXT/
 
+# Agent scratch (do not commit)
+/brain/
 
 .vercel
 .env.debug 
