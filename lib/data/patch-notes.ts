@@ -22,6 +22,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.999',
+    date: '2026-02-09',
+    title: 'PWA Install Fix',
+    codename: 'PWA Install Fix',
+    description:
+      'Fixed a service worker install failure where Workbox tried to precache a Next.js internal manifest that 404s in production, breaking PWA install/offline behavior.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**PWA Install Fix**: Excluded Next.js `app-build-manifest.json` from the service worker precache to prevent Workbox `bad-precaching-response` (404) install failures on production domains.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.998',
     date: '2026-02-09',
     title: 'Session Guard',

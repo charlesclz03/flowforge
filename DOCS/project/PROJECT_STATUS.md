@@ -1,16 +1,17 @@
-# Project Status: v0.9.998 ("Session Guard")
+# Project Status: v0.9.999 ("PWA Install Fix")
 
-**Current Version**: `0.9.998`
+**Current Version**: `0.9.999`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-09
 
 ## Quick Status
 
-> **Latest Release**: v0.9.998 (Session Guard) - Fixed stale global "End Session?" prompts outside Practice.
+> **Latest Release**: v0.9.999 (PWA Install Fix) - Fixed a Workbox precache 404 that prevented PWA service worker install.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **PWA Install Fix**: Service worker no longer fails to install due to precaching `/_next/app-build-manifest.json` (404) in production (2026-02-09).
 - **Session Guard**: Fixed stale active-session navigation guard state that could show "End Session?" on non-practice routes like `/recordings` (2026-02-09).
 - **Silent Night Fix**: Prevented empty recordings in Practice Mode and optimized Free tier UX (2026-02-08).
 - **Turbo Charge**: Optimized Achievements API to reduce DB load by 60% (v0.9.995).
@@ -47,6 +48,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.999 | PWA Install Fix    | 2026-02-09 | Prevented Workbox precache 404 from breaking PWA service worker install            |
 | v0.9.998 | Session Guard      | 2026-02-09 | Scoped global exit guard to practice routes and fixed stale active-session cleanup |
 | v0.9.995 | Upload Shield      | 2026-02-08 | Admin Upload Endpoint Deprecation + Production Error Hardening                     |
 | v0.9.993 | Type Safe          | 2026-02-03 | Stripe Reliability + Version/Docs Alignment                                        |

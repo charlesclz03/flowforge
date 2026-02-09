@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.999 - PWA Install Fix (2026-02-09)
+
+- **FIX**: PWA service worker no longer precaches Next.js `/_next/app-build-manifest.json`, preventing Workbox `bad-precaching-response` install failures (404).
+
 ## v0.9.998 - Session Guard (2026-02-09)
 
 - **FIX**: Practice engine unmount cleanup now explicitly clears global session-active state, preventing stale navigation guards.
