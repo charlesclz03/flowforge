@@ -1,13 +1,17 @@
-# Project Status: v0.9.997 ("Silent Night Fix")
-**Current Version**: `0.9.997`
+# Project Status: v0.9.998 ("Session Guard")
+
+**Current Version**: `0.9.998`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-08
+**Last Updated**: 2026-02-09
 
 ## Quick Status
-> **Latest Release**: v0.9.997 (Silent Night Fix) - Resolved empty recordings issue.
+
+> **Latest Release**: v0.9.998 (Session Guard) - Fixed stale global "End Session?" prompts outside Practice.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
+
+- **Session Guard**: Fixed stale active-session navigation guard state that could show "End Session?" on non-practice routes like `/recordings` (2026-02-09).
 - **Silent Night Fix**: Prevented empty recordings in Practice Mode and optimized Free tier UX (2026-02-08).
 - **Turbo Charge**: Optimized Achievements API to reduce DB load by 60% (v0.9.995).
 - **Upload Shield Release**: Deprecated legacy `/api/admin/beats` upload endpoint (410 + migration guidance), fully standardizing signed direct upload flow for admin beat publishing (2026-02-08).
@@ -34,19 +38,22 @@
 - **Stripe Checkout Working**: Fixed API version and environment variable issues to enable subscriptions.
 
 ## Immediate Focus
+
 - Monitoring subscription flow reliability.
 - Testing webhook-based subscription activation.
 - Further mobile optimizations.
 
 ## Version History (Recent)
-| Version | Codename | Date | Summary |
-|---------|----------|------|---------|
-| v0.9.995 | Upload Shield | 2026-02-08 | Admin Upload Endpoint Deprecation + Production Error Hardening |
-| v0.9.993 | Type Safe | 2026-02-03 | Stripe Reliability + Version/Docs Alignment |
-| v0.9.85 | Voice Upgrade | 2026-01-31 | Smart TTS & Audio Audit |
-| v0.9.84 | Voice Restoration | 2026-01-31 | TTS Implemented & Word Gen Hardened |
-| v0.9.83 | Visual Polish | 2026-01-30 | Profile Card Glow & Feature Roadmap |
-| v0.9.82 | Monetization Audit | 2026-01-29 | History Graph Gating & Stripe Audit |
-| v0.9.81 | Section Audit | 2026-01-29 | User Beat Management Audit & Fixes |
-| v0.9.80 | Clean Slate | 2026-01-29 | Feature Audit (Solo, Cypher, Word Prompts) |
-| v0.9.79 | Pass the Phone | 2026-01-29 | Cypher Mode Activation |
+
+| Version  | Codename           | Date       | Summary                                                                            |
+| -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.998 | Session Guard      | 2026-02-09 | Scoped global exit guard to practice routes and fixed stale active-session cleanup |
+| v0.9.995 | Upload Shield      | 2026-02-08 | Admin Upload Endpoint Deprecation + Production Error Hardening                     |
+| v0.9.993 | Type Safe          | 2026-02-03 | Stripe Reliability + Version/Docs Alignment                                        |
+| v0.9.85  | Voice Upgrade      | 2026-01-31 | Smart TTS & Audio Audit                                                            |
+| v0.9.84  | Voice Restoration  | 2026-01-31 | TTS Implemented & Word Gen Hardened                                                |
+| v0.9.83  | Visual Polish      | 2026-01-30 | Profile Card Glow & Feature Roadmap                                                |
+| v0.9.82  | Monetization Audit | 2026-01-29 | History Graph Gating & Stripe Audit                                                |
+| v0.9.81  | Section Audit      | 2026-01-29 | User Beat Management Audit & Fixes                                                 |
+| v0.9.80  | Clean Slate        | 2026-01-29 | Feature Audit (Solo, Cypher, Word Prompts)                                         |
+| v0.9.79  | Pass the Phone     | 2026-01-29 | Cypher Mode Activation                                                             |

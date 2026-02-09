@@ -137,6 +137,8 @@ export function usePracticeEngine({
 
   useEffect(() => {
     return () => {
+      markSessionInactive()
+
       // If we unmount while playing (e.g. Navigation), stop everything.
       const status = latestStatusRef.current
       if (status !== 'IDLE' && status !== 'COMPLETED') {

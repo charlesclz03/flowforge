@@ -71,6 +71,12 @@ export function BottomNav() {
   const handleTabClick = (e: React.MouseEvent, tab: (typeof tabs)[0]) => {
     bump()
 
+    const isCurrentTab = tab.match ? tab.match(pathname) : pathname === tab.href
+    if (isCurrentTab) {
+      e.preventDefault()
+      return
+    }
+
     // 1. Check for Active Session Interruption
     // Use centralized navigation guard
     if (isActive) {

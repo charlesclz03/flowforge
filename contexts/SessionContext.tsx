@@ -8,7 +8,7 @@ import {
   ReactNode,
   useCallback,
 } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Beat } from '@/types/database'
 
 export interface PracticeSessionState {
@@ -56,6 +56,7 @@ const PracticeSessionContext = createContext<
 
 export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [state, setState] = useState<PracticeSessionState>({
     selectedBeat: null,
     frequency: 4,
@@ -190,14 +191,27 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   // Navigation Guard Logic
   const attemptNavigation = useCallback(
     (target: string | (() => void)) => {
-      // If session is active, block and prompt
-      if (state.isActive) {
+      const isPracticeRoute =
+        pathname === '/practice' || pathname.startsWith('/practice/')
+
+      // Only enforce the exit guard while inside the active practice route.
+      if (state.isActive && isPracticeRoute) {
         setState((prev) => ({
           ...prev,
           showExitPrompt: true,
           pendingNavigation: target, // Store the target for later
         }))
       } else {
+        // Self-heal stale session flags when leaving /practice without proper teardown.
+        if (state.isActive && !isPracticeRoute) {
+          setState((prev) => ({
+            ...prev,
+            isActive: false,
+            showExitPrompt: false,
+            pendingNavigation: null,
+          }))
+        }
+
         // If not active, just go immediately
         if (typeof target === 'string') {
           router.push(target)
@@ -206,7 +220,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    [state.isActive, router]
+    [state.isActive, pathname, router]
   )
 
   const cancelNavigation = useCallback(() => {

@@ -22,6 +22,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.998',
+    date: '2026-02-09',
+    title: 'Session Guard',
+    codename: 'Session Guard',
+    description:
+      'We fixed a navigation-guard regression where stale active-session state could show "End Session?" outside Practice (including Recordings). Session cleanup and guard routing are now resilient.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Practice Unmount Cleanup**: Practice engine teardown now explicitly clears global session-active state to prevent stale navigation locks.',
+          '**Guard Scope Hardening**: Global `attemptNavigation` now enforces the exit prompt only on `/practice` routes and self-heals stale active flags elsewhere.',
+          '**Bottom Nav False-Positive Fix**: Tapping the currently active tab no longer triggers guarded navigation paths or exit prompts.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.997',
     date: '2026-02-08',
     title: 'Silent Night Fix 🌙',
@@ -40,6 +58,8 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Random Difficulty Restore**: Difficulty `Random` now uses the full word pool instead of an empty filter, restoring prompt generation.',
           '**Prompt Ring Sync**: Practice now tracks and renders active frequency from the engine, with frequency changes applied safely on the next prompt boundary.',
           '**Word Prompt Failsafe**: Added a fallback prompt source so sessions never enter a no-word state that leaves the timer ring stuck at 100%.',
+          '**Recording Save Authorization**: `/api/recordings` now uses the same Pro/SUPERADMIN gating logic as `/api/upload/signed-url`, preventing false `403 Forbidden` saves for privileged users.',
+          '**Signed URL Bucket Recovery**: `/api/upload/signed-url` now treats Supabase `404` / `related resource does not exist` responses as missing-bucket signals, so self-healing bucket creation runs reliably.',
         ],
       },
     ],

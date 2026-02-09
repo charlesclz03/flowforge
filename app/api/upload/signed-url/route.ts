@@ -10,8 +10,31 @@ import {
 export const runtime = 'nodejs'
 export const maxDuration = 30
 
-const looksLikeMissingBucket = (message?: string) =>
-  Boolean(message && /bucket.+(not found|does not exist)/i.test(message))
+type StorageApiErrorLike = {
+  message?: string
+  statusCode?: number | string
+  status?: number | string
+}
+
+const looksLikeMissingBucket = (error?: StorageApiErrorLike | null) => {
+  if (!error) return false
+
+  const message = error.message?.toLowerCase() ?? ''
+  const statusCode =
+    typeof error.statusCode === 'string'
+      ? Number(error.statusCode)
+      : error.statusCode
+  const status =
+    typeof error.status === 'string' ? Number(error.status) : error.status
+
+  const notFoundMessage =
+    /bucket.+(not found|does not exist)/i.test(message) ||
+    /related resource does not exist/i.test(message) ||
+    /resource does not exist/i.test(message) ||
+    /not found/i.test(message)
+
+  return notFoundMessage || statusCode === 404 || status === 404
+}
 
 /**
  * Generates a signed URL for direct-to-Supabase uploads.
@@ -76,7 +99,7 @@ export async function POST(req: NextRequest) {
       .createSignedUploadUrl(storagePath)
 
     // Self-heal: create bucket on demand if missing, then retry once.
-    if (error && looksLikeMissingBucket(error.message)) {
+    if (error && looksLikeMissingBucket(error)) {
       const { error: bucketError } = await supabase.storage.createBucket(
         targetBucket,
         {

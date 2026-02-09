@@ -7,6 +7,7 @@ import { AchievementSystem } from '@/lib/gamification/achievements'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
+import { isProUser } from '@/lib/subscription/isPro'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
@@ -164,11 +165,15 @@ export async function POST(request: Request) {
     const wordCount = Array.isArray(words) ? words.length : 0
     const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
 
-    // STORAGE LIMIT CHECK (For Free Users)
+    // STORAGE LIMIT CHECK (For Free / Non-Pro Users)
     const FREE_LIMIT_BYTES = 0 // 0MB (Free users cannot save)
+    const canStoreRecording = isProUser({
+      subscriptionStatus: session.user.subscriptionStatus,
+      role: session.user.role,
+    })
 
-    // Fetch current usage if user is free
-    if (session.user.subscriptionStatus === 'free') {
+    // Fetch current usage only for users who are not Pro / Superadmin
+    if (!canStoreRecording) {
       const currentUsage = await prisma.freestyleSession.aggregate({
         where: { userId: session.user.id },
         _sum: { fileSizeBytes: true },
