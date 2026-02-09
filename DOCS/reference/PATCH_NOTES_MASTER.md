@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1002 - Achievements Express Hotfix (2026-02-09)
+
+- **FIX**: Resolved a production `500` in `/api/user/achievements` caused by an incorrect streak column reference in the optimized progress query.
+
 ## v0.9.1001 - Achievements Express (2026-02-09)
 
 - **FIX**: `/api/user/achievements` no longer performs blocking unlock side-effects on GET and now computes progress in a single query, eliminating intermittent production timeouts (504).

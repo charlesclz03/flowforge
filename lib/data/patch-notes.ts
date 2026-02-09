@@ -22,6 +22,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1002',
+    date: '2026-02-09',
+    title: 'Achievements Express Hotfix',
+    codename: 'Achievements Express Hotfix',
+    description:
+      'Hotfix for Achievements Express: resolved a production 500 caused by an incorrect streak column reference in the optimized progress query.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Achievements API Hotfix**: Fixed a production 500 in `/api/user/achievements` caused by an incorrect streak column reference in the optimized progress query.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1001',
     date: '2026-02-09',
     title: 'Achievements Express',

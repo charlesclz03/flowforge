@@ -38,7 +38,7 @@ export async function GET() {
           (SELECT COUNT(*)::int FROM freestyle_sessions WHERE user_id = ${userId} AND storage_url IS NOT NULL) AS recordings,
           (SELECT COUNT(DISTINCT beat_id)::int FROM freestyle_sessions WHERE user_id = ${userId}) AS beats,
           (SELECT COUNT(*)::int FROM collected_words WHERE user_id = ${userId}) AS words,
-          (SELECT current_streak::int FROM users WHERE id = ${userId}) AS streak
+          (SELECT "currentStreak"::int FROM users WHERE id = ${userId}) AS streak
       `)
 
       userAchievements = await prisma.userAchievement.findMany({
