@@ -7,6 +7,9 @@
 - **FIX**: Hardened `POST /api/upload/signed-url` with bucket self-healing and improved error reporting for failed signed URL generation.
 - **FIX**: Restored correct `401/403` semantics on `POST /api/admin/beats/upload` when superadmin checks fail.
 - **FIX**: `GET /api/user/achievements` now refreshes achievement records after lazy unlock, so newly unlocked badges appear immediately.
+- **FIX**: Restored Random difficulty prompt generation by treating difficulty `4` as full-pool selection instead of exact difficulty filtering.
+- **FIX**: Practice engine now tracks active frequency and applies frequency changes only on prompt boundaries, keeping ring timing synchronized.
+- **FIX**: Added a word-prompt fallback path so sessions cannot get stuck with no prompt text and a fully filled timer ring.
 
 ## v0.9.996 - Studio Restoration (2026-02-08)
 - **FIX**: Restored visibility of Pause and Restart buttons in Practice Mode by removing unstable animation logic.

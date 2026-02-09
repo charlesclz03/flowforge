@@ -33,7 +33,15 @@ export function filterByDifficulty<T extends { difficultyLevel: number }>(
   words: T[],
   difficulty: number
 ): T[] {
-  return words.filter((w) => w.difficultyLevel === difficulty)
+  // 4 = Random mode. Keep full pool so prompts never starve.
+  if (difficulty === 4) {
+    return words
+  }
+
+  const filtered = words.filter((w) => w.difficultyLevel === difficulty)
+
+  // Safety fallback for sparse/legacy datasets.
+  return filtered.length > 0 ? filtered : words
 }
 
 /**

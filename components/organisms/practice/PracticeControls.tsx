@@ -79,7 +79,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleRestart,
     handleBeatSelect,
     difficulty,
-    // activeDifficulty = difficulty, // [UI TWEAK] Unused for now, we show target difficulty immediately
+    activeDifficulty = difficulty,
     frequency, // Target frequency (User Selection)
     activeFrequency = frequency, // Active frequency (Audio Engine) - defaults to target if not provided
     isGolden = false,
@@ -125,24 +125,25 @@ export default function PracticeControls(props: PracticeControlsProps) {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
+  const displayDifficulty = isPlaying ? activeDifficulty : difficulty
+  const displayFrequency = isPlaying ? activeFrequency : frequency
+
   const getDifficultyMeta = () => {
-    // [UI TWEAK] Use 'difficulty' (target) instead of 'activeDifficulty' (engine)
-    // to provide instant visual feedback to the user.
-    if (difficulty <= 1) {
+    if (displayDifficulty <= 1) {
       return {
         label: 'Easy',
         classes:
           'bg-accent-green/10 text-accent-green border-accent-green/20 hover:bg-accent-green/20',
       }
     }
-    if (difficulty === 2) {
+    if (displayDifficulty === 2) {
       return {
         label: 'Medium',
         classes:
           'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20 hover:bg-accent-yellow/20',
       }
     }
-    if (difficulty === 3) {
+    if (displayDifficulty === 3) {
       return {
         label: 'Hard',
         classes:
@@ -311,15 +312,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
             <Zap
               size={14}
               className={
-                frequency === 4
+                displayFrequency === 4
                   ? 'text-accent-red'
-                  : frequency === 8
+                  : displayFrequency === 8
                     ? 'text-accent-yellow'
                     : 'text-accent-blue'
               }
             />
             <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
-              {frequency} Bars
+              {displayFrequency} Bars
             </span>
           </button>
         </div>

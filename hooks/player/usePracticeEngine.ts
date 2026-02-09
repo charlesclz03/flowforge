@@ -27,6 +27,23 @@ const ACTIVE_SESSION_STATUSES = new Set([
   'SAVING',
 ])
 
+const FALLBACK_WORDS = [
+  'Flow',
+  'Rhythm',
+  'Power',
+  'Spirit',
+  'Vision',
+  'Create',
+  'Inspire',
+  'Energy',
+  'Focus',
+  'Elevate',
+  'Master',
+  'Legend',
+  'Hustle',
+  'Grind',
+]
+
 /**
  * Configuration properties for the Practice Engine.
  */
@@ -141,10 +158,14 @@ export function usePracticeEngine({
     duration: number
   }>({ start: 0, duration: 0 })
   const wordGeneratorRef = useRef<WordGenerator | null>(null)
+  const fallbackWordPoolRef = useRef<string[]>(FALLBACK_WORDS)
   const wordsUsedRef = useRef<string[]>([])
   const [activeDifficulty, setActiveDifficulty] = useState(difficulty)
   const activeDifficultyRef = useRef(difficulty)
   const pendingDifficultyRef = useRef<number | null>(null)
+  const [activeFrequency, setActiveFrequency] = useState(frequency)
+  const activeFrequencyRef = useRef(frequency)
+  const pendingFrequencyRef = useRef<number | null>(null)
 
   // Initialize Generator
   useEffect(() => {
@@ -153,23 +174,9 @@ export function usePracticeEngine({
     // SAFETY FALLBACK: If DB returns empty (or fetch failed), use local backup
     if (wordsToUse.length === 0) {
       console.warn('[PracticeEngine] No words provided, using fallback list.')
-      wordsToUse = [
-        'Flow',
-        'Rhythm',
-        'Power',
-        'Spirit',
-        'Vision',
-        'Create',
-        'Inspire',
-        'Energy',
-        'Focus',
-        'Elevate',
-        'Master',
-        'Legend',
-        'Hustle',
-        'Grind',
-      ]
+      wordsToUse = FALLBACK_WORDS
     }
+    fallbackWordPoolRef.current = wordsToUse
 
     // Map string[] to WordData[] structure expected by generator
     const mockWordData = wordsToUse.map((w, i) => {
@@ -196,7 +203,11 @@ export function usePracticeEngine({
 
     // Preload first word
     const first = wordGeneratorRef.current.getRandomWord()
-    if (first) setCurrentWord(first.wordText)
+    if (first) {
+      setCurrentWord(first.wordText)
+    } else {
+      setCurrentWord(fallbackWordPoolRef.current[0] || FALLBACK_WORDS[0])
+    }
   }, [initialWords])
 
   useEffect(() => {
@@ -223,6 +234,21 @@ export function usePracticeEngine({
     }
   }, [difficulty, state.status])
 
+  useEffect(() => {
+    if (frequency === activeFrequencyRef.current) {
+      return
+    }
+
+    if (ACTIVE_SESSION_STATUSES.has(state.status)) {
+      pendingFrequencyRef.current = frequency
+      return
+    }
+
+    pendingFrequencyRef.current = null
+    activeFrequencyRef.current = frequency
+    setActiveFrequency(frequency)
+  }, [frequency, state.status])
+
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
   const {
@@ -246,16 +272,19 @@ export function usePracticeEngine({
     }
   }, [currentWord, speak, state.status])
 
-  // Refs for audio callback access
-  const frequencyRef = useRef(frequency)
-  useEffect(() => {
-    frequencyRef.current = frequency
-  }, [frequency])
-
   const trackWordUsage = useCallback((word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
     wordsUsedRef.current.push(trimmed)
+  }, [])
+
+  const getFallbackWord = useCallback(() => {
+    const pool = fallbackWordPoolRef.current
+    if (!pool.length) {
+      return FALLBACK_WORDS[0]
+    }
+    const index = Math.floor(Math.random() * pool.length)
+    return pool[index] || FALLBACK_WORDS[0]
   }, [])
 
   // Memoize onBeat to prevent useAudioSync restarts
@@ -263,7 +292,7 @@ export function usePracticeEngine({
     (beatIndex: number, time: number) => {
       // EVENT DRIVEN WORD LOGIC
       // Frequency = Bars per Word. 1 Bar = 4 Beats.
-      const beatsPerWord = 4 * (frequencyRef.current || 4)
+      const beatsPerWord = 4 * (activeFrequencyRef.current || 4)
 
       if (beatIndex % beatsPerWord === 0) {
         const pendingDifficulty = pendingDifficultyRef.current
@@ -278,17 +307,31 @@ export function usePracticeEngine({
           setActiveDifficulty(pendingDifficulty)
         }
 
+        const pendingFrequency = pendingFrequencyRef.current
+        if (
+          pendingFrequency !== null &&
+          pendingFrequency !== activeFrequencyRef.current
+        ) {
+          activeFrequencyRef.current = pendingFrequency
+          pendingFrequencyRef.current = null
+          setActiveFrequency(pendingFrequency)
+        }
+
+        const effectiveFrequency = activeFrequencyRef.current || 4
+
         // Trigger Word Change
         // We use the time passed from audio scheduler for precise future timing
         const duration =
-          beatsPerWord * (60 / (beatPlayer.currentBeat?.bpm || 90))
+          4 * effectiveFrequency * (60 / (beatPlayer.currentBeat?.bpm || 90))
 
         // Update State (in valid React way)
-        const next = wordGeneratorRef.current?.getRandomWord()
-        if (next) {
-          setCurrentWord(next.wordText)
+        const nextWord =
+          wordGeneratorRef.current?.getRandomWord()?.wordText ??
+          getFallbackWord()
+        if (nextWord) {
+          setCurrentWord(nextWord)
           setWordTiming({ start: time, duration })
-          trackWordUsage(next.wordText)
+          trackWordUsage(nextWord)
 
           // Cypher Mode Rotation
           if (mode === 'cypher' && beatIndex > 0) {
@@ -297,7 +340,13 @@ export function usePracticeEngine({
         }
       }
     },
-    [beatPlayer.currentBeat?.bpm, mode, cypherPlayers, trackWordUsage]
+    [
+      beatPlayer.currentBeat?.bpm,
+      mode,
+      cypherPlayers,
+      trackWordUsage,
+      getFallbackWord,
+    ]
   )
 
   const audioSync = useAudioSync({
@@ -745,6 +794,7 @@ export function usePracticeEngine({
     wordTiming,
     activePlayer,
     activeDifficulty,
+    activeFrequency,
 
     // Time Logic (Monotonic)
     startTime,

@@ -571,6 +571,7 @@ export default function PracticeClient({
               difficulty={difficulty}
               activeDifficulty={engine.activeDifficulty}
               frequency={frequency}
+              activeFrequency={engine.activeFrequency}
               mode={mode}
               isPro={isPro}
               isRecordingEnabled={isRecordingEnabled}
