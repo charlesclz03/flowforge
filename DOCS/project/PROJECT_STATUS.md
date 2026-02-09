@@ -1,16 +1,17 @@
-# Project Status: v0.9.1000 ("Achievements Fastpath")
+# Project Status: v0.9.1001 ("Achievements Express")
 
-**Current Version**: `0.9.1000`
+**Current Version**: `0.9.1001`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-09
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1000 (Achievements Fastpath) - Fixed production Achievements API timeouts (504) on profile load.
+> **Latest Release**: v0.9.1001 (Achievements Express) - Eliminated intermittent Achievements API timeouts (504) by collapsing progress into a single query and removing blocking GET side-effects.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **Achievements Express**: `GET /api/user/achievements` now computes progress in a single query and no longer performs blocking unlock side-effects, eliminating intermittent production timeouts (504) (2026-02-09).
 - **Achievements Fastpath**: Eliminated production `GET /api/user/achievements` 504 timeouts by batching unlock writes and removing redundant DB queries (2026-02-09).
 - **PWA Install Fix**: Service worker no longer fails to install due to precaching `/_next/app-build-manifest.json` (404) in production (2026-02-09).
 - **Session Guard**: Fixed stale active-session navigation guard state that could show "End Session?" on non-practice routes like `/recordings` (2026-02-09).
@@ -49,6 +50,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1001 | Achievements Express | 2026-02-09 | Eliminated intermittent Achievements API timeouts (504) on profile load            |
 | v0.9.1000 | Achievements Fastpath | 2026-02-09 | Eliminated profile Achievements API 504 timeouts by batching unlock writes          |
 | v0.9.999 | PWA Install Fix    | 2026-02-09 | Prevented Workbox precache 404 from breaking PWA service worker install            |
 | v0.9.998 | Session Guard      | 2026-02-09 | Scoped global exit guard to practice routes and fixed stale active-session cleanup |

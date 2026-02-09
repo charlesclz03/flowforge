@@ -1,5 +1,9 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1001 - Achievements Express (2026-02-09)
+
+- **FIX**: `/api/user/achievements` no longer performs blocking unlock side-effects on GET and now computes progress in a single query, eliminating intermittent production timeouts (504).
+
 ## v0.9.1000 - Achievements Fastpath (2026-02-09)
 
 - **FIX**: `GET /api/user/achievements` no longer hits Vercel function timeouts (504) for large accounts; unlock writes are batched and redundant queries were removed.

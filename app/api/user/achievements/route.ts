@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
-import { AchievementSystem } from '@/lib/gamification/achievements'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,109 +24,35 @@ export async function GET() {
     if (session?.user?.id) {
       const userId = session.user.id
 
-      // UNIFIED DATA FETCH: Fetch everything needed for both display and achievement checking
-      const [
-        sessionCount,
-        recordingCount,
-        distinctBeatsWithGenres,
-        achievements,
-        userStats,
-        totals,
-        cypherCount,
-        collectedWordsCount,
-      ] = await Promise.all([
-        // 1. Session Count
-        prisma.freestyleSession.count({ where: { userId } }),
-        // 2. Recording Count
-        prisma.freestyleSession.count({
-          where: { userId, storageUrl: { not: null } },
-        }),
-        // 3. Distinct Beats (+ Genre)
-        prisma.freestyleSession.findMany({
-          where: { userId },
-          select: { beatId: true, beat: { select: { genre: true } } },
-          distinct: ['beatId'],
-        }),
-        // 4. Existing Achievements (Full object for display)
-        prisma.userAchievement.findMany({
-          where: { userId },
-          include: { achievement: true },
-          orderBy: { unlockedAt: 'desc' },
-        }),
-        // 5. User Stats
-        prisma.user.findUnique({
-          where: { id: userId },
-          select: {
-            xp: true,
-            level: true,
-            currentStreak: true,
-            createdAt: true,
-          },
-        }),
-        // 6. Totals (Duration + Words)
-        prisma.freestyleSession.aggregate({
-          where: { userId },
-          _sum: { durationSeconds: true, wordCount: true },
-        }),
-        // 7. Cypher Count
-        prisma.freestyleSession.count({
-          where: { userId, mode: 'cypher' },
-        }),
-        // 8. Collected Words
-        prisma.collectedWord.count({ where: { userId } }),
-      ])
+      const [progressRow] = await prisma.$queryRaw<
+        {
+          sessions: number
+          recordings: number
+          beats: number
+          words: number
+          streak: number | null
+        }[]
+      >(Prisma.sql`
+        SELECT
+          (SELECT COUNT(*)::int FROM freestyle_sessions WHERE user_id = ${userId}) AS sessions,
+          (SELECT COUNT(*)::int FROM freestyle_sessions WHERE user_id = ${userId} AND storage_url IS NOT NULL) AS recordings,
+          (SELECT COUNT(DISTINCT beat_id)::int FROM freestyle_sessions WHERE user_id = ${userId}) AS beats,
+          (SELECT COUNT(*)::int FROM collected_words WHERE user_id = ${userId}) AS words,
+          (SELECT current_streak::int FROM users WHERE id = ${userId}) AS streak
+      `)
 
-      const distinctBeats = distinctBeatsWithGenres.map((b) => ({
-        beatId: b.beatId,
-      }))
-      const genreCounts = distinctBeatsWithGenres.map((b) => ({
-        beat: b.beat,
-      }))
+      userAchievements = await prisma.userAchievement.findMany({
+        where: { userId },
+        include: { achievement: true },
+        orderBy: { unlockedAt: 'desc' },
+      })
 
-      let currentAchievements = achievements
-
-      // LAZY UNLOCK: Check for missing achievements using PRE-FETCHED data
-      try {
-        const newlyUnlocked = await AchievementSystem.checkAndUnlock(
-          userId,
-          {
-            type: 'SESSION_COMPLETE', // Generic context to trigger totals check
-          },
-          // Optimization: Pass pre-fetched stats to avoid re-querying
-          {
-            sessionCount,
-            recordingCount,
-            distinctBeats,
-            userAchievements: achievements,
-            userStats,
-            totalDuration: totals._sum.durationSeconds || 0,
-            totalWords: totals._sum.wordCount || 0,
-            cypherCount,
-            genreCounts,
-            collectedWordCount: collectedWordsCount,
-          }
-        )
-
-        // Refresh achievements only if we just unlocked new ones.
-        if (newlyUnlocked.length > 0) {
-          currentAchievements = await prisma.userAchievement.findMany({
-            where: { userId },
-            include: { achievement: true },
-            orderBy: { unlockedAt: 'desc' },
-          })
-        }
-      } catch (err) {
-        console.warn('Lazy unlock failed:', err)
-      }
-
-      // Populate response with the already fetched data
-      userAchievements = currentAchievements
       progress = {
-        sessions: sessionCount,
-        recordings: recordingCount,
-        beats: distinctBeats.length,
-        streak: userStats?.currentStreak || 0,
-        words: collectedWordsCount,
+        sessions: progressRow?.sessions ?? 0,
+        recordings: progressRow?.recordings ?? 0,
+        beats: progressRow?.beats ?? 0,
+        streak: progressRow?.streak ?? 0,
+        words: progressRow?.words ?? 0,
       }
     }
 

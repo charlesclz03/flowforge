@@ -22,6 +22,22 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1001',
+    date: '2026-02-09',
+    title: 'Achievements Express',
+    codename: 'Achievements Express',
+    description:
+      'Fixed remaining intermittent Achievements API timeouts in production by collapsing progress computation into a single query and removing blocking GET side-effects.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Achievements API Hardening**: `/api/user/achievements` now computes progress in a single DB query and no longer performs blocking unlock side-effects, eliminating intermittent production timeouts (504).',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1000',
     date: '2026-02-09',
     title: 'Achievements Fastpath',
