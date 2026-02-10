@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1007',
+    date: '2026-02-10',
+    title: 'Icon Polish',
+    codename: 'Icon Polish',
+    description:
+      'PWA/TWA polish: regenerated icons at correct sizes and added maskable variants so Android launch surfaces render cleanly without the mismatched icon border.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Borderless Launch Icon**: Rebuilt PWA icons (`16/32/192/512`) from the clean logo asset with a true `#000000` background to eliminate the visible "circle" mismatch on splash/launch.',
+          '**Maskable Icons**: Added dedicated maskable icons (`icon-maskable-192x192.png`, `icon-maskable-512x512.png`) and referenced them in `manifest.json` for better Android adaptive/splash rendering.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1006',
     date: '2026-02-10',
     title: 'Canonical WWW',

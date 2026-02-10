@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1007 - Icon Polish (2026-02-10)
+
+- **FIX**: Regenerated PWA icons at correct sizes (`16/32/192/512`) with a true `#000000` background to eliminate the visible "circle" mismatch on Android splash/launch.
+- **SYSTEM**: Added dedicated maskable icons (`icon-maskable-192x192.png`, `icon-maskable-512x512.png`) and updated `manifest.json` so Android adaptive/splash surfaces render cleanly.
+
 ## v0.9.1006 - Canonical WWW (2026-02-10)
 
 - **FIX**: Resolved production `ERR_TOO_MANY_REDIRECTS` by aligning canonical origin routing to `www.freestyla.app` (removes apex<->www redirect loop impacting PWA/TWA trust endpoints like `manifest.json` and `assetlinks.json`).

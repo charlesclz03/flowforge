@@ -1,16 +1,17 @@
-# Project Status: v0.9.1006 ("Canonical WWW")
+# Project Status: v0.9.1007 ("Icon Polish")
 
-**Current Version**: `0.9.1006`
+**Current Version**: `0.9.1007`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-10
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1006 (Canonical WWW) - Fixed production `ERR_TOO_MANY_REDIRECTS` by aligning the canonical production origin to `www.freestyla.app` (critical for PWA/TWA trust endpoints + Google OAuth cookie consistency).
+> **Latest Release**: v0.9.1007 (Icon Polish) - Regenerated PWA icons with correct sizes + maskable variants to eliminate the mismatched splash/icon border on launch (TWA-ready polish).
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **Icon Polish**: Regenerated PWA icons (`16/32/192/512` + maskable) so Android splash/launcher surfaces render cleanly with consistent black (2026-02-10).
 - **Canonical WWW**: `freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `www.freestyla.app`, eliminating redirect loops and preventing auth/session split-brain (2026-02-10).
 - **Practice Continuity**: Practice pause/resume now preserves the current word and timer ring timing; in-session difficulty/frequency changes clearly show as pending and apply on prompt boundaries (2026-02-10).
 - **Achievements Resilience**: `GET /api/user/achievements` progress-count queries are now capped to avoid sporadic production timeouts (504) on large accounts (2026-02-10).
@@ -55,6 +56,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1007 | Icon Polish         | 2026-02-10 | Regenerated PWA icons + maskable variants to remove launch splash icon border      |
 | v0.9.1006 | Canonical WWW       | 2026-02-10 | Fixed production redirect loops by aligning canonical origin to `www.freestyla.app` |
 | v0.9.1005 | Canonical Domain    | 2026-02-10 | Redirected all non-API traffic to `freestyla.app` to prevent auth/session split-brain |
 | v0.9.1004 | Practice Continuity | 2026-02-10 | True pause/resume + pending controls + Achievements API resilience                  |
