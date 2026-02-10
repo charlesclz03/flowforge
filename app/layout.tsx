@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ||
       process.env.NEXT_PUBLIC_SITE_URL ||
-      'https://freestyla.app'
+      'https://www.freestyla.app'
   ),
   title: {
     default: 'FreeStyla: Freestyle Rap Coach',

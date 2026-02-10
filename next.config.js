@@ -29,7 +29,15 @@ try {
   canonicalSiteOrigin = undefined
 }
 
-const canonicalOrigin = canonicalSiteOrigin ?? 'https://freestyla.app'
+// PRODUCTION CANONICAL ORIGIN:
+// We intentionally default to `www.freestyla.app` to avoid fighting Vercel's primary-domain redirects.
+// Misalignment (app redirects vs. Vercel redirects) causes ERR_TOO_MANY_REDIRECTS and breaks TWA trust checks.
+const DEFAULT_CANONICAL_ORIGIN = 'https://www.freestyla.app'
+const canonicalOrigin =
+  canonicalSiteOrigin && canonicalSiteOrigin !== 'https://freestyla.app'
+    ? canonicalSiteOrigin
+    : DEFAULT_CANONICAL_ORIGIN
+const canonicalHost = new URL(canonicalOrigin).hostname
 
 // Security Headers Configuration
 const securityHeaders = [
@@ -125,7 +133,12 @@ const nextConfig = {
     ]
   },
   async redirects() {
-    const redirectHosts = ['www.freestyla.app', 'flowforge-freestyle.vercel.app']
+    const knownHosts = [
+      'freestyla.app',
+      'www.freestyla.app',
+      'flowforge-freestyle.vercel.app',
+    ]
+    const redirectHosts = knownHosts.filter((host) => host !== canonicalHost)
 
     return redirectHosts.map((host) => ({
       // Redirect all non-API traffic to the canonical origin to avoid auth/session split-brain.

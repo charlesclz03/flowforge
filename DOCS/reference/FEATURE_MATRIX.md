@@ -1,4 +1,4 @@
-# FreeStyla Feature Matrix (v0.9.1005)
+# FreeStyla Feature Matrix (v0.9.1006)
 
 ## Core Practice Engine
 

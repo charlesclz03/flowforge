@@ -18,7 +18,7 @@
 | Legal Pages | ✅ Ready |
 | Manifest Polish | ✅ Complete (orientation + maskable icon) |
 | Play Store Assets | ✅ Ready (Feature Graphic + Icons) |
-| Custom Domain | ✅ Done (`freestyla.app`) |
+| Custom Domain | ✅ Done (`www.freestyla.app`) |
 
 ---
 
@@ -44,7 +44,7 @@
 ```bash
 npm install -g @bubblewrap/cli
 cd ~/freestyla-android  # Create new folder outside repo
-bubblewrap init --manifest https://freestyla.app/manifest.json
+bubblewrap init --manifest https://www.freestyla.app/manifest.json
 bubblewrap build
 ```
 > This creates `app-release-bundle.aab` (for Play Store) and `app-release-signed.apk` (for testing).
@@ -70,7 +70,7 @@ bubblewrap build
 | 4 | Complete Content Rating questionnaire | ⬜ |
 | 5 | Declare Target Audience (not for kids under 13) | ⬜ |
 | 6 | Set App Category: "Music & Audio" | ⬜ |
-| 7 | Add Privacy Policy URL: `https://freestyla.app/legal/privacy` | ⬜ |
+| 7 | Add Privacy Policy URL: `https://www.freestyla.app/legal/privacy` | ⬜ |
 | 8 | Add Contact Email | ⬜ |
 | 9 | Submit for Review | ⬜ |
 
@@ -104,7 +104,7 @@ window.location.href = "https://play.google.com/store/apps/details?id=com.flowfo
 - [ ] Verify mic permission prompt appears correctly
 - [ ] Verify Google login works end-to-end
 - [ ] Verify Stripe checkout redirects correctly
-- [ ] Verify `assetlinks.json` is accessible at `https://freestyla.app/.well-known/assetlinks.json`
+- [ ] Verify `assetlinks.json` is accessible at `https://www.freestyla.app/.well-known/assetlinks.json`
 - [ ] Use Internal Testing Track first (instant, no review)
 
 ---

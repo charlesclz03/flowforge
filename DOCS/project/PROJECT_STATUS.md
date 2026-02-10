@@ -1,17 +1,17 @@
-# Project Status: v0.9.1005 ("Canonical Domain")
+# Project Status: v0.9.1006 ("Canonical WWW")
 
-**Current Version**: `0.9.1005`
+**Current Version**: `0.9.1006`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-10
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1005 (Canonical Domain) - Enforced a single production origin (`freestyla.app`) to prevent Google OAuth/session split-brain across multiple domains (critical for TWA launch).
+> **Latest Release**: v0.9.1006 (Canonical WWW) - Fixed production `ERR_TOO_MANY_REDIRECTS` by aligning the canonical production origin to `www.freestyla.app` (critical for PWA/TWA trust endpoints + Google OAuth cookie consistency).
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
-- **Canonical Domain**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app`, preventing auth/session split-brain (2026-02-10).
+- **Canonical WWW**: `freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `www.freestyla.app`, eliminating redirect loops and preventing auth/session split-brain (2026-02-10).
 - **Practice Continuity**: Practice pause/resume now preserves the current word and timer ring timing; in-session difficulty/frequency changes clearly show as pending and apply on prompt boundaries (2026-02-10).
 - **Achievements Resilience**: `GET /api/user/achievements` progress-count queries are now capped to avoid sporadic production timeouts (504) on large accounts (2026-02-10).
 - **Launch Audit Verified**: Validated Guest/Free/Pro/SUPERADMIN UX via CDP audit harness and marked Launch Matrix Audit PASS in the Feature Matrix (2026-02-10).
@@ -55,6 +55,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1006 | Canonical WWW       | 2026-02-10 | Fixed production redirect loops by aligning canonical origin to `www.freestyla.app` |
 | v0.9.1005 | Canonical Domain    | 2026-02-10 | Redirected all non-API traffic to `freestyla.app` to prevent auth/session split-brain |
 | v0.9.1004 | Practice Continuity | 2026-02-10 | True pause/resume + pending controls + Achievements API resilience                  |
 | v0.9.1003 | Launch Audit Verified | 2026-02-10 | Validated launch matrix + hardened production audit harness                         |

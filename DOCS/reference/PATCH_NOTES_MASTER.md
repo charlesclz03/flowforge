@@ -1,5 +1,11 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1006 - Canonical WWW (2026-02-10)
+
+- **FIX**: Resolved production `ERR_TOO_MANY_REDIRECTS` by aligning canonical origin routing to `www.freestyla.app` (removes apex<->www redirect loop impacting PWA/TWA trust endpoints like `manifest.json` and `assetlinks.json`).
+- **SYSTEM**: `freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `www.freestyla.app` to keep Google OAuth + session cookies consistent.
+- **CHORE**: `scripts/prod-launch-audit.mjs` now defaults to auditing `https://www.freestyla.app`.
+
 ## v0.9.1005 - Canonical Domain (2026-02-10)
 
 - **SYSTEM**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app` to prevent auth/session split-brain.

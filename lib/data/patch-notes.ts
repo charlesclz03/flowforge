@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1006',
+    date: '2026-02-10',
+    title: 'Canonical WWW',
+    codename: 'Canonical WWW',
+    description:
+      'Production hotfix: fixed ERR_TOO_MANY_REDIRECTS by aligning canonical origin routing to `www.freestyla.app` (critical for PWA/TWA manifest + asset links trust checks).',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Redirect Loop Fix**: Canonical origin is now `www.freestyla.app`. `freestyla.app` and `flowforge-freestyle.vercel.app` redirect to `www` to prevent infinite redirects and OAuth/session split-brain.',
+          '**Launch Audit Default**: `scripts/prod-launch-audit.mjs` now defaults to `https://www.freestyla.app` for production verification.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1005',
     date: '2026-02-10',
     title: 'Canonical Domain',

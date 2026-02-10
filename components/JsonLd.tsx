@@ -13,11 +13,11 @@ export const JsonLd = () => {
     author: {
       '@type': 'Organization',
       name: 'FlowForge',
-      url: 'https://freestyla.app',
+      url: 'https://www.freestyla.app',
     },
     description:
       'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
-    screenshot: 'https://freestyla.app/og-image.png',
+    screenshot: 'https://www.freestyla.app/og-image.png',
   }
 
   return (
