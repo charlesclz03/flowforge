@@ -115,6 +115,9 @@ export function usePracticeEngine({
   // 1. The Reducer (State Machine)
   const { state, dispatch } = usePlayerState()
 
+  // AudioSync reset token (prevents beat counter resets on pause/resume)
+  const [audioSyncSessionId, setAudioSyncSessionId] = useState(0)
+
   // 2. The Sub-Systems
   const beatPlayer = useBeatPlayer()
   const recorder = useRecording()
@@ -155,6 +158,7 @@ export function usePracticeEngine({
   const [currentWord, setCurrentWord] = useState<string>('')
   const [activePlayer, setActivePlayer] = useState(1) // Cypher Mode State
   const [startTime, setStartTime] = useState(0)
+  const pauseStartedAtRef = useRef<number | null>(null)
   const [wordTiming, setWordTiming] = useState<{
     start: number
     duration: number
@@ -354,6 +358,7 @@ export function usePracticeEngine({
   const audioSync = useAudioSync({
     bpm: beatPlayer.currentBeat?.bpm || 90,
     isPlaying: state.status === 'PLAYING' && beatPlayer.isPlaying,
+    sessionId: audioSyncSessionId,
     onBeat,
   })
   const { initAudio, audioState } = audioSync
@@ -377,6 +382,9 @@ export function usePracticeEngine({
 
   useEffect(() => {
     if (state.status === 'PLAYING' && !beatPlayer.isPlaying) {
+      if (pauseStartedAtRef.current === null) {
+        pauseStartedAtRef.current = audioSync.getPreciseTime()
+      }
       dispatch({ type: 'PAUSE' })
       if (isRecordingEnabled) {
         recorder.pause()
@@ -388,6 +396,7 @@ export function usePracticeEngine({
     dispatch,
     isRecordingEnabled,
     recorder,
+    audioSync,
   ])
 
   const startSession = useCallback(async () => {
@@ -395,9 +404,12 @@ export function usePracticeEngine({
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     try {
+      setAudioSyncSessionId((id) => id + 1)
+      pauseStartedAtRef.current = null
       wordsUsedRef.current = []
       setActivePlayer(1)
       setWordTiming({ start: 0, duration: 0 })
+      setStartTime(0)
 
       // 1. Prime Audio Engine - ATOMIC START
       // The "Forever Fix": Unify AudioContext and HTMLAudioElement
@@ -462,6 +474,9 @@ export function usePracticeEngine({
 
   const togglePause = useCallback(async () => {
     if (state.status === 'PLAYING') {
+      if (pauseStartedAtRef.current === null) {
+        pauseStartedAtRef.current = audioSync.getPreciseTime()
+      }
       dispatch({ type: 'PAUSE' })
       // [COMMAND-BASED] Immediate Pause
       beatPlayer.pause()
@@ -475,12 +490,25 @@ export function usePracticeEngine({
         alert('Could not resume playback. Please try again.')
         return
       }
+
+      const pauseStartedAt = pauseStartedAtRef.current
+      if (pauseStartedAt !== null) {
+        const pausedFor = audioSync.getPreciseTime() - pauseStartedAt
+        if (pausedFor > 0) {
+          setStartTime((prev) => (prev > 0 ? prev + pausedFor : prev))
+          setWordTiming((prev) =>
+            prev.start > 0 ? { ...prev, start: prev.start + pausedFor } : prev
+          )
+        }
+      }
+      pauseStartedAtRef.current = null
+
       dispatch({ type: 'RESUME' })
       if (isRecordingEnabled) {
         recorder.resume()
       }
     }
-  }, [state.status, dispatch, beatPlayer, recorder, isRecordingEnabled])
+  }, [state.status, dispatch, beatPlayer, recorder, isRecordingEnabled, audioSync])
 
   // 5. Reactive Side Effects (The Muscles)
   // This is where "StateMachine -> Real World" happens.

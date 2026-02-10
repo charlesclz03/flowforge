@@ -1,5 +1,12 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1004 - Practice Continuity (2026-02-10)
+
+- **FIX**: Practice pause/resume now preserves the current word + timer ring timing (no prompt reset).
+- **UX**: Difficulty/frequency changes during an active session now show `Next: ...` and apply on prompt boundaries.
+- **FIX**: `GET /api/user/achievements` caps progress-count queries to prevent sporadic production timeouts (504) on large accounts.
+- **TEST**: Added Playwright regressions for pause/resume continuity + pending control UX.
+
 ## v0.9.1003 - Launch Audit Verified (2026-02-10)
 
 - **CHORE**: Validated Guest + Free + Pro + SUPERADMIN UX via `scripts/prod-launch-audit.mjs` (CDP) against `www.freestyla.app`.

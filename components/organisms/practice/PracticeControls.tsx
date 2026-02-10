@@ -125,25 +125,30 @@ export default function PracticeControls(props: PracticeControlsProps) {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const displayDifficulty = isPlaying ? activeDifficulty : difficulty
-  const displayFrequency = isPlaying ? activeFrequency : frequency
+  const isSessionActive = isPlaying || isPaused
+  const hasPendingDifficulty =
+    isSessionActive && difficulty !== activeDifficulty
+  const hasPendingFrequency = isSessionActive && frequency !== activeFrequency
 
-  const getDifficultyMeta = () => {
-    if (displayDifficulty <= 1) {
+  const displayDifficulty = isSessionActive ? activeDifficulty : difficulty
+  const displayFrequency = isSessionActive ? activeFrequency : frequency
+
+  const getDifficultyMeta = (value: number) => {
+    if (value <= 1) {
       return {
         label: 'Easy',
         classes:
           'bg-accent-green/10 text-accent-green border-accent-green/20 hover:bg-accent-green/20',
       }
     }
-    if (displayDifficulty === 2) {
+    if (value === 2) {
       return {
         label: 'Medium',
         classes:
           'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20 hover:bg-accent-yellow/20',
       }
     }
-    if (displayDifficulty === 3) {
+    if (value === 3) {
       return {
         label: 'Hard',
         classes:
@@ -157,7 +162,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
     }
   }
 
-  const difficultyMeta = getDifficultyMeta()
+  const difficultyMeta = getDifficultyMeta(displayDifficulty)
+  const pendingDifficultyMeta = getDifficultyMeta(difficulty)
 
   // Calculate progress relative to the WORD, not the global grid
   // This ensures that "Bridge Words" (transitional words) still get a full 0-100% timer
@@ -278,6 +284,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
         <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20 pointer-events-auto">
           {/* Difficulty Pill */}
           <button
+            data-testid="practice-difficulty-pill"
             onClick={cycleDifficulty}
             disabled={!handleDifficultyChange}
             className={cn(
@@ -285,10 +292,22 @@ export default function PracticeControls(props: PracticeControlsProps) {
               difficultyMeta.classes,
               !handleDifficultyChange && 'cursor-default'
             )}
+            title={
+              hasPendingDifficulty
+                ? `Next: ${pendingDifficultyMeta.label}`
+                : `Difficulty: ${difficultyMeta.label}`
+            }
           >
             <Gauge size={14} />
-            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
-              {difficultyMeta.label}
+            <span className="flex flex-col items-start leading-none">
+              <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
+                {difficultyMeta.label}
+              </span>
+              {hasPendingDifficulty && (
+                <span className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-widest text-white/50">
+                  Next: {pendingDifficultyMeta.label}
+                </span>
+              )}
             </span>
           </button>
 
@@ -302,12 +321,18 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
           {/* Bars Pill */}
           <button
+            data-testid="practice-frequency-pill"
             onClick={cycleFrequency}
             disabled={!handleFrequencyChange}
             className={cn(
               'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
               !handleFrequencyChange && 'cursor-default opacity-50'
             )}
+            title={
+              hasPendingFrequency
+                ? `Next: ${frequency} Bars`
+                : `Frequency: ${displayFrequency} Bars`
+            }
           >
             <Zap
               size={14}
@@ -319,8 +344,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     : 'text-accent-blue'
               }
             />
-            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
-              {displayFrequency} Bars
+            <span className="flex flex-col items-start leading-none">
+              <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
+                {displayFrequency} Bars
+              </span>
+              {hasPendingFrequency && (
+                <span className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-widest text-white/50 whitespace-nowrap">
+                  Next: {frequency} Bars
+                </span>
+              )}
             </span>
           </button>
         </div>
@@ -631,6 +663,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           className="flex flex-col items-center justify-center w-full max-w-[85%] px-2"
                         >
                           <h1
+                            data-testid="practice-word"
                             className={cn(
                               'font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase leading-none transition-all duration-300',
                               // Dynamic font sizing

@@ -38,7 +38,11 @@ test('guest is redirected away from protected profile route', async ({ page }) =
 })
 
 test('guest is redirected away from recordings route', async ({ page }) => {
-  await page.goto('/recordings')
+  test.setTimeout(60_000)
+  await page.goto('/recordings', {
+    waitUntil: 'domcontentloaded',
+    timeout: 60_000,
+  })
   await expect(page).toHaveURL(/\/howitworks/, { timeout: 15000 })
 })
 

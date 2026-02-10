@@ -1,4 +1,4 @@
-# FreeStyla Feature Matrix (v0.9.1002)
+# FreeStyla Feature Matrix (v0.9.1004)
 
 ## Core Practice Engine
 
@@ -56,6 +56,7 @@
 
 | Date       | Feature             | Status | Fixes Applied                                                               |
 | :--------- | :------------------ | :----: | :-------------------------------------------------------------------------- |
+| 2026-02-10 | Practice Continuity |  PASS  | True pause/resume now preserves the current word + timer ring timing; in-session difficulty/frequency changes clearly show as pending and apply on prompt boundaries. |
 | 2026-02-09 | Launch Matrix Audit |  PASS  | Validated Guest + Free + Pro + SUPERADMIN UX via real Chrome (CDP) using `scripts/prod-launch-audit.mjs` against `www.freestyla.app`. Verified SUPERADMIN can publish beats via signed upload + `POST /api/admin/beats/upload` (smoke + cleanup). |
 | 2026-01-31 | Recording Review    |  PASS  | Verified hybrid audio engine (HTML5 + SeamlessLooper)                       |
 | 2026-01-29 | Solo Mode           |  PASS  | Implemented `usePracticeEngine` (FSM + Atomic Clock)                        |

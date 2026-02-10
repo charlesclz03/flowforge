@@ -22,6 +22,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1004',
+    date: '2026-02-10',
+    title: 'Practice Continuity',
+    codename: 'Practice Continuity',
+    description:
+      'Practice UX hardening: pause/resume now truly preserves the current prompt + timer ring, in-session control changes clearly show as pending, and Achievements progress fetch avoids sporadic production timeouts.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**True Pause/Resume**: Practice pause now preserves the current word and timer ring progress and resumes exactly where you left off.',
+          '**Pending Session Controls**: Difficulty and frequency changes during a session now show a clear "Next: …" indicator and apply cleanly on prompt boundaries (keeps ring timing synchronized).',
+          '**Achievements API Resilience**: `GET /api/user/achievements` now caps progress-count queries to prevent sporadic Vercel timeouts (504) on large accounts.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**E2E Coverage**: Added Playwright regressions for pause/resume word continuity and pending control UX during active sessions.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1003',
     date: '2026-02-10',
     title: 'Launch Audit Verified',

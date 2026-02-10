@@ -17,6 +17,8 @@ interface UseAudioSyncProps {
   bpm: number
   /** Whether the audio engine should be running */
   isPlaying: boolean
+  /** Changes when a new session starts; used to reset internal beat counters */
+  sessionId?: number
   /**
    * Callback fired precisely on every beat.
    * @param beatIndex - Total beats elapsed since start
@@ -47,6 +49,7 @@ interface UseAudioSyncProps {
 export function useAudioSync({
   bpm,
   isPlaying,
+  sessionId = 0,
   onBeat,
   onSubBeat: _onSubBeat,
 }: UseAudioSyncProps) {
@@ -58,6 +61,8 @@ export function useAudioSync({
   const currentBeatRef = useRef(0)
   const isRunningRef = useRef(false)
   const requestRef = useRef<number | null>(null)
+  const lastStopTimeRef = useRef<number | null>(null)
+  const lastSessionIdRef = useRef<number | null>(null)
 
   // Expose the raw audio state for advanced handling (e.g. stalled detection)
   const [audioState, setAudioState] = useState<AudioContextState>('closed')
@@ -138,18 +143,38 @@ export function useAudioSync({
 
   // Start/Stop Logic
   useEffect(() => {
+    if (lastSessionIdRef.current === null || lastSessionIdRef.current !== sessionId) {
+      lastSessionIdRef.current = sessionId
+      currentBeatRef.current = 0
+      nextNoteTimeRef.current = 0
+      lastStopTimeRef.current = null
+    }
+
     if (isPlaying) {
       const ctx = initAudio()
       if (!ctx) return
 
       isRunningRef.current = true
-      currentBeatRef.current = 0
-      nextNoteTimeRef.current = ctx.currentTime + 0.05 // Start slightly in future
+
+      // Fresh start (new session) initializes the scheduler near "now".
+      if (nextNoteTimeRef.current === 0) {
+        nextNoteTimeRef.current = ctx.currentTime + 0.05 // Start slightly in future
+      } else if (lastStopTimeRef.current !== null) {
+        // Resume (pause -> play): shift the schedule forward by the paused duration
+        // so we don't "catch up" and spam callbacks.
+        const delta = ctx.currentTime - lastStopTimeRef.current
+        nextNoteTimeRef.current += Math.max(0, delta)
+      }
+
+      lastStopTimeRef.current = null
 
       scheduler()
       uiLoop()
     } else {
       isRunningRef.current = false
+      if (audioContextRef.current) {
+        lastStopTimeRef.current = audioContextRef.current.currentTime
+      }
       if (requestRef.current) {
         window.clearTimeout(requestRef.current)
       }
@@ -161,7 +186,7 @@ export function useAudioSync({
         window.clearTimeout(requestRef.current)
       }
     }
-  }, [isPlaying, bpm, initAudio, scheduler, uiLoop])
+  }, [isPlaying, bpm, sessionId, initAudio, scheduler, uiLoop])
 
   // Precise Time Getter
   const getPreciseTime = useCallback(() => {

@@ -4,6 +4,14 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
+
+const PROGRESS_CAPS = {
+  sessions: 100,
+  recordings: 50,
+  beats: 20,
+  words: 5000,
+} as const
 
 export async function GET() {
   try {
@@ -34,10 +42,10 @@ export async function GET() {
         }[]
       >(Prisma.sql`
         SELECT
-          (SELECT COUNT(*)::int FROM freestyle_sessions WHERE user_id = ${userId}) AS sessions,
-          (SELECT COUNT(*)::int FROM freestyle_sessions WHERE user_id = ${userId} AND storage_url IS NOT NULL) AS recordings,
-          (SELECT COUNT(DISTINCT beat_id)::int FROM freestyle_sessions WHERE user_id = ${userId}) AS beats,
-          (SELECT COUNT(*)::int FROM collected_words WHERE user_id = ${userId}) AS words,
+          (SELECT COUNT(*)::int FROM (SELECT 1 FROM freestyle_sessions WHERE user_id = ${userId} LIMIT ${PROGRESS_CAPS.sessions}) AS s) AS sessions,
+          (SELECT COUNT(*)::int FROM (SELECT 1 FROM freestyle_sessions WHERE user_id = ${userId} AND storage_url IS NOT NULL LIMIT ${PROGRESS_CAPS.recordings}) AS r) AS recordings,
+          (SELECT COUNT(*)::int FROM (SELECT DISTINCT beat_id FROM freestyle_sessions WHERE user_id = ${userId} LIMIT ${PROGRESS_CAPS.beats}) AS b) AS beats,
+          (SELECT COUNT(*)::int FROM (SELECT 1 FROM collected_words WHERE user_id = ${userId} LIMIT ${PROGRESS_CAPS.words}) AS w) AS words,
           (SELECT "currentStreak"::int FROM users WHERE id = ${userId}) AS streak
       `)
 
