@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1005',
+    date: '2026-02-10',
+    title: 'Canonical Domain',
+    codename: 'Canonical Domain',
+    description:
+      'Play Store TWA hardening: the app now enforces a single canonical origin (`freestyla.app`) to prevent auth/PWA split-brain across multiple production domains.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Canonical Origin Redirect**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app` to keep Google OAuth + session cookies consistent.',
+          '**Launch Audit Default**: `scripts/prod-launch-audit.mjs` now defaults to `https://freestyla.app` for production verification.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1004',
     date: '2026-02-10',
     title: 'Practice Continuity',

@@ -5,7 +5,7 @@ import { chromium } from '@playwright/test'
 
 const CDP_URL = process.env.CDP_URL ?? 'http://127.0.0.1:9222'
 const BASE_URL =
-  process.env.BASE_URL ?? 'https://flowforge-freestyle.vercel.app'
+  process.env.BASE_URL ?? 'https://freestyla.app'
 const WAIT_FOR_AUTH_SECONDS = Number(process.env.WAIT_FOR_AUTH_SECONDS ?? '0')
 const OUTPUT_PATH = process.env.OUTPUT_PATH
 

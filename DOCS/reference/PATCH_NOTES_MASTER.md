@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1005 - Canonical Domain (2026-02-10)
+
+- **SYSTEM**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app` to prevent auth/session split-brain.
+- **CHORE**: `scripts/prod-launch-audit.mjs` now defaults to auditing `https://freestyla.app`.
+
 ## v0.9.1004 - Practice Continuity (2026-02-10)
 
 - **FIX**: Practice pause/resume now preserves the current word + timer ring timing (no prompt reset).

@@ -20,6 +20,17 @@ const supabaseWss = supabaseHostname
   ? `wss://${supabaseHostname}`
   : 'wss://*.supabase.co'
 
+let canonicalSiteOrigin
+try {
+  canonicalSiteOrigin = process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL).origin
+    : undefined
+} catch {
+  canonicalSiteOrigin = undefined
+}
+
+const canonicalOrigin = canonicalSiteOrigin ?? 'https://freestyla.app'
+
 // Security Headers Configuration
 const securityHeaders = [
   {
@@ -112,6 +123,17 @@ const nextConfig = {
         headers: securityHeaders,
       },
     ]
+  },
+  async redirects() {
+    const redirectHosts = ['www.freestyla.app', 'flowforge-freestyle.vercel.app']
+
+    return redirectHosts.map((host) => ({
+      // Redirect all non-API traffic to the canonical origin to avoid auth/session split-brain.
+      source: '/:path((?!api).*)',
+      has: [{ type: 'host', value: host }],
+      destination: `${canonicalOrigin}/:path`,
+      permanent: true,
+    }))
   },
   webpack: (config) => {
     config.ignoreWarnings = [
