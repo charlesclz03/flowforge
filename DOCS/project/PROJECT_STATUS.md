@@ -1,16 +1,17 @@
-# Project Status: v0.9.1002 ("Achievements Express Hotfix")
+# Project Status: v0.9.1003 ("Launch Audit Verified")
 
-**Current Version**: `0.9.1002`
+**Current Version**: `0.9.1003`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-09
+**Last Updated**: 2026-02-10
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1002 (Achievements Express Hotfix) - Fixed a production 500 in `/api/user/achievements` caused by an incorrect streak column reference in the optimized progress query.
+> **Latest Release**: v0.9.1003 (Launch Audit Verified) - Validated Guest/Free/Pro/SUPERADMIN UX and hardened the production launch audit harness.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **Launch Audit Verified**: Validated Guest/Free/Pro/SUPERADMIN UX via CDP audit harness and marked Launch Matrix Audit PASS in the Feature Matrix (2026-02-10).
 - **Achievements Express Hotfix**: Fixed a production 500 in `/api/user/achievements` caused by an incorrect streak column reference in the optimized progress query (2026-02-09).
 - **Achievements Express**: `GET /api/user/achievements` now computes progress in a single query and no longer performs blocking unlock side-effects, eliminating intermittent production timeouts (504) (2026-02-09).
 - **Achievements Fastpath**: Eliminated production `GET /api/user/achievements` 504 timeouts by batching unlock writes and removing redundant DB queries (2026-02-09).
@@ -51,6 +52,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1003 | Launch Audit Verified | 2026-02-10 | Validated launch matrix + hardened production audit harness                         |
 | v0.9.1002 | Achievements Express Hotfix | 2026-02-09 | Fixed a production 500 in `/api/user/achievements` after optimization              |
 | v0.9.1001 | Achievements Express | 2026-02-09 | Eliminated intermittent Achievements API timeouts (504) on profile load            |
 | v0.9.1000 | Achievements Fastpath | 2026-02-09 | Eliminated profile Achievements API 504 timeouts by batching unlock writes          |

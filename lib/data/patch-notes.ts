@@ -22,6 +22,24 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1003',
+    date: '2026-02-10',
+    title: 'Launch Audit Verified',
+    codename: 'Launch Audit Verified',
+    description:
+      'Release QA hardening: validated the full launch matrix (Guest/Free/Pro/SUPERADMIN) and updated the production audit harness to tolerate legacy profile redirects.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Launch Matrix Audit**: Validated Guest + Free + Pro + SUPERADMIN UX against `www.freestyla.app` using `scripts/prod-launch-audit.mjs` with a real Chrome profile (CDP).',
+          '**Audit Harness**: `/profile` checks now allow redirecting to `/u/[username]` for authenticated users.',
+          '**Docs**: Updated Feature Matrix launch audit status to PASS (incl. SUPERADMIN beat publish smoke + cleanup).',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1002',
     date: '2026-02-09',
     title: 'Achievements Express Hotfix',

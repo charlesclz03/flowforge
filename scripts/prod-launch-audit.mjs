@@ -179,7 +179,8 @@ async function main() {
 
   if (session?.isAuthenticated) {
     results.push(await checkRedirect(page, '/recordings', /\/recordings/))
-    results.push(await checkRedirect(page, '/profile', /\/profile/))
+    // `/profile` is a legacy route that may redirect to a public profile slug (`/u/[username]`).
+    results.push(await checkRedirect(page, '/profile', /\/(profile|u\/)/))
     results.push(await checkAdminAccess(page))
   } else {
     results.push(await checkRedirect(page, '/recordings', /\/howitworks/))

@@ -1,5 +1,11 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1003 - Launch Audit Verified (2026-02-10)
+
+- **CHORE**: Validated Guest + Free + Pro + SUPERADMIN UX via `scripts/prod-launch-audit.mjs` (CDP) against `www.freestyla.app`.
+- **FIX**: Production launch audit harness now treats `/profile` redirecting to `/u/[username]` as valid for authenticated users.
+- **DOCS**: Launch Matrix Audit marked PASS in Feature Matrix after SUPERADMIN beat publish smoke + cleanup.
+
 ## v0.9.1002 - Achievements Express Hotfix (2026-02-09)
 
 - **FIX**: Resolved a production `500` in `/api/user/achievements` caused by an incorrect streak column reference in the optimized progress query.
