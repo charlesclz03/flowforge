@@ -35,7 +35,10 @@ export default function RecordingsPage() {
     clearError()
 
     try {
-      const response = await fetch('/api/recordings')
+      const response = await fetch('/api/recordings?includeMetadata=true', {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' },
+      })
       if (!response.ok) {
         throw new Error('Failed to fetch recordings')
       }

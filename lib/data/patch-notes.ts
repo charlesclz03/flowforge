@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1008',
+    date: '2026-02-10',
+    title: 'Recordings Refresh',
+    codename: 'Recordings Refresh',
+    description:
+      'Launch polish: recordings now always show your latest sessions (including stats-only runs), and the active-session cancel guard no longer leaks onto non-practice routes.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Recordings Freshness**: `/recordings` now fetches `/api/recordings?includeMetadata=true` with `no-store` caching so your newest sessions appear immediately (even when no audio was captured).',
+          '**Cancel Session Guard**: The global exit prompt is now "Cancel Session?" and session teardown clears guard state to prevent lingering modals outside Practice (e.g. `/recordings`).',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1007',
     date: '2026-02-10',
     title: 'Icon Polish',

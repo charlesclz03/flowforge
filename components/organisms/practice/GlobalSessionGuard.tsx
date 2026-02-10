@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
@@ -12,20 +12,19 @@ export function GlobalSessionGuard() {
     <Modal
       isOpen={showExitPrompt}
       onClose={cancelNavigation}
-      title="End Session?"
+      title="Cancel Session?"
       showCloseButton={false}
     >
       <div className="space-y-4">
         <p className="text-text-secondary">
-          You are currently in an active session. Leaving now will end the
-          session.
+          You have an active session. Are you sure you want to cancel it?
         </p>
         <div className="flex gap-3 justify-end">
           <Button variant="ghost" onClick={cancelNavigation}>
-            Cancel
+            Keep Practicing
           </Button>
           <Button variant="primary" onClick={confirmNavigation}>
-            End Session
+            Cancel Session
           </Button>
         </div>
       </div>

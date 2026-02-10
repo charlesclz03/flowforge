@@ -173,8 +173,35 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const stopSession = useCallback(() => {
-    setState((prev) => ({ ...prev, isActive: false }))
+    setState((prev) => ({
+      ...prev,
+      isActive: false,
+      showExitPrompt: false,
+      pendingNavigation: null,
+    }))
   }, [])
+
+  // Guard self-heal: a session should never remain "active" (or keep a prompt open)
+  // once we are off the /practice route.
+  useEffect(() => {
+    const isPracticeRoute =
+      pathname === '/practice' || pathname.startsWith('/practice/')
+
+    if (isPracticeRoute) return
+
+    setState((prev) => {
+      if (!prev.isActive && !prev.showExitPrompt && !prev.pendingNavigation) {
+        return prev
+      }
+
+      return {
+        ...prev,
+        isActive: false,
+        showExitPrompt: false,
+        pendingNavigation: null,
+      }
+    })
+  }, [pathname])
 
   const resetSession = useCallback(() => {
     setState((prev) => ({

@@ -1,5 +1,10 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1008 - Recordings Refresh (2026-02-10)
+
+- **FIX**: `/recordings` now shows the latest sessions even when no audio was captured (metadata-only saves), eliminating the "stuck on last week's recording" confusion.
+- **UX**: The active-session exit prompt is now "Cancel Session?" and guard state self-heals on teardown so it won't linger on non-practice routes (e.g. `/recordings`).
+
 ## v0.9.1007 - Icon Polish (2026-02-10)
 
 - **FIX**: Regenerated PWA icons at correct sizes (`16/32/192/512`) with a true `#000000` background to eliminate the visible "circle" mismatch on Android splash/launch.
