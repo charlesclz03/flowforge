@@ -1,16 +1,17 @@
-# Project Status: v0.9.1010 ("Android Deployment Ready")
+# Project Status: v1.0.0
 
-**Current Version**: `0.9.1010`
+**Current Version**: `1.0.0`
 **Phase**: Beta Polish
 **Last Updated**: 2026-02-11
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1010 (Android Deployment Ready) - Production-ready Android App Links configuration with real SHA-256 certificate fingerprint for Google Play Store deployment.
+> **Latest Release**: v1.0.0 - Account deletion clarity + user data controls + Play Store readiness.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **v1.0.0 Release**: Privacy Policy now includes clear account deletion instructions, and users can delete recordings / uploaded beats without deleting their account (2026-02-11).
 - **Android Deployment Ready**: Updated `assetlinks.json` with production SHA-256 fingerprint + generated production keystore and Android App Bundle for Google Play Console submission (2026-02-11).
 - **Sync & Speed**: Locked-in recording sync (playback/share/download/export) + faster `/recordings` (batched signed URLs) + fixed chrome/no-scroll Practice + scrub-to-pause review behavior + share moved to top-right (2026-02-11).
 - **Recordings Refresh**: `/recordings` now includes metadata-only sessions and uses `no-store` fetching to prevent stale lists; session cancel guard state self-heals so it won't linger outside Practice (2026-02-10).
@@ -59,6 +60,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v1.0.0 | 1.0 | 2026-02-11 | Account deletion clarity + user data controls + Play Store readiness |
 | v0.9.1010 | Android Deployment Ready | 2026-02-11 | Production Android App Links config + Play Store AAB generation                       |
 | v0.9.1009 | Sync & Speed        | 2026-02-11 | Recording sync + `/recordings` perf + fixed chrome/no-scroll Practice + review/share UX |
 | v0.9.1008 | Recordings Refresh  | 2026-02-10 | Recordings list freshness + session cancel guard self-heal                          |

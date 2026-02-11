@@ -22,6 +22,49 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.0',
+    date: '2026-02-11',
+    title: '1.0',
+    codename: '1.0',
+    type: 'major',
+    description:
+      'FreeStyla v1.0. Account deletion is now clearly documented, and users can delete recordings or uploaded beats without deleting their account.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Account Deletion**: Privacy Policy now includes a clear account deletion section (Profile → Security → Delete Account) plus email-based deletion requests.',
+          '**Partial Deletion**: Users can delete individual recordings and uploaded beats without deleting their account.',
+          '**Profile Data Controls**: Profile > Security links directly to Recordings and Tracks for data management.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Android App Links**: Production TWA App Links configuration is in place for Google Play submission.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.1011',
+    date: '2026-02-11',
+    title: 'Data Controls',
+    codename: 'Data Controls',
+    description:
+      'Privacy policy and profile UI now clarify how to delete recordings or uploaded beats without deleting the whole account.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Account Deletion Clarity**: Privacy Policy now explains how to delete your account and how to request deletion by email.',
+          '**Partial Deletion**: Users can delete individual recordings or uploaded beats without deleting their account.',
+          '**Profile Data Controls**: Profile > Security links directly to Recordings and Tracks for data management.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1010',
     date: '2026-02-11',
     title: 'Android Deployment Ready',

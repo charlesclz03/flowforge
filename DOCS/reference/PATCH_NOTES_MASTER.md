@@ -1,5 +1,22 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.0 - 1.0 (2026-02-11)
+
+- **DOCS**: Privacy Policy includes clear account deletion instructions (Profile → Security → Delete Account) plus email-based deletion requests.
+- **DATA CONTROL**: Users can delete recordings and uploaded beats without deleting their whole account.
+- **UX**: Profile > Security links directly to Recordings and Tracks for data management.
+
+## v0.9.1011 - Data Controls (2026-02-11)
+
+- **DOCS**: Privacy Policy now explains account deletion, partial deletion (recordings and uploaded beats), and email-based deletion requests.
+- **UX**: Profile > Security now links to Recordings and Tracks so users can delete data without deleting their account.
+
+
+## v0.9.1010 - Android Deployment Ready (2026-02-11)
+
+- **SYSTEM**: Updated `assetlinks.json` with production SHA-256 fingerprint to enable TWA Digital Asset Links verification.
+- **SYSTEM**: Generated production keystore and Android App Bundle (AAB) for Google Play Console submission.
+
 ## v0.9.1009 - Sync & Speed (2026-02-11)
 
 - **FIX**: Recording playback + share links + downloads + video exports now honor beat phase offset + latency nudge so vocals stay aligned to the beat.
