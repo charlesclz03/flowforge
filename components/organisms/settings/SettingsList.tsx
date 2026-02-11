@@ -486,7 +486,9 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v0.9.1009 (Sync & Speed)</p>
+          <p className="ml-2 text-xs text-white/20">
+            v0.9.1010 (Android Deployment Ready)
+          </p>
         </div>
       </div>
       <SupportModal

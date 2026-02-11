@@ -22,6 +22,23 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1010',
+    date: '2026-02-11',
+    title: 'Android Deployment Ready',
+    codename: 'Android Deployment Ready',
+    description:
+      'Production-ready Android App Links configuration: updated assetlinks.json with the real SHA-256 certificate fingerprint from the production keystore.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Android App Links**: Updated `assetlinks.json` with production SHA-256 fingerprint to enable TWA Digital Asset Links verification.',
+          '**Play Store Preparation**: Generated production keystore and Android App Bundle (AAB) for Google Play Console submission.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1009',
     date: '2026-02-11',
     title: 'Sync & Speed',
