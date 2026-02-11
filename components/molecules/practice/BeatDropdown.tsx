@@ -1,6 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from 'react'
 import { useRouter } from 'next/navigation'
 import { Beat } from '@/types/database'
 import {
@@ -62,6 +68,11 @@ interface BeatDropdownProps {
   hideLocalTab?: boolean
   embedded?: boolean
   defaultCollapsed?: boolean
+  /**
+   * When `embedded`, render the expanded menu as an overlay so the Practice page
+   * can stay non-scroll while the menu scrolls internally.
+   */
+  overlay?: boolean
 }
 
 export function BeatDropdown(props: BeatDropdownProps) {
@@ -76,6 +87,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
     hideLocalTab = false,
     embedded = false,
     defaultCollapsed = false,
+    overlay = false,
   } = props
 
   const [isExpanded, setIsExpanded] = useState(
@@ -88,6 +100,15 @@ export function BeatDropdown(props: BeatDropdownProps) {
   const [playingId, setPlayingId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const useOverlay = embedded && overlay
+  const [overlayMetrics, setOverlayMetrics] = useState<{
+    top: number
+    left: number
+    width: number
+    maxHeight: number
+  } | null>(null)
 
   const fetchMyBeats = useCallback(async () => {
     if (!isPro) return
@@ -119,6 +140,43 @@ export function BeatDropdown(props: BeatDropdownProps) {
     fetchMyBeats()
     getFavoriteBeatIds().then((ids) => setFavoriteIds(new Set(ids)))
   }, [fetchMyBeats])
+
+  useLayoutEffect(() => {
+    if (!useOverlay || !isExpanded) return
+
+    const update = () => {
+      const button = buttonRef.current
+      if (!button) return
+
+      const rect = button.getBoundingClientRect()
+      const top = Math.round(rect.bottom + 8)
+      const left = Math.round(rect.left)
+      const width = Math.round(rect.width)
+
+      // Prefer the app shell viewport (main-content) so overlays don't hide behind BottomNav.
+      const main = document.getElementById('main-content')
+      const mainBottom =
+        main?.getBoundingClientRect().bottom ?? window.innerHeight
+      const maxHeight = Math.max(240, mainBottom - top - 16)
+
+      setOverlayMetrics({ top, left, width, maxHeight })
+    }
+
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [useOverlay, isExpanded])
+
+  useEffect(() => {
+    if (!useOverlay || !isExpanded) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsExpanded(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [useOverlay, isExpanded])
 
   useEffect(() => {
     if (embedded) return
@@ -229,9 +287,10 @@ export function BeatDropdown(props: BeatDropdownProps) {
   return (
     <div
       ref={dropdownRef}
-      className={cn('relative w-full z-40', embedded && 'mb-4')}
+      className={cn('relative w-full z-40', embedded && !useOverlay && 'mb-4')}
     >
       <button
+        ref={buttonRef}
         type="button"
         disabled={disabled}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -269,14 +328,33 @@ export function BeatDropdown(props: BeatDropdownProps) {
         />
       </button>
 
-      {isExpanded && (
+      {isExpanded && useOverlay && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsExpanded(false)}
+        />
+      )}
+
+      {isExpanded && (!useOverlay || overlayMetrics) && (
         <div
           className={cn(
-            'bg-surface-elevated border border-white/10 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300',
-            !embedded
-              ? 'absolute left-0 right-0 mt-2 rounded-2xl max-h-[400px]'
-              : 'mt-4 rounded-2xl'
+            'bg-surface-elevated border border-white/10 overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 flex flex-col min-h-0',
+            useOverlay
+              ? 'fixed z-[61] rounded-2xl'
+              : !embedded
+                ? 'absolute left-0 right-0 mt-2 rounded-2xl max-h-[400px]'
+                : 'mt-4 rounded-2xl'
           )}
+          style={
+            useOverlay && overlayMetrics
+              ? {
+                  top: overlayMetrics.top,
+                  left: overlayMetrics.left,
+                  width: overlayMetrics.width,
+                  maxHeight: overlayMetrics.maxHeight,
+                }
+              : undefined
+          }
         >
           <div className="p-3 border-b border-white/10">
             <input
@@ -291,7 +369,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
           <Tabs
             value={activeTab}
             onValueChange={(v) => setActiveTab(v as 'public' | 'local')}
-            className="w-full"
+            className={cn('w-full', useOverlay && 'flex flex-col min-h-0')}
           >
             <TabsList className="grid grid-cols-2 p-1 bg-black/40 border-b border-white/10 rounded-none h-11">
               <TabsTrigger
@@ -310,7 +388,10 @@ export function BeatDropdown(props: BeatDropdownProps) {
 
             <TabsContent
               value="public"
-              className="m-0 p-0 max-h-[300px] overflow-y-auto custom-scrollbar"
+              className={cn(
+                'm-0 p-0 overflow-y-auto custom-scrollbar',
+                useOverlay ? 'flex-1 min-h-0' : 'max-h-[300px]'
+              )}
             >
               <div className="p-1">
                 {/* Random Beat Option */}
@@ -447,7 +528,10 @@ export function BeatDropdown(props: BeatDropdownProps) {
             {!hideLocalTab && (
               <TabsContent
                 value="local"
-                className="m-0 p-0 max-h-[300px] overflow-y-auto custom-scrollbar"
+                className={cn(
+                  'm-0 p-0 overflow-y-auto custom-scrollbar',
+                  useOverlay ? 'flex-1 min-h-0' : 'max-h-[300px]'
+                )}
               >
                 <div className="p-1">
                   {allUserBeats.map((beat) => (

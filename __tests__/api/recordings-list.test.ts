@@ -48,14 +48,20 @@ describe('GET /api/recordings', () => {
       ],
     } as never)
 
-    const createSignedUrl = vi
-      .fn()
-      .mockResolvedValue({ data: { signedUrl: 'https://signed/audio.webm' } })
+    const createSignedUrls = vi.fn().mockResolvedValue({
+      data: [
+        {
+          path: 'user-1/with-audio.webm',
+          signedUrl: 'https://signed/audio.webm',
+        },
+      ],
+      error: null,
+    })
 
     vi.mocked(createServerClient).mockReturnValue({
       storage: {
         from: vi.fn().mockReturnValue({
-          createSignedUrl,
+          createSignedUrls,
         }),
       },
     } as never)
@@ -97,14 +103,20 @@ describe('GET /api/recordings', () => {
       ],
     } as never)
 
-    const createSignedUrl = vi
-      .fn()
-      .mockResolvedValue({ data: { signedUrl: 'https://signed/audio.webm' } })
+    const createSignedUrls = vi.fn().mockResolvedValue({
+      data: [
+        {
+          path: 'user-1/with-audio.webm',
+          signedUrl: 'https://signed/audio.webm',
+        },
+      ],
+      error: null,
+    })
 
     vi.mocked(createServerClient).mockReturnValue({
       storage: {
         from: vi.fn().mockReturnValue({
-          createSignedUrl,
+          createSignedUrls,
         }),
       },
     } as never)
@@ -119,7 +131,8 @@ describe('GET /api/recordings', () => {
 
     expect(data.count).toBe(2)
     expect(data.recordings).toHaveLength(2)
-    expect(data.recordings.find((r: { id: string }) => r.id === 'metadata-only'))
-      .toBeTruthy()
+    expect(
+      data.recordings.find((r: { id: string }) => r.id === 'metadata-only')
+    ).toBeTruthy()
   })
 })

@@ -52,6 +52,8 @@ export const RecordingCard = memo(function RecordingCard({
     recordingUrl: recording.storageUrl,
     beatUrl: recording.beat?.storageUrl || null,
     recordingId: recording.id,
+    beatOffsetMs: recording.beatOffsetMs ?? null,
+    fxConfig: recording.fxConfig ?? null,
     onPlayStateChange: useCallback((_isPlaying: boolean) => {
       // hook manages local state perfectly
     }, []),

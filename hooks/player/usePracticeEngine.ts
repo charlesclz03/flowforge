@@ -16,8 +16,6 @@ import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
  * Orchestrates: State Machine <-> Audio Audio <-> Recording <-> Word Prompts <-> Audio Mixing
  */
 
-import { AudioMixer } from '@/lib/audio/mixer'
-
 const ACTIVE_SESSION_STATUSES = new Set([
   'COUNTDOWN',
   'PLAYING',
@@ -124,6 +122,7 @@ export function usePracticeEngine({
   const latestStatusRef = useRef(state.status)
   const beatPlayerRef = useRef(beatPlayer)
   const recorderRef = useRef(recorder)
+  const beatOffsetMsRef = useRef(0)
 
   // 0. SAFETY NET: Cleanup on unmount
   useEffect(() => {
@@ -404,6 +403,7 @@ export function usePracticeEngine({
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     try {
+      beatOffsetMsRef.current = 0
       setAudioSyncSessionId((id) => id + 1)
       pauseStartedAtRef.current = null
       wordsUsedRef.current = []
@@ -530,9 +530,15 @@ export function usePracticeEngine({
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
     setStartTime(audioSync.getPreciseTime())
     if (isRecordingEnabled) {
-      recorder.start().catch((err) => {
-        console.error('[PracticeEngine] Recorder start failed:', err)
-      })
+      beatOffsetMsRef.current = 0
+      recorder
+        .start()
+        .then(() => {
+          beatOffsetMsRef.current = Math.round(beatPlayer.getPreciseTime() * 1000)
+        })
+        .catch((err) => {
+          console.error('[PracticeEngine] Recorder start failed:', err)
+        })
     }
   }, [dispatch, beatPlayer, recorder, audioSync, isRecordingEnabled])
 
@@ -619,53 +625,7 @@ export function usePracticeEngine({
           return
         }
 
-        // 1. Enter Mixing State (UI Feedback)
-        dispatch({ type: 'START_MIXING' })
-
-        let finalBlob = blob
-        let cleanupUrl: string | null = null
-
-        try {
-          // 2. Client-Side Mixing
-          debugLog('[PracticeEngine] Starting audio mix...')
-          const mixer = new AudioMixer()
-          const voiceUrl = URL.createObjectURL(blob)
-          cleanupUrl = voiceUrl
-
-          // Get User Latency Calibration (Nudge)
-          const latencyMs = parseInt(
-            localStorage.getItem('flowforge_latency') || '0'
-          )
-
-          // Perform Mix
-          if (beatPlayer.currentBeat?.storageUrl) {
-            finalBlob = await mixer.mix(
-              voiceUrl,
-              beatPlayer.currentBeat.storageUrl,
-              {
-                voiceVolume: 1.0, // Vocals always max (normalized)
-                beatVolume: beatVolume, // User setting
-                isStudioMode: isStudioFXEnabled, // User setting
-                nudge: latencyMs,
-              }
-            )
-            debugLog(
-              `[PracticeEngine] Mix complete. Size: ${finalBlob.size} bytes`
-            )
-          } else {
-            console.warn('[PracticeEngine] No beat URL found, skipping mix.')
-          }
-        } catch (mixErr) {
-          console.error(
-            '[PracticeEngine] Mixing failed, using raw vocal:',
-            mixErr
-          )
-          // Fallback to raw blob is automatic since finalBlob = blob initially
-        } finally {
-          if (cleanupUrl) URL.revokeObjectURL(cleanupUrl)
-        }
-
-        // 3. Begin Upload
+        // Begin Upload (voice-only; beat is re-mixed on-demand for downloads/exports)
         dispatch({ type: 'START_SAVE' })
 
         // Construct FormData using Ref to avoid closure staleness if needed,
@@ -674,7 +634,7 @@ export function usePracticeEngine({
 
         try {
           const fd = new FormData()
-          fd.append('audio', finalBlob, 'recording.wav') // Note: Mixer returns WAV
+          fd.append('audio', blob, 'recording.webm')
 
           // We need current session state.
           // Since we don't have access to Session contexts directly here (we are a hook),
@@ -697,11 +657,21 @@ export function usePracticeEngine({
           fd.append('vibe', 'Freestyle Flow')
           fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
-          // [LATENCY FIX] Inject beatOffsetMs from localStorage
           const latencyMs = parseInt(
             localStorage.getItem('flowforge_latency') || '0'
           )
-          fd.append('beatOffsetMs', latencyMs.toString())
+
+          fd.append('beatOffsetMs', beatOffsetMsRef.current.toString())
+          fd.append(
+            'fxConfig',
+            JSON.stringify({
+              version: 1,
+              voiceVolume: 1.0,
+              beatVolume,
+              nudge: latencyMs,
+              reverb: isStudioFXEnabled,
+            })
+          )
 
           // Execute Save
           submitSession(fd)

@@ -24,6 +24,7 @@ export interface MixOptions {
   isStudioMode?: boolean
   reverbLevel?: number // 0 to 1
   nudge?: number // ms
+  beatOffsetMs?: number // ms (beat position when recording started)
 }
 
 export class AudioMixer {
@@ -113,45 +114,21 @@ export class AudioMixer {
       // Connect Voice Mix to Master
       voiceMainGain.connect(this.ctx.destination)
 
-      // [LATENCY FIX] Apply Nudge (Negative offset = start later, Positive = skip start)
-      // Usually latency means "I heard the beat late, so I recorded late".
-      // We need to shift the vocal BACK (earlier) to match the beat.
-      // A positive calibration (e.g. 100ms) means "My system is 100ms slow".
-      // So the recording is 100ms *late*.
-      // To fix, we should start the vocal *EARLIER* relative to the beat.
-      // OR start the BEAT *LATER* relative to the voice.
-
-      // Implementation:
-      // If we want to move voice EARLIER, we skip the first N seconds of the voice file?
-      // No, that deletes audio.
-      // We want to move the voice LEFT.
-      // Since we can't move left of 0, we effectively move the BEAT RIGHT.
-
+      // Sync model:
+      // - Voice starts at t=0.
+      // - Beat should start at the same beat "phase" it was at when recording started.
+      // - `nudge` shifts the beat phase to align vocals (positive nudge = delay beat relative to voice).
+      const beatOffsetSeconds = (options.beatOffsetMs || 0) / 1000
       const nudgeSeconds = (options.nudge || 0) / 1000
-
-      // If Latency (nudge) is POSITIVE (common, e.g. 100ms lag):
-      // The voice is LATE. We need to play the BEAT LATER to match.
-      // So beatStartTime = nudgeSeconds.
-
-      // If Latency is NEGATIVE (rare, user tapped early):
-      // The voice is EARLY. We need to play the BEAT EARLIER (impossible) or Voice LATER.
-      // So voiceStartTime = abs(nudgeSeconds).
-
-      let voiceStartTime = 0
-      let beatStartTime = 0
-
-      if (nudgeSeconds > 0) {
-        // Voice is late, delay the beat
-        beatStartTime = nudgeSeconds
-      } else {
-        // Voice is early (or 0), delay the voice
-        voiceStartTime = Math.abs(nudgeSeconds)
-      }
-
-      voiceSource.start(voiceStartTime)
+      voiceSource.start(0)
 
       // 4. Create Beat Graph (if exists)
       if (beatBuffer && beatUrl) {
+        const beatDuration = beatBuffer.duration || 1
+        const phaseSeconds = beatOffsetSeconds - nudgeSeconds
+        const beatStartOffset =
+          ((phaseSeconds % beatDuration) + beatDuration) % beatDuration
+
         const beatSource = this.ctx.createBufferSource()
         beatSource.buffer = beatBuffer
         beatSource.loop = true // Loop beat if voice recording is longer than beat duration
@@ -161,9 +138,7 @@ export class AudioMixer {
 
         beatSource.connect(beatGain)
         beatGain.connect(this.ctx.destination)
-        beatSource.connect(beatGain)
-        beatGain.connect(this.ctx.destination)
-        beatSource.start(beatStartTime)
+        beatSource.start(0, beatStartOffset)
       }
 
       // 5. Render

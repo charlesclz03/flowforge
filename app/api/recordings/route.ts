@@ -448,24 +448,42 @@ export async function GET(request: Request) {
       : (result.data || []).filter((recording) => Boolean(recording.storageUrl))
 
     const supabase = createServerClient()
-    const recordingsWithSignedUrls = await Promise.all(
-      sourceRecordings.map(async (recording) => {
-        if (!recording.storageUrl) return recording
 
-        if (recording.storageUrl.startsWith('http')) {
-          return recording
-        }
+    const pathsToSign = sourceRecordings
+      .map((recording) => recording.storageUrl)
+      .filter((storageUrl): storageUrl is string => Boolean(storageUrl))
+      .filter((storageUrl) => !storageUrl.startsWith('http'))
+      .map((storageUrl) => storageUrl.replace(/^\/+/, ''))
 
-        const { data: signedUrlData } = await supabase.storage
+    const signedUrlByPath = new Map<string, string>()
+
+    if (pathsToSign.length > 0) {
+      const { data: signedUrls, error: signedUrlsError } =
+        await supabase.storage
           .from(RECORDINGS_BUCKET)
-          .createSignedUrl(recording.storageUrl, SIGNED_URL_TTL_SECONDS)
+          .createSignedUrls(pathsToSign, SIGNED_URL_TTL_SECONDS)
 
-        return {
-          ...recording,
-          storageUrl: signedUrlData?.signedUrl ?? null,
+      if (signedUrlsError) {
+        console.error('Failed to create signed URLs:', signedUrlsError)
+      } else {
+        for (const item of signedUrls) {
+          if (item.path && item.signedUrl) {
+            signedUrlByPath.set(item.path, item.signedUrl)
+          }
         }
-      })
-    )
+      }
+    }
+
+    const recordingsWithSignedUrls = sourceRecordings.map((recording) => {
+      if (!recording.storageUrl) return recording
+      if (recording.storageUrl.startsWith('http')) return recording
+
+      const normalizedPath = recording.storageUrl.replace(/^\/+/, '')
+      return {
+        ...recording,
+        storageUrl: signedUrlByPath.get(normalizedPath) ?? null,
+      }
+    })
 
     return NextResponse.json({
       recordings: recordingsWithSignedUrls,

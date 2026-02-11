@@ -21,17 +21,15 @@ export function ReviewTemplate({
   alerts,
 }: ReviewTemplateProps) {
   return (
-    <div className="min-h-screen bg-background text-text-primary pb-32">
+    <div className="h-full min-h-full bg-background text-text-primary">
       {header}
 
-      <main className="pt-20 md:pt-24 px-4">
+      <main className="px-4 py-6 md:py-8">
         <Container>
           {alerts}
 
           {/* Centered Page Header - Only render if content exists to avoid empty margin space */}
-          {pageHeader && (
-            <div className="mb-6 md:mb-8 text-center">{pageHeader}</div>
-          )}
+          {pageHeader && <div className="mb-6 md:mb-8">{pageHeader}</div>}
 
           <div className="max-w-2xl mx-auto space-y-6">
             <section>{player}</section>

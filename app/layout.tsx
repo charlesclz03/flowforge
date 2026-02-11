@@ -164,11 +164,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager (noscript) */}
         <SessionProvider session={session}>
           <PracticeSessionProvider>
-            <SafeAreaWrapper>
+            <SafeAreaWrapper top={false} bottom={false}>
               <ResponsiveLayout>
                 <main
                   id="main-content"
-                  className="flex-1 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
+                  className="flex-1 min-h-0 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
                 >
                   <JsonLd />
                   {children}

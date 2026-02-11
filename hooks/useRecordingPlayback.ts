@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { SeamlessLooper } from '@/lib/audio/seamless-looper'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 interface UseRecordingPlaybackProps {
   recordingUrl: string | null
   beatUrl: string | null
   recordingId: string
+  beatOffsetMs?: number | null
+  fxConfig?: unknown
   onPlayStateChange?: (isPlaying: boolean) => void
 }
 
@@ -12,6 +15,8 @@ export function useRecordingPlayback({
   recordingUrl,
   beatUrl,
   recordingId,
+  beatOffsetMs,
+  fxConfig,
   onPlayStateChange,
 }: UseRecordingPlaybackProps) {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -24,10 +29,18 @@ export function useRecordingPlayback({
   // Track if we are currently trying to refresh a link to avoid infinite loops
   const isRetryingRef = useRef(false)
   const onPlayStateChangeRef = useRef(onPlayStateChange)
+  const resolvedSyncRef = useRef<{ beatOffsetMs: number; nudgeMs: number }>({
+    beatOffsetMs: 0,
+    nudgeMs: 0,
+  })
 
   useEffect(() => {
     onPlayStateChangeRef.current = onPlayStateChange
   }, [onPlayStateChange])
+
+  useEffect(() => {
+    resolvedSyncRef.current = resolveRecordingSync({ beatOffsetMs, fxConfig })
+  }, [beatOffsetMs, fxConfig])
 
   const cleanup = useCallback(() => {
     if (audioRef.current) {
@@ -61,12 +74,34 @@ export function useRecordingPlayback({
       const audio = new Audio(recordingUrl)
       audioRef.current = audio
 
+      // Apply saved mix settings if present
+      if (fxConfig && typeof fxConfig === 'object') {
+        const config = fxConfig as Record<string, unknown>
+        if (
+          typeof config.voiceVolume === 'number' &&
+          Number.isFinite(config.voiceVolume)
+        ) {
+          audio.volume = Math.max(0, Math.min(1, config.voiceVolume))
+        }
+      }
+
       // 2. Setup Beat Track (SeamlessLooper for gapless looping)
       if (beatUrl) {
         const looper = new SeamlessLooper()
         // Load beat - this might fail if link is expired/403
         await looper.load(beatUrl)
-        looper.setVolume(0.8) // Default mix
+
+        let beatVolume = 0.8
+        if (fxConfig && typeof fxConfig === 'object') {
+          const config = fxConfig as Record<string, unknown>
+          if (
+            typeof config.beatVolume === 'number' &&
+            Number.isFinite(config.beatVolume)
+          ) {
+            beatVolume = config.beatVolume
+          }
+        }
+        looper.setVolume(beatVolume)
         beatLooperRef.current = looper
       }
 
@@ -85,7 +120,13 @@ export function useRecordingPlayback({
 
       audio.addEventListener('play', () => {
         setIsPlaying(true)
-        beatLooperRef.current?.play()
+        const sync = resolvedSyncRef.current
+        const beatStartTime =
+          sync.beatOffsetMs / 1000 + audio.currentTime - sync.nudgeMs / 1000
+        if (beatLooperRef.current) {
+          beatLooperRef.current.seek(beatStartTime)
+          beatLooperRef.current.play()
+        }
         onPlayStateChangeRef.current?.(true)
       })
 

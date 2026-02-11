@@ -1,17 +1,20 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Spinner } from '@/components/atoms/Spinner'
+import { Button } from '@/components/atoms/Button'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
 import { VideoCreator } from '@/components/features/export/VideoCreator'
 import { isProUser } from '@/lib/subscription/isPro'
+import { AudioMixer } from '@/lib/audio/mixer'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 export default function VideoExportPage() {
   const routeParams = useParams<{ id: string }>()
@@ -22,7 +25,10 @@ export default function VideoExportPage() {
     null
   )
   const [isLoading, setIsLoading] = useState(true)
+  const [isPreparingAudio, setIsPreparingAudio] = useState(false)
+  const [videoAudioUrl, setVideoAudioUrl] = useState<string | null>(null)
   const { error, handleError, clearError } = useErrorHandler()
+  const preparedUrlRef = useRef<string | null>(null)
 
   const fetchRecording = useCallback(async () => {
     if (!recordingId) return
@@ -46,6 +52,96 @@ export default function VideoExportPage() {
       fetchRecording()
     }
   }, [status, recordingId, fetchRecording])
+
+  useEffect(() => {
+    return () => {
+      if (preparedUrlRef.current) {
+        URL.revokeObjectURL(preparedUrlRef.current)
+        preparedUrlRef.current = null
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const currentRecording = recording
+    if (!currentRecording) {
+      setVideoAudioUrl(null)
+      return
+    }
+
+    const voiceUrl = currentRecording.storageUrl ?? null
+    const beatUrl = currentRecording.beat?.storageUrl ?? null
+    const beatOffsetMs = currentRecording.beatOffsetMs ?? 0
+    const fxConfig = currentRecording.fxConfig
+    const fx =
+      fxConfig && typeof fxConfig === 'object'
+        ? (fxConfig as Record<string, unknown>)
+        : {}
+
+    if (!voiceUrl) {
+      setVideoAudioUrl(null)
+      return
+    }
+
+    if (!beatUrl) {
+      setVideoAudioUrl(voiceUrl)
+      return
+    }
+
+    let cancelled = false
+
+    const prepareMixedAudio = async () => {
+      setIsPreparingAudio(true)
+
+      if (preparedUrlRef.current) {
+        URL.revokeObjectURL(preparedUrlRef.current)
+        preparedUrlRef.current = null
+      }
+
+      try {
+        const resolvedSync = resolveRecordingSync({
+          beatOffsetMs,
+          fxConfig,
+        })
+
+        const mixer = new AudioMixer()
+        const blob = await mixer.mix(voiceUrl, beatUrl, {
+          voiceVolume:
+            typeof fx.voiceVolume === 'number' &&
+            Number.isFinite(fx.voiceVolume)
+              ? fx.voiceVolume
+              : 1.0,
+          beatVolume:
+            typeof fx.beatVolume === 'number' && Number.isFinite(fx.beatVolume)
+              ? fx.beatVolume
+              : 0.8,
+          isStudioMode: fxConfig ? !!fx.reverb : true,
+          nudge: resolvedSync.nudgeMs,
+          beatOffsetMs: resolvedSync.beatOffsetMs,
+        })
+
+        if (cancelled) return
+
+        const url = URL.createObjectURL(blob)
+        preparedUrlRef.current = url
+        setVideoAudioUrl(url)
+      } catch (err) {
+        if (cancelled) return
+        handleError(err, ErrorCodes.UNKNOWN_ERROR)
+        setVideoAudioUrl(voiceUrl)
+      } finally {
+        if (!cancelled) {
+          setIsPreparingAudio(false)
+        }
+      }
+    }
+
+    prepareMixedAudio()
+
+    return () => {
+      cancelled = true
+    }
+  }, [recording, handleError])
 
   const handleBack = () => router.push('/recordings')
 
@@ -117,12 +213,23 @@ export default function VideoExportPage() {
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
         <div className="w-full">
-          <VideoCreator
-            audioUrl={recording.storageUrl}
-            title={recording.title}
-            artist={recording.userId || 'User'}
-            onBack={handleBack}
-          />
+          {isPreparingAudio && (
+            <div className="min-h-[240px] flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/10 bg-background-card/60 p-8 text-center">
+              <Spinner size="lg" />
+              <p className="text-sm text-text-secondary">
+                Preparing your studio mix for video export...
+              </p>
+            </div>
+          )}
+
+          {!isPreparingAudio && (
+            <VideoCreator
+              audioUrl={videoAudioUrl ?? recording.storageUrl}
+              title={recording.title}
+              artist={recording.userId || 'User'}
+              onBack={handleBack}
+            />
+          )}
         </div>
       }
       metadata={null}
@@ -130,6 +237,3 @@ export default function VideoExportPage() {
     />
   )
 }
-
-// Temporary Button import for error state
-import { Button } from '@/components/atoms/Button'

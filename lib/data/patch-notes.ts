@@ -22,6 +22,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '0.9.1009',
+    date: '2026-02-11',
+    title: 'Sync & Speed',
+    codename: 'Sync & Speed',
+    description:
+      'Audio trust + performance polish + fixed chrome: recordings now stay locked to the beat across playback and exports, the recordings list loads significantly faster, and Practice is now truly no-scroll on mobile with a cleaner review/share flow.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Locked-In Recording Sync**: Playback, share links, downloads, and video exports now honor the session sync model (beat phase offset + latency nudge) so vocals stay aligned to the beat.',
+          '**Faster `/recordings` Load**: `/api/recordings` now batches Supabase signed URL creation (removes per-recording N+1 calls) to dramatically reduce recordings page load time.',
+          '**Seek Safety**: Beat-loop seeking is normalized to avoid negative-offset edge cases when applying offsets/nudge.',
+          '**Scrub-to-Pause**: Scrubbing the waveform now pauses playback so edits (FX/mix/alignment) apply cleanly; resume only when you hit Play again.',
+          '**Studio While Paused**: Studio Processing and Alignment nudge controls now update correctly whether the track is playing or paused.',
+          '**Practice Layout**: Removed extra empty space (“black zone”) below the Practice player on mobile by removing fixed-height control wrappers and redundant bottom padding.',
+          '**Practice Track Switcher**: The beat dropdown no longer gets clipped on mobile, so changing tracks during a session is visible and scrollable.',
+          '**Fixed App Chrome**: AppHeader + BottomNav now stay visually fixed outside the scroll area (prevents “phantom scroll” on small WebViews).',
+          '**Share Placement**: Share moved next to the recording title (top-right) on review and shared pages; removed the Shared Session mic CTA and the redundant bottom Share button.',
+        ],
+      },
+    ],
+  },
+  {
     version: '0.9.1008',
     date: '2026-02-10',
     title: 'Recordings Refresh',

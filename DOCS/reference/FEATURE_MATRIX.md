@@ -1,4 +1,4 @@
-# FreeStyla Feature Matrix (v0.9.1008)
+# FreeStyla Feature Matrix (v0.9.1009)
 
 ## Core Practice Engine
 
@@ -56,6 +56,8 @@
 
 | Date       | Feature             | Status | Fixes Applied                                                               |
 | :--------- | :------------------ | :----: | :-------------------------------------------------------------------------- |
+| 2026-02-11 | Practice Page Layout |  PASS  | Removed fixed-height top/bottom Practice control wrappers and redundant bottom padding that created a large empty “black zone” under the player on mobile. Added `min-h-0` to the main shell to harden flex behavior. |
+| 2026-02-11 | App Shell Chrome     |  PASS  | Fixed phantom scroll/“moving chrome” on small WebViews by removing double safe-area padding (shell + header/nav), hardening key flex containers with `min-h-0`, and removing template-level `min-h-screen` padding compensation. Practice now enforces a true no-scroll shell while keeping the beat selector usable via an overlay menu. |
 | 2026-02-10 | Practice Continuity |  PASS  | True pause/resume now preserves the current word + timer ring timing; in-session difficulty/frequency changes clearly show as pending and apply on prompt boundaries. |
 | 2026-02-09 | Launch Matrix Audit |  PASS  | Validated Guest + Free + Pro + SUPERADMIN UX via real Chrome (CDP) using `scripts/prod-launch-audit.mjs` against `www.freestyla.app`. Verified SUPERADMIN can publish beats via signed upload + `POST /api/admin/beats/upload` (smoke + cleanup). |
 | 2026-01-31 | Recording Review    |  PASS  | Verified hybrid audio engine (HTML5 + SeamlessLooper)                       |

@@ -36,7 +36,7 @@ export function ScreenPage({
       {header && <div className="flex-none z-30 relative">{header}</div>}
 
       {/* Content Area - Internal Scrolling if needed, or just flow */}
-      <div className="flex-1 w-full relative z-0">{children}</div>
+      <div className="flex-1 min-h-0 w-full relative z-0">{children}</div>
 
       {/* Deprecated Footer Slot - Keeping for backward compat if passed explicitly, but global nav is outside */}
       {footer && (

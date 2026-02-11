@@ -19,6 +19,7 @@ import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
 import { SeamlessLooper } from '@/lib/audio/seamless-looper'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 // Impulse response for reverb (simple noise burst fallback or load file)
 const createReverb = (
@@ -45,6 +46,7 @@ export interface SessionPlayerHandles {
     voiceVolume: number
     beatVolume: number
     isStudioMode: boolean
+    nudge: number
   }
 }
 
@@ -89,6 +91,11 @@ export const SessionPlayer = forwardRef<
     },
     ref
   ) => {
+    const resolvedSync = resolveRecordingSync({
+      beatOffsetMs,
+      fxConfig: initialSettings,
+    })
+
     const [isPlaying, setIsPlaying] = useState(false)
     const [duration, setDuration] = useState(sessionDuration || 0)
     const [currentTime, setCurrentTime] = useState(0)
@@ -100,8 +107,8 @@ export const SessionPlayer = forwardRef<
     const [audioError, setAudioError] = useState<string | null>(null)
 
     // Advanced Features
-    const [nudge, setNudge] = useState(initialSettings?.nudge ?? 0)
-    const nudgeRef = useRef(initialSettings?.nudge ?? 0) // Ref to avoid re-creating audio on nudge change
+    const [nudge, setNudge] = useState(resolvedSync.nudgeMs)
+    const nudgeRef = useRef(resolvedSync.nudgeMs) // Ref to avoid re-creating audio on nudge change
     const [isStudioMode, setIsStudioMode] = useState(
       initialSettings?.isStudioMode ?? true
     )
@@ -112,6 +119,7 @@ export const SessionPlayer = forwardRef<
         voiceVolume: isMuted ? 0 : volume,
         beatVolume,
         isStudioMode,
+        nudge: nudgeRef.current,
       }),
     }))
 
@@ -128,6 +136,16 @@ export const SessionPlayer = forwardRef<
 
     // Load latency from calibration
     useEffect(() => {
+      // Respect per-recording settings if provided.
+      if (typeof initialSettings?.nudge === 'number') {
+        return
+      }
+
+      // Legacy sessions stored nudge in beatOffsetMs; don't override.
+      if (resolvedSync.nudgeMs !== 0) {
+        return
+      }
+
       // Migrate legacy key if present (from old Latency Wizard)
       const legacyKey = localStorage.getItem('flowforge_audio_latency_ms')
       if (legacyKey && !localStorage.getItem('flowforge_latency')) {
@@ -141,7 +159,7 @@ export const SessionPlayer = forwardRef<
         setNudge(val)
         nudgeRef.current = val
       }
-    }, [])
+    }, [initialSettings?.nudge, resolvedSync.nudgeMs])
 
     // Keep nudgeRef in sync with state changes
     useEffect(() => {
@@ -154,6 +172,21 @@ export const SessionPlayer = forwardRef<
         beatLooperRef.current.setVolume(beatVolume)
       }
     }, [beatVolume])
+
+    // Keep beat loop aligned when alignment nudge changes (playing or paused).
+    useEffect(() => {
+      if (!audioRef.current || !beatLooperRef.current) return
+
+      const voiceTime = audioRef.current.currentTime
+      beatLooperRef.current.seek(
+        voiceTime + resolvedSync.beatOffsetMs / 1000 - nudge / 1000
+      )
+
+      // Prevent accidental beat resume if the voice track is paused.
+      if (!isPlaying) {
+        beatLooperRef.current.pause()
+      }
+    }, [nudge, isPlaying, resolvedSync.beatOffsetMs])
 
     // Initialize Web Audio Context for Studio FX
     const initAudioGraph = useCallback(() => {
@@ -216,7 +249,18 @@ export const SessionPlayer = forwardRef<
 
     // Studio FX Trigger
     useEffect(() => {
-      if (isPlaying || isStudioMode) {
+      if (!audioRef.current) return
+
+      // Initialize the graph when needed, but also allow toggling FX OFF while paused
+      // (graph exists but mix needs to be updated).
+      if (
+        isPlaying ||
+        isStudioMode ||
+        sourceRef.current ||
+        reverbRef.current ||
+        dryGainRef.current ||
+        wetGainRef.current
+      ) {
         initAudioGraph()
       }
     }, [isPlaying, isStudioMode, initAudioGraph])
@@ -311,13 +355,38 @@ export const SessionPlayer = forwardRef<
           // Sync beat to voice using the recorded offset
           // Voice starts at t=0, beat should start at beatOffsetMs/1000
           const beatStartTime =
-            (beatOffsetMs || 0) / 1000 + audioRef.current.currentTime
+            resolvedSync.beatOffsetMs / 1000 +
+            audioRef.current.currentTime -
+            nudgeRef.current / 1000
           beatLooperRef.current.seek(beatStartTime)
           beatLooperRef.current.play()
         }
         setIsPlaying(true)
       }
-    }, [isPlaying, beatOffsetMs])
+    }, [isPlaying, resolvedSync.beatOffsetMs])
+
+    const pausePlayback = useCallback(() => {
+      if (!audioRef.current) return
+      audioRef.current.pause()
+      if (beatLooperRef.current) beatLooperRef.current.pause()
+      setIsPlaying(false)
+    }, [])
+
+    const seekTo = useCallback(
+      (time: number) => {
+        if (!audioRef.current) return
+
+        audioRef.current.currentTime = time
+        // Apply beat offset for sync
+        if (beatLooperRef.current) {
+          beatLooperRef.current.seek(
+            time + resolvedSync.beatOffsetMs / 1000 - nudgeRef.current / 1000
+          )
+        }
+        setCurrentTime(time)
+      },
+      [resolvedSync.beatOffsetMs]
+    )
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!audioRef.current) return
@@ -344,8 +413,11 @@ export const SessionPlayer = forwardRef<
       audioRef.current.currentTime = newTime
       // Apply beat offset for sync
       if (beatLooperRef.current) {
-        beatLooperRef.current.seek(newTime + (beatOffsetMs || 0) / 1000)
+        beatLooperRef.current.seek(
+          newTime + resolvedSync.beatOffsetMs / 1000 - nudgeRef.current / 1000
+        )
       }
+      setCurrentTime(newTime)
     }
 
     const skipBackward = () => {
@@ -354,8 +426,11 @@ export const SessionPlayer = forwardRef<
       audioRef.current.currentTime = newTime
       // Apply beat offset for sync
       if (beatLooperRef.current) {
-        beatLooperRef.current.seek(newTime + (beatOffsetMs || 0) / 1000)
+        beatLooperRef.current.seek(
+          newTime + resolvedSync.beatOffsetMs / 1000 - nudgeRef.current / 1000
+        )
       }
+      setCurrentTime(newTime)
     }
 
     const resetPlayback = useCallback(() => {
@@ -365,9 +440,11 @@ export const SessionPlayer = forwardRef<
       }
       if (beatLooperRef.current) {
         // Reset to the original offset position
-        beatLooperRef.current.seek((beatOffsetMs || 0) / 1000)
+        beatLooperRef.current.seek(
+          resolvedSync.beatOffsetMs / 1000 - nudgeRef.current / 1000
+        )
       }
-    }, [beatOffsetMs])
+    }, [resolvedSync.beatOffsetMs])
 
     // Keyboard Shortcuts - MOVED UP before early returns
     useEffect(() => {
@@ -530,28 +607,12 @@ export const SessionPlayer = forwardRef<
                 color="#27272a"
                 playedColor="#a855f7"
                 onChange={(time) => {
-                  if (audioRef.current) {
-                    audioRef.current.currentTime = time
-                    // Apply beat offset for sync
-                    if (beatLooperRef.current) {
-                      beatLooperRef.current.seek(
-                        time + (beatOffsetMs || 0) / 1000
-                      )
-                    }
-                    setCurrentTime(time)
-                  }
+                  pausePlayback()
+                  seekTo(time)
                 }}
                 onSeek={(time) => {
-                  if (audioRef.current) {
-                    audioRef.current.currentTime = time
-                    // Apply beat offset for sync
-                    if (beatLooperRef.current) {
-                      beatLooperRef.current.seek(
-                        time + (beatOffsetMs || 0) / 1000
-                      )
-                    }
-                    setCurrentTime(time)
-                  }
+                  pausePlayback()
+                  seekTo(time)
                 }}
                 height={64}
               />

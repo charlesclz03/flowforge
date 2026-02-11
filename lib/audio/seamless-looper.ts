@@ -260,8 +260,9 @@ export class SeamlessLooper {
       this.stopSources()
     }
 
-    // Set new position
-    this.pauseOffset = time % this.audioBuffer.duration
+    // Set new position (normalize to [0, duration) to avoid negative offsets)
+    const duration = this.audioBuffer.duration || 1
+    this.pauseOffset = ((time % duration) + duration) % duration
 
     // Resume if was playing
     if (wasPlaying) {

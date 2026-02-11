@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v0.9.1009 - Sync & Speed (2026-02-11)
+
+- **FIX**: Recording playback + share links + downloads + video exports now honor beat phase offset + latency nudge so vocals stay aligned to the beat.
+- **PERF**: `/recordings` loads significantly faster by batching Supabase signed URL creation (removes per-recording N+1 calls).
+- **FIX**: Beat-loop seeking is normalized to avoid negative-offset edge cases when applying offsets/nudge.
+- **UX**: Scrubbing the waveform now pauses playback; changes apply cleanly and resume only when the user hits Play again.
+- **FIX**: Studio Processing + Alignment nudge controls now update correctly whether playing or paused.
+- **UI**: Practice page no longer leaves a large empty “black zone” under the player on mobile (removed fixed-height wrappers + redundant bottom padding).
+- **UX**: Practice beat dropdown no longer gets clipped on mobile; the track switcher is visible and scrollable during a session.
+- **UI**: AppHeader + BottomNav now stay visually fixed outside the scroll area (prevents “phantom scroll” on small WebViews).
+- **UX**: Share moved next to the recording title (top-right) on review/shared pages; removed the Shared Session mic CTA and the redundant bottom Share button.
+
 ## v0.9.1008 - Recordings Refresh (2026-02-10)
 
 - **FIX**: `/recordings` now shows the latest sessions even when no audio was captured (metadata-only saves), eliminating the "stuck on last week's recording" confusion.

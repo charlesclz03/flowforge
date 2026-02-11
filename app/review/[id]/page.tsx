@@ -8,6 +8,7 @@ import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import {
   SessionPlayer,
   SessionPlayerHandles,
+  AudioSettings,
 } from '@/components/organisms/recordings/SessionPlayer'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
@@ -19,6 +20,7 @@ import { ErrorCodes } from '@/lib/errors'
 import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 export default function ReviewPage() {
   const routeParams = useParams<{ id: string }>()
@@ -91,9 +93,14 @@ export default function ReviewPage() {
         voiceVolume: 1.0,
         beatVolume: 0.8,
         isStudioMode: true,
+        nudge: 0,
       }
 
       const mixer = new AudioMixer()
+      const resolvedSync = resolveRecordingSync({
+        beatOffsetMs: recording.beatOffsetMs ?? 0,
+        fxConfig: recording.fxConfig,
+      })
       const blob = await mixer.mix(
         recording.storageUrl,
         recording.beat?.storageUrl || null,
@@ -101,6 +108,8 @@ export default function ReviewPage() {
           voiceVolume: settings.voiceVolume,
           beatVolume: settings.beatVolume,
           isStudioMode: settings.isStudioMode,
+          nudge: settings.nudge,
+          beatOffsetMs: resolvedSync.beatOffsetMs,
         }
       )
 
@@ -164,7 +173,34 @@ export default function ReviewPage() {
           customSubtitle="Listen back and analyze your flow"
         />
       }
-      pageHeader={null}
+      pageHeader={
+        <div className="w-full max-w-2xl mx-auto">
+          <div className="grid grid-cols-[1fr_auto] items-start gap-3">
+            <div className="min-w-0 space-y-2">
+              <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase line-clamp-2">
+                {recording.title}
+              </h1>
+              {recording.beat?.title && (
+                <p className="text-text-secondary font-medium truncate">
+                  {recording.beat.title}
+                </p>
+              )}
+            </div>
+            {recording.storageUrl && (
+              <ShareButton
+                title={recording.title}
+                text={`Check out my freestyle flow on FreeStyla!`}
+                url={
+                  typeof window !== 'undefined'
+                    ? `${window.location.origin}/s/${recording.id}`
+                    : ''
+                }
+                className="px-3 py-2 justify-center whitespace-nowrap"
+              />
+            )}
+          </div>
+        </div>
+      }
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
       player={
         recording.storageUrl ? (
@@ -173,11 +209,10 @@ export default function ReviewPage() {
             audioUrl={recording.storageUrl}
             beatUrl={recording.beat?.storageUrl}
             beatOffsetMs={
-              (
-                recording as FreestyleSessionWithBeat & {
-                  beatOffsetMs?: number
-                }
-              ).beatOffsetMs
+              resolveRecordingSync({
+                beatOffsetMs: recording.beatOffsetMs ?? 0,
+                fxConfig: recording.fxConfig,
+              }).beatOffsetMs
             }
             beatTitle={recording.beat?.title}
             beatBpm={recording.beat?.bpm}
@@ -185,6 +220,19 @@ export default function ReviewPage() {
             sessionDuration={recording.durationSeconds}
             sessionDifficulty={recording.difficulty}
             sessionDate={recording.createdAt}
+            initialSettings={
+              recording.fxConfig
+                ? (recording.fxConfig as unknown as AudioSettings)
+                : {
+                    voiceVolume: 1.0,
+                    beatVolume: 0.8,
+                    isStudioMode: true,
+                    nudge: resolveRecordingSync({
+                      beatOffsetMs: recording.beatOffsetMs ?? 0,
+                      fxConfig: recording.fxConfig,
+                    }).nudgeMs,
+                  }
+            }
           />
         ) : (
           <div className="rounded-2xl border border-white/10 bg-background-card/60 p-8 text-center space-y-3">
@@ -224,14 +272,6 @@ export default function ReviewPage() {
           >
             Delete
           </Button>
-          {recording.storageUrl && (
-            <ShareButton
-              title={recording.title}
-              text={`Check out my freestyle flow on FreeStyla!`}
-              url={`${window.location.origin}/s/${recording.id}`}
-              className="w-full sm:w-auto px-4 justify-center"
-            />
-          )}
         </div>
       }
     />

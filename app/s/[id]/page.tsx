@@ -12,13 +12,13 @@ import {
 } from '@/components/organisms/recordings/SessionPlayer'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
-import { Mic } from 'lucide-react'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 export default function SharedRecordingPage() {
   const routeParams = useParams<{ id: string }>()
@@ -86,25 +86,29 @@ export default function SharedRecordingPage() {
           showBackButton={false}
           customTitle="FREESTYLA"
           customSubtitle="Shared Session"
-          action={
-            <Link href="/">
-              <Button size="sm" variant="primary" className="gap-2">
-                <Mic size={16} />
-                <span className="hidden sm:inline">Start Freestyling</span>
-              </Button>
-            </Link>
-          }
         />
       }
       pageHeader={
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">
-            {recording.title}
-          </h1>
-          <p className="text-accent-purple font-medium">
-            Recorded by{' '}
-            {recording.user?.name || recording.user?.username || 'Anonymous'}
-          </p>
+        <div className="w-full max-w-2xl mx-auto">
+          <div className="grid grid-cols-[1fr_auto] items-start gap-3">
+            <div className="min-w-0 space-y-2">
+              <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase line-clamp-2">
+                {recording.title}
+              </h1>
+              <p className="text-accent-purple font-medium">
+                Recorded by{' '}
+                {recording.user?.name ||
+                  recording.user?.username ||
+                  'Anonymous'}
+              </p>
+            </div>
+            <ShareButton
+              title={recording.title}
+              text={`Check out this freestyle by ${recording.user?.name || 'an artist'} on FreeStyla!`}
+              url={typeof window !== 'undefined' ? window.location.href : ''}
+              className="px-3 py-2 justify-center whitespace-nowrap"
+            />
+          </div>
         </div>
       }
       alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
@@ -114,8 +118,10 @@ export default function SharedRecordingPage() {
           audioUrl={recording.storageUrl}
           beatUrl={recording.beat?.storageUrl}
           beatOffsetMs={
-            (recording as FreestyleSessionWithBeat & { beatOffsetMs?: number })
-              .beatOffsetMs
+            resolveRecordingSync({
+              beatOffsetMs: recording.beatOffsetMs ?? 0,
+              fxConfig: recording.fxConfig,
+            }).beatOffsetMs
           }
           beatTitle={recording.beat?.title}
           beatBpm={recording.beat?.bpm}
@@ -131,20 +137,13 @@ export default function SharedRecordingPage() {
                   voiceVolume: 1.0,
                   beatVolume: 0.8,
                   isStudioMode: true,
-                  nudge: recording.beatOffsetMs || 0,
+                  nudge: resolveRecordingSync({
+                    beatOffsetMs: recording.beatOffsetMs ?? 0,
+                    fxConfig: recording.fxConfig,
+                  }).nudgeMs,
                 }
           }
         />
-      }
-      actions={
-        <div className="flex justify-center w-full">
-          <ShareButton
-            title={recording.title}
-            text={`Check out this freestyle by ${recording.user?.name || 'an artist'} on FreeStyla!`}
-            url={typeof window !== 'undefined' ? window.location.href : ''}
-            className="w-full sm:w-auto justify-center"
-          />
-        </div>
       }
     />
   )

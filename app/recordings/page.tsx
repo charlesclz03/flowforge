@@ -21,6 +21,7 @@ import { toast } from 'react-hot-toast'
 import { StorageBar } from '@/components/organisms/recordings/StorageBar'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
 import { isProUser } from '@/lib/subscription/isPro'
+import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -106,6 +107,10 @@ export default function RecordingsPage() {
       // Parse saved FX config
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const fxConfig = (recording.fxConfig as any) || {}
+      const resolvedSync = resolveRecordingSync({
+        beatOffsetMs: recording.beatOffsetMs ?? 0,
+        fxConfig: recording.fxConfig,
+      })
 
       const blob = await mixer.mix(
         recording.storageUrl,
@@ -116,7 +121,8 @@ export default function RecordingsPage() {
           // If config exists, use user preference for reverb (mapped to Studio Mode for now)
           // If no config, default to true ("Production Ready")
           isStudioMode: recording.fxConfig ? !!fxConfig.reverb : true,
-          nudge: fxConfig.nudge ?? (recording.beatOffsetMs || 0),
+          nudge: resolvedSync.nudgeMs,
+          beatOffsetMs: resolvedSync.beatOffsetMs,
         }
       )
 

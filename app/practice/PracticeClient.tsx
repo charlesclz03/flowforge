@@ -20,6 +20,7 @@ import { isProUser } from '@/lib/subscription/isPro'
 // Components
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
 import { ScreenPage } from '@/components/layout/ScreenPage'
+import { LockMainScroll } from '@/components/layout/LockMainScroll'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Button } from '@/components/atoms/Button'
 import { Modal } from '@/components/atoms/Modal'
@@ -186,6 +187,15 @@ export default function PracticeClient({
             return
           }
 
+          if (key === 'fxConfig' && typeof value === 'string') {
+            try {
+              json[key] = JSON.parse(value)
+            } catch {
+              json[key] = null
+            }
+            return
+          }
+
           if (numericKeys.has(key) && typeof value === 'string') {
             const parsed = Number(value)
             json[key] = Number.isFinite(parsed) ? parsed : value
@@ -206,12 +216,21 @@ export default function PracticeClient({
           throw new Error('Recording payload missing audio blob')
         }
 
+        const mimeType = audioValue.type || 'audio/webm'
+        const fileExtension = (() => {
+          if (mimeType.includes('webm')) return 'webm'
+          if (mimeType.includes('ogg')) return 'ogg'
+          if (mimeType.includes('mp4')) return 'm4a'
+          if (mimeType.includes('wav')) return 'wav'
+          return 'dat'
+        })()
+
         const uploadUrlResponse = await fetch('/api/upload/signed-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            fileName: `recording-${Date.now()}.wav`,
-            contentType: audioValue.type || 'audio/wav',
+            fileName: `recording-${Date.now()}.${fileExtension}`,
+            contentType: mimeType,
           }),
         })
 
@@ -223,7 +242,7 @@ export default function PracticeClient({
         const uploadResponse = await fetch(uploadUrlData.signedUrl as string, {
           method: 'PUT',
           headers: {
-            'Content-Type': audioValue.type || 'audio/wav',
+            'Content-Type': mimeType,
           },
           body: audioValue,
         })
@@ -496,200 +515,206 @@ export default function PracticeClient({
   if (!isLoaded) return null // Or skeleton
 
   return (
-    <ScreenPage
-      header={
-        <AppHeader
-          showBackButton
-          onBack={handleBack}
-          customTitle="THE BOOTH"
-          customSubtitle="Step up and drop your bars"
-        />
-      }
-      className="bg-background h-full min-h-full overflow-hidden"
-    >
-      {/* Background Ambience */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-accent-purple/20 rounded-full blur-[128px] animate-pulse-slow" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center h-full px-4 pb-16 md:pb-8 max-w-lg mx-auto w-full overflow-hidden">
-        {/* Siren Overlay */}
-        <AnimatePresence>
-          {isSirenActive && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.15 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 pointer-events-none rounded-3xl z-0"
-              style={{
-                background:
-                  sirenPhase === 0
-                    ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
-                    : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-              }}
-            />
-          )}
-        </AnimatePresence>
-
-        <div className="w-full flex-1 z-20 flex flex-col min-h-0">
-          {selectedBeat ? (
-            <PracticeControls
-              // Data
-              selectedBeat={selectedBeat}
-              beats={beats}
-              currentWord={engine.currentWord}
-              wordTiming={engine.wordTiming}
-              // Status
-              isPlaying={
-                engine.status === 'PLAYING' || engine.status === 'COUNTDOWN'
-              }
-              isPaused={engine.status === 'PAUSED'}
-              isRecording={engine.recorder.isRecording}
-              isLoading={
-                engine.beatPlayer.isLoading ||
-                engine.status === 'MIXING' ||
-                engine.status === 'SAVING'
-              }
-              loadingText={
-                engine.status === 'MIXING'
-                  ? 'Mixing Audio...'
-                  : engine.status === 'SAVING'
-                    ? 'Saving Session...'
-                    : 'Preparing Studio'
-              }
-              isSirenActive={isSirenActive}
-              sirenPhase={sirenPhase}
-              countdownValue={countdownValue}
-              error={engine.error || engine.beatPlayer.error}
-              // Time
-              currentTime={uiTime}
-              startTime={engine.startTime}
-              sessionDuration={sessionDurationLimit}
-              recordingDuration={engine.recorder.duration}
-              // Settings
-              difficulty={difficulty}
-              activeDifficulty={engine.activeDifficulty}
-              frequency={frequency}
-              activeFrequency={engine.activeFrequency}
-              mode={mode}
-              isPro={isPro}
-              isRecordingEnabled={isRecordingEnabled}
-              // Handlers
-              handleToggle={() => {
-                if (engine.status === 'IDLE' || engine.status === 'COMPLETED') {
-                  engine.startSession()
-                } else {
-                  // Stop/Pause logic managed via modal usually
-                  setPendingAction('finish')
-                  setShowExitConfirmation(true)
-                }
-              }}
-              // Beat Handling
-              activePlayer={engine.activePlayer}
-              cypherPlayers={cypherPlayers}
-              handleRestart={() => {
-                setPendingAction('restart')
-                setShowExitConfirmation(true)
-              }}
-              handleBeatSelect={handleBeatSelect}
-              handleDifficultyChange={setDifficulty}
-              handleFrequencyChange={setFrequency}
-              onTogglePause={engine.togglePause}
-              handleUpgrade={() => {
-                setPremiumTrigger('recording')
-                setShowPremiumModal(true)
-              }}
-              onToggleRecordingMode={() =>
-                setIsRecordingEnabled(!isRecordingEnabled)
-              }
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center space-y-4 py-8">
-              <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
-              <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
-                {loadingText}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Modals */}
-      <SessionSummaryModal
-        data={sessionSummary}
-        onClose={() => {
-          const meta = sessionSummary?.meta
-          if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
-            setSessionSummary(null)
-            setShowRateModal(true)
-          } else {
-            setSessionSummary(null)
-            router.push('/recordings')
-          }
-        }}
-      />
-      <RateAppModal
-        isOpen={showRateModal}
-        onClose={() => {
-          setShowRateModal(false)
-          router.push('/recordings')
-        }}
-        onRate={() => {
-          setShowRateModal(false)
-          router.push('/feedback?mode=rate')
-        }}
-      />
-      <GuestLoginModal
-        isOpen={showGuestModal}
-        onClose={() => {
-          setShowGuestModal(false)
-          router.push('/')
-        }}
-      />
-      <PremiumModal
-        isOpen={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        trigger={premiumTrigger}
-        beatCount={beats.length}
-      />
-
-      <Modal
-        isOpen={showExitConfirmation}
-        onClose={() => setShowExitConfirmation(false)}
-        title="End Session?"
-        showCloseButton={false}
+    <>
+      <LockMainScroll />
+      <ScreenPage
+        header={
+          <AppHeader
+            showBackButton
+            onBack={handleBack}
+            customTitle="THE BOOTH"
+            customSubtitle="Step up and drop your bars"
+          />
+        }
+        className="bg-background h-full min-h-full"
       >
-        <div className="space-y-4">
-          <p className="text-text-secondary">
-            {pendingAction === 'restart'
-              ? 'Restarting will discard the current recording. Continue?'
-              : 'Stop and save your session?'}
-          </p>
-          <div className="flex gap-3 justify-end">
-            <Button
-              variant="ghost"
-              onClick={() => setShowExitConfirmation(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setShowExitConfirmation(false)
-                if (pendingAction === 'restart') {
-                  engine.discardSession()
-                  setTimeout(() => engine.startSession(), 500)
-                } else {
-                  engine.stopSession() // This triggers 'FINISHING' -> 'SAVING'
+        {/* Background Ambience */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute -top-32 -left-32 w-96 h-96 bg-accent-purple/20 rounded-full blur-[128px] animate-pulse-slow" />
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center h-full px-4 max-w-lg mx-auto w-full">
+          {/* Siren Overlay */}
+          <AnimatePresence>
+            {isSirenActive && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.15 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 pointer-events-none rounded-3xl z-0"
+                style={{
+                  background:
+                    sirenPhase === 0
+                      ? 'radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%)'
+                      : 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+                }}
+              />
+            )}
+          </AnimatePresence>
+
+          <div className="w-full flex-1 z-20 flex flex-col min-h-0">
+            {selectedBeat ? (
+              <PracticeControls
+                // Data
+                selectedBeat={selectedBeat}
+                beats={beats}
+                currentWord={engine.currentWord}
+                wordTiming={engine.wordTiming}
+                // Status
+                isPlaying={
+                  engine.status === 'PLAYING' || engine.status === 'COUNTDOWN'
                 }
-              }}
-            >
-              Confirm
-            </Button>
+                isPaused={engine.status === 'PAUSED'}
+                isRecording={engine.recorder.isRecording}
+                isLoading={
+                  engine.beatPlayer.isLoading ||
+                  engine.status === 'MIXING' ||
+                  engine.status === 'SAVING'
+                }
+                loadingText={
+                  engine.status === 'MIXING'
+                    ? 'Mixing Audio...'
+                    : engine.status === 'SAVING'
+                      ? 'Saving Session...'
+                      : 'Preparing Studio'
+                }
+                isSirenActive={isSirenActive}
+                sirenPhase={sirenPhase}
+                countdownValue={countdownValue}
+                error={engine.error || engine.beatPlayer.error}
+                // Time
+                currentTime={uiTime}
+                startTime={engine.startTime}
+                sessionDuration={sessionDurationLimit}
+                recordingDuration={engine.recorder.duration}
+                // Settings
+                difficulty={difficulty}
+                activeDifficulty={engine.activeDifficulty}
+                frequency={frequency}
+                activeFrequency={engine.activeFrequency}
+                mode={mode}
+                isPro={isPro}
+                isRecordingEnabled={isRecordingEnabled}
+                // Handlers
+                handleToggle={() => {
+                  if (
+                    engine.status === 'IDLE' ||
+                    engine.status === 'COMPLETED'
+                  ) {
+                    engine.startSession()
+                  } else {
+                    // Stop/Pause logic managed via modal usually
+                    setPendingAction('finish')
+                    setShowExitConfirmation(true)
+                  }
+                }}
+                // Beat Handling
+                activePlayer={engine.activePlayer}
+                cypherPlayers={cypherPlayers}
+                handleRestart={() => {
+                  setPendingAction('restart')
+                  setShowExitConfirmation(true)
+                }}
+                handleBeatSelect={handleBeatSelect}
+                handleDifficultyChange={setDifficulty}
+                handleFrequencyChange={setFrequency}
+                onTogglePause={engine.togglePause}
+                handleUpgrade={() => {
+                  setPremiumTrigger('recording')
+                  setShowPremiumModal(true)
+                }}
+                onToggleRecordingMode={() =>
+                  setIsRecordingEnabled(!isRecordingEnabled)
+                }
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center space-y-4 py-8">
+                <div className="h-16 w-16 rounded-full border-2 border-accent-purple/20 border-t-accent-purple animate-spin" />
+                <span className="text-xs font-bold text-text-tertiary uppercase tracking-widest animate-pulse">
+                  {loadingText}
+                </span>
+              </div>
+            )}
           </div>
         </div>
-      </Modal>
-    </ScreenPage>
+
+        {/* Modals */}
+        <SessionSummaryModal
+          data={sessionSummary}
+          onClose={() => {
+            const meta = sessionSummary?.meta
+            if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
+              setSessionSummary(null)
+              setShowRateModal(true)
+            } else {
+              setSessionSummary(null)
+              router.push('/recordings')
+            }
+          }}
+        />
+        <RateAppModal
+          isOpen={showRateModal}
+          onClose={() => {
+            setShowRateModal(false)
+            router.push('/recordings')
+          }}
+          onRate={() => {
+            setShowRateModal(false)
+            router.push('/feedback?mode=rate')
+          }}
+        />
+        <GuestLoginModal
+          isOpen={showGuestModal}
+          onClose={() => {
+            setShowGuestModal(false)
+            router.push('/')
+          }}
+        />
+        <PremiumModal
+          isOpen={showPremiumModal}
+          onClose={() => setShowPremiumModal(false)}
+          trigger={premiumTrigger}
+          beatCount={beats.length}
+        />
+
+        <Modal
+          isOpen={showExitConfirmation}
+          onClose={() => setShowExitConfirmation(false)}
+          title="End Session?"
+          showCloseButton={false}
+        >
+          <div className="space-y-4">
+            <p className="text-text-secondary">
+              {pendingAction === 'restart'
+                ? 'Restarting will discard the current recording. Continue?'
+                : 'Stop and save your session?'}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="ghost"
+                onClick={() => setShowExitConfirmation(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setShowExitConfirmation(false)
+                  if (pendingAction === 'restart') {
+                    engine.discardSession()
+                    setTimeout(() => engine.startSession(), 500)
+                  } else {
+                    engine.stopSession() // This triggers 'FINISHING' -> 'SAVING'
+                  }
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </ScreenPage>
+    </>
   )
 }

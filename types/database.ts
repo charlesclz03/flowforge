@@ -18,7 +18,7 @@ export type FreestyleSessionWithBeat = FreestyleSession & {
   beat: Beat
   user?: any // Added for Share page
   fileSizeBytes?: number | null
-  beatOffsetMs?: number | null // [LATENCY FIX] Added manually
+  beatOffsetMs?: number | null // Beat position at recording start (ms)
   fxConfig?: any // [STUDIO FX] Added manually
   isPublic?: boolean // [SHARE] Added manually
 }

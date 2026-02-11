@@ -1,16 +1,17 @@
-# Project Status: v0.9.1008 ("Recordings Refresh")
+# Project Status: v0.9.1009 ("Sync & Speed")
 
-**Current Version**: `0.9.1008`
+**Current Version**: `0.9.1009`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-02-11
 
 ## Quick Status
 
-> **Latest Release**: v0.9.1008 (Recordings Refresh) - `/recordings` now shows your latest sessions (including stats-only runs) and the active-session cancel guard no longer leaks onto non-practice routes.
+> **Latest Release**: v0.9.1009 (Sync & Speed) - Recording sync is now consistent across playback/share/downloads/exports, `/recordings` loads significantly faster, and the app chrome (header + bottom nav) is now stable on small WebViews.
 > **Focus**: Stability & Polish.
 
 ## Recent Achievements
 
+- **Sync & Speed**: Locked-in recording sync (playback/share/download/export) + faster `/recordings` (batched signed URLs) + fixed chrome/no-scroll Practice + scrub-to-pause review behavior + share moved to top-right (2026-02-11).
 - **Recordings Refresh**: `/recordings` now includes metadata-only sessions and uses `no-store` fetching to prevent stale lists; session cancel guard state self-heals so it won't linger outside Practice (2026-02-10).
 - **Icon Polish**: Regenerated PWA icons (`16/32/192/512` + maskable) so Android splash/launcher surfaces render cleanly with consistent black (2026-02-10).
 - **Canonical WWW**: `freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `www.freestyla.app`, eliminating redirect loops and preventing auth/session split-brain (2026-02-10).
@@ -57,6 +58,7 @@
 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v0.9.1009 | Sync & Speed        | 2026-02-11 | Recording sync + `/recordings` perf + fixed chrome/no-scroll Practice + review/share UX |
 | v0.9.1008 | Recordings Refresh  | 2026-02-10 | Recordings list freshness + session cancel guard self-heal                          |
 | v0.9.1007 | Icon Polish         | 2026-02-10 | Regenerated PWA icons + maskable variants to remove launch splash icon border      |
 | v0.9.1006 | Canonical WWW       | 2026-02-10 | Fixed production redirect loops by aligning canonical origin to `www.freestyla.app` |

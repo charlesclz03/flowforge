@@ -265,8 +265,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
         )}
       </AnimatePresence>
 
-      {/* Top Controls Section - Balanced Height Container */}
-      <div className="w-full flex-none h-40 sm:h-48 flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-30 pointer-events-none">
+      {/* Top Controls Section */}
+      <div className="w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-30 pointer-events-none">
         {/* Beat Dropdown (Pointer Events Auto) */}
         <div className="pointer-events-auto w-full flex justify-center">
           <BeatDropdown
@@ -277,6 +277,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             disabled={false}
             embedded={true}
             defaultCollapsed={true}
+            overlay
           />
         </div>
 
@@ -809,11 +810,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
         </div>
       </div>
 
-      {/* Record Notifier / Bottom Control Area - SYMMETRICAL HEIGHT
-          Restored to h-40 sm:h-48 to match Top Controls.
-          Overflow visible ensures breathing effects aren't clipped.
-      */}
-      <div className="flex-none h-40 sm:h-48 flex items-center justify-center shrink-0 z-30 pb-4 overflow-visible">
+      {/* Record Notifier / Bottom Control Area */}
+      <div className="flex-none flex items-end justify-center shrink-0 z-30 pt-2 pb-4 overflow-visible">
         <button
           onClick={(e) => {
             e.stopPropagation()
