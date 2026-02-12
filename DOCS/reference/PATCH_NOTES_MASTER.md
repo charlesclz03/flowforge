@@ -1,5 +1,11 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.1 - Practice Overlay Fix (2026-02-12)
+
+- **FIX**: Practice beat dropdown overlay is now opaque and blocks click-through (no tapping behind the menu).
+- **UI**: Premium beats show a clear gold crown badge in the dropdown.
+- **LAYOUT**: Practice stage now flex-fills the available height so the player stays centered (no dead black zone).
+
 ## v1.0.0 - 1.0 (2026-02-11)
 
 - **DOCS**: Privacy Policy includes clear account deletion instructions (Profile → Security → Delete Account) plus email-based deletion requests.

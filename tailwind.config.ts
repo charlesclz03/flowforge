@@ -25,6 +25,8 @@ const config: Config = {
         accent: {
           purple: '#7D7AFF', // Primary accent color
           gold: '#FFD60A', // Duolingo/Gamification Gold
+          // Back-compat alias (many components still use `accent-yellow`)
+          yellow: '#FFD60A',
           platinum: '#E5E5EA', // Silver/Platinum
           bronze: '#CD7F32',
           orange: '#FF9500', // Premium badges only
@@ -41,6 +43,7 @@ const config: Config = {
         },
         surface: {
           subtle: '#121212', // Off-black (Audit 4.2)
+          elevated: '#2C2C2E', // Matches `background.elevated`
         },
         timer: {
           ring: '#7D7AFF', // Purple instead of orange

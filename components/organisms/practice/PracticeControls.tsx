@@ -206,7 +206,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none h-full flex flex-col justify-between',
+        'transition-opacity duration-500 bg-transparent border-none flex flex-col justify-between flex-1 min-h-0',
         // CENTERING FIX V4 (FINAL):
         // Removed dynamic padding and duplicate BottomNav.
         // Pure Flexbox Symmetrical Centering.
@@ -266,7 +266,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </AnimatePresence>
 
       {/* Top Controls Section */}
-      <div className="w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-30 pointer-events-none">
+      <div className="w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-40 pointer-events-none">
         {/* Beat Dropdown (Pointer Events Auto) */}
         <div className="pointer-events-auto w-full flex justify-center">
           <BeatDropdown

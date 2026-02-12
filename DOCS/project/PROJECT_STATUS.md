@@ -1,16 +1,17 @@
-# Project Status: v1.0.0
-
-**Current Version**: `1.0.0`
+# Project Status: v1.0.1
+ 
+**Current Version**: `1.0.1`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-11
-
+**Last Updated**: 2026-02-12
+ 
 ## Quick Status
-
-> **Latest Release**: v1.0.0 - Account deletion clarity + user data controls + Play Store readiness.
+ 
+> **Latest Release**: v1.0.1 - Practice dropdown overlay fix + premium crown visibility + centered Practice stage.
 > **Focus**: Stability & Polish.
-
+ 
 ## Recent Achievements
-
+ 
+- **Practice Overlay Fix**: Beat dropdown is now opaque and blocks click-through; premium crowns are visible; Practice stage fills the available height so the player stays centered (2026-02-12).
 - **v1.0.0 Release**: Privacy Policy now includes clear account deletion instructions, and users can delete recordings / uploaded beats without deleting their account (2026-02-11).
 - **Android Deployment Ready**: Updated `assetlinks.json` with production SHA-256 fingerprint + generated production keystore and Android App Bundle for Google Play Console submission (2026-02-11).
 - **Sync & Speed**: Locked-in recording sync (playback/share/download/export) + faster `/recordings` (batched signed URLs) + fixed chrome/no-scroll Practice + scrub-to-pause review behavior + share moved to top-right (2026-02-11).
@@ -57,9 +58,10 @@
 - Further mobile optimizations.
 
 ## Version History (Recent)
-
+ 
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v1.0.1 | Practice Overlay Fix | 2026-02-12 | Practice dropdown overlay fix + premium crown visibility + centered Practice stage |
 | v1.0.0 | 1.0 | 2026-02-11 | Account deletion clarity + user data controls + Play Store readiness |
 | v0.9.1010 | Android Deployment Ready | 2026-02-11 | Production Android App Links config + Play Store AAB generation                       |
 | v0.9.1009 | Sync & Speed        | 2026-02-11 | Recording sync + `/recordings` perf + fixed chrome/no-scroll Practice + review/share UX |

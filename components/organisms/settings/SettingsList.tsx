@@ -486,7 +486,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.0.0</p>
+          <p className="ml-2 text-xs text-white/20">v1.0.1</p>
         </div>
       </div>
       <SupportModal

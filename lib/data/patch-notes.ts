@@ -22,6 +22,25 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.1',
+    date: '2026-02-12',
+    title: 'Practice Overlay Fix',
+    codename: 'Practice Overlay Fix',
+    type: 'patch',
+    description:
+      'Practice dropdown is now fully opaque and blocks click-through, premium crowns are visible again, and the Practice stage fills the screen correctly (no dead black zone).',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Beat Dropdown Overlay**: Practice beat menu now renders as a true overlay with an opaque surface and proper hit-blocking (no tapping buttons behind it).',
+          '**Premium Visibility**: Premium beats show a clear gold crown badge in the dropdown.',
+          '**Practice Layout**: Practice stage now flex-fills the available height so the player stays centered between AppHeader and BottomNav across device sizes.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.0',
     date: '2026-02-11',
     title: '1.0',

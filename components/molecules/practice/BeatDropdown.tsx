@@ -450,8 +450,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
                         className="relative w-10 h-10 rounded-lg overflow-hidden bg-black/40 flex-shrink-0 cursor-pointer"
                       >
                         {beat.isPremium && (
-                          <div className="absolute top-0.5 right-0.5 z-10 p-0.5 bg-accent-yellow rounded-full">
-                            <Crown size={8} className="text-black" />
+                          <div className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent-yellow ring-1 ring-white/20 shadow-[0_0_10px_rgba(255,214,10,0.35)]">
+                            <Crown size={12} className="text-black" />
                           </div>
                         )}
                         <Music
