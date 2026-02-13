@@ -20,6 +20,9 @@
 - **UX**: Calibration now includes quick `-10/+10ms` controls, manual slider tuning, explicit `Save Changes`/`Discard` behavior, and `Reset` to `0ms`.
 - **UX**: Added one-shot + looped sync pulse tests in calibration settings for fast audio/visual timing validation.
 - **CHORE**: Redirected legacy `/calibration` to canonical `/settings/latency` to remove duplicate calibration flows.
+- **FIX**: Replaced middleware token-gating with server-side auth guards on `/settings`, `/recordings`, and `/profile`, eliminating DB-session callback loops (including `/?callbackUrl=/settings/latency`).
+- **FIX**: Home callback handling now validates internal paths server-side, preserves callback intent for unauthenticated users via `/howitworks`, and removes client loader redirect loops.
+- **TEST**: Added Playwright regression coverage for `/?callbackUrl=/settings/latency` and direct guest access to `/settings/latency` to prevent callback-loop regressions.
 - **FIX**: `/difficultyselection?beatId=` now resolves user-uploaded beats in addition to public beats, restoring private-track preselection from `/tracks`.
 - **TEST**: Added a Playwright regression that covers private-track arrow handoff (`/tracks` -> `/difficultyselection?beatId=`) and verifies Practice playback starts at the calibrated `offset`.
 - **SECURITY**: Locked down `/api/debug/seed` to SUPERADMIN-only access.

@@ -46,6 +46,31 @@ test('guest is redirected away from recordings route', async ({ page }) => {
   await expect(page).toHaveURL(/\/howitworks/, { timeout: 15000 })
 })
 
+test('guest callback to latency settings resolves to blueprint (no home loop)', async ({
+  page,
+}) => {
+  await page.goto('/?callbackUrl=%2Fsettings%2Flatency')
+  await expect(page).toHaveURL(
+    /\/howitworks\?callbackUrl=%2Fsettings%2Flatency/,
+    {
+      timeout: 15000,
+    }
+  )
+  await expect(page.getByRole('heading', { name: 'THE BLUEPRINT' })).toBeVisible()
+})
+
+test('guest direct latency settings access preserves callback intent', async ({
+  page,
+}) => {
+  await page.goto('/settings/latency')
+  await expect(page).toHaveURL(
+    /\/howitworks\?callbackUrl=%2Fsettings%2Flatency/,
+    {
+      timeout: 20000,
+    }
+  )
+})
+
 test('visitor sees 404 on unknown route', async ({ page }) => {
   await page.goto('/this-route-does-not-exist')
   await expect(page.getByRole('heading', { name: '404' })).toBeVisible()

@@ -1,50 +1,45 @@
-'use client'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
+import { authOptions } from '@/lib/auth'
 
-import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useSession } from 'next-auth/react'
-import Image from 'next/image'
-import { AppHeader } from '@/components/organisms/layout/AppHeader'
-
-function HomePageContent() {
-  const { status } = useSession()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  useEffect(() => {
-    if (status === 'loading') return
-
-    // If we have a callbackUrl (just signed in), go there
-    const callbackUrl = searchParams?.get('callbackUrl')
-    if (status === 'authenticated' && callbackUrl) {
-      router.push(decodeURIComponent(callbackUrl))
-      return
-    }
-
-    // Default: Redirect everyone to /howitworks
-    router.push('/howitworks')
-  }, [status, router, searchParams])
-
-  return (
-    <main className="flex flex-col min-h-[100dvh] bg-black">
-      <div className="absolute top-0 w-full z-10">
-        {/* Header specifically for Home - Standard Logo */}
-        <AppHeader showBackButton={false} showSettings={false} />
-      </div>
-      <div className="flex-1 flex items-center justify-center animate-pulse">
-        <Image
-          src="/logo.png"
-          alt="Loading FreeStyla..."
-          width={64}
-          height={64}
-          priority
-          className="h-16 w-16 object-contain drop-shadow-neon"
-        />
-      </div>
-    </main>
-  )
+type HomeSearchParams = {
+  callbackUrl?: string | string[]
 }
 
-export default function HomePage() {
-  return <HomePageContent />
+function normalizeCallbackPath(
+  rawCallback: HomeSearchParams['callbackUrl']
+): string | null {
+  const value = Array.isArray(rawCallback) ? rawCallback[0] : rawCallback
+  if (!value) return null
+
+  let decoded = value
+  try {
+    decoded = decodeURIComponent(value)
+  } catch {
+    decoded = value
+  }
+
+  if (!decoded.startsWith('/') || decoded.startsWith('//')) return null
+
+  return decoded
+}
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Promise<HomeSearchParams>
+}) {
+  const params = (await searchParams) ?? {}
+  const callbackPath = normalizeCallbackPath(params.callbackUrl)
+  const session = await getServerSession(authOptions)
+
+  if (callbackPath) {
+    if (session?.user) {
+      redirect(callbackPath)
+    }
+
+    redirect(`/howitworks?callbackUrl=${encodeURIComponent(callbackPath)}`)
+  }
+
+  redirect('/howitworks')
 }
