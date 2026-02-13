@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_SUMMARY_DEC_19_2025_FEATURE_CLEANUP.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Session Summary: Feature Cleanup & Navigation (Dec 19, 2025)
 
 ## Overview
@@ -36,3 +45,4 @@ Focused on streamlining the application by removing outdated features ("Streak F
 
 - Monitor PWA install rates (if analytics were added, though currently manual).
 - Gather feedback on the new navigation flow.
+

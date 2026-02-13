@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_SUMMARY_NOV_15_2025.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Development Session Summary - November 15, 2025
 
 **Session Duration**: ~1–2 hours  
@@ -159,3 +168,4 @@ Smoke tests:
 ---
 
 **Bottom line**: The core practice loop is now structured as a three-step, game-like experience backed by a shared session context, with a minimal Freestyla HUD header framing every step. The next session should focus on visual polish and micro-interactions to fully match the provided design assets.
+

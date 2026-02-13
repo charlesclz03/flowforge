@@ -14,5 +14,6 @@ description: Start a new session by reading all key project documentation to gai
 10. Read `DOCS/testing/TESTING_PLAN_V3.md` for current testing strategy.
 11. Read `DOCS/guides/DEPLOYMENT.md` for release procedures.
 12. Read `DOCS/guides/ANDROID_DEPLOYMENT.md` for mobile-specific context.
+13. Read `DOCS/reference/DOC_CANONICAL_MAP.json` to confirm canonical-doc ownership and drift rules.
 14. Synthesize all read information to form a complete understanding of the project state, goals, and technical details.
 15. Present a summary of the current session's objectives based on the read documents.

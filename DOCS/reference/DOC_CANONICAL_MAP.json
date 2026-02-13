@@ -1,0 +1,446 @@
+{
+    "currentVersion":  "1.0.2",
+    "lastUpdated":  "2026-02-13",
+    "canonicalDomains":  {
+                             "entry":  [
+                                           "DOCS/README.md",
+                                           "DOCS/DOCUMENTATION_INDEX.md"
+                                       ],
+                             "productStatus":  [
+                                                   "DOCS/project/PROJECT_STATUS.md",
+                                                   "DOCS/project/ROADMAP.md"
+                                               ],
+                             "releaseTruth":  [
+                                                  "DOCS/reference/PATCH_NOTES_MASTER.md",
+                                                  "lib/data/patch-notes.ts"
+                                              ],
+                             "featureTruth":  [
+                                                  "DOCS/reference/FEATURE_MATRIX.md"
+                                              ],
+                             "mcpTruth":  [
+                                              "DOCS/reference/MCP_MATRIX.md",
+                                              "DOCS/testing/MCP_TEST_REPORT.md"
+                                          ],
+                             "developerSetup":  [
+                                                    "DOCS/guides/DEVELOPER_SETUP.md"
+                                                ],
+                             "deployment":  [
+                                                "DOCS/guides/DEPLOYMENT.md",
+                                                "DOCS/guides/ANDROID_DEPLOYMENT.md"
+                                            ],
+                             "testingStrategy":  [
+                                                     "DOCS/testing/TESTING_PLAN_V3.md"
+                                                 ],
+                             "architecture":  [
+                                                  "DOCS/architecture/APP_OVERVIEW.md",
+                                                  "DOCS/architecture/PRODUCT_SPEC.md"
+                                              ]
+                         },
+    "driftRules":  [
+                       {
+                           "path":  "DOCS/project/PROJECT_STATUS.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Current Version\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       },
+                       {
+                           "path":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Current Version\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       },
+                       {
+                           "path":  "DOCS/reference/FEATURE_MATRIX.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Current Version\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       },
+                       {
+                           "path":  "DOCS/guides/DEPLOYMENT.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Current Version\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       },
+                       {
+                           "path":  "DOCS/testing/TESTING_PLAN_V3.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Target Release\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       },
+                       {
+                           "path":  "DOCS/DOCUMENTATION_INDEX.md",
+                           "requiredPatterns":  [
+                                                    "\\*\\*Current Canonical Version\\*\\*: `{{VERSION}}`",
+                                                    "\\*\\*Last Updated\\*\\*: {{DATE}}"
+                                                ]
+                       }
+                   ],
+    "stubMarker":  "\u003c!-- DOC_STUB --\u003e",
+    "stubs":  [
+                  {
+                      "path":  "DOCS/00_START_HERE.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/00_START_HERE.md"
+                  },
+                  {
+                      "path":  "DOCS/COMPLETED_DOCS_AUDIT.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/COMPLETED_DOCS_AUDIT.md"
+                  },
+                  {
+                      "path":  "DOCS/Comprehensive Pre-Launch Optimization Audit.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/Comprehensive Pre-Launch Optimization Audit.md"
+                  },
+                  {
+                      "path":  "DOCS/deployment/DEPLOYMENT_READY.md",
+                      "canonical":  "DOCS/guides/DEPLOYMENT.md",
+                      "archive":  "DOCS/ARCHIVE/deployment/DEPLOYMENT_READY.md"
+                  },
+                  {
+                      "path":  "DOCS/deployment/GCS_UPLOAD_PLAN.md",
+                      "canonical":  "DOCS/guides/DEPLOYMENT.md",
+                      "archive":  "DOCS/ARCHIVE/deployment/GCS_UPLOAD_PLAN.md"
+                  },
+                  {
+                      "path":  "DOCS/deployment/VERCEL_DEPLOY.md",
+                      "canonical":  "DOCS/guides/DEPLOYMENT.md",
+                      "archive":  "DOCS/ARCHIVE/deployment/VERCEL_DEPLOY.md"
+                  },
+                  {
+                      "path":  "DOCS/DOCUMENTATION_REORGANIZATION.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/DOCUMENTATION_REORGANIZATION.md"
+                  },
+                  {
+                      "path":  "DOCS/Feedback of freestyle rap.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/Feedback of freestyle rap.md"
+                  },
+                  {
+                      "path":  "DOCS/Feedback_Analysis_Report.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/Feedback_Analysis_Report.md"
+                  },
+                  {
+                      "path":  "DOCS/Freestyla_ Game Achievements Creation Guide.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/Freestyla_ Game Achievements Creation Guide.md"
+                  },
+                  {
+                      "path":  "DOCS/guides/ANDROID_TWA_SETUP.md",
+                      "canonical":  "DOCS/guides/ANDROID_DEPLOYMENT.md",
+                      "archive":  "DOCS/ARCHIVE/guides/ANDROID_TWA_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/guides/STRIPE_CURRENCY_SETUP.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/guides/STRIPE_CURRENCY_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/guides/STRIPE_LAUNCH_CHECKLIST.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/guides/STRIPE_LAUNCH_CHECKLIST.md"
+                  },
+                  {
+                      "path":  "DOCS/project/ALL_TODOS_COMPLETE.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/ALL_TODOS_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/project/ANDROID_TWA_AUDIT.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/ANDROID_TWA_AUDIT.md"
+                  },
+                  {
+                      "path":  "DOCS/project/HARDCODED_LOGIC_AUDIT.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/HARDCODED_LOGIC_AUDIT.md"
+                  },
+                  {
+                      "path":  "DOCS/project/MOBILE_PWA_CHECKLIST.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/MOBILE_PWA_CHECKLIST.md"
+                  },
+                  {
+                      "path":  "DOCS/project/MVP_BUILD_PLAN.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/MVP_BUILD_PLAN.md"
+                  },
+                  {
+                      "path":  "DOCS/project/PROGRESS_CHART.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/project/PROGRESS_CHART.md"
+                  },
+                  {
+                      "path":  "DOCS/QUICK_REFERENCE.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/QUICK_REFERENCE.md"
+                  },
+                  {
+                      "path":  "DOCS/ROADMAP_v1.4.md",
+                      "canonical":  "DOCS/project/ROADMAP.md",
+                      "archive":  "DOCS/ARCHIVE/ROADMAP_v1.4.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/ACCESSIBILITY_NOTES.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/ACCESSIBILITY_NOTES.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/ADSENSE_SETUP.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/ADSENSE_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/AUTH_SETUP.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/AUTH_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/AUTH_SETUP_COMPLETE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/AUTH_SETUP_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/AUTHENTICATION_COMPLETE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/AUTHENTICATION_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/DATABASE_SETUP_COMPLETE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/DATABASE_SETUP_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/NEXT_STEPS_SUPABASE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/NEXT_STEPS_SUPABASE.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/SETUP_CHECKLIST.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/SETUP_CHECKLIST.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/SETUP_SUPABASE_STORAGE_NOW.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/SETUP_SUPABASE_STORAGE_NOW.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/STRIPE_SETUP.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/STRIPE_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/SUPABASE_SETUP_COMPLETE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/SUPABASE_SETUP_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/SUPABASE_SETUP_STATUS.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/SUPABASE_SETUP_STATUS.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/SUPABASE_STORAGE_SETUP.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/SUPABASE_STORAGE_SETUP.md"
+                  },
+                  {
+                      "path":  "DOCS/setup/VERIFY_SERVICE_ROLE_KEY.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/setup/VERIFY_SERVICE_ROLE_KEY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/ASSETS_COMPLETE.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/ASSETS_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/ASSETS_GUIDE.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/ASSETS_GUIDE.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/CURRENT_STATUS_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/CURRENT_STATUS_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/DOCUMENTATION_UPDATE_NOV_11_2025.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/DOCUMENTATION_UPDATE_NOV_11_2025.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/DOCUMENTATION_UPDATE_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/DOCUMENTATION_UPDATE_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/END_OF_DAY_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/END_OF_DAY_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/FINAL_SESSION_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/FINAL_SESSION_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/IMPLEMENTATION_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/IMPLEMENTATION_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/ISSUES_RESOLVED_NOV_11_2025.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/ISSUES_RESOLVED_NOV_11_2025.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/NAVIGATION_UPDATE_COMPLETE.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/NAVIGATION_UPDATE_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/NEW_SESSION.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/NEW_SESSION.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/REFACTORING_COMPLETE.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/REFACTORING_COMPLETE.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/REFACTORING_SESSION_SUMMARY.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/REFACTORING_SESSION_SUMMARY.md"
+                  },
+                  {
+                      "path":  "DOCS/summaries/WHAT_JUST_HAPPENED.md",
+                      "canonical":  "DOCS/summaries/QUICK_START_NEXT_SESSION.md",
+                      "archive":  "DOCS/ARCHIVE/summaries/WHAT_JUST_HAPPENED.md"
+                  },
+                  {
+                      "path":  "DOCS/TESTING.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/TESTING.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/MASTER_BUG_REPORT.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/MASTER_BUG_REPORT.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_1.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_1.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_2.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_2.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_3.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_3.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_4.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_4.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_5.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_5.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_6.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_6.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TEST_REPORT_MODULE_7.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TEST_REPORT_MODULE_7.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TESTING_PLAN_V1.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TESTING_PLAN_V1.md"
+                  },
+                  {
+                      "path":  "DOCS/testing/TESTING_PLAN_V2.md",
+                      "canonical":  "DOCS/testing/TESTING_PLAN_V3.md",
+                      "archive":  "DOCS/ARCHIVE/testing/TESTING_PLAN_V2.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/CACHE_CLEARED_RESTART.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/CACHE_CLEARED_RESTART.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/DEBUG_RECORDING.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/DEBUG_RECORDING.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/DIAGNOSE_RECORDING_ISSUES.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/DIAGNOSE_RECORDING_ISSUES.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/FIX_LOCAL_AUTH.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/FIX_LOCAL_AUTH.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/FIX_RECORDING_SAVE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/FIX_RECORDING_SAVE.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/FIX_RECORDINGS_REDIRECT.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/FIX_RECORDINGS_REDIRECT.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/MACOS_PERMISSION_FIX.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/MACOS_PERMISSION_FIX.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/QUICK_FIX_GUIDE.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/QUICK_FIX_GUIDE.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/TESTING_SESSION_NOV_14_2025.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/TESTING_SESSION_NOV_14_2025.md"
+                  },
+                  {
+                      "path":  "DOCS/troubleshooting/TROUBLESHOOTING_RECORDINGS_REDIRECT.md",
+                      "canonical":  "DOCS/guides/DEVELOPER_SETUP.md",
+                      "archive":  "DOCS/ARCHIVE/troubleshooting/TROUBLESHOOTING_RECORDINGS_REDIRECT.md"
+                  },
+                  {
+                      "path":  "DOCS/UX_MASTER_JOURNEY.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/UX_MASTER_JOURNEY.md"
+                  },
+                  {
+                      "path":  "DOCS/WORDING CHANGE.md",
+                      "canonical":  "DOCS/DOCUMENTATION_INDEX.md",
+                      "archive":  "DOCS/ARCHIVE/WORDING CHANGE.md"
+                  }
+              ]
+}

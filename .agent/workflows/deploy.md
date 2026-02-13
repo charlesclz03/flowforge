@@ -19,6 +19,8 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
       - Run `npm run check:release-env:local` (local contract).
       - Run `npm run check:release-env` (strict production contract).
       - Run `npm run check:release-env:vercel` (remote Vercel variable presence).
+    - **Docs Contract**:
+      - Run `npm run docs:check` (links + canonical drift + stub integrity).
     - **ACTION**: You MUST fix ALL errors reported by these commands before proceeding. Do not push code that fails the build.
 
 4.  **Asset Verification**
@@ -31,6 +33,17 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
 
 6.  **Documentation Synchronization**
     - Read `package.json` version.
+    - Ensure canonical docs remain aligned with current release:
+      - `DOCS/DOCUMENTATION_INDEX.md`
+      - `DOCS/project/PROJECT_STATUS.md`
+      - `DOCS/project/ROADMAP.md`
+      - `DOCS/summaries/QUICK_START_NEXT_SESSION.md`
+      - `DOCS/reference/FEATURE_MATRIX.md`
+      - `DOCS/reference/MCP_MATRIX.md`
+      - `DOCS/testing/TESTING_PLAN_V3.md`
+      - `DOCS/guides/DEVELOPER_SETUP.md`
+      - `DOCS/guides/DEPLOYMENT.md`
+      - `DOCS/guides/ANDROID_DEPLOYMENT.md`
     - **Update**: `lib/data/patch-notes.ts` (Ensure entry exists).
     - **Update**: `DOCS/reference/PATCH_NOTES_MASTER.md`.
     - **Update**: `DOCS/project/PROJECT_STATUS.md` (Update "Last Updated" date).

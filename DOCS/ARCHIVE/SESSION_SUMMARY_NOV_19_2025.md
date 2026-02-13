@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_SUMMARY_NOV_19_2025.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 ## Session Summary – November 19, 2025 (Profile Page & Auth Troubleshooting)
 
 **Date**: November 19, 2025  
@@ -89,3 +98,4 @@
   - Stats
   - Quick Actions
 - **Auth**: Production remains healthy; local auth is blocked by a **Google OAuth client configuration issue**, not by application code. Fixing the local Google client/env alignment will unblock profile access locally without further code changes.
+

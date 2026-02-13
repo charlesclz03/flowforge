@@ -1,53 +1,9 @@
-# New Session Playbook
+# Archived: NEW_SESSION
 
-Use this checklist to get productive fast in a new session.
+<!-- DOC_STUB -->
+This document was archived during documentation consolidation.
 
-## 1) Pull and Install
+- Canonical replacement: [DOCS/summaries/QUICK_START_NEXT_SESSION.md](QUICK_START_NEXT_SESSION.md)
+- Archive snapshot: [DOCS/ARCHIVE/summaries/NEW_SESSION.md](../ARCHIVE/summaries/NEW_SESSION.md)
 
-```bash
-git pull origin main
-npm install
-```
-
-## 2) Env Vars
-
-- Ensure `.env.local` exists with:
-  - `DATABASE_URL` (pooled, port 6543, `pgbouncer=true&sslmode=require`)
-  - `DIRECT_URL` (direct, port 5432, `sslmode=require`)
-- If password has special chars, URL-encode them (e.g. `*` -> `%2A`).
-
-## 3) Prisma
-
-```bash
-npx prisma generate
-npx prisma migrate dev
-# optional seed (uses DIRECT_URL)
-export $(grep -E '^(DIRECT_URL)=' .env | xargs)
-DATABASE_URL="$DIRECT_URL" npx prisma db seed
-```
-
-## 4) Run
-
-```bash
-npm run dev
-# open http://localhost:3000
-```
-
-## 5) Smoke Checks
-
-- Home loads
-- `/api/beats` returns JSON
-- `/api/words/random?count=5&difficulty=2` returns JSON
-
-## 6) Common Fixes
-
-- Build failures due to Prettier are warnings; not blocking.
-- If seed fails with PgBouncer, use the `DIRECT_URL` override snippet above.
-
-## 7) Useful Scripts
-
-- `npm run build` – production build
-- `npm run lint` – linting
-- `npm test` – unit tests
-
-Ready to code.
+If you need historical context, use the archive snapshot.

@@ -4,11 +4,17 @@ on:
   push:
     paths:
       - 'DOCS/**/*.md'
+      - 'DOCS/reference/DOC_CANONICAL_MAP.json'
+      - 'scripts/docs/**/*.mjs'
+      - 'package.json'
       - 'README.md'
       - '.github/workflows/docs-link-check.yml'
   pull_request:
     paths:
       - 'DOCS/**/*.md'
+      - 'DOCS/reference/DOC_CANONICAL_MAP.json'
+      - 'scripts/docs/**/*.mjs'
+      - 'package.json'
       - 'README.md'
   workflow_dispatch:
 
@@ -18,13 +24,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Check Links
         uses: lycheeverse/lychee-action@v1.9.0
         with:
-          # Check all markdown files in root and DOCS
-          # Exclude node_modules to ensure speed
-          args: --verbose --no-progress --exclude-path 'node_modules' './**/*.md'
+          # Check markdown files while excluding dependency and legacy archive trees.
+          # Canonical docs integrity is enforced by docs:check below.
+          args: --verbose --no-progress --exclude-path 'node_modules' --exclude-path 'DOCS/ARCHIVE' './**/*.md'
           # Fail if broken links are found
           fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docs Contract Checks
+        run: npm run docs:check

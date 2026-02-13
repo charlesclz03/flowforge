@@ -1,11 +1,9 @@
 # Quick Start - Next Session
 
-**Last Updated**: 2026-02-03  
-**Project Status**: Active Development (v0.9.993)
+**Current Version**: `1.0.2`
+**Last Updated**: 2026-02-13
 
----
-
-## Instant Start (Windows-Safe)
+## Bootstrap (Windows-safe)
 
 ```powershell
 cd "c:\Projects\FlowForge - Freestyle"
@@ -15,66 +13,30 @@ git pull --rebase
 & "C:/Program Files/nodejs/npm.cmd" run dev
 ```
 
-Open: http://localhost:3000
+Open: `http://localhost:3000`
 
-> Note: Local dev requires a valid `.env.local` (Supabase, NextAuth, Stripe if testing payments locally).
-
----
-
-## Current Focus
-
-- Stripe: subscription activation + webhook reliability (live)
-- Mobile: audio reliability smoke + CSP/CORS sanity
-- Quality: keep lint/types/tests/build green
-
----
-
-## Key Docs
-
-| Document | Purpose |
-| --- | --- |
-| `DOCS/project/PROJECT_STATUS.md` | Current state and priorities |
-| `DOCS/reference/PATCH_NOTES_MASTER.md` | Canonical release history |
-| `DOCS/guides/DEVELOPER_SETUP.md` | Local setup + env vars |
-| `DOCS/guides/DEPLOYMENT.md` | Deployment workflow |
-
----
-
-## Common Tasks (Windows-Safe)
-
-### Run Dev Server
-
-```powershell
-& "C:/Program Files/nodejs/npm.cmd" run dev
-```
-
-### Lint
+## Mandatory Pre-Release Checks
 
 ```powershell
 & "C:/Program Files/nodejs/npm.cmd" run lint
-```
-
-### Typecheck
-
-```powershell
 & "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
-```
-
-### Tests (single run)
-
-```powershell
-& "C:/Program Files/nodejs/npm.cmd" run test -- --run
-```
-
-### Build
-
-```powershell
 & "C:/Program Files/nodejs/npm.cmd" run build
+& "C:/Program Files/nodejs/npm.cmd" run check:release-env:local
+& "C:/Program Files/nodejs/npm.cmd" run check:release-env
+& "C:/Program Files/nodejs/npm.cmd" run check:release-env:vercel
+& "C:/Program Files/nodejs/npm.cmd" run docs:check
 ```
 
-### Prisma Studio
+## Canonical Docs to Read First
 
-```powershell
-& "C:/Program Files/nodejs/npx.cmd" prisma studio
-```
+- `DOCS/project/PROJECT_STATUS.md`
+- `DOCS/project/ROADMAP.md`
+- `DOCS/reference/PATCH_NOTES_MASTER.md`
+- `DOCS/testing/TESTING_PLAN_V3.md`
+- `DOCS/guides/DEPLOYMENT.md`
 
+## Current Focus
+
+1. Stability and polish of practice/recording pipeline.
+2. Language-aware prompt and TTS consistency.
+3. Release discipline with enforced docs governance.

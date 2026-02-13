@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/PHASE_8_FUTURE_ROADMAP.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Phase 8: Future Vision (Mobile & Advanced AI)
 
 **Status**:  **VISION**  
@@ -44,3 +53,4 @@ Phase 8 begins after user feedback and analytics from the v1.1.0 launch confirm 
 ---
 
 **Last Updated**: December 18, 2025
+

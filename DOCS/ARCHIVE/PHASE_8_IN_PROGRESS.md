@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/PHASE_8_IN_PROGRESS.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Phase 8: Pro Tier & Superadmin ✅ COMPLETE
 
 **Status**: ✅ Complete
@@ -30,3 +39,4 @@ Phase 8 focused on monetization infrastructure (Pro Tier), Superadmin capabiliti
 - **Client**: Major updates to `PracticeControls`, `ProfilePage`, and `RecordingsPage` to support role-based rendering.
 
 ## Completed: December 2025
+

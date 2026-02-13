@@ -30,6 +30,9 @@
 - **PERF**: Removed duplicate `getServerSession()` calls in server auth helper paths.
 - **TESTING**: Added missing `@vitest/coverage-v8` so `npm run test:coverage` works again.
 - **DEPS**: Applied `qs@6.14.2` override to resolve the audit advisory inherited through Stripe dependencies.
+- **DOCS**: Consolidated `DOCS/` into a canonical-first structure, archived legacy docs with path-preserving stubs, and normalized archive metadata headers.
+- **DOCS**: Added docs governance contract (`DOC_CANONICAL_MAP.json`) and automated docs checks (`docs:check`) for link integrity, canonical drift, and stub integrity.
+- **CHORE**: Hardened release workflow docs to include canonical-doc validation gates in load-context and deploy procedures.
 
 ## v1.0.1 - Practice Overlay Fix (2026-02-12)
 

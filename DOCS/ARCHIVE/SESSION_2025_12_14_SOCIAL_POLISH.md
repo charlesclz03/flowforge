@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_2025_12_14_SOCIAL_POLISH.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Session Summary: Social Features & Core Polish (Phase 6)
 
 **Date:** December 14, 2025
@@ -47,3 +56,4 @@ We successfully implemented the "missing pieces" from the original spec and the 
 - **Vercel Verification**: Confirm production deployment acts as expected.
 - **User Acceptance Testing**: Validate real-time usage of Duels.
 - **Launch**: v1.0 Release.
+

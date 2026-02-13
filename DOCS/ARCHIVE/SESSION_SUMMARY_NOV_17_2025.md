@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_SUMMARY_NOV_17_2025.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Development Session Summary - November 17, 2025 (Design & UX Alignment)
 
 **Session Duration**: Multi-hour working block  
@@ -256,3 +265,4 @@ Recommended next focus for the **next session**:
 ---
 
 **Bottom line**: The MVP is now wrapped in a cohesive, Figma-accurate shell. The journey from landing → onboarding → practice feels intentional, the practice screen is calmer and clearer, and what users see now matches both the **design vision** and the **business plan**.
+

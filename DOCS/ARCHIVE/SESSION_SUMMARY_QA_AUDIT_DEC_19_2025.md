@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/SESSION_SUMMARY_QA_AUDIT_DEC_19_2025.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Session Summary: The Great QA Audit
 
 **Date:** December 19, 2025
@@ -49,3 +58,4 @@ The next session focuses purely on **Execution**:
 1.  **Fix Stripe Portal API**: Restore subscription management.
 2.  **Restore/Implement Cypher Mode**: Bring back the multiplayer UI.
 3.  **Implement Sharing**: Add a share button to the recording card.
+

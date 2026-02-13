@@ -1,3 +1,12 @@
+# Archived Document
+
+**Archived On**: 2026-02-13
+**Original Path**: DOCS/GUEST_MODE_PLAN.md
+**Canonical Replacement**: DOCS/DOCUMENTATION_INDEX.md
+**Reason**: Pre-existing historical archive metadata normalization.
+**Last Verified**: 2026-02-13
+
+---
 # Guest Mode Implementation Plan
 
 **Feature**: Guest Mode ("Try before you buy")
@@ -87,3 +96,4 @@ _Solution_: **IndexedDB** is the most robust way to store the large Audio Blob t
 2.  **UI**: Updates to `PracticePage` to handle "Guest State".
 3.  **Auth Interception**: Create the Sign-In Modal trigger.
 4.  **Recovery**: Implement the "Upload on First Login" logic.
+
