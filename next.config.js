@@ -178,6 +178,15 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
   runtimeCaching: require('./cache.js'),
+  // Keep install payload light: large media and store screenshots should be lazy-cached at runtime.
+  publicExcludes: [
+    '!noprecache/**/*',
+    '!beats/**/*',
+    '!play store/**/*',
+    '!OLD ICON/**/*',
+    '!FREESTYLA ICON.png',
+    '!FREESTYLA_ICON-removebg-preview.png',
+  ],
   // Next.js App Router writes `app-build-manifest.json` to `.next/` but does not serve it at `/_next/` in production.
   // If Workbox tries to precache it, the service worker install fails with `bad-precaching-response` (404).
   buildExcludes: [/app-build-manifest\.json$/],

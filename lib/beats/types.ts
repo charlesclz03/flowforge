@@ -3,6 +3,7 @@ export interface BeatMetadata {
   title: string
   bpm: number
   storageUrl: string
+  offset?: number | null
   isPremium: boolean
   genre: string | null
   duration: number | null // in seconds

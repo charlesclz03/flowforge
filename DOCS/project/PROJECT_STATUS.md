@@ -1,16 +1,17 @@
-# Project Status: v1.0.1
+# Project Status: v1.0.2
  
-**Current Version**: `1.0.1`
+**Current Version**: `1.0.2`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-12
+**Last Updated**: 2026-02-13
  
 ## Quick Status
  
-> **Latest Release**: v1.0.1 - Practice dropdown overlay fix + premium crown visibility + centered Practice stage.
+> **Latest Release**: v1.0.2 - Practice full-height fix (removes remaining black zone under player).
 > **Focus**: Stability & Polish.
  
 ## Recent Achievements
  
+- **Practice Full Height Fix**: Practice now properly fills `main-content` height during route transitions, eliminating the remaining large black zone under the player on mobile (2026-02-12).
 - **Practice Overlay Fix**: Beat dropdown is now opaque and blocks click-through; premium crowns are visible; Practice stage fills the available height so the player stays centered (2026-02-12).
 - **v1.0.0 Release**: Privacy Policy now includes clear account deletion instructions, and users can delete recordings / uploaded beats without deleting their account (2026-02-11).
 - **Android Deployment Ready**: Updated `assetlinks.json` with production SHA-256 fingerprint + generated production keystore and Android App Bundle for Google Play Console submission (2026-02-11).
@@ -61,6 +62,7 @@
  
 | Version  | Codename           | Date       | Summary                                                                            |
 | -------- | ------------------ | ---------- | ---------------------------------------------------------------------------------- |
+| v1.0.2 | Practice Full Height Fix | 2026-02-12 | Fixed remaining black zone under Practice player by correcting transition wrapper height |
 | v1.0.1 | Practice Overlay Fix | 2026-02-12 | Practice dropdown overlay fix + premium crown visibility + centered Practice stage |
 | v1.0.0 | 1.0 | 2026-02-11 | Account deletion clarity + user data controls + Play Store readiness |
 | v0.9.1010 | Android Deployment Ready | 2026-02-11 | Production Android App Links config + Play Store AAB generation                       |
@@ -85,3 +87,4 @@
 | v0.9.81  | Section Audit      | 2026-01-29 | User Beat Management Audit & Fixes                                                 |
 | v0.9.80  | Clean Slate        | 2026-01-29 | Feature Audit (Solo, Cypher, Word Prompts)                                         |
 | v0.9.79  | Pass the Phone     | 2026-01-29 | Cypher Mode Activation                                                             |
+

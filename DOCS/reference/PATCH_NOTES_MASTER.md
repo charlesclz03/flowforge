@@ -1,5 +1,36 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.2 - Practice Full Height Fix (2026-02-12)
+
+- **FIX**: Removed the remaining large empty black zone under the Practice player on mobile by fixing the route transition wrapper height so `ScreenPage` can truly fill the available space.
+- **UI**: `/practice` now renders a route-aware backdrop behind the shared BottomNav shell to remove the visible seam/black line while preserving tab interactivity.
+- **UI**: Added a practice-only subpixel seam guard (1px nav overlap) so fractional viewport boundaries no longer render a thin horizontal line after hard refresh.
+- **FIX**: Practice now applies uploaded beat cue offsets at runtime (including replay/restart), so calibrated private tracks start from the selected queue point instead of 0s.
+- **FIX**: `/api/user/beats` now accepts long-track cue offsets (up to 1 hour), so upload calibration points beyond 30s save successfully.
+- **FIX**: Practice word prompts now use phonetic anti-rhyme matching (instead of raw suffix checks), preventing back-to-back rhymes like `Sky` -> `Tie` unless every remaining candidate rhymes.
+- **FIX**: Practice runtime anti-rhyme now uses the active language profile (EN/FR/PT) instead of always evaluating with English defaults.
+- **FIX**: Practice language selection now resolves aliases (`en`, `fr`, `pt`) and stays synchronized between server word loading and session TTS language state.
+- **FIX**: Recordings now show `PROCESSING` while uploaded audio links are not yet streamable, instead of showing the stats-only label.
+- **FIX**: Sessions saved with `Capture the Audio` disabled remain stats-only in Recordings and no longer show playback/share/download/video controls.
+- **FIX**: `/review/[id]` now displays `Save Changes` only when studio controls were edited, and persists updated mix/alignment settings to the recording.
+- **FIX**: Review and shared playback now honor legacy `fxConfig.reverb` values as Studio Mode for consistent sound profile.
+- **FIX**: Review `SessionPlayer` now rehydrates saved mix/alignment values whenever the loaded recording/settings payload changes, preventing stale settings carry-over.
+- **AUDIO**: Review studio preview now uses compressor + reverb (`Reverb + Comp`) for closer parity with exported studio mixes.
+- **FIX**: Advanced Audio Calibration now supports separate saved profiles for Phone Speaker, Wired, and Bluetooth outputs, with one active profile applied globally.
+- **UX**: Calibration now includes quick `-10/+10ms` controls, manual slider tuning, explicit `Save Changes`/`Discard` behavior, and `Reset` to `0ms`.
+- **UX**: Added one-shot + looped sync pulse tests in calibration settings for fast audio/visual timing validation.
+- **CHORE**: Redirected legacy `/calibration` to canonical `/settings/latency` to remove duplicate calibration flows.
+- **FIX**: `/difficultyselection?beatId=` now resolves user-uploaded beats in addition to public beats, restoring private-track preselection from `/tracks`.
+- **TEST**: Added a Playwright regression that covers private-track arrow handoff (`/tracks` -> `/difficultyselection?beatId=`) and verifies Practice playback starts at the calibrated `offset`.
+- **SECURITY**: Locked down `/api/debug/seed` to SUPERADMIN-only access.
+- **SECURITY**: Hardened avatar upload/proxy flow with strict MIME + magic-byte validation, file size limits, randomized filenames, and safe image response headers (`X-Content-Type-Options: nosniff`).
+- **SECURITY**: Sanitized support email payload fields and enforced subject/message length limits in `/api/support`.
+- **VALIDATION**: Added strict request validation for `/api/user/beats` and `/api/feedback` to reject malformed BPM/rating payloads early with `400` responses.
+- **PWA**: Excluded heavy media folders from install-time precache (`/beats`, `/play store`, `/OLD ICON`) so audio is now lazy-cached on first play/preview via runtime caching.
+- **PERF**: Removed duplicate `getServerSession()` calls in server auth helper paths.
+- **TESTING**: Added missing `@vitest/coverage-v8` so `npm run test:coverage` works again.
+- **DEPS**: Applied `qs@6.14.2` override to resolve the audit advisory inherited through Stripe dependencies.
+
 ## v1.0.1 - Practice Overlay Fix (2026-02-12)
 
 - **FIX**: Practice beat dropdown overlay is now opaque and blocks click-through (no tapping behind the menu).
@@ -16,7 +47,6 @@
 
 - **DOCS**: Privacy Policy now explains account deletion, partial deletion (recordings and uploaded beats), and email-based deletion requests.
 - **UX**: Profile > Security now links to Recordings and Tracks so users can delete data without deleting their account.
-
 
 ## v0.9.1010 - Android Deployment Ready (2026-02-11)
 

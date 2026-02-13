@@ -1,4 +1,10 @@
-import { Beat as PrismaBeat, Word, FreestyleSession } from '@prisma/client'
+import {
+  Beat as PrismaBeat,
+  Word,
+  FreestyleSession,
+  User,
+  Prisma,
+} from '@prisma/client'
 
 // Export Prisma types
 export type { Word, FreestyleSession }
@@ -16,11 +22,12 @@ export type BeatWithSessions = Beat & {
 // Force fileSizeBytes inclusion if Prisma types lag
 export type FreestyleSessionWithBeat = FreestyleSession & {
   beat: Beat
-  user?: any // Added for Share page
+  user?: Pick<User, 'id' | 'name' | 'email' | 'image' | 'username'> | null
   fileSizeBytes?: number | null
   beatOffsetMs?: number | null // Beat position at recording start (ms)
-  fxConfig?: any // [STUDIO FX] Added manually
+  fxConfig?: Prisma.JsonValue | null // [STUDIO FX] Added manually
   isPublic?: boolean // [SHARE] Added manually
+  audioStatus?: 'ready' | 'processing' | 'stats-only'
 }
 
 // API response types
@@ -47,6 +54,7 @@ export type BeatResponse = {
 export type WordResponse = {
   id: string
   wordText: string
+  language: string
   syllableCount: number
   difficultyLevel: number
   category: string | null
@@ -98,6 +106,7 @@ export type WordFilters = {
   difficultyLevel?: number
   minSyllables?: number
   maxSyllables?: number
+  language?: string
 }
 
 export type SessionFilters = {

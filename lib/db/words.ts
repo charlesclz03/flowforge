@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { Word, Prisma } from '@prisma/client'
 import { WordFilters, DatabaseResult } from '@/types/database'
+import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
+import { getFallbackWords } from '@/lib/data/fallbacks'
 
 /**
  * Get random words based on filters
@@ -11,53 +13,11 @@ export async function getRandomWords(
 ): Promise<DatabaseResult<Word[]>> {
   try {
     if (process.env.DISABLE_DB === 'true') {
-      const fallback = [
-        {
-          id: 'w1',
-          wordText: 'flow',
-          syllableCount: 1,
-          difficultyLevel: 1,
-          category: 'noun',
-          createdAt: new Date(),
-        },
-        {
-          id: 'w2',
-          wordText: 'rhythm',
-          syllableCount: 2,
-          difficultyLevel: 1,
-          category: 'noun',
-          createdAt: new Date(),
-        },
-        {
-          id: 'w3',
-          wordText: 'elevate',
-          syllableCount: 3,
-          difficultyLevel: 2,
-          category: 'verb',
-          createdAt: new Date(),
-        },
-        {
-          id: 'w4',
-          wordText: 'ambition',
-          syllableCount: 3,
-          difficultyLevel: 2,
-          category: 'noun',
-          createdAt: new Date(),
-        },
-        {
-          id: 'w5',
-          wordText: 'extraordinary',
-          syllableCount: 5,
-          difficultyLevel: 3,
-          category: 'adjective',
-          createdAt: new Date(),
-        },
-      ] as unknown as Word[]
-
-      let pool = fallback
-      if (filters?.difficultyLevel)
-        pool = pool.filter((w) => w.difficultyLevel === filters.difficultyLevel)
-
+      const language = filters?.language || DEFAULT_TTS_LANGUAGE
+      const pool = getFallbackWords(
+        language,
+        filters?.difficultyLevel
+      ) as Word[]
       const shuffled = pool.sort(() => Math.random() - 0.5)
       const selected = shuffled.slice(0, count)
       return { success: true, data: selected }
@@ -68,8 +28,8 @@ export async function getRandomWords(
       where.difficultyLevel = filters.difficultyLevel
     }
 
-    if (filters?.difficultyLevel) {
-      where.difficultyLevel = filters.difficultyLevel
+    if (filters?.language) {
+      where.language = filters.language
     }
 
     if (filters?.minSyllables || filters?.maxSyllables) {
@@ -103,53 +63,8 @@ export async function getRandomWords(
     } else {
       console.error('Error fetching random words:', error)
     }
-    // Fallback when DB is unavailable
-    const fallback = [
-      // Easy (1 Syllable)
-      { id: 'w1', wordText: 'flow', difficultyLevel: 1 },
-      { id: 'w2', wordText: 'beam', difficultyLevel: 1 },
-      { id: 'w3', wordText: 'shine', difficultyLevel: 1 },
-      { id: 'w4', wordText: 'rise', difficultyLevel: 1 },
-      { id: 'w5', wordText: 'prime', difficultyLevel: 1 },
-      { id: 'w6', wordText: 'peak', difficultyLevel: 1 },
-      { id: 'w7', wordText: 'vibe', difficultyLevel: 1 },
-      { id: 'w8', wordText: 'zone', difficultyLevel: 1 },
-      { id: 'w9', wordText: 'truth', difficultyLevel: 1 },
-      { id: 'w10', wordText: 'light', difficultyLevel: 1 },
-
-      // Medium (2-3 Syllables)
-      { id: 'w20', wordText: 'rhythm', difficultyLevel: 2 },
-      { id: 'w21', wordText: 'vision', difficultyLevel: 2 },
-      { id: 'w22', wordText: 'power', difficultyLevel: 2 },
-      { id: 'w23', wordText: 'spirit', difficultyLevel: 2 },
-      { id: 'w24', wordText: 'focus', difficultyLevel: 2 },
-      { id: 'w25', wordText: 'elevate', difficultyLevel: 2 },
-      { id: 'w26', wordText: 'manifest', difficultyLevel: 2 },
-      { id: 'w27', wordText: 'legacy', difficultyLevel: 2 },
-      { id: 'w28', wordText: 'destiny', difficultyLevel: 2 },
-      { id: 'w29', wordText: 'clarity', difficultyLevel: 2 },
-
-      // Hard (4+ Syllables)
-      { id: 'w40', wordText: 'imagination', difficultyLevel: 3 },
-      { id: 'w41', wordText: 'extraordinary', difficultyLevel: 3 },
-      { id: 'w42', wordText: 'unprecedented', difficultyLevel: 3 },
-      { id: 'w43', wordText: 'revolutionary', difficultyLevel: 3 },
-      { id: 'w44', wordText: 'opportunity', difficultyLevel: 3 },
-      { id: 'w45', wordText: 'possibility', difficultyLevel: 3 },
-      { id: 'w46', wordText: 'dedication', difficultyLevel: 3 },
-      { id: 'w47', wordText: 'inspiration', difficultyLevel: 3 },
-      { id: 'w48', wordText: 'generation', difficultyLevel: 3 },
-      { id: 'w49', wordText: 'liberation', difficultyLevel: 3 },
-    ] as unknown as Word[]
-    let pool = fallback
-    if (filters?.difficultyLevel) {
-      pool = pool.filter((w) => w.difficultyLevel === filters.difficultyLevel)
-    }
-    // If we filtered everyone out (e.g. only have easy fallback but requested hard),
-    // we might want to return *something*, but for now let's respect the filter
-    // so we don't leak "transformation" into easy mode.
-    // If empty, user just gets no words (better than wrong difficulty).
-
+    const language = filters?.language || DEFAULT_TTS_LANGUAGE
+    const pool = getFallbackWords(language, filters?.difficultyLevel) as Word[]
     return { success: true, data: pool.slice(0, count) }
   }
 }
@@ -159,9 +74,10 @@ export async function getRandomWords(
  */
 export async function getWordsByDifficulty(
   difficulty: number,
-  count: number = 10
+  count: number = 10,
+  language: string = DEFAULT_TTS_LANGUAGE
 ): Promise<DatabaseResult<Word[]>> {
-  return getRandomWords(count, { difficultyLevel: difficulty })
+  return getRandomWords(count, { difficultyLevel: difficulty, language })
 }
 
 /**

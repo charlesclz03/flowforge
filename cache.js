@@ -46,13 +46,14 @@ module.exports = [
     },
   },
   {
-    urlPattern: /\.(?:mp3|wav|ogg)$/i,
+    // Lazy cache audio on first play/preview instead of install-time precache.
+    urlPattern: ({ url }) => /\.(?:mp3|wav|ogg)$/i.test(url.pathname),
     handler: 'CacheFirst',
     options: {
       cacheName: 'audio-assets',
       expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxEntries: 48,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       },
       rangeRequests: true, // Important for audio seeking
     },

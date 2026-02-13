@@ -10,6 +10,11 @@ import {
 } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Beat } from '@/types/database'
+import {
+  DEFAULT_TTS_LANGUAGE,
+  getLanguageOption,
+  TTSLanguageCode,
+} from '@/lib/tts/languages'
 
 export interface PracticeSessionState {
   selectedBeat: Beat | null
@@ -24,6 +29,7 @@ export interface PracticeSessionState {
   isRecordingEnabled: boolean
   isStudioFXEnabled: boolean
   beatVolume: number
+  selectedLanguage: TTSLanguageCode
   // Navigation Guard State
   showExitPrompt: boolean
   pendingNavigation: string | (() => void) | null
@@ -40,6 +46,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setIsRecordingEnabled: (enabled: boolean) => void
   setStudioFXEnabled: (enabled: boolean) => void
   setBeatVolume: (volume: number) => void
+  setSelectedLanguage: (language: TTSLanguageCode) => void
   testVoice: () => void
   startSession: () => void
   stopSession: () => void
@@ -70,6 +77,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     isRecordingEnabled: false,
     isStudioFXEnabled: true,
     beatVolume: 0.7,
+    selectedLanguage: DEFAULT_TTS_LANGUAGE,
     showExitPrompt: false,
     pendingNavigation: null,
   })
@@ -82,10 +90,14 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       const saved = localStorage.getItem('flowforge_session_state')
       if (saved) {
         const parsed = JSON.parse(saved)
+        const normalizedLanguage = getLanguageOption(
+          parsed?.selectedLanguage || DEFAULT_TTS_LANGUAGE
+        ).code
         // Ensure we don't restore invalid state like stuck active
         setState((prev) => ({
           ...prev,
           ...parsed,
+          selectedLanguage: normalizedLanguage,
           isActive: false,
         }))
       }
@@ -112,6 +124,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isRecordingEnabled,
       isStudioFXEnabled,
       beatVolume,
+      selectedLanguage,
     } = state
     const toSave = {
       selectedBeat,
@@ -124,6 +137,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isRecordingEnabled,
       isStudioFXEnabled,
       beatVolume,
+      selectedLanguage,
     }
     localStorage.setItem('flowforge_session_state', JSON.stringify(toSave))
   }, [state])
@@ -166,6 +180,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
 
   const setBeatVolume = useCallback((volume: number) => {
     setState((prev) => ({ ...prev, beatVolume: volume }))
+  }, [])
+
+  const setSelectedLanguage = useCallback((language: TTSLanguageCode) => {
+    setState((prev) => ({ ...prev, selectedLanguage: language }))
   }, [])
 
   const startSession = useCallback(() => {
@@ -212,6 +230,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       isActive: false,
       mode: 'solo',
       cypherPlayers: 2,
+      selectedLanguage: DEFAULT_TTS_LANGUAGE,
     }))
   }, [])
 
@@ -298,16 +317,17 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setIsRecordingEnabled,
         setStudioFXEnabled,
         setBeatVolume,
+        setSelectedLanguage,
         testVoice: useCallback(() => {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
-            const u = new SpeechSynthesisUtterance(
-              'Mic check, one two. FreeStyla audio systems operational.'
-            )
+            const languageOption = getLanguageOption(state.selectedLanguage)
+            const u = new SpeechSynthesisUtterance(languageOption.testPhrase)
             u.rate = 1.1
             u.volume = state.ttsVolume
+            u.lang = state.selectedLanguage
             window.speechSynthesis.speak(u)
           }
-        }, [state.ttsVolume]),
+        }, [state.selectedLanguage, state.ttsVolume]),
         startSession,
         stopSession,
         resetSession,

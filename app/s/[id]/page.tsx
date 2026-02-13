@@ -20,6 +20,44 @@ import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
+type PersistedFxConfig = {
+  voiceVolume?: number
+  beatVolume?: number
+  nudge?: number
+  reverb?: boolean
+  isStudioMode?: boolean
+}
+
+function normalizeAudioSettings(recording: FreestyleSessionWithBeat): AudioSettings {
+  const fx =
+    recording.fxConfig &&
+    typeof recording.fxConfig === 'object' &&
+    !Array.isArray(recording.fxConfig)
+      ? (recording.fxConfig as unknown as PersistedFxConfig)
+      : null
+
+  return {
+    voiceVolume:
+      typeof fx?.voiceVolume === 'number' && Number.isFinite(fx.voiceVolume)
+        ? fx.voiceVolume
+        : 1.0,
+    beatVolume:
+      typeof fx?.beatVolume === 'number' && Number.isFinite(fx.beatVolume)
+        ? fx.beatVolume
+        : 0.8,
+    isStudioMode:
+      typeof fx?.isStudioMode === 'boolean'
+        ? fx.isStudioMode
+        : typeof fx?.reverb === 'boolean'
+          ? fx.reverb
+          : true,
+    nudge: resolveRecordingSync({
+      beatOffsetMs: recording.beatOffsetMs ?? 0,
+      fxConfig: recording.fxConfig,
+    }).nudgeMs,
+  }
+}
+
 export default function SharedRecordingPage() {
   const routeParams = useParams<{ id: string }>()
   const recordingId = routeParams?.id
@@ -129,20 +167,7 @@ export default function SharedRecordingPage() {
           sessionDuration={recording.durationSeconds}
           sessionDifficulty={recording.difficulty}
           sessionDate={recording.createdAt}
-          // Enforce read-only / studio defaults if needed, or let player handle it
-          initialSettings={
-            recording.fxConfig
-              ? (recording.fxConfig as unknown as AudioSettings)
-              : {
-                  voiceVolume: 1.0,
-                  beatVolume: 0.8,
-                  isStudioMode: true,
-                  nudge: resolveRecordingSync({
-                    beatOffsetMs: recording.beatOffsetMs ?? 0,
-                    fxConfig: recording.fxConfig,
-                  }).nudgeMs,
-                }
-          }
+          initialSettings={normalizeAudioSettings(recording)}
         />
       }
     />

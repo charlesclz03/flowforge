@@ -8,6 +8,9 @@ import { useTTS } from '@/hooks/useTTS'
 import { Beat } from '@/types/database'
 import { WordGenerator } from '@/lib/words/generator'
 import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
+import { getActiveCalibrationMs } from '@/lib/audio/calibration'
+import { getFallbackWords } from '@/lib/data/fallbacks'
+import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
 
 /**
  * usePracticeEngine
@@ -25,7 +28,7 @@ const ACTIVE_SESSION_STATUSES = new Set([
   'SAVING',
 ])
 
-const FALLBACK_WORDS = [
+const STATIC_FALLBACK_WORDS = [
   'Flow',
   'Rhythm',
   'Power',
@@ -41,6 +44,19 @@ const FALLBACK_WORDS = [
   'Hustle',
   'Grind',
 ]
+
+const DEFAULT_LANGUAGE_FALLBACK_WORDS = getFallbackWords(
+  DEFAULT_TTS_LANGUAGE
+).map((word) => word.wordText)
+
+function getFallbackWordPool(language: string): string[] {
+  const localized = getFallbackWords(language).map((word) => word.wordText)
+  if (localized.length > 0) return localized
+  if (DEFAULT_LANGUAGE_FALLBACK_WORDS.length > 0) {
+    return DEFAULT_LANGUAGE_FALLBACK_WORDS
+  }
+  return STATIC_FALLBACK_WORDS
+}
 
 /**
  * Configuration properties for the Practice Engine.
@@ -123,6 +139,15 @@ export function usePracticeEngine({
   const beatPlayerRef = useRef(beatPlayer)
   const recorderRef = useRef(recorder)
   const beatOffsetMsRef = useRef(0)
+  const {
+    isTTSEnabled,
+    ttsVolume,
+    beatVolume,
+    selectedLanguage,
+    isStudioFXEnabled,
+    startSession: markSessionActive,
+    stopSession: markSessionInactive,
+  } = usePracticeSession()
 
   // 0. SAFETY NET: Cleanup on unmount
   useEffect(() => {
@@ -163,7 +188,9 @@ export function usePracticeEngine({
     duration: number
   }>({ start: 0, duration: 0 })
   const wordGeneratorRef = useRef<WordGenerator | null>(null)
-  const fallbackWordPoolRef = useRef<string[]>(FALLBACK_WORDS)
+  const fallbackWordPoolRef = useRef<string[]>(
+    getFallbackWordPool(selectedLanguage)
+  )
   const wordsUsedRef = useRef<string[]>([])
   const [activeDifficulty, setActiveDifficulty] = useState(difficulty)
   const activeDifficultyRef = useRef(difficulty)
@@ -174,12 +201,13 @@ export function usePracticeEngine({
 
   // Initialize Generator
   useEffect(() => {
+    const localizedFallbackPool = getFallbackWordPool(selectedLanguage)
     let wordsToUse = initialWords || []
 
-    // SAFETY FALLBACK: If DB returns empty (or fetch failed), use local backup
+    // SAFETY FALLBACK: If DB returns empty (or fetch failed), use language-aware backup
     if (wordsToUse.length === 0) {
       console.warn('[PracticeEngine] No words provided, using fallback list.')
-      wordsToUse = FALLBACK_WORDS
+      wordsToUse = localizedFallbackPool
     }
     fallbackWordPoolRef.current = wordsToUse
 
@@ -196,7 +224,9 @@ export function usePracticeEngine({
       }
     })
 
-    wordGeneratorRef.current = new WordGenerator(mockWordData)
+    wordGeneratorRef.current = new WordGenerator(mockWordData, {
+      language: selectedLanguage,
+    })
 
     // Config Generator
     const initialDifficulty =
@@ -211,9 +241,13 @@ export function usePracticeEngine({
     if (first) {
       setCurrentWord(first.wordText)
     } else {
-      setCurrentWord(fallbackWordPoolRef.current[0] || FALLBACK_WORDS[0])
+      setCurrentWord(
+        fallbackWordPoolRef.current[0] ||
+          localizedFallbackPool[0] ||
+          STATIC_FALLBACK_WORDS[0]
+      )
     }
-  }, [initialWords])
+  }, [initialWords, selectedLanguage])
 
   useEffect(() => {
     const generator = wordGeneratorRef.current
@@ -256,16 +290,9 @@ export function usePracticeEngine({
 
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
-  const {
-    isTTSEnabled,
-    ttsVolume,
-    beatVolume,
-    isStudioFXEnabled,
-    startSession: markSessionActive,
-    stopSession: markSessionInactive,
-  } = usePracticeSession()
   const { speak } = useTTS({
     enabled: isTTSEnabled,
+    language: selectedLanguage,
     volume: ttsVolume,
     rate: 1.0,
     pitch: 1.0,
@@ -286,10 +313,10 @@ export function usePracticeEngine({
   const getFallbackWord = useCallback(() => {
     const pool = fallbackWordPoolRef.current
     if (!pool.length) {
-      return FALLBACK_WORDS[0]
+      return STATIC_FALLBACK_WORDS[0]
     }
     const index = Math.floor(Math.random() * pool.length)
-    return pool[index] || FALLBACK_WORDS[0]
+    return pool[index] || STATIC_FALLBACK_WORDS[0]
   }, [])
 
   // Memoize onBeat to prevent useAudioSync restarts
@@ -508,7 +535,14 @@ export function usePracticeEngine({
         recorder.resume()
       }
     }
-  }, [state.status, dispatch, beatPlayer, recorder, isRecordingEnabled, audioSync])
+  }, [
+    state.status,
+    dispatch,
+    beatPlayer,
+    recorder,
+    isRecordingEnabled,
+    audioSync,
+  ])
 
   // 5. Reactive Side Effects (The Muscles)
   // This is where "StateMachine -> Real World" happens.
@@ -534,7 +568,9 @@ export function usePracticeEngine({
       recorder
         .start()
         .then(() => {
-          beatOffsetMsRef.current = Math.round(beatPlayer.getPreciseTime() * 1000)
+          beatOffsetMsRef.current = Math.round(
+            beatPlayer.getPreciseTime() * 1000
+          )
         })
         .catch((err) => {
           console.error('[PracticeEngine] Recorder start failed:', err)
@@ -657,9 +693,7 @@ export function usePracticeEngine({
           fd.append('vibe', 'Freestyle Flow')
           fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
-          const latencyMs = parseInt(
-            localStorage.getItem('flowforge_latency') || '0'
-          )
+          const latencyMs = getActiveCalibrationMs()
 
           fd.append('beatOffsetMs', beatOffsetMsRef.current.toString())
           fd.append(

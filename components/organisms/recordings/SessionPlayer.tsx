@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
 import { SeamlessLooper } from '@/lib/audio/seamless-looper'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
+import { getActiveCalibrationMs } from '@/lib/audio/calibration'
 
 // Impulse response for reverb (simple noise burst fallback or load file)
 const createReverb = (
@@ -54,6 +55,7 @@ export interface AudioSettings {
   voiceVolume?: number
   beatVolume?: number
   isStudioMode?: boolean
+  reverb?: boolean
   nudge?: number
 }
 
@@ -70,6 +72,12 @@ export interface SessionPlayerProps {
   sessionDifficulty?: number
   sessionDate?: string | Date
   initialSettings?: AudioSettings
+  onSettingsChange?: (settings: {
+    voiceVolume: number
+    beatVolume: number
+    isStudioMode: boolean
+    nudge: number
+  }) => void
 }
 
 export const SessionPlayer = forwardRef<
@@ -88,6 +96,7 @@ export const SessionPlayer = forwardRef<
       sessionDuration,
       sessionDate,
       initialSettings,
+      onSettingsChange,
     },
     ref
   ) => {
@@ -110,7 +119,7 @@ export const SessionPlayer = forwardRef<
     const [nudge, setNudge] = useState(resolvedSync.nudgeMs)
     const nudgeRef = useRef(resolvedSync.nudgeMs) // Ref to avoid re-creating audio on nudge change
     const [isStudioMode, setIsStudioMode] = useState(
-      initialSettings?.isStudioMode ?? true
+      initialSettings?.isStudioMode ?? initialSettings?.reverb ?? true
     )
 
     // Expose settings to parent (e.g. for downloading mix)
@@ -130,9 +139,33 @@ export const SessionPlayer = forwardRef<
     // Web Audio Refs
     const contextRef = useRef<AudioContext | null>(null)
     const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
+    const compressorRef = useRef<DynamicsCompressorNode | null>(null)
     const reverbRef = useRef<ConvolverNode | null>(null)
     const dryGainRef = useRef<GainNode | null>(null)
     const wetGainRef = useRef<GainNode | null>(null)
+
+    // Keep player state in sync when a different recording/settings payload is loaded.
+    useEffect(() => {
+      const nextVoiceVolume = initialSettings?.voiceVolume ?? 1
+      const nextBeatVolume = initialSettings?.beatVolume ?? 0.8
+      const nextStudioMode =
+        initialSettings?.isStudioMode ?? initialSettings?.reverb ?? true
+      const nextNudge = resolvedSync.nudgeMs
+
+      setVolume(nextVoiceVolume)
+      setIsMuted(nextVoiceVolume === 0)
+      setBeatVolume(nextBeatVolume)
+      setIsStudioMode(nextStudioMode)
+      setNudge(nextNudge)
+      nudgeRef.current = nextNudge
+    }, [
+      audioUrl,
+      initialSettings?.voiceVolume,
+      initialSettings?.beatVolume,
+      initialSettings?.isStudioMode,
+      initialSettings?.reverb,
+      resolvedSync.nudgeMs,
+    ])
 
     // Load latency from calibration
     useEffect(() => {
@@ -146,25 +179,29 @@ export const SessionPlayer = forwardRef<
         return
       }
 
-      // Migrate legacy key if present (from old Latency Wizard)
-      const legacyKey = localStorage.getItem('flowforge_audio_latency_ms')
-      if (legacyKey && !localStorage.getItem('flowforge_latency')) {
-        localStorage.setItem('flowforge_latency', legacyKey)
-        localStorage.removeItem('flowforge_audio_latency_ms')
-      }
-
-      const saved = localStorage.getItem('flowforge_latency')
-      if (saved) {
-        const val = parseInt(saved)
-        setNudge(val)
-        nudgeRef.current = val
-      }
+      const activeCalibrationMs = getActiveCalibrationMs()
+      setNudge(activeCalibrationMs)
+      nudgeRef.current = activeCalibrationMs
     }, [initialSettings?.nudge, resolvedSync.nudgeMs])
 
     // Keep nudgeRef in sync with state changes
     useEffect(() => {
       nudgeRef.current = nudge
     }, [nudge])
+
+    useEffect(() => {
+      onSettingsChange?.({
+        voiceVolume: isMuted ? 0 : volume,
+        beatVolume,
+        isStudioMode,
+        nudge: nudgeRef.current,
+      })
+    }, [onSettingsChange, isMuted, volume, beatVolume, isStudioMode, nudge])
+
+    useEffect(() => {
+      if (!audioRef.current) return
+      audioRef.current.volume = isMuted ? 0 : volume
+    }, [volume, isMuted])
 
     // dedicated effect for beat volume
     useEffect(() => {
@@ -218,29 +255,49 @@ export const SessionPlayer = forwardRef<
       }
 
       // Create FX Nodes (Idempotent)
-      if (!reverbRef.current) {
+      if (
+        !compressorRef.current ||
+        !reverbRef.current ||
+        !dryGainRef.current ||
+        !wetGainRef.current
+      ) {
+        compressorRef.current = ctx.createDynamicsCompressor()
+        compressorRef.current.threshold.value = -24
+        compressorRef.current.knee.value = 30
+        compressorRef.current.ratio.value = 12
+        compressorRef.current.attack.value = 0.003
+        compressorRef.current.release.value = 0.25
+
         reverbRef.current = ctx.createConvolver()
         reverbRef.current.buffer = createReverb(ctx)
 
         dryGainRef.current = ctx.createGain()
         wetGainRef.current = ctx.createGain() // Reverb level
 
-        if (sourceRef.current) {
-          sourceRef.current.connect(dryGainRef.current)
-          dryGainRef.current.connect(ctx.destination)
-
-          sourceRef.current.connect(reverbRef.current)
-          reverbRef.current.connect(wetGainRef.current)
-          wetGainRef.current.connect(ctx.destination)
-        }
+        sourceRef.current?.connect(compressorRef.current)
+        compressorRef.current.connect(dryGainRef.current)
+        compressorRef.current.connect(reverbRef.current)
+        dryGainRef.current.connect(ctx.destination)
+        reverbRef.current.connect(wetGainRef.current)
+        wetGainRef.current.connect(ctx.destination)
       }
 
       // Update mix based on mode
-      if (dryGainRef.current && wetGainRef.current) {
+      if (compressorRef.current && dryGainRef.current && wetGainRef.current) {
         if (isStudioMode) {
+          compressorRef.current.threshold.value = -24
+          compressorRef.current.knee.value = 30
+          compressorRef.current.ratio.value = 12
+          compressorRef.current.attack.value = 0.003
+          compressorRef.current.release.value = 0.25
           dryGainRef.current.gain.setTargetAtTime(0.7, ctx.currentTime, 0.1)
           wetGainRef.current.gain.setTargetAtTime(0.4, ctx.currentTime, 0.1)
         } else {
+          compressorRef.current.threshold.value = 0
+          compressorRef.current.knee.value = 0
+          compressorRef.current.ratio.value = 1
+          compressorRef.current.attack.value = 0
+          compressorRef.current.release.value = 0.25
           dryGainRef.current.gain.setTargetAtTime(1.0, ctx.currentTime, 0.1)
           wetGainRef.current.gain.setTargetAtTime(0, ctx.currentTime, 0.1)
         }
@@ -272,6 +329,7 @@ export const SessionPlayer = forwardRef<
       const audio = new Audio(audioUrl)
       audioRef.current = audio
       audio.crossOrigin = 'anonymous' // Enable Web Audio API
+      audio.volume = isMuted ? 0 : volume
 
       // Initialize beat with SeamlessLooper for gapless playback
       let beatLooper: SeamlessLooper | null = null
@@ -337,6 +395,26 @@ export const SessionPlayer = forwardRef<
         if (beatLooperRef.current) {
           beatLooperRef.current.destroy()
           beatLooperRef.current = null
+        }
+
+        sourceRef.current?.disconnect()
+        sourceRef.current = null
+
+        compressorRef.current?.disconnect()
+        compressorRef.current = null
+
+        reverbRef.current?.disconnect()
+        reverbRef.current = null
+
+        dryGainRef.current?.disconnect()
+        dryGainRef.current = null
+
+        wetGainRef.current?.disconnect()
+        wetGainRef.current = null
+
+        if (contextRef.current) {
+          void contextRef.current.close().catch(() => {})
+          contextRef.current = null
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -698,7 +776,7 @@ export const SessionPlayer = forwardRef<
                   )}
                 >
                   <Sparkles size={20} />
-                  <span className="text-xs font-medium">Reverb & EQ</span>
+                  <span className="text-xs font-medium">Reverb + Comp</span>
                   <span
                     className={cn(
                       'text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm',

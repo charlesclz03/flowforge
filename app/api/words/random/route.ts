@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { FALLBACK_WORDS } from '@/lib/data/fallbacks'
+import { DEFAULT_TTS_LANGUAGE, resolveLanguageCode } from '@/lib/tts/languages'
+import { getFallbackWords } from '@/lib/data/fallbacks'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,9 +11,16 @@ export async function GET(request: Request) {
     const difficulty = searchParams.get('difficulty')
       ? parseInt(searchParams.get('difficulty')!)
       : undefined
+    const language = resolveLanguageCode(
+      searchParams.get('language') ?? searchParams.get('lang')
+    )
 
     // Dynamically import to prevent top-level crashes if module loading fails (e.g. Prisma issues)
-    let wordsData: { wordText: string }[] = []
+    let wordsData: {
+      wordText: string
+      difficultyLevel: number
+      language: string
+    }[] = []
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -20,6 +28,7 @@ export async function GET(request: Request) {
 
       const result = await getRandomWords(count, {
         difficultyLevel: difficulty,
+        language,
       })
 
       if (result.success && result.data && result.data.length > 0) {
@@ -29,12 +38,8 @@ export async function GET(request: Request) {
       }
     } catch (dbError) {
       console.warn('Database word fetch failed, using fallback:', dbError)
-      // Filter fallback words loosely based on difficulty if requested
-      wordsData = FALLBACK_WORDS.filter((w) =>
-        difficulty ? w.difficultyLevel === difficulty : true
-      )
-      // If filtering resulted in empty, just use all safety words
-      if (wordsData.length === 0) wordsData = FALLBACK_WORDS
+      wordsData = getFallbackWords(language, difficulty)
+      if (wordsData.length === 0) wordsData = getFallbackWords()
 
       // Shuffle fallback words
       wordsData = wordsData.sort(() => Math.random() - 0.5)
@@ -57,9 +62,10 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('API Error:', error)
     // Absolute final failsafe - return JSON, never throw 500 HTML
+    const fallback = getFallbackWords(DEFAULT_TTS_LANGUAGE)
     return NextResponse.json({
-      words: FALLBACK_WORDS,
-      count: FALLBACK_WORDS.length,
+      words: fallback,
+      count: fallback.length,
     })
   }
 }

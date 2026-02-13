@@ -9,6 +9,8 @@ export class AudioPlayer {
   private onEndedCallback: (() => void) | null = null
   private debug: boolean = false
   private isDestroyed: boolean = false
+  private loopEnabled: boolean = false
+  private loopStartSeconds: number = 0
 
   constructor() {
     // Debug logs are opt-in and disabled in production for privacy.
@@ -47,12 +49,35 @@ export class AudioPlayer {
       if (this.onTimeUpdateCallback && this.audio) {
         this.onTimeUpdateCallback(this.audio.currentTime)
       }
+
+      // If a calibrated cue/start point exists, keep loops anchored there.
+      if (
+        this.audio &&
+        this.loopEnabled &&
+        this.loopStartSeconds > 0 &&
+        Number.isFinite(this.audio.duration) &&
+        this.audio.duration > 0
+      ) {
+        const loopBoundary = Math.max(
+          this.loopStartSeconds,
+          this.audio.duration - 0.05
+        )
+        if (this.audio.currentTime >= loopBoundary) {
+          this.audio.currentTime = this.loopStartSeconds
+        }
+      }
     })
 
     this.audio.addEventListener('ended', () => {
-      // Browser handles looping naturally if .loop is true.
-      // We only need to notify if playback actually stops.
-      if (this.audio?.loop) {
+      // For calibrated tracks we loop manually from loopStartSeconds.
+      if (this.audio && this.loopEnabled && this.loopStartSeconds > 0) {
+        this.audio.currentTime = this.loopStartSeconds
+        void this.audio.play().catch(() => undefined)
+        return
+      }
+
+      // Browser handles default loop naturally if .loop is true.
+      if (this.audio?.loop && this.loopEnabled) {
         return
       }
       this.log('Playback ended')
@@ -254,7 +279,22 @@ export class AudioPlayer {
    */
   setLoop(loop: boolean): void {
     if (!this.audio) throw new Error('Audio not initialized')
-    this.audio.loop = loop
+    this.loopEnabled = loop
+    this.audio.loop = loop && this.loopStartSeconds <= 0
+  }
+
+  /**
+   * Set calibrated loop start (seconds). 0 means full-track looping.
+   */
+  setLoopStart(seconds: number): void {
+    if (!this.audio) throw new Error('Audio not initialized')
+
+    const normalized =
+      Number.isFinite(seconds) && seconds > 0 ? Number(seconds) : 0
+    this.loopStartSeconds = normalized
+
+    // Native loop only works for full-track looping from 0.
+    this.audio.loop = this.loopEnabled && this.loopStartSeconds <= 0
   }
 
   /**

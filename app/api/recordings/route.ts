@@ -475,13 +475,37 @@ export async function GET(request: Request) {
     }
 
     const recordingsWithSignedUrls = sourceRecordings.map((recording) => {
-      if (!recording.storageUrl) return recording
-      if (recording.storageUrl.startsWith('http')) return recording
+      if (!recording.storageUrl) {
+        return {
+          ...recording,
+          audioStatus: 'stats-only' as const,
+        }
+      }
+
+      if (recording.storageUrl.startsWith('http')) {
+        return {
+          ...recording,
+          audioStatus: 'ready' as const,
+        }
+      }
 
       const normalizedPath = recording.storageUrl.replace(/^\/+/, '')
+      const signedUrl = signedUrlByPath.get(normalizedPath)
+
+      if (signedUrl) {
+        return {
+          ...recording,
+          storageUrl: signedUrl,
+          audioStatus: 'ready' as const,
+        }
+      }
+
+      // Storage path exists but signed URL is not ready yet (recent upload or
+      // transient signing miss). Keep session visible as processing.
       return {
         ...recording,
-        storageUrl: signedUrlByPath.get(normalizedPath) ?? null,
+        storageUrl: null,
+        audioStatus: 'processing' as const,
       }
     })
 

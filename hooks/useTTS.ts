@@ -1,20 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { getBestVoice } from '@/lib/tts/voice-picker'
+import { getBestVoice, hasVoiceForLanguage } from '@/lib/tts/voice-picker'
+import { DEFAULT_TTS_LANGUAGE, TTSLanguageCode } from '@/lib/tts/languages'
 
 interface UseTTSProps {
   enabled?: boolean
   volume?: number // 0-1
   rate?: number // 0.1-10
   pitch?: number // 0-2
+  language?: TTSLanguageCode
 }
+
+export type TTSVoiceStatus = 'unsupported' | 'loading' | 'ready' | 'fallback'
 
 export function useTTS({
   enabled = true,
   volume = 1,
   rate = 1,
   pitch = 1,
+  language = DEFAULT_TTS_LANGUAGE,
 }: UseTTSProps = {}) {
   const [isReady, setIsReady] = useState(false)
+  const [voiceStatus, setVoiceStatus] = useState<TTSVoiceStatus>('loading')
+  const [hasLanguageVoice, setHasLanguageVoice] = useState(false)
   const [activeVoice, setActiveVoice] = useState<SpeechSynthesisVoice | null>(
     null
   )
@@ -24,15 +31,27 @@ export function useTTS({
 
   // Initialize Voices
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setVoiceStatus('unsupported')
+      setHasLanguageVoice(false)
+      setIsReady(false)
+      setActiveVoice(null)
+      return
+    }
+
+    mountedRef.current = true
+    setVoiceStatus('loading')
 
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices()
       if (voices.length > 0) {
-        const best = getBestVoice(voices)
+        const matching = hasVoiceForLanguage(voices, language)
+        const best = getBestVoice(voices, language)
         if (mountedRef.current) {
+          setHasLanguageVoice(matching)
           setActiveVoice(best)
           setIsReady(true)
+          setVoiceStatus(matching ? 'ready' : 'fallback')
         }
       }
     }
@@ -45,7 +64,7 @@ export function useTTS({
       mountedRef.current = false
       window.speechSynthesis.onvoiceschanged = null
     }
-  }, [])
+  }, [language])
 
   const speak = useCallback(
     (text: string) => {
@@ -59,6 +78,7 @@ export function useTTS({
       const u = new SpeechSynthesisUtterance(text)
 
       // 3. Apply Settings
+      u.lang = language
       if (activeVoice) u.voice = activeVoice
       u.volume = volume
       u.rate = rate
@@ -70,7 +90,7 @@ export function useTTS({
       // is called from a useEffect that was triggered by a user-driven state change.
       window.speechSynthesis.speak(u)
     },
-    [enabled, activeVoice, volume, rate, pitch]
+    [enabled, activeVoice, volume, rate, pitch, language]
   )
 
   const cancel = useCallback(() => {
@@ -84,5 +104,7 @@ export function useTTS({
     cancel,
     isReady,
     activeVoice,
+    hasLanguageVoice,
+    voiceStatus,
   }
 }

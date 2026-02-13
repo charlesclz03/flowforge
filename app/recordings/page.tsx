@@ -105,8 +105,17 @@ export default function RecordingsPage() {
       const mixer = new AudioMixer()
       // Mix with Studio FX (Reverb/Compression) enabled by default for "Production Ready" downloads
       // Parse saved FX config
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const fxConfig = (recording.fxConfig as any) || {}
+      const fxConfig =
+        recording.fxConfig &&
+        typeof recording.fxConfig === 'object' &&
+        !Array.isArray(recording.fxConfig)
+          ? (recording.fxConfig as Record<string, unknown>)
+          : {}
+
+      const voiceVolume =
+        typeof fxConfig.voiceVolume === 'number' ? fxConfig.voiceVolume : 1.0
+      const beatVolume =
+        typeof fxConfig.beatVolume === 'number' ? fxConfig.beatVolume : 0.8
       const resolvedSync = resolveRecordingSync({
         beatOffsetMs: recording.beatOffsetMs ?? 0,
         fxConfig: recording.fxConfig,
@@ -116,11 +125,11 @@ export default function RecordingsPage() {
         recording.storageUrl,
         recording.beat?.storageUrl || null,
         {
-          voiceVolume: fxConfig.voiceVolume ?? 1.0,
-          beatVolume: fxConfig.beatVolume ?? 0.8,
+          voiceVolume,
+          beatVolume,
           // If config exists, use user preference for reverb (mapped to Studio Mode for now)
           // If no config, default to true ("Production Ready")
-          isStudioMode: recording.fxConfig ? !!fxConfig.reverb : true,
+          isStudioMode: recording.fxConfig ? Boolean(fxConfig.reverb) : true,
           nudge: resolvedSync.nudgeMs,
           beatOffsetMs: resolvedSync.beatOffsetMs,
         }

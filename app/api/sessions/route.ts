@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createSession, getSessions } from '@/lib/db/sessions'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       storageUrl,
     } = parseResult.data
 
-    const result = await createSession({
+    const payload: Prisma.FreestyleSessionUncheckedCreateInput = {
       beatId,
       title,
       durationSeconds,
@@ -82,7 +83,13 @@ export async function POST(request: Request) {
       restarts: 0,
       playbacks: 0,
       wordCount: 0,
-    } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+      beatOffsetMs: 0,
+      fxConfig: Prisma.DbNull,
+      isPublic: true,
+      fileSizeBytes: 0,
+    }
+
+    const result = await createSession(payload)
 
     if (!result.success) {
       return NextResponse.json(

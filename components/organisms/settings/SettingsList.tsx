@@ -23,10 +23,15 @@ import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { cn } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SupportModal } from '@/components/organisms/support/SupportModal'
 import { getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
+import {
+  CALIBRATION_PROFILES,
+  formatSignedLatencyMs,
+  getCalibrationState,
+} from '@/lib/audio/calibration'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
@@ -44,6 +49,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   } = usePracticeSession()
   const [isStudioOpen, setIsStudioOpen] = useState(false)
   const [isSupportOpen, setIsSupportOpen] = useState(false)
+  const [calibrationLabel, setCalibrationLabel] = useState('Audio Calibration')
 
   // Determine subscription status
   const isPro = isProUser(session?.user)
@@ -67,6 +73,34 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
       setIsManaging(false)
     }
   }
+
+  useEffect(() => {
+    const updateCalibrationLabel = () => {
+      const state = getCalibrationState()
+      const activeValue = state.profiles[state.activeProfileId]
+      const profileLabel =
+        CALIBRATION_PROFILES.find(
+          (profile) => profile.id === state.activeProfileId
+        )?.label || 'Output'
+      setCalibrationLabel(
+        `Audio Calibration (${formatSignedLatencyMs(activeValue)} | ${profileLabel})`
+      )
+    }
+
+    updateCalibrationLabel()
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', updateCalibrationLabel)
+      window.addEventListener('storage', updateCalibrationLabel)
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', updateCalibrationLabel)
+        window.removeEventListener('storage', updateCalibrationLabel)
+      }
+    }
+  }, [])
 
   // Helper for consistent menu items
   const MenuItem = ({
@@ -385,7 +419,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
           <MenuItem
             icon={Settings}
-            label="Audio Calibration"
+            label={calibrationLabel}
             href="/settings/latency"
             color="text-accent-blue"
           />
@@ -486,7 +520,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.0.1</p>
+          <p className="ml-2 text-xs text-white/20">v1.0.2</p>
         </div>
       </div>
       <SupportModal

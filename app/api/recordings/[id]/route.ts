@@ -52,8 +52,7 @@ export async function GET(
 
     // If public, allow access (skip ownership check)
     // IMPORTANT: The `isPublic` field defaults to true for now
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isPublic = (recording as any).isPublic ?? true
+    const isPublic = recording.isPublic ?? true
 
     if (!isPublic) {
       if (!session?.user?.email) {

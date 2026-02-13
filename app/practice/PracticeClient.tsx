@@ -16,6 +16,7 @@ import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
+import { TTSLanguageCode } from '@/lib/tts/languages'
 
 // Components
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
@@ -55,6 +56,7 @@ const RateAppModal = dynamic(
 interface PracticeClientProps {
   initialBeats: Beat[]
   initialWords: string[]
+  initialLanguage: TTSLanguageCode
 }
 
 interface SessionSummary {
@@ -92,6 +94,7 @@ interface SessionSummary {
 export default function PracticeClient({
   initialBeats,
   initialWords,
+  initialLanguage,
 }: PracticeClientProps) {
   const router = useRouter()
   const { data: session } = useSession()
@@ -116,6 +119,8 @@ export default function PracticeClient({
     isLoaded,
     mode,
     cypherPlayers,
+    selectedLanguage,
+    setSelectedLanguage,
     isRecordingEnabled,
     setIsRecordingEnabled,
   } = usePracticeSession()
@@ -138,6 +143,12 @@ export default function PracticeClient({
     const defaultBeat = beats.find((b) => !b.isPremium) || beats[0]
     if (defaultBeat) setBeat(defaultBeat)
   }, [isLoaded, selectedBeat, beats, setBeat])
+
+  useEffect(() => {
+    if (!isLoaded) return
+    if (selectedLanguage === initialLanguage) return
+    setSelectedLanguage(initialLanguage)
+  }, [initialLanguage, isLoaded, selectedLanguage, setSelectedLanguage])
 
   // Modals
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -484,7 +495,12 @@ export default function PracticeClient({
         })
         .catch(() => toast.error('Failed to load beat'))
     }
-  }, [selectedBeat?.id, engine.status]) // Only re-run if ID changes
+  }, [
+    selectedBeat?.id,
+    selectedBeat?.offset,
+    selectedBeat?.storageUrl,
+    engine.status,
+  ])
 
   // Navigation handlers
   const handleBack = () => router.back()
@@ -526,10 +542,10 @@ export default function PracticeClient({
             customSubtitle="Step up and drop your bars"
           />
         }
-        className="bg-background h-full min-h-full"
+        className="bg-transparent h-full min-h-full"
       >
         {/* Background Ambience */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute -top-32 -left-32 w-96 h-96 bg-accent-purple/20 rounded-full blur-[128px] animate-pulse-slow" />
           <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-accent-blue/10 rounded-full blur-[128px] animate-pulse-slow delay-1000" />
         </div>

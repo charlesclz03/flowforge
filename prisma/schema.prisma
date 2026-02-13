@@ -5,38 +5,38 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 // Beat model - Stores instrumental beat metadata
 model Beat {
-  id              String   @id @default(uuid())
-  title           String
-  bpm             Float
-  storageUrl      String   @map("storage_url")
-  coverImage      String?  @map("cover_image")
-  isPremium       Boolean  @default(false) @map("is_premium")
-  genre           String?
-  tags            String[] @default([])
-  duration        Int?     // Duration in seconds
-  artistName      String?  @map("artist_name")
-  label           String?
-  difficulty      String   @default("Medium") // "Easy", "Medium", "Hard"
-  
+  id         String   @id @default(uuid())
+  title      String
+  bpm        Float
+  storageUrl String   @map("storage_url")
+  coverImage String?  @map("cover_image")
+  isPremium  Boolean  @default(false) @map("is_premium")
+  genre      String?
+  tags       String[] @default([])
+  duration   Int? // Duration in seconds
+  artistName String?  @map("artist_name")
+  label      String?
+  difficulty String   @default("Medium") // "Easy", "Medium", "Hard"
+
   // User Uploads & Calibration
-  uploaderId      String?  @map("uploader_id")
-  offset          Float    @default(0) // Start point calibration in seconds
-  sortOrder       Int      @default(0) @map("sort_order")
-  
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  uploaderId String? @map("uploader_id")
+  offset     Float   @default(0) // Start point calibration in seconds
+  sortOrder  Int     @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  sessions        FreestyleSession[]
-  favoritedBy     FavoriteBeat[]
-  uploader        User?    @relation(fields: [uploaderId], references: [id])
+  sessions    FreestyleSession[]
+  favoritedBy FavoriteBeat[]
+  uploader    User?              @relation(fields: [uploaderId], references: [id])
 
   @@map("beats")
 }
@@ -44,12 +44,15 @@ model Beat {
 // Word model - Word library for prompts
 model Word {
   id              String   @id @default(uuid())
-  wordText        String   @unique @map("word_text")
+  wordText        String   @map("word_text")
+  language        String   @default("en-US")
   syllableCount   Int      @map("syllable_count")
   difficultyLevel Int      @map("difficulty_level") // 1 = Easy, 2 = Medium, 3 = Hard
-  category        String?  // Optional: noun, verb, adjective, etc.
+  category        String? // Optional: noun, verb, adjective, etc.
   createdAt       DateTime @default(now()) @map("created_at")
 
+  @@unique([language, wordText])
+  @@index([language, difficultyLevel])
   @@index([difficultyLevel])
   @@index([syllableCount])
   @@map("words")
@@ -65,31 +68,31 @@ model User {
   image         String?
   username      String?   @unique
   bio           String?   @db.Text
-  
+
   // Stripe fields
-  customerId         String?   @unique @map("customer_id")
-  subscriptionId     String?   @unique @map("subscription_id")
-  subscriptionStatus String?   @default("free") @map("subscription_status")
+  customerId         String? @unique @map("customer_id")
+  subscriptionId     String? @unique @map("subscription_id")
+  subscriptionStatus String? @default("free") @map("subscription_status")
   // Values: "free", "active", "past_due", "canceled", "trialing"
-  
+
   role String @default("USER") // "USER", "SUPERADMIN"
 
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Social Links (JSON) - Keeping for profile display only
-  socials       Json?
+  socials Json?
 
   // Relations
-  accounts      Account[]
-  sessions      Session[]
+  accounts          Account[]
+  sessions          Session[]
   freestyleSessions FreestyleSession[]
-  
+
   // Word Vault
   collectedWords CollectedWord[]
-  favoriteBeats FavoriteBeat[]
-  uploadedBeats Beat[]
-  feedback      Feedback[]
+  favoriteBeats  FavoriteBeat[]
+  uploadedBeats  Beat[]
+  feedback       Feedback[]
 
   // Achievements
   achievements UserAchievement[]
@@ -98,13 +101,13 @@ model User {
   currentStreak    Int       @default(0)
   longestStreak    Int       @default(0)
   lastPracticeDate DateTime?
-  
+
   // XP & Leveling (v1.5)
-  xp               Int       @default(0)
-  level            Int       @default(1)
-  
+  xp    Int @default(0)
+  level Int @default(1)
+
   // Rate App Feature
-  hasRated         Boolean   @default(false) @map("has_rated")
+  hasRated Boolean @default(false) @map("has_rated")
 
   @@map("users")
 }
@@ -167,7 +170,7 @@ model FreestyleSession {
   difficulty      Int      @default(2) // 1 = Easy, 2 = Medium, 3 = Hard
   wordCount       Int      @default(0) @map("word_count")
   score           Int      @default(0) // Legacy score, might be repurposed
-  vibe            String?  // "Hype", "Chill", "Locked In"
+  vibe            String? // "Hype", "Chill", "Locked In"
   mode            String   @default("solo") // "solo"
   restarts        Int      @default(0)
   playbacks       Int      @default(0)
@@ -177,8 +180,8 @@ model FreestyleSession {
   createdAt       DateTime @default(now()) @map("created_at")
 
   // Relations
-  beat            Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  beat Beat @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([beatId])
@@ -188,12 +191,12 @@ model FreestyleSession {
 
 // Social: Favorite Beats
 model FavoriteBeat {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  beatId    String   @map("beat_id")
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  beatId String @map("beat_id")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  beat      Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  beat Beat @relation(fields: [beatId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -203,7 +206,6 @@ model FavoriteBeat {
   @@map("favorite_beats")
 }
 
-
 // Word Vault: Track unique words collected by user
 model CollectedWord {
   id        String   @id @default(uuid())
@@ -211,7 +213,7 @@ model CollectedWord {
   wordText  String   @map("word_text")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, wordText])
   @@index([userId])
@@ -220,26 +222,26 @@ model CollectedWord {
 
 // Achievements System
 model Achievement {
-  id          String   @id @default(uuid())
-  code        String   @unique // e.g. "FIRST_SESSION"
+  id          String @id @default(uuid())
+  code        String @unique // e.g. "FIRST_SESSION"
   name        String
   description String
-  icon        String   // e.g. Lucide icon name or emoji
-  points      Int      @default(10) // Weighted value of achievement
-  
+  icon        String // e.g. Lucide icon name or emoji
+  points      Int    @default(10) // Weighted value of achievement
+
   userAchievements UserAchievement[]
 
   @@map("achievements")
 }
 
 model UserAchievement {
-  id            String      @id @default(uuid())
-  userId        String      @map("user_id")
-  achievementId String      @map("achievement_id")
-  unlockedAt    DateTime    @default(now()) @map("unlocked_at")
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  achievementId String   @map("achievement_id")
+  unlockedAt    DateTime @default(now()) @map("unlocked_at")
 
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
 
   @@unique([userId, achievementId])
   @@index([userId])
@@ -250,12 +252,12 @@ model UserAchievement {
 model Feedback {
   id        String   @id @default(uuid())
   content   String   @db.Text
-  rating    Int?     // 1-5 Star Rating
+  rating    Int? // 1-5 Star Rating
   userId    String?  @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   isRead    Boolean  @default(false) @map("is_read")
 
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([createdAt])

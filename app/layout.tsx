@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from '@/components/providers/SessionProvider'
 import { PracticeSessionProvider } from '@/contexts/SessionContext'
 import { BottomNav } from '@/components/organisms/layout/BottomNav'
+import { BottomNavBackdrop } from '@/components/organisms/layout/BottomNavBackdrop'
 import { AudioContextUnlock } from '@/components/atoms/utils/AudioContextUnlock'
 import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
 import { GlobalSessionGuard } from '@/components/organisms/practice/GlobalSessionGuard'
@@ -166,6 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <PracticeSessionProvider>
             <SafeAreaWrapper top={false} bottom={false}>
               <ResponsiveLayout>
+                <BottomNavBackdrop />
                 <main
                   id="main-content"
                   className="flex-1 min-h-0 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"

@@ -130,6 +130,40 @@ describe('POST /api/user/beats', () => {
     expect(data.beat.id).toBe('beat-123')
   })
 
+  it('accepts cue offsets beyond 30 seconds for long tracks', async () => {
+    vi.mocked(getServerSession).mockResolvedValue(mockSession)
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(mockProUser as never)
+    vi.mocked(prisma.beat.count).mockResolvedValue(0)
+    vi.mocked(prisma.beat.create).mockResolvedValue({
+      id: 'beat-456',
+      title: 'Long Intro Beat',
+      bpm: 90,
+      offset: 120,
+      storageUrl: 'http://example.com/beat.mp3',
+    } as never)
+
+    const req = new NextRequest('http://localhost/api/user/beats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: 'Long Intro Beat',
+        bpm: 90,
+        offset: 120,
+        storageUrl: 'http://example.com/beat.mp3',
+      }),
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(200)
+    expect(prisma.beat.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          offset: 120,
+        }),
+      })
+    )
+  })
+
   it('enforces 50 beat quota', async () => {
     vi.mocked(getServerSession).mockResolvedValue(mockSession)
     vi.mocked(prisma.user.findUnique).mockResolvedValue(mockProUser as never)

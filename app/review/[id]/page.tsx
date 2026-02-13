@@ -22,6 +22,60 @@ import { toast } from 'react-hot-toast'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 
+type PersistedFxConfig = {
+  voiceVolume?: number
+  beatVolume?: number
+  nudge?: number
+  reverb?: boolean
+  isStudioMode?: boolean
+}
+
+function normalizeAudioSettings(recording: FreestyleSessionWithBeat): AudioSettings {
+  const fx =
+    recording.fxConfig &&
+    typeof recording.fxConfig === 'object' &&
+    !Array.isArray(recording.fxConfig)
+      ? (recording.fxConfig as unknown as PersistedFxConfig)
+      : null
+
+  const resolvedSync = resolveRecordingSync({
+    beatOffsetMs: recording.beatOffsetMs ?? 0,
+    fxConfig: recording.fxConfig,
+  })
+
+  return {
+    voiceVolume:
+      typeof fx?.voiceVolume === 'number' && Number.isFinite(fx.voiceVolume)
+        ? fx.voiceVolume
+        : 1.0,
+    beatVolume:
+      typeof fx?.beatVolume === 'number' && Number.isFinite(fx.beatVolume)
+        ? fx.beatVolume
+        : 0.8,
+    isStudioMode:
+      typeof fx?.isStudioMode === 'boolean'
+        ? fx.isStudioMode
+        : typeof fx?.reverb === 'boolean'
+          ? fx.reverb
+          : true,
+    nudge: resolvedSync.nudgeMs,
+  }
+}
+
+function areSettingsEqual(
+  a: AudioSettings | null,
+  b: AudioSettings | null
+): boolean {
+  if (!a || !b) return false
+
+  return (
+    Math.abs((a.voiceVolume ?? 1) - (b.voiceVolume ?? 1)) < 0.0001 &&
+    Math.abs((a.beatVolume ?? 0.8) - (b.beatVolume ?? 0.8)) < 0.0001 &&
+    Boolean(a.isStudioMode ?? true) === Boolean(b.isStudioMode ?? true) &&
+    Math.trunc(a.nudge ?? 0) === Math.trunc(b.nudge ?? 0)
+  )
+}
+
 export default function ReviewPage() {
   const routeParams = useParams<{ id: string }>()
   const recordingId = routeParams?.id
@@ -30,8 +84,13 @@ export default function ReviewPage() {
   const [recording, setRecording] = useState<FreestyleSessionWithBeat | null>(
     null
   )
+  const [savedSettings, setSavedSettings] = useState<AudioSettings | null>(null)
+  const [currentSettings, setCurrentSettings] = useState<AudioSettings | null>(
+    null
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isSavingSettings, setIsSavingSettings] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
 
   // Ref to get volume/fx settings from player
@@ -46,7 +105,11 @@ export default function ReviewPage() {
         throw new Error('Failed to fetch recording')
       }
       const data = await response.json()
-      setRecording(data.recording)
+      const loadedRecording = data.recording as FreestyleSessionWithBeat
+      const normalizedSettings = normalizeAudioSettings(loadedRecording)
+      setRecording(loadedRecording)
+      setSavedSettings(normalizedSettings)
+      setCurrentSettings(normalizedSettings)
     } catch (err) {
       handleError(err, ErrorCodes.FETCH_RECORDINGS_FAILED)
     } finally {
@@ -59,6 +122,60 @@ export default function ReviewPage() {
       fetchRecording()
     }
   }, [status, recordingId, fetchRecording])
+
+  const hasUnsavedSettingsChanges =
+    Boolean(currentSettings && savedSettings) &&
+    !areSettingsEqual(currentSettings, savedSettings)
+
+  const handleSettingsChange = useCallback((settings: AudioSettings) => {
+    setCurrentSettings(settings)
+  }, [])
+
+  const handleSaveSettings = useCallback(async () => {
+    if (!recordingId || !currentSettings) return
+
+    setIsSavingSettings(true)
+    try {
+      const fxConfig = {
+        voiceVolume: Number((currentSettings.voiceVolume ?? 1).toFixed(3)),
+        beatVolume: Number((currentSettings.beatVolume ?? 0.8).toFixed(3)),
+        nudge: Math.trunc(currentSettings.nudge ?? 0),
+        reverb: Boolean(currentSettings.isStudioMode ?? true),
+        isStudioMode: Boolean(currentSettings.isStudioMode ?? true),
+      }
+
+      const response = await fetch(`/api/recordings/${recordingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fxConfig }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save studio settings')
+      }
+
+      setRecording((prev) =>
+        prev
+          ? ({
+              ...prev,
+              fxConfig,
+            } as FreestyleSessionWithBeat)
+          : prev
+      )
+      setSavedSettings({
+        voiceVolume: fxConfig.voiceVolume,
+        beatVolume: fxConfig.beatVolume,
+        isStudioMode: fxConfig.isStudioMode,
+        nudge: fxConfig.nudge,
+      })
+
+      toast.success('Studio settings saved')
+    } catch (err) {
+      handleError(err, ErrorCodes.SESSION_SAVE_FAILED)
+    } finally {
+      setIsSavingSettings(false)
+    }
+  }, [currentSettings, handleError, recordingId])
 
   const handleDelete = async () => {
     if (!recordingId) return
@@ -220,19 +337,8 @@ export default function ReviewPage() {
             sessionDuration={recording.durationSeconds}
             sessionDifficulty={recording.difficulty}
             sessionDate={recording.createdAt}
-            initialSettings={
-              recording.fxConfig
-                ? (recording.fxConfig as unknown as AudioSettings)
-                : {
-                    voiceVolume: 1.0,
-                    beatVolume: 0.8,
-                    isStudioMode: true,
-                    nudge: resolveRecordingSync({
-                      beatOffsetMs: recording.beatOffsetMs ?? 0,
-                      fxConfig: recording.fxConfig,
-                    }).nudgeMs,
-                  }
-            }
+            initialSettings={savedSettings ?? undefined}
+            onSettingsChange={handleSettingsChange}
           />
         ) : (
           <div className="rounded-2xl border border-white/10 bg-background-card/60 p-8 text-center space-y-3">
@@ -253,6 +359,16 @@ export default function ReviewPage() {
       }
       actions={
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          {recording.storageUrl && hasUnsavedSettingsChanges && (
+            <Button
+              variant="primary"
+              onClick={handleSaveSettings}
+              isLoading={isSavingSettings}
+              className="w-full sm:w-auto"
+            >
+              Save Changes
+            </Button>
+          )}
           {recording.storageUrl && (
             <Button
               variant="secondary"

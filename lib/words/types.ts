@@ -1,6 +1,7 @@
 export interface WordData {
   id: string
   wordText: string
+  language?: string
   syllableCount: number
   difficultyLevel: number
   category?: string | null

@@ -106,6 +106,14 @@ export const RecordingCard = memo(function RecordingCard({
   const hasStreamableAudio =
     typeof recording.storageUrl === 'string' &&
     recording.storageUrl.startsWith('http')
+  const audioStatus =
+    recording.audioStatus ??
+    (hasStreamableAudio
+      ? 'ready'
+      : hasAudio
+        ? 'processing'
+        : 'stats-only')
+  const isAudioReady = audioStatus === 'ready' && hasStreamableAudio
 
   return (
     <Card className={cn('relative', className)}>
@@ -169,7 +177,7 @@ export const RecordingCard = memo(function RecordingCard({
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-white truncate">
-                {hasAudio ? (
+                {isAudioReady ? (
                   <Link
                     href={`/review/${recording.id}`}
                     className="block hover:text-accent-purple transition-colors"
@@ -185,7 +193,12 @@ export const RecordingCard = memo(function RecordingCard({
                 <span className="w-1 h-1 rounded-full bg-white/20" />
                 <span>{recording.beat.bpm} BPM</span>
               </p>
-              {!hasAudio && (
+              {audioStatus === 'processing' && (
+                <p className="mt-1 text-xs text-accent-cyan uppercase tracking-wide">
+                  PROCESSING
+                </p>
+              )}
+              {audioStatus === 'stats-only' && (
                 <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide">
                   Stats-only session (no audio captured)
                 </p>
@@ -211,7 +224,7 @@ export const RecordingCard = memo(function RecordingCard({
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
-          {hasStreamableAudio && (
+          {isAudioReady && (
             <Button
               variant="secondary"
               size="sm"
@@ -222,7 +235,7 @@ export const RecordingCard = memo(function RecordingCard({
               {isPlaying ? 'Pause' : 'Play'}
             </Button>
           )}
-          {hasAudio && (
+          {isAudioReady && (
             <Button
               variant="ghost"
               size="sm"
@@ -234,7 +247,7 @@ export const RecordingCard = memo(function RecordingCard({
             </Button>
           )}
 
-          {hasStreamableAudio && (
+          {isAudioReady && (
             <ShareButton
               title={recording.title}
               text="Check out my freestyle flow on FreeStyla!"
@@ -244,7 +257,7 @@ export const RecordingCard = memo(function RecordingCard({
             />
           )}
 
-          {hasAudio && (
+          {isAudioReady && (
             <Link
               href={`/recordings/${recording.id}/video`}
               className="flex-1 md:flex-none"

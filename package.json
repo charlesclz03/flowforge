@@ -1,6 +1,6 @@
 {
   "name": "flowforge-freestyle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,6 +15,9 @@
     "check:release-env:vercel": "node scripts/check-vercel-env.mjs --environment=production",
     "verify:storage": "node scripts/verify-supabase-storage.js",
     "postinstall": "prisma generate"
+  },
+  "overrides": {
+    "qs": "6.14.2"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -51,6 +54,7 @@
     "@types/node": "^20.19.24",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
+    "@vitest/coverage-v8": "^4.0.18",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "@vitejs/plugin-react": "^5.1.3",

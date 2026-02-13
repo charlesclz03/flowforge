@@ -76,6 +76,7 @@ describe('GET /api/recordings', () => {
     expect(data.recordings).toHaveLength(1)
     expect(data.recordings[0].id).toBe('with-audio')
     expect(data.recordings[0].storageUrl).toBe('https://signed/audio.webm')
+    expect(data.recordings[0].audioStatus).toBe('ready')
   })
 
   it('returns metadata-only sessions when includeMetadata=true', async () => {
@@ -131,8 +132,55 @@ describe('GET /api/recordings', () => {
 
     expect(data.count).toBe(2)
     expect(data.recordings).toHaveLength(2)
-    expect(
-      data.recordings.find((r: { id: string }) => r.id === 'metadata-only')
-    ).toBeTruthy()
+    const metadataOnly = data.recordings.find(
+      (r: { id: string }) => r.id === 'metadata-only'
+    )
+    expect(metadataOnly).toBeTruthy()
+    expect(metadataOnly.audioStatus).toBe('stats-only')
+  })
+
+  it('marks path-backed sessions without signed URLs as processing', async () => {
+    vi.mocked(getServerSessionWithUserId).mockResolvedValue({
+      user: { id: 'user-1' },
+    } as never)
+
+    vi.mocked(getSessions).mockResolvedValue({
+      success: true,
+      data: [
+        {
+          id: 'pending-audio',
+          title: 'Pending Audio',
+          storageUrl: 'user-1/pending-audio.webm',
+          beatId: 'beat-1',
+          beat: { id: 'beat-1', title: 'Beat A', bpm: 90 },
+        },
+      ],
+    } as never)
+
+    const createSignedUrls = vi.fn().mockResolvedValue({
+      data: [],
+      error: null,
+    })
+
+    vi.mocked(createServerClient).mockReturnValue({
+      storage: {
+        from: vi.fn().mockReturnValue({
+          createSignedUrls,
+        }),
+      },
+    } as never)
+
+    const req = new Request(
+      'http://localhost/api/recordings?includeMetadata=true'
+    )
+    const res = await GET(req)
+
+    expect(res.status).toBe(200)
+    const data = await res.json()
+
+    expect(data.recordings).toHaveLength(1)
+    expect(data.recordings[0].id).toBe('pending-audio')
+    expect(data.recordings[0].storageUrl).toBeNull()
+    expect(data.recordings[0].audioStatus).toBe('processing')
   })
 })

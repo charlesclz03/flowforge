@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { verifySuperAdmin } from '@/lib/auth/admin'
 
 const achievements = [
   // Session Milestones
@@ -150,6 +151,8 @@ const achievements = [
 
 export async function GET() {
   try {
+    await verifySuperAdmin()
+
     const results = []
     for (const ach of achievements) {
       const res = await prisma.achievement.upsert({
@@ -169,6 +172,15 @@ export async function GET() {
       seeded: results,
     })
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === 'Unauthorized') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      if (error.message === 'Forbidden') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+
     const e = error as Error
     return NextResponse.json(
       { error: e?.message || 'Unknown error' },

@@ -3,30 +3,40 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { isSuperAdmin } from '@/lib/auth/admin'
+import { z } from 'zod'
+
+const feedbackPayloadSchema = z.object({
+  content: z.string().trim().min(1).max(2000),
+  rating: z.coerce.number().int().min(1).max(5).optional().nullable(),
+})
 
 // POST: Submit new feedback
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    const { content, rating } = await req.json()
+    const parseResult = feedbackPayloadSchema.safeParse(await req.json())
 
-    if (!content || typeof content !== 'string') {
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Feedback content is required' },
+        {
+          error: 'Invalid feedback payload',
+          details: parseResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       )
     }
+    const { content, rating } = parseResult.data
 
     const feedback = await prisma.feedback.create({
       data: {
         content,
-        rating: typeof rating === 'number' ? rating : undefined,
+        rating: rating ?? undefined,
         userId: session?.user?.id || null,
       },
     })
 
     // If user is logged in and providing a rating, mark them as having rated
-    if (session?.user?.id && typeof rating === 'number') {
+    if (session?.user?.id && rating !== null && rating !== undefined) {
       await prisma.user.update({
         where: { id: session.user.id },
         data: { hasRated: true },

@@ -13,6 +13,20 @@ export function useBeatPlayer() {
   const playerRef = useRef<AudioPlayer | null>(null)
   const currentBeatRef = useRef<BeatMetadata | null>(null)
   const timeRef = useRef(0)
+  const startOffsetRef = useRef(0)
+
+  const normalizeOffset = (offset: number | null | undefined, beatDuration: number) => {
+    if (!Number.isFinite(offset ?? NaN)) return 0
+
+    const parsed = Number(offset)
+    if (parsed <= 0) return 0
+
+    if (Number.isFinite(beatDuration) && beatDuration > 0) {
+      return Math.min(parsed, Math.max(beatDuration - 0.01, 0))
+    }
+
+    return parsed
+  }
 
   // Initialize player
   useEffect(() => {
@@ -50,10 +64,23 @@ export function useBeatPlayer() {
       currentBeatRef.current = beat
 
       const state = playerRef.current.getState()
+      const startOffset = normalizeOffset(beat.offset, state.duration)
+
+      startOffsetRef.current = startOffset
+      playerRef.current.setLoopStart(startOffset)
+
+      if (startOffset > 0) {
+        playerRef.current.seek(startOffset)
+        timeRef.current = startOffset
+      } else {
+        timeRef.current = 0
+      }
+
       setDuration(state.duration)
       setIsLoading(false)
     } catch (err) {
       console.error('Error loading beat:', err)
+      startOffsetRef.current = 0
       setError('Failed to load beat')
       setIsLoading(false)
     }
@@ -69,6 +96,16 @@ export function useBeatPlayer() {
       // Optimistic update
       setIsPlaying(true)
       setError(null)
+
+      const stateBeforePlay = playerRef.current.getState()
+      if (
+        !stateBeforePlay.isPlaying &&
+        stateBeforePlay.currentTime <= 0.05 &&
+        startOffsetRef.current > 0
+      ) {
+        playerRef.current.seek(startOffsetRef.current)
+        timeRef.current = startOffsetRef.current
+      }
 
       await playerRef.current.play()
 

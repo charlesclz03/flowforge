@@ -1,59 +1,59 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { WordGenerator } from '@/lib/words/generator'
+import { clearRhymeKeyCache, doWordsRhyme } from '@/lib/words/rhyme'
 import { WordData } from '@/lib/words/types'
 
-// Mock word data for testing
-const mockWords: WordData[] = [
+const baseWords: WordData[] = [
   { id: '1', wordText: 'nation', syllableCount: 2, difficultyLevel: 2 },
   { id: '2', wordText: 'station', syllableCount: 2, difficultyLevel: 2 },
   { id: '3', wordText: 'creation', syllableCount: 3, difficultyLevel: 2 },
-  { id: '4', wordText: 'flow', syllableCount: 1, difficultyLevel: 1 },
-  { id: '5', wordText: 'grow', syllableCount: 1, difficultyLevel: 1 },
-  { id: '6', wordText: 'show', syllableCount: 1, difficultyLevel: 1 },
-  { id: '7', wordText: 'dream', syllableCount: 1, difficultyLevel: 1 },
-  { id: '8', wordText: 'unique', syllableCount: 2, difficultyLevel: 2 },
+  { id: '4', wordText: 'unique', syllableCount: 2, difficultyLevel: 2 },
+  { id: '5', wordText: 'sky', syllableCount: 1, difficultyLevel: 1 },
+  { id: '6', wordText: 'tie', syllableCount: 1, difficultyLevel: 1 },
+  { id: '7', wordText: 'stone', syllableCount: 1, difficultyLevel: 1 },
 ]
 
 describe('WordGenerator', () => {
   let generator: WordGenerator
 
   beforeEach(() => {
-    generator = new WordGenerator(mockWords)
+    clearRhymeKeyCache()
+    generator = new WordGenerator(baseWords)
   })
 
-  describe('Anti-Rhyme Logic (isTooSimilar)', () => {
-    it('should not return consecutive words with same suffix', () => {
-      generator.setDifficulty(2)
+  describe('Phonetic Anti-Rhyme Logic', () => {
+    it('should avoid phonetic rhymes like sky -> tie when alternatives exist', () => {
+      generator.setDifficulty(1)
 
-      // Get first word
-      const firstWord = generator.getRandomWord()
-      expect(firstWord).not.toBeNull()
+      let prev: string | null = null
+      for (let i = 0; i < 18; i++) {
+        const next = generator.getRandomWord()
+        expect(next).not.toBeNull()
+        if (!next) continue
 
-      // Get second word - should not have same last 3 chars
-      const secondWord = generator.getRandomWord()
-      expect(secondWord).not.toBeNull()
+        if (prev) {
+          expect(doWordsRhyme(prev, next.wordText)).toBe(false)
+        }
 
-      if (firstWord && secondWord) {
-        // The anti-rhyme logic blocks words with same last 3 chars
-        // In mock data: "nation", "station", "creation" all end in "ion"
-        // After first, it should pick "unique" or fall back to the pool
-        // We just verify we got a valid word
-        expect(secondWord.wordText).toBeDefined()
+        prev = next.wordText
       }
     })
 
-    it('should allow words with different suffixes', () => {
-      generator.setDifficulty(1) // Easy words: flow, grow, show, dream
+    it('should avoid classic rhyme chains like nation -> station when non-rhyme exists', () => {
+      generator.setDifficulty(2)
 
-      // Get multiple words
-      const words: string[] = []
-      for (let i = 0; i < 4; i++) {
-        const word = generator.getRandomWord()
-        if (word) words.push(word.wordText)
+      let prev: string | null = null
+      for (let i = 0; i < 25; i++) {
+        const next = generator.getRandomWord()
+        expect(next).not.toBeNull()
+        if (!next) continue
+
+        if (prev) {
+          expect(doWordsRhyme(prev, next.wordText)).toBe(false)
+        }
+
+        prev = next.wordText
       }
-
-      // "dream" should appear as it breaks the -ow rhyme pattern
-      expect(words.length).toBeGreaterThan(0)
     })
 
     it('should handle short words gracefully', () => {
@@ -66,50 +66,73 @@ describe('WordGenerator', () => {
       const shortGenerator = new WordGenerator(shortWords)
       shortGenerator.setDifficulty(1)
 
-      // Should not crash on words < 3 chars
       const word = shortGenerator.getRandomWord()
       expect(word).not.toBeNull()
+    })
+
+    it('should apply anti-rhyme with the configured language', () => {
+      const frenchWords: WordData[] = [
+        { id: '1', wordText: 'rime', syllableCount: 1, difficultyLevel: 1 },
+        { id: '2', wordText: 'crime', syllableCount: 1, difficultyLevel: 1 },
+        { id: '3', wordText: 'phase', syllableCount: 1, difficultyLevel: 1 },
+      ]
+
+      const frenchGenerator = new WordGenerator(frenchWords, {
+        language: 'fr-FR',
+      })
+      frenchGenerator.setDifficulty(1)
+
+      let prev: string | null = null
+      for (let i = 0; i < 14; i++) {
+        const next = frenchGenerator.getRandomWord()
+        expect(next).not.toBeNull()
+        if (!next) continue
+
+        if (prev) {
+          expect(doWordsRhyme(prev, next.wordText, 'fr-FR')).toBe(false)
+        }
+        prev = next.wordText
+      }
     })
   })
 
   describe('Fallback Behavior', () => {
-    it('should fall back to original pool when all words violate constraint', () => {
-      // All words end in "-ow" except none - forces fallback
-      const allRhymeWords: WordData[] = [
+    it('should keep returning words even when all options rhyme', () => {
+      const allRhymingWords: WordData[] = [
         { id: '1', wordText: 'flow', syllableCount: 1, difficultyLevel: 1 },
         { id: '2', wordText: 'grow', syllableCount: 1, difficultyLevel: 1 },
         { id: '3', wordText: 'show', syllableCount: 1, difficultyLevel: 1 },
       ]
 
-      const rhymeGenerator = new WordGenerator(allRhymeWords)
-      rhymeGenerator.setDifficulty(1)
+      const rhymeOnlyGenerator = new WordGenerator(allRhymingWords)
+      rhymeOnlyGenerator.setDifficulty(1)
 
-      // Get first word
-      const first = rhymeGenerator.getRandomWord()
-      expect(first).not.toBeNull()
-
-      // Get second word - should still work via fallback
-      const second = rhymeGenerator.getRandomWord()
-      expect(second).not.toBeNull()
-
-      // Get third word
-      const third = rhymeGenerator.getRandomWord()
-      expect(third).not.toBeNull()
+      for (let i = 0; i < 8; i++) {
+        const word = rhymeOnlyGenerator.getRandomWord()
+        expect(word).not.toBeNull()
+      }
     })
 
-    it('should reset usedWords and allow cycling through words', () => {
-      const smallPool: WordData[] = [
-        { id: '1', wordText: 'alpha', syllableCount: 2, difficultyLevel: 1 },
-        { id: '2', wordText: 'beta', syllableCount: 2, difficultyLevel: 1 },
+    it('should relax anti-repeat before allowing a forced rhyme', () => {
+      const constrainedWords: WordData[] = [
+        { id: '1', wordText: 'sky', syllableCount: 1, difficultyLevel: 1 },
+        { id: '2', wordText: 'tie', syllableCount: 1, difficultyLevel: 1 },
+        { id: '3', wordText: 'stone', syllableCount: 1, difficultyLevel: 1 },
       ]
 
-      const smallGenerator = new WordGenerator(smallPool)
-      smallGenerator.setDifficulty(1)
+      const constrainedGenerator = new WordGenerator(constrainedWords)
+      constrainedGenerator.setDifficulty(1)
 
-      // Get all words twice - should reset after exhausting pool
-      for (let i = 0; i < 4; i++) {
-        const word = smallGenerator.getRandomWord()
+      let prev: string | null = null
+      for (let i = 0; i < 14; i++) {
+        const word = constrainedGenerator.getRandomWord()
         expect(word).not.toBeNull()
+        if (!word) continue
+
+        if (prev) {
+          expect(doWordsRhyme(prev, word.wordText)).toBe(false)
+        }
+        prev = word.wordText
       }
     })
   })
@@ -126,21 +149,19 @@ describe('WordGenerator', () => {
       safeGenerator.setDifficulty(1)
       safeGenerator.setSafeMode(true)
 
-      // Get all available words
       const words: string[] = []
       for (let i = 0; i < 10; i++) {
         const word = safeGenerator.getRandomWord()
         if (word) words.push(word.wordText)
       }
 
-      // "fuck" should never appear
       expect(words).not.toContain('fuck')
     })
   })
 
   describe('Difficulty Filtering', () => {
     it('should only return words matching current difficulty', () => {
-      generator.setDifficulty(1) // Easy
+      generator.setDifficulty(1)
 
       const words: string[] = []
       for (let i = 0; i < 10; i++) {
@@ -148,10 +169,9 @@ describe('WordGenerator', () => {
         if (word) words.push(word.wordText)
       }
 
-      // Only easy words should appear
-      const easyWords = ['flow', 'grow', 'show', 'dream']
-      words.forEach((w) => {
-        expect(easyWords).toContain(w)
+      const easyWords = ['sky', 'tie', 'stone']
+      words.forEach((word) => {
+        expect(easyWords).toContain(word)
       })
     })
   })
@@ -160,18 +180,14 @@ describe('WordGenerator', () => {
     it('should clear usedWords on reset', () => {
       generator.setDifficulty(1)
 
-      // Use some words
       generator.getRandomWord()
       generator.getRandomWord()
 
-      // Stats should show used words
       const statsBefore = generator.getStats()
       expect(statsBefore.usedWords).toBeGreaterThan(0)
 
-      // Reset
       generator.reset()
 
-      // Stats should show 0 used words
       const statsAfter = generator.getStats()
       expect(statsAfter.usedWords).toBe(0)
     })

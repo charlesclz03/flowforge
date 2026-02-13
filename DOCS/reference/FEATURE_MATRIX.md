@@ -17,9 +17,9 @@
 | :---------------- | :------- | :------------------------------------------------------ | :-------- |
 | **Upload Beats**  | [x] 1/29 | Upload MP3/WAV files to personal library.               | **Pro**   |
 | **Cloud Storage** | [x] 1/29 | Secure bucket storage for user assets.                  | **Pro**   |
-| **Calibration**   | [x] 1/29 | Set custom "Start Points" and offset for perfect loops. | **Pro**   |
+| **Calibration**   | [x] 2/12 | Set custom "Start Points" and offset for perfect loops. | **Pro**   |
 | **Beat Deletion** | [x] 1/29 | Permanently remove uploaded tracks.                     | **Pro**   |
-| **"My Beats"**    | [x] 1/29 | Dedicated tab in Beat Selector for uploads.             | **Pro**   |
+| **"My Beats"**    | [x] 2/12 | Dedicated tab in Beat Selector for uploads.             | **Pro**   |
 
 ## Recording & Studio
 
@@ -56,6 +56,8 @@
 
 | Date       | Feature             | Status | Fixes Applied                                                               |
 | :--------- | :------------------ | :----: | :-------------------------------------------------------------------------- |
+| 2026-02-13 | User Beat Calibration + Difficulty Handoff (Re-audit) |  PASS  | Re-audited after user report. Verified via Playwright regression and static checks that private-track arrow handoff and calibrated Practice offset start both work. No new fixes required. |
+| 2026-02-13 | User Beat Calibration + Difficulty Handoff |  PASS  | Forever fix applied: Practice now honors saved `offset` cue points at playback/replay time, and `/difficultyselection?beatId=` resolves against both public and user-uploaded beats so `/tracks` handoff works for private uploads. |
 | 2026-02-11 | Practice Page Layout |  PASS  | Removed fixed-height top/bottom Practice control wrappers and redundant bottom padding that created a large empty “black zone” under the player on mobile. Added `min-h-0` to the main shell to harden flex behavior. |
 | 2026-02-11 | App Shell Chrome     |  PASS  | Fixed phantom scroll/“moving chrome” on small WebViews by removing double safe-area padding (shell + header/nav), hardening key flex containers with `min-h-0`, and removing template-level `min-h-screen` padding compensation. Practice now enforces a true no-scroll shell while keeping the beat selector usable via an overlay menu. |
 | 2026-02-10 | Practice Continuity |  PASS  | True pause/resume now preserves the current word + timer ring timing; in-session difficulty/frequency changes clearly show as pending and apply on prompt boundaries. |

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { DifficultySelector } from '@/components/molecules/practice/DifficultySelector'
@@ -12,12 +12,14 @@ import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ChevronDown, User, Users, Mic } from 'lucide-react'
+import { ChevronDown, User, Users, Mic, HelpCircle } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
 import { isProUser } from '@/lib/subscription/isPro'
+import { useTTS } from '@/hooks/useTTS'
+import { TTS_LANGUAGE_OPTIONS } from '@/lib/tts/languages'
 
 type Frequency = 4 | 8 | 16
 
@@ -30,8 +32,8 @@ export function DifficultySelectionClient({
 }: DifficultySelectionClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session } = useSession()
-  const { error, clearError } = useErrorHandler()
+  const { data: session, status: sessionStatus } = useSession()
+  const { error, clearError, handleError } = useErrorHandler()
   const {
     selectedBeat,
     frequency,
@@ -43,26 +45,118 @@ export function DifficultySelectionClient({
     setMode,
     cypherPlayers,
     setCypherPlayers,
+    selectedLanguage,
+    setSelectedLanguage,
     isRecordingEnabled,
     setIsRecordingEnabled,
   } = usePracticeSession()
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
+  const [userBeats, setUserBeats] = useState<Beat[]>([])
+  const [hasResolvedUserBeats, setHasResolvedUserBeats] = useState(false)
+  const missingBeatIdRef = useRef<string | null>(null)
 
   const isPro = isProUser(session?.user)
 
   // Use initial beats passed from server
   const [beats] = useState<Beat[]>(initialBeats)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [showLanguageHelp, setShowLanguageHelp] = useState(false)
+  const { activeVoice, voiceStatus } = useTTS({
+    enabled: false,
+    language: selectedLanguage,
+  })
+
+  const beatsById = useMemo(() => {
+    const index = new Map<string, Beat>()
+
+    for (const beat of beats) {
+      index.set(beat.id, beat)
+    }
+    for (const beat of userBeats) {
+      index.set(beat.id, beat)
+    }
+
+    return index
+  }, [beats, userBeats])
+
+  useEffect(() => {
+    let isMounted = true
+    const controller = new AbortController()
+
+    const loadUserBeats = async () => {
+      if (sessionStatus === 'loading') return
+
+      if (sessionStatus !== 'authenticated' || !isPro) {
+        if (isMounted) {
+          setUserBeats([])
+          setHasResolvedUserBeats(true)
+        }
+        return
+      }
+
+      setHasResolvedUserBeats(false)
+
+      try {
+        const res = await fetch('/api/user/beats', {
+          cache: 'no-store',
+          signal: controller.signal,
+        })
+
+        if (!res.ok) {
+          if (isMounted) setUserBeats([])
+          return
+        }
+
+        const data = await res.json()
+        if (isMounted) {
+          setUserBeats(Array.isArray(data?.beats) ? data.beats : [])
+        }
+      } catch (err) {
+        if (isMounted && (err as Error).name !== 'AbortError') {
+          console.error('Failed to fetch user beats for beat handoff', err)
+          setUserBeats([])
+        }
+      } finally {
+        if (isMounted) {
+          setHasResolvedUserBeats(true)
+        }
+      }
+    }
+
+    void loadUserBeats()
+
+    return () => {
+      isMounted = false
+      controller.abort()
+    }
+  }, [isPro, sessionStatus])
 
   // Handle URL Params (Beat, Mode, Advanced Settings)
   useEffect(() => {
+    const canResolveBeatId =
+      sessionStatus !== 'loading' &&
+      (sessionStatus !== 'authenticated' || !isPro || hasResolvedUserBeats)
+
     // 1. Beat Selection
     const beatId = searchParams.get('beatId')
-    if (beatId && beats.length > 0) {
-      const beat = beats.find((b) => b.id === beatId)
+    if (beatId && canResolveBeatId) {
+      const beat = beatsById.get(beatId)
       if (beat) {
         setBeat(beat)
+        clearError()
+        missingBeatIdRef.current = null
+      } else {
+        setBeat(null)
+        if (missingBeatIdRef.current !== beatId) {
+          handleError(
+            new Error(
+              'Selected track was not found. Please select a beat manually.'
+            ),
+            'BEAT_NOT_FOUND'
+          )
+          missingBeatIdRef.current = beatId
+        }
       }
     }
 
@@ -77,7 +171,17 @@ export function DifficultySelectionClient({
     if (advancedParam === 'true') {
       setIsAdvancedOpen(true)
     }
-  }, [searchParams, beats, setBeat, setMode])
+  }, [
+    beatsById,
+    clearError,
+    handleError,
+    hasResolvedUserBeats,
+    isPro,
+    searchParams,
+    sessionStatus,
+    setBeat,
+    setMode,
+  ])
 
   const canStart = !!selectedBeat
 
@@ -100,6 +204,56 @@ export function DifficultySelectionClient({
             onChange={setDifficulty}
             disabled={false}
           />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <label className="text-base text-text-primary">Language</label>
+              <button
+                type="button"
+                onClick={() => setShowLanguageHelp((prev) => !prev)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <HelpCircle size={12} />?
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {TTS_LANGUAGE_OPTIONS.map((option) => {
+                const isActive = selectedLanguage === option.code
+                return (
+                  <button
+                    key={option.code}
+                    type="button"
+                    onClick={() => setSelectedLanguage(option.code)}
+                    className={cn(
+                      'rounded-xl border px-3 py-2 text-sm font-bold transition-all',
+                      isActive
+                        ? 'border-accent-purple bg-accent-purple/20 text-white shadow-[0_0_12px_rgba(125,122,255,0.28)]'
+                        : 'border-white/10 bg-black/20 text-text-secondary hover:text-white hover:border-white/25'
+                    )}
+                  >
+                    <span className="block">{option.shortLabel}</span>
+                    <span className="block text-[10px] font-medium uppercase tracking-wider opacity-80">
+                      {option.label}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs text-text-secondary">
+              {voiceStatus === 'unsupported'
+                ? 'This browser does not support Web Speech API. Prompts will stay visual-only.'
+                : voiceStatus === 'ready'
+                  ? `Voice ready: ${activeVoice?.name || 'System voice'} (${activeVoice?.lang || selectedLanguage})`
+                  : voiceStatus === 'fallback'
+                    ? 'No matching voice installed for this language on this device. Spoken prompts may use a fallback voice.'
+                    : 'Checking available voices for this language...'}
+            </div>
+            {showLanguageHelp && (
+              <div className="rounded-xl border border-accent-blue/30 bg-accent-blue/10 px-3 py-2 text-xs text-text-secondary">
+                If a language voice is unavailable, install that voice package
+                in your device speech settings, then refresh this page.
+              </div>
+            )}
+          </div>
           <FrequencySelector
             value={
               (frequency as Frequency) ||
@@ -287,7 +441,7 @@ export function DifficultySelectionClient({
             disabled={!canStart}
             onClick={() => {
               if (!selectedBeat) return
-              router.push('/practice')
+              router.push(`/practice?lang=${encodeURIComponent(selectedLanguage)}`)
             }}
           >
             {canStart ? 'Practice' : 'Select a beat to continue'}

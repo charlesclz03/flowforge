@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { ReactNode } from 'react'
 import { usePracticeSession } from '@/contexts/SessionContext'
 
-interface ProtectedLinkProps extends LinkProps {
+interface ProtectedLinkProps extends Omit<LinkProps, 'href'> {
+  href: string
   children: ReactNode
   className?: string
   onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
@@ -42,15 +43,7 @@ export function ProtectedLink({
 
     // We'll wrap the navigation in a thunk
     const performNavigation = () => {
-      // If it's a simple string, we can pass it directly or push it here
-      if (typeof href === 'string') {
-        router.push(href)
-      } else {
-        // Handle UrlObject if needed, but for now mostly strings are used.
-        // If complex, we might need to rely on router.push(href)
-        // @ts-expect-error - router.push supports UrlObject
-        router.push(href)
-      }
+      router.push(href)
     }
 
     attemptNavigation(performNavigation)

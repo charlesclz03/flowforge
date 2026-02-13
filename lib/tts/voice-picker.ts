@@ -1,3 +1,9 @@
+import {
+  DEFAULT_TTS_LANGUAGE,
+  getLanguageAliases,
+  normalizeLangTag,
+} from '@/lib/tts/languages'
+
 /**
  * Smart Voice Picker for FlowForge
  *
@@ -6,67 +12,99 @@
  */
 
 export interface VoicePreference {
-  lang: string
+  langPrefix: string
   name?: string
   priority: number
 }
 
-// Higher priority = better
-const PREFERRED_VOICES: VoicePreference[] = [
-  // Tier 1: Premium Neural/Natural Voices
-  { lang: 'en-US', name: 'Google US English', priority: 100 },
-  { lang: 'en-US', name: 'Samantha', priority: 90 }, // iOS Premium
-  { lang: 'en-GB', name: 'Daniel', priority: 85 }, // iOS Premium GB
-  { lang: 'en-US', name: 'Microsoft Zira', priority: 80 }, // Windows
+const LANGUAGE_PREFERENCES: Record<string, VoicePreference[]> = {
+  en: [
+    { langPrefix: 'en-us', name: 'Google US English', priority: 120 },
+    { langPrefix: 'en-us', name: 'Samantha', priority: 110 },
+    { langPrefix: 'en-gb', name: 'Daniel', priority: 105 },
+    { langPrefix: 'en-us', name: 'Microsoft Zira', priority: 100 },
+    { langPrefix: 'en', priority: 30 },
+  ],
+  fr: [
+    { langPrefix: 'fr-fr', name: 'Google francais', priority: 120 },
+    { langPrefix: 'fr-fr', name: 'Amelie', priority: 110 },
+    { langPrefix: 'fr-ca', name: 'Thomas', priority: 90 },
+    { langPrefix: 'fr', priority: 30 },
+  ],
+  pt: [
+    { langPrefix: 'pt-br', name: 'Google português do Brasil', priority: 120 },
+    { langPrefix: 'pt-pt', name: 'Joana', priority: 110 },
+    { langPrefix: 'pt', priority: 30 },
+  ],
+}
 
-  // Tier 2: Standard English
-  { lang: 'en-US', priority: 50 },
-  { lang: 'en-GB', priority: 40 },
+function getTargetPreferences(targetLang: string): VoicePreference[] {
+  const normalized = normalizeLangTag(targetLang)
+  const base = normalized.split('-')[0]
+  return LANGUAGE_PREFERENCES[base] ?? LANGUAGE_PREFERENCES.en
+}
 
-  // Tier 3: Any English
-  { lang: 'en', priority: 10 },
-]
+function matchesAlias(voiceLang: string, aliases: string[]): boolean {
+  const normalizedVoiceLang = normalizeLangTag(voiceLang)
+  return aliases.some((alias) => {
+    const normalizedAlias = normalizeLangTag(alias)
+    const aliasBase = normalizedAlias.split('-')[0]
+    return (
+      normalizedVoiceLang === normalizedAlias ||
+      normalizedVoiceLang.startsWith(`${aliasBase}-`) ||
+      normalizedVoiceLang === aliasBase
+    )
+  })
+}
+
+export function hasVoiceForLanguage(
+  voices: SpeechSynthesisVoice[],
+  targetLang: string
+): boolean {
+  const aliases = getLanguageAliases(targetLang)
+  return voices.some((voice) => matchesAlias(voice.lang, aliases))
+}
 
 export const getBestVoice = (
-  voices: SpeechSynthesisVoice[]
+  voices: SpeechSynthesisVoice[],
+  targetLang: string = DEFAULT_TTS_LANGUAGE
 ): SpeechSynthesisVoice | null => {
   if (!voices || voices.length === 0) return null
 
-  // 1. Filter for English only to simplify
-  const englishVoices = voices.filter((v) => v.lang.startsWith('en'))
+  const aliases = getLanguageAliases(targetLang)
+  const matchingVoices = voices.filter((voice) =>
+    matchesAlias(voice.lang, aliases)
+  )
+  const pool = matchingVoices.length > 0 ? matchingVoices : voices
+  const preferences = getTargetPreferences(targetLang)
 
-  if (englishVoices.length === 0) return voices[0] // Fallback to anything
-
-  // 2. Score each voice
-  const scored = englishVoices.map((voice) => {
+  const scored = pool.map((voice) => {
+    const lang = normalizeLangTag(voice.lang)
     let score = 0
 
-    // Check preferences
-    for (const pref of PREFERRED_VOICES) {
-      if (
-        voice.lang === pref.lang ||
-        (pref.lang === 'en' && voice.lang.startsWith('en'))
-      ) {
+    if (matchesAlias(voice.lang, aliases)) {
+      score += 200
+    }
+
+    for (const pref of preferences) {
+      const prefPrefix = pref.langPrefix
+      if (lang === prefPrefix || lang.startsWith(`${prefPrefix}-`)) {
         if (pref.name) {
-          if (voice.name.includes(pref.name)) {
+          if (voice.name.toLowerCase().includes(pref.name.toLowerCase())) {
             score += pref.priority
           }
         } else {
           score += pref.priority
         }
-        // Break after first valid match tier to avoid double counting?
-        // Actually, specific name match should boost significantly.
       }
     }
 
-    // Penalty for "local" only if we have a remote option?
-    // Actually, localService is usually better for latency, but worse for quality?
-    // On Chrome, "Google US English" is remote but fast.
+    if (voice.localService) score += 10
+    if (voice.default) score += 3
 
     return { voice, score }
   })
 
-  // 3. Sort by score descending
   scored.sort((a, b) => b.score - a.score)
 
   return scored[0].voice
