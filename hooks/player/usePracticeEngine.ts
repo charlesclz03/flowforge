@@ -290,7 +290,7 @@ export function usePracticeEngine({
 
   // TTS Integration (Restored)
   // TTS Integration (Restored & Upgraded)
-  const { speak } = useTTS({
+  const { speak, warmup } = useTTS({
     enabled: isTTSEnabled,
     language: selectedLanguage,
     volume: ttsVolume,
@@ -456,6 +456,10 @@ export function usePracticeEngine({
       // C. Prime the Element (Unlock Autoplay)
       await beatPlayer.prime()
 
+      if (isTTSEnabled) {
+        warmup()
+      }
+
       // D. Sync Volume (Crucial Fix)
       beatPlayer.setVolume(beatVolume)
 
@@ -477,7 +481,16 @@ export function usePracticeEngine({
       // dispatch({ type: 'ERROR', error: 'Failed to initialize audio' })
       alert('Could not start audio engine. Please tap again.')
     }
-  }, [state.status, dispatch, initAudio, beatPlayer, beatVolume, debugLog])
+  }, [
+    state.status,
+    dispatch,
+    initAudio,
+    beatPlayer,
+    beatVolume,
+    debugLog,
+    isTTSEnabled,
+    warmup,
+  ])
 
   const stopSession = useCallback(() => {
     dispatch({ type: 'STOP', shouldSave: shouldSaveSessions })

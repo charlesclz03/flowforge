@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getBestVoice, hasVoiceForLanguage } from '@/lib/tts/voice-picker'
-import { DEFAULT_TTS_LANGUAGE, TTSLanguageCode } from '@/lib/tts/languages'
+import {
+  DEFAULT_TTS_LANGUAGE,
+  normalizeLangTag,
+  TTSLanguageCode,
+} from '@/lib/tts/languages'
 
 interface UseTTSProps {
   enabled?: boolean
@@ -11,6 +15,32 @@ interface UseTTSProps {
 }
 
 export type TTSVoiceStatus = 'unsupported' | 'loading' | 'ready' | 'fallback'
+
+interface ResolveUtteranceLanguageParams {
+  requestedLanguage: TTSLanguageCode
+  activeVoice: SpeechSynthesisVoice | null
+  voiceStatus: TTSVoiceStatus
+}
+
+export function resolveUtteranceLanguage({
+  requestedLanguage,
+  activeVoice,
+  voiceStatus,
+}: ResolveUtteranceLanguageParams): string {
+  if (!activeVoice?.lang || voiceStatus !== 'fallback') {
+    return requestedLanguage
+  }
+
+  const requestedBase = normalizeLangTag(requestedLanguage).split('-')[0]
+  const voiceBase = normalizeLangTag(activeVoice.lang).split('-')[0]
+
+  // Keep the requested locale when the fallback voice is at least the same language family.
+  if (requestedBase === voiceBase) {
+    return requestedLanguage
+  }
+
+  return activeVoice.lang
+}
 
 export function useTTS({
   enabled = true,
@@ -78,7 +108,11 @@ export function useTTS({
       const u = new SpeechSynthesisUtterance(text)
 
       // 3. Apply Settings
-      u.lang = language
+      u.lang = resolveUtteranceLanguage({
+        requestedLanguage: language,
+        activeVoice,
+        voiceStatus,
+      })
       if (activeVoice) u.voice = activeVoice
       u.volume = volume
       u.rate = rate
@@ -90,8 +124,32 @@ export function useTTS({
       // is called from a useEffect that was triggered by a user-driven state change.
       window.speechSynthesis.speak(u)
     },
-    [enabled, activeVoice, volume, rate, pitch, language]
+    [enabled, activeVoice, volume, rate, pitch, language, voiceStatus]
   )
+
+  const warmup = useCallback((): boolean => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return false
+
+    try {
+      const u = new SpeechSynthesisUtterance('.')
+      u.lang = resolveUtteranceLanguage({
+        requestedLanguage: language,
+        activeVoice,
+        voiceStatus,
+      })
+      if (activeVoice) u.voice = activeVoice
+      u.volume = 0
+      u.rate = 1
+      u.pitch = 1
+
+      // Clear stale queue first, then trigger a silent no-op utterance from user gesture.
+      window.speechSynthesis.cancel()
+      window.speechSynthesis.speak(u)
+      return true
+    } catch {
+      return false
+    }
+  }, [language, activeVoice, voiceStatus])
 
   const cancel = useCallback(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -101,6 +159,7 @@ export function useTTS({
 
   return {
     speak,
+    warmup,
     cancel,
     isReady,
     activeVoice,

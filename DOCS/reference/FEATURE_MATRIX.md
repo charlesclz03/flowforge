@@ -1,7 +1,7 @@
 # Feature Matrix
 
 **Current Version**: `1.0.2`
-**Last Updated**: 2026-02-13
+**Last Updated**: 2026-02-17
 
 ## Core Practice
 
@@ -11,7 +11,7 @@
 | Cypher Mode | PASS | Local pass-the-phone with player rotation | All |
 | Beat Selection | PASS | Public + private beat selection and handoff | All |
 | Prompt Engine | PASS | Difficulty + frequency with anti-rhyme guard | All |
-| Language Runtime | PASS | EN/FR/PT alias + handoff synchronization | All |
+| Language Runtime (TTS) | PASS [x] 2026-02-17 | Alias + handoff sync works and fallback voice/lang resolution now prevents silent prompts when matching voice packs are unavailable | All |
 
 ## Beats & Calibration
 
@@ -40,10 +40,12 @@
 | Docs Canonical Governance | PASS | Canonical map + CI docs checks enforced |
 | MCP Matrix Tracking | PASS | MCP health baseline documented |
 
-## Audit Trail (Recent)
+## Audit History
 
 | Date | Audit | Status | Outcome |
 | --- | --- | --- | --- |
+| 2026-02-17 | TTS Prompt Output Forever Fix | PASS | Implemented fallback-safe utterance language contract, user-gesture warmup on session start, setup diagnostics, and regression tests for fallback behavior |
+| 2026-02-17 | TTS Prompt Output Re-Audit | FAIL | Root cause isolated: forced `utterance.lang` + non-matching fallback `voice` can produce silent prompts on some engines; fix plan added in `brain/TTS_FIX_PLAN_2026-02-17.md` |
 | 2026-02-13 | User Beat Calibration + Difficulty Handoff | PASS | Re-audited and validated private-beat handoff + runtime offset behavior |
 | 2026-02-10 | Launch Matrix Audit | PASS | Guest/Free/Pro/SUPERADMIN coverage validated |
 

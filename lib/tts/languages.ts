@@ -8,36 +8,29 @@ export interface TTSLanguageOption {
   shortLabel: string
   aliases: string[]
   testPhrase: string
-  voiceGuidance: string
 }
 
 export const TTS_LANGUAGE_OPTIONS: TTSLanguageOption[] = [
   {
     code: 'en-US',
     label: 'English',
-    shortLabel: 'EN',
+    shortLabel: '\u{1F1FA}\u{1F1F8}',
     aliases: ['en-US', 'en-GB', 'en'],
     testPhrase: 'Mic check, one two. FreeStyla is ready.',
-    voiceGuidance:
-      'English voice packs are usually preinstalled. If prompts are silent, tap once to enable audio in browser.',
   },
   {
     code: 'fr-FR',
     label: 'French',
-    shortLabel: 'FR',
+    shortLabel: '\u{1F1EB}\u{1F1F7}',
     aliases: ['fr-FR', 'fr-CA', 'fr'],
     testPhrase: 'Micro test, un deux. FreeStyla est pret.',
-    voiceGuidance:
-      'Install a French voice in your device speech settings to unlock spoken prompts.',
   },
   {
     code: 'pt-PT',
     label: 'Portuguese',
-    shortLabel: 'PT',
+    shortLabel: '\u{1F1F5}\u{1F1F9}',
     aliases: ['pt-PT', 'pt-BR', 'pt'],
     testPhrase: 'Teste de microfone. FreeStyla esta pronto.',
-    voiceGuidance:
-      'Install a Portuguese voice package in your device speech settings to unlock spoken prompts.',
   },
 ]
 

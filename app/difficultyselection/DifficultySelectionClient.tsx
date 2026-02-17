@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
+import { Menu } from '@headlessui/react'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { DifficultySelector } from '@/components/molecules/practice/DifficultySelector'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
@@ -12,19 +14,25 @@ import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
-import { ChevronDown, User, Users, Mic, HelpCircle } from 'lucide-react'
+import { ChevronDown, User, Users, Mic } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
 import { isProUser } from '@/lib/subscription/isPro'
 import { useTTS } from '@/hooks/useTTS'
-import { TTS_LANGUAGE_OPTIONS } from '@/lib/tts/languages'
+import { TTS_LANGUAGE_OPTIONS, type TTSLanguageCode } from '@/lib/tts/languages'
 
 type Frequency = 4 | 8 | 16
 
 interface DifficultySelectionClientProps {
   initialBeats: Beat[]
+}
+
+const LANGUAGE_FLAGS: Record<TTSLanguageCode, string> = {
+  'en-US': '/flags/us.svg',
+  'fr-FR': '/flags/fr.svg',
+  'pt-PT': '/flags/pt.svg',
 }
 
 export function DifficultySelectionClient({
@@ -61,11 +69,6 @@ export function DifficultySelectionClient({
   // Use initial beats passed from server
   const [beats] = useState<Beat[]>(initialBeats)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
-  const [showLanguageHelp, setShowLanguageHelp] = useState(false)
-  const { activeVoice, voiceStatus } = useTTS({
-    enabled: false,
-    language: selectedLanguage,
-  })
 
   const beatsById = useMemo(() => {
     const index = new Map<string, Beat>()
@@ -184,6 +187,31 @@ export function DifficultySelectionClient({
   ])
 
   const canStart = !!selectedBeat
+  const { activeVoice, voiceStatus } = useTTS({
+    enabled: false,
+    language: selectedLanguage,
+  })
+  const activeLanguageCode =
+    TTS_LANGUAGE_OPTIONS.find((option) => option.code === selectedLanguage)
+      ?.code ?? TTS_LANGUAGE_OPTIONS[0].code
+  const voiceStatusMessage = useMemo(() => {
+    if (voiceStatus === 'unsupported') {
+      return 'Voice prompts are unavailable in this browser.'
+    }
+
+    if (voiceStatus === 'fallback') {
+      const fallbackLabel = activeVoice?.name
+        ? `Using fallback voice: ${activeVoice.name}.`
+        : 'Using a fallback voice.'
+      return `${fallbackLabel} Install a matching language voice for best results.`
+    }
+
+    if (voiceStatus === 'loading') {
+      return 'Checking installed voice packs...'
+    }
+
+    return null
+  }, [voiceStatus, activeVoice])
 
   return (
     <OnboardingLayout
@@ -204,56 +232,6 @@ export function DifficultySelectionClient({
             onChange={setDifficulty}
             disabled={false}
           />
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <label className="text-base text-text-primary">Language</label>
-              <button
-                type="button"
-                onClick={() => setShowLanguageHelp((prev) => !prev)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <HelpCircle size={12} />?
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {TTS_LANGUAGE_OPTIONS.map((option) => {
-                const isActive = selectedLanguage === option.code
-                return (
-                  <button
-                    key={option.code}
-                    type="button"
-                    onClick={() => setSelectedLanguage(option.code)}
-                    className={cn(
-                      'rounded-xl border px-3 py-2 text-sm font-bold transition-all',
-                      isActive
-                        ? 'border-accent-purple bg-accent-purple/20 text-white shadow-[0_0_12px_rgba(125,122,255,0.28)]'
-                        : 'border-white/10 bg-black/20 text-text-secondary hover:text-white hover:border-white/25'
-                    )}
-                  >
-                    <span className="block">{option.shortLabel}</span>
-                    <span className="block text-[10px] font-medium uppercase tracking-wider opacity-80">
-                      {option.label}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-            <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs text-text-secondary">
-              {voiceStatus === 'unsupported'
-                ? 'This browser does not support Web Speech API. Prompts will stay visual-only.'
-                : voiceStatus === 'ready'
-                  ? `Voice ready: ${activeVoice?.name || 'System voice'} (${activeVoice?.lang || selectedLanguage})`
-                  : voiceStatus === 'fallback'
-                    ? 'No matching voice installed for this language on this device. Spoken prompts may use a fallback voice.'
-                    : 'Checking available voices for this language...'}
-            </div>
-            {showLanguageHelp && (
-              <div className="rounded-xl border border-accent-blue/30 bg-accent-blue/10 px-3 py-2 text-xs text-text-secondary">
-                If a language voice is unavailable, install that voice package
-                in your device speech settings, then refresh this page.
-              </div>
-            )}
-          </div>
           <FrequencySelector
             value={
               (frequency as Frequency) ||
@@ -276,15 +254,82 @@ export function DifficultySelectionClient({
 
           {/* Advanced Section */}
           <div className="pt-2">
-            <button
-              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-              className="flex items-center gap-2 text-sm font-medium text-text-secondary hover:text-white transition-colors group w-full sm:w-auto"
-            >
-              <div
+            <div className="flex min-h-[44px] items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <Menu as="div" className="relative shrink-0">
+                  <Menu.Button
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-white/15 bg-white/5 text-lg transition-colors hover:border-white/25 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/70"
+                    aria-label="Select language"
+                  >
+                    <Image
+                      src={LANGUAGE_FLAGS[activeLanguageCode]}
+                      alt=""
+                      aria-hidden
+                      width={24}
+                      height={16}
+                      className="h-4 w-6 rounded-[2px] object-cover"
+                    />
+                  </Menu.Button>
+                  <Menu.Items className="absolute left-0 top-full z-30 mt-2 flex min-w-[138px] items-center gap-1 rounded-xl border border-white/15 bg-zinc-950/95 p-1.5 shadow-2xl backdrop-blur focus:outline-none">
+                    {TTS_LANGUAGE_OPTIONS.map((option) => {
+                      const isActive = selectedLanguage === option.code
+                      return (
+                        <Menu.Item key={option.code}>
+                          {({ active }) => (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedLanguage(option.code)}
+                              className={cn(
+                                'flex h-10 w-10 items-center justify-center rounded-lg border text-lg transition-colors',
+                                isActive
+                                  ? 'border-accent-purple bg-accent-purple/20 shadow-[0_0_12px_rgba(125,122,255,0.28)]'
+                                  : 'border-white/10 bg-black/20',
+                                active &&
+                                  !isActive &&
+                                  'border-white/20 bg-white/10'
+                              )}
+                              aria-label={option.label}
+                            >
+                              <Image
+                                src={LANGUAGE_FLAGS[option.code]}
+                                alt=""
+                                aria-hidden
+                                width={24}
+                                height={16}
+                                className="h-4 w-6 rounded-[2px] object-cover"
+                              />
+                            </button>
+                          )}
+                        </Menu.Item>
+                      )
+                    })}
+                  </Menu.Items>
+                </Menu>
+
+                <button
+                  type="button"
+                  onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+                  className="flex min-h-[44px] items-center gap-2 rounded-lg px-1 text-sm font-medium text-text-secondary transition-colors hover:text-white"
+                >
+                  <span className="truncate">Advanced Settings</span>
+                  {!isAdvancedOpen && mode === 'cypher' && (
+                    <div className="ml-1 h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-accent-purple" />
+                  )}
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
                 className={cn(
-                  'p-1 rounded-md bg-white/5 group-hover:bg-white/10 transition-colors shrink-0',
+                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md bg-white/5 text-text-secondary transition-colors hover:bg-white/10 hover:text-white',
                   isAdvancedOpen && 'bg-accent-purple/20 text-accent-purple'
                 )}
+                aria-label={
+                  isAdvancedOpen
+                    ? 'Collapse advanced settings'
+                    : 'Expand advanced settings'
+                }
               >
                 <ChevronDown
                   className={cn(
@@ -293,12 +338,13 @@ export function DifficultySelectionClient({
                   )}
                   size={14}
                 />
-              </div>
-              <span className="truncate">Advanced Settings</span>
-              {!isAdvancedOpen && mode === 'cypher' && (
-                <div className="h-1.5 w-1.5 rounded-full bg-accent-purple animate-pulse ml-1 shrink-0" />
-              )}
-            </button>
+              </button>
+            </div>
+            {voiceStatusMessage && (
+              <p className="mt-2 text-xs text-text-tertiary">
+                {voiceStatusMessage}
+              </p>
+            )}
 
             {isAdvancedOpen && (
               <div className="mt-6 space-y-8 pt-6 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -441,7 +487,9 @@ export function DifficultySelectionClient({
             disabled={!canStart}
             onClick={() => {
               if (!selectedBeat) return
-              router.push(`/practice?lang=${encodeURIComponent(selectedLanguage)}`)
+              router.push(
+                `/practice?lang=${encodeURIComponent(selectedLanguage)}`
+              )
             }}
           >
             {canStart ? 'Practice' : 'Select a beat to continue'}

@@ -50,7 +50,11 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
     - **Update**: `components/organisms/settings/SettingsList.tsx` (Update displayed version).
 
 7.  **Deploy (Push to Vercel)**
-    - Run `git add .`
-    - Run `git commit -m "chore(release): vX.X.X - <Codename>"` (Use the version and codename from patch notes).
-    - Run `git push origin main`.
-    - **Notify**: "Deployed vX.X.X to Vercel! 🚀"
+    - **Auto-Deploy Path (Git-Connected Project)**:
+      - Run `git add .`
+      - Run `git commit -m "chore(release): vX.X.X - <Codename>"` (Use the version and codename from patch notes).
+      - Run `git push origin main` (Vercel will build/deploy from `main`).
+    - **Manual CLI Path (Direct Production Deploy)**:
+      - Run `& "C:/Program Files/nodejs/npx.cmd" vercel pull --yes --environment=production`.
+      - Run `& "C:/Program Files/nodejs/npx.cmd" vercel --prod --yes`.
+    - **Notify**: "Deployed vX.X.X to Vercel!"

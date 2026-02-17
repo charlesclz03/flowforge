@@ -1,7 +1,7 @@
 # Deployment Guide
 
 **Current Version**: `1.0.2`
-**Last Updated**: 2026-02-13
+**Last Updated**: 2026-02-17
 
 This guide is the canonical deployment procedure.
 
@@ -45,12 +45,21 @@ Before pushing release:
 3. `DOCS/project/PROJECT_STATUS.md`
 4. `components/organisms/settings/SettingsList.tsx`
 
-## Push Sequence
+## Push Sequence (Git-Triggered Vercel Deploy)
 
 ```powershell
 git add .
 git commit -m "chore(release): vX.X.X - <Codename>"
 git push origin main
+```
+
+## Manual Vercel CLI Deploy (Optional)
+
+Use this when you need to deploy directly from local without waiting for the Git integration path.
+
+```powershell
+& "C:/Program Files/nodejs/npx.cmd" vercel pull --yes --environment=production
+& "C:/Program Files/nodejs/npx.cmd" vercel --prod --yes
 ```
 
 ## Post-Push Validation

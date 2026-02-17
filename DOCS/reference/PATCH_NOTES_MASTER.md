@@ -10,6 +10,12 @@
 - **FIX**: Practice word prompts now use phonetic anti-rhyme matching (instead of raw suffix checks), preventing back-to-back rhymes like `Sky` -> `Tie` unless every remaining candidate rhymes.
 - **FIX**: Practice runtime anti-rhyme now uses the active language profile (EN/FR/PT) instead of always evaluating with English defaults.
 - **FIX**: Practice language selection now resolves aliases (`en`, `fr`, `pt`) and stays synchronized between server word loading and session TTS language state.
+- **FIX**: Practice TTS now resolves `SpeechSynthesisUtterance.lang` against active fallback voice language, preventing silent prompts when selected locale and fallback voice family do not match.
+- **FIX**: Practice session start now primes TTS with a silent user-gesture warmup utterance, improving first-prompt reliability on browsers that gate speech queue activation.
+- **UX**: Skill Check now surfaces fallback/unsupported TTS diagnostics in setup so users know when local language voice packs are missing.
+- **UI**: `/difficultyselection` now uses a compact flag-only language dropdown beside `Advanced Settings`, and removes the language `?` help pill plus the `Voice ready` status line.
+- **UI**: Skill Check language controls now render real SVG flag assets (US/FR/PT), preventing Windows/non-emoji fallback from showing `US`/`FR`/`PT` text.
+- **CHORE**: Removed unused `voiceGuidance` metadata from `lib/tts/languages.ts`.
 - **FIX**: Recordings now show `PROCESSING` while uploaded audio links are not yet streamable, instead of showing the stats-only label.
 - **FIX**: Sessions saved with `Capture the Audio` disabled remain stats-only in Recordings and no longer show playback/share/download/video controls.
 - **FIX**: `/review/[id]` now displays `Save Changes` only when studio controls were edited, and persists updated mix/alignment settings to the recording.

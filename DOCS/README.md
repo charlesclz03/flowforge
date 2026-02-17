@@ -1,7 +1,7 @@
 # Freestyla Documentation Hub
 
 **Current Version**: `1.0.2`
-**Last Updated**: 2026-02-13
+**Last Updated**: 2026-02-17
 
 This folder is now canonical-first:
 - Active docs live in canonical paths listed below.
