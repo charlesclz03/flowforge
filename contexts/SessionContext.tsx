@@ -15,6 +15,11 @@ import {
   getLanguageOption,
   TTSLanguageCode,
 } from '@/lib/tts/languages'
+import { getBestVoice, hasVoiceForLanguage } from '@/lib/tts/voice-picker'
+import {
+  resolveUtteranceLanguage,
+  type TTSVoiceStatus,
+} from '@/lib/tts/utterance-language'
 
 export interface PracticeSessionState {
   selectedBeat: Beat | null
@@ -320,12 +325,30 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setSelectedLanguage,
         testVoice: useCallback(() => {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
+            const synth = window.speechSynthesis
+            const voices = synth.getVoices()
+            const hasMatch = hasVoiceForLanguage(voices, state.selectedLanguage)
+            const bestVoice = getBestVoice(voices, state.selectedLanguage)
+            const voiceStatus: TTSVoiceStatus =
+              voices.length === 0
+                ? 'fallback'
+                : hasMatch
+                  ? 'ready'
+                  : 'fallback'
+
             const languageOption = getLanguageOption(state.selectedLanguage)
             const u = new SpeechSynthesisUtterance(languageOption.testPhrase)
             u.rate = 1.1
             u.volume = state.ttsVolume
-            u.lang = state.selectedLanguage
-            window.speechSynthesis.speak(u)
+            u.lang = resolveUtteranceLanguage({
+              requestedLanguage: state.selectedLanguage,
+              activeVoice: bestVoice,
+              voiceStatus,
+            })
+            if (bestVoice) u.voice = bestVoice
+
+            synth.cancel()
+            synth.speak(u)
           }
         }, [state.selectedLanguage, state.ttsVolume]),
         startSession,

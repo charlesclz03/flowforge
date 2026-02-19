@@ -11,6 +11,7 @@ import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
 import { getActiveCalibrationMs } from '@/lib/audio/calibration'
 import { getFallbackWords } from '@/lib/data/fallbacks'
 import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
+import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 /**
  * usePracticeEngine
@@ -27,6 +28,10 @@ const ACTIVE_SESSION_STATUSES = new Set([
   'MIXING',
   'SAVING',
 ])
+
+const WORD_HISTORY_KEY = 'flowforge_seen_words_v2'
+const WORD_HISTORY_TTL_MS = 60 * 60 * 1000
+const WORD_HISTORY_MIN_POOL = 12
 
 const STATIC_FALLBACK_WORDS = [
   'Flow',
@@ -58,6 +63,32 @@ function getFallbackWordPool(language: string): string[] {
   return STATIC_FALLBACK_WORDS
 }
 
+function getFallbackWordSeeds(language: string): PracticeWordSeed[] {
+  const localized = getFallbackWords(language)
+  if (localized.length > 0) {
+    return localized.map((word) => ({
+      wordText: word.wordText,
+      difficultyLevel: word.difficultyLevel,
+      syllableCount: word.syllableCount,
+    }))
+  }
+
+  const defaultPool = getFallbackWords(DEFAULT_TTS_LANGUAGE)
+  if (defaultPool.length > 0) {
+    return defaultPool.map((word) => ({
+      wordText: word.wordText,
+      difficultyLevel: word.difficultyLevel,
+      syllableCount: word.syllableCount,
+    }))
+  }
+
+  return STATIC_FALLBACK_WORDS.map((wordText) => ({
+    wordText,
+    difficultyLevel: undefined,
+    syllableCount: undefined,
+  }))
+}
+
 /**
  * Configuration properties for the Practice Engine.
  */
@@ -65,7 +96,7 @@ interface UsePracticeEngineProps {
   /** The list of beats available for the session */
   initialBeats: Beat[]
   /** The pool of words to be used for generation */
-  initialWords: string[]
+  initialWords: PracticeWordSeed[]
   /**
    * Frequency of word changes.
    * Represents "Bars per Word".
@@ -202,27 +233,110 @@ export function usePracticeEngine({
   // Initialize Generator
   useEffect(() => {
     const localizedFallbackPool = getFallbackWordPool(selectedLanguage)
+    const localizedFallbackSeeds = getFallbackWordSeeds(selectedLanguage)
     let wordsToUse = initialWords || []
 
     // SAFETY FALLBACK: If DB returns empty (or fetch failed), use language-aware backup
     if (wordsToUse.length === 0) {
       console.warn('[PracticeEngine] No words provided, using fallback list.')
-      wordsToUse = localizedFallbackPool
+      wordsToUse = localizedFallbackSeeds
     }
-    fallbackWordPoolRef.current = wordsToUse
 
-    // Map string[] to WordData[] structure expected by generator
-    const mockWordData = wordsToUse.map((w, i) => {
-      const syllables = countSyllables(w)
-      const diff = getDifficultyFromSyllables(syllables)
-      return {
-        wordText: w,
-        difficulty: diff,
-        id: String(i),
-        syllableCount: syllables,
-        difficultyLevel: diff,
+    const normalizedSeeds = wordsToUse
+      .map((seed) => {
+        const wordText = seed.wordText.trim()
+        if (!wordText) return null
+
+        const syllables =
+          typeof seed.syllableCount === 'number' && seed.syllableCount > 0
+            ? seed.syllableCount
+            : countSyllables(wordText)
+
+        const rawDifficulty =
+          typeof seed.difficultyLevel === 'number' && seed.difficultyLevel > 0
+            ? seed.difficultyLevel
+            : getDifficultyFromSyllables(syllables)
+        const difficultyLevel = Math.min(3, Math.max(1, rawDifficulty))
+
+        return {
+          wordText,
+          syllableCount: syllables,
+          difficultyLevel,
+        }
+      })
+      .filter(
+        (
+          seed
+        ): seed is {
+          wordText: string
+          syllableCount: number
+          difficultyLevel: number
+        } => seed !== null
+      )
+
+    const seededWords = (() => {
+      if (typeof window === 'undefined' || normalizedSeeds.length === 0) {
+        return normalizedSeeds
       }
-    })
+
+      let history: Record<string, number> = {}
+      try {
+        const raw = window.localStorage.getItem(WORD_HISTORY_KEY)
+        if (raw) {
+          const parsed = JSON.parse(raw) as Record<string, number>
+          if (parsed && typeof parsed === 'object') {
+            history = parsed
+          }
+        }
+      } catch {
+        history = {}
+      }
+
+      const now = Date.now()
+      const languagePrefix = `${selectedLanguage}:`
+
+      for (const [key, seenAt] of Object.entries(history)) {
+        if (now - seenAt > WORD_HISTORY_TTL_MS) {
+          delete history[key]
+        }
+      }
+
+      const unseen = normalizedSeeds.filter((seed) => {
+        const key = `${languagePrefix}${seed.wordText.toLowerCase()}`
+        const seenAt = history[key]
+        return !seenAt || now - seenAt > WORD_HISTORY_TTL_MS
+      })
+
+      const selectedSeeds =
+        unseen.length >= Math.min(WORD_HISTORY_MIN_POOL, normalizedSeeds.length)
+          ? unseen
+          : normalizedSeeds
+
+      for (const seed of selectedSeeds) {
+        history[`${languagePrefix}${seed.wordText.toLowerCase()}`] = now
+      }
+
+      try {
+        window.localStorage.setItem(WORD_HISTORY_KEY, JSON.stringify(history))
+      } catch {
+        // Storage write failures should never block prompt generation.
+      }
+
+      return selectedSeeds
+    })()
+
+    fallbackWordPoolRef.current =
+      seededWords.length > 0
+        ? seededWords.map((seed) => seed.wordText)
+        : localizedFallbackPool
+
+    const mockWordData = seededWords.map((seed, i) => ({
+      wordText: seed.wordText,
+      difficulty: seed.difficultyLevel,
+      id: String(i),
+      syllableCount: seed.syllableCount,
+      difficultyLevel: seed.difficultyLevel,
+    }))
 
     wordGeneratorRef.current = new WordGenerator(mockWordData, {
       language: selectedLanguage,

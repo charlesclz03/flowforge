@@ -10,7 +10,12 @@
 - **FIX**: Practice word prompts now use phonetic anti-rhyme matching (instead of raw suffix checks), preventing back-to-back rhymes like `Sky` -> `Tie` unless every remaining candidate rhymes.
 - **FIX**: Practice runtime anti-rhyme now uses the active language profile (EN/FR/PT) instead of always evaluating with English defaults.
 - **FIX**: Practice language selection now resolves aliases (`en`, `fr`, `pt`) and stays synchronized between server word loading and session TTS language state.
+- **FIX**: Practice word randomization now preserves server-provided difficulty metadata instead of recomputing difficulty from client-only syllable heuristics, restoring expected language-tier pools.
+- **FIX**: Prompt generator now prioritizes unused words (including constrained rhyme pools) before recycling used words, preventing early repeats before pool exhaustion.
+- **FIX**: Random word fetch now deduplicates prompt text case-insensitively before selection, reducing repeat collisions from legacy/case-variant entries.
 - **FIX**: Practice TTS now resolves `SpeechSynthesisUtterance.lang` against active fallback voice language, preventing silent prompts when selected locale and fallback voice family do not match.
+- **FIX**: TTS now exits prolonged voice-loading states and falls back to a safe default utterance locale when browser voice catalogs never populate, preventing silent prompts in FR/PT fallback scenarios.
+- **FIX**: Admin `Test Voice` now uses the same language/voice resolution contract as runtime Practice prompts for consistent diagnostics.
 - **FIX**: Practice session start now primes TTS with a silent user-gesture warmup utterance, improving first-prompt reliability on browsers that gate speech queue activation.
 - **UX**: Skill Check now surfaces fallback/unsupported TTS diagnostics in setup so users know when local language voice packs are missing.
 - **UI**: `/difficultyselection` now uses a compact flag-only language dropdown beside `Advanced Settings`, and removes the language `?` help pill plus the `Voice ready` status line.

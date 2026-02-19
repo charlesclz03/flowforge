@@ -2,9 +2,12 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { getBestVoice, hasVoiceForLanguage } from '@/lib/tts/voice-picker'
 import {
   DEFAULT_TTS_LANGUAGE,
-  normalizeLangTag,
   TTSLanguageCode,
 } from '@/lib/tts/languages'
+import {
+  resolveUtteranceLanguage,
+  TTSVoiceStatus,
+} from '@/lib/tts/utterance-language'
 
 interface UseTTSProps {
   enabled?: boolean
@@ -14,33 +17,8 @@ interface UseTTSProps {
   language?: TTSLanguageCode
 }
 
-export type TTSVoiceStatus = 'unsupported' | 'loading' | 'ready' | 'fallback'
-
-interface ResolveUtteranceLanguageParams {
-  requestedLanguage: TTSLanguageCode
-  activeVoice: SpeechSynthesisVoice | null
-  voiceStatus: TTSVoiceStatus
-}
-
-export function resolveUtteranceLanguage({
-  requestedLanguage,
-  activeVoice,
-  voiceStatus,
-}: ResolveUtteranceLanguageParams): string {
-  if (!activeVoice?.lang || voiceStatus !== 'fallback') {
-    return requestedLanguage
-  }
-
-  const requestedBase = normalizeLangTag(requestedLanguage).split('-')[0]
-  const voiceBase = normalizeLangTag(activeVoice.lang).split('-')[0]
-
-  // Keep the requested locale when the fallback voice is at least the same language family.
-  if (requestedBase === voiceBase) {
-    return requestedLanguage
-  }
-
-  return activeVoice.lang
-}
+export type { TTSVoiceStatus } from '@/lib/tts/utterance-language'
+const VOICE_LOAD_TIMEOUT_MS = 1500
 
 export function useTTS({
   enabled = true,
@@ -71,10 +49,16 @@ export function useTTS({
 
     mountedRef.current = true
     setVoiceStatus('loading')
+    const synth = window.speechSynthesis
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
 
     const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices()
+      const voices = synth.getVoices()
       if (voices.length > 0) {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
         const matching = hasVoiceForLanguage(voices, language)
         const best = getBestVoice(voices, language)
         if (mountedRef.current) {
@@ -88,11 +72,25 @@ export function useTTS({
 
     // Chrome loads voices asynchronously
     loadVoices()
-    window.speechSynthesis.onvoiceschanged = loadVoices
+    synth.addEventListener('voiceschanged', loadVoices)
+    timeoutId = setTimeout(() => {
+      if (!mountedRef.current) return
+      const voices = synth.getVoices()
+      if (voices.length > 0) return
+
+      // Stay audible even when engines never expose voices.
+      setHasLanguageVoice(false)
+      setActiveVoice(null)
+      setIsReady(true)
+      setVoiceStatus('fallback')
+    }, VOICE_LOAD_TIMEOUT_MS)
 
     return () => {
       mountedRef.current = false
-      window.speechSynthesis.onvoiceschanged = null
+      synth.removeEventListener('voiceschanged', loadVoices)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
     }
   }, [language])
 

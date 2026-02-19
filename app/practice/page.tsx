@@ -2,6 +2,7 @@ import { getBeats } from '@/lib/db/beats'
 import { getRandomWords } from '@/lib/db/words'
 import { resolveLanguageCode } from '@/lib/tts/languages'
 import { getFallbackWords } from '@/lib/data/fallbacks'
+import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 import PracticeClient from './PracticeClient'
 
 export const revalidate = 3600 // Cache for 1 hour
@@ -23,14 +24,22 @@ export default async function PracticePage({
   const wordsResult = await getRandomWords(100, { language })
 
   // Flatten words to simple string array as expected by client
-  let initialWords =
+  let initialWords: PracticeWordSeed[] =
     wordsResult.success && wordsResult.data
-      ? wordsResult.data.map((w) => w.wordText)
+      ? wordsResult.data.map((w) => ({
+          wordText: w.wordText,
+          difficultyLevel: w.difficultyLevel,
+          syllableCount: w.syllableCount,
+        }))
       : []
 
   // Server-Side Fallback (Double Safety)
   if (initialWords.length === 0) {
-    initialWords = getFallbackWords(language).map((word) => word.wordText)
+    initialWords = getFallbackWords(language).map((word) => ({
+      wordText: word.wordText,
+      difficultyLevel: word.difficultyLevel,
+      syllableCount: word.syllableCount,
+    }))
   }
 
   return (

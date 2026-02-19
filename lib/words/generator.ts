@@ -73,12 +73,18 @@ export class WordGenerator {
     this.lastWord = null
   }
 
+  private getWordKey(word: string): string {
+    return word.trim().toLowerCase()
+  }
+
   /**
    * Get available words for current difficulty
    */
   private getAvailableWords(): WordData[] {
     const difficultyWords = this.getDifficultyWords()
-    return difficultyWords.filter((w) => !this.usedWords.has(w.wordText))
+    return difficultyWords.filter(
+      (w) => !this.usedWords.has(this.getWordKey(w.wordText))
+    )
   }
 
   /**
@@ -112,24 +118,45 @@ export class WordGenerator {
       (w) => !this.isTooSimilar(w.wordText)
     )
 
-    // Pass B: If anti-repeat would force a rhyme, relax anti-repeat but keep anti-rhyme.
+    // Pass B: Keep anti-repeat priority and allow fresh rhymes before recycling words.
+    const freshRhyming = available.filter((w) => this.isTooSimilar(w.wordText))
+
+    // Pass C: Recycle used words only when needed, still preferring anti-rhyme.
+    const usedNonRhyming = allDifficultyWords.filter(
+      (w) =>
+        this.usedWords.has(this.getWordKey(w.wordText)) &&
+        !this.isTooSimilar(w.wordText)
+    )
+
+    // Pass D: Last-resort used pool when every other guard is exhausted.
+    const usedAny = allDifficultyWords.filter((w) =>
+      this.usedWords.has(this.getWordKey(w.wordText))
+    )
+
+    // Retained as an ultimate non-jamming guard.
     const anyNonRhyming = allDifficultyWords.filter(
       (w) => !this.isTooSimilar(w.wordText)
     )
 
-    // Pass C (last resort): if every possible candidate rhymes, keep flow alive.
+    // Pool order keeps fresh words ahead of recycled words.
     const pool =
       freshNonRhyming.length > 0
         ? freshNonRhyming
-        : anyNonRhyming.length > 0
-          ? anyNonRhyming
-          : available.length > 0
-            ? available
-            : allDifficultyWords
+        : freshRhyming.length > 0
+          ? freshRhyming
+          : usedNonRhyming.length > 0
+            ? usedNonRhyming
+            : usedAny.length > 0
+              ? usedAny
+              : anyNonRhyming.length > 0
+                ? anyNonRhyming
+                : available.length > 0
+                  ? available
+                  : allDifficultyWords
 
     const selected = getRandomWords(pool, 1)[0]
 
-    this.usedWords.add(selected.wordText)
+    this.usedWords.add(this.getWordKey(selected.wordText))
     this.lastWord = selected.wordText
 
     return selected

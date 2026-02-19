@@ -1,7 +1,7 @@
 # Feature Matrix
 
 **Current Version**: `1.0.2`
-**Last Updated**: 2026-02-17
+**Last Updated**: 2026-02-19
 
 ## Core Practice
 
@@ -44,6 +44,10 @@
 
 | Date | Audit | Status | Outcome |
 | --- | --- | --- | --- |
+| 2026-02-19 | TTS Language Runtime Forever Fix | PASS | Added zero-voices fallback handling, unified utterance language resolution, and aligned admin test voice diagnostics with runtime logic |
+| 2026-02-19 | Word Prompt Random Logic Forever Fix | PASS | Restored anti-repeat priority before recycling used words, preserved source difficulty metadata, and added dedupe on random word fetch |
+| 2026-02-19 | TTS Language Runtime Re-Audit | FAIL | Reproduced remaining silent-prompt risk when `speechSynthesis` voices never resolve; fallback contract still depends on active voice state |
+| 2026-02-19 | Word Prompt Random Logic Re-Audit | FAIL | Confirmed repeat-wall regression: anti-repeat is relaxed too early in rhyme-heavy pools, with frequent repeats in FR/PT |
 | 2026-02-17 | TTS Prompt Output Forever Fix | PASS | Implemented fallback-safe utterance language contract, user-gesture warmup on session start, setup diagnostics, and regression tests for fallback behavior |
 | 2026-02-17 | TTS Prompt Output Re-Audit | FAIL | Root cause isolated: forced `utterance.lang` + non-matching fallback `voice` can produce silent prompts on some engines; fix plan added in `brain/TTS_FIX_PLAN_2026-02-17.md` |
 | 2026-02-13 | User Beat Calibration + Difficulty Handoff | PASS | Re-audited and validated private-beat handoff + runtime offset behavior |

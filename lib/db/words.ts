@@ -4,6 +4,20 @@ import { WordFilters, DatabaseResult } from '@/types/database'
 import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
 import { getFallbackWords } from '@/lib/data/fallbacks'
 
+function dedupeWordsByText(words: Word[]): Word[] {
+  const seen = new Set<string>()
+  const deduped: Word[] = []
+
+  for (const word of words) {
+    const key = word.wordText.trim().toLowerCase()
+    if (seen.has(key)) continue
+    seen.add(key)
+    deduped.push(word)
+  }
+
+  return deduped
+}
+
 /**
  * Get random words based on filters
  */
@@ -18,7 +32,7 @@ export async function getRandomWords(
         language,
         filters?.difficultyLevel
       ) as Word[]
-      const shuffled = pool.sort(() => Math.random() - 0.5)
+      const shuffled = dedupeWordsByText(pool).sort(() => Math.random() - 0.5)
       const selected = shuffled.slice(0, count)
       return { success: true, data: selected }
     }
@@ -45,7 +59,7 @@ export async function getRandomWords(
     })
 
     // Shuffle and take requested count
-    const shuffled = allWords.sort(() => Math.random() - 0.5)
+    const shuffled = dedupeWordsByText(allWords).sort(() => Math.random() - 0.5)
     const selected = shuffled.slice(0, count)
 
     return {
@@ -65,7 +79,7 @@ export async function getRandomWords(
     }
     const language = filters?.language || DEFAULT_TTS_LANGUAGE
     const pool = getFallbackWords(language, filters?.difficultyLevel) as Word[]
-    return { success: true, data: pool.slice(0, count) }
+    return { success: true, data: dedupeWordsByText(pool).slice(0, count) }
   }
 }
 

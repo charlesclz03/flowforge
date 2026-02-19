@@ -17,6 +17,7 @@ import { SESSION_CONFIG } from '@/lib/constants/design'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
 import { TTSLanguageCode } from '@/lib/tts/languages'
+import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 // Components
 import PracticeControls from '@/components/organisms/practice/PracticeControls'
@@ -55,7 +56,7 @@ const RateAppModal = dynamic(
 
 interface PracticeClientProps {
   initialBeats: Beat[]
-  initialWords: string[]
+  initialWords: PracticeWordSeed[]
   initialLanguage: TTSLanguageCode
 }
 
