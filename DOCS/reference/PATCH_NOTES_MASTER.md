@@ -40,6 +40,9 @@
 - **SECURITY**: Hardened avatar upload/proxy flow with strict MIME + magic-byte validation, file size limits, randomized filenames, and safe image response headers (`X-Content-Type-Options: nosniff`).
 - **SECURITY**: Sanitized support email payload fields and enforced subject/message length limits in `/api/support`.
 - **VALIDATION**: Added strict request validation for `/api/user/beats` and `/api/feedback` to reject malformed BPM/rating payloads early with `400` responses.
+- **SECURITY**: `/admin/beats` server actions now enforce public-library mutation scope (`uploaderId: null`) for update/delete/reorder paths, preventing out-of-scope private-beat mutations.
+- **VALIDATION**: Admin beat updates now use strict field-whitelist validation (title/artist/label/genre/bpm/isPremium only) and reject unknown fields.
+- **TEST**: Added `__tests__/admin/admin-beats-actions.test.ts` to cover SUPERADMIN auth boundaries, public-scope mutation guards, payload validation, and reorder normalization.
 - **PWA**: Excluded heavy media folders from install-time precache (`/beats`, `/play store`, `/OLD ICON`) so audio is now lazy-cached on first play/preview via runtime caching.
 - **PERF**: Removed duplicate `getServerSession()` calls in server auth helper paths.
 - **TESTING**: Added missing `@vitest/coverage-v8` so `npm run test:coverage` works again.

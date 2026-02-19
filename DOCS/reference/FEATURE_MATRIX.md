@@ -39,11 +39,14 @@
 | Patch Notes Sync | PASS [x] 2026-02-19 | `patch-notes.ts` and master notes aligned |
 | Docs Canonical Governance | PASS [x] 2026-02-19 | Canonical map + CI docs checks enforced |
 | MCP Matrix Tracking | PASS [x] 2026-02-19 | MCP health baseline documented |
+| SUPERADMIN Public Beat Management | PASS [x] 2026-02-19 | `/admin/beats` now enforces public-track mutation scope (`uploaderId: null`) in server actions, with strict payload validation + regression tests; audit: `audit_reports/matrix_features/superadmin_public_beat_management/audit.md` |
 
 ## Audit History
 
 | Date | Audit | Status | Outcome |
 | --- | --- | --- | --- |
+| 2026-02-19 | SUPERADMIN Public Beat Management Forever Fix | PASS | Enforced public-track mutation boundaries for update/delete/reorder, added strict update payload validation, and added regression tests in `__tests__/admin/admin-beats-actions.test.ts`. |
+| 2026-02-19 | SUPERADMIN Public Beat Management Re-Audit | FAIL | Found server-action scope leak: update/delete paths are id-only and not constrained to public tracks; fix plan recorded in `brain/SUPERADMIN_PUBLIC_BEAT_MANAGEMENT_FIX_PLAN_2026-02-19.md`. |
 | 2026-02-19 | Cross-Cutting Fix Wave (Formatting/Prisma/Audit/Tooling) | PASS (Watch) | Cleared lint formatting debt, suppressed expected Prisma build-time noise, removed audit-tool module warning, and reduced `npm audit` from 35 findings (31 high / 4 moderate) to 15 moderate-only findings. |
 | 2026-02-19 | Full Feature Matrix Re-Audit (17 Features) | PASS | Created per-feature audits under `audit_reports/matrix_features/*`; flagged cross-cutting fix tracks for formatting debt, Prisma build-time noise, npm audit backlog, and audit-tool module warning |
 | 2026-02-19 | TTS Language Runtime Forever Fix | PASS | Added zero-voices fallback handling, unified utterance language resolution, and aligned admin test voice diagnostics with runtime logic |

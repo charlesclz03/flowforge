@@ -16,3 +16,11 @@
 - [x] Add normalized de-duplication in DB random word fetch path.
 - [x] Add regression tests for utterance fallback and constrained anti-repeat behavior.
 - [x] Run full verification gates (`lint`, `tsc --noEmit`, `build`) after implementation.
+
+## 2026-02-19 - Forever Fix: SUPERADMIN public beat management scope
+- [x] Re-audit `/admin/beats` public-track management and identify scope leak.
+- [x] Enforce public-library mutation boundary (`uploaderId: null`) for update/delete actions.
+- [x] Add strict field-whitelist validation for admin beat updates (reject unknown fields).
+- [x] Harden reorder path to reject out-of-scope beat ids.
+- [x] Add regression tests for admin action auth/scope/validation/reorder.
+- [x] Run verification gates (`lint`, `tsc --noEmit`, scoped tests, `build`).

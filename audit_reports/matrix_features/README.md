@@ -21,6 +21,7 @@ This folder contains one `audit.md` per feature listed in `DOCS/reference/FEATUR
 - `patch_notes_sync/audit.md`
 - `docs_canonical_governance/audit.md`
 - `mcp_matrix_tracking/audit.md`
+- `superadmin_public_beat_management/audit.md`
 
 ## Cross-Cutting Issues
 1. Prettier/line-ending warning volume in recording/review/practice/API files.
