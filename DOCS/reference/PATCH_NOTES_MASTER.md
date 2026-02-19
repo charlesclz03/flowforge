@@ -44,6 +44,10 @@
 - **PERF**: Removed duplicate `getServerSession()` calls in server auth helper paths.
 - **TESTING**: Added missing `@vitest/coverage-v8` so `npm run test:coverage` works again.
 - **DEPS**: Applied `qs@6.14.2` override to resolve the audit advisory inherited through Stripe dependencies.
+- **DEPS**: Added `minimatch@10.2.2` override and upgraded `@typescript-eslint` parser/plugin to reduce `npm audit` from 35 findings (31 high / 4 moderate) to 15 moderate-only findings.
+- **CHORE**: Prisma build-phase initialization now suppresses expected datasource bootstrap error spam while preserving beat fallback behavior.
+- **CHORE**: Normalized formatting + line-ending drift across practice, recordings, and API modules, restoring clean lint gates.
+- **CHORE**: Updated `scripts/audit-feature.ts` to CommonJS runtime imports and ISO report dates, removing module-type warnings and locale-driven date variance.
 - **DOCS**: Consolidated `DOCS/` into a canonical-first structure, archived legacy docs with path-preserving stubs, and normalized archive metadata headers.
 - **DOCS**: Added docs governance contract (`DOC_CANONICAL_MAP.json`) and automated docs checks (`docs:check`) for link integrity, canonical drift, and stub integrity.
 - **CHORE**: Hardened release workflow docs to include canonical-doc validation gates in load-context and deploy procedures.

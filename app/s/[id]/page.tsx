@@ -28,7 +28,9 @@ type PersistedFxConfig = {
   isStudioMode?: boolean
 }
 
-function normalizeAudioSettings(recording: FreestyleSessionWithBeat): AudioSettings {
+function normalizeAudioSettings(
+  recording: FreestyleSessionWithBeat
+): AudioSettings {
   const fx =
     recording.fxConfig &&
     typeof recording.fxConfig === 'object' &&

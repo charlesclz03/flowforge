@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { isProductionBuildPhase } from '@/lib/db/runtime-guards'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -12,13 +13,17 @@ const datasourceUrl =
     ? process.env.DIRECT_URL || process.env.DATABASE_URL
     : process.env.DATABASE_URL
 
+const isBuildPhase = isProductionBuildPhase()
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     log:
       process.env.NODE_ENV === 'development'
         ? ['query', 'error', 'warn']
-        : ['error'],
+        : isBuildPhase
+          ? []
+          : ['error'],
     datasources: datasourceUrl
       ? {
           db: {

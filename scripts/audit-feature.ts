@@ -1,6 +1,6 @@
-import { execSync } from 'child_process'
-import fs from 'fs'
-import path from 'path'
+const { execSync } = require('child_process')
+const fs = require('fs')
+const path = require('path')
 
 /**
  * Audit Feature CLI
@@ -95,7 +95,7 @@ const keyVersions = runGit(
 
 // --- Report Generation ---
 const report = `# ${featureName} - Forensic Audit Report
-**Date**: ${new Date().toLocaleDateString()}
+**Date**: ${new Date().toISOString().slice(0, 10)}
 **Scope**: \`${filePatterns}\`
 
 ## 1. Executive Summary

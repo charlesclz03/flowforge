@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import beatsData from '@/data/beats.json'
 import { Beat, Prisma } from '@prisma/client'
 import { BeatFilters, DatabaseResult } from '@/types/database'
+import { isExpectedDatabaseSetupError } from '@/lib/db/runtime-guards'
 
 /**
  * Get all beats with optional filtering
@@ -97,7 +98,13 @@ export async function getBeats(
       data: sanitized,
     }
   } catch (error: unknown) {
-    console.error('Error fetching beats:', error)
+    if (isExpectedDatabaseSetupError(error)) {
+      console.warn(
+        '[beats] Database unavailable in current runtime; using static fallback beats.'
+      )
+    } else {
+      console.error('Error fetching beats:', error)
+    }
     // Fallback to static data when DB is unavailable
     try {
       const all = (
@@ -154,7 +161,11 @@ export async function getBeatById(id: string): Promise<DatabaseResult<Beat>> {
       data: beat,
     }
   } catch (error) {
-    console.error('Error fetching beat:', error)
+    if (isExpectedDatabaseSetupError(error)) {
+      console.warn('[beats] Beat lookup fallback triggered.')
+    } else {
+      console.error('Error fetching beat:', error)
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch beat',
@@ -219,7 +230,11 @@ export async function searchBeats(
       data: beats,
     }
   } catch (error) {
-    console.error('Error searching beats:', error)
+    if (isExpectedDatabaseSetupError(error)) {
+      console.warn('[beats] Search fallback triggered.')
+    } else {
+      console.error('Error searching beats:', error)
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to search beats',
@@ -256,7 +271,11 @@ export async function getAllGenres(): Promise<DatabaseResult<string[]>> {
       data: genreList,
     }
   } catch (error) {
-    console.error('Error fetching genres:', error)
+    if (isExpectedDatabaseSetupError(error)) {
+      console.warn('[beats] Genre lookup fallback triggered.')
+    } else {
+      console.error('Error fetching genres:', error)
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch genres',

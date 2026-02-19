@@ -12,7 +12,8 @@
       "warn",
       {
         "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
+        "varsIgnorePattern": "^_",
+        "caughtErrors": "none"
       }
     ],
     "@typescript-eslint/no-explicit-any": "warn",

@@ -21,7 +21,8 @@
     "postinstall": "prisma generate"
   },
   "overrides": {
-    "qs": "6.14.2"
+    "qs": "6.14.2",
+    "minimatch": "10.2.2"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -58,10 +59,10 @@
     "@types/node": "^20.19.24",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
-    "@vitest/coverage-v8": "^4.0.18",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "@vitejs/plugin-react": "^5.1.3",
+    "@vitest/coverage-v8": "^4.0.18",
     "autoprefixer": "^10.4.20",
     "dotenv-cli": "^11.0.0",
     "eslint": "^8.57.0",

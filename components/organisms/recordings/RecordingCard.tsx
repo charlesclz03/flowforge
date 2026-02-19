@@ -108,11 +108,7 @@ export const RecordingCard = memo(function RecordingCard({
     recording.storageUrl.startsWith('http')
   const audioStatus =
     recording.audioStatus ??
-    (hasStreamableAudio
-      ? 'ready'
-      : hasAudio
-        ? 'processing'
-        : 'stats-only')
+    (hasStreamableAudio ? 'ready' : hasAudio ? 'processing' : 'stats-only')
   const isAudioReady = audioStatus === 'ready' && hasStreamableAudio
 
   return (
