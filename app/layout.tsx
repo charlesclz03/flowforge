@@ -9,7 +9,11 @@ import { BottomNavBackdrop } from '@/components/organisms/layout/BottomNavBackdr
 import { AudioContextUnlock } from '@/components/atoms/utils/AudioContextUnlock'
 import { SafeAreaWrapper } from '@/components/layout/SafeAreaWrapper'
 import { GlobalSessionGuard } from '@/components/organisms/practice/GlobalSessionGuard'
-import { JsonLd } from '@/components/JsonLd'
+import {
+  JsonLd,
+  websiteSchema,
+  softwareAppSchema,
+} from '@/components/atoms/seo/JsonLd'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Script from 'next/script'
@@ -117,12 +121,14 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+  preload: true,
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-mono',
+  preload: true,
 })
 
 export default async function RootLayout({
@@ -135,6 +141,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className="notranslate" translate="no">
       <head>
+        <JsonLd data={websiteSchema} />
+        <JsonLd data={softwareAppSchema} />
         <meta name="google" content="notranslate" />
         {/* Google Tag Manager */}
         <Script
@@ -174,7 +182,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     id="main-content"
                     className="flex-1 min-h-0 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
                   >
-                    <JsonLd />
                     {children}
                   </main>
                   <div className="flex-none w-full relative z-50 pointer-events-none">

@@ -60,6 +60,8 @@ function normalizeAudioSettings(
   }
 }
 
+import { JsonLd } from '@/components/atoms/seo/JsonLd'
+
 export default function SharedRecordingPage() {
   const routeParams = useParams<{ id: string }>()
   const recordingId = routeParams?.id
@@ -120,58 +122,77 @@ export default function SharedRecordingPage() {
   }
 
   return (
-    <ReviewTemplate
-      header={
-        <AppHeader
-          showBackButton={false}
-          customTitle="FREESTYLA"
-          customSubtitle="Shared Session"
-        />
-      }
-      pageHeader={
-        <div className="w-full max-w-2xl mx-auto">
-          <div className="grid grid-cols-[1fr_auto] items-start gap-3">
-            <div className="min-w-0 space-y-2">
-              <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase line-clamp-2">
-                {recording.title}
-              </h1>
-              <p className="text-accent-purple font-medium">
-                Recorded by{' '}
-                {recording.user?.name ||
-                  recording.user?.username ||
-                  'Anonymous'}
-              </p>
+    <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'AudioObject',
+          name: recording.title,
+          description: `Freestyle rap session by ${recording.user?.name || recording.user?.username || 'an artist'} on FreeStyla.`,
+          contentUrl: recording.storageUrl,
+          duration: `PT${Math.floor(recording.durationSeconds / 60)}M${recording.durationSeconds % 60}S`,
+          encodingFormat: 'audio/mp4',
+          uploadDate: new Date(recording.createdAt).toISOString(),
+          author: {
+            '@type': 'Person',
+            name:
+              recording.user?.name || recording.user?.username || 'Anonymous',
+          },
+        }}
+      />
+      <ReviewTemplate
+        header={
+          <AppHeader
+            showBackButton={false}
+            customTitle="FREESTYLA"
+            customSubtitle="Shared Session"
+          />
+        }
+        pageHeader={
+          <div className="w-full max-w-2xl mx-auto">
+            <div className="grid grid-cols-[1fr_auto] items-start gap-3">
+              <div className="min-w-0 space-y-2">
+                <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase line-clamp-2">
+                  {recording.title}
+                </h1>
+                <p className="text-accent-purple font-medium">
+                  Recorded by{' '}
+                  {recording.user?.name ||
+                    recording.user?.username ||
+                    'Anonymous'}
+                </p>
+              </div>
+              <ShareButton
+                title={recording.title}
+                text={`Check out this freestyle by ${recording.user?.name || 'an artist'} on FreeStyla!`}
+                url={typeof window !== 'undefined' ? window.location.href : ''}
+                className="px-3 py-2 justify-center whitespace-nowrap"
+              />
             </div>
-            <ShareButton
-              title={recording.title}
-              text={`Check out this freestyle by ${recording.user?.name || 'an artist'} on FreeStyla!`}
-              url={typeof window !== 'undefined' ? window.location.href : ''}
-              className="px-3 py-2 justify-center whitespace-nowrap"
-            />
           </div>
-        </div>
-      }
-      alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
-      player={
-        <SessionPlayer
-          ref={playerRef}
-          audioUrl={recording.storageUrl}
-          beatUrl={recording.beat?.storageUrl}
-          beatOffsetMs={
-            resolveRecordingSync({
-              beatOffsetMs: recording.beatOffsetMs ?? 0,
-              fxConfig: recording.fxConfig,
-            }).beatOffsetMs
-          }
-          beatTitle={recording.beat?.title}
-          beatBpm={recording.beat?.bpm}
-          beatArtist={recording.beat?.artistName ?? undefined}
-          sessionDuration={recording.durationSeconds}
-          sessionDifficulty={recording.difficulty}
-          sessionDate={recording.createdAt}
-          initialSettings={normalizeAudioSettings(recording)}
-        />
-      }
-    />
+        }
+        alerts={error && <ErrorAlert error={error} onDismiss={clearError} />}
+        player={
+          <SessionPlayer
+            ref={playerRef}
+            audioUrl={recording.storageUrl}
+            beatUrl={recording.beat?.storageUrl}
+            beatOffsetMs={
+              resolveRecordingSync({
+                beatOffsetMs: recording.beatOffsetMs ?? 0,
+                fxConfig: recording.fxConfig,
+              }).beatOffsetMs
+            }
+            beatTitle={recording.beat?.title}
+            beatBpm={recording.beat?.bpm}
+            beatArtist={recording.beat?.artistName ?? undefined}
+            sessionDuration={recording.durationSeconds}
+            sessionDifficulty={recording.difficulty}
+            sessionDate={recording.createdAt}
+            initialSettings={normalizeAudioSettings(recording)}
+          />
+        }
+      />
+    </>
   )
 }

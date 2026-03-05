@@ -8,6 +8,7 @@ interface CardProps {
   variant?: 'default' | 'elevated' | 'glass'
   padding?: 'sm' | 'md' | 'lg'
   action?: React.ReactNode
+  style?: React.CSSProperties
 }
 
 export function Card({

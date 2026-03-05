@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-
-const MAX_SUBJECT_LENGTH = 120
-const MAX_MESSAGE_LENGTH = 5000
+import { applyRateLimit } from '@/lib/api-rate-limit'
+import { validateJsonRequest, supportRequestSchema } from '@/lib/api-validation'
 
 function escapeHtml(value: string): string {
   return value
@@ -21,32 +20,17 @@ function isValidEmail(value: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: mutation tier (20 req/min)
+    const blocked = applyRateLimit(req, 'mutation')
+    if (blocked) return blocked
+
     const session = await getServerSession(authOptions)
-    const body = (await req.json()) as { subject?: string; message?: string }
 
-    const subjectRaw =
-      typeof body.subject === 'string' ? body.subject.trim() : 'Support Request'
-    const messageRaw =
-      typeof body.message === 'string' ? body.message.trim() : ''
+    // Zod validation
+    const parsedBody = await validateJsonRequest(req, supportRequestSchema)
+    if (parsedBody instanceof NextResponse) return parsedBody
 
-    if (!messageRaw) {
-      return NextResponse.json(
-        { error: 'Message content is required' },
-        { status: 400 }
-      )
-    }
-    if (subjectRaw.length > MAX_SUBJECT_LENGTH) {
-      return NextResponse.json(
-        { error: `Subject must be <= ${MAX_SUBJECT_LENGTH} characters` },
-        { status: 400 }
-      )
-    }
-    if (messageRaw.length > MAX_MESSAGE_LENGTH) {
-      return NextResponse.json(
-        { error: `Message must be <= ${MAX_MESSAGE_LENGTH} characters` },
-        { status: 400 }
-      )
-    }
+    const { subject: subjectRaw, message: messageRaw } = parsedBody
 
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY is missing')

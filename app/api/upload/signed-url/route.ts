@@ -6,6 +6,8 @@ import {
   RECORDINGS_BUCKET,
   BEATS_BUCKET,
 } from '@/lib/supabase/server'
+import { applyRateLimit } from '@/lib/api-rate-limit'
+import { validateJsonRequest, signedUrlSchema } from '@/lib/api-validation'
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
@@ -42,19 +44,23 @@ const looksLikeMissingBucket = (error?: StorageApiErrorLike | null) => {
  */
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: upload tier (5 req/min)
+    const blocked = applyRateLimit(req, 'upload')
+    if (blocked) return blocked
+
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { fileName, contentType, bucket: requestedBucket } = await req.json()
+    const parsedBody = await validateJsonRequest(req, signedUrlSchema)
+    if (parsedBody instanceof NextResponse) return parsedBody
 
-    if (!fileName || !contentType) {
-      return NextResponse.json(
-        { error: 'Missing fileName or contentType' },
-        { status: 400 }
-      )
-    }
+    const {
+      fileName,
+      contentType: _contentType,
+      bucket: requestedBucket,
+    } = parsedBody
 
     // Pro Check
     const { prisma } = await import('@/lib/prisma')

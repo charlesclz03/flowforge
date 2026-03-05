@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // Cache for 1 hour (ISR)
 
 // Fallback beats to ensure the app works even if DB/Prisma fails completely
 const FALLBACK_BEATS = [

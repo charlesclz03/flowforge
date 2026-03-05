@@ -206,7 +206,7 @@ export function usePracticeEngine({
         }
       }
     }
-  }, [])
+  }, [markSessionInactive])
 
   // 3. Audio Clock (The Heartbeat)
   // Word Management State
@@ -235,9 +235,51 @@ export function usePracticeEngine({
   useEffect(() => {
     const localizedFallbackPool = getFallbackWordPool(selectedLanguage)
     const localizedFallbackSeeds = getFallbackWordSeeds(selectedLanguage)
-    let wordsToUse = initialWords || []
+    const WORD_POOL_KEY = `flowforge_word_pool_${selectedLanguage}` // Cache key per language
 
-    // SAFETY FALLBACK: If DB returns empty (or fetch failed), use language-aware backup
+    // 1. Retrieve the existing cached word pool for this language
+    let cachedPool: PracticeWordSeed[] = []
+    try {
+      if (typeof window !== 'undefined') {
+        const rawPool = window.localStorage.getItem(WORD_POOL_KEY)
+        if (rawPool) {
+          cachedPool = JSON.parse(rawPool)
+        }
+      }
+    } catch {
+      cachedPool = []
+    }
+
+    // 2. Merge server-provided words with the cached pool
+    const incomingWords = initialWords || []
+    const combinedMap = new Map<string, PracticeWordSeed>()
+
+    // Add cached words first
+    cachedPool.forEach((seed) => {
+      if (seed && seed.wordText) {
+        combinedMap.set(seed.wordText.toLowerCase(), seed)
+      }
+    })
+
+    // Add and overwrite with incoming words
+    incomingWords.forEach((seed) => {
+      if (seed && seed.wordText) {
+        combinedMap.set(seed.wordText.toLowerCase(), seed)
+      }
+    })
+
+    let wordsToUse = Array.from(combinedMap.values())
+
+    // 3. Save the updated pool back to localStorage to accumulate over time
+    try {
+      if (typeof window !== 'undefined' && wordsToUse.length > 0) {
+        window.localStorage.setItem(WORD_POOL_KEY, JSON.stringify(wordsToUse))
+      }
+    } catch {
+      // Silently fail if localStorage is full or restricted
+    }
+
+    // SAFETY FALLBACK
     if (wordsToUse.length === 0) {
       console.warn('[PracticeEngine] No words provided, using fallback list.')
       wordsToUse = localizedFallbackSeeds
@@ -245,7 +287,7 @@ export function usePracticeEngine({
 
     const normalizedSeeds = wordsToUse
       .map((seed) => {
-        const wordText = seed.wordText.trim()
+        const wordText = seed.wordText?.trim()
         if (!wordText) return null
 
         const syllables =

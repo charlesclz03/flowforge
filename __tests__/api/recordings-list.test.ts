@@ -13,6 +13,7 @@ vi.mock('@/lib/supabase/server', () => ({
   createServerClient: vi.fn(),
 }))
 
+import { NextRequest } from 'next/server'
 import { GET } from '@/app/api/recordings/route'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { getSessions } from '@/lib/db/sessions'
@@ -66,7 +67,7 @@ describe('GET /api/recordings', () => {
       },
     } as never)
 
-    const req = new Request('http://localhost/api/recordings')
+    const req = new NextRequest('http://localhost/api/recordings')
     const res = await GET(req)
 
     expect(res.status).toBe(200)
@@ -122,7 +123,7 @@ describe('GET /api/recordings', () => {
       },
     } as never)
 
-    const req = new Request(
+    const req = new NextRequest(
       'http://localhost/api/recordings?includeMetadata=true'
     )
     const res = await GET(req)
@@ -170,7 +171,7 @@ describe('GET /api/recordings', () => {
       },
     } as never)
 
-    const req = new Request(
+    const req = new NextRequest(
       'http://localhost/api/recordings?includeMetadata=true'
     )
     const res = await GET(req)

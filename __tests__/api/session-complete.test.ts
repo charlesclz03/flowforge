@@ -38,6 +38,7 @@ vi.mock('@/lib/prisma', () => ({
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createSession } from '@/lib/db/sessions'
 import { prisma } from '@/lib/prisma'
+import { NextRequest } from 'next/server'
 import { POST } from '@/app/api/session/complete/route'
 
 const mockSession = {
@@ -55,7 +56,7 @@ describe('POST /api/session/complete', () => {
   it('rejects unauthenticated requests', async () => {
     vi.mocked(getServerSessionWithUserId).mockResolvedValue(null)
 
-    const req = new Request('http://localhost/api/session/complete', {
+    const req = new NextRequest('http://localhost/api/session/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -69,7 +70,9 @@ describe('POST /api/session/complete', () => {
   })
 
   it('accepts numeric fields provided as strings', async () => {
-    vi.mocked(getServerSessionWithUserId).mockResolvedValue(mockSession as never)
+    vi.mocked(getServerSessionWithUserId).mockResolvedValue(
+      mockSession as never
+    )
     vi.mocked(createSession).mockResolvedValue({
       success: true,
       data: {
@@ -104,7 +107,7 @@ describe('POST /api/session/complete', () => {
     vi.mocked(prisma.user.update).mockResolvedValue({} as never)
     vi.mocked(prisma.freestyleSession.count).mockResolvedValue(3 as never)
 
-    const req = new Request('http://localhost/api/session/complete', {
+    const req = new NextRequest('http://localhost/api/session/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -137,14 +140,16 @@ describe('POST /api/session/complete', () => {
   })
 
   it('sanitizes DB error details (no prisma internals leaked)', async () => {
-    vi.mocked(getServerSessionWithUserId).mockResolvedValue(mockSession as never)
+    vi.mocked(getServerSessionWithUserId).mockResolvedValue(
+      mockSession as never
+    )
     vi.mocked(createSession).mockResolvedValue({
       success: false,
       error:
         'Invalid `prisma.freestyleSession.create()` invocation: Argument `durationSeconds`: Invalid value provided. Expected Int, provided String.',
     } as never)
 
-    const req = new Request('http://localhost/api/session/complete', {
+    const req = new NextRequest('http://localhost/api/session/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -163,9 +168,11 @@ describe('POST /api/session/complete', () => {
   })
 
   it('returns 400 for invalid durationSeconds', async () => {
-    vi.mocked(getServerSessionWithUserId).mockResolvedValue(mockSession as never)
+    vi.mocked(getServerSessionWithUserId).mockResolvedValue(
+      mockSession as never
+    )
 
-    const req = new Request('http://localhost/api/session/complete', {
+    const req = new NextRequest('http://localhost/api/session/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -180,4 +187,3 @@ describe('POST /api/session/complete', () => {
     expect(createSession).not.toHaveBeenCalled()
   })
 })
-

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
 import { createSession } from '@/lib/db/sessions'
@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
+import { applyRateLimit } from '@/lib/api-rate-limit'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
@@ -34,8 +35,12 @@ function parseOptionalInt(value: unknown, fallback = 0): number {
  * POST /api/recordings
  * Upload a recording and create a session
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Rate limit: upload tier (5 req/min)
+    const blocked = applyRateLimit(request, 'upload')
+    if (blocked) return blocked
+
     // Check authentication
     const session = await getServerSessionWithUserId()
     if (!session?.user?.id) {
@@ -422,8 +427,12 @@ export async function POST(request: Request) {
  * GET /api/recordings
  * Get all recordings for the current user
  */
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
+    // Rate limit: standard tier (60 req/min)
+    const blocked = applyRateLimit(request, 'standard')
+    if (blocked) return blocked
+
     // Check authentication
     const session = await getServerSessionWithUserId()
     if (!session?.user?.id) {

@@ -17,12 +17,15 @@ export async function PATCH(request: Request) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const currentUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { image: true },
-    })
+    // 1 & 2. Fetch current user and parse formData concurrently
+    const [currentUser, formData] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { image: true },
+      }),
+      request.formData(),
+    ])
 
-    const formData = await request.formData()
     const username = formData.get('username') as string
     const bio = formData.get('bio') as string
     const imageFile = formData.get('image') as File | null

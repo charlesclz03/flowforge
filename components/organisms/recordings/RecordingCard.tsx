@@ -121,7 +121,10 @@ export const RecordingCard = memo(function RecordingCard({
   const isAudioReady = audioStatus === 'ready' && hasStreamableAudio
 
   return (
-    <Card className={cn('relative', className)}>
+    <Card
+      className={cn('relative', className)}
+      style={{ contentVisibility: 'auto' }}
+    >
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}

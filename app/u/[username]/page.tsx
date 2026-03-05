@@ -81,7 +81,11 @@ const getUser = cache(async (username: string) => {
   return user
 })
 
-export async function generateMetadata({ params }: ProfilePageProps) {
+import { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
   const { username } = await params
   const user = await getUser(username)
 
@@ -97,6 +101,9 @@ export async function generateMetadata({ params }: ProfilePageProps) {
   return {
     title,
     description,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.freestyla.app'}/u/${user.username || user.id}`,
+    },
     openGraph: {
       title,
       description,

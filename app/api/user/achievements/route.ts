@@ -29,10 +29,13 @@ export async function GET() {
       words: 0,
     }
 
+    let allAchievements: Prisma.AchievementGetPayload<Prisma.AchievementDefaultArgs>[] =
+      []
+
     if (session?.user?.id) {
       const userId = session.user.id
 
-      const [progressRow] = await prisma.$queryRaw<
+      const queryRawPromise = prisma.$queryRaw<
         {
           sessions: number
           recordings: number
@@ -49,11 +52,26 @@ export async function GET() {
           (SELECT "currentStreak"::int FROM users WHERE id = ${userId}) AS streak
       `)
 
-      userAchievements = await prisma.userAchievement.findMany({
+      const userAchievementsPromise = prisma.userAchievement.findMany({
         where: { userId },
         include: { achievement: true },
         orderBy: { unlockedAt: 'desc' },
       })
+
+      const allAchievementsPromise = prisma.achievement.findMany({
+        orderBy: { points: 'asc' },
+      })
+
+      const [progressRowResult, userAchievementsResult, allAchievementsResult] =
+        await Promise.all([
+          queryRawPromise,
+          userAchievementsPromise,
+          allAchievementsPromise,
+        ])
+
+      const progressRow = progressRowResult[0]
+      userAchievements = userAchievementsResult
+      allAchievements = allAchievementsResult
 
       progress = {
         sessions: progressRow?.sessions ?? 0,
@@ -62,11 +80,12 @@ export async function GET() {
         streak: progressRow?.streak ?? 0,
         words: progressRow?.words ?? 0,
       }
+    } else {
+      // If no session, fetch allAchievements anyway to show what's available
+      allAchievements = await prisma.achievement.findMany({
+        orderBy: { points: 'asc' },
+      })
     }
-
-    let allAchievements = await prisma.achievement.findMany({
-      orderBy: { points: 'asc' },
-    })
 
     const { ACHIEVEMENTS } = await import('@/lib/gamification/data')
 

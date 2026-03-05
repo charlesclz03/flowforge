@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
-import {
-  RecordingsList,
-  RecordingsStats,
-} from '@/components/organisms/recordings'
+import { RecordingsList } from '@/components/organisms/recordings/RecordingsList'
+import { RecordingsStats } from '@/components/organisms/recordings/RecordingsStats'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'

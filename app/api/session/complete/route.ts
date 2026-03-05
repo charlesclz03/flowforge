@@ -1,10 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createSession } from '@/lib/db/sessions'
 import { AchievementSystem } from '@/lib/gamification/achievements'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
+import { applyRateLimit } from '@/lib/api-rate-limit'
+import {
+  validateJsonRequest,
+  sessionCompleteSchema,
+} from '@/lib/api-validation'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -14,24 +19,6 @@ interface UserWithRate {
   level: number
   hasRated: boolean
   currentStreak?: number
-}
-
-function parseOptionalInt(value: unknown): number | null {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return Math.trunc(value)
-  }
-
-  if (typeof value === 'string') {
-    const trimmed = value.trim()
-    if (!trimmed) return null
-
-    const parsed = Number(trimmed)
-    if (!Number.isFinite(parsed)) return null
-
-    return Math.trunc(parsed)
-  }
-
-  return null
 }
 
 async function withTimeout<T>(
@@ -62,48 +49,36 @@ async function withTimeout<T>(
  * Submit a session result without a recording (metadata only).
  * Triggers XP, Streak, and Achievement updates.
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Rate limit: mutation tier (20 req/min)
+    const blocked = applyRateLimit(request, 'mutation')
+    if (blocked) return blocked
+
     // Check authentication
     const session = await getServerSessionWithUserId()
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Parse JSON body
-    const body = (await request.json()) as Record<string, unknown>
+    // Zod validation
+    const parsedBody = await validateJsonRequest(request, sessionCompleteSchema)
+    if (parsedBody instanceof NextResponse) return parsedBody
 
-    const beatId = typeof body.beatId === 'string' ? body.beatId : ''
-    const title = typeof body.title === 'string' ? body.title : undefined
-    const mode = typeof body.mode === 'string' ? body.mode : 'solo'
-
-    const durationSeconds = parseOptionalInt(body.durationSeconds)
-    const frequencyRaw = parseOptionalInt(body.frequency)
-    const difficultyRaw = parseOptionalInt(body.difficulty)
-    const restartsRaw = parseOptionalInt(body.restarts)
-    const baseWordCountRaw = parseOptionalInt(body.baseWordCount)
-
-    const frequency = frequencyRaw ?? 8
-    const difficulty = difficultyRaw ?? 2
-    const restarts = Math.max(0, restartsRaw ?? 0)
-    const baseWordCount = Math.max(0, baseWordCountRaw ?? 0)
-
-    const wordsUsedRaw = body.wordsUsed
-    const wordsUsed = Array.isArray(wordsUsedRaw)
-      ? wordsUsedRaw.filter((w): w is string => typeof w === 'string')
-      : []
-
-    // Validate required fields
-    if (!beatId || durationSeconds === null || durationSeconds <= 0) {
-      return NextResponse.json(
-        { error: 'Missing required fields: beatId, durationSeconds' },
-        { status: 400 }
-      )
-    }
+    const {
+      beatId,
+      title,
+      mode,
+      durationSeconds,
+      frequency,
+      difficulty,
+      restarts,
+      baseWordCount,
+      wordsUsed,
+    } = parsedBody
 
     // Calculate Word Count
-    const words = Array.isArray(wordsUsed) ? wordsUsed : []
-    const wordCount = words.length > 0 ? words.length : baseWordCount
+    const wordCount = wordsUsed.length > 0 ? wordsUsed.length : baseWordCount
 
     // Calculate Server Score (for validation/anti-cheat)
     const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
@@ -147,7 +122,7 @@ export async function POST(request: Request) {
     let newBadges: string[] = []
     try {
       const uniqueWords = [
-        ...new Set(words.map((w: string) => w.toLowerCase().trim())),
+        ...new Set(wordsUsed.map((w: string) => w.toLowerCase().trim())),
       ].filter((w) => w.length > 0)
 
       // A. Update Streak

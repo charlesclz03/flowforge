@@ -3,8 +3,24 @@
 import { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Settings } from 'lucide-react'
-import { SettingsList } from '@/components/organisms/settings/SettingsList' // Adjust path
+import dynamic from 'next/dynamic'
 import { Modal } from '@/components/atoms/Modal'
+
+const SettingsList = dynamic(
+  () =>
+    import('@/components/organisms/settings/SettingsList').then(
+      (mod) => mod.SettingsList
+    ),
+  {
+    loading: () => (
+      <div className="flex w-full flex-col gap-2 p-4 animate-pulse">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-12 w-full rounded-lg bg-white/5" />
+        ))}
+      </div>
+    ),
+  }
+)
 
 export function SettingsDropdown() {
   const [showSheet, setShowSheet] = useState(false)

@@ -3,7 +3,23 @@ import { authOptions } from '@/lib/auth'
 import { Container } from '@/components/atoms/Container'
 import { Trophy } from 'lucide-react'
 import Link from 'next/link'
-import { AchievementsDisplay } from '@/components/organisms/profile/AchievementsDisplay'
+import dynamic from 'next/dynamic'
+
+const AchievementsDisplay = dynamic(
+  () =>
+    import('@/components/organisms/profile/AchievementsDisplay').then(
+      (mod) => mod.AchievementsDisplay
+    ),
+  {
+    loading: () => (
+      <div className="flex w-full flex-col gap-4 animate-pulse">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-24 w-full rounded-xl bg-white/5" />
+        ))}
+      </div>
+    ),
+  }
+)
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { prisma } from '@/lib/prisma'
 import { getLevelInfo } from '@/lib/gamification/xp'
