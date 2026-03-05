@@ -45,11 +45,11 @@ export const sessionCompleteSchema = z.object({
   beatId: z.string().min(1, 'Beat ID is required'),
   title: z.string().trim().optional().default('Freestyle Session'),
   mode: z.string().optional().default('solo'),
-  durationSeconds: z.number().int().positive('Duration must be > 0'),
-  frequency: z.number().int().optional().default(8),
-  difficulty: z.number().int().optional().default(2),
-  restarts: z.number().int().min(0).optional().default(0),
-  baseWordCount: z.number().int().min(0).optional().default(0),
+  durationSeconds: z.coerce.number().int().positive('Duration must be > 0'),
+  frequency: z.coerce.number().int().optional().default(8),
+  difficulty: z.coerce.number().int().optional().default(2),
+  restarts: z.coerce.number().int().min(0).optional().default(0),
+  baseWordCount: z.coerce.number().int().min(0).optional().default(0),
   wordsUsed: z.array(z.string()).optional().default([]),
 })
 
