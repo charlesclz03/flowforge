@@ -124,6 +124,7 @@ export default function PracticeClient({
     setSelectedLanguage,
     isRecordingEnabled,
     setIsRecordingEnabled,
+    isTTSEnabled,
   } = usePracticeSession()
 
   // 2. Local UI State
@@ -644,6 +645,9 @@ export default function PracticeClient({
                 onToggleRecordingMode={() =>
                   setIsRecordingEnabled(!isRecordingEnabled)
                 }
+                onRetrySave={engine.retrySave} // [NEW] Bind retry save
+                isTTSEnabled={isTTSEnabled}
+                voiceStatus={engine.voiceStatus}
               />
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4 py-8">
@@ -656,25 +660,33 @@ export default function PracticeClient({
           </div>
         </div>
 
-        {/* Modals */}
         <SessionSummaryModal
           data={sessionSummary}
           onClose={() => {
+            const hasAudio = isRecordingEnabled && engine.recorder.duration > 0
+            const destination = hasAudio
+              ? '/recordings'
+              : '/difficultyselection'
+
             const meta = sessionSummary?.meta
             if (meta && meta.totalSessions >= 3 && !meta.hasRated) {
               setSessionSummary(null)
               setShowRateModal(true)
             } else {
               setSessionSummary(null)
-              router.push('/recordings')
+              router.push(destination)
             }
           }}
         />
         <RateAppModal
           isOpen={showRateModal}
           onClose={() => {
+            const hasAudio = isRecordingEnabled && engine.recorder.duration > 0
+            const destination = hasAudio
+              ? '/recordings'
+              : '/difficultyselection'
             setShowRateModal(false)
-            router.push('/recordings')
+            router.push(destination)
           }}
           onRate={() => {
             setShowRateModal(false)

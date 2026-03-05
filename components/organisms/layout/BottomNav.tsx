@@ -102,9 +102,10 @@ export function BottomNav() {
     <>
       <nav
         className={cn(
-          'w-full flex flex-none justify-center pb-6 pt-2 bg-transparent pointer-events-auto px-4 safe-bottom z-50',
+          'w-full flex flex-none justify-center pt-2 bg-transparent pointer-events-auto px-4 z-50',
           isPracticeRoute && '-translate-y-px'
         )}
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)' }}
       >
         {/* iOS-style Glass Dock */}
         <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5 w-full max-w-[400px]">

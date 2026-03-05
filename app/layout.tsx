@@ -165,23 +165,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager (noscript) */}
         <SessionProvider session={session}>
           <PracticeSessionProvider>
-            <SafeAreaWrapper top={false} bottom={false}>
-              <ResponsiveLayout>
-                <BottomNavBackdrop />
-                <main
-                  id="main-content"
-                  className="flex-1 min-h-0 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
-                >
-                  <JsonLd />
-                  {children}
-                </main>
-                <div className="flex-none w-full relative z-50 pointer-events-none">
-                  <div className="pointer-events-auto">
-                    <BottomNav />
+            {/* Rigid App Shell to prevent mobile browsers from overflowing height */}
+            <div className="fixed inset-0 w-full flex flex-col overflow-hidden">
+              <SafeAreaWrapper top={false} bottom={false}>
+                <ResponsiveLayout>
+                  <BottomNavBackdrop />
+                  <main
+                    id="main-content"
+                    className="flex-1 min-h-0 w-full relative overflow-y-auto overflow-x-hidden scrollbar-none"
+                  >
+                    <JsonLd />
+                    {children}
+                  </main>
+                  <div className="flex-none w-full relative z-50 pointer-events-none">
+                    <div className="pointer-events-auto">
+                      <BottomNav />
+                    </div>
                   </div>
-                </div>
-              </ResponsiveLayout>
-            </SafeAreaWrapper>
+                </ResponsiveLayout>
+              </SafeAreaWrapper>
+            </div>
             {process.env.NEXT_PUBLIC_GA_ID ? (
               <>
                 <Script

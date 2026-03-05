@@ -122,8 +122,13 @@ function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
       }
 
     case 'START_SAVE':
-      // Can start save from FINISHING (old way) or MIXING (new way)
-      if (state.status !== 'FINISHING' && state.status !== 'MIXING') return state
+      // Can start save from FINISHING, MIXING, or COMPLETED (for retries)
+      if (
+        state.status !== 'FINISHING' &&
+        state.status !== 'MIXING' &&
+        state.status !== 'COMPLETED'
+      )
+        return state
       return {
         ...state,
         status: 'SAVING',

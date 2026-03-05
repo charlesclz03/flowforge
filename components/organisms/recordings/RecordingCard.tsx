@@ -3,7 +3,16 @@
 import { useState, useEffect, memo, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Download, Trash2, Play, Pause, Music, Video } from 'lucide-react'
+import {
+  Download,
+  Trash2,
+  Play,
+  Pause,
+  Music,
+  Video,
+  MicOff,
+  RefreshCw,
+} from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
@@ -190,13 +199,26 @@ export const RecordingCard = memo(function RecordingCard({
                 <span>{recording.beat.bpm} BPM</span>
               </p>
               {audioStatus === 'processing' && (
-                <p className="mt-1 text-xs text-accent-cyan uppercase tracking-wide">
-                  PROCESSING
-                </p>
+                <div className="mt-1 flex items-center gap-3">
+                  <p className="text-xs text-accent-cyan uppercase tracking-wide flex items-center gap-1.5 font-bold">
+                    <div className="w-3 h-3 border-2 border-accent-cyan/30 border-t-accent-cyan rounded-full animate-spin" />
+                    Processing Audio
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      router.refresh()
+                    }}
+                    className="text-[10px] text-white/40 hover:text-white flex items-center gap-1 transition-colors bg-white/5 px-2 py-0.5 rounded-full"
+                  >
+                    <RefreshCw size={10} /> Refresh
+                  </button>
+                </div>
               )}
               {audioStatus === 'stats-only' && (
-                <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide">
-                  Stats-only session (no audio captured)
+                <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide flex items-center gap-1.5 font-bold opacity-90">
+                  <MicOff size={12} />
+                  Stats-Only (No Mic)
                 </p>
               )}
             </div>

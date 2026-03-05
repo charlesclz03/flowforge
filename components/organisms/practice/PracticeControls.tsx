@@ -65,6 +65,9 @@ interface PracticeControlsProps {
   wordTiming?: { start: number; duration: number }
   activeFrequency?: number
   loadingText?: string // [NEW]
+  onRetrySave?: () => void // [NEW]
+  isTTSEnabled?: boolean
+  voiceStatus?: 'loading' | 'ready' | 'fallback' | 'unsupported'
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -104,6 +107,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
     startTime,
     wordTiming,
     loadingText = 'Preparing Studio', // Default
+    onRetrySave, // [NEW]
+    isTTSEnabled,
+    voiceStatus,
   } = props
 
   // State for pause modal
@@ -364,8 +370,31 @@ export default function PracticeControls(props: PracticeControlsProps) {
         {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
         <div className="flex flex-col items-center w-full max-w-lg">
           {error && (
-            <div className="mb-4 text-red-400 text-sm text-center bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/20">
-              {error}
+            <div className="mb-4 flex flex-col items-center gap-2 text-red-400 text-sm text-center bg-red-500/10 px-4 py-3 rounded-lg border border-red-500/20 pointer-events-auto z-50">
+              <span>{error}</span>
+              {onRetrySave && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onRetrySave()
+                  }}
+                  className="px-3 py-1 rounded bg-red-500/20 hover:bg-red-500/40 text-red-300 font-bold text-[10px] uppercase tracking-widest transition-colors shadow-lg shadow-red-500/10"
+                >
+                  Retry Save
+                </button>
+              )}
+            </div>
+          )}
+
+          {isTTSEnabled && voiceStatus === 'fallback' && !error && (
+            <div className="mb-4 flex flex-col items-center gap-1 text-accent-yellow text-xs text-center bg-accent-yellow/10 px-4 py-2 rounded-lg border border-accent-yellow/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
+              <span className="font-bold tracking-wider uppercase">
+                Native Voice Missing
+              </span>
+              <span className="opacity-90 leading-tight">
+                Falling back to a standard robotic voice. Check browser settings
+                to install language packs.
+              </span>
             </div>
           )}
 

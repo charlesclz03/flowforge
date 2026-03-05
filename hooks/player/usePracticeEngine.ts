@@ -229,6 +229,7 @@ export function usePracticeEngine({
   const [activeFrequency, setActiveFrequency] = useState(frequency)
   const activeFrequencyRef = useRef(frequency)
   const pendingFrequencyRef = useRef<number | null>(null)
+  const lastSavePayloadRef = useRef<FormData | null>(null) // [NEW] Store save payload for retries
 
   // Initialize Generator
   useEffect(() => {
@@ -402,9 +403,8 @@ export function usePracticeEngine({
     setActiveFrequency(frequency)
   }, [frequency, state.status])
 
-  // TTS Integration (Restored)
-  // TTS Integration (Restored & Upgraded)
-  const { speak, warmup } = useTTS({
+  // TTS Integration
+  const { speak, warmup, voiceStatus } = useTTS({
     enabled: isTTSEnabled,
     language: selectedLanguage,
     volume: ttsVolume,
@@ -412,10 +412,15 @@ export function usePracticeEngine({
     pitch: 1.0,
   })
 
+  // TTS Integration — debounced to avoid cancel→speak race with warmup()
   useEffect(() => {
-    if (currentWord && state.status === 'PLAYING') {
-      speak(currentWord)
-    }
+    if (!currentWord || state.status !== 'PLAYING') return
+
+    // Small delay prevents the rapid cancel→speak→cancel→speak race condition
+    // that causes some mobile browsers to silently drop the utterance after
+    // warmup()'s own cancel→speak sequence during startSession.
+    const id = setTimeout(() => speak(currentWord), 150)
+    return () => clearTimeout(id)
   }, [currentWord, speak, state.status])
 
   const trackWordUsage = useCallback((word: string) => {
@@ -671,6 +676,24 @@ export function usePracticeEngine({
     audioSync,
   ])
 
+  const retrySave = useCallback(() => {
+    if (
+      state.status === 'COMPLETED' &&
+      state.error &&
+      lastSavePayloadRef.current
+    ) {
+      dispatch({ type: 'START_SAVE' })
+      submitSession(lastSavePayloadRef.current)
+        .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
+        .catch((err) =>
+          dispatch({
+            type: 'SAVE_ERROR',
+            error: err instanceof Error ? err.message : 'Unknown error',
+          })
+        )
+    }
+  }, [state.status, state.error, dispatch, submitSession])
+
   // 5. Reactive Side Effects (The Muscles)
   // This is where "StateMachine -> Real World" happens.
 
@@ -835,6 +858,7 @@ export function usePracticeEngine({
           )
 
           // Execute Save
+          lastSavePayloadRef.current = fd
           submitSession(fd)
             .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
             .catch((err: unknown) =>
@@ -886,6 +910,7 @@ export function usePracticeEngine({
       fd.append('score', '0')
       fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
+      lastSavePayloadRef.current = fd
       submitSession(fd)
         .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
         .catch((err) =>
@@ -945,6 +970,10 @@ export function usePracticeEngine({
     discardSession,
     togglePause,
     completeCountdown,
+    retrySave,
+
+    // Sub-systems Info
+    voiceStatus,
 
     // Child Hooks (Exposed for UI binding if needed, or wrapped)
     beatPlayer,

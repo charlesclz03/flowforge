@@ -22,6 +22,28 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.3',
+    date: '2026-03-05',
+    title: 'Pipeline Hardening',
+    codename: 'Pipeline Hardening',
+    type: 'patch',
+    description:
+      'Hardened the recording pipeline with retry-save, fixed TTS silence on session start, repaired BottomNav clipping on mobile, and improved post-session navigation logic.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Retry Save**: Failed session saves now show a "Retry Save" button so users can recover without losing their session data.',
+          '**TTS Silence Fix**: Resolved a race condition where TTS was silent on first session start due to rapid cancel→speak sequences between warmup and the first word announcement.',
+          '**TTS Fallback Warning**: Practice screen now warns users when their browser lacks the native voice pack for the selected language.',
+          '**BottomNav Visibility**: Fixed BottomNav being clipped on some devices by switching from `h-[100dvh]` to a rigid `fixed inset-0` app shell, and replaced conflicting CSS padding with explicit safe-area-aware inline styles.',
+          '**Smart Post-Session Redirect**: Sessions without audio recording now redirect to Difficulty Selection instead of Recordings, keeping the practice loop tight.',
+          '**Recording Card UX**: Processing state now shows a spinner with refresh button; stats-only sessions display a clear "Stats-Only (No Mic)" badge.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.2',
     date: '2026-02-12',
     title: 'Practice Full Height Fix',
