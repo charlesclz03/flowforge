@@ -1,70 +1,57 @@
-import { Quote } from 'lucide-react'
+import { Activity, AudioLines, Trophy } from 'lucide-react'
 
-const TESTIMONIALS = [
+const PROOF_POINTS = [
   {
-    quote:
-      'Finally, a practice tool that actually understands flow. The beat matching is insane.',
-    author: 'MC Rhyth',
-    role: 'Freestyle Artist',
-    image: null,
+    title: 'Built for repetition',
+    description:
+      'Short setup, fast restarts, and a mobile-first booth keep practice friction low.',
+    icon: Activity,
   },
   {
-    quote:
-      'I used to struggle with beat block. The prompt engine keeps me locked in for hours.',
-    author: 'Sarah J.',
-    role: 'Bedroom Producer',
-    image: null,
+    title: 'Stay on the beat',
+    description:
+      'Timed prompts and beat-aware pacing keep every round anchored to rhythm instead of guesswork.',
+    icon: AudioLines,
   },
   {
-    quote:
-      'Clean, fast, and no distractions. Exactly what I needed for my daily practice sessions.',
-    author: 'FlowState',
-    role: 'Verified User',
-    image: null,
+    title: 'See progress stack up',
+    description:
+      'XP, streaks, and saved takes turn casual practice into a measurable routine.',
+    icon: Trophy,
   },
 ]
 
 export function LandingTestimonials() {
   return (
-    <section className="py-24 bg-black relative overflow-hidden">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-purple/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-blue/5 rounded-full blur-3xl" />
+    <section className="relative overflow-hidden rounded-[2.5rem] border border-stroke-subtle/40 bg-background-card/30 px-6 py-12 backdrop-blur-light md:px-10">
+      <div className="pointer-events-none absolute inset-0 opacity-60 blur-3xl">
+        <div className="absolute inset-0 bg-gradient-aurora" aria-hidden />
+      </div>
 
-      <div className="container px-4 md:px-6 relative z-10">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-3xl md:text-5xl font-light text-white tracking-tight">
-            Trusted by artists in motion.
+      <div className="relative z-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-light text-white">
+            Why the product loop works
           </h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-            Join thousands of creators using FreeStyla to sharpen their lyrical
-            skills.
+          <p className="mt-3 text-text-secondary">
+            The edge is not a social feed. It is a tighter practice system that
+            keeps rhythm, prompts, and progression in one place.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {TESTIMONIALS.map((t, i) => (
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {PROOF_POINTS.map(({ title, description, icon: Icon }) => (
             <div
-              key={i}
-              className="bg-background-elevated/50 backdrop-blur-sm border border-white/5 p-8 rounded-2xl hover:border-white/10 transition-colors relative group"
+              key={title}
+              className="rounded-2xl border border-white/10 bg-black/30 p-6 shadow-soft"
             >
-              <Quote className="absolute top-8 right-8 text-white/5 w-12 h-12 group-hover:text-white/10 transition-colors" />
-
-              <div className="min-h-[120px] mb-8">
-                <p className="text-lg text-text-secondary leading-relaxed">
-                  "{t.quote}"
-                </p>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-accent-purple">
+                <Icon className="h-6 w-6" />
               </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-purple to-accent-blue flex items-center justify-center text-white font-bold text-sm">
-                  {t.author[0]}
-                </div>
-                <div>
-                  <div className="text-white font-medium">{t.author}</div>
-                  <div className="text-xs text-text-tertiary">{t.role}</div>
-                </div>
-              </div>
+              <h3 className="mt-5 text-lg font-medium text-white">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-text-secondary">
+                {description}
+              </p>
             </div>
           ))}
         </div>

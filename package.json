@@ -1,6 +1,6 @@
 {
   "name": "flowforge-freestyle",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -22,8 +22,8 @@
   },
   "overrides": {
     "qs": "6.14.2",
-    "minimatch": "10.2.2",
-    "serialize-javascript": "^6.0.2",
+    "minimatch": "10.2.4",
+    "serialize-javascript": "^7.0.4",
     "terser-webpack-plugin": "^5.3.17",
     "workbox-webpack-plugin": "^7.3.0"
   },

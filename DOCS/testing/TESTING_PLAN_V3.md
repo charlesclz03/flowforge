@@ -1,7 +1,7 @@
 # Testing Plan V3
 
-**Target Release**: `1.0.2`
-**Last Updated**: 2026-02-19
+**Target Release**: `1.0.7`
+**Last Updated**: 2026-03-06
 
 This is the canonical testing strategy for current releases.
 
@@ -14,8 +14,8 @@ This is the canonical testing strategy for current releases.
 
 ```powershell
 & "C:/Program Files/nodejs/npm.cmd" run lint
-& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run build
+& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run docs:check
 ```
 

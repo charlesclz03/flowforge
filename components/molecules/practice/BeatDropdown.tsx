@@ -28,7 +28,9 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/atoms/Tabs'
+import { ConfirmDialog } from '@/components/molecules/feedback/ConfirmDialog'
 import { deleteLocalBeat } from '@/lib/beats/localBeats'
+import { toast } from 'react-hot-toast'
 
 // Compact upload row that appears after existing tracks
 function UploadNewTrackRow() {
@@ -98,6 +100,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
   const [myBeats, setMyBeats] = useState<Beat[]>([])
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set())
   const [playingId, setPlayingId] = useState<string | null>(null)
+  const [beatPendingDelete, setBeatPendingDelete] = useState<Beat | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -205,27 +209,34 @@ export function BeatDropdown(props: BeatDropdownProps) {
     await toggleBeatFavorite(beatId)
   }
 
-  const handleDeleteBeat = async (beatId: string, e: React.MouseEvent) => {
+  const requestDeleteBeat = (beat: Beat, e: React.MouseEvent) => {
     e.stopPropagation()
-    if (confirm('Delete this track?')) {
-      try {
-        // Check if it's a local beat (stored in IndexedDB) vs server beat
-        if (beatId.startsWith('local-')) {
-          await deleteLocalBeat(beatId)
-        } else {
-          // Server-side beat - call the API
-          const res = await fetch(`/api/user/beats/${beatId}`, {
-            method: 'DELETE',
-          })
-          if (!res.ok) {
-            throw new Error('Failed to delete beat')
-          }
+    setBeatPendingDelete(beat)
+  }
+
+  const confirmDeleteBeat = async () => {
+    if (!beatPendingDelete) return
+
+    setIsDeleting(true)
+    try {
+      if (beatPendingDelete.id.startsWith('local-')) {
+        await deleteLocalBeat(beatPendingDelete.id)
+      } else {
+        const res = await fetch(`/api/user/beats/${beatPendingDelete.id}`, {
+          method: 'DELETE',
+        })
+        if (!res.ok) {
+          throw new Error('Failed to delete beat')
         }
-        fetchMyBeats()
-      } catch (error) {
-        console.error('Delete beat error:', error)
-        alert('Failed to delete beat')
       }
+      await fetchMyBeats()
+      toast.success('Track deleted')
+      setBeatPendingDelete(null)
+    } catch (error) {
+      console.error('Delete beat error:', error)
+      toast.error('Failed to delete beat')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -289,6 +300,21 @@ export function BeatDropdown(props: BeatDropdownProps) {
       ref={dropdownRef}
       className={cn('relative w-full z-40', embedded && !useOverlay && 'mb-4')}
     >
+      <ConfirmDialog
+        isOpen={Boolean(beatPendingDelete)}
+        onClose={() => setBeatPendingDelete(null)}
+        onConfirm={confirmDeleteBeat}
+        title="Delete Track?"
+        description={
+          beatPendingDelete
+            ? `Remove "${beatPendingDelete.title}" from your library?`
+            : 'Remove this track from your library?'
+        }
+        confirmLabel="Delete Track"
+        isLoading={isDeleting}
+        tone="danger"
+      />
+
       <button
         ref={buttonRef}
         type="button"
@@ -594,7 +620,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             <Heart size={16} />
                           </div>
                           <div
-                            onClick={(e) => handleDeleteBeat(beat.id, e)}
+                            onClick={(e) => requestDeleteBeat(beat, e)}
                             className="p-2 text-text-tertiary hover:text-accent-red opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                           >
                             <Trash2 size={16} />

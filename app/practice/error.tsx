@@ -33,7 +33,10 @@ export default function PracticeError({
           onClick={() => reset()}
           className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-500 px-6 py-4 font-bold text-white transition-all active:scale-95"
         >
-          <RefreshCcw size={20} className="transition-transform group-hover:rotate-180" />
+          <RefreshCcw
+            size={20}
+            className="transition-transform group-hover:rotate-180"
+          />
           REBOOT ENGINE
         </button>
         <Link

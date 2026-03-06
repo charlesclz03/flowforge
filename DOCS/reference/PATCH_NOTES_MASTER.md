@@ -1,5 +1,23 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.7 - Residual Cleanup (2026-03-06)
+
+- **UX**: Replaced the remaining browser-native `confirm()` and `alert()` flows in Download, Review, Profile Security, Admin Beats, and Beat Dropdown with in-app dialogs and toast feedback.
+- **ANALYTICS**: Added conversion tracking for `/howitworks` views and CTA clicks, download-page entry/CTA actions, checkout CTA launches, and order-confirmation activation events.
+- **QUALITY**: `next lint` is fully clean again after clearing the remaining formatting/prettier debt.
+- **SEO**: JSON-LD metadata now matches the live `www.freestyla.app` domain and EUR pricing context.
+
+## v1.0.6 - Integrity & Funnel Fix (2026-03-06)
+
+- **SECURITY**: Dependency overrides now fully clear the remaining audit exposure, and `npm audit` resolves to `0 vulnerabilities`.
+- **ARCHITECTURE**: Recordings and metadata-only completions now share one session-save pipeline for XP, streaks, achievements, and session meta.
+- **SECURITY**: `/api/recordings`, `/api/session/complete`, and Stripe checkout now return sanitized client errors instead of raw backend/provider messages.
+- **FUNNEL**: `/` is now a real landing page with live pricing, product proof, FAQ, and focused CTAs instead of redirecting immediately to `/howitworks`.
+- **UX**: Public entry routes (`/` and `/howitworks`) now hide the bottom app dock, keeping onboarding focused on conversion instead of app detours.
+- **ACCESSIBILITY**: Restored browser zoom and text selection by removing the global no-zoom/no-select defaults.
+- **UX**: Replaced the core Practice beat-switch confirm and Tracks delete confirm with in-app modals; subscription actions now use toasts instead of browser alerts.
+- **BUILD**: React Strict Mode is back on, and `/api/beats` is explicitly request-driven so the build no longer reports dynamic-server-usage for that route.
+
 ## v1.0.5 - Whole App Audit Forever Fix (2026-03-05)
 
 - **SECURITY**: Resolved 25 high-severity NPM vulnerabilities caused by deprecated Webpack plugins and `serialize-javascript` vulnerabilities by migrating to `@ducanh2912/next-pwa` and injecting `package.json` overrides.

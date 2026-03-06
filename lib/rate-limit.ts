@@ -6,10 +6,7 @@
  * function instance, which provides reasonable burst protection.
  */
 
-const rateLimitMap = new Map<
-  string,
-  { count: number; lastReset: number }
->()
+const rateLimitMap = new Map<string, { count: number; lastReset: number }>()
 
 // Clean up stale entries every 60s to avoid memory leaks
 if (typeof setInterval !== 'undefined') {
@@ -46,7 +43,7 @@ export function rateLimit(
   const entry = rateLimitMap.get(identifier)
 
   if (!entry || now - entry.lastReset > windowMs) {
-    // First request or window expired — reset
+    // First request or expired window; reset the counter state.
     rateLimitMap.set(identifier, { count: 1, lastReset: now })
     return { success: true, limit, remaining: limit - 1, reset: now + windowMs }
   }

@@ -105,8 +105,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1, // Prevent zoom for app-like feel
-  userScalable: false, // Disabling zoom for "Native App" feel (Accessibility trade-off accepted for Game/Tool apps)
   viewportFit: 'cover',
   interactiveWidget: 'resizes-content',
   themeColor: [

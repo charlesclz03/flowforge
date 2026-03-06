@@ -8,9 +8,7 @@ export default function RecordingsLoading() {
           <h1 className="text-3xl font-black uppercase text-white tracking-widest leading-none">
             THE VAULT
           </h1>
-          <p className="mt-2 text-sm text-gray-400">
-            LOADING SESSIONS...
-          </p>
+          <p className="mt-2 text-sm text-gray-400">LOADING SESSIONS...</p>
         </div>
         <div className="flex h-[38px] w-[130px] animate-pulse rounded-lg bg-white/5" />
       </div>
@@ -28,7 +26,7 @@ export default function RecordingsLoading() {
               </div>
               <div className="h-8 w-8 animate-pulse rounded-full bg-white/10" />
             </div>
-            
+
             <div className="mt-6 flex h-[48px] w-full items-center justify-center rounded-lg bg-white/5">
               <Loader2 className="animate-spin text-white/20" size={20} />
             </div>

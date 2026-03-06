@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
-export const revalidate = 3600 // Cache for 1 hour (ISR)
+import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 
 // Fallback beats to ensure the app works even if DB/Prisma fails completely
 const FALLBACK_BEATS = [
@@ -25,9 +26,9 @@ const FALLBACK_BEATS = [
   },
 ]
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const freeOnly = searchParams.get('free') === 'true'
 
     let beatsData: {

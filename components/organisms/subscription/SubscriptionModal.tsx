@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-
+import { toast } from 'react-hot-toast'
 import { X, Check } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics/track'
 
 interface SubscriptionModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubscribe?: (plan: 'monthly' | 'annual') => void
+  onSubscribe?: (plan: 'monthly' | 'yearly') => void
   beatCount?: number
 }
 
@@ -24,8 +25,12 @@ export function SubscriptionModal({
 
   if (!isOpen) return null
 
-  const handleSubscribe = async (plan: 'monthly' | 'annual') => {
+  const handleSubscribe = async (plan: 'monthly' | 'yearly') => {
     setLoading(plan)
+    trackEvent('checkout_cta_click', {
+      source: 'subscription_modal',
+      plan,
+    })
     try {
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
@@ -42,31 +47,38 @@ export function SubscriptionModal({
 
       const { url } = await response.json()
       if (url) {
+        trackEvent('checkout_redirect_ready', {
+          source: 'subscription_modal',
+          plan,
+        })
         window.location.href = url
-        // Don't reset loading, we're redirecting
       } else {
         throw new Error('No checkout URL received')
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      alert(error instanceof Error ? error.message : 'Failed to start checkout')
+      trackEvent('checkout_error', {
+        source: 'subscription_modal',
+        plan,
+      })
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to start checkout'
+      )
       setLoading(null)
     }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative w-full max-w-lg card p-6 space-y-6">
+      <div className="card relative w-full max-w-lg space-y-6 p-6">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-2 rounded-lg text-text-secondary hover:bg-background-elevated transition-colors"
+          className="absolute right-4 top-4 rounded-lg p-2 text-text-secondary transition-colors hover:bg-background-elevated"
           aria-label="Close"
         >
           <X size={20} />
@@ -79,60 +91,59 @@ export function SubscriptionModal({
           </p>
         </div>
 
-        {/* Monthly Plan */}
         <div
-          className={`border-2 border-text-tertiary/20 rounded-xl p-4 hover:border-accent-orange/40 transition-colors ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+          className={`rounded-xl border-2 border-text-tertiary/20 p-4 transition-colors hover:border-accent-orange/40 ${loading ? 'pointer-events-none opacity-50' : ''}`}
         >
-          <div className="flex items-start justify-between mb-3">
+          <div className="mb-3 flex items-start justify-between">
             <div>
               <h3 className="font-medium text-text-primary">Monthly</h3>
-              <p className="text-text-secondary text-sm">Pay month-to-month</p>
+              <p className="text-sm text-text-secondary">Pay month-to-month</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-light text-text-primary">€4.99</div>
-              <div className="text-text-tertiary text-xs">/month</div>
+              <div className="text-2xl font-light text-text-primary">
+                EUR 4.99
+              </div>
+              <div className="text-xs text-text-tertiary">/month</div>
             </div>
           </div>
           <button
             onClick={() => handleSubscribe('monthly')}
             disabled={!!loading}
-            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-accent-orange py-2 font-medium text-black transition-all hover:bg-opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading === 'monthly' ? 'Processing...' : 'Subscribe Monthly'}
           </button>
         </div>
 
-        {/* Annual Plan */}
         <div
-          className={`border-2 border-accent-orange rounded-xl p-4 bg-accent-orange/5 relative ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+          className={`relative rounded-xl border-2 border-accent-orange bg-accent-orange/5 p-4 ${loading ? 'pointer-events-none opacity-50' : ''}`}
         >
-          <div className="absolute -top-3 left-4 px-2 py-1 bg-accent-orange text-black text-xs font-medium rounded-full">
+          <div className="absolute -top-3 left-4 rounded-full bg-accent-orange px-2 py-1 text-xs font-medium text-black">
             Save 17%
           </div>
-          <div className="flex items-start justify-between mb-3">
+          <div className="mb-3 flex items-start justify-between">
             <div>
-              <h3 className="font-medium text-text-primary">Annual</h3>
-              <p className="text-text-secondary text-sm">Best value</p>
+              <h3 className="font-medium text-text-primary">Yearly</h3>
+              <p className="text-sm text-text-secondary">Best value</p>
             </div>
             <div className="text-right">
               <div className="text-2xl font-light text-text-primary">
-                €49.00
+                EUR 49.00
               </div>
-              <div className="text-text-tertiary text-xs">/year</div>
+              <div className="text-xs text-text-tertiary">/year</div>
             </div>
           </div>
           <button
-            onClick={() => handleSubscribe('annual')}
+            onClick={() => handleSubscribe('yearly')}
             disabled={!!loading}
-            className="w-full py-2 rounded-lg bg-accent-orange text-black font-medium transition-all hover:bg-opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-accent-orange py-2 font-medium text-black transition-all hover:bg-opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {loading === 'annual' ? 'Processing...' : 'Subscribe Annually'}
+            {loading === 'yearly' ? 'Processing...' : 'Subscribe Yearly'}
           </button>
         </div>
 
-        {/* Features */}
-        <div className="space-y-2 pt-4 border-t border-text-tertiary/10">
-          <p className="text-text-secondary text-sm font-medium">
+        <div className="space-y-2 border-t border-text-tertiary/10 pt-4">
+          <p className="text-sm font-medium text-text-secondary">
             What's included:
           </p>
           {[
@@ -144,7 +155,7 @@ export function SubscriptionModal({
           ].map((feature, index) => (
             <div
               key={index}
-              className="flex items-center space-x-2 text-text-secondary text-sm"
+              className="flex items-center space-x-2 text-sm text-text-secondary"
             >
               <Check size={16} className="text-accent-green" />
               <span>{feature}</span>
@@ -152,7 +163,7 @@ export function SubscriptionModal({
           ))}
         </div>
 
-        <p className="text-text-tertiary text-xs text-center pt-2">
+        <p className="pt-2 text-center text-xs text-text-tertiary">
           Secure checkout powered by Stripe.
         </p>
       </div>

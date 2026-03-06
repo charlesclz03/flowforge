@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti'
 import { Check, Music, Zap, Mic, Upload, BarChart2 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
+import { trackEvent } from '@/lib/analytics/track'
 
 type ActivationState = 'checking' | 'confirmed' | 'timeout' | 'unauthorized'
 
@@ -17,6 +18,7 @@ export default function OrderConfirmedPage() {
     null
   )
   const startedAtRef = useRef<number>(Date.now())
+  const hasTrackedConfirmedRef = useRef(false)
 
   useEffect(() => {
     setActivationState('checking')
@@ -78,7 +80,22 @@ export default function OrderConfirmedPage() {
   }, [retryKey])
 
   useEffect(() => {
+    trackEvent('orderconfirmed_view', {
+      activation_state: activationState,
+      subscription_status: subscriptionStatus ?? 'unknown',
+    })
+  }, [activationState, subscriptionStatus])
+
+  useEffect(() => {
     if (activationState !== 'confirmed') return
+    if (hasTrackedConfirmedRef.current) return
+
+    hasTrackedConfirmedRef.current = true
+
+    trackEvent('subscription_activated', {
+      source: 'orderconfirmed',
+      subscription_status: subscriptionStatus ?? 'active',
+    })
 
     // Fire confetti on mount
     const duration = 3 * 1000
@@ -112,7 +129,7 @@ export default function OrderConfirmedPage() {
     }, 250)
 
     return () => clearInterval(interval)
-  }, [activationState])
+  }, [activationState, subscriptionStatus])
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-accent-purple/30">

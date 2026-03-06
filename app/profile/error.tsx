@@ -24,13 +24,17 @@ export default function ProfileError({
         Profile Unavailable
       </h2>
       <p className="mb-8 max-w-sm text-sm text-gray-400">
-        We couldn't load this profile data. The user might not exist, or there could be a temporary connection issue.
+        We couldn't load this profile data. The user might not exist, or there
+        could be a temporary connection issue.
       </p>
       <button
         onClick={() => reset()}
         className="group flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-6 py-4 font-bold text-red-500 transition-all hover:bg-red-500/20 active:scale-95"
       >
-        <RefreshCcw size={20} className="transition-transform group-hover:rotate-180" />
+        <RefreshCcw
+          size={20}
+          className="transition-transform group-hover:rotate-180"
+        />
         RETRY LOADING
       </button>
     </div>

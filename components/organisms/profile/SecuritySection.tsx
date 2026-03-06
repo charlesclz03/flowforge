@@ -1,13 +1,45 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'react-hot-toast'
 import { Card } from '@/components/atoms/Card'
 import { SignOutButton } from '@/components/molecules/auth/SignOutButton'
+import { ConfirmDialog } from '@/components/molecules/feedback/ConfirmDialog'
 
 export function SecuritySection() {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true)
+    try {
+      const res = await fetch('/api/user', { method: 'DELETE' })
+      if (!res.ok) {
+        throw new Error('Failed to delete account')
+      }
+      window.location.href = '/'
+    } catch (err) {
+      console.error(err)
+      toast.error(err instanceof Error ? err.message : 'An error occurred')
+      setIsDeleting(false)
+    }
+  }
+
   return (
     <Card title="Security">
       <div className="space-y-4">
+        <ConfirmDialog
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          onConfirm={handleDeleteAccount}
+          title="Delete Account?"
+          description="This permanently removes your account and all associated data. This action cannot be undone."
+          confirmLabel="Delete Account"
+          isLoading={isDeleting}
+          tone="danger"
+        />
+
         {/* Sign Out */}
         <div className="flex items-center justify-between rounded-xl border border-stroke-subtle/20 bg-background-elevated/50 p-4">
           <div>
@@ -57,25 +89,7 @@ export function SecuritySection() {
               </p>
             </div>
             <button
-              onClick={async () => {
-                if (
-                  window.confirm(
-                    'Are you sure you want to delete your account? This action cannot be undone.'
-                  )
-                ) {
-                  try {
-                    const res = await fetch('/api/user', { method: 'DELETE' })
-                    if (res.ok) {
-                      window.location.href = '/' // Force hard redirect to home
-                    } else {
-                      alert('Failed to delete account')
-                    }
-                  } catch (err) {
-                    console.error(err)
-                    alert('An error occurred')
-                  }
-                }
-              }}
+              onClick={() => setShowDeleteConfirm(true)}
               className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-500 hover:text-white"
             >
               Delete Account

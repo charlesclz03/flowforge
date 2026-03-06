@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 export function ManageSubscriptionButton() {
   const [loading, setLoading] = useState(false)
@@ -24,7 +25,7 @@ export function ManageSubscriptionButton() {
       }
     } catch (error) {
       console.error('Portal error:', error)
-      alert(
+      toast.error(
         error instanceof Error ? error.message : 'Failed to open billing portal'
       )
     } finally {

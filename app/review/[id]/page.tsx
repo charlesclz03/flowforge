@@ -15,6 +15,7 @@ import { Spinner } from '@/components/atoms/Spinner'
 import { Download, Trash2 } from 'lucide-react'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
+import { ConfirmDialog } from '@/components/molecules/feedback/ConfirmDialog'
 import { FreestyleSessionWithBeat } from '@/types/database'
 import { ErrorCodes } from '@/lib/errors'
 import { AudioMixer } from '@/lib/audio/mixer'
@@ -93,6 +94,7 @@ export default function ReviewPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isSavingSettings, setIsSavingSettings] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
 
   // Ref to get volume/fx settings from player
@@ -181,12 +183,6 @@ export default function ReviewPage() {
 
   const handleDelete = async () => {
     if (!recordingId) return
-    if (
-      !confirm(
-        'Are you sure you want to delete this recording? This cannot be undone.'
-      )
-    )
-      return
 
     setIsDeleting(true)
     try {
@@ -194,6 +190,7 @@ export default function ReviewPage() {
         method: 'DELETE',
       })
       if (!response.ok) throw new Error('Failed to delete')
+      setShowDeleteConfirm(false)
       router.push('/recordings')
     } catch (err) {
       handleError(err, ErrorCodes.SESSION_DELETE_FAILED)
@@ -285,12 +282,24 @@ export default function ReviewPage() {
   return (
     <ReviewTemplate
       header={
-        <AppHeader
-          showBackButton={true}
-          onBack={handleBack}
-          customTitle="TRACK REVIEW"
-          customSubtitle="Listen back and analyze your flow"
-        />
+        <>
+          <ConfirmDialog
+            isOpen={showDeleteConfirm}
+            onClose={() => setShowDeleteConfirm(false)}
+            onConfirm={handleDelete}
+            title="Delete Recording?"
+            description="This permanently removes the recording and its saved settings. This action cannot be undone."
+            confirmLabel="Delete Recording"
+            isLoading={isDeleting}
+            tone="danger"
+          />
+          <AppHeader
+            showBackButton={true}
+            onBack={handleBack}
+            customTitle="TRACK REVIEW"
+            customSubtitle="Listen back and analyze your flow"
+          />
+        </>
       }
       pageHeader={
         <div className="w-full max-w-2xl mx-auto">
@@ -383,7 +392,7 @@ export default function ReviewPage() {
           )}
           <Button
             variant="danger"
-            onClick={handleDelete}
+            onClick={() => setShowDeleteConfirm(true)}
             isLoading={isDeleting}
             leftIcon={<Trash2 size={18} />}
             className="w-full sm:w-auto"

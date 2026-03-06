@@ -161,8 +161,11 @@ export default function PracticeClient({
     'beat'
   )
   const [pendingAction, setPendingAction] = useState<
-    'exit' | 'restart' | 'finish' | null
+    'exit' | 'restart' | 'finish' | 'change-beat' | null
   >(null)
+  const [pendingBeatSelection, setPendingBeatSelection] = useState<Beat | null>(
+    null
+  )
 
   // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
@@ -508,10 +511,9 @@ export default function PracticeClient({
   const handleBack = () => router.back()
   const handleBeatSelect = (beat: Beat) => {
     if (engine.status === 'PLAYING' || engine.status === 'PAUSED') {
-      if (confirm('Stop current session to change beat?')) {
-        engine.stopSession()
-        setBeat(beat)
-      }
+      setPendingBeatSelection(beat)
+      setPendingAction('change-beat')
+      setShowExitConfirmation(true)
     } else {
       setBeat(beat)
     }
@@ -709,20 +711,32 @@ export default function PracticeClient({
 
         <Modal
           isOpen={showExitConfirmation}
-          onClose={() => setShowExitConfirmation(false)}
-          title="End Session?"
+          onClose={() => {
+            setShowExitConfirmation(false)
+            setPendingAction(null)
+            setPendingBeatSelection(null)
+          }}
+          title={
+            pendingAction === 'change-beat' ? 'Change Beat?' : 'End Session?'
+          }
           showCloseButton={false}
         >
           <div className="space-y-4">
             <p className="text-text-secondary">
               {pendingAction === 'restart'
                 ? 'Restarting will discard the current recording. Continue?'
-                : 'Stop and save your session?'}
+                : pendingAction === 'change-beat'
+                  ? 'Switching beats will stop and save the current session first.'
+                  : 'Stop and save your session?'}
             </p>
             <div className="flex gap-3 justify-end">
               <Button
                 variant="ghost"
-                onClick={() => setShowExitConfirmation(false)}
+                onClick={() => {
+                  setShowExitConfirmation(false)
+                  setPendingAction(null)
+                  setPendingBeatSelection(null)
+                }}
               >
                 Cancel
               </Button>
@@ -733,9 +747,17 @@ export default function PracticeClient({
                   if (pendingAction === 'restart') {
                     engine.discardSession()
                     setTimeout(() => engine.startSession(), 500)
+                  } else if (
+                    pendingAction === 'change-beat' &&
+                    pendingBeatSelection
+                  ) {
+                    engine.stopSession()
+                    setBeat(pendingBeatSelection)
                   } else {
                     engine.stopSession() // This triggers 'FINISHING' -> 'SAVING'
                   }
+                  setPendingAction(null)
+                  setPendingBeatSelection(null)
                 }}
               >
                 Confirm

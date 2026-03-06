@@ -22,6 +22,7 @@ interface LandingHeroProps {
   badges: SessionBadge[]
   progress: number
   isAuthenticated: boolean
+  ctaPath?: string
 }
 
 export function LandingHero({
@@ -29,6 +30,7 @@ export function LandingHero({
   badges,
   progress,
   isAuthenticated,
+  ctaPath = '/difficultyselection',
 }: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden rounded-[2.5rem] border border-stroke-subtle/60 bg-background-glow/80 p-[1px] shadow-soft">
@@ -65,17 +67,17 @@ export function LandingHero({
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-center">
               {isAuthenticated ? (
                 <Link
-                  href="/howitworks"
+                  href={ctaPath}
                   className="btn-primary w-full rounded-full bg-gradient-pulse px-8 py-3 text-center text-base font-medium text-black shadow-neon transition hover:shadow-glow sm:w-auto"
                 >
-                  Practice Here
+                  Start Practicing
                 </Link>
               ) : (
                 <SignInButton
-                  callbackUrl="/howitworks"
+                  callbackUrl={ctaPath}
                   className="w-full rounded-full px-8 py-3 text-center text-base font-medium sm:w-auto"
                 >
-                  Practice Here
+                  Start Practicing
                 </SignInButton>
               )}
             </div>

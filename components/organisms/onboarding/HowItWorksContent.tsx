@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Music, Timer, Mic, Sparkles, Zap, Target } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { QASection } from '@/components/organisms/landing/QASection'
+import { trackEvent } from '@/lib/analytics/track'
 
 interface HowItWorksContentProps {
   onStartPractice?: () => void
@@ -17,6 +19,29 @@ export function HowItWorksContent({
   const router = useRouter()
   const handleStart =
     onStartPractice || (() => router.push('/difficultyselection'))
+
+  useEffect(() => {
+    trackEvent('howitworks_view', {
+      page_path: '/howitworks',
+      beat_count: beatCount,
+    })
+  }, [beatCount])
+
+  const handleStartClick = () => {
+    trackEvent('howitworks_cta_click', {
+      cta: 'start_practice',
+      location: 'blueprint',
+    })
+    handleStart()
+  }
+
+  const handleDownloadClick = () => {
+    trackEvent('howitworks_cta_click', {
+      cta: 'get_app',
+      location: 'blueprint',
+    })
+    router.push('/download')
+  }
 
   return (
     <div className="space-y-12">
@@ -80,7 +105,8 @@ export function HowItWorksContent({
             </div>
             <p className="text-sm text-text-secondary">
               Hit play and start freestyling. Words appear in sync with the
-              beat. Your session is automatically recorded for review.
+              beat. Your performance is tracked so you can review progress and,
+              on Pro, save the full take.
             </p>
           </div>
         </div>
@@ -94,8 +120,8 @@ export function HowItWorksContent({
             <div>
               <h2 className="mb-2 text-lg font-semibold">Precision timing</h2>
               <p className="text-sm text-text-secondary">
-                your session. Standard sessions run for 10 minutes, perfect for
-                daily practice.
+                Standard sessions run for 10 minutes, giving you enough room to
+                build momentum without losing focus.
               </p>
             </div>
           </div>
@@ -136,10 +162,10 @@ export function HowItWorksContent({
           <div className="flex items-start space-x-4">
             <Music className="mt-1 h-6 w-6 flex-shrink-0 text-green-400" />
             <div>
-              <h2 className="mb-2 text-lg font-semibold">Auto-recording</h2>
+              <h2 className="mb-2 text-lg font-semibold">Session tracking</h2>
               <p className="text-sm text-text-secondary">
-                Every session is captured automatically. Review your
-                performances and track your progress over time.
+                Every run feeds your progress history. Pro users can also save,
+                replay, and download their recordings.
               </p>
             </div>
           </div>
@@ -152,7 +178,7 @@ export function HowItWorksContent({
           variant="primary"
           size="lg"
           className="bg-gradient-to-r from-accent-purple to-accent-purple/80 px-10 py-4 text-lg text-black shadow-purple hover:scale-105 hover:shadow-glow"
-          onClick={handleStart}
+          onClick={handleStartClick}
         >
           Start
         </Button>
@@ -160,7 +186,7 @@ export function HowItWorksContent({
           variant="outline"
           size="lg"
           className="px-10 py-4 text-lg border-2 border-white/20 hover:bg-white/10 hover:border-white/40 transition-colors"
-          onClick={() => router.push('/download')}
+          onClick={handleDownloadClick}
         >
           Get the App
         </Button>

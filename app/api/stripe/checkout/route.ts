@@ -70,7 +70,7 @@ export async function POST(request: Request) {
       stripeKey: process.env.STRIPE_SECRET_KEY ? 'SET' : 'MISSING',
     })
     return NextResponse.json(
-      { error: `Failed to create checkout session: ${errorMessage}` },
+      { error: 'Failed to create checkout session' },
       { status: 500 }
     )
   }

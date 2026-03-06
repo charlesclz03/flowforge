@@ -14,7 +14,7 @@ export function LandingHowItWorks() {
             1. Choose your beat
           </h3>
           <p>
-            Pick from a curated library of hip‑hop instrumentals, each tagged
+            Pick from a curated library of hip-hop instrumentals, each tagged
             with BPM and genre so you can lock in the right vibe fast.
           </p>
         </div>
@@ -23,17 +23,17 @@ export function LandingHowItWorks() {
             2. Configure your session
           </h3>
           <p>
-            Set difficulty and word frequency so prompts match your level—easy
-            warm‑ups or tougher vocab every 4, 8, or 16 bars.
+            Set difficulty and word frequency so prompts match your level, from
+            easy warm-ups to tougher vocab bursts.
           </p>
         </div>
         <div className="space-y-2">
           <h3 className="text-base font-medium text-text-primary">
-            3. Press play & flow
+            3. Press play and flow
           </h3>
           <p>
-            Hit play to start your 2‑minute run. Words appear on‑beat while
-            FreeStyla records, so you can review your take and track progress.
+            Hit play to start a focused practice run. Words appear on-beat while
+            FreeStyla tracks your session, XP, and saved takes.
           </p>
         </div>
       </div>

@@ -19,6 +19,7 @@ import {
   reorderBeat,
 } from '@/app/actions/admin/beats'
 import { Button } from '@/components/atoms/Button'
+import { ConfirmDialog } from '@/components/molecules/feedback/ConfirmDialog'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 
 // Local simple components to replace missing shadcn/ui
@@ -60,6 +61,8 @@ export default function AdminBeatsPage() {
   const [beats, setBeats] = useState<Beat[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [beatPendingDelete, setBeatPendingDelete] = useState<Beat | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Local state for the row currently being edited
   const [editForm, setEditForm] = useState({
@@ -87,14 +90,16 @@ export default function AdminBeatsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this beat?')) return
-
+    setIsDeleting(true)
     try {
       await deleteBeat(id)
       setBeats(beats.filter((b) => b.id !== id))
       toast.success('Beat deleted')
     } catch (error) {
       toast.error('Failed to delete beat')
+    } finally {
+      setIsDeleting(false)
+      setBeatPendingDelete(null)
     }
   }
 
@@ -165,6 +170,23 @@ export default function AdminBeatsPage() {
 
   return (
     <div className="min-h-screen bg-background pb-bottomnav">
+      <ConfirmDialog
+        isOpen={Boolean(beatPendingDelete)}
+        onClose={() => setBeatPendingDelete(null)}
+        onConfirm={() => {
+          if (!beatPendingDelete) return
+          handleDelete(beatPendingDelete.id)
+        }}
+        title="Delete Beat?"
+        description={
+          beatPendingDelete
+            ? `Delete "${beatPendingDelete.title}" from the public beat library?`
+            : 'Delete this beat from the public beat library?'
+        }
+        confirmLabel="Delete Beat"
+        isLoading={isDeleting}
+        tone="danger"
+      />
       <AppHeader
         showBackButton
         customTitle="BEAT MANAGEMENT"
@@ -392,7 +414,7 @@ export default function AdminBeatsPage() {
                             variant="ghost"
                             size="sm"
                             className="text-red-400 hover:text-red-300 transition-opacity"
-                            onClick={() => handleDelete(beat.id)}
+                            onClick={() => setBeatPendingDelete(beat)}
                           >
                             <Trash2 size={16} />
                           </Button>

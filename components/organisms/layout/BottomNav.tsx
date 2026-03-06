@@ -13,6 +13,7 @@ import { usePracticeSession } from '@/contexts/SessionContext'
 export function BottomNav() {
   const pathname = usePathname()
   const isPracticeRoute = pathname === '/practice'
+  const isPublicEntryRoute = pathname === '/' || pathname === '/howitworks'
   const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
   const { bump } = useHaptics()
@@ -97,6 +98,10 @@ export function BottomNav() {
   }
 
   // confirmExit Logic moved to SessionContext/GlobalSessionGuard
+
+  if (isPublicEntryRoute) {
+    return null
+  }
 
   return (
     <>

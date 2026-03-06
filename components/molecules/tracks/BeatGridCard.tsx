@@ -208,7 +208,7 @@ export function BeatGridCard({
             </h3>
             <p className="truncate text-xs text-text-secondary">
               {beat.label && beat.artistName
-                ? `${beat.label} • ${beat.artistName}`
+                ? `${beat.label} | ${beat.artistName}`
                 : beat.label || beat.artistName || 'FreeStyla Originals'}
             </p>
           </div>

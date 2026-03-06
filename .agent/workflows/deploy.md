@@ -13,8 +13,8 @@ description: Prepare the application for deployment to Vercel, ensuring all docu
 
 3.  **The "Clean Slate" Protocol (Fix Current Problems)**
     - **Linting**: Run `npm run lint`.
-    - **Types**: Run `tsc --noEmit`.
     - **Build**: Run `npm run build`.
+    - **Types**: Run `tsc --noEmit` after build, because this repo includes `.next/types` in `tsconfig.json`.
     - **Env Contract**:
       - Run `npm run check:release-env:local` (local contract).
       - Run `npm run check:release-env` (strict production contract).

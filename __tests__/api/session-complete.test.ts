@@ -4,40 +4,12 @@ vi.mock('@/lib/auth/server', () => ({
   getServerSessionWithUserId: vi.fn(),
 }))
 
-vi.mock('@/lib/db/sessions', () => ({
-  createSession: vi.fn(),
-}))
-
-vi.mock('@/lib/gamification/achievements', () => ({
-  AchievementSystem: {
-    checkAndUnlock: vi.fn().mockResolvedValue([]),
-  },
-}))
-
-vi.mock('@/lib/gamification/streak', () => ({
-  StreakSystem: {
-    checkAndUpdate: vi.fn().mockResolvedValue(null),
-  },
-}))
-
-vi.mock('@/lib/prisma', () => ({
-  prisma: {
-    user: {
-      findUnique: vi.fn(),
-      update: vi.fn(),
-    },
-    collectedWord: {
-      createMany: vi.fn(),
-    },
-    freestyleSession: {
-      count: vi.fn(),
-    },
-  },
+vi.mock('@/lib/sessions/save-session-with-progress', () => ({
+  saveSessionWithProgress: vi.fn(),
 }))
 
 import { getServerSessionWithUserId } from '@/lib/auth/server'
-import { createSession } from '@/lib/db/sessions'
-import { prisma } from '@/lib/prisma'
+import { saveSessionWithProgress } from '@/lib/sessions/save-session-with-progress'
 import { NextRequest } from 'next/server'
 import { POST } from '@/app/api/session/complete/route'
 
@@ -73,39 +45,45 @@ describe('POST /api/session/complete', () => {
     vi.mocked(getServerSessionWithUserId).mockResolvedValue(
       mockSession as never
     )
-    vi.mocked(createSession).mockResolvedValue({
+    vi.mocked(saveSessionWithProgress).mockResolvedValue({
       success: true,
       data: {
-        id: 'sess-1',
-        userId: 'user-123',
-        beatId: 'beat-1',
-        title: 'NightRidaz',
-        storageUrl: null,
-        fileSizeBytes: 0,
-        durationSeconds: 14,
-        frequency: 4,
-        difficulty: 2,
-        wordCount: 0,
-        score: 140,
-        vibe: null,
-        mode: 'solo',
-        restarts: 0,
-        playbacks: 0,
-        beatOffsetMs: 0,
-        fxConfig: null,
-        createdAt: new Date(),
-        isPublic: true,
+        session: {
+          id: 'sess-1',
+          userId: 'user-123',
+          beatId: 'beat-1',
+          title: 'NightRidaz',
+          storageUrl: null,
+          fileSizeBytes: 0,
+          durationSeconds: 14,
+          frequency: 4,
+          difficulty: 2,
+          wordCount: 0,
+          score: 140,
+          vibe: null,
+          mode: 'solo',
+          restarts: 0,
+          playbacks: 0,
+          beatOffsetMs: 0,
+          fxConfig: null,
+          createdAt: new Date(),
+          isPublic: true,
+        },
+        newBadges: [],
+        xp: {
+          gained: 20,
+          newLevel: 1,
+          currentXP: 20,
+          maxXP: 1000,
+          breakdown: { base: 10, duration: 10, words: 0, achievements: 0 },
+        },
+        meta: {
+          totalSessions: 3,
+          currentStreak: 0,
+          hasRated: false,
+        },
       },
     } as never)
-
-    vi.mocked(prisma.user.findUnique).mockResolvedValue({
-      xp: 0,
-      level: 1,
-      hasRated: false,
-      currentStreak: 0,
-    } as never)
-    vi.mocked(prisma.user.update).mockResolvedValue({} as never)
-    vi.mocked(prisma.freestyleSession.count).mockResolvedValue(3 as never)
 
     const req = new NextRequest('http://localhost/api/session/complete', {
       method: 'POST',
@@ -125,16 +103,18 @@ describe('POST /api/session/complete', () => {
     const res = await POST(req)
     expect(res.status).toBe(200)
 
-    expect(createSession).toHaveBeenCalledWith(
+    expect(saveSessionWithProgress).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: 'user-123',
-        beatId: 'beat-1',
-        durationSeconds: 14,
-        frequency: 4,
-        difficulty: 2,
-        restarts: 0,
-        wordCount: 0,
-        score: 140,
+        createInput: expect.objectContaining({
+          beatId: 'beat-1',
+          durationSeconds: 14,
+          frequency: 4,
+          difficulty: 2,
+          restarts: 0,
+          wordCount: 0,
+          score: 140,
+        }),
       })
     )
   })
@@ -143,7 +123,7 @@ describe('POST /api/session/complete', () => {
     vi.mocked(getServerSessionWithUserId).mockResolvedValue(
       mockSession as never
     )
-    vi.mocked(createSession).mockResolvedValue({
+    vi.mocked(saveSessionWithProgress).mockResolvedValue({
       success: false,
       error:
         'Invalid `prisma.freestyleSession.create()` invocation: Argument `durationSeconds`: Invalid value provided. Expected Int, provided String.',
@@ -184,6 +164,6 @@ describe('POST /api/session/complete', () => {
 
     const res = await POST(req)
     expect(res.status).toBe(400)
-    expect(createSession).not.toHaveBeenCalled()
+    expect(saveSessionWithProgress).not.toHaveBeenCalled()
   })
 })

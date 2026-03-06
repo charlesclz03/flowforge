@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 import { BeatGridCard } from '@/components/molecules/tracks/BeatGridCard'
 import { Beat } from '@/types/database'
@@ -13,6 +14,8 @@ import { UserBeatUploadModal } from '@/components/molecules/practice/UserBeatUpl
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { ScreenPage } from '@/components/layout/ScreenPage'
+import { Button } from '@/components/atoms/Button'
+import { Modal } from '@/components/atoms/Modal'
 import { cn } from '@/lib/utils'
 import { FALLBACK_BEATS } from '@/lib/data/fallbacks'
 
@@ -30,6 +33,7 @@ export default function TracksPage() {
   const searchParams = useSearchParams()
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false)
+  const [beatPendingDelete, setBeatPendingDelete] = useState<Beat | null>(null)
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -149,19 +153,21 @@ export default function TracksPage() {
     await toggleBeatFavorite(beatId)
   }
 
-  const handleDeleteBeat = async (beatId: string) => {
-    if (!confirm('Are you sure you want to delete this beat?')) return
-
+  const confirmDeleteBeat = async () => {
+    if (!beatPendingDelete) return
     try {
-      const res = await fetch(`/api/user/beats/${beatId}`, {
+      const res = await fetch(`/api/user/beats/${beatPendingDelete.id}`, {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error('Failed to delete')
 
-      setBeats((prev) => prev.filter((b) => b.id !== beatId))
+      setBeats((prev) => prev.filter((b) => b.id !== beatPendingDelete.id))
+      toast.success('Beat deleted')
     } catch (e) {
       console.error(e)
-      alert('Failed to delete beat')
+      toast.error('Failed to delete beat')
+    } finally {
+      setBeatPendingDelete(null)
     }
   }
 
@@ -327,7 +333,7 @@ export default function TracksPage() {
                 onLockedClick={() => setIsPremiumModalOpen(true)}
                 onDelete={
                   beat.uploaderId && beat.uploaderId === session?.user?.id
-                    ? () => handleDeleteBeat(beat.id)
+                    ? () => setBeatPendingDelete(beat)
                     : undefined
                 }
               />
@@ -374,6 +380,27 @@ export default function TracksPage() {
         trigger="beat"
         beatCount={beats.length}
       />
+      <Modal
+        isOpen={Boolean(beatPendingDelete)}
+        onClose={() => setBeatPendingDelete(null)}
+        title="Delete Beat?"
+      >
+        <div className="space-y-4">
+          <p className="text-text-secondary">
+            {beatPendingDelete
+              ? `Remove "${beatPendingDelete.title}" from your library?`
+              : 'Remove this beat from your library?'}
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button variant="ghost" onClick={() => setBeatPendingDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={confirmDeleteBeat}>
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </ScreenPage>
   )
 }

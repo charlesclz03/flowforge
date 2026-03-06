@@ -19,11 +19,12 @@ export const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'FreeStyla',
-  url: 'https://freestyla.app', // Update with actual domain
-  description: 'The ultimate app for rappers to practice freestyle, record sessions, and level up their skills.',
+  url: 'https://www.freestyla.app',
+  description:
+    'The ultimate app for rappers to practice freestyle, record sessions, and level up their skills.',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://freestyla.app/search?q={search_term_string}',
+    target: 'https://www.freestyla.app/search?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 }
@@ -37,6 +38,6 @@ export const softwareAppSchema = {
   offers: {
     '@type': 'Offer',
     price: '0.00',
-    priceCurrency: 'USD',
+    priceCurrency: 'EUR',
   },
 }

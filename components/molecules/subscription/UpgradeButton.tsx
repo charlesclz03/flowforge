@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
+import { trackEvent } from '@/lib/analytics/track'
 import { cn } from '@/lib/utils'
 
 interface UpgradeButtonProps {
@@ -17,6 +19,10 @@ export function UpgradeButton({
 
   const handleUpgrade = async () => {
     setLoading(true)
+    trackEvent('checkout_cta_click', {
+      source: 'upgrade_button',
+      plan,
+    })
     try {
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
@@ -24,17 +30,30 @@ export function UpgradeButton({
         body: JSON.stringify({ plan }),
       })
 
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to start checkout')
+      }
 
       if (data.url) {
+        trackEvent('checkout_redirect_ready', {
+          source: 'upgrade_button',
+          plan,
+        })
         window.location.href = data.url
       } else {
-        console.error('No checkout URL received')
-        // Ideally show a toast here
+        throw new Error('No checkout URL received')
       }
     } catch (error) {
       console.error('Upgrade error:', error)
-      alert('Failed to start checkout')
+      trackEvent('checkout_error', {
+        source: 'upgrade_button',
+        plan,
+      })
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to start checkout'
+      )
     } finally {
       setLoading(false)
     }

@@ -22,6 +22,67 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.7',
+    date: '2026-03-06',
+    title: 'Residual Cleanup',
+    codename: 'Residual Fix',
+    type: 'patch',
+    description:
+      'Cleared the last lint debt, replaced the remaining browser-native dialogs with in-app UI, and added conversion instrumentation to the public entry and checkout flow.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Dialog Consistency**: Replaced the remaining `confirm()` and `alert()` calls in Download, Review, Profile Security, Admin Beats, and Beat Dropdown flows with in-app modals and toast feedback.',
+          '**Lint Closure**: Removed the remaining Prettier/formatting drift so `next lint` is now fully clean again.',
+          '**SEO Accuracy**: Updated JSON-LD metadata to the current `www.freestyla.app` domain and EUR pricing context.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Conversion Analytics**: Added client-side tracking for `/howitworks` views and CTA clicks, download page entry/CTA actions, checkout CTA launches, and order-confirmation activation events.',
+          '**Analytics Test Coverage**: Added a unit test for the shared analytics helper to lock in `gtag` vs `dataLayer` behavior.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.0.6',
+    date: '2026-03-06',
+    title: 'Integrity & Funnel Fix',
+    codename: 'Integrity Fix',
+    type: 'patch',
+    description:
+      'Cleared the remaining audit exposure, unified session-save logic, repaired the public landing funnel, and removed the most visible accessibility and UX regressions.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Audit Truth Restored**: Updated dependency overrides so `npm audit` now resolves to 0 vulnerabilities instead of shipping a partially fixed audit state.',
+          '**Session Save Unification**: Moved recordings and metadata-only session completion onto a shared `saveSessionWithProgress` helper so XP, streaks, achievements, and session meta all follow one code path.',
+          '**Build Discipline**: Re-enabled React Strict Mode and marked `/api/beats` as request-driven instead of pretending it can be statically rendered while reading query params.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**API Error Sanitization**: `/api/recordings`, `/api/session/complete`, and Stripe checkout now return safe client errors instead of leaking raw backend/provider details.',
+          '**Pricing & Checkout Accuracy**: Homepage pricing now reflects the live Stripe plans, and upgrade/billing actions use in-app toasts instead of browser alerts.',
+          '**Accessibility Baseline**: Restored browser zoom and text selection by removing the global no-zoom/no-select defaults.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Real Homepage Funnel**: `/` is now a proper landing page with product proof, live pricing, FAQ, and focused CTAs instead of an immediate redirect stub.',
+          '**Public Route Focus**: Hidden the bottom dock on `/` and `/howitworks` so onboarding pages feel like a guided funnel instead of the authenticated app shell.',
+          '**Modal UX Cleanup**: Replaced the core Practice beat-switch confirm and Tracks delete confirm with native in-app modals, and cleaned stale copy across onboarding/pricing surfaces.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.5',
     date: '2026-03-05',
     title: 'Whole App Audit Forever Fix',

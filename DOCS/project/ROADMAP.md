@@ -1,7 +1,7 @@
 # Product Roadmap
 
-**Current Version**: `1.0.2`
-**Last Updated**: 2026-02-19
+**Current Version**: `1.0.7`
+**Last Updated**: 2026-03-06
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.

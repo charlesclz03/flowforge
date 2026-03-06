@@ -8,7 +8,7 @@ export default function ProfileLoading() {
           <div className="h-8 w-48 animate-pulse rounded-lg bg-white/10" />
           <div className="h-5 w-32 animate-pulse rounded-full bg-white/5" />
         </div>
-        
+
         {/* Stats Row Skeleton */}
         <div className="mt-4 flex gap-8">
           {[1, 2, 3].map((i) => (

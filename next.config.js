@@ -92,8 +92,7 @@ const securityHeaders = [
 ]
 
 const nextConfig = {
-  // DISABLED: StrictMode causes effects to run twice, breaking the timer animation loop
-  reactStrictMode: false,
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {

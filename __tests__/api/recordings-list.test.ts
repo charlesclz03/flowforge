@@ -184,4 +184,25 @@ describe('GET /api/recordings', () => {
     expect(data.recordings[0].storageUrl).toBeNull()
     expect(data.recordings[0].audioStatus).toBe('processing')
   })
+
+  it('sanitizes backend errors when loading recordings fails', async () => {
+    vi.mocked(getServerSessionWithUserId).mockResolvedValue({
+      user: { id: 'user-1' },
+    } as never)
+
+    vi.mocked(getSessions).mockResolvedValue({
+      success: false,
+      error:
+        'Invalid `prisma.freestyleSession.findMany()` invocation: relation "FreestyleSession" does not exist',
+    } as never)
+
+    const req = new NextRequest('http://localhost/api/recordings')
+    const res = await GET(req)
+
+    expect(res.status).toBe(500)
+
+    const data = await res.json()
+    expect(data.error).toBe('Failed to fetch recordings')
+    expect(String(data.error).toLowerCase()).not.toContain('prisma')
+  })
 })

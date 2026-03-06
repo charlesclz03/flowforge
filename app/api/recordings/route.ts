@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSessionWithUserId } from '@/lib/auth/server'
 import { createServerClient, RECORDINGS_BUCKET } from '@/lib/supabase/server'
-import { createSession } from '@/lib/db/sessions'
 import { randomUUID } from 'crypto'
-import { AchievementSystem } from '@/lib/gamification/achievements'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
-import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
 import { applyRateLimit } from '@/lib/api-rate-limit'
+import { saveSessionWithProgress } from '@/lib/sessions/save-session-with-progress'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Pro hint, Hobby limit remains 10s
 const SIGNED_URL_TTL_SECONDS = 60 * 60
+
+function serverError(message: string) {
+  return NextResponse.json({ error: message }, { status: 500 })
+}
 
 function parseOptionalInt(value: unknown, fallback = 0): number {
   if (typeof value === 'number' && Number.isFinite(value)) {
@@ -218,208 +220,62 @@ export async function POST(request: NextRequest) {
 
       if (uploadError) {
         console.error('Storage upload error:', uploadError)
-        return NextResponse.json(
-          { error: `Failed to upload recording: ${uploadError.message}` },
-          { status: 500 }
-        )
+        return serverError('Failed to upload recording')
       }
     }
 
-    // PARALLEL OPERATIONS: DB Creation + Signed URL
-    const [sessRes, signedUrlRes] = await Promise.all([
-      createSession({
+    const [sessionSaveResult, signedUrlRes] = await Promise.all([
+      saveSessionWithProgress({
         userId: session.user.id,
-        beatId,
-        title,
-        storageUrl: uploadedStoragePath,
-        fileSizeBytes: fileSize, // Save file size
-        durationSeconds,
-        frequency,
-        difficulty,
-        score: serverScore,
-        vibe: null,
-        mode: 'solo',
-        restarts,
-        playbacks,
-        wordCount,
-        beatOffsetMs,
-        fxConfig: fxConfig || Prisma.DbNull,
+        createInput: {
+          userId: session.user.id,
+          beatId,
+          title,
+          storageUrl: uploadedStoragePath,
+          fileSizeBytes: fileSize,
+          durationSeconds,
+          frequency,
+          difficulty,
+          score: serverScore,
+          vibe: null,
+          mode: 'solo',
+          restarts,
+          playbacks,
+          wordCount,
+          beatOffsetMs,
+          fxConfig: fxConfig || Prisma.DbNull,
+        },
+        wordsUsed: words,
+        achievementType: 'RECORDING_SAVED',
+        logPrefix: 'RECORDINGS_POST',
       }),
       supabase.storage
         .from(RECORDINGS_BUCKET)
         .createSignedUrl(uploadedStoragePath, SIGNED_URL_TTL_SECONDS),
     ])
 
-    if (!sessRes.success) {
-      // Cleanup storage if DB fails
+    if (!sessionSaveResult.success || !sessionSaveResult.data) {
       await supabase.storage
         .from(RECORDINGS_BUCKET)
         .remove([uploadedStoragePath])
-      return NextResponse.json(
-        { error: sessRes.error || 'Failed to save session' },
-        { status: 500 }
-      )
+      return serverError('Failed to save session')
     }
 
     const signedUrl = signedUrlRes.data?.signedUrl || null
 
-    // NON-BLOCKING (ish) / PARALLEL FEEDBACK: Achievements & Words
-    let newBadges: string[] = []
-    try {
-      const uniqueWords = [
-        ...new Set(words.map((w) => w.toLowerCase().trim())),
-      ].filter((w) => w.length > 0)
-
-      // 1. Update Streak FIRST (Blocking for Gamification Logic)
-      try {
-        const { StreakSystem } = await import('@/lib/gamification/streak')
-        await StreakSystem.checkAndUpdate(session.user.id)
-      } catch (e) {
-        console.error('[GAMIFICATION] Streak update failed:', e)
-      }
-
-      // 2. Check Achievements (Now that user stats are fresh)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tasks: Promise<any>[] = [
-        AchievementSystem.checkAndUnlock(session.user.id, {
-          type: 'RECORDING_SAVED',
-          meta: {
-            wordCount,
-            durationSeconds,
-            restarts,
-            frequency,
-          },
-        }),
-      ]
-
-      if (uniqueWords.length > 0) {
-        tasks.push(
-          prisma.collectedWord.createMany({
-            data: uniqueWords.map((word) => ({
-              userId: session.user.id,
-              wordText: word,
-            })),
-            skipDuplicates: true,
-          })
-        )
-      }
-
-      const results = await Promise.all(tasks)
-      newBadges = (results[0] as string[]) || []
-    } catch (e) {
-      console.error('Secondary ingestion/gamification failed:', e)
-    }
-
-    // --- XP CALCULATION & LEVEL UPDATE ---
-    let xpData = {
-      gained: 0,
-      newLevel: 1,
-      currentXP: 0,
-      maxXP: 1000,
-      breakdown: {
-        base: 0,
-        duration: 0,
-        words: 0,
-        achievements: 0,
-      },
-    }
-
-    let currentUser = null
-    try {
-      // Calculate XP
-      const xpResult = calculateSessionXP({
-        durationSeconds,
-        wordCount,
-        achievementsUnlocked: newBadges.length,
-      })
-
-      // Default response with gained XP (so user sees progress even if DB save fails)
-      xpData = {
-        gained: xpResult.total,
-        newLevel: 1, // Fallback
-        currentXP: xpResult.total, // Ensure bar animates from 0 -> total
-        maxXP: 1000, // Fallback
-        breakdown: xpResult.breakdown,
-      }
-
-      // Fetch current user XP
-      console.log(`[XP_UPDATE] Starting update for user: ${session.user.id}`)
-
-      currentUser = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: {
-          xp: true,
-          level: true,
-          hasRated: true,
-          currentStreak: true,
-        },
-      })
-
-      if (currentUser) {
-        console.log(
-          `[XP_UPDATE] User found found. Current XP: ${currentUser.xp}, Level: ${currentUser.level}`
-        )
-
-        const totalXP = (currentUser.xp || 0) + xpResult.total
-        const levelInfo = getLevelInfo(totalXP)
-
-        console.log(
-          `[XP_UPDATE] New Totals - XP: ${totalXP}, Level: ${levelInfo.level}`
-        )
-
-        // Update User
-        await prisma.user.update({
-          where: { id: session.user.id },
-          data: {
-            xp: totalXP,
-            level: levelInfo.level,
-          },
-        })
-
-        xpData = {
-          gained: xpResult.total,
-          newLevel: levelInfo.level,
-          currentXP: levelInfo.currentXP,
-          maxXP: levelInfo.maxXP,
-          breakdown: xpResult.breakdown,
-        }
-      } else {
-        console.warn(
-          `[XP_UPDATE] User ${session.user.id} not found in public.users table. XP not saved.`
-        )
-      }
-    } catch (err) {
-      console.error(
-        'XP update failed. Possible causes: DB Schema mismatch, missing User record, or connection issue.',
-        err
-      )
-      if (err instanceof Error) console.error(err.stack)
-    }
-
     return NextResponse.json({
       session: {
-        ...sessRes.data,
+        ...sessionSaveResult.data.session,
         storageUrl: signedUrl,
-        newBadges,
-        xp: xpData, // Return XP data to client
-        meta: {
-          totalSessions: await prisma.freestyleSession.count({
-            where: { userId: session.user.id },
-          }),
-          currentStreak: currentUser?.currentStreak || 0, // Pass actual streak
-          hasRated: currentUser?.hasRated || false,
-        },
+        newBadges: sessionSaveResult.data.newBadges,
+        xp: sessionSaveResult.data.xp,
+        meta: sessionSaveResult.data.meta,
       },
       storageUrl: signedUrl,
     })
   } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Internal server error',
-      },
-      { status: 500 }
-    )
+    console.error('[RECORDINGS_POST] Unhandled error', error)
+    return serverError('Failed to save session')
   }
 }
 
@@ -443,10 +299,8 @@ export async function GET(request: NextRequest) {
     const result = await getSessions({ userId: session.user.id })
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error || 'Failed to fetch recordings' },
-        { status: 500 }
-      )
+      console.error('[RECORDINGS_GET] Failed to fetch recordings', result.error)
+      return serverError('Failed to fetch recordings')
     }
 
     const includeMetadata =
@@ -523,12 +377,7 @@ export async function GET(request: NextRequest) {
       count: recordingsWithSignedUrls.length,
     })
   } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Internal server error',
-      },
-      { status: 500 }
-    )
+    console.error('[RECORDINGS_GET] Unhandled error', error)
+    return serverError('Failed to fetch recordings')
   }
 }

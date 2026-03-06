@@ -1,7 +1,7 @@
 # Deployment Guide
 
-**Current Version**: `1.0.2`
-**Last Updated**: 2026-02-19
+**Current Version**: `1.0.7`
+**Last Updated**: 2026-03-06
 
 This guide is the canonical deployment procedure.
 
@@ -11,14 +11,16 @@ Run all commands before pushing a release commit:
 
 ```powershell
 & "C:/Program Files/nodejs/npm.cmd" run lint
-& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run build
+& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env:local
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env:vercel
 & "C:/Program Files/nodejs/npm.cmd" run docs:check
 & "C:/Program Files/nodejs/npm.cmd" audit
 ```
+
+`tsc --noEmit` is intentionally run after `next build` in this repo because `tsconfig.json` includes `.next/types`.
 
 ## Database Safety
 

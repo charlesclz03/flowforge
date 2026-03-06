@@ -19,7 +19,7 @@ export function LandingTemplate({
   faq,
 }: LandingTemplateProps) {
   return (
-    <OnboardingLayout>
+    <OnboardingLayout showProgress={false} showSettings={false}>
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-16 pb-16 pt-16 md:pb-24 md:pt-20">
         {/* Hero Section */}
         {hero}

@@ -1,7 +1,7 @@
 # Quick Start - Next Session
 
-**Current Version**: `1.0.2`
-**Last Updated**: 2026-02-19
+**Current Version**: `1.0.7`
+**Last Updated**: 2026-03-06
 
 ## Bootstrap (Windows-safe)
 
@@ -19,8 +19,8 @@ Open: `http://localhost:3000`
 
 ```powershell
 & "C:/Program Files/nodejs/npm.cmd" run lint
-& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run build
+& "C:/Program Files/nodejs/npx.cmd" tsc --noEmit
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env:local
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env
 & "C:/Program Files/nodejs/npm.cmd" run check:release-env:vercel
@@ -37,6 +37,6 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Stability and polish of practice/recording pipeline.
-2. Language-aware prompt and TTS consistency.
+1. Funnel instrumentation and conversion visibility on public entry routes.
+2. Stability and polish of practice/recording pipeline.
 3. Release discipline with enforced docs governance.

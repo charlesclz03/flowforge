@@ -19,6 +19,7 @@ export default async function HowItWorksPage() {
     <OnboardingLayout
       customTitle="THE BLUEPRINT"
       customSubtitle="Mastering the art of freestyle"
+      showSettings={false}
     >
       <HowItWorksContent beatCount={beatCount} />
     </OnboardingLayout>

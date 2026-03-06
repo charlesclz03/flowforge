@@ -10,9 +10,6 @@
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
-    /* Prevent selection generally for app feel, re-enable on text inputs if needed */
-    user-select: none;
-    -webkit-user-select: none;
     overscroll-behavior: none;
   }
 
@@ -82,7 +79,7 @@
     @apply focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent;
     @apply transition-all;
     /* iOS Zoom Prevention: Must be at least 16px */
-    font-size: 16px !important; 
+    font-size: 16px !important;
     user-select: text;
     -webkit-user-select: text;
   }
@@ -148,13 +145,27 @@
   }
 
   @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
-    20%, 40%, 60%, 80% { transform: translateX(2px); }
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-2px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(2px);
+    }
   }
 
   .animate-shake {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
   }
 
   /* Safe area insets for mobile */
@@ -302,4 +313,3 @@
   display: flex;
   flex-direction: column;
 }
-
