@@ -1,18 +1,19 @@
 # Project Status
 
-**Current Version**: `1.0.2`
+**Current Version**: `1.0.5`
 **Phase**: Beta Polish
-**Last Updated**: 2026-02-19
+**Last Updated**: 2026-03-05
 
 ## Quick Status
 
-- Latest release: `v1.0.2` (Practice Full Height Fix + calibration/runtime integrity updates).
+- Latest release: `v1.0.5` (Whole App Audit Forever Fix).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
 
-- Practice bottom-nav seam/background continuity fixes.
-- Private beat calibration runtime fix (practice starts at saved cue offset).
+- Resolved 25 security vulnerabilities across dependencies using package overrides.
+- Refactored 903-line Practice UI orchestrator to extract stateful layout logic.
+- Lazy-Loaded 500+ LOC settings configuration panel.
 - Difficulty handoff fix for private beats (`/tracks` -> `/difficultyselection?beatId=`).
 - Language-aware phonetic anti-rhyme runtime for EN/FR/PT.
 - Recording processing label improvements (`PROCESSING` vs misleading stats-only label).

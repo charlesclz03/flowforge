@@ -22,7 +22,31 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    version: '1.0.3',
+    version: '1.0.5',
+    date: '2026-03-05',
+    title: 'Whole App Audit Forever Fix',
+    codename: 'Audit Fix',
+    type: 'patch',
+    description:
+      'Resolved NPM audit security vulnerabilities, re-architectured the monolithic Practice UI state machine, and added lazy-loading to the Latency Settings page to drastically reduce bundle size.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**NPM Audit Patch**: Overrode unmaintained Webpack tools and migrated to `@ducanh2912/next-pwa` to clear 25 high-severity vulnerabilities.',
+          '**Settings Lazy-Loading**: Split the 500+ LOC Latency calibration studio out of the main bundle, lazy-loading the `AudioContext` only when needed.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Practice Controls UI Detanglement**: Chopped the 903-line monolithic Practice UI into independent Layout components (`PracticeTopControls`, `PracticePauseModal`, `PracticeErrorBanner`) while preserving the rock-solid finite state audio machine.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.0.4',
     date: '2026-03-05',
     title: 'Pipeline Hardening',
     codename: 'Pipeline Hardening',

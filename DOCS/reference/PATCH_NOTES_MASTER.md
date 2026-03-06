@@ -1,5 +1,19 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.5 - Whole App Audit Forever Fix (2026-03-05)
+
+- **SECURITY**: Resolved 25 high-severity NPM vulnerabilities caused by deprecated Webpack plugins and `serialize-javascript` vulnerabilities by migrating to `@ducanh2912/next-pwa` and injecting `package.json` overrides.
+- **PERFORMANCE**: Drastically reduced bundle sizing on the Latency Settings page (500+ LOC) by fully abstracting the interactive audio testing module into a client-only `next/dynamic` lazy-load boundary.
+- **ARCHITECTURE**: Refactored the `PracticeControls.tsx` file (903 LOC). De-coupled the static elements (Pause modals, top navigators, and alert banners) away from the complex finite-state-machine visualizer loop, effectively neutralizing future UI regression cycles without breaking tests.
+
+## v1.0.4 - Pipeline Hardening (2026-03-05)
+
+- **Feature**: Hardened the recording pipeline with retry-save capabilities.
+
+## v1.0.3 - Authentication Type Extensions (2026-03-05)
+
+- **Type Safety**: Passed `tsc` statically by applying definitive Module Augmentations to NextAuth configurations.
+
 ## v1.0.2 - Practice Full Height Fix (2026-02-12)
 
 - **FIX**: Removed the remaining large empty black zone under the Practice player on mobile by fixing the route transition wrapper height so `ScreenPage` can truly fill the available space.

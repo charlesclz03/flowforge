@@ -1,17 +1,10 @@
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
-import {
-  RefreshCcw,
-  Pause,
-  Play,
-  Mic,
-  Zap,
-  Gauge,
-  Infinity as InfinityIcon,
-  User,
-} from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
+import { RefreshCcw, Pause, Mic, Infinity as InfinityIcon } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { PracticeTopControls } from '@/components/molecules/practice/PracticeTopControls'
+import { PracticePauseModal } from '@/components/molecules/practice/PracticePauseModal'
+import { PracticeErrorBanner } from '@/components/molecules/practice/PracticeErrorBanner'
 import { TimerRing } from '@/components/atoms/TimerRing'
 import dynamic from 'next/dynamic'
 const AudioVisualizer = dynamic(
@@ -131,46 +124,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const isSessionActive = isPlaying || isPaused
-  const hasPendingDifficulty =
-    isSessionActive && difficulty !== activeDifficulty
-  const hasPendingFrequency = isSessionActive && frequency !== activeFrequency
-
-  const displayDifficulty = isSessionActive ? activeDifficulty : difficulty
-  const displayFrequency = isSessionActive ? activeFrequency : frequency
-
-  const getDifficultyMeta = (value: number) => {
-    if (value <= 1) {
-      return {
-        label: 'Easy',
-        classes:
-          'bg-accent-green/10 text-accent-green border-accent-green/20 hover:bg-accent-green/20',
-      }
-    }
-    if (value === 2) {
-      return {
-        label: 'Medium',
-        classes:
-          'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20 hover:bg-accent-yellow/20',
-      }
-    }
-    if (value === 3) {
-      return {
-        label: 'Hard',
-        classes:
-          'bg-accent-red/10 text-accent-red border-accent-red/20 hover:bg-accent-red/20',
-      }
-    }
-    return {
-      label: 'Random',
-      classes:
-        'bg-accent-purple/10 text-accent-purple border-accent-purple/20 hover:bg-accent-purple/20',
-    }
-  }
-
-  const difficultyMeta = getDifficultyMeta(displayDifficulty)
-  const pendingDifficultyMeta = getDifficultyMeta(difficulty)
-
   // Calculate progress relative to the WORD, not the global grid
   // This ensures that "Bridge Words" (transitional words) still get a full 0-100% timer
   let intervalProgress = 0
@@ -196,18 +149,6 @@ export default function PracticeControls(props: PracticeControlsProps) {
     handleToggle()
   }
 
-  const cycleDifficulty = () => {
-    if (!handleDifficultyChange) return
-    const nextDiff = difficulty >= 4 ? 1 : difficulty + 1
-    handleDifficultyChange(nextDiff)
-  }
-
-  const cycleFrequency = () => {
-    if (!handleFrequencyChange) return
-    const nextFreq = frequency === 4 ? 8 : frequency === 8 ? 16 : 4
-    handleFrequencyChange(nextFreq)
-  }
-
   return (
     <Card
       padding="lg"
@@ -223,168 +164,36 @@ export default function PracticeControls(props: PracticeControlsProps) {
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
 
       {/* Pause Modal */}
-      <AnimatePresence>
-        {showPauseModal && isPaused && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="flex items-center gap-6 p-6 rounded-2xl bg-background-elevated/90 border border-white/10 backdrop-blur-xl"
-            >
-              {/* Resume Button */}
-              <button
-                onClick={() => {
-                  setShowPauseModal(false)
-                  onTogglePause?.()
-                }}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-accent-purple/20 border border-accent-purple/30 text-accent-purple hover:bg-accent-purple/30 transition-all"
-              >
-                <Play size={32} />
-                <span className="text-xs font-bold uppercase tracking-widest">
-                  Resume
-                </span>
-              </button>
-              {/* Restart Button */}
-              {handleRestart && (
-                <button
-                  onClick={() => {
-                    setShowPauseModal(false)
-                    handleRestart()
-                  }}
-                  className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all"
-                >
-                  <RefreshCcw size={32} />
-                  <span className="text-xs font-bold uppercase tracking-widest">
-                    Restart
-                  </span>
-                </button>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <PracticePauseModal
+        showPauseModal={showPauseModal}
+        isPaused={isPaused}
+        setShowPauseModal={setShowPauseModal}
+        onTogglePause={onTogglePause}
+        handleRestart={handleRestart}
+      />
 
       {/* Top Controls Section */}
-      <div className="w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-40 pointer-events-none">
-        {/* Beat Dropdown (Pointer Events Auto) */}
-        <div className="pointer-events-auto w-full flex justify-center">
-          <BeatDropdown
-            beats={beats}
-            selectedBeat={selectedBeat}
-            handleSelect={handleBeatSelect}
-            isPro={isPro}
-            disabled={false}
-            embedded={true}
-            defaultCollapsed={true}
-            overlay
-          />
-        </div>
-
-        {/* Info Pills (Pointer Events Auto) - Moved from Center */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 w-full max-w-md relative z-20 pointer-events-auto">
-          {/* Difficulty Pill */}
-          <button
-            data-testid="practice-difficulty-pill"
-            onClick={cycleDifficulty}
-            disabled={!handleDifficultyChange}
-            className={cn(
-              'flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
-              difficultyMeta.classes,
-              !handleDifficultyChange && 'cursor-default'
-            )}
-            title={
-              hasPendingDifficulty
-                ? `Next: ${pendingDifficultyMeta.label}`
-                : `Difficulty: ${difficultyMeta.label}`
-            }
-          >
-            <Gauge size={14} />
-            <span className="flex flex-col items-start leading-none">
-              <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
-                {difficultyMeta.label}
-              </span>
-              {hasPendingDifficulty && (
-                <span className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-widest text-white/50">
-                  Next: {pendingDifficultyMeta.label}
-                </span>
-              )}
-            </span>
-          </button>
-
-          {/* Mode Pill */}
-          <div className="flex-[1.5] h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
-            <User size={14} className="text-white/60" />
-            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
-              {mode}
-            </span>
-          </div>
-
-          {/* Bars Pill */}
-          <button
-            data-testid="practice-frequency-pill"
-            onClick={cycleFrequency}
-            disabled={!handleFrequencyChange}
-            className={cn(
-              'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
-              !handleFrequencyChange && 'cursor-default opacity-50'
-            )}
-            title={
-              hasPendingFrequency
-                ? `Next: ${frequency} Bars`
-                : `Frequency: ${displayFrequency} Bars`
-            }
-          >
-            <Zap
-              size={14}
-              className={
-                displayFrequency === 4
-                  ? 'text-accent-red'
-                  : displayFrequency === 8
-                    ? 'text-accent-yellow'
-                    : 'text-accent-blue'
-              }
-            />
-            <span className="flex flex-col items-start leading-none">
-              <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
-                {displayFrequency} Bars
-              </span>
-              {hasPendingFrequency && (
-                <span className="text-[0.55rem] sm:text-[0.6rem] font-semibold uppercase tracking-widest text-white/50 whitespace-nowrap">
-                  Next: {frequency} Bars
-                </span>
-              )}
-            </span>
-          </button>
-        </div>
-      </div>
+      <PracticeTopControls
+        beats={beats}
+        selectedBeat={selectedBeat}
+        handleBeatSelect={handleBeatSelect}
+        isPro={isPro}
+        isPlaying={isPlaying}
+        isPaused={isPaused}
+        difficulty={difficulty}
+        activeDifficulty={activeDifficulty}
+        handleDifficultyChange={handleDifficultyChange}
+        mode={mode}
+        frequency={frequency}
+        activeFrequency={activeFrequency}
+        handleFrequencyChange={handleFrequencyChange}
+      />
 
       {/* CENTER STAGE: Just the Player */}
       <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20 overflow-visible">
         {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
         <div className="flex flex-col items-center w-full max-w-lg">
-          {error && (
-            <div className="mb-4 flex flex-col items-center gap-2 text-red-400 text-sm text-center bg-red-500/10 px-4 py-3 rounded-lg border border-red-500/20 pointer-events-auto z-50">
-              <span>{error}</span>
-              {onRetrySave && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onRetrySave()
-                  }}
-                  className="px-3 py-1 rounded bg-red-500/20 hover:bg-red-500/40 text-red-300 font-bold text-[10px] uppercase tracking-widest transition-colors shadow-lg shadow-red-500/10"
-                >
-                  Retry Save
-                </button>
-              )}
-            </div>
-          )}
+          <PracticeErrorBanner error={error} onRetrySave={onRetrySave} />
 
           {isTTSEnabled && voiceStatus === 'fallback' && !error && (
             <div className="mb-4 flex flex-col items-center gap-1 text-accent-yellow text-xs text-center bg-accent-yellow/10 px-4 py-2 rounded-lg border border-accent-yellow/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
