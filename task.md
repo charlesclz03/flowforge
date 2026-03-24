@@ -38,4 +38,4 @@
 - [x] Document the findings in `DOCS/reference/GITHUB_REPO_RESEARCH.md`.
 - [x] Add the top-5 shortlist to the roadmap and next-session handoff docs.
 - [x] Run deployment verification gates for the current `v1.0.8` working tree.
-- [ ] Deploy/push the release state after verification and any required migration steps.
+- [x] Deploy/push the release state after verification and any required migration steps.
