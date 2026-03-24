@@ -22,6 +22,34 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.8',
+    date: '2026-03-24',
+    title: 'Prompt Engine Forever Fix',
+    codename: 'Unique Flow',
+    type: 'patch',
+    description:
+      'Locked practice sessions to unique prompt queues, added required first-time profile completion after Google sign-in, and switched iPhone/iPad practice to text-only prompts so the beat no longer ducks under TTS.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Unique Session Queues**: Practice now builds a full no-repeat prompt queue at session start, keeps anti-rhyme as an ordering rule, and stops recycling used words mid-session.',
+          '**Multilingual Prompt Coverage**: Expanded French and Portuguese fallback/seed dictionaries to 110 unique words each (`36/36/38` across difficulty tiers), and added exclusion-aware word top-ups for queue building.',
+          '**iOS Beat Protection**: Spoken prompts are now intentionally disabled on iPhone and iPad during practice so Safari speech playback cannot duck the instrumental volume.',
+          '**Language-First Onboarding**: `/howitworks` now tells users up front that prompts can run in English, French, or Portuguese, and explains the iPhone/iPad text-only prompt behavior.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Required Google Profile Setup**: First-time Google sign-ins now land on `/auth/continue`, then complete `/complete-profile` before entering guarded app routes.',
+          '**Username Validation Flow**: Added live username availability checks, duplicate handling, and a server-side rule that locks username edits after required setup is completed.',
+          '**Prompt Engine Regression Coverage**: Added Vitest coverage for session queues, guarded route helpers, username/profile-completion routes, and iPad-class device detection.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.7',
     date: '2026-03-06',
     title: 'Residual Cleanup',

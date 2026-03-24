@@ -3,6 +3,7 @@ import { getRandomWords } from '@/lib/db/words'
 import { resolveLanguageCode } from '@/lib/tts/languages'
 import { getFallbackWords } from '@/lib/data/fallbacks'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
+import { redirectIncompleteProfileSetupIfNeeded } from '@/lib/auth/require-user-session'
 import PracticeClient from './PracticeClient'
 
 export const revalidate = 3600 // Cache for 1 hour
@@ -12,6 +13,7 @@ export default async function PracticePage({
 }: {
   searchParams?: Promise<{ lang?: string; language?: string }>
 }) {
+  await redirectIncompleteProfileSetupIfNeeded('/practice')
   const params = (await searchParams) || {}
   const language = resolveLanguageCode(params.lang ?? params.language)
 
@@ -20,8 +22,8 @@ export default async function PracticePage({
   const initialBeats =
     beatsResult.success && beatsResult.data ? beatsResult.data : []
 
-  // Fetch initial words (Server Side) - Default count 100
-  const wordsResult = await getRandomWords(100, { language })
+  // Fetch a larger pool so session queues can stay unique without early top-ups.
+  const wordsResult = await getRandomWords(160, { language })
 
   // Flatten words to simple string array as expected by client
   let initialWords: PracticeWordSeed[] =

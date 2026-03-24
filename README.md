@@ -9,6 +9,15 @@ Your AI‑powered freestyle rap practice partner. This README gives new agents a
 
 > **✅ PROGRESS UPDATE**: **LIVE & MONETIZED**. Stripe subscriptions are active (€4.99/mo, €49.00/yr). Recent updates include **Stripe Checkout Fix**, **Price Alignment**, and **Feature Label Accuracy**. See `DOCS/APP_OVERVIEW_AND_FEATURES.md` for the full feature guide.
 
+## Documentation System
+
+Start from the canonical docs hub:
+
+- `docs/README.md`
+- `docs/summaries/QUICK_START_NEXT_SESSION.md`
+- `docs/project/PROJECT_STATUS.md`
+- `docs/project/ROADMAP.md`
+
 ## 1) TL;DR
 
 - **What**: Web-first practice tool for freestyle rappers combining curated beats, on‑beat word prompts, and session recording in one browser experience.

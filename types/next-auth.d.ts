@@ -18,6 +18,7 @@ declare module 'next-auth' {
       socials?: unknown
       username?: string | null
       bio?: string | null
+      profileSetupCompletedAt?: string | null
       currentStreak?: number
       xp?: number
       level?: number
@@ -31,6 +32,7 @@ declare module 'next-auth' {
     socials?: unknown
     username?: string | null
     bio?: string | null
+    profileSetupCompletedAt?: Date | null
     currentStreak?: number
     xp?: number
     level?: number
@@ -44,6 +46,7 @@ declare module 'next-auth/adapters' {
     socials?: unknown
     username?: string | null
     bio?: string | null
+    profileSetupCompletedAt?: Date | null
     currentStreak?: number
     xp?: number
     level?: number

@@ -14,6 +14,7 @@ import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
+import { useDevice } from '@/hooks/useDevice'
 import { ChevronDown, User, Users, Mic } from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
@@ -22,6 +23,7 @@ import { useSession } from 'next-auth/react'
 import { isProUser } from '@/lib/subscription/isPro'
 import { useTTS } from '@/hooks/useTTS'
 import { TTS_LANGUAGE_OPTIONS, type TTSLanguageCode } from '@/lib/tts/languages'
+import { IOS_SPOKEN_PROMPT_NOTICE } from '@/lib/tts/platform'
 
 type Frequency = 4 | 8 | 16
 
@@ -42,6 +44,7 @@ export function DifficultySelectionClient({
   const searchParams = useSearchParams()
   const { data: session, status: sessionStatus } = useSession()
   const { error, clearError, handleError } = useErrorHandler()
+  const { isIOS } = useDevice()
   const {
     selectedBeat,
     frequency,
@@ -195,6 +198,10 @@ export function DifficultySelectionClient({
     TTS_LANGUAGE_OPTIONS.find((option) => option.code === selectedLanguage)
       ?.code ?? TTS_LANGUAGE_OPTIONS[0].code
   const voiceStatusMessage = useMemo(() => {
+    if (isIOS) {
+      return IOS_SPOKEN_PROMPT_NOTICE
+    }
+
     if (voiceStatus === 'unsupported') {
       return 'Voice prompts are unavailable in this browser.'
     }
@@ -211,7 +218,7 @@ export function DifficultySelectionClient({
     }
 
     return null
-  }, [voiceStatus, activeVoice])
+  }, [isIOS, voiceStatus, activeVoice])
 
   return (
     <OnboardingLayout

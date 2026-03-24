@@ -24,3 +24,18 @@
 - [x] Harden reorder path to reject out-of-scope beat ids.
 - [x] Add regression tests for admin action auth/scope/validation/reorder.
 - [x] Run verification gates (`lint`, `tsc --noEmit`, scoped tests, `build`).
+
+## 2026-03-24 - Forever Fix: Prompt engine session uniqueness + profile completion
+- [x] Re-audit prompt generation regressions and confirm why repeated words still surfaced in 10-minute sessions.
+- [x] Replace recycle-on-exhaustion prompt generation with a prebuilt no-repeat session queue.
+- [x] Expand French and Portuguese fallback/seed pools, then backfill the database so same-language uniqueness is feasible.
+- [x] Add exclusion-aware word loading, iPhone/iPad text-only spoken-prompt fallback, and required post-Google profile completion.
+- [x] Add targeted Vitest coverage for queues, guarded auth/profile helpers, username/profile APIs, and iPad-class device detection.
+- [x] Run final verification gates (`lint`, `tsc --noEmit`, scoped tests, `build`, `docs:check`) after docs and audit artifacts are updated.
+
+## 2026-03-24 - GitHub research and deployment handoff
+- [x] Research GitHub repositories relevant to FlowForge's current beta-polish priorities.
+- [x] Document the findings in `DOCS/reference/GITHUB_REPO_RESEARCH.md`.
+- [x] Add the top-5 shortlist to the roadmap and next-session handoff docs.
+- [x] Run deployment verification gates for the current `v1.0.8` working tree.
+- [ ] Deploy/push the release state after verification and any required migration steps.

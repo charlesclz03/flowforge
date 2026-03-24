@@ -4,12 +4,16 @@ import { WordFilters, DatabaseResult } from '@/types/database'
 import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
 import { getFallbackWords } from '@/lib/data/fallbacks'
 
+function normalizeWordKey(word: string): string {
+  return word.trim().toLowerCase()
+}
+
 function dedupeWordsByText(words: Word[]): Word[] {
   const seen = new Set<string>()
   const deduped: Word[] = []
 
   for (const word of words) {
-    const key = word.wordText.trim().toLowerCase()
+    const key = normalizeWordKey(word.wordText)
     if (seen.has(key)) continue
     seen.add(key)
     deduped.push(word)
@@ -26,13 +30,21 @@ export async function getRandomWords(
   filters?: WordFilters
 ): Promise<DatabaseResult<Word[]>> {
   try {
+    const excludedWords = new Set(
+      (filters?.excludeWordTexts || []).map(normalizeWordKey)
+    )
+    const excludeWord = (word: Word) =>
+      excludedWords.has(normalizeWordKey(word.wordText))
+
     if (process.env.DISABLE_DB === 'true') {
       const language = filters?.language || DEFAULT_TTS_LANGUAGE
       const pool = getFallbackWords(
         language,
         filters?.difficultyLevel
       ) as Word[]
-      const shuffled = dedupeWordsByText(pool).sort(() => Math.random() - 0.5)
+      const shuffled = dedupeWordsByText(pool)
+        .filter((word) => !excludeWord(word))
+        .sort(() => Math.random() - 0.5)
       const selected = shuffled.slice(0, count)
       return { success: true, data: selected }
     }
@@ -59,7 +71,9 @@ export async function getRandomWords(
     })
 
     // Shuffle and take requested count
-    const shuffled = dedupeWordsByText(allWords).sort(() => Math.random() - 0.5)
+    const shuffled = dedupeWordsByText(allWords)
+      .filter((word) => !excludeWord(word))
+      .sort(() => Math.random() - 0.5)
     const selected = shuffled.slice(0, count)
 
     return {
@@ -78,8 +92,14 @@ export async function getRandomWords(
       console.error('Error fetching random words:', error)
     }
     const language = filters?.language || DEFAULT_TTS_LANGUAGE
+    const excludedWords = new Set(
+      (filters?.excludeWordTexts || []).map(normalizeWordKey)
+    )
     const pool = getFallbackWords(language, filters?.difficultyLevel) as Word[]
-    return { success: true, data: dedupeWordsByText(pool).slice(0, count) }
+    const data = dedupeWordsByText(pool)
+      .filter((word) => !excludedWords.has(normalizeWordKey(word.wordText)))
+      .slice(0, count)
+    return { success: true, data }
   }
 }
 

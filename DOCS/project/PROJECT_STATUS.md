@@ -1,12 +1,39 @@
 # Project Status
 
-**Current Version**: `1.0.7`
+Purpose:
+
+- state the current release truth and operational focus
+
+Audience:
+
+- maintainers
+- coding agents
+
+Status:
+
+- active
+
+Source of truth scope:
+
+- current product status and near-term release focus
+
+Last updated:
+
+- 2026-03-24
+
+Related docs:
+
+- `docs/README.md`
+- `docs/project/ROADMAP.md`
+- `docs/reference/PATCH_NOTES_MASTER.md`
+
+**Current Version**: `1.0.8`
 **Phase**: Beta Polish
-**Last Updated**: 2026-03-06
+**Last Updated**: 2026-03-24
 
 ## Quick Status
 
-- Latest release: `v1.0.7` (Residual Cleanup).
+- Latest release: `v1.0.8` (Prompt Engine Forever Fix).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -23,11 +50,13 @@
 1. Monitor multilingual prompt quality and TTS fallback behavior.
 2. Continue recording pipeline reliability hardening.
 3. Preserve release discipline and docs governance consistency.
+4. Use `DOCS/reference/GITHUB_REPO_RESEARCH.md` to drive the next TTS, waveform, Android/TWA, upload, and phonetic-quality spikes.
 
 ## Recent Version History
 
 | Version | Codename | Date | Summary |
 | --- | --- | --- | --- |
+| v1.0.8 | Prompt Engine Forever Fix | 2026-03-24 | Added strict no-repeat session queues, required Google profile completion, expanded FR/PT prompt packs, and forced iPhone/iPad practice to text-only prompts to preserve beat volume |
 | v1.0.7 | Residual Cleanup | 2026-03-06 | Cleared remaining lint debt, replaced final native dialogs, added conversion instrumentation, and aligned SEO metadata |
 | v1.0.6 | Integrity & Funnel Fix | 2026-03-06 | Session-save unification, sanitized errors, accessibility defaults restored, and release audit fully cleared |
 | v1.0.5 | Whole App Audit Forever Fix | 2026-03-05 | Security overrides, practice refactor, and performance hardening |

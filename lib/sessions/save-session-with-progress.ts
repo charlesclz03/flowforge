@@ -2,6 +2,10 @@ import { createSession } from '@/lib/db/sessions'
 import { AchievementSystem } from '@/lib/gamification/achievements'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { prisma } from '@/lib/prisma'
+import {
+  trackReliabilityEvent,
+  trackReliabilityException,
+} from '@/lib/telemetry/reliability'
 import { Prisma, type FreestyleSession } from '@prisma/client'
 
 const STREAK_TIMEOUT_MS = 1500
@@ -75,6 +79,15 @@ async function withTimeout<T>(
   const result = await Promise.race([safePromise, timeout])
   if (result === TIMEOUT) {
     console.warn(`[${logPrefix}] Timed out: ${label}`)
+    trackReliabilityEvent(
+      'session_progress_timeout',
+      {
+        logPrefix,
+        label,
+        timeoutMs,
+      },
+      'warning'
+    )
     return null
   }
 
@@ -110,6 +123,14 @@ export async function saveSessionWithProgress({
       `[${logPrefix}] Failed to create session`,
       sessionResult.error
     )
+    trackReliabilityEvent(
+      'session_progress_create_failed',
+      {
+        logPrefix,
+        achievementType,
+      },
+      'error'
+    )
     return {
       success: false,
       error: 'Failed to save session',
@@ -137,6 +158,10 @@ export async function saveSessionWithProgress({
     )
   } catch (error) {
     console.error(`[${logPrefix}] Streak update failed`, error)
+    trackReliabilityException(error, 'session_progress_streak_failed', {
+      logPrefix,
+      achievementType,
+    })
   }
 
   try {
@@ -174,6 +199,10 @@ export async function saveSessionWithProgress({
     newBadges = Array.isArray(results?.[0]) ? (results[0] as string[]) : []
   } catch (error) {
     console.error(`[${logPrefix}] Gamification update failed`, error)
+    trackReliabilityException(error, 'session_progress_gamification_failed', {
+      logPrefix,
+      achievementType,
+    })
   }
 
   let xpData = createDefaultXPData()
@@ -226,6 +255,10 @@ export async function saveSessionWithProgress({
     }
   } catch (error) {
     console.error(`[${logPrefix}] XP update failed`, error)
+    trackReliabilityException(error, 'session_progress_xp_failed', {
+      logPrefix,
+      achievementType,
+    })
   }
 
   return {

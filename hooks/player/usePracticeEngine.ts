@@ -6,19 +6,14 @@ import { useRecording } from '@/hooks/useRecording'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useTTS } from '@/hooks/useTTS'
 import { Beat } from '@/types/database'
-import { WordGenerator } from '@/lib/words/generator'
 import { countSyllables, getDifficultyFromSyllables } from '@/lib/words/utils'
 import { getActiveCalibrationMs } from '@/lib/audio/calibration'
 import { getFallbackWords } from '@/lib/data/fallbacks'
 import { DEFAULT_TTS_LANGUAGE } from '@/lib/tts/languages'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
-
-/**
- * usePracticeEngine
- *
- * The "Brain" of the Practice Mode.
- * Orchestrates: State Machine <-> Audio Audio <-> Recording <-> Word Prompts <-> Audio Mixing
- */
+import { buildSessionWordQueue } from '@/lib/words/session-queue'
+import { getEffectiveTTSEnabled } from '@/lib/tts/platform'
+import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
 
 const ACTIVE_SESSION_STATUSES = new Set([
   'COUNTDOWN',
@@ -28,10 +23,6 @@ const ACTIVE_SESSION_STATUSES = new Set([
   'MIXING',
   'SAVING',
 ])
-
-const WORD_HISTORY_KEY = 'flowforge_seen_words_v2'
-const WORD_HISTORY_TTL_MS = 60 * 60 * 1000
-const WORD_HISTORY_MIN_POOL = 12
 
 const STATIC_FALLBACK_WORDS = [
   'Flow',
@@ -50,17 +41,8 @@ const STATIC_FALLBACK_WORDS = [
   'Grind',
 ]
 
-const DEFAULT_LANGUAGE_FALLBACK_WORDS = getFallbackWords(
-  DEFAULT_TTS_LANGUAGE
-).map((word) => word.wordText)
-
-function getFallbackWordPool(language: string): string[] {
-  const localized = getFallbackWords(language).map((word) => word.wordText)
-  if (localized.length > 0) return localized
-  if (DEFAULT_LANGUAGE_FALLBACK_WORDS.length > 0) {
-    return DEFAULT_LANGUAGE_FALLBACK_WORDS
-  }
-  return STATIC_FALLBACK_WORDS
+function normalizeWordKey(word: string): string {
+  return word.trim().toLowerCase()
 }
 
 function getFallbackWordSeeds(language: string): PracticeWordSeed[] {
@@ -89,52 +71,57 @@ function getFallbackWordSeeds(language: string): PracticeWordSeed[] {
   }))
 }
 
-/**
- * Configuration properties for the Practice Engine.
- */
-interface UsePracticeEngineProps {
-  /** The list of beats available for the session */
-  initialBeats: Beat[]
-  /** The pool of words to be used for generation */
-  initialWords: PracticeWordSeed[]
-  /**
-   * Frequency of word changes.
-   * Represents "Bars per Word".
-   * - 1 = Fast (New word every bar)
-   * - 4 = Slow (New word every 4 bars)
-   */
-  frequency: number
-  /** Difficulty level of the session (1-5) */
-  difficulty: number
-  /**
-   * Callback to submit the finalized session data.
-   * Injected to keep the engine decoupled from network logic.
-   */
-  submitSession: (formData: FormData) => Promise<unknown>
-  /** Session Mode */
-  mode?: 'solo' | 'cypher'
-  /** Number of players for Cypher mode (2-4) */
-  cypherPlayers?: number
-  /** Whether recording is enabled for this run */
-  isRecordingEnabled?: boolean
-  /** Whether completed sessions should be persisted via API */
-  shouldSaveSessions?: boolean
+function normalizeWordSeeds(words: PracticeWordSeed[]): PracticeWordSeed[] {
+  const seen = new Set<string>()
+  const normalized: PracticeWordSeed[] = []
+
+  for (const seed of words) {
+    const wordText = seed.wordText?.trim()
+    if (!wordText) continue
+
+    const key = normalizeWordKey(wordText)
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    const syllableCount =
+      typeof seed.syllableCount === 'number' && seed.syllableCount > 0
+        ? seed.syllableCount
+        : countSyllables(wordText)
+    const rawDifficulty =
+      typeof seed.difficultyLevel === 'number' && seed.difficultyLevel > 0
+        ? seed.difficultyLevel
+        : getDifficultyFromSyllables(syllableCount)
+
+    normalized.push({
+      wordText,
+      syllableCount,
+      difficultyLevel: Math.min(3, Math.max(1, rawDifficulty)),
+    })
+  }
+
+  return normalized
 }
 
-/**
- * The Core Practice Engine Hook.
- *
- * Acts as the centralized controller for the Practice Mode, orchestrating:
- * 1. **State Management**: Finite State Machine (IDLE -> COUNTDOWN -> PLAYING -> FINISHING).
- * 2. **Audio Sync**: Precise timing via `useAudioSync`.
- * 3. **Word Generation**: Deterministic word prompting based on musical timing.
- * 4. **Recording**: managing the microphone input and blob creation.
- *
- * @param props - Configuration options {@link UsePracticeEngineProps}
- * @returns The engine state and control methods.
- */
+function mergeWordPools(...pools: PracticeWordSeed[][]): PracticeWordSeed[] {
+  return normalizeWordSeeds(pools.flat())
+}
+
+interface UsePracticeEngineProps {
+  initialBeats: Beat[]
+  initialWords: PracticeWordSeed[]
+  frequency: number
+  difficulty: number
+  submitSession: (formData: FormData) => Promise<unknown>
+  mode?: 'solo' | 'cypher'
+  cypherPlayers?: number
+  isRecordingEnabled?: boolean
+  shouldSaveSessions?: boolean
+  sessionDurationSeconds?: number
+  disableSpokenTTS?: boolean
+}
+
 export function usePracticeEngine({
-  initialBeats: _initialBeats,
+  initialBeats,
   initialWords,
   frequency,
   difficulty,
@@ -143,6 +130,8 @@ export function usePracticeEngine({
   cypherPlayers = 4,
   isRecordingEnabled = false,
   shouldSaveSessions = true,
+  sessionDurationSeconds = 600,
+  disableSpokenTTS = false,
 }: UsePracticeEngineProps) {
   const isAudioDebug =
     process.env.NODE_ENV !== 'production' &&
@@ -157,19 +146,26 @@ export function usePracticeEngine({
     [isAudioDebug]
   )
 
-  // 1. The Reducer (State Machine)
   const { state, dispatch } = usePlayerState()
-
-  // AudioSync reset token (prevents beat counter resets on pause/resume)
   const [audioSyncSessionId, setAudioSyncSessionId] = useState(0)
-
-  // 2. The Sub-Systems
   const beatPlayer = useBeatPlayer()
   const recorder = useRecording()
   const latestStatusRef = useRef(state.status)
   const beatPlayerRef = useRef(beatPlayer)
   const recorderRef = useRef(recorder)
   const beatOffsetMsRef = useRef(0)
+  const startTimeRef = useRef(0)
+  const wordPoolRef = useRef<PracticeWordSeed[]>([])
+  const sessionQueueRef = useRef<PracticeWordSeed[]>([])
+  const sessionQueueIndexRef = useRef(0)
+  const isTopUpInFlightRef = useRef(false)
+  const fallbackWordPoolRef = useRef<string[]>([])
+  const sessionTelemetryRef = useRef({
+    queueTopUpRequested: false,
+    queueFallbackRequired: false,
+    textOnlyModeLogged: false,
+    emptyRecordingLogged: false,
+  })
   const {
     isTTSEnabled,
     ttsVolume,
@@ -180,7 +176,6 @@ export function usePracticeEngine({
     stopSession: markSessionInactive,
   } = usePracticeSession()
 
-  // 0. SAFETY NET: Cleanup on unmount
   useEffect(() => {
     latestStatusRef.current = state.status
   }, [state.status])
@@ -197,7 +192,6 @@ export function usePracticeEngine({
     return () => {
       markSessionInactive()
 
-      // If we unmount while playing (e.g. Navigation), stop everything.
       const status = latestStatusRef.current
       if (status !== 'IDLE' && status !== 'COMPLETED') {
         beatPlayerRef.current.stop()
@@ -208,20 +202,14 @@ export function usePracticeEngine({
     }
   }, [markSessionInactive])
 
-  // 3. Audio Clock (The Heartbeat)
-  // Word Management State
-  const [currentWord, setCurrentWord] = useState<string>('')
-  const [activePlayer, setActivePlayer] = useState(1) // Cypher Mode State
+  const [currentWord, setCurrentWord] = useState('')
+  const [activePlayer, setActivePlayer] = useState(1)
   const [startTime, setStartTime] = useState(0)
   const pauseStartedAtRef = useRef<number | null>(null)
   const [wordTiming, setWordTiming] = useState<{
     start: number
     duration: number
   }>({ start: 0, duration: 0 })
-  const wordGeneratorRef = useRef<WordGenerator | null>(null)
-  const fallbackWordPoolRef = useRef<string[]>(
-    getFallbackWordPool(selectedLanguage)
-  )
   const wordsUsedRef = useRef<string[]>([])
   const [activeDifficulty, setActiveDifficulty] = useState(difficulty)
   const activeDifficultyRef = useRef(difficulty)
@@ -229,187 +217,235 @@ export function usePracticeEngine({
   const [activeFrequency, setActiveFrequency] = useState(frequency)
   const activeFrequencyRef = useRef(frequency)
   const pendingFrequencyRef = useRef<number | null>(null)
-  const lastSavePayloadRef = useRef<FormData | null>(null) // [NEW] Store save payload for retries
+  const lastSavePayloadRef = useRef<FormData | null>(null)
 
-  // Initialize Generator
-  useEffect(() => {
-    const localizedFallbackPool = getFallbackWordPool(selectedLanguage)
-    const localizedFallbackSeeds = getFallbackWordSeeds(selectedLanguage)
-    const WORD_POOL_KEY = `flowforge_word_pool_${selectedLanguage}` // Cache key per language
+  const effectiveTTSEnabled = getEffectiveTTSEnabled(
+    isTTSEnabled,
+    disableSpokenTTS
+  )
 
-    // 1. Retrieve the existing cached word pool for this language
-    let cachedPool: PracticeWordSeed[] = []
-    try {
-      if (typeof window !== 'undefined') {
-        const rawPool = window.localStorage.getItem(WORD_POOL_KEY)
-        if (rawPool) {
-          cachedPool = JSON.parse(rawPool)
-        }
-      }
-    } catch {
-      cachedPool = []
-    }
+  const getSessionBpm = useCallback(() => {
+    return beatPlayer.currentBeat?.bpm || initialBeats[0]?.bpm || 90
+  }, [beatPlayer.currentBeat?.bpm, initialBeats])
 
-    // 2. Merge server-provided words with the cached pool
-    const incomingWords = initialWords || []
-    const combinedMap = new Map<string, PracticeWordSeed>()
+  const getFallbackWord = useCallback((usedWords: string[] = []) => {
+    const usedKeys = new Set(usedWords.map(normalizeWordKey))
+    const unusedFallback = fallbackWordPoolRef.current.find(
+      (word) => !usedKeys.has(normalizeWordKey(word))
+    )
 
-    // Add cached words first
-    cachedPool.forEach((seed) => {
-      if (seed && seed.wordText) {
-        combinedMap.set(seed.wordText.toLowerCase(), seed)
-      }
-    })
+    return unusedFallback || fallbackWordPoolRef.current[0] || STATIC_FALLBACK_WORDS[0]
+  }, [])
 
-    // Add and overwrite with incoming words
-    incomingWords.forEach((seed) => {
-      if (seed && seed.wordText) {
-        combinedMap.set(seed.wordText.toLowerCase(), seed)
-      }
-    })
+  const buildQueueFromPool = useCallback(
+    ({
+      nextDifficulty,
+      nextFrequency,
+      remainingDurationSeconds,
+      usedWords,
+    }: {
+      nextDifficulty: number
+      nextFrequency: number
+      remainingDurationSeconds: number
+      usedWords: string[]
+    }) => {
+      const fallbackSeeds = normalizeWordSeeds(getFallbackWordSeeds(selectedLanguage))
+      wordPoolRef.current = mergeWordPools(wordPoolRef.current, fallbackSeeds)
+      fallbackWordPoolRef.current = fallbackSeeds.map((seed) => seed.wordText)
 
-    let wordsToUse = Array.from(combinedMap.values())
-
-    // 3. Save the updated pool back to localStorage to accumulate over time
-    try {
-      if (typeof window !== 'undefined' && wordsToUse.length > 0) {
-        window.localStorage.setItem(WORD_POOL_KEY, JSON.stringify(wordsToUse))
-      }
-    } catch {
-      // Silently fail if localStorage is full or restricted
-    }
-
-    // SAFETY FALLBACK
-    if (wordsToUse.length === 0) {
-      console.warn('[PracticeEngine] No words provided, using fallback list.')
-      wordsToUse = localizedFallbackSeeds
-    }
-
-    const normalizedSeeds = wordsToUse
-      .map((seed) => {
-        const wordText = seed.wordText?.trim()
-        if (!wordText) return null
-
-        const syllables =
-          typeof seed.syllableCount === 'number' && seed.syllableCount > 0
-            ? seed.syllableCount
-            : countSyllables(wordText)
-
-        const rawDifficulty =
-          typeof seed.difficultyLevel === 'number' && seed.difficultyLevel > 0
-            ? seed.difficultyLevel
-            : getDifficultyFromSyllables(syllables)
-        const difficultyLevel = Math.min(3, Math.max(1, rawDifficulty))
-
-        return {
-          wordText,
-          syllableCount: syllables,
-          difficultyLevel,
-        }
+      const result = buildSessionWordQueue({
+        bpm: getSessionBpm(),
+        frequency: nextFrequency,
+        difficulty: nextDifficulty,
+        language: selectedLanguage,
+        sessionDurationSeconds: Math.max(1, remainingDurationSeconds),
+        words: wordPoolRef.current,
+        usedWords,
       })
-      .filter(
-        (
-          seed
-        ): seed is {
-          wordText: string
-          syllableCount: number
-          difficultyLevel: number
-        } => seed !== null
-      )
 
-    const seededWords = (() => {
-      if (typeof window === 'undefined' || normalizedSeeds.length === 0) {
-        return normalizedSeeds
-      }
+      sessionQueueRef.current = result.queue
+      sessionQueueIndexRef.current = 0
+      return result
+    },
+    [getSessionBpm, selectedLanguage]
+  )
 
-      let history: Record<string, number> = {}
+  const fetchWordTopUps = useCallback(
+    async (count: number, excludeWordTexts: string[]) => {
+      if (count <= 0) return []
+
+      const params = new URLSearchParams()
+      params.set('count', String(Math.min(Math.max(count, 12), 240)))
+      params.set('language', selectedLanguage)
+      excludeWordTexts.forEach((word) => params.append('exclude', word))
+
       try {
-        const raw = window.localStorage.getItem(WORD_HISTORY_KEY)
-        if (raw) {
-          const parsed = JSON.parse(raw) as Record<string, number>
-          if (parsed && typeof parsed === 'object') {
-            history = parsed
+        const res = await fetch(`/api/words/random?${params.toString()}`, {
+          cache: 'no-store',
+        })
+        if (!res.ok) {
+          throw new Error(`Word top-up failed (${res.status})`)
+        }
+
+        const data = (await res.json()) as {
+          words?: PracticeWordSeed[]
+        }
+
+        return normalizeWordSeeds(Array.isArray(data.words) ? data.words : [])
+      } catch (error) {
+        console.warn('[PracticeEngine] Failed to top up word queue:', error)
+        return []
+      }
+    },
+    [selectedLanguage]
+  )
+
+  const ensurePreparedQueue = useCallback(
+    async ({
+      nextDifficulty,
+      nextFrequency,
+      remainingDurationSeconds,
+      usedWords,
+    }: {
+      nextDifficulty: number
+      nextFrequency: number
+      remainingDurationSeconds: number
+      usedWords: string[]
+    }) => {
+      let result = buildQueueFromPool({
+        nextDifficulty,
+        nextFrequency,
+        remainingDurationSeconds,
+        usedWords,
+      })
+
+      if (result.deficit > 0 && !isTopUpInFlightRef.current) {
+        if (!sessionTelemetryRef.current.queueTopUpRequested) {
+          sessionTelemetryRef.current.queueTopUpRequested = true
+          trackReliabilityEvent('practice_prompt_queue_top_up_requested', {
+            language: selectedLanguage,
+            difficulty: nextDifficulty,
+            frequency: nextFrequency,
+            budget: result.budget,
+            deficit: result.deficit,
+            usedWordsCount: usedWords.length,
+            poolSize: wordPoolRef.current.length,
+          })
+        }
+
+        isTopUpInFlightRef.current = true
+        try {
+          const topUps = await fetchWordTopUps(result.deficit + 24, [
+            ...usedWords,
+            ...wordPoolRef.current.map((seed) => seed.wordText),
+          ])
+
+          if (topUps.length > 0) {
+            trackReliabilityEvent('practice_prompt_queue_top_up_received', {
+              language: selectedLanguage,
+              requestedCount: result.deficit + 24,
+              receivedCount: topUps.length,
+            })
+            wordPoolRef.current = mergeWordPools(wordPoolRef.current, topUps)
+            result = buildQueueFromPool({
+              nextDifficulty,
+              nextFrequency,
+              remainingDurationSeconds,
+              usedWords,
+            })
           }
-        }
-      } catch {
-        history = {}
-      }
-
-      const now = Date.now()
-      const languagePrefix = `${selectedLanguage}:`
-
-      for (const [key, seenAt] of Object.entries(history)) {
-        if (now - seenAt > WORD_HISTORY_TTL_MS) {
-          delete history[key]
+        } finally {
+          isTopUpInFlightRef.current = false
         }
       }
 
-      const unseen = normalizedSeeds.filter((seed) => {
-        const key = `${languagePrefix}${seed.wordText.toLowerCase()}`
-        const seenAt = history[key]
-        return !seenAt || now - seenAt > WORD_HISTORY_TTL_MS
-      })
+      if (result.deficit > 0) {
+        if (!sessionTelemetryRef.current.queueFallbackRequired) {
+          sessionTelemetryRef.current.queueFallbackRequired = true
+          trackReliabilityEvent(
+            'practice_prompt_queue_fallback_required',
+            {
+              language: selectedLanguage,
+              difficulty: nextDifficulty,
+              frequency: nextFrequency,
+              budget: result.budget,
+              remainingDeficit: result.deficit,
+            },
+            'warning'
+          )
+        }
 
-      const selectedSeeds =
-        unseen.length >= Math.min(WORD_HISTORY_MIN_POOL, normalizedSeeds.length)
-          ? unseen
-          : normalizedSeeds
-
-      for (const seed of selectedSeeds) {
-        history[`${languagePrefix}${seed.wordText.toLowerCase()}`] = now
+        wordPoolRef.current = mergeWordPools(
+          wordPoolRef.current,
+          getFallbackWordSeeds(selectedLanguage)
+        )
+        result = buildQueueFromPool({
+          nextDifficulty,
+          nextFrequency,
+          remainingDurationSeconds,
+          usedWords,
+        })
       }
 
-      try {
-        window.localStorage.setItem(WORD_HISTORY_KEY, JSON.stringify(history))
-      } catch {
-        // Storage write failures should never block prompt generation.
+      return result
+    },
+    [buildQueueFromPool, fetchWordTopUps, selectedLanguage]
+  )
+
+  const takeNextQueuedWord = useCallback(
+    ({
+      nextDifficulty,
+      nextFrequency,
+      remainingDurationSeconds,
+    }: {
+      nextDifficulty: number
+      nextFrequency: number
+      remainingDurationSeconds: number
+    }) => {
+      if (sessionQueueIndexRef.current >= sessionQueueRef.current.length) {
+        buildQueueFromPool({
+          nextDifficulty,
+          nextFrequency,
+          remainingDurationSeconds,
+          usedWords: wordsUsedRef.current,
+        })
       }
 
-      return selectedSeeds
-    })()
+      const nextSeed = sessionQueueRef.current[sessionQueueIndexRef.current]
+      if (!nextSeed) return null
 
-    fallbackWordPoolRef.current =
-      seededWords.length > 0
-        ? seededWords.map((seed) => seed.wordText)
-        : localizedFallbackPool
-
-    const mockWordData = seededWords.map((seed, i) => ({
-      wordText: seed.wordText,
-      difficulty: seed.difficultyLevel,
-      id: String(i),
-      syllableCount: seed.syllableCount,
-      difficultyLevel: seed.difficultyLevel,
-    }))
-
-    wordGeneratorRef.current = new WordGenerator(mockWordData, {
-      language: selectedLanguage,
-    })
-
-    // Config Generator
-    const initialDifficulty =
-      pendingDifficultyRef.current ?? activeDifficultyRef.current
-    wordGeneratorRef.current.setDifficulty(initialDifficulty)
-    pendingDifficultyRef.current = null
-    activeDifficultyRef.current = initialDifficulty
-    setActiveDifficulty(initialDifficulty)
-
-    // Preload first word
-    const first = wordGeneratorRef.current.getRandomWord()
-    if (first) {
-      setCurrentWord(first.wordText)
-    } else {
-      setCurrentWord(
-        fallbackWordPoolRef.current[0] ||
-          localizedFallbackPool[0] ||
-          STATIC_FALLBACK_WORDS[0]
-      )
-    }
-  }, [initialWords, selectedLanguage])
+      sessionQueueIndexRef.current += 1
+      return nextSeed
+    },
+    [buildQueueFromPool]
+  )
 
   useEffect(() => {
-    const generator = wordGeneratorRef.current
-    if (!generator) return
+    const normalizedInitialWords = normalizeWordSeeds(initialWords)
+    const fallbackSeeds = normalizeWordSeeds(getFallbackWordSeeds(selectedLanguage))
 
+    wordPoolRef.current = mergeWordPools(normalizedInitialWords, fallbackSeeds)
+    fallbackWordPoolRef.current = fallbackSeeds.map((seed) => seed.wordText)
+
+    const previewQueue = buildQueueFromPool({
+      nextDifficulty: pendingDifficultyRef.current ?? activeDifficultyRef.current,
+      nextFrequency: pendingFrequencyRef.current ?? activeFrequencyRef.current,
+      remainingDurationSeconds: sessionDurationSeconds,
+      usedWords: [],
+    })
+
+    const previewWord =
+      previewQueue.queue[0]?.wordText || getFallbackWord(wordsUsedRef.current)
+    setCurrentWord(previewWord)
+  }, [
+    initialWords,
+    selectedLanguage,
+    sessionDurationSeconds,
+    buildQueueFromPool,
+    getFallbackWord,
+  ])
+
+  useEffect(() => {
     if (difficulty === activeDifficultyRef.current) {
       return
     }
@@ -419,16 +455,26 @@ export function usePracticeEngine({
       return
     }
 
-    generator.setDifficulty(difficulty)
     pendingDifficultyRef.current = null
     activeDifficultyRef.current = difficulty
     setActiveDifficulty(difficulty)
 
-    const next = generator.getRandomWord()
-    if (next) {
-      setCurrentWord(next.wordText)
-    }
-  }, [difficulty, state.status])
+    const previewQueue = buildQueueFromPool({
+      nextDifficulty: difficulty,
+      nextFrequency: activeFrequencyRef.current,
+      remainingDurationSeconds: sessionDurationSeconds,
+      usedWords: [],
+    })
+    const previewWord =
+      previewQueue.queue[0]?.wordText || getFallbackWord(wordsUsedRef.current)
+    setCurrentWord(previewWord)
+  }, [
+    difficulty,
+    state.status,
+    buildQueueFromPool,
+    getFallbackWord,
+    sessionDurationSeconds,
+  ])
 
   useEffect(() => {
     if (frequency === activeFrequencyRef.current) {
@@ -443,107 +489,134 @@ export function usePracticeEngine({
     pendingFrequencyRef.current = null
     activeFrequencyRef.current = frequency
     setActiveFrequency(frequency)
-  }, [frequency, state.status])
 
-  // TTS Integration
+    const previewQueue = buildQueueFromPool({
+      nextDifficulty: activeDifficultyRef.current,
+      nextFrequency: frequency,
+      remainingDurationSeconds: sessionDurationSeconds,
+      usedWords: [],
+    })
+    const previewWord =
+      previewQueue.queue[0]?.wordText || getFallbackWord(wordsUsedRef.current)
+    setCurrentWord(previewWord)
+  }, [
+    frequency,
+    state.status,
+    buildQueueFromPool,
+    getFallbackWord,
+    sessionDurationSeconds,
+  ])
+
   const { speak, warmup, voiceStatus } = useTTS({
-    enabled: isTTSEnabled,
+    enabled: effectiveTTSEnabled,
     language: selectedLanguage,
     volume: ttsVolume,
     rate: 1.0,
     pitch: 1.0,
   })
 
-  // TTS Integration — debounced to avoid cancel→speak race with warmup()
   useEffect(() => {
-    if (!currentWord || state.status !== 'PLAYING') return
+    if (!effectiveTTSEnabled || !currentWord || state.status !== 'PLAYING') {
+      return
+    }
 
-    // Small delay prevents the rapid cancel→speak→cancel→speak race condition
-    // that causes some mobile browsers to silently drop the utterance after
-    // warmup()'s own cancel→speak sequence during startSession.
     const id = setTimeout(() => speak(currentWord), 150)
     return () => clearTimeout(id)
-  }, [currentWord, speak, state.status])
+  }, [currentWord, speak, state.status, effectiveTTSEnabled])
 
   const trackWordUsage = useCallback((word: string) => {
     const trimmed = word.trim()
     if (!trimmed) return
-    wordsUsedRef.current.push(trimmed)
-  }, [])
 
-  const getFallbackWord = useCallback(() => {
-    const pool = fallbackWordPoolRef.current
-    if (!pool.length) {
-      return STATIC_FALLBACK_WORDS[0]
+    const wordKey = normalizeWordKey(trimmed)
+    const alreadyTracked = wordsUsedRef.current.some(
+      (usedWord) => normalizeWordKey(usedWord) === wordKey
+    )
+    if (!alreadyTracked) {
+      wordsUsedRef.current.push(trimmed)
     }
-    const index = Math.floor(Math.random() * pool.length)
-    return pool[index] || STATIC_FALLBACK_WORDS[0]
   }, [])
 
-  // Memoize onBeat to prevent useAudioSync restarts
   const onBeat = useCallback(
     (beatIndex: number, time: number) => {
-      // EVENT DRIVEN WORD LOGIC
-      // Frequency = Bars per Word. 1 Bar = 4 Beats.
       const beatsPerWord = 4 * (activeFrequencyRef.current || 4)
+      if (beatIndex % beatsPerWord !== 0) {
+        return
+      }
 
-      if (beatIndex % beatsPerWord === 0) {
-        const pendingDifficulty = pendingDifficultyRef.current
-        if (
-          pendingDifficulty !== null &&
-          pendingDifficulty !== activeDifficultyRef.current &&
-          wordGeneratorRef.current
-        ) {
-          wordGeneratorRef.current.setDifficulty(pendingDifficulty)
-          pendingDifficultyRef.current = null
-          activeDifficultyRef.current = pendingDifficulty
-          setActiveDifficulty(pendingDifficulty)
-        }
+      let nextDifficulty = activeDifficultyRef.current
+      let nextFrequency = activeFrequencyRef.current || 4
+      let shouldRebuildQueue = false
 
-        const pendingFrequency = pendingFrequencyRef.current
-        if (
-          pendingFrequency !== null &&
-          pendingFrequency !== activeFrequencyRef.current
-        ) {
-          activeFrequencyRef.current = pendingFrequency
-          pendingFrequencyRef.current = null
-          setActiveFrequency(pendingFrequency)
-        }
+      if (
+        pendingDifficultyRef.current !== null &&
+        pendingDifficultyRef.current !== activeDifficultyRef.current
+      ) {
+        nextDifficulty = pendingDifficultyRef.current
+        pendingDifficultyRef.current = null
+        activeDifficultyRef.current = nextDifficulty
+        setActiveDifficulty(nextDifficulty)
+        shouldRebuildQueue = true
+      }
 
-        const effectiveFrequency = activeFrequencyRef.current || 4
+      if (
+        pendingFrequencyRef.current !== null &&
+        pendingFrequencyRef.current !== activeFrequencyRef.current
+      ) {
+        nextFrequency = pendingFrequencyRef.current
+        pendingFrequencyRef.current = null
+        activeFrequencyRef.current = nextFrequency
+        setActiveFrequency(nextFrequency)
+        shouldRebuildQueue = true
+      }
 
-        // Trigger Word Change
-        // We use the time passed from audio scheduler for precise future timing
-        const duration =
-          4 * effectiveFrequency * (60 / (beatPlayer.currentBeat?.bpm || 90))
+      const duration =
+        4 * nextFrequency * (60 / (beatPlayer.currentBeat?.bpm || getSessionBpm()))
+      const elapsed = Math.max(0, time - startTimeRef.current)
+      const remainingDurationSeconds = Math.max(
+        1,
+        sessionDurationSeconds - elapsed
+      )
 
-        // Update State (in valid React way)
-        const nextWord =
-          wordGeneratorRef.current?.getRandomWord()?.wordText ??
-          getFallbackWord()
-        if (nextWord) {
-          setCurrentWord(nextWord)
-          setWordTiming({ start: time, duration })
-          trackWordUsage(nextWord)
+      if (shouldRebuildQueue) {
+        buildQueueFromPool({
+          nextDifficulty,
+          nextFrequency,
+          remainingDurationSeconds,
+          usedWords: wordsUsedRef.current,
+        })
+      }
 
-          // Cypher Mode Rotation
-          if (mode === 'cypher' && beatIndex > 0) {
-            setActivePlayer((prev) => (prev % cypherPlayers) + 1)
-          }
-        }
+      const nextSeed = takeNextQueuedWord({
+        nextDifficulty,
+        nextFrequency,
+        remainingDurationSeconds,
+      })
+      const nextWord = nextSeed?.wordText || getFallbackWord(wordsUsedRef.current)
+
+      setCurrentWord(nextWord)
+      setWordTiming({ start: time, duration })
+      trackWordUsage(nextWord)
+
+      if (mode === 'cypher' && beatIndex > 0) {
+        setActivePlayer((prev) => (prev % cypherPlayers) + 1)
       }
     },
     [
       beatPlayer.currentBeat?.bpm,
-      mode,
+      buildQueueFromPool,
       cypherPlayers,
-      trackWordUsage,
       getFallbackWord,
+      getSessionBpm,
+      mode,
+      sessionDurationSeconds,
+      takeNextQueuedWord,
+      trackWordUsage,
     ]
   )
 
   const audioSync = useAudioSync({
-    bpm: beatPlayer.currentBeat?.bpm || 90,
+    bpm: beatPlayer.currentBeat?.bpm || getSessionBpm(),
     isPlaying: state.status === 'PLAYING' && beatPlayer.isPlaying,
     sessionId: audioSyncSessionId,
     onBeat,
@@ -551,16 +624,7 @@ export function usePracticeEngine({
   const { initAudio, audioState } = audioSync
 
   useEffect(() => {
-    const activeStatuses = new Set([
-      'COUNTDOWN',
-      'PLAYING',
-      'PAUSED',
-      'FINISHING',
-      'MIXING',
-      'SAVING',
-    ])
-
-    if (activeStatuses.has(state.status)) {
+    if (ACTIVE_SESSION_STATUSES.has(state.status)) {
       markSessionActive()
     } else {
       markSessionInactive()
@@ -587,44 +651,72 @@ export function usePracticeEngine({
   ])
 
   const startSession = useCallback(async () => {
-    // Only allowed from IDLE
     if (state.status !== 'IDLE' && state.status !== 'COMPLETED') return
 
     try {
+      const sessionDifficulty = pendingDifficultyRef.current ?? difficulty
+      const sessionFrequency = pendingFrequencyRef.current ?? frequency
+
       beatOffsetMsRef.current = 0
+      startTimeRef.current = 0
       setAudioSyncSessionId((id) => id + 1)
       pauseStartedAtRef.current = null
       wordsUsedRef.current = []
+      sessionTelemetryRef.current = {
+        queueTopUpRequested: false,
+        queueFallbackRequired: false,
+        textOnlyModeLogged: false,
+        emptyRecordingLogged: false,
+      }
       setActivePlayer(1)
       setWordTiming({ start: 0, duration: 0 })
       setStartTime(0)
+      activeDifficultyRef.current = sessionDifficulty
+      pendingDifficultyRef.current = null
+      setActiveDifficulty(sessionDifficulty)
+      activeFrequencyRef.current = sessionFrequency
+      pendingFrequencyRef.current = null
+      setActiveFrequency(sessionFrequency)
 
-      // 1. Prime Audio Engine - ATOMIC START
-      // The "Forever Fix": Unify AudioContext and HTMLAudioElement
-      // This MUST happen in the user-initiated event loop.
+      const preparedQueue = await ensurePreparedQueue({
+        nextDifficulty: sessionDifficulty,
+        nextFrequency: sessionFrequency,
+        remainingDurationSeconds: sessionDurationSeconds,
+        usedWords: [],
+      })
+
+      const firstWord =
+        preparedQueue.queue[0]?.wordText || getFallbackWord(wordsUsedRef.current)
+      setCurrentWord(firstWord)
+
       const ctx = initAudio()
 
-      // A. Ensure Master Clock is Running
       if (ctx) {
         if (ctx.state === 'suspended') {
           await ctx.resume()
         }
 
-        // B. Bridge the Track (Prevent independent failures)
         beatPlayer.connectTo(ctx)
       }
 
-      // C. Prime the Element (Unlock Autoplay)
       await beatPlayer.prime()
 
-      if (isTTSEnabled) {
+      if (effectiveTTSEnabled) {
         warmup()
+      } else if (
+        isTTSEnabled &&
+        disableSpokenTTS &&
+        !sessionTelemetryRef.current.textOnlyModeLogged
+      ) {
+        sessionTelemetryRef.current.textOnlyModeLogged = true
+        trackReliabilityEvent('practice_tts_text_only_mode', {
+          language: selectedLanguage,
+          reason: 'ios_ducking_protection',
+        })
       }
 
-      // D. Sync Volume (Crucial Fix)
       beatPlayer.setVolume(beatVolume)
 
-      // E. Debug Context State
       if (ctx?.state !== 'running') {
         console.warn(
           '[PracticeEngine] AudioContext is not running:',
@@ -634,28 +726,29 @@ export function usePracticeEngine({
         debugLog('[PracticeEngine] AudioContext Verified: RUNNING')
       }
 
-      // 2. Enter Countdown (Only if Audio is confirmed ready)
       dispatch({ type: 'START' })
     } catch (err) {
       console.error('[PracticeEngine] Start failed:', err)
-      // Optional: Dispatch error state if we had a persistent error banner
-      // dispatch({ type: 'ERROR', error: 'Failed to initialize audio' })
       alert('Could not start audio engine. Please tap again.')
     }
   }, [
     state.status,
-    dispatch,
+    difficulty,
+    frequency,
+    ensurePreparedQueue,
+    getFallbackWord,
     initAudio,
     beatPlayer,
+    effectiveTTSEnabled,
+    warmup,
     beatVolume,
     debugLog,
-    isTTSEnabled,
-    warmup,
+    dispatch,
+    sessionDurationSeconds,
   ])
 
   const stopSession = useCallback(() => {
     dispatch({ type: 'STOP', shouldSave: shouldSaveSessions })
-    // [COMMAND-BASED] Immediate Stop
     beatPlayer.stop()
     if (isRecordingEnabled) {
       recorder.stop()
@@ -665,7 +758,6 @@ export function usePracticeEngine({
   const discardSession = useCallback(() => {
     if (confirm('Discard this session?')) {
       dispatch({ type: 'DISCARD' })
-      // [COMMAND-BASED] Immediate Stop
       beatPlayer.stop()
       if (isRecordingEnabled) {
         recorder.stop()
@@ -679,13 +771,11 @@ export function usePracticeEngine({
         pauseStartedAtRef.current = audioSync.getPreciseTime()
       }
       dispatch({ type: 'PAUSE' })
-      // [COMMAND-BASED] Immediate Pause
       beatPlayer.pause()
       if (isRecordingEnabled) {
         recorder.pause()
       }
     } else if (state.status === 'PAUSED') {
-      // [COMMAND-BASED] Resume only if playback truly restarted.
       const resumed = await beatPlayer.play()
       if (!resumed) {
         alert('Could not resume playback. Please try again.')
@@ -696,7 +786,11 @@ export function usePracticeEngine({
       if (pauseStartedAt !== null) {
         const pausedFor = audioSync.getPreciseTime() - pauseStartedAt
         if (pausedFor > 0) {
-          setStartTime((prev) => (prev > 0 ? prev + pausedFor : prev))
+          setStartTime((prev) => {
+            const next = prev > 0 ? prev + pausedFor : prev
+            startTimeRef.current = next
+            return next
+          })
           setWordTiming((prev) =>
             prev.start > 0 ? { ...prev, start: prev.start + pausedFor } : prev
           )
@@ -736,13 +830,7 @@ export function usePracticeEngine({
     }
   }, [state.status, state.error, dispatch, submitSession])
 
-  // 5. Reactive Side Effects (The Muscles)
-  // This is where "StateMachine -> Real World" happens.
-
-  // Effect: Handle COUNTDOWN -> PLAYING transition
-  // We explicitly trigger the "Drop" here to ensure tight timing.
   const completeCountdown = useCallback(async () => {
-    // [COMMAND-BASED] Start "The Drop" before entering PLAYING state.
     beatPlayer.setLoop(true)
     const started = await beatPlayer.play()
 
@@ -754,7 +842,9 @@ export function usePracticeEngine({
     }
 
     dispatch({ type: 'COUNTDOWN_COMPLETE' })
-    setStartTime(audioSync.getPreciseTime())
+    const nextStartTime = audioSync.getPreciseTime()
+    startTimeRef.current = nextStartTime
+    setStartTime(nextStartTime)
     if (isRecordingEnabled) {
       beatOffsetMsRef.current = 0
       recorder
@@ -770,59 +860,49 @@ export function usePracticeEngine({
     }
   }, [dispatch, beatPlayer, recorder, audioSync, isRecordingEnabled])
 
-  // REMOVED: Circular Dependency Effect (was lines 246-267)
-  // The logic is now distributed to the commands above.
-
-  // Effect: FINISHING -> SAVING (The Save Flow)
-  useEffect(() => {
-    if (state.status === 'FINISHING') {
-      // Wait for recorder to finalize (it updates duration/blob)
-      // This is a tricky sync point.
-      // recorder.stop() callback sets blob.
-      // We might need to listen to recorder changes.
-      // For "Forever Fix", we should probably make start/stop async and await them in the Transition?
-      // Or rely on recorder.onComplete callback to dispatch 'START_SAVE'
-    }
-  }, [state.status])
-
-  // Guarantee non-save paths do not linger in FINISHING.
   useEffect(() => {
     if (state.status === 'FINISHING' && !state.shouldSave) {
       dispatch({ type: 'RESET' })
     }
   }, [state.status, state.shouldSave, dispatch])
 
-  // Guarantee EXITING paths always settle back to IDLE.
   useEffect(() => {
     if (state.status === 'EXITING' && !recorder.isRecording) {
       dispatch({ type: 'RESET' })
     }
   }, [state.status, recorder.isRecording, dispatch])
 
-  // 6. External Recorder Callback Wiring
-  // 6. External Recorder Callback Wiring
-
   const { setOnComplete, setOnMaxDurationReached } = recorder
 
   useEffect(() => {
-    // We overwrite the recorder's onComplete to hook into our FSM
     setOnComplete(async (blob, duration) => {
-      // Only proceed if we are in FINISHING state (avoids phantom saves)
       if (
         (state.status === 'FINISHING' || state.status === 'MIXING') &&
         state.shouldSave
       ) {
-        // [FIX] Prevent 0-byte uploads (Practice Mode or Microphone Failures)
         if (blob.size === 0) {
+          if (!sessionTelemetryRef.current.emptyRecordingLogged) {
+            sessionTelemetryRef.current.emptyRecordingLogged = true
+            trackReliabilityEvent(
+              'practice_recording_metadata_only_fallback',
+              {
+                reason: 'empty_blob',
+                durationSeconds: Math.max(
+                  1,
+                  Math.round(audioSync.getPreciseTime() - startTimeRef.current)
+                ),
+                isRecordingEnabled,
+              },
+              'warning'
+            )
+          }
+
           debugLog(
             '[PracticeEngine] Empty blob detected. Skipping upload, saving metadata only.'
           )
-          // Redirect to metadata-only flow below
-          // We can't easily "jump" to the other if-block, so we execute it here.
           dispatch({ type: 'START_SAVE' })
 
           const fd = new FormData()
-          // No 'audio' file appended
 
           if (beatPlayer.currentBeat) {
             fd.append('beatId', beatPlayer.currentBeat.id)
@@ -831,11 +911,10 @@ export function usePracticeEngine({
               `${beatPlayer.currentBeat.title} - ${new Date().toLocaleDateString()}`
             )
           }
-          // Use startTime to calculate duration if recorder duration is 0
-          const duration = audioSync.getPreciseTime() - startTime
+          const fallbackDuration = audioSync.getPreciseTime() - startTimeRef.current
           fd.append(
             'durationSeconds',
-            Math.max(1, Math.round(duration)).toString()
+            Math.max(1, Math.round(fallbackDuration)).toString()
           )
           fd.append('frequency', frequency.toString())
           fd.append('difficulty', difficulty.toString())
@@ -853,21 +932,12 @@ export function usePracticeEngine({
           return
         }
 
-        // Begin Upload (voice-only; beat is re-mixed on-demand for downloads/exports)
         dispatch({ type: 'START_SAVE' })
-
-        // Construct FormData using Ref to avoid closure staleness if needed,
-        // but since we depend on context props, we can access them directly if they are passed in.
-        // Ideally, we move FormData construction to a helper or do it here.
 
         try {
           const fd = new FormData()
           fd.append('audio', blob, 'recording.webm')
 
-          // We need current session state.
-          // Since we don't have access to Session contexts directly here (we are a hook),
-          // we rely on the props passed to usePracticeEngine.
-          // NOTE: The consumer (PracticeClient) must ensure these props are fresh.
           if (beatPlayer.currentBeat) {
             fd.append('beatId', beatPlayer.currentBeat.id)
             fd.append(
@@ -879,8 +949,8 @@ export function usePracticeEngine({
             'durationSeconds',
             Math.max(1, Math.round(duration)).toString()
           )
-          fd.append('frequency', frequency.toString()) // Default fallback, should be prop
-          fd.append('difficulty', difficulty.toString()) // Default fallback, should be prop
+          fd.append('frequency', frequency.toString())
+          fd.append('difficulty', difficulty.toString())
           fd.append('score', '0')
           fd.append('vibe', 'Freestyle Flow')
           fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
@@ -899,7 +969,6 @@ export function usePracticeEngine({
             })
           )
 
-          // Execute Save
           lastSavePayloadRef.current = fd
           submitSession(fd)
             .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
@@ -916,26 +985,38 @@ export function usePracticeEngine({
           })
         }
       } else if (state.status === 'EXITING' || !state.shouldSave) {
-        // Just reset
         dispatch({ type: 'RESET' })
       }
     })
 
-    // Handle Metadata-Only Saves (No Recording)
-    // This triggers if recording was disabled or failed to start
     if (
       state.status === 'FINISHING' &&
       state.shouldSave &&
-      !recorder.isRecording && // Not recording now
-      recorder.duration === 0 // And didn't record anything
+      !recorder.isRecording &&
+      recorder.duration === 0
     ) {
+      if (!sessionTelemetryRef.current.emptyRecordingLogged) {
+        sessionTelemetryRef.current.emptyRecordingLogged = true
+        trackReliabilityEvent(
+          'practice_recording_metadata_only_fallback',
+          {
+            reason: 'no_recording_detected',
+            durationSeconds: Math.max(
+              1,
+              Math.round(audioSync.getPreciseTime() - startTimeRef.current)
+            ),
+            isRecordingEnabled,
+          },
+          'warning'
+        )
+      }
+
       debugLog(
         '[PracticeEngine] No recording detected. Submitting metadata only.'
       )
       dispatch({ type: 'START_SAVE' })
 
       const fd = new FormData()
-      // No 'audio' file appended
 
       if (beatPlayer.currentBeat) {
         fd.append('beatId', beatPlayer.currentBeat.id)
@@ -944,8 +1025,7 @@ export function usePracticeEngine({
           `${beatPlayer.currentBeat.title} - ${new Date().toLocaleDateString()}`
         )
       }
-      // Use startTime to calculate duration if recorder duration is 0
-      const duration = audioSync.getPreciseTime() - startTime
+      const duration = audioSync.getPreciseTime() - startTimeRef.current
       fd.append('durationSeconds', Math.max(1, Math.round(duration)).toString())
       fd.append('frequency', frequency.toString())
       fd.append('difficulty', difficulty.toString())
@@ -963,50 +1043,41 @@ export function usePracticeEngine({
         )
     }
 
-    // Wire up Max Duration (Premium/Guest Limits)
     if (isRecordingEnabled) {
       setOnMaxDurationReached(() => {
-        // Stop everything
         stopSession()
       })
     }
   }, [
     state.status,
     state.shouldSave,
-    // recorder, // Removed unstable object dependency
-    setOnComplete, // Stable action
-    setOnMaxDurationReached, // Stable action
+    setOnComplete,
+    setOnMaxDurationReached,
     submitSession,
     dispatch,
     beatPlayer.currentBeat,
     stopSession,
     difficulty,
     frequency,
-    beatVolume, // Added dependency
+    beatVolume,
     isStudioFXEnabled,
     audioSync,
     recorder.duration,
     recorder.isRecording,
-    startTime,
     isRecordingEnabled,
     debugLog,
   ])
 
-  // 7. Live Volume Sync (The Missing Link)
   useEffect(() => {
-    if (beatPlayer) {
-      beatPlayer.setVolume(beatVolume)
-    }
+    beatPlayer.setVolume(beatVolume)
   }, [beatVolume, beatPlayer])
 
   return {
-    // State
     status: state.status,
     isGuest: state.isGuest,
     error: state.error,
     audioState,
 
-    // Actions
     startSession,
     stopSession,
     discardSession,
@@ -1014,21 +1085,16 @@ export function usePracticeEngine({
     completeCountdown,
     retrySave,
 
-    // Sub-systems Info
     voiceStatus,
-
-    // Child Hooks (Exposed for UI binding if needed, or wrapped)
     beatPlayer,
     recorder,
 
-    // Word Data
     currentWord,
     wordTiming,
     activePlayer,
     activeDifficulty,
     activeFrequency,
 
-    // Time Logic (Monotonic)
     startTime,
     getAudioTime: audioSync.getPreciseTime,
   }

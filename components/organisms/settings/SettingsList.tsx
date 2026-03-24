@@ -27,14 +27,25 @@ import { useEffect, useState } from 'react'
 import { SupportModal } from '@/components/organisms/support/SupportModal'
 import { getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
+import { useDevice } from '@/hooks/useDevice'
 import {
   CALIBRATION_PROFILES,
   formatSignedLatencyMs,
   getCalibrationState,
 } from '@/lib/audio/calibration'
+import {
+  buildAuthContinuePath,
+  buildCompleteProfilePath,
+  isProfileSetupComplete,
+} from '@/lib/auth/paths'
+import {
+  IOS_SPOKEN_PROMPT_NOTICE,
+  getEffectiveTTSEnabled,
+} from '@/lib/tts/platform'
 
 export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
   const { data: session } = useSession()
+  const { isIOS } = useDevice()
   const [isManaging, setIsManaging] = useState(false)
   const {
     isTTSEnabled,
@@ -53,6 +64,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
   // Determine subscription status
   const isPro = isProUser(session?.user)
+  const effectiveTTSEnabled = getEffectiveTTSEnabled(isTTSEnabled, isIOS)
 
   const handleLinkClick = () => {
     if (onItemClick) onItemClick()
@@ -153,7 +165,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
       <div className="mx-4 mt-2">
         <ProtectedLink
           href={
-            session?.user?.username ? `/u/${session.user.username}` : '/profile'
+            session && !isProfileSetupComplete(session.user)
+              ? buildCompleteProfilePath('/profile')
+              : session?.user?.username
+                ? `/u/${session.user.username}`
+                : '/profile'
           }
           className={cn(
             'block relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/50 to-purple-900/50 p-6 border border-white/10 shadow-xl transition-transform active:scale-[0.98]',
@@ -278,13 +294,19 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                   Voice Prompts
                 </span>
                 <span className="text-xs text-zinc-500">
-                  Spoken word suggestions
+                  {isIOS
+                    ? 'Disabled on iPhone and iPad to preserve beat volume'
+                    : 'Spoken word suggestions'}
                 </span>
               </div>
             </div>
             <button
               onClick={(e) => {
                 e.preventDefault()
+                if (isIOS) {
+                  toast(IOS_SPOKEN_PROMPT_NOTICE, { icon: 'i' })
+                  return
+                }
                 const newValue = !isTTSEnabled
                 setTTSEnabled(newValue)
                 toast.success(
@@ -293,19 +315,30 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                     : 'Voice Assistant Disabled'
                 )
               }}
+              disabled={isIOS}
               className={cn(
                 'w-11 h-6 rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-orange/50',
-                isTTSEnabled ? 'bg-accent-orange' : 'bg-white/10'
+                isIOS
+                  ? 'cursor-not-allowed bg-white/10 opacity-60'
+                  : isTTSEnabled
+                    ? 'bg-accent-orange'
+                    : 'bg-white/10'
               )}
             >
               <div
                 className={cn(
                   'absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm',
-                  isTTSEnabled ? 'left-6' : 'left-1'
+                  effectiveTTSEnabled ? 'left-6' : 'left-1'
                 )}
               />
             </button>
           </div>
+
+          {isIOS && (
+            <div className="px-5 pb-4 text-xs text-accent-blue">
+              {IOS_SPOKEN_PROMPT_NOTICE}
+            </div>
+          )}
 
           {/* Studio FX Toggle */}
           <div className="flex items-center justify-between px-5 py-4">
@@ -347,7 +380,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           <div
             className={cn(
               'overflow-hidden transition-all duration-300 bg-black/20',
-              isStudioOpen || isTTSEnabled
+              isStudioOpen || effectiveTTSEnabled
                 ? 'max-h-40 opacity-100'
                 : 'max-h-0 opacity-0'
             )}
@@ -377,7 +410,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               </div>
 
               {/* TTS Volume */}
-              {isTTSEnabled && (
+              {effectiveTTSEnabled && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-zinc-400">
                     <span>Voice Volume</span>
@@ -404,7 +437,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </div>
 
           {/* Admin Only: Test Voice */}
-          {session?.user?.role === 'SUPERADMIN' && (
+          {session?.user?.role === 'SUPERADMIN' && !isIOS && (
             <button
               onClick={(e) => {
                 e.preventDefault()
@@ -512,7 +545,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         ) : (
           <button
-            onClick={() => signIn('google', { callbackUrl: '/profile' })}
+            onClick={() =>
+              signIn('google', {
+                callbackUrl: buildAuthContinuePath('/profile'),
+              })
+            }
             className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-blue text-white font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
           >
             <LogIn size={18} />
@@ -520,7 +557,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.0.7</p>
+          <p className="ml-2 text-xs text-white/20">v1.0.8</p>
         </div>
       </div>
       <SupportModal

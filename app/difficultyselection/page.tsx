@@ -1,4 +1,5 @@
 import { getBeats } from '@/lib/db/beats'
+import { redirectIncompleteProfileSetupIfNeeded } from '@/lib/auth/require-user-session'
 import { DifficultySelectionClient } from './DifficultySelectionClient'
 import { Beat } from '@/types/database'
 
@@ -69,6 +70,7 @@ const BEAT_URL_MAP: Record<string, string> = {
 }
 
 export default async function DifficultySelectionPage() {
+  await redirectIncompleteProfileSetupIfNeeded('/difficultyselection')
   let beats: Beat[] = []
 
   try {

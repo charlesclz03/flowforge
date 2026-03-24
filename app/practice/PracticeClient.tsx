@@ -12,11 +12,16 @@ import { usePracticeSession } from '@/contexts/SessionContext'
 import { usePracticeEngine } from '@/hooks/player/usePracticeEngine'
 import { useSound } from '@/hooks/useSound'
 import { useOptimisticAction } from '@/hooks/useOptimisticAction'
+import { useDevice } from '@/hooks/useDevice'
 import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { calculateSessionXP, getLevelInfo } from '@/lib/gamification/xp'
 import { isProUser } from '@/lib/subscription/isPro'
 import { TTSLanguageCode } from '@/lib/tts/languages'
+import {
+  IOS_SPOKEN_PROMPT_NOTICE,
+  getEffectiveTTSEnabled,
+} from '@/lib/tts/platform'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 // Components
@@ -100,6 +105,7 @@ export default function PracticeClient({
   const router = useRouter()
   const { data: session } = useSession()
   const { play } = useSound()
+  const { isIOS } = useDevice()
   const sessionDurationLimit = useMemo(() => {
     const raw = process.env.NEXT_PUBLIC_SESSION_DURATION_SECONDS
     const parsed = raw ? Number(raw) : NaN
@@ -166,6 +172,8 @@ export default function PracticeClient({
   const [pendingBeatSelection, setPendingBeatSelection] = useState<Beat | null>(
     null
   )
+
+  const effectiveTTSEnabled = getEffectiveTTSEnabled(isTTSEnabled, isIOS)
 
   // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
@@ -370,6 +378,8 @@ export default function PracticeClient({
     cypherPlayers,
     isRecordingEnabled,
     shouldSaveSessions: Boolean(session?.user?.id),
+    sessionDurationSeconds: sessionDurationLimit,
+    disableSpokenTTS: isIOS,
   })
 
   // 5. Visual Effects & Glue Logic
@@ -648,8 +658,9 @@ export default function PracticeClient({
                   setIsRecordingEnabled(!isRecordingEnabled)
                 }
                 onRetrySave={engine.retrySave} // [NEW] Bind retry save
-                isTTSEnabled={isTTSEnabled}
+                isTTSEnabled={effectiveTTSEnabled}
                 voiceStatus={engine.voiceStatus}
+                spokenPromptNotice={isIOS ? IOS_SPOKEN_PROMPT_NOTICE : null}
               />
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4 py-8">

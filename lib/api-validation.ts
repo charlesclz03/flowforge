@@ -44,7 +44,7 @@ export const supportRequestSchema = z.object({
 export const sessionCompleteSchema = z.object({
   beatId: z.string().min(1, 'Beat ID is required'),
   title: z.string().trim().optional().default('Freestyle Session'),
-  mode: z.string().optional().default('solo'),
+  mode: z.enum(['solo', 'cypher']).optional().default('solo'),
   durationSeconds: z.coerce.number().int().positive('Duration must be > 0'),
   frequency: z.coerce.number().int().optional().default(8),
   difficulty: z.coerce.number().int().optional().default(2),

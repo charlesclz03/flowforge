@@ -61,6 +61,7 @@ interface PracticeControlsProps {
   onRetrySave?: () => void // [NEW]
   isTTSEnabled?: boolean
   voiceStatus?: 'loading' | 'ready' | 'fallback' | 'unsupported'
+  spokenPromptNotice?: string | null
 }
 
 export default function PracticeControls(props: PracticeControlsProps) {
@@ -103,6 +104,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     onRetrySave, // [NEW]
     isTTSEnabled,
     voiceStatus,
+    spokenPromptNotice,
   } = props
 
   // State for pause modal
@@ -195,17 +197,31 @@ export default function PracticeControls(props: PracticeControlsProps) {
         <div className="flex flex-col items-center w-full max-w-lg">
           <PracticeErrorBanner error={error} onRetrySave={onRetrySave} />
 
-          {isTTSEnabled && voiceStatus === 'fallback' && !error && (
-            <div className="mb-4 flex flex-col items-center gap-1 text-accent-yellow text-xs text-center bg-accent-yellow/10 px-4 py-2 rounded-lg border border-accent-yellow/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
+          {spokenPromptNotice && !error && (
+            <div className="mb-4 flex flex-col items-center gap-1 text-accent-blue text-xs text-center bg-accent-blue/10 px-4 py-2 rounded-lg border border-accent-blue/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
               <span className="font-bold tracking-wider uppercase">
-                Native Voice Missing
+                Text-Only Prompts
               </span>
               <span className="opacity-90 leading-tight">
-                Falling back to a standard robotic voice. Check browser settings
-                to install language packs.
+                {spokenPromptNotice}
               </span>
             </div>
           )}
+
+          {!spokenPromptNotice &&
+            isTTSEnabled &&
+            voiceStatus === 'fallback' &&
+            !error && (
+              <div className="mb-4 flex flex-col items-center gap-1 text-accent-yellow text-xs text-center bg-accent-yellow/10 px-4 py-2 rounded-lg border border-accent-yellow/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
+                <span className="font-bold tracking-wider uppercase">
+                  Native Voice Missing
+                </span>
+                <span className="opacity-90 leading-tight">
+                  Falling back to a standard robotic voice. Check browser
+                  settings to install language packs.
+                </span>
+              </div>
+            )}
 
           <div className="flex items-center justify-center gap-2 sm:gap-4 w-full px-2 relative z-10 pointer-events-none">
             {/* Left Satellite: RESTART */}

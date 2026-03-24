@@ -68,6 +68,7 @@ model User {
   image         String?
   username      String?   @unique
   bio           String?   @db.Text
+  profileSetupCompletedAt DateTime? @map("profile_setup_completed_at")
 
   // Stripe fields
   customerId         String? @unique @map("customer_id")

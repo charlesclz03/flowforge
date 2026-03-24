@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react'
 import { useSearchParams, usePathname } from 'next/navigation'
 import { Suspense } from 'react'
+import { buildAuthContinuePath } from '@/lib/auth/paths'
 
 interface SignInButtonProps {
   className?: string
@@ -32,7 +33,7 @@ function SignInButtonContent({
     // Default to /practice if still no callbackUrl
     redirectUrl = redirectUrl || '/practice'
 
-    signIn('google', { callbackUrl: redirectUrl })
+    signIn('google', { callbackUrl: buildAuthContinuePath(redirectUrl) })
   }
 
   const baseClasses =

@@ -8,6 +8,7 @@ import {
   resolveUtteranceLanguage,
   TTSVoiceStatus,
 } from '@/lib/tts/utterance-language'
+import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
 
 interface UseTTSProps {
   enabled?: boolean
@@ -36,6 +37,7 @@ export function useTTS({
 
   // Refs to avoid closure staleness in async callbacks
   const mountedRef = useRef(true)
+  const lastTelemetryKeyRef = useRef<string | null>(null)
 
   // Initialize Voices
   useEffect(() => {
@@ -93,6 +95,31 @@ export function useTTS({
       }
     }
   }, [language])
+
+  useEffect(() => {
+    if (voiceStatus === 'loading') return
+
+    const telemetryKey = `${language}:${voiceStatus}:${activeVoice?.lang ?? 'none'}`
+    if (lastTelemetryKeyRef.current === telemetryKey) {
+      return
+    }
+    lastTelemetryKeyRef.current = telemetryKey
+
+    if (voiceStatus === 'ready') {
+      return
+    }
+
+    trackReliabilityEvent(
+      'tts_voice_mode_resolved',
+      {
+        requestedLanguage: language,
+        voiceStatus,
+        hasLanguageVoice,
+        activeVoiceLanguage: activeVoice?.lang ?? null,
+      },
+      voiceStatus === 'unsupported' ? 'warning' : 'info'
+    )
+  }, [activeVoice?.lang, hasLanguageVoice, language, voiceStatus])
 
   const speak = useCallback(
     (text: string) => {

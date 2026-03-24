@@ -14,6 +14,18 @@ export async function GET(request: Request) {
     const language = resolveLanguageCode(
       searchParams.get('language') ?? searchParams.get('lang')
     )
+    const excludeWordTexts = Array.from(
+      new Set(
+        searchParams
+          .getAll('exclude')
+          .flatMap((value) => value.split(','))
+          .map((value) => value.trim())
+          .filter(Boolean)
+      )
+    )
+    const excludedWordKeys = new Set(
+      excludeWordTexts.map((word) => word.trim().toLowerCase())
+    )
 
     // Dynamically import to prevent top-level crashes if module loading fails (e.g. Prisma issues)
     let wordsData: {
@@ -29,6 +41,7 @@ export async function GET(request: Request) {
       const result = await getRandomWords(count, {
         difficultyLevel: difficulty,
         language,
+        excludeWordTexts,
       })
 
       if (result.success && result.data && result.data.length > 0) {
@@ -38,7 +51,9 @@ export async function GET(request: Request) {
       }
     } catch (dbError) {
       console.warn('Database word fetch failed, using fallback:', dbError)
-      wordsData = getFallbackWords(language, difficulty)
+      wordsData = getFallbackWords(language, difficulty).filter(
+        (word) => !excludedWordKeys.has(word.wordText.trim().toLowerCase())
+      )
       if (wordsData.length === 0) wordsData = getFallbackWords()
 
       // Shuffle fallback words

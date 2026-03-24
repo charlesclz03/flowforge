@@ -1,7 +1,7 @@
 # Feature Matrix
 
-**Current Version**: `1.0.7`
-**Last Updated**: 2026-03-06
+**Current Version**: `1.0.8`
+**Last Updated**: 2026-03-24
 
 ## Core Practice
 
@@ -10,8 +10,8 @@
 | Solo Mode | PASS [x] 2026-02-19 | Stable session loop with configurable prompts | All |
 | Cypher Mode | PASS [x] 2026-02-19 | Local pass-the-phone with player rotation | All |
 | Beat Selection | PASS [x] 2026-02-19 | Public + private beat selection and handoff | All |
-| Prompt Engine | PASS [x] 2026-02-19 | Difficulty + frequency with anti-rhyme guard | All |
-| Language Runtime (TTS) | PASS [x] 2026-02-19 | Alias + handoff sync works and fallback voice/lang resolution now prevents silent prompts when matching voice packs are unavailable | All |
+| Prompt Engine | PASS [x] 2026-03-24 | Prebuilt no-repeat session queues now expand across same-language difficulty tiers, preserve anti-rhyme ordering, and use exclusion-based top-ups instead of recycling prompts mid-session | All |
+| Language Runtime (TTS) | PASS [x] 2026-03-24 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, and iPhone/iPad now use intentional text-only prompts to preserve beat volume during practice | All |
 
 ## Beats & Calibration
 
@@ -45,6 +45,7 @@
 
 | Date | Audit | Status | Outcome |
 | --- | --- | --- | --- |
+| 2026-03-24 | Prompt Engine Session Uniqueness Forever Fix | PASS | Replaced recycle-on-exhaustion prompt generation with prebuilt no-repeat session queues, expanded FR/PT dictionaries to `36/36/38` per tier set, added exclusion-aware word top-ups, enforced required Google profile completion, and switched iPhone/iPad practice to text-only prompts to avoid Safari volume ducking. |
 | 2026-02-19 | SUPERADMIN Public Beat Management Forever Fix | PASS | Enforced public-track mutation boundaries for update/delete/reorder, added strict update payload validation, and added regression tests in `__tests__/admin/admin-beats-actions.test.ts`. |
 | 2026-02-19 | SUPERADMIN Public Beat Management Re-Audit | FAIL | Found server-action scope leak: update/delete paths are id-only and not constrained to public tracks; fix plan recorded in `brain/SUPERADMIN_PUBLIC_BEAT_MANAGEMENT_FIX_PLAN_2026-02-19.md`. |
 | 2026-02-19 | Cross-Cutting Fix Wave (Formatting/Prisma/Audit/Tooling) | PASS (Watch) | Cleared lint formatting debt, suppressed expected Prisma build-time noise, removed audit-tool module warning, and reduced `npm audit` from 35 findings (31 high / 4 moderate) to 15 moderate-only findings. |

@@ -2,6 +2,7 @@
 
 import { signIn } from 'next-auth/react'
 import { X } from 'lucide-react'
+import { buildAuthContinuePath } from '@/lib/auth/paths'
 
 interface GuestLoginModalProps {
   isOpen: boolean
@@ -13,7 +14,7 @@ export function GuestLoginModal({ isOpen, onClose }: GuestLoginModalProps) {
 
   const handleSignIn = () => {
     // Redirect to difficulty selection after login
-    signIn('google', { callbackUrl: '/practice' })
+    signIn('google', { callbackUrl: buildAuthContinuePath('/practice') })
   }
 
   return (

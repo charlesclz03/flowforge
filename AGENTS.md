@@ -5,6 +5,12 @@
 2. Pick exactly one workflow from `.agent/workflows/` for the task (see index below) and follow it end-to-end.
 3. Keep changes small, verify locally, then update the relevant docs (patch notes / matrices) required by the workflow.
 
+## Documentation Start Here
+- Canonical docs hub: `docs/README.md`
+- Current handoff: `docs/summaries/QUICK_START_NEXT_SESSION.md`
+- Current status: `docs/project/PROJECT_STATUS.md`
+- Roadmap: `docs/project/ROADMAP.md`
+
 ## Project Facts
 - Stack: Next.js (App Router), TypeScript, Tailwind CSS, Prisma, Supabase, NextAuth, Playwright, Vitest, TWA/PWA.
 - Key dirs: `app/`, `components/`, `lib/`, `prisma/`, `public/`, `DOCS/`, `.agent/`.
@@ -56,4 +62,3 @@ Canonical MCP references:
 - Never commit or paste secrets (tokens, keys, cookies).
 - MCP config files (e.g. `mcp_config.json`) are local-only; do not add them to the repo.
 - Redact secrets from logs, screenshots, bug reports, and PRs.
-

@@ -1,39 +1,64 @@
-# Freestyla Documentation Hub
+# FreeStyla Documentation Hub
 
-**Current Version**: `1.0.2`
-**Last Updated**: 2026-02-19
+Purpose:
 
-This folder is now canonical-first:
-- Active docs live in canonical paths listed below.
-- Legacy docs are preserved under `DOCS/ARCHIVE/`.
-- Original legacy paths now contain stubs that point to canonical docs and archive snapshots.
+- provide one canonical entry point for humans and future coding sessions
 
-## Canonical Entry Points
+Audience:
 
-- `DOCUMENTATION_INDEX.md` - Full canonical index
-- `project/PROJECT_STATUS.md` - Current release status and recent history
-- `project/ROADMAP.md` - Forward roadmap (Now / Next / Later)
-- `reference/PATCH_NOTES_MASTER.md` - Master release history
-- `summaries/QUICK_START_NEXT_SESSION.md` - Next-session bootstrap
+- maintainers
+- coding agents
+
+Status:
+
+- active
+
+Source of truth scope:
+
+- documentation navigation and canonical role mapping
+
+Last updated:
+
+- 2026-03-24
+
+Related docs:
+
+- `README.md`
+- `AGENTS.md`
+- `docs/DOCUMENTATION_INDEX.md`
+
+## Start Here
+
+1. `AGENTS.md`
+2. `docs/summaries/QUICK_START_NEXT_SESSION.md`
+3. `docs/project/PROJECT_STATUS.md`
+4. `docs/project/ROADMAP.md`
+5. `docs/guides/DEVELOPER_SETUP.md`
+
+## Canonical Role Map
+
+- repo overview: `README.md`
+- docs index: `docs/DOCUMENTATION_INDEX.md`
+- current handoff: `docs/summaries/QUICK_START_NEXT_SESSION.md`
+- current status: `docs/project/PROJECT_STATUS.md`
+- shipped history: `docs/reference/PATCH_NOTES_MASTER.md`
+- immediate roadmap: `docs/project/ROADMAP.md`
+- local setup: `docs/guides/DEVELOPER_SETUP.md`
+- deployment: `docs/guides/DEPLOYMENT.md`
+- verification: `docs/testing/TESTING_PLAN_V3.md`
+- archive boundary: `docs/ARCHIVE/`
 
 ## Canonical Operational Docs
 
-- `guides/DEVELOPER_SETUP.md` - Local setup and env contracts
-- `guides/DEPLOYMENT.md` - Release/deploy workflow
-- `guides/ANDROID_DEPLOYMENT.md` - Android/TWA deployment process
-- `testing/TESTING_PLAN_V3.md` - Current testing strategy
-- `testing/MCP_TEST_REPORT.md` - MCP baseline verification
-
-## Canonical Reference Docs
-
-- `reference/FEATURE_MATRIX.md` - Feature truth matrix
-- `reference/MCP_MATRIX.md` - MCP server status matrix
-- `reference/DOC_CANONICAL_MAP.json` - Machine-readable docs contract
+- `docs/guides/ANDROID_DEPLOYMENT.md`
+- `docs/testing/MCP_TEST_REPORT.md`
+- `docs/reference/FEATURE_MATRIX.md`
+- `docs/reference/MCP_MATRIX.md`
+- `docs/reference/DOC_CANONICAL_MAP.json`
+- `docs/reference/GITHUB_REPO_RESEARCH.md`
 
 ## Archive Policy
 
-If you open a stubbed document, use:
-1. The canonical replacement for current truth.
-2. The archive snapshot for historical context.
-
-Do not treat archived files as release-current unless explicitly promoted back to canonical.
+- active docs live in the canonical paths above
+- legacy paths and older notes live under `docs/ARCHIVE/`
+- archived docs are historical context only unless explicitly promoted back into the canonical path

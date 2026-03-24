@@ -9,11 +9,20 @@ import { cn } from '@/lib/utils'
 import { useSession, signIn } from 'next-auth/react'
 import { useHaptics } from '@/hooks/useHaptics'
 import { usePracticeSession } from '@/contexts/SessionContext'
+import {
+  buildAuthContinuePath,
+  buildCompleteProfilePath,
+  isProfileSetupComplete,
+} from '@/lib/auth/paths'
 
 export function BottomNav() {
   const pathname = usePathname()
   const isPracticeRoute = pathname === '/practice'
-  const isPublicEntryRoute = pathname === '/' || pathname === '/howitworks'
+  const isPublicEntryRoute =
+    pathname === '/' ||
+    pathname === '/howitworks' ||
+    pathname === '/complete-profile' ||
+    pathname === '/auth/continue'
   const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
   const { bump } = useHaptics()
@@ -60,9 +69,11 @@ export function BottomNav() {
       name: 'Profile',
       // If we have a username, go direct. Otherwise fallback to the redirector.
       href:
-        isAuthenticated && session?.user?.username
-          ? `/u/${session.user.username}`
-          : '/profile',
+        isAuthenticated && !isProfileSetupComplete(session?.user)
+          ? buildCompleteProfilePath('/profile')
+          : isAuthenticated && session?.user?.username
+            ? `/u/${session.user.username}`
+            : '/profile',
       icon: User,
       match: (path: string) =>
         path.startsWith('/profile') || path.startsWith('/u/'),
@@ -207,7 +218,9 @@ export function BottomNav() {
             <button
               onClick={() =>
                 // Redirect to profile after login, which will then bounce to /u/[username]
-                signIn('google', { callbackUrl: '/profile' })
+                signIn('google', {
+                  callbackUrl: buildAuthContinuePath('/profile'),
+                })
               }
               className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
             >

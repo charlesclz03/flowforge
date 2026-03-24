@@ -107,6 +107,7 @@ export type WordFilters = {
   minSyllables?: number
   maxSyllables?: number
   language?: string
+  excludeWordTexts?: string[]
 }
 
 export type SessionFilters = {

@@ -1,7 +1,34 @@
 # Quick Start - Next Session
 
-**Current Version**: `1.0.7`
-**Last Updated**: 2026-03-06
+Purpose:
+
+- tell the next session how to bootstrap the repo and where current truth lives
+
+Audience:
+
+- coding agents
+- maintainers
+
+Status:
+
+- active
+
+Source of truth scope:
+
+- immediate next-session bootstrap
+
+Last updated:
+
+- 2026-03-24
+
+Related docs:
+
+- `docs/README.md`
+- `docs/project/PROJECT_STATUS.md`
+- `docs/project/ROADMAP.md`
+
+**Current Version**: `1.0.8`
+**Last Updated**: 2026-03-24
 
 ## Bootstrap (Windows-safe)
 
@@ -37,6 +64,16 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Funnel instrumentation and conversion visibility on public entry routes.
-2. Stability and polish of practice/recording pipeline.
-3. Release discipline with enforced docs governance.
+1. Monitor multilingual prompt quality and TTS fallback behavior.
+2. Continue recording pipeline reliability hardening.
+3. Preserve release discipline and docs governance consistency.
+
+## GitHub Research Handoff
+
+- Full report: `DOCS/reference/GITHUB_REPO_RESEARCH.md`
+- Top 5 priority repos for the next implementation spikes:
+  1. `leaonline/easy-speech`
+  2. `katspaugh/wavesurfer.js`
+  3. `GoogleChromeLabs/bubblewrap`
+  4. `transloadit/uppy`
+  5. `words/cmu-pronouncing-dictionary`

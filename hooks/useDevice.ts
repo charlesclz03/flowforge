@@ -11,12 +11,16 @@ export function useDevice() {
       navigator.userAgent ||
       navigator.vendor ||
       (window as unknown as { opera: string }).opera
+    const isIPadDesktopClass =
+      navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+    const isIOSDevice =
+      /iPad|iPhone|iPod/.test(userAgent) || isIPadDesktopClass
 
     if (/android/i.test(userAgent)) {
       setIsAndroid(true)
       setIsMobile(true)
     } else if (
-      /iPad|iPhone|iPod/.test(userAgent) &&
+      isIOSDevice &&
       !(window as unknown as { MSStream: boolean }).MSStream
     ) {
       setIsIOS(true)

@@ -2,7 +2,15 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Music, Timer, Mic, Sparkles, Zap, Target } from 'lucide-react'
+import {
+  Languages,
+  Mic,
+  Music,
+  Sparkles,
+  Timer,
+  Zap,
+  Target,
+} from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { QASection } from '@/components/organisms/landing/QASection'
 import { trackEvent } from '@/lib/analytics/track'
@@ -83,8 +91,9 @@ export function HowItWorksContent({
               </h2>
             </div>
             <p className="text-sm text-text-secondary">
-              Set your difficulty level and word frequency. Start easy with 2-3
-              syllable words, or challenge yourself with complex vocabulary.
+              Choose your difficulty, word frequency, and prompt language.
+              Freestyle in English, French, or Portuguese before you even enter
+              the session.
             </p>
           </div>
         </div>
@@ -114,6 +123,25 @@ export function HowItWorksContent({
 
       {/* Features Grid */}
       <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-transparent p-6">
+          <div className="flex items-start space-x-4">
+            <Languages className="mt-1 h-6 w-6 flex-shrink-0 text-amber-300" />
+            <div>
+              <h2 className="mb-2 text-lg font-semibold">
+                Language-first practice
+              </h2>
+              <p className="text-sm text-text-secondary">
+                Pick prompt language up front and train your flow in{' '}
+                <strong className="text-white">
+                  English, French, or Portuguese
+                </strong>
+                . On iPhone and iPad, prompts stay visual during practice so the
+                beat volume stays strong.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="rounded-2xl border border-accent-purple/20 bg-gradient-to-br from-accent-purple/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
             <Timer className="mt-1 h-6 w-6 flex-shrink-0 text-accent-purple" />
@@ -205,7 +233,7 @@ export function HowItWorksContent({
           <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
             1,000+
           </div>
-          <div>Word vault</div>
+          <div>Word vault across EN / FR / PT</div>
         </div>
         <div className="h-12 w-px bg-white/10" />
         <div>

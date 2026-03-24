@@ -6,7 +6,9 @@ import {
   validateJsonRequest,
   sessionCompleteSchema,
 } from '@/lib/api-validation'
+import { buildSessionSaveInput } from '@/lib/sessions/session-submission'
 import { saveSessionWithProgress } from '@/lib/sessions/save-session-with-progress'
+import { trackReliabilityException } from '@/lib/telemetry/reliability'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -48,33 +50,28 @@ export async function POST(request: NextRequest) {
       wordsUsed,
     } = parsedBody
 
-    // Calculate Word Count
-    const wordCount = wordsUsed.length > 0 ? wordsUsed.length : baseWordCount
-
-    // Calculate Server Score (for validation/anti-cheat)
-    const serverScore = Math.round(durationSeconds * 10 * (1 + wordCount / 10))
+    const sessionPayload = buildSessionSaveInput({
+      userId: session.user.id,
+      beatId,
+      title,
+      mode,
+      durationSeconds,
+      frequency,
+      difficulty,
+      restarts,
+      playbacks: 0,
+      beatOffsetMs: 0,
+      fileSizeBytes: 0,
+      storageUrl: null,
+      fxConfig: Prisma.DbNull,
+      wordsUsed,
+      baseWordCount,
+    })
 
     const sessionSaveResult = await saveSessionWithProgress({
       userId: session.user.id,
-      createInput: {
-        userId: session.user.id,
-        beatId,
-        title: title || 'Freestyle Session',
-        storageUrl: null,
-        fileSizeBytes: 0,
-        durationSeconds,
-        frequency,
-        difficulty,
-        score: serverScore,
-        vibe: null,
-        mode,
-        restarts,
-        playbacks: 0,
-        wordCount,
-        beatOffsetMs: 0,
-        fxConfig: Prisma.DbNull,
-      },
-      wordsUsed,
+      createInput: sessionPayload.createInput,
+      wordsUsed: sessionPayload.wordsUsed,
       achievementType: 'SESSION_COMPLETE',
       logPrefix: 'SESSION_COMPLETE',
     })
@@ -93,6 +90,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('[SESSION_COMPLETE] Unhandled error', error)
+    trackReliabilityException(error, 'session_complete_unhandled_error', {})
     return serverError('Failed to save session')
   }
 }

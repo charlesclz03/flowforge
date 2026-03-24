@@ -4,6 +4,10 @@ import { createServerClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
 import {
+  isUsernameAvailable,
+  validateUsernameCandidate,
+} from '@/lib/auth/username'
+import {
   AVATAR_MAX_BYTES,
   avatarExtensionForMimeType,
   detectAvatarMimeType,
@@ -21,18 +25,78 @@ export async function PATCH(request: Request) {
     const [currentUser, formData] = await Promise.all([
       prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { image: true },
+        select: {
+          image: true,
+          username: true,
+          profileSetupCompletedAt: true,
+        },
       }),
       request.formData(),
     ])
 
-    const username = formData.get('username') as string
-    const bio = formData.get('bio') as string
-    const imageFile = formData.get('image') as File | null
+    if (!currentUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
 
-    const updateData: Record<string, string> = {}
-    if (username) updateData.username = username
+    const usernameValue = formData.get('username')
+    const username =
+      typeof usernameValue === 'string' ? usernameValue.trim() : ''
+    const bioValue = formData.get('bio')
+    const bio = typeof bioValue === 'string' ? bioValue : null
+    const imageFile = formData.get('image') as File | null
+    const completeProfile =
+      String(formData.get('completeProfile') || '').toLowerCase() === 'true'
+
+    const updateData: Record<string, string | Date> = {}
+    if (username) {
+      if (
+        currentUser.profileSetupCompletedAt &&
+        !completeProfile &&
+        username !== currentUser.username
+      ) {
+        return NextResponse.json(
+          { error: 'Username can only be changed during profile setup.' },
+          { status: 403 }
+        )
+      }
+
+      const validation = validateUsernameCandidate(username)
+      if (validation.error) {
+        return NextResponse.json({ error: validation.error }, { status: 400 })
+      }
+
+      const nextUsername = validation.normalized
+      if (nextUsername !== currentUser.username) {
+        const available = await isUsernameAvailable(
+          nextUsername,
+          session.user.id
+        )
+        if (!available) {
+          return NextResponse.json(
+            { error: 'That username is already taken.' },
+            { status: 409 }
+          )
+        }
+      }
+
+      updateData.username = nextUsername
+    }
     if (bio !== null) updateData.bio = bio // Allow empty string to clear bio
+
+    if (completeProfile) {
+      const finalUsername =
+        typeof updateData.username === 'string'
+          ? updateData.username
+          : currentUser.username
+
+      const validation = validateUsernameCandidate(finalUsername || '')
+      if (validation.error) {
+        return NextResponse.json({ error: validation.error }, { status: 400 })
+      }
+
+      updateData.profileSetupCompletedAt =
+        currentUser.profileSetupCompletedAt || new Date()
+    }
 
     // Handle Image Upload
     let newAvatarStoragePath: string | null = null
@@ -130,6 +194,18 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ user: updatedUser })
   } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'P2002'
+    ) {
+      return NextResponse.json(
+        { error: 'That username is already taken.' },
+        { status: 409 }
+      )
+    }
+
     console.error('Profile update error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

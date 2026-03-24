@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
+import { resolveUniqueUsername } from '@/lib/auth/username'
 
 function getSuperadminEmailAllowlist(): Set<string> {
   const allowlist = new Set<string>()
@@ -74,24 +75,10 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser({ user }) {
       if (user.email && !user.username) {
-        // Generate a username from the email slug
-        let baseUsername = user.email.split('@')[0].toLowerCase()
-        // Sanitize: allow only alphanumeric, underscores, and hyphens
-        baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
-
-        // Ensure uniqueness (simple retry mechanism)
-        let uniqueUsername = baseUsername
-        let counter = 1
-
-        while (true) {
-          const existing = await prisma.user.findUnique({
-            where: { username: uniqueUsername },
-          })
-          if (!existing) break
-
-          uniqueUsername = `${baseUsername}${counter}`
-          counter++
-        }
+        const uniqueUsername = await resolveUniqueUsername(
+          user.email.split('@')[0],
+          user.id
+        )
 
         await prisma.user.update({
           where: { id: user.id },
@@ -115,21 +102,10 @@ export const authOptions: NextAuthOptions = {
 
       // GENERAL BACKFILL for legacy users
       if (!user.username) {
-        let baseUsername = user.email.split('@')[0].toLowerCase()
-        baseUsername = baseUsername.replace(/[^a-z0-9_-]/g, '')
-
-        let uniqueUsername = baseUsername
-        let counter = 1
-
-        while (true) {
-          const existing = await prisma.user.findUnique({
-            where: { username: uniqueUsername },
-          })
-          if (!existing) break
-
-          uniqueUsername = `${baseUsername}${counter}`
-          counter++
-        }
+        const uniqueUsername = await resolveUniqueUsername(
+          user.email.split('@')[0],
+          user.id
+        )
 
         await prisma.user.update({
           where: { id: user.id },
@@ -166,6 +142,7 @@ export const authOptions: NextAuthOptions = {
             socials: true,
             username: true,
             bio: true,
+            profileSetupCompletedAt: true,
             image: true,
             currentStreak: true,
             xp: true,
@@ -178,6 +155,8 @@ export const authOptions: NextAuthOptions = {
           session.user.socials = latestUser.socials
           session.user.username = latestUser.username
           session.user.bio = latestUser.bio
+          session.user.profileSetupCompletedAt =
+            latestUser.profileSetupCompletedAt?.toISOString() ?? null
           session.user.image = latestUser.image ?? session.user.image
           session.user.currentStreak = latestUser.currentStreak
           session.user.xp = latestUser.xp
@@ -188,6 +167,8 @@ export const authOptions: NextAuthOptions = {
           session.user.socials = user.socials
           session.user.username = user.username ?? null
           session.user.bio = user.bio ?? null
+          session.user.profileSetupCompletedAt =
+            user.profileSetupCompletedAt?.toISOString() ?? null
         }
 
         // Superadmin Override (transitional allowlist)
