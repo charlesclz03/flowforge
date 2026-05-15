@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDevice } from '@/hooks/useDevice'
 import { Button } from '@/components/atoms/Button'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { Modal } from '@/components/atoms/Modal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Download, Zap, WifiOff, Smartphone, Laptop } from 'lucide-react'
@@ -41,7 +42,13 @@ export default function DownloadPage() {
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center md:px-8">
         <div className="relative mb-8">
           <div className="absolute -inset-4 rounded-full bg-accent-purple/20 blur-2xl filter" />
-          <Download className="relative h-20 w-20 text-accent-purple" />
+          <IconFrame
+            icon={Download}
+            variant="hero"
+            tone="purple"
+            decorative
+            className="relative"
+          />
         </div>
 
         <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter sm:text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
@@ -72,7 +79,13 @@ export default function DownloadPage() {
                   size="xl"
                   className="w-full bg-gradient-to-r from-[#3DDC84] to-[#3DDC84]/80 text-black font-bold shadow-lg shadow-[#3DDC84]/20 hover:scale-105"
                 >
-                  <Smartphone className="mr-2 h-6 w-6" />
+                  <IconFrame
+                    icon={Smartphone}
+                    variant="inline"
+                    tone="zinc"
+                    decorative
+                    className="text-black"
+                  />
                   Get it on Google Play
                 </Button>
               </Link>
@@ -97,7 +110,12 @@ export default function DownloadPage() {
                   setShowIOSInstallGuide(true)
                 }}
               >
-                <Smartphone className="mr-2 h-6 w-6" />
+                <IconFrame
+                  icon={Smartphone}
+                  variant="inline"
+                  tone="white"
+                  decorative
+                />
                 Launch App
               </Button>
               <p className="text-xs text-text-tertiary">
@@ -123,7 +141,13 @@ export default function DownloadPage() {
                   size="xl"
                   className="w-full bg-white text-black font-bold shadow-lg shadow-purple-500/20 hover:scale-105 hover:bg-white/90"
                 >
-                  <Laptop className="mr-2 h-6 w-6" />
+                  <IconFrame
+                    icon={Laptop}
+                    variant="inline"
+                    tone="zinc"
+                    decorative
+                    className="text-black"
+                  />
                   Launch Web App
                 </Button>
               </Link>
@@ -139,7 +163,13 @@ export default function DownloadPage() {
         {/* Feature Grid */}
         <div className="grid gap-6 md:grid-cols-3 md:gap-8 max-w-4xl mx-auto">
           <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
-            <WifiOff className="mb-4 h-8 w-8 text-blue-400 mx-auto" />
+            <IconFrame
+              icon={WifiOff}
+              variant="feature"
+              tone="blue"
+              decorative
+              className="mx-auto mb-4"
+            />
             <h3 className="mb-2 font-bold text-lg">Offline Mode</h3>
             <p className="text-sm text-text-secondary">
               Practice anywhere, even without an internet connection.
@@ -147,7 +177,13 @@ export default function DownloadPage() {
           </div>
 
           <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
-            <Zap className="mb-4 h-8 w-8 text-yellow-400 mx-auto" />
+            <IconFrame
+              icon={Zap}
+              variant="feature"
+              tone="gold"
+              decorative
+              className="mx-auto mb-4"
+            />
             <h3 className="mb-2 font-bold text-lg">Zero Latency</h3>
             <p className="text-sm text-text-secondary">
               Optimized performance for perfect beat synchronization.
@@ -155,7 +191,13 @@ export default function DownloadPage() {
           </div>
 
           <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
-            <Smartphone className="mb-4 h-8 w-8 text-green-400 mx-auto" />
+            <IconFrame
+              icon={Smartphone}
+              variant="feature"
+              tone="green"
+              decorative
+              className="mx-auto mb-4"
+            />
             <h3 className="mb-2 font-bold text-lg">Native Feel</h3>
             <p className="text-sm text-text-secondary">
               Full-screen immersion with focused practice tools.

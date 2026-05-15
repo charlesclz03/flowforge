@@ -12,6 +12,7 @@ import {
   Target,
 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { QASection } from '@/components/organisms/landing/QASection'
 import { trackEvent } from '@/lib/analytics/track'
 
@@ -57,9 +58,13 @@ export function HowItWorksContent({
       <div className="grid gap-4 md:grid-cols-3">
         {/* Step 1 */}
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
-          <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20">
-            <Music className="h-7 w-7 text-blue-400" />
-          </div>
+          <IconFrame
+            icon={Music}
+            variant="feature"
+            tone="blue"
+            decorative
+            className="mb-6"
+          />
           <div className="space-y-3">
             <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
@@ -78,9 +83,13 @@ export function HowItWorksContent({
 
         {/* Step 2 */}
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
-          <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-purple/20">
-            <Target className="h-7 w-7 text-accent-purple" />
-          </div>
+          <IconFrame
+            icon={Target}
+            variant="feature"
+            tone="purple"
+            decorative
+            className="mb-6"
+          />
           <div className="space-y-3">
             <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
@@ -100,9 +109,13 @@ export function HowItWorksContent({
 
         {/* Step 3 */}
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
-          <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/20">
-            <Mic className="h-7 w-7 text-violet-400" />
-          </div>
+          <IconFrame
+            icon={Mic}
+            variant="feature"
+            tone="purple"
+            decorative
+            className="mb-6"
+          />
           <div className="space-y-3">
             <div className="flex items-start space-x-3">
               <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
@@ -125,7 +138,13 @@ export function HowItWorksContent({
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
-            <Languages className="mt-1 h-6 w-6 flex-shrink-0 text-amber-300" />
+            <IconFrame
+              icon={Languages}
+              variant="action"
+              tone="gold"
+              decorative
+              className="mt-1"
+            />
             <div>
               <h2 className="mb-2 text-lg font-semibold">
                 Language-first practice
@@ -144,7 +163,13 @@ export function HowItWorksContent({
 
         <div className="rounded-2xl border border-accent-purple/20 bg-gradient-to-br from-accent-purple/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
-            <Timer className="mt-1 h-6 w-6 flex-shrink-0 text-accent-purple" />
+            <IconFrame
+              icon={Timer}
+              variant="action"
+              tone="purple"
+              decorative
+              className="mt-1"
+            />
             <div>
               <h2 className="mb-2 text-lg font-semibold">Precision timing</h2>
               <p className="text-sm text-text-secondary">
@@ -157,7 +182,13 @@ export function HowItWorksContent({
 
         <div className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
-            <Sparkles className="mt-1 h-6 w-6 flex-shrink-0 text-violet-400" />
+            <IconFrame
+              icon={Sparkles}
+              variant="action"
+              tone="purple"
+              decorative
+              className="mt-1"
+            />
             <div>
               <h2 className="mb-2 text-lg font-semibold">
                 Freestyle practice engine with beats
@@ -173,7 +204,13 @@ export function HowItWorksContent({
 
         <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
-            <Zap className="mt-1 h-6 w-6 flex-shrink-0 text-blue-400" />
+            <IconFrame
+              icon={Zap}
+              variant="action"
+              tone="blue"
+              decorative
+              className="mt-1"
+            />
             <div>
               <h2 className="mb-2 text-lg font-semibold">
                 Beat synchronization
@@ -188,7 +225,13 @@ export function HowItWorksContent({
 
         <div className="rounded-2xl border border-green-500/20 bg-gradient-to-br from-green-500/10 to-transparent p-6">
           <div className="flex items-start space-x-4">
-            <Music className="mt-1 h-6 w-6 flex-shrink-0 text-green-400" />
+            <IconFrame
+              icon={Music}
+              variant="action"
+              tone="green"
+              decorative
+              className="mt-1"
+            />
             <div>
               <h2 className="mb-2 text-lg font-semibold">Session tracking</h2>
               <p className="text-sm text-text-secondary">

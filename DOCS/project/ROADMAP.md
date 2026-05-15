@@ -27,8 +27,8 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.0.8`
-**Last Updated**: 2026-03-24
+**Current Version**: `1.1.0`
+**Last Updated**: 2026-05-15
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.

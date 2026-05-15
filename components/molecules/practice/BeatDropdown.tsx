@@ -28,6 +28,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/atoms/Tabs'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { ConfirmDialog } from '@/components/molecules/feedback/ConfirmDialog'
 import { deleteLocalBeat } from '@/lib/beats/localBeats'
 import { toast } from 'react-hot-toast'
@@ -43,9 +44,7 @@ function UploadNewTrackRow() {
   return (
     <div onClick={handleUploadClick} className="p-1">
       <div className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/5 cursor-pointer border border-dashed border-white/10 hover:border-accent-purple/30">
-        <div className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0">
-          <Upload size={16} className="text-accent-purple" />
-        </div>
+        <IconFrame icon={Upload} variant="action" tone="purple" decorative />
         <div className="flex-1">
           <p className="text-sm font-medium text-accent-purple">
             Upload new track
@@ -329,9 +328,12 @@ export function BeatDropdown(props: BeatDropdownProps) {
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-accent-purple/20 rounded-xl text-accent-purple">
-            {selectedBeat ? <Music size={18} /> : <Play size={18} />}
-          </div>
+          <IconFrame
+            icon={selectedBeat ? Music : Play}
+            variant="action"
+            tone="purple"
+            decorative
+          />
           <div className="text-left">
             <p className="text-sm font-medium text-white line-clamp-1">
               {isLoading
@@ -477,7 +479,11 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       >
                         {beat.isPremium && (
                           <div className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent-yellow ring-1 ring-white/20 shadow-[0_0_10px_rgba(255,214,10,0.35)]">
-                            <Crown size={12} className="text-black" />
+                            <Crown
+                              size={12}
+                              className="text-black"
+                              strokeWidth={2}
+                            />
                           </div>
                         )}
                         <Music
@@ -580,15 +586,12 @@ export function BeatDropdown(props: BeatDropdownProps) {
                         <div className="flex items-center gap-3">
                           <div
                             onClick={(e) => handlePreview(e, beat)}
-                            className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center flex-shrink-0 cursor-pointer group-hover:bg-accent-purple/20 transition-colors"
+                            className="flex h-11 w-11 flex-shrink-0 cursor-pointer items-center justify-center rounded-xl border border-accent-purple/25 bg-accent-purple/10 text-accent-purple transition-colors group-hover:bg-accent-purple/20"
                           >
                             {playingId === beat.id ? (
-                              <Pause size={16} className="text-accent-purple" />
+                              <Pause size={20} />
                             ) : (
-                              <Upload
-                                size={16}
-                                className="text-accent-purple"
-                              />
+                              <Upload size={20} />
                             )}
                           </div>
                           <div className="flex-1">

@@ -14,6 +14,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { Card } from '@/components/atoms/Card'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
@@ -180,9 +181,7 @@ export const RecordingCard = memo(function RecordingCard({
         {/* Left: Recording Info */}
         <div className="flex-1 w-full min-w-0">
           <div className="flex items-center gap-4 mb-3">
-            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center border border-accent-orange/20">
-              <Music size={24} className="text-accent-orange" />
-            </div>
+            <IconFrame icon={Music} variant="action" tone="orange" decorative />
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-white truncate">
                 {isAudioReady ? (
@@ -214,13 +213,27 @@ export const RecordingCard = memo(function RecordingCard({
                     }}
                     className="text-[10px] text-white/40 hover:text-white flex items-center gap-1 transition-colors bg-white/5 px-2 py-0.5 rounded-full"
                   >
-                    <RefreshCw size={10} /> Refresh
+                    <IconFrame
+                      icon={RefreshCw}
+                      variant="inline"
+                      tone="white"
+                      decorative
+                      className="h-3 w-3 text-white/40"
+                      iconClassName="h-3 w-3"
+                    />
+                    Refresh
                   </button>
                 </div>
               )}
               {audioStatus === 'stats-only' && (
                 <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide flex items-center gap-1.5 font-bold opacity-90">
-                  <MicOff size={12} />
+                  <IconFrame
+                    icon={MicOff}
+                    variant="inline"
+                    tone="gold"
+                    decorative
+                    iconClassName="h-3 w-3"
+                  />
                   Stats-Only (No Mic)
                 </p>
               )}
@@ -250,7 +263,14 @@ export const RecordingCard = memo(function RecordingCard({
               variant="secondary"
               size="sm"
               onClick={() => onPlay?.()}
-              leftIcon={isPlaying ? <Pause size={16} /> : <Play size={16} />}
+              leftIcon={
+                <IconFrame
+                  icon={isPlaying ? Pause : Play}
+                  variant="inline"
+                  tone="white"
+                  decorative
+                />
+              }
               className="flex-1 md:flex-none justify-center bg-white/5 hover:bg-white/10 border-white/10"
             >
               {isPlaying ? 'Pause' : 'Play'}
@@ -264,7 +284,12 @@ export const RecordingCard = memo(function RecordingCard({
               isLoading={isDownloading}
               className="flex-1 md:flex-none justify-center px-2"
             >
-              <Download size={20} className="text-text-secondary" />
+              <IconFrame
+                icon={Download}
+                variant="inline"
+                tone="zinc"
+                decorative
+              />
             </Button>
           )}
 
@@ -288,7 +313,12 @@ export const RecordingCard = memo(function RecordingCard({
                 size="sm"
                 className="w-full justify-center px-2"
               >
-                <Video size={20} className="text-text-secondary" />
+                <IconFrame
+                  icon={Video}
+                  variant="inline"
+                  tone="zinc"
+                  decorative
+                />
               </Button>
             </Link>
           )}
@@ -299,7 +329,7 @@ export const RecordingCard = memo(function RecordingCard({
             onClick={() => setShowDeleteConfirm(true)}
             className="flex-1 md:flex-none justify-center px-2 text-red-400 hover:text-red-300 hover:bg-red-500/10"
           >
-            <Trash2 size={20} />
+            <IconFrame icon={Trash2} variant="inline" tone="red" decorative />
           </Button>
         </div>
       </div>

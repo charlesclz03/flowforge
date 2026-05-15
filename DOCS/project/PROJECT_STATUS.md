@@ -27,13 +27,13 @@ Related docs:
 - `docs/project/ROADMAP.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.0.9`
+**Current Version**: `1.1.0`
 **Phase**: Beta Polish
 **Last Updated**: 2026-05-15
 
 ## Quick Status
 
-- Latest release: `v1.0.9` (Funnel Polish).
+- Latest release: `v1.1.0` (Audit Visual Closure).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -42,6 +42,7 @@ Related docs:
 - Replaced the last browser-native `confirm()` and `alert()` flows with in-app dialogs and toast feedback.
 - Added conversion instrumentation for `/howitworks`, `/download`, checkout CTA launches, and subscription activation.
 - Added the audit funnel polish set: `/pricing`, `/login`, `/signup`, tier-aware header CTA, truthful platform install copy, premium upgrade paths, and mobile accessibility/layout cleanup.
+- Closed the remaining post-v1.0.9 visual audit follow-up with shared icon styling, START halo balancing, and measured landing-card readability evidence.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
 - Restored browser zoom/text selection defaults and kept public onboarding routes focused.
@@ -58,6 +59,7 @@ Related docs:
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.1.0  | Audit Visual Closure        | 2026-05-15 | Standardized high-traffic icon treatments, balanced the Practice START halo, and re-verified landing feature-card readability on mobile                                                                               |
 | v1.0.9  | Funnel Polish               | 2026-05-15 | Added pricing/auth entry routes, improved premium upgrade paths, corrected install messaging, restored readable/accessibility states, and added a tier-aware `Get Pro` header CTA                                     |
 | v1.0.8  | Unique Flow                 | 2026-05-15 | Added strict no-repeat session queues, required Google profile completion, expanded FR/PT prompt packs, forced iPhone/iPad practice to text-only prompts, and moved live practice beats to calibrated gapless looping |
 | v1.0.7  | Residual Cleanup            | 2026-03-06 | Cleared remaining lint debt, replaced final native dialogs, added conversion instrumentation, and aligned SEO metadata                                                                                                |

@@ -15,6 +15,7 @@ import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { ScreenPage } from '@/components/layout/ScreenPage'
 import { Button } from '@/components/atoms/Button'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { Modal } from '@/components/atoms/Modal'
 import { cn } from '@/lib/utils'
 import { FALLBACK_BEATS } from '@/lib/data/fallbacks'
@@ -268,7 +269,15 @@ export default function TracksPage() {
               )}
             >
               My Tracks
-              {!isPro && <Lock size={12} className="opacity-70" />}
+              {!isPro && (
+                <IconFrame
+                  icon={Lock}
+                  variant="inline"
+                  tone="zinc"
+                  decorative
+                  className="opacity-70"
+                />
+              )}
             </button>
           </div>
 
@@ -277,7 +286,12 @@ export default function TracksPage() {
               onClick={() => router.push('/admin/beats')}
               className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg font-medium text-sm hover:bg-red-500/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(248,113,113,0.15)] mr-2"
             >
-              <Settings size={16} />
+              <IconFrame
+                icon={Settings}
+                variant="inline"
+                tone="red"
+                decorative
+              />
               <span>Admin</span>
             </button>
           )}
@@ -293,7 +307,12 @@ export default function TracksPage() {
                 : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
             )}
           >
-            {isPro ? <Plus size={16} /> : <Lock size={16} />}
+            <IconFrame
+              icon={isPro ? Plus : Lock}
+              variant="inline"
+              tone={isPro ? 'white' : 'zinc'}
+              decorative
+            />
             <span>New Beat</span>
           </button>
         </div>
@@ -366,18 +385,26 @@ export default function TracksPage() {
 
         {filteredBeats.length === 0 && !isLoading && activeTab === 'public' && (
           <div className="py-20 text-center space-y-4 opacity-50">
-            <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-              <Music size={32} />
-            </div>
+            <IconFrame
+              icon={Music}
+              variant="hero"
+              tone="zinc"
+              decorative
+              className="mx-auto"
+            />
             <p>No beats available. Pull to refresh.</p>
           </div>
         )}
 
         {filteredBeats.length === 0 && !isLoading && activeTab === 'mine' && (
           <div className="py-20 text-center space-y-4 px-6 opacity-50">
-            <div className="mx-auto w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-              <Music size={32} />
-            </div>
+            <IconFrame
+              icon={Music}
+              variant="hero"
+              tone="zinc"
+              decorative
+              className="mx-auto"
+            />
             <h2 className="text-lg font-bold text-white">
               Capture your own sound.
             </h2>

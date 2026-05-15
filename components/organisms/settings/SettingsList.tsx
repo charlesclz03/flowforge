@@ -16,8 +16,10 @@ import {
   Zap,
   Crown,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 import Image from 'next/image'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { ProtectedLink } from '@/components/atoms/ProtectedLink'
 import { useSession, signOut, signIn } from 'next-auth/react'
 import { usePracticeSession } from '@/contexts/SessionContext'
@@ -123,7 +125,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     color = 'text-zinc-400',
     showChevron = true,
   }: {
-    icon: React.ElementType
+    icon: LucideIcon
     label: string
     href?: string
     onClick?: () => void
@@ -133,10 +135,24 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     const content = (
       <div className="flex w-full items-center justify-between px-5 py-4 transition-all hover:bg-white/5 active:scale-[0.98]">
         <div className="flex items-center gap-4">
-          <Icon size={20} className={color} />
+          <IconFrame
+            icon={Icon}
+            variant="inline"
+            tone="zinc"
+            decorative
+            className={color}
+          />
           <span className="text-sm font-medium text-zinc-200">{label}</span>
         </div>
-        {showChevron && <ChevronRight size={16} className="text-white/20" />}
+        {showChevron && (
+          <IconFrame
+            icon={ChevronRight}
+            variant="inline"
+            tone="white"
+            decorative
+            className="text-white/20"
+          />
+        )}
       </div>
     )
 
@@ -188,7 +204,13 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
-                <User size={24} className="text-white" />
+                <IconFrame
+                  icon={User}
+                  variant="inline"
+                  tone="white"
+                  decorative
+                  iconClassName="h-6 w-6"
+                />
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -213,11 +235,11 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 </span>
                 {isPro ? (
                   <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-accent-purple/30 to-accent-pink/30 text-[10px] font-bold uppercase tracking-wider text-accent-purple border border-accent-purple/20 flex items-center gap-1">
-                    <Crown size={10} fill="currentColor" /> Pro
+                    <Crown size={10} fill="currentColor" strokeWidth={2} /> Pro
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-accent-yellow border border-white/10 flex items-center gap-1">
-                    <Zap size={10} fill="currentColor" /> Free
+                    <Zap size={10} fill="currentColor" strokeWidth={2} /> Free
                   </span>
                 )}
               </div>
@@ -269,12 +291,16 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               isStudioOpen && 'bg-accent-purple/20 text-accent-purple'
             )}
           >
-            <ChevronDown
-              size={14}
+            <IconFrame
+              icon={ChevronDown}
+              variant="inline"
+              tone={isStudioOpen ? 'purple' : 'zinc'}
+              decorative
               className={cn(
                 'transition-transform duration-300',
                 isStudioOpen && 'rotate-180'
               )}
+              iconClassName="h-3.5 w-3.5"
             />
           </div>
         </button>
@@ -288,7 +314,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           {/* TTS Toggle */}
           <div className="flex items-center justify-between px-5 py-4">
             <div className="flex items-center gap-4">
-              <Mic size={20} className="text-accent-orange" />
+              <IconFrame icon={Mic} variant="action" tone="orange" decorative />
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-zinc-200">
                   Voice Prompts
@@ -343,7 +369,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           {/* Studio FX Toggle */}
           <div className="flex items-center justify-between px-5 py-4">
             <div className="flex items-center gap-4">
-              <Zap size={20} className="text-accent-cyan" />
+              <IconFrame icon={Zap} variant="action" tone="blue" decorative />
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-zinc-200">
                   Studio FX
@@ -393,7 +419,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                   <span>{Math.round(beatVolume * 100)}%</span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <Volume2 size={16} className="text-accent-cyan" />
+                  <IconFrame
+                    icon={Volume2}
+                    variant="inline"
+                    tone="blue"
+                    decorative
+                  />
                   <input
                     type="range"
                     min="0"
@@ -417,7 +448,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                     <span>{Math.round(ttsVolume * 100)}%</span>
                   </div>
                   <div className="flex items-center gap-4">
-                    <Volume2 size={16} className="text-accent-orange" />
+                    <IconFrame
+                      icon={Volume2}
+                      variant="inline"
+                      tone="orange"
+                      decorative
+                    />
                     <input
                       type="range"
                       min="0"
@@ -445,7 +481,13 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
               }}
               className="w-full flex items-center gap-4 px-5 py-3 text-xs font-medium text-accent-purple bg-accent-purple/5 hover:bg-accent-purple/10 transition-colors"
             >
-              <Mic size={14} />
+              <IconFrame
+                icon={Mic}
+                variant="inline"
+                tone="purple"
+                decorative
+                iconClassName="h-3.5 w-3.5"
+              />
               Test Voice Generation (Admin)
             </button>
           )}
@@ -480,7 +522,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             className="col-span-2 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <div className="flex items-center gap-2">
-              <Mic size={16} className="text-accent-blue" />
+              <IconFrame icon={Mic} variant="inline" tone="blue" decorative />
               <span className="text-xs font-bold text-white">
                 Contact Support
               </span>
@@ -493,7 +535,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <FileText size={20} className="text-accent-pink" />
+            <IconFrame
+              icon={FileText}
+              variant="action"
+              tone="purple"
+              decorative
+            />
             <span className="text-xs font-medium text-zinc-300">
               Patch Notes
             </span>
@@ -505,7 +552,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <Bug size={20} className="text-accent-red" />
+            <IconFrame icon={Bug} variant="action" tone="red" decorative />
             <span className="text-xs font-medium text-zinc-300">
               Report Bug
             </span>
@@ -517,7 +564,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <Scale size={18} className="text-zinc-500" />
+            <IconFrame icon={Scale} variant="action" tone="zinc" decorative />
             <span className="text-xs font-medium text-zinc-400">Terms</span>
           </ProtectedLink>
 
@@ -527,7 +574,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             onClick={handleLinkClick}
             className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
-            <Shield size={18} className="text-zinc-500" />
+            <IconFrame icon={Shield} variant="action" tone="zinc" decorative />
             <span className="text-xs font-medium text-zinc-400">Privacy</span>
           </ProtectedLink>
         </div>
@@ -540,7 +587,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             onClick={() => signOut({ callbackUrl: '/' })}
             className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 font-medium hover:bg-red-950/30 hover:text-red-400 hover:border-red-900/50 transition-all active:scale-[0.98]"
           >
-            <LogOut size={18} />
+            <IconFrame icon={LogOut} variant="inline" tone="zinc" decorative />
             Sign Out
           </button>
         ) : (
@@ -552,12 +599,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             }
             className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-blue text-white font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
           >
-            <LogIn size={18} />
+            <IconFrame icon={LogIn} variant="inline" tone="white" decorative />
             Sign In
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.0.9</p>
+          <p className="ml-2 text-xs text-white/20">v1.1.0</p>
         </div>
       </div>
       <SupportModal

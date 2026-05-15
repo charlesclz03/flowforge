@@ -22,6 +22,30 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.0',
+    date: '2026-05-15',
+    title: 'Audit Visual Closure',
+    codename: 'Visual Closure',
+    type: 'minor',
+    description:
+      'Closed the remaining v1.0.9 visual audit follow-up with a shared icon treatment, measured landing-card readability validation, and a cleaner Practice START halo.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Icon Standard**: Added a shared `IconFrame` treatment and migrated high-traffic header, onboarding, download, Beat Vault, recordings, settings, and profile surfaces toward consistent Lucide sizing, frames, tones, and stroke defaults.',
+          '**Practice START Halo**: Moved the decorative START-button glow outside the clipped visualizer circle and softened the text-only shadow so the call-to-action reads more balanced on mobile and desktop.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Landing Readability Evidence**: Re-verified `/howitworks` feature-card typography on mobile and kept the current 18px headings, 14px body copy, 20px body line-height, and no-overflow baseline intact.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.9',
     date: '2026-05-15',
     title: 'Audit Funnel Polish',

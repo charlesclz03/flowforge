@@ -11,6 +11,7 @@ import {
   Trash2,
   ArrowRight,
 } from 'lucide-react'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useMemo } from 'react'
@@ -94,7 +95,13 @@ export function BeatGridCard({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Music className="w-12 h-12 text-white/50" />
+            <IconFrame
+              icon={Music}
+              variant="hero"
+              tone="white"
+              decorative
+              className="border-white/10 bg-black/20 text-white/50"
+            />
           </div>
         )}
 
@@ -117,7 +124,13 @@ export function BeatGridCard({
               className="flex flex-col items-center justify-center text-white/70 gap-2 hover:text-accent-purple hover:scale-105 transition-all cursor-pointer min-h-[44px] min-w-[44px] p-2"
               aria-label="Tap to unlock premium content"
             >
-              <Lock size={24} />
+              <IconFrame
+                icon={Lock}
+                variant="action"
+                tone="white"
+                decorative
+                className="bg-white/10"
+              />
               <span className="text-[10px] font-medium uppercase tracking-wider">
                 Tap to Unlock
               </span>
@@ -178,7 +191,7 @@ export function BeatGridCard({
                   title="Use this track"
                   aria-label="Use this track"
                 >
-                  <ArrowRight size={28} strokeWidth={3} />
+                  <ArrowRight size={24} strokeWidth={2} />
                 </button>
               )}
             </>
@@ -188,7 +201,7 @@ export function BeatGridCard({
         {/* Premium Badge */}
         {beat.isPremium && (
           <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] font-medium text-accent-orange backdrop-blur-md border border-accent-orange/20">
-            <Crown size={10} />
+            <Crown size={10} strokeWidth={2} />
             {isLocked ? <span>PREMIUM</span> : <span>PRO</span>}
           </div>
         )}
@@ -224,7 +237,12 @@ export function BeatGridCard({
                 title="Delete Beat"
                 aria-label="Delete Beat"
               >
-                <Trash2 size={16} />
+                <IconFrame
+                  icon={Trash2}
+                  variant="inline"
+                  tone="zinc"
+                  decorative
+                />
               </button>
             )}
 

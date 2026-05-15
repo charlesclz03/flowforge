@@ -8,6 +8,7 @@ import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
 import { ProtectedLink } from '@/components/atoms/ProtectedLink'
+import { IconFrame } from '@/components/atoms/IconFrame'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { isProUser } from '@/lib/subscription/isPro'
 import { cn } from '@/lib/utils'
@@ -82,11 +83,14 @@ export function AppHeader({
             {!action && showSettings && (
               <ProtectedLink
                 href="/howitworks"
-                className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-accent-purple/30 bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20 transition-all active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl transition-all active:scale-95 hover:brightness-125"
                 aria-label="How it works"
               >
-                <HelpCircle
-                  className="w-5 h-5 sm:w-6 sm:h-6"
+                <IconFrame
+                  icon={HelpCircle}
+                  variant="action"
+                  tone="purple"
+                  decorative
                   strokeWidth={2.5}
                 />
               </ProtectedLink>
@@ -177,7 +181,12 @@ export function AppHeader({
                             : 'border-accent-purple/40 bg-accent-purple text-white shadow-[0_0_18px_rgba(125,122,255,0.25)] hover:bg-accent-purple/90 hover:shadow-[0_0_24px_rgba(125,122,255,0.35)]'
                         )}
                       >
-                        <Crown size={14} aria-hidden="true" />
+                        <IconFrame
+                          icon={Crown}
+                          variant="inline"
+                          tone={isPro ? 'gold' : 'white'}
+                          decorative
+                        />
                         <span>{isPro ? tierLabel : 'Get Pro'}</span>
                       </ProtectedLink>
                     )}

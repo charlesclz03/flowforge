@@ -243,6 +243,13 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
             {/* Hero Player - Centered */}
             <div className="relative flex items-center justify-center shrink-0 pointer-events-auto">
+              <div
+                aria-hidden="true"
+                className={cn(
+                  'absolute inset-0 z-0 rounded-full border border-accent-purple/10 shadow-[0_0_0_20px_rgba(125,122,255,0.24),0_0_50px_26px_rgba(125,122,255,0.34)] transition-opacity duration-700',
+                  isPlaying ? 'opacity-60' : 'opacity-95'
+                )}
+              />
               {/* Simon Ring (Cypher Mode) - Outer Edge */}
               {mode === 'cypher' && isPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
@@ -394,7 +401,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 }}
                 disabled={isLoading}
                 className={cn(
-                  'relative flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
+                  'relative z-10 flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
                   // Responsive size: Big Red Button with Safety Constraints
                   // Caps width and height to 45% of viewport height to prevent crop on short screens
                   'w-[min(65vmin,320px,45vh)] h-[min(65vmin,320px,45vh)] sm:w-[340px] sm:h-[340px] max-w-[calc(100vw-7rem)] max-h-[calc(100vw-7rem)]',
@@ -620,7 +627,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                           repeat: Infinity,
                           ease: 'easeInOut',
                         }}
-                        className="text-5xl sm:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/70 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] uppercase"
+                        className="text-5xl sm:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/70 drop-shadow-[0_0_18px_rgba(255,255,255,0.22)] uppercase"
                       >
                         START
                       </motion.span>

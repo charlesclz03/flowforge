@@ -1,14 +1,14 @@
 # MCP Matrix
 
-**Current Version**: `1.0.9`
-**Last Updated**: 2026-03-24
+**Current Version**: `1.1.0`
+**Last Updated**: 2026-05-15
 
 ## Server Status
 
-| Server | Status | Last Audit | Notes |
-| --- | --- | --- | --- |
-| `chrome-devtools` | OK | 2026-02-13 | Browser automation and visual verification available |
-| `supabase-mcp-server` | OK | 2026-02-13 | Supabase admin/docs/query operations available |
+| Server                | Status | Last Audit | Notes                                                |
+| --------------------- | ------ | ---------- | ---------------------------------------------------- |
+| `chrome-devtools`     | OK     | 2026-02-13 | Browser automation and visual verification available |
+| `supabase-mcp-server` | OK     | 2026-02-13 | Supabase admin/docs/query operations available       |
 
 ## Required Usage Policy
 
@@ -17,9 +17,9 @@
 
 ## Recent History
 
-| Date | Server | Status | Notes |
-| --- | --- | --- | --- |
-| 2026-02-13 | `chrome-devtools` | PASS | Used for local verification workflows |
-| 2026-02-13 | `supabase-mcp-server` | PASS | Used for migration/docs verification |
-| 2026-02-08 | `chrome-devtools` | PASS | Release-hardening checks |
-| 2026-02-08 | `supabase-mcp-server` | PASS | Release-hardening checks |
+| Date       | Server                | Status | Notes                                 |
+| ---------- | --------------------- | ------ | ------------------------------------- |
+| 2026-02-13 | `chrome-devtools`     | PASS   | Used for local verification workflows |
+| 2026-02-13 | `supabase-mcp-server` | PASS   | Used for migration/docs verification  |
+| 2026-02-08 | `chrome-devtools`     | PASS   | Release-hardening checks              |
+| 2026-02-08 | `supabase-mcp-server` | PASS   | Release-hardening checks              |

@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { Card } from '@/components/atoms/Card'
+import { IconFrame } from '@/components/atoms/IconFrame'
 
 import { Edit2 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
@@ -63,7 +64,7 @@ export function AccountInfo({ user, rank, onEdit }: AccountInfoProps) {
               onClick={onEdit}
               className="text-text-secondary hover:text-white"
             >
-              <Edit2 size={16} />
+              <IconFrame icon={Edit2} variant="inline" tone="zinc" decorative />
             </Button>
           )}
         </div>

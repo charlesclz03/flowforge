@@ -1,5 +1,11 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.0 - Audit Visual Closure (2026-05-15)
+
+- **UI**: Added a shared `IconFrame` treatment and migrated high-traffic header, onboarding, download, Beat Vault, recordings, settings, and profile surfaces toward consistent Lucide icon sizing, framing, tones, and stroke defaults.
+- **PRACTICE**: Moved the START button's decorative halo outside the clipped visualizer circle and softened the text glow so the call-to-action reads more balanced on mobile and desktop.
+- **AUDIT**: Re-verified `/howitworks` feature-card typography on mobile and preserved the readable 18px heading / 14px body / 20px line-height baseline with no overflow.
+
 ## v1.0.9 - Audit Funnel Polish (2026-05-15)
 
 - **FUNNEL**: Added `/pricing` with Free/Pro plan cards, signed-in Stripe upgrade actions, and guest sign-in guidance.
