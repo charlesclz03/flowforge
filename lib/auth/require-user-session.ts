@@ -9,7 +9,7 @@ import {
 
 export function buildSignInRedirect(callbackPath: string): string {
   const normalized = normalizeInternalPath(callbackPath) || '/'
-  return `/?callbackUrl=${encodeURIComponent(normalized)}`
+  return `/login?callbackUrl=${encodeURIComponent(normalized)}`
 }
 
 export async function requireUserSession(callbackPath: string) {

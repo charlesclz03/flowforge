@@ -22,6 +22,36 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.0.9',
+    date: '2026-05-15',
+    title: 'Audit Funnel Polish',
+    codename: 'Funnel Polish',
+    type: 'patch',
+    description:
+      'Resolved the highest-impact audit polish buckets across auth, pricing, install messaging, premium gating, mobile layout, and accessibility clarity.',
+    changes: [
+      {
+        category: 'New Features',
+        items: [
+          '**Pricing Page**: Added `/pricing` with the existing Free/Pro plan logic and direct Stripe upgrade actions for signed-in users.',
+          '**Google Auth Entry Pages**: Added `/login` and `/signup` as lightweight Google sign-in routes with callback preservation and a guest practice fallback.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Protected Route Redirects**: Guests opening guarded pages now land on `/login?callbackUrl=...` instead of being silently routed through onboarding.',
+          '**Premium Upgrade Path**: Locked premium beat and recording prompts now show guest sign-in/pricing actions and authenticated Stripe checkout actions.',
+          '**Download Accuracy**: `/download` now describes Google Play for Android, Safari home-screen install for iOS, and browser launch for desktop without implying missing binaries.',
+          '**Onboarding Progress Layout**: Onboarding progress dots now sit in the page flow so they no longer cover mobile copy or CTAs.',
+          '**Beat Vault Polish**: Locked My Tracks/New Beat controls, loading states, practice chips, achievement text, slider labels, recording toggle, focus states, and low-contrast text tokens were tightened for readability.',
+          '**Header Tier CTA**: Added a compact tier-aware header action so Free/guest users see `Get Pro` and Pro/SUPERADMIN users see their current tier state.',
+          '**PWA Install Metadata**: Added missing mobile web app capability meta tags for install-friendly surfaces.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.0.8',
     date: '2026-05-15',
     title: 'Prompt Engine Forever Fix',

@@ -10,6 +10,7 @@ interface SignInButtonProps {
   children?: React.ReactNode
   callbackUrl?: string
   mode?: 'full' | 'icon' | 'link'
+  ariaLabel?: string
 }
 
 function SignInButtonContent({
@@ -17,6 +18,7 @@ function SignInButtonContent({
   children,
   callbackUrl,
   mode = 'full',
+  ariaLabel,
 }: SignInButtonProps) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -46,7 +48,12 @@ function SignInButtonContent({
   const showText = mode === 'full' || mode === 'link'
 
   return (
-    <button onClick={handleSignIn} className={`${baseClasses} ${className}`}>
+    <button
+      type="button"
+      onClick={handleSignIn}
+      aria-label={ariaLabel || 'Continue with Google'}
+      className={`${baseClasses} ${className}`}
+    >
       <svg className="h-5 w-5" viewBox="0 0 24 24">
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -75,7 +82,9 @@ export function SignInButton(props: SignInButtonProps) {
     <Suspense
       fallback={
         <button
+          type="button"
           disabled
+          aria-label={props.ariaLabel || 'Continue with Google'}
           className={`inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm opacity-50 ${props.className}`}
         >
           {props.children || 'Sign in with Google'}

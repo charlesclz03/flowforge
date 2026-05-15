@@ -210,7 +210,7 @@ export function AchievementsDisplay() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {filteredAchievements.map((ach) => {
             // Ring Color based on points/tier
             const tierColor =
@@ -240,10 +240,10 @@ export function AchievementsDisplay() {
                 key={ach.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center gap-2 group cursor-pointer relative"
+                whileHover={{ scale: 1.02 }}
+                className="group relative flex min-h-[220px] flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center"
               >
-                <div className="relative w-24 h-24 flex items-center justify-center">
+                <div className="relative flex h-20 w-20 items-center justify-center">
                   {/* Ring SVG */}
                   <svg
                     className="absolute inset-0 w-full h-full rotate-[-90deg]"
@@ -281,18 +281,18 @@ export function AchievementsDisplay() {
                   {/* Icon */}
                   <div
                     className={cn(
-                      'w-14 h-14 rounded-full flex items-center justify-center z-10 transition-colors bg-[#121212] border-4 border-background',
+                      'w-12 h-12 rounded-full flex items-center justify-center z-10 transition-colors bg-[#121212] border-4 border-background',
                       ach.isUnlocked ? 'text-white' : 'text-white/20 grayscale'
                     )}
                   >
                     {ach.isUnlocked ? (
                       <Trophy
-                        size={24}
+                        size={22}
                         color={tierColor}
                         className="drop-shadow-glow"
                       />
                     ) : (
-                      <Lock size={20} />
+                      <Lock size={18} />
                     )}
                   </div>
 
@@ -302,22 +302,22 @@ export function AchievementsDisplay() {
                   )}
                 </div>
 
-                <div className="text-center z-20 max-w-[100px]">
+                <div className="z-20 flex w-full flex-1 flex-col items-center text-center">
                   <div
                     className={cn(
-                      'text-xs font-bold leading-tight',
+                      'text-sm font-bold leading-tight',
                       ach.isUnlocked ? 'text-white' : 'text-text-tertiary'
                     )}
                   >
                     {ach.name}
                   </div>
-                  <div className="text-[10px] text-text-tertiary mt-0.5 font-mono">
+                  <div className="mt-1 text-[10px] font-mono text-text-tertiary">
                     {ach.points} pts
                   </div>
                   {/* Description always visible */}
                   <div
                     className={cn(
-                      'text-[9px] mt-1 leading-tight line-clamp-2',
+                      'mt-2 min-h-[44px] text-[11px] leading-snug',
                       ach.isUnlocked
                         ? 'text-text-secondary'
                         : 'text-text-tertiary/70'
@@ -327,7 +327,7 @@ export function AchievementsDisplay() {
                   </div>
                   {/* Progress indicator for locked achievements */}
                   {!ach.isUnlocked && ach.progressTarget && (
-                    <div className="text-[10px] mt-1 font-mono font-bold text-accent-purple">
+                    <div className="mt-auto pt-2 text-[10px] font-mono font-bold text-accent-purple">
                       {ach.progressCurrent}/{ach.progressTarget}
                     </div>
                   )}

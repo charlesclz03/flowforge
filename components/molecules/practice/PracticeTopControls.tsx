@@ -112,8 +112,9 @@ export function PracticeTopControls({
           data-testid="practice-difficulty-pill"
           onClick={cycleDifficulty}
           disabled={!handleDifficultyChange}
+          aria-label={`Difficulty: ${difficultyMeta.label}. Tap to change.`}
           className={cn(
-            'flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+            'flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
             difficultyMeta.classes,
             !handleDifficultyChange && 'cursor-default'
           )}
@@ -137,9 +138,12 @@ export function PracticeTopControls({
         </button>
 
         {/* Mode Pill */}
-        <div className="flex-[1.5] h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10">
+        <div
+          aria-label={`Current mode: ${mode}`}
+          className="flex-[1.5] h-12 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-sm flex items-center justify-center gap-2 text-text-secondary"
+        >
           <User size={14} className="text-white/60" />
-          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80">
+          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/70">
             {mode}
           </span>
         </div>
@@ -149,8 +153,9 @@ export function PracticeTopControls({
           data-testid="practice-frequency-pill"
           onClick={cycleFrequency}
           disabled={!handleFrequencyChange}
+          aria-label={`Word frequency: every ${displayFrequency} bars. Tap to change.`}
           className={cn(
-            'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10',
+            'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
             !handleFrequencyChange && 'cursor-default opacity-50'
           )}
           title={

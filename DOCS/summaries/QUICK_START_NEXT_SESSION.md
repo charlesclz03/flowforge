@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.0.8`
+**Current Version**: `1.0.9`
 **Last Updated**: 2026-05-15
 
 ## Bootstrap (Windows-safe)

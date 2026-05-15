@@ -3,12 +3,14 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, Flame, HelpCircle } from 'lucide-react'
+import { ArrowLeft, Crown, Flame, HelpCircle } from 'lucide-react'
 import { Container } from '@/components/atoms/Container'
 import { SettingsDropdown } from '@/components/organisms/settings/SettingsDropdown'
 import { DailyStreakWidget } from '@/components/molecules/gamification/DailyStreakWidget'
 import { ProtectedLink } from '@/components/atoms/ProtectedLink'
 import { usePracticeSession } from '@/contexts/SessionContext'
+import { isProUser } from '@/lib/subscription/isPro'
+import { cn } from '@/lib/utils'
 
 // Interface for the global app header
 interface AppHeaderProps {
@@ -37,6 +39,9 @@ export function AppHeader({
   const router = useRouter()
   const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
+  const isPro = isProUser(session?.user)
+  const showTierCta = status !== 'loading'
+  const tierLabel = session?.user?.role === 'SUPERADMIN' ? 'Admin' : 'Pro'
 
   // Link to howitworks for logged-in users, landing for guests
   const homeLink = isAuthenticated ? '/howitworks' : '/'
@@ -156,6 +161,26 @@ export function AppHeader({
                           </div>
                         </div>
                       )}
+                    {showTierCta && (
+                      <ProtectedLink
+                        href={isPro ? '/profile' : '/pricing'}
+                        aria-label={
+                          isPro
+                            ? `Current tier: ${tierLabel}. Open account.`
+                            : 'Get Pro pricing'
+                        }
+                        className={cn(
+                          'inline-flex h-10 min-w-[72px] items-center justify-center gap-1.5 rounded-full border px-3 text-[11px] font-bold uppercase tracking-wide transition-all active:scale-95 sm:h-11 sm:min-w-[88px] sm:px-4 sm:text-xs',
+                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                          isPro
+                            ? 'border-accent-gold/30 bg-accent-gold/10 text-accent-gold hover:bg-accent-gold/15'
+                            : 'border-accent-purple/40 bg-accent-purple text-white shadow-[0_0_18px_rgba(125,122,255,0.25)] hover:bg-accent-purple/90 hover:shadow-[0_0_24px_rgba(125,122,255,0.35)]'
+                        )}
+                      >
+                        <Crown size={14} aria-hidden="true" />
+                        <span>{isPro ? tierLabel : 'Get Pro'}</span>
+                      </ProtectedLink>
+                    )}
                     <SettingsDropdown />
                   </>
                 )}

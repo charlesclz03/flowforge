@@ -1,5 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v1.0.9 - Audit Funnel Polish (2026-05-15)
+
+- **FUNNEL**: Added `/pricing` with Free/Pro plan cards, signed-in Stripe upgrade actions, and guest sign-in guidance.
+- **AUTH**: Added `/login` and `/signup` Google-auth entry pages with callback preservation and a guest fallback to Skill Check.
+- **AUTH**: Protected routes now send guests to `/login?callbackUrl=...` instead of silently bouncing through onboarding.
+- **MONETIZATION**: Locked premium prompts now distinguish guests from authenticated users, offering sign-in/pricing to guests and direct checkout to signed-in non-Pro users.
+- **DOWNLOAD**: `/download` now uses truthful platform-specific copy for Android Google Play, iOS Safari home-screen install, and desktop browser launch.
+- **LAYOUT**: Onboarding progress dots now render in-flow so mobile content and CTAs are not covered.
+- **UI**: Bottom nav, Beat Vault locked controls, loading skeletons, achievement descriptions, sliders, practice chips, disabled Skill Check CTA, and the recording toggle received the audit polish pass.
+- **MONETIZATION**: The shared app header now shows a compact tier-aware action: `Get Pro` for Free/guest users and the current Pro/admin tier state for upgraded accounts.
+- **ACCESSIBILITY**: Raised low-contrast text tokens, added/fixed aria labels on touched controls, preserved visible focus states, and added mobile PWA capability meta tags.
+
 ## v1.0.8 - Prompt Engine Forever Fix (2026-05-15)
 
 - **PROMPTS**: Practice now prebuilds a no-repeat session queue, keeps anti-rhyme as an ordering rule instead of a repeat fallback, and never clears used words mid-session.

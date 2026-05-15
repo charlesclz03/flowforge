@@ -1,6 +1,6 @@
 # Android Deployment Guide (TWA)
 
-**Current Version**: `1.0.8`
+**Current Version**: `1.0.9`
 **Last Updated**: 2026-03-24
 
 This is the canonical Android/TWA deployment reference.
@@ -36,5 +36,6 @@ This is the canonical Android/TWA deployment reference.
 ## Release Notes
 
 For Android-related product changes, record updates in:
+
 - `DOCS/reference/PATCH_NOTES_MASTER.md`
 - `DOCS/project/PROJECT_STATUS.md`

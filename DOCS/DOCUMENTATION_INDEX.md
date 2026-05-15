@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Current Canonical Version**: `1.0.8`
+**Current Canonical Version**: `1.0.9`
 **Last Updated**: 2026-05-15
 
 ## Start Here
@@ -49,9 +49,11 @@
 ## Archive
 
 Historical docs are stored at:
+
 - `ARCHIVE/`
 
 Original legacy paths are intentionally preserved as stubs that contain:
+
 - canonical replacement link
 - archive snapshot link
 

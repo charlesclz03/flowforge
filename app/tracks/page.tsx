@@ -244,21 +244,28 @@ export default function TracksPage() {
           <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
             <button
               onClick={() => handleTabChange('public')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center ${
+              className={cn(
+                'px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                 activeTab === 'public'
                   ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
                   : 'text-text-tertiary hover:text-white'
-              }`}
+              )}
             >
               Public Tracks
             </button>
             <button
               onClick={() => handleTabChange('mine')}
-              className={`flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              aria-label={
+                isPro ? 'Show my tracks' : 'My Tracks requires FreeStyla Pro'
+              }
+              className={cn(
+                'flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                 activeTab === 'mine'
                   ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
-                  : 'text-text-tertiary hover:text-white'
-              }`}
+                  : isPro
+                    ? 'text-text-tertiary hover:text-white'
+                    : 'border border-white/10 bg-white/[0.03] text-text-secondary hover:border-accent-purple/40 hover:text-white'
+              )}
             >
               My Tracks
               {!isPro && <Lock size={12} className="opacity-70" />}
@@ -276,7 +283,15 @@ export default function TracksPage() {
           )}
           <button
             onClick={handleNewBeatClick}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-purple text-white border border-accent-purple rounded-lg font-medium text-sm hover:bg-accent-purple/90 hover:scale-105 transition-all shadow-[0_0_15px_rgba(125,122,255,0.3)]"
+            aria-label={
+              isPro ? 'Upload a new beat' : 'New Beat requires FreeStyla Pro'
+            }
+            className={cn(
+              'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+              isPro
+                ? 'bg-accent-purple text-white border border-accent-purple hover:bg-accent-purple/90 hover:scale-105 shadow-[0_0_15px_rgba(125,122,255,0.3)]'
+                : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
+            )}
           >
             {isPro ? <Plus size={16} /> : <Lock size={16} />}
             <span>New Beat</span>
@@ -304,13 +319,21 @@ export default function TracksPage() {
         )}
 
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="aspect-square rounded-2xl bg-white/5 animate-pulse"
-              />
-            ))}
+          <div className="space-y-3" role="status" aria-live="polite">
+            <p className="text-sm font-medium text-text-secondary">
+              Loading Beat Vault...
+            </p>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="aspect-square rounded-2xl border border-white/10 bg-white/[0.04] p-4"
+                >
+                  <div className="h-full animate-pulse rounded-xl bg-white/[0.06]" />
+                  <div className="mt-3 h-3 w-2/3 animate-pulse rounded-full bg-white/10" />
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

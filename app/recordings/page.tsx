@@ -54,7 +54,7 @@ export default function RecordingsPage() {
   // Handle unauthenticated redirect
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/')
+      router.replace('/login?callbackUrl=%2Frecordings')
     }
   }, [status, router])
 

@@ -489,7 +489,7 @@ export function DifficultySelectionClient({
             className={`rounded-full px-10 py-4 text-lg ${
               canStart
                 ? 'bg-gradient-to-r from-accent-purple to-accent-purple/80 text-black shadow-purple hover:scale-105 hover:shadow-glow'
-                : 'bg-white/10 text-text-secondary cursor-not-allowed'
+                : 'border border-white/15 bg-white/10 text-white cursor-not-allowed disabled:opacity-100'
             }`}
             disabled={!canStart}
             onClick={() => {

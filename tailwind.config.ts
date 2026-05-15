@@ -18,9 +18,9 @@ const config: Config = {
         },
         text: {
           primary: '#FFFFFF',
-          secondary: '#8E8E93',
-          tertiary: '#48484A',
-          muted: '#3A3A3C',
+          secondary: '#A1A1AA',
+          tertiary: '#8E8E93',
+          muted: '#636366',
         },
         accent: {
           purple: '#7D7AFF', // Primary accent color

@@ -22,17 +22,19 @@ export function OnboardingProgress({ className }: { className?: string }) {
   )
 
   return (
-    <div
+    <nav
+      aria-label="Onboarding progress"
       className={cn(
-        'fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center space-x-2',
+        'flex items-center justify-center space-x-2 py-6',
         className
       )}
     >
       {steps.map((index) => {
         const isActive = index === activeStep
         return (
-          <div
+          <span
             key={index}
+            aria-label={`Step ${index + 1}${isActive ? ', current step' : ''}`}
             className={cn(
               'h-2 rounded-full transition-all duration-300',
               isActive ? 'w-8 bg-accent-purple' : 'w-2 bg-white/20'
@@ -40,6 +42,6 @@ export function OnboardingProgress({ className }: { className?: string }) {
           />
         )
       })}
-    </div>
+    </nav>
   )
 }

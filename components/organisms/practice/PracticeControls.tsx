@@ -684,41 +684,38 @@ export default function PracticeControls(props: PracticeControlsProps) {
             }
           }}
           className={cn(
-            'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative',
+            'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
             !isRecordingEnabled && 'grayscale opacity-60'
           )}
           aria-label={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
-          <div className="flex items-center gap-2 px-6 py-2">
-            {/* Left Bracket */}
-            <div className="w-2.5 h-10 border-l-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-l-sm" />
-
-            <div className="flex items-center gap-3 mx-1">
-              {/* Dot */}
+          <div
+            className={cn(
+              'flex items-center gap-3 rounded-full border px-5 py-3 shadow-lg backdrop-blur-md transition-colors',
+              isPro && isRecordingEnabled
+                ? 'border-red-500/30 bg-red-500/10 text-white'
+                : 'border-white/10 bg-white/5 text-text-tertiary'
+            )}
+          >
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-black/30">
               <div
                 className={cn(
-                  'h-6 w-6 rounded-full transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]',
-                  // Base State
-                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-gray-700',
-                  // Active State - Only Pulse Red if Pro
+                  'h-3.5 w-3.5 rounded-full transition-colors',
+                  isPro && isRecordingEnabled ? 'bg-red-500' : 'bg-gray-600',
                   isRecording && isPro
-                    ? 'animate-pulse bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.8)]'
+                    ? 'animate-pulse shadow-[0_0_20px_rgba(255,0,0,0.8)]'
                     : ''
                 )}
               />
-              {/* Text */}
-              <span
-                className={cn(
-                  'text-3xl font-black tracking-tighter drop-shadow-lg transition-colors',
-                  isPro ? 'text-white/90' : 'text-white/30'
-                )}
-              >
-                REC
-              </span>
             </div>
-
-            {/* Right Bracket */}
-            <div className="w-2.5 h-10 border-r-[3px] border-t-[3px] border-b-[3px] border-white/40 rounded-r-sm" />
+            <span
+              className={cn(
+                'text-sm font-bold uppercase tracking-[0.18em] transition-colors',
+                isPro ? 'text-white' : 'text-white/45'
+              )}
+            >
+              Record
+            </span>
           </div>
         </button>
       </div>

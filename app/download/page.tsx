@@ -13,6 +13,16 @@ export default function DownloadPage() {
   const { isAndroid, isIOS, isDesktop } = useDevice()
   const [showIOSInstallGuide, setShowIOSInstallGuide] = useState(false)
   const hasTrackedViewRef = useRef(false)
+  const platformTitle = isAndroid
+    ? 'Get FreeStyla on Android'
+    : isIOS
+      ? 'Install FreeStyla on iPhone'
+      : 'Practice in your browser'
+  const platformDescription = isAndroid
+    ? 'Install the Android app from Google Play for the best mobile practice experience.'
+    : isIOS
+      ? 'FreeStyla installs as a Safari home-screen app. No App Store download is required.'
+      : 'Launch the web app instantly on desktop. There is no desktop binary to download.'
 
   useEffect(() => {
     if (hasTrackedViewRef.current) return
@@ -35,12 +45,11 @@ export default function DownloadPage() {
         </div>
 
         <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter sm:text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
-          Start Your Practice
+          {platformTitle}
         </h1>
 
         <p className="mb-12 max-w-lg text-lg text-text-secondary">
-          Download FreeStyla to get the best experience with offline mode,
-          better performance, and zero latency.
+          {platformDescription}
         </p>
 
         <div className="mb-16 w-full max-w-sm space-y-4">
@@ -112,7 +121,7 @@ export default function DownloadPage() {
                 <Button
                   variant="primary"
                   size="xl"
-                  className="w-full bg-gradient-to-r from-accent-purple to-accent-pink text-black font-bold shadow-lg shadow-purple-500/20 hover:scale-105"
+                  className="w-full bg-white text-black font-bold shadow-lg shadow-purple-500/20 hover:scale-105 hover:bg-white/90"
                 >
                   <Laptop className="mr-2 h-6 w-6" />
                   Launch Web App

@@ -21,12 +21,18 @@ export function BottomNav() {
   const isPublicEntryRoute =
     pathname === '/' ||
     pathname === '/howitworks' ||
+    pathname === '/pricing' ||
+    pathname === '/login' ||
+    pathname === '/signup' ||
     pathname === '/complete-profile' ||
     pathname === '/auth/continue'
   const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
   const { bump } = useHaptics()
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const [loginPrompt, setLoginPrompt] = useState<{
+    name: string
+    href: string
+  } | null>(null)
   // Navigation guard logic is now handled by SessionContext via attemptNavigation
 
   // Use the session context to check if a session is currently active
@@ -101,7 +107,7 @@ export function BottomNav() {
     // 2. Check Authentication
     if (tab.requiresAuth && !isAuthenticated) {
       e.preventDefault()
-      setShowLoginPrompt(true)
+      setLoginPrompt({ name: tab.name, href: tab.href })
       return
     }
 
@@ -137,6 +143,7 @@ export function BottomNav() {
                 href={tab.href}
                 onClick={(e) => handleTabClick(e, tab)}
                 aria-label={tab.name}
+                aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'relative flex flex-col items-center justify-center transition-all duration-300 group h-full'
                 )}
@@ -154,7 +161,12 @@ export function BottomNav() {
                   className={cn(
                     'relative flex items-center justify-center transition-all duration-300',
                     isPrimary
-                      ? 'w-14 h-14 rounded-full border-2 border-accent-purple bg-transparent shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+                      ? cn(
+                          'w-14 h-14 rounded-full border-2',
+                          isActive
+                            ? 'border-accent-purple bg-accent-purple/10 shadow-[0_0_15px_rgba(168,85,247,0.35)]'
+                            : 'border-white/10 bg-white/[0.03] opacity-80 group-hover:border-white/20 group-hover:opacity-100'
+                        )
                       : cn(
                           'w-12 h-12 rounded-full',
                           isActive
@@ -199,27 +211,27 @@ export function BottomNav() {
       </nav>
 
       {/* Login Prompt Modal */}
-      {showLoginPrompt && (
+      {loginPrompt && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={() => setShowLoginPrompt(false)}
+          onClick={() => setLoginPrompt(null)}
         >
           <div
             className="bg-background-elevated border border-white/10 rounded-2xl p-6 max-w-sm mx-4 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold text-white text-center">
-              Sign in to access your profile
+              Sign in to open {loginPrompt.name}
             </h2>
             <p className="text-text-secondary text-center text-sm">
               Create an account to save your sessions, track progress, and
               unlock all features.
             </p>
             <button
+              type="button"
               onClick={() =>
-                // Redirect to profile after login, which will then bounce to /u/[username]
                 signIn('google', {
-                  callbackUrl: buildAuthContinuePath('/profile'),
+                  callbackUrl: buildAuthContinuePath(loginPrompt.href),
                 })
               }
               className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
@@ -245,7 +257,8 @@ export function BottomNav() {
               Continue with Google
             </button>
             <button
-              onClick={() => setShowLoginPrompt(false)}
+              type="button"
+              onClick={() => setLoginPrompt(null)}
               className="w-full py-2 text-text-secondary text-sm hover:text-white transition-colors"
             >
               Maybe later

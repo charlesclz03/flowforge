@@ -1,6 +1,6 @@
 # Testing Plan V3
 
-**Target Release**: `1.0.8`
+**Target Release**: `1.0.9`
 **Last Updated**: 2026-05-15
 
 This is the canonical testing strategy for current releases.
@@ -21,15 +21,15 @@ This is the canonical testing strategy for current releases.
 
 ## Core Functional Smoke Matrix
 
-| Area | Required Checks |
-| --- | --- |
-| Auth | Guest flow, user login, protected route behavior |
-| Practice | Start/pause/resume/end, prompt cadence, difficulty/frequency changes |
-| Beats | Public beat selection, private beat handoff from `/tracks`, cue offset playback |
+| Area       | Required Checks                                                                  |
+| ---------- | -------------------------------------------------------------------------------- |
+| Auth       | Guest flow, user login, protected route behavior                                 |
+| Practice   | Start/pause/resume/end, prompt cadence, difficulty/frequency changes             |
+| Beats      | Public beat selection, private beat handoff from `/tracks`, cue offset playback  |
 | Recordings | Processing label behavior, stats-only behavior, playback/download/share controls |
-| Review | Load session, adjust settings, save changes visibility/persistence |
-| Settings | Latency profiles, save/discard/reset paths |
-| Admin | SUPERADMIN-only privileged routes and actions |
+| Review     | Load session, adjust settings, save changes visibility/persistence               |
+| Settings   | Latency profiles, save/discard/reset paths                                       |
+| Admin      | SUPERADMIN-only privileged routes and actions                                    |
 
 ## Regression Priorities
 

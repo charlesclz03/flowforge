@@ -3,8 +3,11 @@
 import { X, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { PLANS } from '@/lib/stripe'
+import { SignInButton } from '@/components/molecules/auth/SignInButton'
+import { UpgradeButton } from '@/components/molecules/subscription/UpgradeButton'
 
 export interface PremiumModalProps {
   isOpen: boolean
@@ -19,8 +22,9 @@ export function PremiumModal({
   trigger,
   beatCount,
 }: PremiumModalProps) {
-  const router = useRouter()
+  const { data: session } = useSession()
   const [mounted, setMounted] = useState(false)
+  const isAuthenticated = Boolean(session?.user)
 
   useEffect(() => {
     setMounted(true)
@@ -86,7 +90,9 @@ export function PremiumModal({
       <div className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-background-elevated border border-stroke-glow shadow-glow transform transition-all animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
+          type="button"
           onClick={onClose}
+          aria-label="Close upgrade dialog"
           className="absolute top-4 right-4 p-2 text-text-secondary hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10"
         >
           <X size={20} />
@@ -125,19 +131,45 @@ export function PremiumModal({
             ))}
           </div>
 
-          <button
-            onClick={() => {
-              router.push('/profile')
-            }}
-            className="w-full py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-gray-100 transition-transform active:scale-95 shadow-glow"
-          >
-            Get Pro -{' '}
-            {PLANS.monthly.price.toLocaleString('en-US', {
-              style: 'currency',
-              currency: PLANS.monthly.currency,
-            })}
-            /mo
-          </button>
+          {isAuthenticated ? (
+            <div className="grid gap-3">
+              <UpgradeButton
+                plan="monthly"
+                source={`premium_modal_${trigger}`}
+                className="w-full rounded-xl bg-white py-4 text-lg font-bold text-black shadow-glow hover:bg-gray-100"
+              >
+                Get Pro -{' '}
+                {PLANS.monthly.price.toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: PLANS.monthly.currency,
+                })}
+                /mo
+              </UpgradeButton>
+              <UpgradeButton
+                plan="yearly"
+                source={`premium_modal_${trigger}`}
+                className="w-full rounded-xl border border-white/10 bg-white/10 py-3 text-sm font-semibold text-white shadow-none hover:bg-white/15"
+              >
+                Upgrade yearly
+              </UpgradeButton>
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              <SignInButton
+                callbackUrl="/pricing"
+                className="w-full rounded-xl py-4 text-lg font-bold"
+              >
+                Sign in to upgrade
+              </SignInButton>
+              <Link
+                href="/pricing"
+                onClick={onClose}
+                className="inline-flex w-full items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                View pricing
+              </Link>
+            </div>
+          )}
 
           <p className="mt-4 text-center text-xs text-text-tertiary">
             Cancel anytime.

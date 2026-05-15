@@ -68,6 +68,10 @@ export function DifficultySelector({
           background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) ${((value - 1) / 3) * 100}%, rgba(255,255,255,0.1) 100%)`,
         }}
       />
+      <div className="flex items-center justify-between text-xs font-medium text-text-tertiary">
+        <span>Easy</span>
+        <span>Random</span>
+      </div>
     </div>
   )
 }

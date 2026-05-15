@@ -62,8 +62,7 @@ export function OnboardingLayout({
           role="main"
           className={cn(
             'flex flex-1 flex-col px-6 pt-4 sm:pt-6',
-            // Responsive bottom padding - less on small screens
-            'pb-20 sm:pb-24'
+            'pb-8 sm:pb-10'
           )}
         >
           <div
@@ -73,12 +72,10 @@ export function OnboardingLayout({
             )}
           >
             {children}
+            {!preventScroll && showProgress && <OnboardingProgress />}
           </div>
         </main>
       </div>
-
-      {/* Bottom page progress indicator */}
-      {showProgress && <OnboardingProgress />}
     </div>
   )
 }

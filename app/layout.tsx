@@ -142,6 +142,8 @@ export default async function RootLayout({
         <JsonLd data={websiteSchema} />
         <JsonLd data={softwareAppSchema} />
         <meta name="google" content="notranslate" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         {/* Google Tag Manager */}
         <Script
           id="gtm-init"

@@ -1,6 +1,6 @@
 # Deployment Guide
 
-**Current Version**: `1.0.8`
+**Current Version**: `1.0.9`
 **Last Updated**: 2026-05-15
 
 This guide is the canonical deployment procedure.
@@ -25,6 +25,7 @@ Run all commands before pushing a release commit:
 ## Database Safety
 
 If `prisma/schema.prisma` changed:
+
 1. Apply migration before deployment.
 2. Confirm migration status is up to date.
 
@@ -42,6 +43,7 @@ If `prisma/schema.prisma` changed:
 ## Release Documentation Sync
 
 Before pushing release:
+
 1. `lib/data/patch-notes.ts`
 2. `DOCS/reference/PATCH_NOTES_MASTER.md`
 3. `DOCS/project/PROJECT_STATUS.md`
