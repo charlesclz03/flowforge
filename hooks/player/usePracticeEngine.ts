@@ -921,6 +921,7 @@ export function usePracticeEngine({
           fd.append('score', '0')
           fd.append('wordsUsed', JSON.stringify(wordsUsedRef.current))
 
+          lastSavePayloadRef.current = fd
           submitSession(fd)
             .then(() => dispatch({ type: 'SAVE_SUCCESS' }))
             .catch((err) =>

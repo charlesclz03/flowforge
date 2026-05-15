@@ -23,7 +23,7 @@ export interface PatchNote {
 export const PATCH_NOTES: PatchNote[] = [
   {
     version: '1.0.8',
-    date: '2026-03-24',
+    date: '2026-05-15',
     title: 'Prompt Engine Forever Fix',
     codename: 'Unique Flow',
     type: 'patch',
@@ -36,6 +36,8 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Unique Session Queues**: Practice now builds a full no-repeat prompt queue at session start, keeps anti-rhyme as an ordering rule, and stops recycling used words mid-session.',
           '**Multilingual Prompt Coverage**: Expanded French and Portuguese fallback/seed dictionaries to 110 unique words each (`36/36/38` across difficulty tiers), and added exclusion-aware word top-ups for queue building.',
           '**iOS Beat Protection**: Spoken prompts are now intentionally disabled on iPhone and iPad during practice so Safari speech playback cannot duck the instrumental volume.',
+          '**Practice Track Looping**: Live practice beat playback now uses the Web Audio gapless looper, preserving calibrated cue points when a track reaches its end and continuing until the session is stopped or times out.',
+          '**Retryable Metadata Saves**: Empty recording fallbacks now keep the same retryable save payload as audio and stats-only completions, so transient save failures can be retried from the in-session error banner.',
           '**Language-First Onboarding**: `/howitworks` now tells users up front that prompts can run in English, French, or Portuguese, and explains the iPhone/iPad text-only prompt behavior.',
         ],
       },
@@ -44,7 +46,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Required Google Profile Setup**: First-time Google sign-ins now land on `/auth/continue`, then complete `/complete-profile` before entering guarded app routes.',
           '**Username Validation Flow**: Added live username availability checks, duplicate handling, and a server-side rule that locks username edits after required setup is completed.',
-          '**Prompt Engine Regression Coverage**: Added Vitest coverage for session queues, guarded route helpers, username/profile-completion routes, and iPad-class device detection.',
+          '**Prompt + Audio Regression Coverage**: Added Vitest coverage for session queues, calibrated loop-start math, guarded route helpers, username/profile-completion routes, and iPad-class device detection.',
         ],
       },
     ],

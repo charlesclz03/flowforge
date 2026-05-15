@@ -1,14 +1,16 @@
 # PATCH NOTES MASTER FILE
 
-## v1.0.8 - Prompt Engine Forever Fix (2026-03-24)
+## v1.0.8 - Prompt Engine Forever Fix (2026-05-15)
 
 - **PROMPTS**: Practice now prebuilds a no-repeat session queue, keeps anti-rhyme as an ordering rule instead of a repeat fallback, and never clears used words mid-session.
 - **MULTILINGUAL**: French and Portuguese prompt packs were expanded to 110 unique words each (`36/36/38` across difficulty tiers), and the word API now supports exclusion-based top-ups for queue building.
 - **IOS**: Spoken prompts are intentionally disabled on iPhone and iPad during practice so Safari TTS cannot duck the instrumental volume.
+- **AUDIO**: Live practice beat playback now uses the Web Audio gapless looper, preserving calibrated cue points at track end and continuing until the session stops or times out.
+- **RECORDING**: Empty recording fallbacks now keep retryable save payloads, matching audio and stats-only completions when a transient save failure needs another attempt.
 - **ONBOARDING**: `/howitworks` now introduces language selection up front, including EN/FR/PT support and the iPhone/iPad text-only prompt note.
 - **AUTH**: First-time Google sign-ins now continue through `/auth/continue` and must finish `/complete-profile` before entering guarded app routes.
 - **PROFILE**: Added live username availability checks, duplicate handling, and a server-side rule that locks username edits after required setup is complete.
-- **TEST**: Added targeted Vitest coverage for session queues, guarded profile-setup routing, username/profile-completion APIs, and iPad-class device detection.
+- **TEST**: Added targeted Vitest coverage for session queues, calibrated loop-start math, guarded profile-setup routing, username/profile-completion APIs, and iPad-class device detection.
 
 ## v1.0.7 - Residual Cleanup (2026-03-06)
 

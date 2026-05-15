@@ -42,6 +42,28 @@ type MockBeat = {
   updatedAt: string
 }
 
+function createSilentWav(durationSeconds: number, sampleRate = 8000): Buffer {
+  const sampleCount = Math.max(1, Math.floor(durationSeconds * sampleRate))
+  const dataSize = sampleCount * 2
+  const buffer = Buffer.alloc(44 + dataSize)
+
+  buffer.write('RIFF', 0)
+  buffer.writeUInt32LE(36 + dataSize, 4)
+  buffer.write('WAVE', 8)
+  buffer.write('fmt ', 12)
+  buffer.writeUInt32LE(16, 16)
+  buffer.writeUInt16LE(1, 20)
+  buffer.writeUInt16LE(1, 22)
+  buffer.writeUInt32LE(sampleRate, 24)
+  buffer.writeUInt32LE(sampleRate * 2, 28)
+  buffer.writeUInt16LE(2, 32)
+  buffer.writeUInt16LE(16, 34)
+  buffer.write('data', 36)
+  buffer.writeUInt32LE(dataSize, 40)
+
+  return buffer
+}
+
 function loadDatabaseUrlFromEnvFiles() {
   if (process.env.DATABASE_URL) return
 
@@ -101,17 +123,17 @@ test('private track arrow handoff preselects beat and starts practice at calibra
     id: 'pw-user-beat-1',
     title: 'Playwright Private Beat',
     bpm: 91,
-    storageUrl: '/beats/2-Naughty.mp3',
+    storageUrl: '/beats/pw-short-loop.wav',
     coverImage: null,
     isPremium: false,
     genre: 'Hip-Hop',
     tags: [],
-    duration: 120,
+    duration: 1,
     artistName: 'PW Artist',
     label: null,
     difficulty: 'Medium',
     uploaderId: null,
-    offset: 9,
+    offset: 0.8,
     sortOrder: 0,
     createdAt: now,
     updatedAt: now,
@@ -125,7 +147,7 @@ test('private track arrow handoff preselects beat and starts practice at calibra
     isPremium: false,
     genre: 'Hip-Hop',
     tags: [],
-    duration: 120,
+    duration: 1,
     artistName: null,
     label: null,
     difficulty: 'Medium',
@@ -137,25 +159,24 @@ test('private track arrow handoff preselects beat and starts practice at calibra
   }
 
   await page.addInitScript(() => {
-    type PlayProbeCall = { currentTime: number; at: number }
-    type ProbeWindow = Window & { __playProbeCalls?: PlayProbeCall[] }
-    type ProbePrototype = HTMLMediaElement & { __ffPlayProbeInstalled?: boolean }
+    type LoopProbeEvent = {
+      type: string
+      currentTime: number
+      loopStartSeconds: number
+      loopCount?: number
+      at: number
+    }
+    type ProbeWindow = Window & { __loopProbeEvents?: LoopProbeEvent[] }
 
     const probeWindow = window as ProbeWindow
-    const prototype = HTMLMediaElement.prototype as ProbePrototype
-
-    probeWindow.__playProbeCalls = []
-    if (prototype.__ffPlayProbeInstalled) return
-
-    const originalPlay = prototype.play
-    prototype.play = function (...args: []) {
-      probeWindow.__playProbeCalls?.push({
-        currentTime: this.currentTime,
+    probeWindow.__loopProbeEvents = []
+    window.addEventListener('freestyla:audio-loop', (event) => {
+      const customEvent = event as CustomEvent<LoopProbeEvent>
+      probeWindow.__loopProbeEvents?.push({
+        ...customEvent.detail,
         at: performance.now(),
       })
-      return originalPlay.apply(this, args)
-    }
-    prototype.__ffPlayProbeInstalled = true
+    })
   })
 
   try {
@@ -169,6 +190,8 @@ test('private track arrow handoff preselects beat and starts practice at calibra
         id: userId,
         email: `pw-pro-${userId}@example.com`,
         name: 'Playwright Pro',
+        username: `pwpro${userId.slice(0, 8)}`,
+        profileSetupCompletedAt: new Date('2026-03-24T10:00:00.000Z'),
         role: 'SUPERADMIN',
         subscriptionStatus: 'active',
       },
@@ -230,6 +253,14 @@ test('private track arrow handoff preselects beat and starts practice at calibra
       })
     })
 
+    await page.route('**/beats/pw-short-loop.wav', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'audio/wav',
+        body: createSilentWav(1),
+      })
+    })
+
     await page.goto('/tracks?tab=mine')
     await expect(page.getByText('Beat Vault')).toBeVisible()
     await expect(
@@ -261,25 +292,49 @@ test('private track arrow handoff preselects beat and starts practice at calibra
         async () =>
           await page.evaluate(() => {
             const probeWindow = window as Window & {
-              __playProbeCalls?: Array<{ currentTime: number; at: number }>
+              __loopProbeEvents?: Array<{
+                type: string
+                currentTime: number
+                loopStartSeconds: number
+                loopCount?: number
+                at: number
+              }>
             }
-            return probeWindow.__playProbeCalls?.length ?? 0
+            return (
+              probeWindow.__loopProbeEvents?.filter(
+                (entry) => entry.type === 'loop'
+              ).length ?? 0
+            )
           }),
         { timeout: 20_000 }
       )
-      .toBeGreaterThan(0)
+      .toBeGreaterThan(2)
 
-    const playProbeCalls = await page.evaluate(() => {
+    const loopProbeEvents = await page.evaluate(() => {
       const probeWindow = window as Window & {
-        __playProbeCalls?: Array<{ currentTime: number; at: number }>
+        __loopProbeEvents?: Array<{
+          type: string
+          currentTime: number
+          loopStartSeconds: number
+          loopCount?: number
+          at: number
+        }>
       }
-      return probeWindow.__playProbeCalls ?? []
+      return probeWindow.__loopProbeEvents ?? []
     })
 
     expect(
-      playProbeCalls.some(
-        (entry) => entry.currentTime >= 8.5 && entry.currentTime <= 9.5
+      loopProbeEvents.some(
+        (entry) =>
+          entry.type === 'play' &&
+          entry.currentTime >= 0.75 &&
+          entry.currentTime <= 0.85
       )
+    ).toBeTruthy()
+    expect(
+      loopProbeEvents
+        .filter((entry) => entry.type === 'loop')
+        .every((entry) => entry.loopStartSeconds === 0.8)
     ).toBeTruthy()
   } finally {
     if (createdSessionToken) {
