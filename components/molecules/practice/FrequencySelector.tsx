@@ -10,21 +10,8 @@ interface FrequencySelectorProps {
   className?: string
 }
 
-/*
 const frequencyLabels: Record<number, string> = {
   2: 'Every 2 bars',
-  4: 'Every 4 bars',
-  8: 'Every 8 bars',
-}
-
-const frequencyDescriptions: Record<number, string> = {
-  2: 'New word every 2 bars - intense',
-  4: 'New word every 4 bars - fast-paced',
-  8: 'New word every 8 bars - balanced',
-}
-*/
-
-const frequencyLabels: Record<number, string> = {
   4: 'Every 4 bars',
   8: 'Every 8 bars',
   16: 'Every 16 bars',
@@ -36,13 +23,21 @@ export function FrequencySelector({
   disabled = false,
   className,
 }: FrequencySelectorProps) {
+  const maxIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.length - 1
+
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const index = parseInt(e.target.value)
-    onChange(SESSION_CONFIG.FREQUENCY_OPTIONS[index])
+    onChange(
+      SESSION_CONFIG.FREQUENCY_OPTIONS[index] ??
+        SESSION_CONFIG.DEFAULT_FREQUENCY
+    )
   }
 
-  const currentIndex = SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(
-    value as 4 | 8 | 16
+  const currentIndex = Math.max(
+    0,
+    SESSION_CONFIG.FREQUENCY_OPTIONS.indexOf(
+      value as (typeof SESSION_CONFIG.FREQUENCY_OPTIONS)[number]
+    )
   )
 
   return (
@@ -57,7 +52,7 @@ export function FrequencySelector({
       <input
         type="range"
         min="0"
-        max="2"
+        max={maxIndex}
         step="1"
         value={currentIndex}
         onChange={handleSliderChange}
@@ -75,7 +70,7 @@ export function FrequencySelector({
           disabled && 'opacity-50 cursor-not-allowed'
         )}
         style={{
-          background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${(currentIndex / 2) * 100}%, rgba(255,255,255,0.1) ${(currentIndex / 2) * 100}%, rgba(255,255,255,0.1) 100%)`,
+          background: `linear-gradient(to right, #7D7AFF 0%, #7D7AFF ${(currentIndex / maxIndex) * 100}%, rgba(255,255,255,0.1) ${(currentIndex / maxIndex) * 100}%, rgba(255,255,255,0.1) 100%)`,
         }}
       />
     </div>

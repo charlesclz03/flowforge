@@ -34,7 +34,10 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           '**Unique Session Queues**: Practice now builds a full no-repeat prompt queue at session start, keeps anti-rhyme as an ordering rule, and stops recycling used words mid-session.',
+          '**Word-Family Rotation**: Prompt queues now avoid reusing the same rhyme family (for example `station` / `nation` / `creation`) until the other available families have had a turn.',
           '**Multilingual Prompt Coverage**: Expanded French and Portuguese fallback/seed dictionaries to 110 unique words each (`36/36/38` across difficulty tiers), and added exclusion-aware word top-ups for queue building.',
+          '**2-Bar Frequency**: Skill Check and Practice now support 2-bar prompt timing alongside 4, 8, and 16 bars, including save/API validation paths.',
+          '**TTS Prompt Sync**: Spoken prompts now fire as soon as the displayed PLAYING prompt is active, while pause/stop/word-change cleanup cancels stale speech to prevent delayed or doubled calls.',
           '**iOS Beat Protection**: Spoken prompts are now intentionally disabled on iPhone and iPad during practice so Safari speech playback cannot duck the instrumental volume.',
           '**Practice Track Looping**: Live practice beat playback now uses the Web Audio gapless looper, preserving calibrated cue points when a track reaches its end and continuing until the session is stopped or times out.',
           '**Retryable Metadata Saves**: Empty recording fallbacks now keep the same retryable save payload as audio and stats-only completions, so transient save failures can be retried from the in-session error banner.',
@@ -46,7 +49,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Required Google Profile Setup**: First-time Google sign-ins now land on `/auth/continue`, then complete `/complete-profile` before entering guarded app routes.',
           '**Username Validation Flow**: Added live username availability checks, duplicate handling, and a server-side rule that locks username edits after required setup is completed.',
-          '**Prompt + Audio Regression Coverage**: Added Vitest coverage for session queues, calibrated loop-start math, guarded route helpers, username/profile-completion routes, and iPad-class device detection.',
+          '**Prompt + Audio Regression Coverage**: Added Vitest coverage for session queues, word-family rotation, 2-bar session saves, TTS prompt timing, calibrated loop-start math, guarded route helpers, username/profile-completion routes, and iPad-class device detection.',
         ],
       },
     ],

@@ -4,7 +4,7 @@ import {
   estimateSessionPromptBudget,
 } from '@/lib/words/session-queue'
 import { getFallbackWords } from '@/lib/data/fallbacks'
-import { doWordsRhyme } from '@/lib/words/rhyme'
+import { doWordsRhyme, getPhoneticRhymeKey } from '@/lib/words/rhyme'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 function makeWords(): PracticeWordSeed[] {
@@ -80,9 +80,58 @@ describe('session queue', () => {
 
     expect(result.queue[0]?.wordText).toBe('station')
     expect(result.queue[1]?.wordText).toBeDefined()
-    expect(doWordsRhyme(result.queue[0]!.wordText, result.queue[1]!.wordText)).toBe(
-      false
+    expect(
+      doWordsRhyme(result.queue[0]!.wordText, result.queue[1]!.wordText)
+    ).toBe(false)
+  })
+
+  it('does not repeat a word family until other available families are used', () => {
+    const result = buildSessionWordQueue({
+      bpm: 60,
+      frequency: 4,
+      difficulty: 2,
+      language: 'en-US',
+      sessionDurationSeconds: 64,
+      randomFn: () => 0,
+      words: [
+        { wordText: 'station', difficultyLevel: 2, syllableCount: 2 },
+        { wordText: 'nation', difficultyLevel: 2, syllableCount: 2 },
+        { wordText: 'creation', difficultyLevel: 2, syllableCount: 3 },
+        { wordText: 'unique', difficultyLevel: 2, syllableCount: 2 },
+        { wordText: 'melody', difficultyLevel: 2, syllableCount: 3 },
+      ],
+    })
+
+    const queueWords = result.queue.map((word) => word.wordText)
+    const queueFamilies = queueWords.map((word) =>
+      getPhoneticRhymeKey(word, 'en-US')
     )
+    const ionFamily = getPhoneticRhymeKey('station', 'en-US')
+
+    expect(queueWords).toHaveLength(5)
+    expect(queueWords[0]).toBe('station')
+    expect(queueFamilies.slice(1, 3)).not.toContain(ionFamily)
+    expect(queueFamilies[3]).toBe(ionFamily)
+    expect(queueFamilies[4]).toBe(ionFamily)
+  })
+
+  it('carries family history from used words when rebuilding a queue', () => {
+    const result = buildSessionWordQueue({
+      bpm: 60,
+      frequency: 4,
+      difficulty: 2,
+      language: 'en-US',
+      sessionDurationSeconds: 20,
+      randomFn: () => 0,
+      usedWords: ['station'],
+      words: [
+        { wordText: 'station', difficultyLevel: 2, syllableCount: 2 },
+        { wordText: 'nation', difficultyLevel: 2, syllableCount: 2 },
+        { wordText: 'unique', difficultyLevel: 2, syllableCount: 2 },
+      ],
+    })
+
+    expect(result.queue[0]?.wordText).toBe('unique')
   })
 
   it('has enough fallback French words to keep a full session unique', () => {

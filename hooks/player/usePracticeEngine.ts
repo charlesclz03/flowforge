@@ -234,7 +234,11 @@ export function usePracticeEngine({
       (word) => !usedKeys.has(normalizeWordKey(word))
     )
 
-    return unusedFallback || fallbackWordPoolRef.current[0] || STATIC_FALLBACK_WORDS[0]
+    return (
+      unusedFallback ||
+      fallbackWordPoolRef.current[0] ||
+      STATIC_FALLBACK_WORDS[0]
+    )
   }, [])
 
   const buildQueueFromPool = useCallback(
@@ -249,7 +253,9 @@ export function usePracticeEngine({
       remainingDurationSeconds: number
       usedWords: string[]
     }) => {
-      const fallbackSeeds = normalizeWordSeeds(getFallbackWordSeeds(selectedLanguage))
+      const fallbackSeeds = normalizeWordSeeds(
+        getFallbackWordSeeds(selectedLanguage)
+      )
       wordPoolRef.current = mergeWordPools(wordPoolRef.current, fallbackSeeds)
       fallbackWordPoolRef.current = fallbackSeeds.map((seed) => seed.wordText)
 
@@ -422,13 +428,16 @@ export function usePracticeEngine({
 
   useEffect(() => {
     const normalizedInitialWords = normalizeWordSeeds(initialWords)
-    const fallbackSeeds = normalizeWordSeeds(getFallbackWordSeeds(selectedLanguage))
+    const fallbackSeeds = normalizeWordSeeds(
+      getFallbackWordSeeds(selectedLanguage)
+    )
 
     wordPoolRef.current = mergeWordPools(normalizedInitialWords, fallbackSeeds)
     fallbackWordPoolRef.current = fallbackSeeds.map((seed) => seed.wordText)
 
     const previewQueue = buildQueueFromPool({
-      nextDifficulty: pendingDifficultyRef.current ?? activeDifficultyRef.current,
+      nextDifficulty:
+        pendingDifficultyRef.current ?? activeDifficultyRef.current,
       nextFrequency: pendingFrequencyRef.current ?? activeFrequencyRef.current,
       remainingDurationSeconds: sessionDurationSeconds,
       usedWords: [],
@@ -507,7 +516,7 @@ export function usePracticeEngine({
     sessionDurationSeconds,
   ])
 
-  const { speak, warmup, voiceStatus } = useTTS({
+  const { speak, warmup, cancel, voiceStatus } = useTTS({
     enabled: effectiveTTSEnabled,
     language: selectedLanguage,
     volume: ttsVolume,
@@ -520,9 +529,9 @@ export function usePracticeEngine({
       return
     }
 
-    const id = setTimeout(() => speak(currentWord), 150)
-    return () => clearTimeout(id)
-  }, [currentWord, speak, state.status, effectiveTTSEnabled])
+    speak(currentWord)
+    return () => cancel()
+  }, [cancel, currentWord, speak, state.status, effectiveTTSEnabled])
 
   const trackWordUsage = useCallback((word: string) => {
     const trimmed = word.trim()
@@ -571,7 +580,9 @@ export function usePracticeEngine({
       }
 
       const duration =
-        4 * nextFrequency * (60 / (beatPlayer.currentBeat?.bpm || getSessionBpm()))
+        4 *
+        nextFrequency *
+        (60 / (beatPlayer.currentBeat?.bpm || getSessionBpm()))
       const elapsed = Math.max(0, time - startTimeRef.current)
       const remainingDurationSeconds = Math.max(
         1,
@@ -592,7 +603,8 @@ export function usePracticeEngine({
         nextFrequency,
         remainingDurationSeconds,
       })
-      const nextWord = nextSeed?.wordText || getFallbackWord(wordsUsedRef.current)
+      const nextWord =
+        nextSeed?.wordText || getFallbackWord(wordsUsedRef.current)
 
       setCurrentWord(nextWord)
       setWordTiming({ start: time, duration })
@@ -686,7 +698,8 @@ export function usePracticeEngine({
       })
 
       const firstWord =
-        preparedQueue.queue[0]?.wordText || getFallbackWord(wordsUsedRef.current)
+        preparedQueue.queue[0]?.wordText ||
+        getFallbackWord(wordsUsedRef.current)
       setCurrentWord(firstWord)
 
       const ctx = initAudio()
@@ -911,7 +924,8 @@ export function usePracticeEngine({
               `${beatPlayer.currentBeat.title} - ${new Date().toLocaleDateString()}`
             )
           }
-          const fallbackDuration = audioSync.getPreciseTime() - startTimeRef.current
+          const fallbackDuration =
+            audioSync.getPreciseTime() - startTimeRef.current
           fd.append(
             'durationSeconds',
             Math.max(1, Math.round(fallbackDuration)).toString()

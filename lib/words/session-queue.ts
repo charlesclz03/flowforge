@@ -1,4 +1,4 @@
-import { doWordsRhyme } from '@/lib/words/rhyme'
+import { doWordsRhyme, getPhoneticRhymeKey } from '@/lib/words/rhyme'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 interface SessionQueueOptions {
@@ -20,6 +20,14 @@ export interface SessionQueueResult {
 
 function normalizeWordKey(word: string): string {
   return word.trim().toLowerCase()
+}
+
+function getWordFamilyKey(
+  word: string,
+  language: string,
+  fallbackKey: string
+): string {
+  return getPhoneticRhymeKey(word, language) || fallbackKey
 }
 
 function difficultyOrder(difficulty: number): number[] {
@@ -94,6 +102,11 @@ export function buildSessionWordQueue({
     ])
   )
   const queue: PracticeWordSeed[] = []
+  const usedFamilyCycle = new Set(
+    usedWords
+      .map((word) => getWordFamilyKey(word, language, normalizeWordKey(word)))
+      .filter(Boolean)
+  )
   let previousWord =
     usedWords.length > 0 ? usedWords[usedWords.length - 1] : null
 
@@ -105,21 +118,63 @@ export function buildSessionWordQueue({
     if (!nextBucket) break
 
     const bucket = remaining.get(nextBucket) || []
-    const previousPrompt = previousWord
-    const nonRhyming = previousPrompt
-      ? bucket.filter(
-          (seed) => !doWordsRhyme(previousPrompt, seed.wordText, language)
+    const bucketFamilies = new Set(
+      bucket.map((seed) =>
+        getWordFamilyKey(
+          seed.wordText,
+          language,
+          normalizeWordKey(seed.wordText)
         )
-      : bucket
-    const source = nonRhyming.length > 0 ? nonRhyming : bucket
+      )
+    )
+
+    if (
+      bucketFamilies.size > 0 &&
+      [...bucketFamilies].every((family) => usedFamilyCycle.has(family))
+    ) {
+      bucketFamilies.forEach((family) => usedFamilyCycle.delete(family))
+    }
+
+    const previousPrompt = previousWord
+    const nonRhyming = (seed: PracticeWordSeed) =>
+      !previousPrompt || !doWordsRhyme(previousPrompt, seed.wordText, language)
+    const unusedFamily = (seed: PracticeWordSeed) =>
+      !usedFamilyCycle.has(
+        getWordFamilyKey(
+          seed.wordText,
+          language,
+          normalizeWordKey(seed.wordText)
+        )
+      )
+    const nonRhymingUnusedFamily = bucket.filter(
+      (seed) => nonRhyming(seed) && unusedFamily(seed)
+    )
+    const unusedFamilyWords = bucket.filter(unusedFamily)
+    const nonRhymingWords = bucket.filter(nonRhyming)
+    const source =
+      nonRhymingUnusedFamily.length > 0
+        ? nonRhymingUnusedFamily
+        : unusedFamilyWords.length > 0
+          ? unusedFamilyWords
+          : nonRhymingWords.length > 0
+            ? nonRhymingWords
+            : bucket
     const nextIndex = pickRandomIndex(source.length, randomFn)
     const selected = source[nextIndex]
     const selectedKey = normalizeWordKey(selected.wordText)
+    const selectedFamily = getWordFamilyKey(
+      selected.wordText,
+      language,
+      selectedKey
+    )
     const remainingBucket = bucket.filter(
       (seed) => normalizeWordKey(seed.wordText) !== selectedKey
     )
 
     remaining.set(nextBucket, remainingBucket)
+    if (selectedFamily) {
+      usedFamilyCycle.add(selectedFamily)
+    }
     queue.push(selected)
     previousWord = selected.wordText
   }

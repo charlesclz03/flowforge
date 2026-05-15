@@ -11,8 +11,9 @@
 | Cypher Mode | PASS [x] 2026-02-19 | Local pass-the-phone with player rotation | All |
 | Beat Selection | PASS [x] 2026-02-19 | Public + private beat selection and handoff | All |
 | Practice Track Looping | PASS [x] 2026-05-15 | Live practice uses Web Audio gapless looping and preserves calibrated cue points until session stop/timeout | All |
-| Prompt Engine | PASS [x] 2026-03-24 | Prebuilt no-repeat session queues now expand across same-language difficulty tiers, preserve anti-rhyme ordering, and use exclusion-based top-ups instead of recycling prompts mid-session | All |
-| Language Runtime (TTS) | PASS [x] 2026-03-24 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, and iPhone/iPad now use intentional text-only prompts to preserve beat volume during practice | All |
+| Prompt Engine | PASS [x] 2026-05-15 | Prebuilt no-repeat session queues expand across same-language difficulty tiers, preserve anti-rhyme ordering, rotate across word families before repeating suffix/rhyme groups, and use exclusion-based top-ups instead of recycling prompts mid-session | All |
+| Prompt Frequency | PASS [x] 2026-05-15 | Skill Check and Practice support 2, 4, 8, and 16-bar prompt timing, with save/API contracts accepting the full set | All |
+| Language Runtime (TTS) | PASS [x] 2026-05-15 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, iPhone/iPad use intentional text-only prompts, and spoken prompts cancel cleanly on pause/stop while staying aligned with displayed PLAYING prompts | All |
 
 ## Beats & Calibration
 
@@ -47,6 +48,7 @@
 | Date | Audit | Status | Outcome |
 | --- | --- | --- | --- |
 | 2026-05-15 | Practice Track Looping Forever Fix | PASS | Replaced live practice HTML media looping with Web Audio gapless scheduling, preserved private-track cue offsets at loop boundaries, added loop math coverage, and made empty recording fallback saves retryable. |
+| 2026-05-15 | Practice Reliability Follow-up | PASS | Added word-family anti-repeat cycling, restored 2-bar frequency support across Skill Check/Practice/session saves, removed delayed spoken-prompt scheduling, and added focused Vitest coverage. |
 | 2026-03-24 | Prompt Engine Session Uniqueness Forever Fix | PASS | Replaced recycle-on-exhaustion prompt generation with prebuilt no-repeat session queues, expanded FR/PT dictionaries to `36/36/38` per tier set, added exclusion-aware word top-ups, enforced required Google profile completion, and switched iPhone/iPad practice to text-only prompts to avoid Safari volume ducking. |
 | 2026-02-19 | SUPERADMIN Public Beat Management Forever Fix | PASS | Enforced public-track mutation boundaries for update/delete/reorder, added strict update payload validation, and added regression tests in `__tests__/admin/admin-beats-actions.test.ts`. |
 | 2026-02-19 | SUPERADMIN Public Beat Management Re-Audit | FAIL | Found server-action scope leak: update/delete paths are id-only and not constrained to public tracks; fix plan recorded in `brain/SUPERADMIN_PUBLIC_BEAT_MANAGEMENT_FIX_PLAN_2026-02-19.md`. |

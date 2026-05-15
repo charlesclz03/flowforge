@@ -180,7 +180,7 @@ export function HowItWorksContent({
               </h2>
               <p className="text-sm text-text-secondary">
                 Words appear precisely timed to musical bars. Choose between 2,
-                4, or 8 bar intervals.
+                4, 8, or 16 bar intervals.
               </p>
             </div>
           </div>

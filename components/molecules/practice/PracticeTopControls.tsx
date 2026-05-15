@@ -2,6 +2,7 @@ import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
 import { Gauge, User, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Beat } from '@/types/database'
+import { SESSION_CONFIG } from '@/lib/constants/design'
 
 interface PracticeTopControlsProps {
   beats: Beat[]
@@ -82,7 +83,9 @@ export function PracticeTopControls({
 
   const cycleFrequency = () => {
     if (!handleFrequencyChange) return
-    const nextFreq = frequency === 4 ? 8 : frequency === 8 ? 16 : 4
+    const options = SESSION_CONFIG.FREQUENCY_OPTIONS
+    const currentIndex = options.indexOf(frequency as (typeof options)[number])
+    const nextFreq = options[(currentIndex + 1) % options.length] || options[0]
     handleFrequencyChange(nextFreq)
   }
 
@@ -159,9 +162,9 @@ export function PracticeTopControls({
           <Zap
             size={14}
             className={
-              displayFrequency === 4
+              displayFrequency === 2
                 ? 'text-accent-red'
-                : displayFrequency === 8
+                : displayFrequency === 4
                   ? 'text-accent-yellow'
                   : 'text-accent-blue'
             }

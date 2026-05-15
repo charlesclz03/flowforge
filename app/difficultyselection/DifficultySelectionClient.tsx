@@ -25,7 +25,7 @@ import { useTTS } from '@/hooks/useTTS'
 import { TTS_LANGUAGE_OPTIONS, type TTSLanguageCode } from '@/lib/tts/languages'
 import { IOS_SPOKEN_PROMPT_NOTICE } from '@/lib/tts/platform'
 
-type Frequency = 4 | 8 | 16
+type Frequency = 2 | 4 | 8 | 16
 
 interface DifficultySelectionClientProps {
   initialBeats: Beat[]
