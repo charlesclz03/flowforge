@@ -1,7 +1,7 @@
 # Deployment Guide
 
-**Current Version**: `1.1.0`
-**Last Updated**: 2026-05-15
+**Current Version**: `1.1.1`
+**Last Updated**: 2026-05-16
 
 This guide is the canonical deployment procedure.
 

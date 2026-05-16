@@ -4,7 +4,7 @@ import { PATCH_NOTES } from '../lib/data/patch-notes.js'
 
 const TARGET_FILE = path.join(
   __dirname,
-  '../DOCS/project/PATCH_NOTES_MASTER.md'
+  '../DOCS/reference/PATCH_NOTES_MASTER.md'
 )
 
 function generateMarkdown() {

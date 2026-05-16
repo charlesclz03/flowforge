@@ -1,12 +1,13 @@
 # Documentation Index
 
-**Current Canonical Version**: `1.1.0`
-**Last Updated**: 2026-05-15
+**Current Canonical Version**: `1.1.1`
+**Last Updated**: 2026-05-16
 
 ## Start Here
 
 - `README.md`
 - `summaries/QUICK_START_NEXT_SESSION.md`
+- `summaries/NEXT_PROMPT_PATCH_NOTE_NOT_DONE_AUDIT.md`
 - `project/PROJECT_STATUS.md`
 - `project/ROADMAP.md`
 

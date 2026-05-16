@@ -24,7 +24,7 @@ export default function PatchNotesPage() {
           <div className="space-y-12 relative before:absolute before:left-6 md:before:left-1/2 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-purple-500 before:via-zinc-800 before:to-transparent before:-translate-x-1/2 before:opacity-30">
             {PATCH_NOTES.map((note, index) => (
               <motion.div
-                key={`${note.version}-${note.date}`}
+                key={`${note.version}-${note.date}-${note.title}-${note.codename}-${index}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}

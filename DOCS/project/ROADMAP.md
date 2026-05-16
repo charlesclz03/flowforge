@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-03-24
+- 2026-05-16
 
 Related docs:
 
@@ -27,8 +27,8 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.0`
-**Last Updated**: 2026-05-15
+**Current Version**: `1.1.1`
+**Last Updated**: 2026-05-16
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.
@@ -38,6 +38,7 @@ This roadmap is forward-looking only. Historical phase logs were archived under 
 1. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
 2. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
 3. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
+4. Plan the remaining patch-note audit `Not done` findings from the source audit list before making code/docs changes.
 
 ## Next (2-6 weeks)
 

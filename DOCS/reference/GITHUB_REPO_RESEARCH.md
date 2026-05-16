@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-03-24
+- 2026-05-16
 
 Related docs:
 
@@ -27,7 +27,7 @@ Related docs:
 - `DOCS/project/ROADMAP.md`
 - `DOCS/summaries/QUICK_START_NEXT_SESSION.md`
 
-**Current Version**: `1.0.8`
+**Current Version**: `1.1.1`
 **Session Context**: Beta Polish
 
 ## Why This Research Exists

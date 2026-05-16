@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const tsPath = path.join(__dirname, '../lib/data/patch-notes.ts');
-const mdPath = path.join(__dirname, '../DOCS/project/PATCH_NOTES_MASTER.md');
+const mdPath = path.join(__dirname, '../DOCS/reference/PATCH_NOTES_MASTER.md');
 
 try {
   let tsContent = fs.readFileSync(tsPath, 'utf8');

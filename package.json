@@ -1,6 +1,6 @@
 {
   "name": "flowforge-freestyle",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,8 +12,9 @@
     "test:coverage": "vitest --coverage",
     "docs:check:links": "node scripts/docs/check-internal-links.mjs",
     "docs:check:drift": "node scripts/docs/check-canonical-drift.mjs",
+    "docs:check:patch-notes": "node scripts/docs/check-patch-notes-sync.mjs",
     "docs:check:stubs": "node scripts/docs/check-stub-integrity.mjs",
-    "docs:check": "npm run docs:check:links && npm run docs:check:drift && npm run docs:check:stubs",
+    "docs:check": "npm run docs:check:links && npm run docs:check:drift && npm run docs:check:patch-notes && npm run docs:check:stubs",
     "check:release-env": "dotenv -e .env -e .env.local -e .env.production.local -- node scripts/check-release-env.mjs --mode=production",
     "check:release-env:local": "dotenv -e .env -e .env.local -e .env.production.local -- node scripts/check-release-env.mjs --mode=local --allow-local-urls",
     "check:release-env:vercel": "node scripts/check-vercel-env.mjs --environment=production",

@@ -1,7 +1,7 @@
 # Feature Matrix
 
-**Current Version**: `1.1.0`
-**Last Updated**: 2026-05-15
+**Current Version**: `1.1.1`
+**Last Updated**: 2026-05-16
 
 ## Core Practice
 
@@ -38,7 +38,7 @@
 
 | Feature                           | Status              | Notes                                                                                                                                                                                                                                |
 | --------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Patch Notes Sync                  | PASS [x] 2026-02-19 | `patch-notes.ts` and master notes aligned                                                                                                                                                                                            |
+| Patch Notes Sync                  | PASS [x] 2026-05-16 | `patch-notes.ts` and master notes aligned with `docs:check:patch-notes` enforcing release-entry drift detection                                                                                                                       |
 | Docs Canonical Governance         | PASS [x] 2026-02-19 | Canonical map + CI docs checks enforced                                                                                                                                                                                              |
 | MCP Matrix Tracking               | PASS [x] 2026-02-19 | MCP health baseline documented                                                                                                                                                                                                       |
 | SUPERADMIN Public Beat Management | PASS [x] 2026-02-19 | `/admin/beats` now enforces public-track mutation scope (`uploaderId: null`) in server actions, with strict payload validation + regression tests; audit: `audit_reports/matrix_features/superadmin_public_beat_management/audit.md` |

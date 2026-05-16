@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-03-24
+- 2026-05-16
 
 Related docs:
 
@@ -40,6 +40,7 @@ Related docs:
 - repo overview: `README.md`
 - docs index: `docs/DOCUMENTATION_INDEX.md`
 - current handoff: `docs/summaries/QUICK_START_NEXT_SESSION.md`
+- patch-note Not done prompt: `docs/summaries/NEXT_PROMPT_PATCH_NOTE_NOT_DONE_AUDIT.md`
 - current status: `docs/project/PROJECT_STATUS.md`
 - shipped history: `docs/reference/PATCH_NOTES_MASTER.md`
 - immediate roadmap: `docs/project/ROADMAP.md`

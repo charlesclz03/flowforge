@@ -30,7 +30,7 @@ describe('require user session helpers', () => {
 
     await requireUserSession('/practice')
 
-    expect(redirect).toHaveBeenCalledWith('/?callbackUrl=%2Fpractice')
+    expect(redirect).toHaveBeenCalledWith('/login?callbackUrl=%2Fpractice')
   })
 
   it('redirects incomplete users to required profile setup', async () => {

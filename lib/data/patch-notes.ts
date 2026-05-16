@@ -22,6 +22,25 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.1',
+    date: '2026-05-16',
+    title: 'Patch Note Governance',
+    codename: 'Audit Handoff',
+    type: 'patch',
+    description:
+      'Promoted the patch-note audit cleanup into the release baseline and captured the follow-up prompt for the remaining Not done findings.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Release Source Sync**: Kept `lib/data/patch-notes.ts` and `DOCS/reference/PATCH_NOTES_MASTER.md` aligned under the new patch-note sync check.',
+          '**Deployment Versioning**: Bumped app, lockfile, settings display, and canonical documentation headers to `v1.1.1` for the release handoff.',
+          '**Audit Follow-up Prompt**: Added a guarded next-session prompt for the 18 patch-note audit items classified as `Not done`, requiring the source audit list before any implementation plan is written.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-05-15',
     title: 'Audit Visual Closure',
@@ -41,6 +60,12 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           '**Landing Readability Evidence**: Re-verified `/howitworks` feature-card typography on mobile and kept the current 18px headings, 14px body copy, 20px body line-height, and no-overflow baseline intact.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Patch Note Governance**: Re-synchronized the app patch-note data with the canonical master notes, clarified historical supersessions, and added a docs check to prevent future release-note drift.',
         ],
       },
     ],
@@ -188,7 +213,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Fixes & Improvements',
         items: [
-          '**Practice Controls UI Detanglement**: Chopped the 903-line monolithic Practice UI into independent Layout components (`PracticeTopControls`, `PracticePauseModal`, `PracticeErrorBanner`) while preserving the rock-solid finite state audio machine.',
+          '**Practice Controls UI Detanglement**: `PracticeControls.tsx` now uses extracted molecules (`PracticeTopControls`, `PracticePauseModal`, `PracticeErrorBanner`) plus a dynamic `AudioVisualizer` boundary while still owning the main player, timer ring, and visualizer composition.',
         ],
       },
     ],
@@ -211,6 +236,23 @@ export const PATCH_NOTES: PatchNote[] = [
           '**BottomNav Visibility**: Fixed BottomNav being clipped on some devices by switching from `h-[100dvh]` to a rigid `fixed inset-0` app shell, and replaced conflicting CSS padding with explicit safe-area-aware inline styles.',
           '**Smart Post-Session Redirect**: Sessions without audio recording now redirect to Difficulty Selection instead of Recordings, keeping the practice loop tight.',
           '**Recording Card UX**: Processing state now shows a spinner with refresh button; stats-only sessions display a clear "Stats-Only (No Mic)" badge.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '1.0.3',
+    date: '2026-03-05',
+    title: 'Authentication Type Extensions',
+    codename: 'Authentication Type Extensions',
+    type: 'patch',
+    description:
+      'Passed `tsc` statically by applying definitive Module Augmentations to NextAuth configurations.',
+    changes: [
+      {
+        category: 'System Updates',
+        items: [
+          '**Type Safety**: Passed `tsc` statically by applying definitive Module Augmentations to NextAuth configurations.',
         ],
       },
     ],
@@ -444,13 +486,13 @@ export const PATCH_NOTES: PatchNote[] = [
     title: 'Canonical Domain',
     codename: 'Canonical Domain',
     description:
-      'Play Store TWA hardening: the app now enforces a single canonical origin (`freestyla.app`) to prevent auth/PWA split-brain across multiple production domains.',
+      'Historical Play Store TWA hardening: this release briefly enforced `freestyla.app` as the canonical origin before v0.9.1006 superseded it with `www.freestyla.app`.',
     changes: [
       {
         category: 'System Updates',
         items: [
-          '**Canonical Origin Redirect**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app` to keep Google OAuth + session cookies consistent.',
-          '**Launch Audit Default**: `scripts/prod-launch-audit.mjs` now defaults to `https://freestyla.app` for production verification.',
+          '**Canonical Origin Redirect**: Historical note: `www.freestyla.app` and `flowforge-freestyle.vercel.app` redirected all non-API traffic to `freestyla.app`; v0.9.1006 superseded this with `www.freestyla.app` as the current canonical origin.',
+          '**Launch Audit Default**: Historical note: `scripts/prod-launch-audit.mjs` temporarily defaulted to `https://freestyla.app`; current production verification defaults to `https://www.freestyla.app`.',
         ],
       },
     ],
@@ -815,6 +857,25 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Volume Sync**: Fixed regression where player volume desynchronized from session settings (Live Sync V2).',
           '**CSP Expansion**: Whitelisted Google Analytics/Ads domains to silence browser console errors.',
           '**Performance**: Verified build stability and type safety.',
+        ],
+      },
+    ],
+  },
+  {
+    version: '0.9.98',
+    date: '2026-02-01',
+    title: 'Audio Shield',
+    codename: 'Audio Shield',
+    type: 'patch',
+    description:
+      'Hardened Profile and Practice audio paths by fixing an Audio Player race, allowing blob previews, and consolidating Audio Context handling.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Profile Audio Race Fix**: Resolved a 500 Global Error on the Profile page caused by an Audio Player race condition.',
+          '**Preview CSP Fix**: Added `blob:` to CSP so profile picture previews render correctly.',
+          '**Practice Audio Sync**: Consolidated Audio Context handling for Practice Mode audio sync.',
         ],
       },
     ],
@@ -2790,7 +2851,7 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           'Concurrent Playback: Implemented "Single Source of Truth" audio logic. Only one track plays at a time.',
           'Gapless Looping: Eliminated the restart gap in SessionPlayer and RecordingCard loops.',
-          'Build Stability: Resolved 100% of lint warnings and type errors for a pristine codebase.',
+          'Build Stability: Resolved the known lint warnings and type errors for that release baseline. Current builds may still pass with known Sentry/OpenTelemetry critical dependency warnings.',
           'Admin Management: Fixed Beat Reordering and Upload tools.',
         ],
       },
@@ -2935,7 +2996,7 @@ export const PATCH_NOTES: PatchNote[] = [
     codename: 'Perfect Sync',
     date: 'January 09, 2026',
     description:
-      'Critical regressions in audio timing and synchronization resolved. Achieved a perfectly clean build with 0 warnings.',
+      'Critical regressions in audio timing and synchronization resolved. At the time, the release cleared the known build-warning baseline; current builds may still pass with known Sentry/OpenTelemetry critical dependency warnings.',
     changes: [
       {
         category: 'Fixes & Improvements',
@@ -2944,7 +3005,7 @@ export const PATCH_NOTES: PatchNote[] = [
           'Double TTS: Fixed logic bug causing the first word to repeat twice.',
           'Error Persistence: useBeatPlayer now clears errors on stop/restart.',
           'Achievements: Implemented auto-seeding to ensure milestones are always populated.',
-          'Industrial Cleanup: Fixed all remaining 8 build warnings across the codebase.',
+          'Industrial Cleanup: Fixed the 8 build warnings known in that release baseline; later Sentry/OpenTelemetry critical dependency warnings are tracked separately as known passing-build warnings.',
         ],
       },
     ],

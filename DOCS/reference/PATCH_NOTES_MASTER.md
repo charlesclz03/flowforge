@@ -1,10 +1,17 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.1 - Patch Note Governance (2026-05-16)
+
+- **SYSTEM**: Kept `lib/data/patch-notes.ts` and `DOCS/reference/PATCH_NOTES_MASTER.md` aligned under the new patch-note sync check.
+- **RELEASE**: Bumped app, lockfile, settings display, and canonical documentation headers to `v1.1.1` for the deployment handoff.
+- **DOCS**: Added `DOCS/summaries/NEXT_PROMPT_PATCH_NOTE_NOT_DONE_AUDIT.md`, a guarded next-session prompt for the 18 patch-note audit items classified as `Not done`.
+
 ## v1.1.0 - Audit Visual Closure (2026-05-15)
 
 - **UI**: Added a shared `IconFrame` treatment and migrated high-traffic header, onboarding, download, Beat Vault, recordings, settings, and profile surfaces toward consistent Lucide icon sizing, framing, tones, and stroke defaults.
 - **PRACTICE**: Moved the START button's decorative halo outside the clipped visualizer circle and softened the text glow so the call-to-action reads more balanced on mobile and desktop.
 - **AUDIT**: Re-verified `/howitworks` feature-card typography on mobile and preserved the readable 18px heading / 14px body / 20px line-height baseline with no overflow.
+- **DOCS**: Re-synchronized the app patch-note data with the canonical master notes, clarified historical supersessions, and added a docs check to prevent future release-note drift.
 
 ## v1.0.9 - Audit Funnel Polish (2026-05-15)
 
@@ -55,7 +62,7 @@
 
 - **SECURITY**: Resolved 25 high-severity NPM vulnerabilities caused by deprecated Webpack plugins and `serialize-javascript` vulnerabilities by migrating to `@ducanh2912/next-pwa` and injecting `package.json` overrides.
 - **PERFORMANCE**: Drastically reduced bundle sizing on the Latency Settings page (500+ LOC) by fully abstracting the interactive audio testing module into a client-only `next/dynamic` lazy-load boundary.
-- **ARCHITECTURE**: Refactored the `PracticeControls.tsx` file (903 LOC). De-coupled the static elements (Pause modals, top navigators, and alert banners) away from the complex finite-state-machine visualizer loop, effectively neutralizing future UI regression cycles without breaking tests.
+- **ARCHITECTURE**: Refactored `PracticeControls.tsx` to use extracted molecules (`PracticeTopControls`, `PracticePauseModal`, `PracticeErrorBanner`) plus a dynamic `AudioVisualizer` boundary while the component still owns the main player, timer ring, and visualizer composition.
 
 ## v1.0.4 - Pipeline Hardening (2026-03-05)
 
@@ -172,8 +179,8 @@
 
 ## v0.9.1005 - Canonical Domain (2026-02-10)
 
-- **SYSTEM**: `www.freestyla.app` and `flowforge-freestyle.vercel.app` now redirect all non-API traffic to `freestyla.app` to prevent auth/session split-brain.
-- **CHORE**: `scripts/prod-launch-audit.mjs` now defaults to auditing `https://freestyla.app`.
+- **SYSTEM**: Historical note: `www.freestyla.app` and `flowforge-freestyle.vercel.app` redirected all non-API traffic to `freestyla.app`; v0.9.1006 superseded this with `www.freestyla.app` as the current canonical origin.
+- **CHORE**: Historical note: `scripts/prod-launch-audit.mjs` temporarily defaulted to `https://freestyla.app`; current production verification defaults to `https://www.freestyla.app`.
 
 ## v0.9.1004 - Practice Continuity (2026-02-10)
 
@@ -304,6 +311,17 @@
 - **CHORE**: Normalized line endings to eliminate Prettier warnings in `npm run lint`.
 - **SEC**: Upgraded Next.js and eslint-config-next to clear `npm audit --audit-level=high` (includes Next 15 async request API updates).
 
+## v0.9.92 - Trophy Hunter (2026-02-02)
+
+- **FIX**: Resolved achievement seeding so the full trophy set is consistently available.
+- **DB**: Confirmed database connectivity and validated the populated achievements table with debug tooling.
+
+## v0.9.992 - Profile Perfected (2026-02-02)
+
+- **UI**: Widened the profile page container on desktop and added avatar fallback initials when external images fail.
+- **FIX**: Added metadata-only session save support when audio recording is disabled or unavailable.
+- **BUILD**: Verified build integrity for recent layout changes.
+
 ## v0.9.991 - Sonic Unbound (Hotfix) (2026-02-02)
 
 - **FIX**: Resolved silent audio issue by enabling CORS in `player.ts`.
@@ -317,6 +335,10 @@
 - **FIX**: Resolved 500 Global Error on Profile Page (Audio Player race condition).
 - **FIX**: Added `blob:` to CSP to fix profile picture previews.
 - **FIX**: Consolidated Audio Context for Practice Mode (Audio Sync).
+
+## v0.9.96 - Profile Polish (2026-02-01)
+
+- **UI**: Fixed profile page layout scale, Google image loading fallback behavior, and mobile header overlap.
 
 ## v0.9.95 - Dashboard Upgrade (2026-02-01)
 
@@ -381,9 +403,8 @@ We significantly upgraded the Text-to-Speech engine with smart voice selection a
 
 ---
 
-## v0.9.87 - Core Stability Patch
+## v0.9.87 - Core Stability Patch (2026-01-31)
 
-**Date:** 2026-01-31
 **Codename:** Iron Core
 
 **Description**
@@ -477,6 +498,14 @@ A deep dive into the User Beat Management system. We fixed a critical upload bug
 
 ---
 
+## v0.9.80 - Clean Slate (2026-01-29)
+
+- **FIX**: Resolved Latency Wizard calibration not being applied during playback.
+- **TEST**: Added 8 word prompt unit tests covering anti-rhyme logic, fallback behavior, and difficulty filtering.
+- **DOCS**: Added detailed scheduler and beat-library comments, introduced MCP audit workflow notes, and refreshed the feature matrix audit status.
+
+---
+
 ## v0.9.79 - Pass the Phone (2026-01-29)
 
 **"Cypher Mode Activated 🎤"**
@@ -517,9 +546,8 @@ Minor layout improvements to ensure perfect alignment across all devices.
 
 ---
 
-## v0.9.76 - Ad Conversion Update 🚀
+## v0.9.76 - Ad Conversion Update 🚀 (2026-01-27)
 
-**Date:** 2026-01-27
 **Codename:** Conversion Flow
 
 We launched a dedicated download landing page and a celebration screen for new Pro members to optimize our ad campaigns.
@@ -532,7 +560,7 @@ We launched a dedicated download landing page and a celebration screen for new P
 
 ---
 
-## v0.9.75 - Sonic Boost Update ⚡(2026-01-27)
+## v0.9.75 - Sonic Boost Update ⚡ (2026-01-27)
 
 **"Sonic Boost Update ⚡"**
 
@@ -1744,7 +1772,7 @@ Achieved a "Zero Problem" build state, perfected audio loop handling, and finali
 
 - Concurrent Playback: Implemented "Single Source of Truth" audio logic. Only one track plays at a time.
 - Gapless Looping: Eliminated the restart gap in SessionPlayer and RecordingCard loops.
-- Build Stability: Resolved 100% of lint warnings and type errors for a pristine codebase.
+- Build Stability: Resolved the known lint warnings and type errors for that release baseline. Current builds may still pass with known Sentry/OpenTelemetry critical dependency warnings.
 - Admin Management: Fixed Beat Reordering and Upload tools.
 
 ---
@@ -1857,7 +1885,7 @@ Restored core practice UI and hardened architecture against serialization errors
 
 **"The Zero Warning"**
 
-Critical regressions in audio timing and synchronization resolved. Achieved a perfectly clean build with 0 warnings.
+Critical regressions in audio timing and synchronization resolved. At the time, the release cleared the known build-warning baseline; current builds may still pass with known Sentry/OpenTelemetry critical dependency warnings.
 
 ### Fixes & Improvements
 
@@ -1865,7 +1893,7 @@ Critical regressions in audio timing and synchronization resolved. Achieved a pe
 - Double TTS: Fixed logic bug causing the first word to repeat twice.
 - Error Persistence: useBeatPlayer now clears errors on stop/restart.
 - Achievements: Implemented auto-seeding to ensure milestones are always populated.
-- Industrial Cleanup: Fixed all remaining 8 build warnings across the codebase.
+- Industrial Cleanup: Fixed the 8 build warnings known in that release baseline; later Sentry/OpenTelemetry critical dependency warnings are tracked separately as known passing-build warnings.
 
 ---
 
