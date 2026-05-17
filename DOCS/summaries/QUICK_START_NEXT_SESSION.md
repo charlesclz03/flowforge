@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.1.3`
+**Current Version**: `1.1.4`
 **Last Updated**: 2026-05-17
 
 ## Bootstrap (Windows-safe)
@@ -64,10 +64,10 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Verify the new TTS, review waveform, and private beat upload adapters on real mobile browsers.
-2. Monitor multilingual prompt quality and TTS fallback behavior.
-3. Continue recording pipeline reliability hardening.
-4. Preserve release discipline and docs governance consistency.
+1. Production-smoke v1.1.4 UX recovery surfaces: review deep links, Beat Vault, feedback, setup, practice, recordings, settings, and install guidance.
+2. Verify the TTS, review waveform, and private beat upload adapters on real mobile browsers.
+3. Monitor multilingual prompt quality and TTS fallback behavior.
+4. Continue recording pipeline reliability hardening.
 
 ## GitHub Research Handoff
 

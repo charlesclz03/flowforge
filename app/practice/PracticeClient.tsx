@@ -22,6 +22,7 @@ import {
   IOS_SPOKEN_PROMPT_NOTICE,
   getEffectiveTTSEnabled,
 } from '@/lib/tts/platform'
+import { trackEvent } from '@/lib/analytics/track'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
 
 // Components
@@ -529,6 +530,28 @@ export default function PracticeClient({
     }
   }
 
+  const practiceStatusMessage = useMemo(() => {
+    if (engine.status === 'MIXING') return 'Mixing your recording.'
+    if (engine.status === 'SAVING') return 'Saving your session.'
+    if (engine.status === 'PAUSED') return 'Session paused.'
+    if (engine.status === 'PLAYING') {
+      return isRecordingEnabled && engine.recorder.isRecording
+        ? 'Session playing and recording.'
+        : 'Session playing without microphone recording.'
+    }
+    if (engine.status === 'COUNTDOWN') return 'Session countdown started.'
+    if (engine.error) return 'Practice needs attention.'
+    return selectedBeat
+      ? 'Practice is ready.'
+      : 'Choose a beat before starting practice.'
+  }, [
+    engine.error,
+    engine.recorder.isRecording,
+    engine.status,
+    isRecordingEnabled,
+    selectedBeat,
+  ])
+
   // Loading Animation
   const [loadingText, setLoadingText] = useState('Initializing Studio...')
   useEffect(() => {
@@ -565,6 +588,9 @@ export default function PracticeClient({
         </div>
 
         <div className="relative z-10 flex flex-col items-center h-full px-4 max-w-lg mx-auto w-full">
+          <div className="sr-only" role="status" aria-live="polite">
+            {practiceStatusMessage}
+          </div>
           {/* Siren Overlay */}
           <AnimatePresence>
             {isSirenActive && (
@@ -632,8 +658,17 @@ export default function PracticeClient({
                     engine.status === 'IDLE' ||
                     engine.status === 'COMPLETED'
                   ) {
+                    trackEvent('recording_start', {
+                      surface: 'practice',
+                      recording: isRecordingEnabled,
+                      language: selectedLanguage,
+                    })
                     engine.startSession()
                   } else {
+                    trackEvent('recording_end_intent', {
+                      surface: 'practice',
+                      status: engine.status,
+                    })
                     // Stop/Pause logic managed via modal usually
                     setPendingAction('finish')
                     setShowExitConfirmation(true)
@@ -654,9 +689,14 @@ export default function PracticeClient({
                   setPremiumTrigger('recording')
                   setShowPremiumModal(true)
                 }}
-                onToggleRecordingMode={() =>
-                  setIsRecordingEnabled(!isRecordingEnabled)
-                }
+                onToggleRecordingMode={() => {
+                  const nextValue = !isRecordingEnabled
+                  trackEvent('recording_mode_toggle', {
+                    enabled: nextValue,
+                    surface: 'practice',
+                  })
+                  setIsRecordingEnabled(nextValue)
+                }}
                 onRetrySave={engine.retrySave} // [NEW] Bind retry save
                 isTTSEnabled={effectiveTTSEnabled}
                 voiceStatus={engine.voiceStatus}
@@ -765,6 +805,10 @@ export default function PracticeClient({
                     engine.stopSession()
                     setBeat(pendingBeatSelection)
                   } else {
+                    trackEvent('recording_end_confirmed', {
+                      surface: 'practice',
+                      action: pendingAction || 'finish',
+                    })
                     engine.stopSession() // This triggers 'FINISHING' -> 'SAVING'
                   }
                   setPendingAction(null)

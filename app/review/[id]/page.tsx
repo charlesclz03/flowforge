@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { ReviewTemplate } from '@/components/templates/ReviewTemplate'
@@ -99,6 +99,10 @@ export default function ReviewPage() {
   const [isSavingSettings, setIsSavingSettings] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const { error, handleError, clearError } = useErrorHandler()
+  const signInPath = useMemo(() => {
+    const callbackPath = recordingId ? `/review/${recordingId}` : '/recordings'
+    return `/login?callbackUrl=${encodeURIComponent(callbackPath)}`
+  }, [recordingId])
 
   // Ref to get volume/fx settings from player
   const playerRef = useRef<SessionPlayerHandles>(null)
@@ -129,6 +133,12 @@ export default function ReviewPage() {
       fetchRecording()
     }
   }, [status, recordingId, fetchRecording])
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace(signInPath)
+    }
+  }, [router, signInPath, status])
 
   const hasUnsavedSettingsChanges =
     Boolean(currentSettings && savedSettings) &&
@@ -251,7 +261,7 @@ export default function ReviewPage() {
 
   const handleBack = () => router.push('/recordings')
 
-  if (status === 'loading' || isLoading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Spinner size="lg" />
@@ -260,8 +270,23 @@ export default function ReviewPage() {
   }
 
   if (status === 'unauthenticated') {
-    router.push('/')
-    return null
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 text-center">
+        <Surface tone="elevated" padding="lg" className="max-w-md space-y-4">
+          <StatusBadge tone="info">Private review</StatusBadge>
+          <h1 className="text-2xl font-semibold text-white">
+            Sign in to open this recording
+          </h1>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            Review links are private. Continue with Google and FreeStyla will
+            bring you back to this studio view.
+          </p>
+          <Button onClick={() => router.replace(signInPath)} className="w-full">
+            Continue to Sign In
+          </Button>
+        </Surface>
+      </div>
+    )
   }
 
   if (!recordingId) {
@@ -273,11 +298,55 @@ export default function ReviewPage() {
     )
   }
 
+  if (isLoading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center bg-background"
+        role="status"
+        aria-live="polite"
+      >
+        <Spinner size="lg" />
+        <span className="sr-only">Loading recording review</span>
+      </div>
+    )
+  }
+
+  if (error && !recording) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 text-center">
+        <Surface tone="elevated" padding="lg" className="max-w-md space-y-4">
+          <StatusBadge tone="warning">Review unavailable</StatusBadge>
+          <h1 className="text-2xl font-semibold text-white">
+            Recording not found
+          </h1>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            This recording may have been deleted, may belong to another account,
+            or may still be processing.
+          </p>
+          <Button onClick={handleBack} className="w-full">
+            Back to Recordings
+          </Button>
+        </Surface>
+      </div>
+    )
+  }
+
   if (!recording) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
-        <h1 className="text-xl text-white">Recording not found</h1>
-        <Button onClick={handleBack}>Back to Recordings</Button>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 text-center">
+        <Surface tone="elevated" padding="lg" className="max-w-md space-y-4">
+          <StatusBadge tone="warning">Review unavailable</StatusBadge>
+          <h1 className="text-2xl font-semibold text-white">
+            Recording not found
+          </h1>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            This recording may have been deleted or may belong to another
+            account.
+          </p>
+          <Button onClick={handleBack} className="w-full">
+            Back to Recordings
+          </Button>
+        </Surface>
       </div>
     )
   }

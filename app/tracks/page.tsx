@@ -20,6 +20,7 @@ import { Modal } from '@/components/atoms/Modal'
 import { Toolbar } from '@/components/molecules/display/Toolbar'
 import { cn } from '@/lib/utils'
 import { FALLBACK_BEATS } from '@/lib/data/fallbacks'
+import { trackEvent } from '@/lib/analytics/track'
 
 // Desktop responsiveness fix applied
 export default function TracksPage() {
@@ -46,6 +47,11 @@ export default function TracksPage() {
     user?.role === 'SUPERADMIN'
 
   const handleUseTrack = (beat: Beat) => {
+    trackEvent('beat_vault_use_track', {
+      beat_id: beat.id,
+      premium: Boolean(beat.isPremium),
+      tab: activeTab,
+    })
     router.push(`/difficultyselection?beatId=${beat.id}`)
   }
 
@@ -82,6 +88,7 @@ export default function TracksPage() {
       // Client-side Fallback
       if (publicBeats.length === 0) {
         publicBeats = FALLBACK_BEATS
+        toast('Loaded backup beat catalog', { icon: 'i' })
       }
 
       setFavoriteIds(new Set(favs))
@@ -190,6 +197,10 @@ export default function TracksPage() {
 
   const handleTabChange = (tab: 'public' | 'mine') => {
     if (tab === 'mine' && !isPro) {
+      trackEvent('pro_lock_click', {
+        surface: 'beat_vault_tab',
+        tab,
+      })
       setIsPremiumModalOpen(true)
       return
     }
@@ -198,6 +209,9 @@ export default function TracksPage() {
 
   const handleNewBeatClick = () => {
     if (!isPro) {
+      trackEvent('pro_lock_click', {
+        surface: 'beat_vault_new_beat',
+      })
       setIsPremiumModalOpen(true)
       return
     }
@@ -249,7 +263,7 @@ export default function TracksPage() {
               <button
                 onClick={() => handleTabChange('public')}
                 className={cn(
-                  'px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  'min-h-[44px] px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                   activeTab === 'public'
                     ? 'bg-accent-purple/20 text-white border border-accent-purple/40 shadow-purple-glow'
                     : 'text-text-tertiary hover:text-white'
@@ -263,7 +277,7 @@ export default function TracksPage() {
                   isPro ? 'Show my tracks' : 'My Tracks requires FreeStyla Pro'
                 }
                 className={cn(
-                  'flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  'flex min-h-[44px] items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                   activeTab === 'mine'
                     ? 'bg-accent-purple/20 text-white border border-accent-purple/40 shadow-purple-glow'
                     : isPro
@@ -289,7 +303,7 @@ export default function TracksPage() {
               {session?.user?.role === 'SUPERADMIN' && (
                 <button
                   onClick={() => router.push('/admin/beats')}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-red/10 text-accent-red border border-accent-red/20 rounded-lg font-medium text-sm hover:bg-accent-red/20 transition-all shadow-red-glow"
+                  className="flex min-h-[44px] items-center justify-center gap-2 px-4 py-2 bg-accent-red/10 text-accent-red border border-accent-red/20 rounded-lg font-medium text-sm hover:bg-accent-red/20 transition-all shadow-red-glow"
                 >
                   <IconFrame
                     icon={Settings}
@@ -308,7 +322,7 @@ export default function TracksPage() {
                     : 'New Beat requires FreeStyla Pro'
                 }
                 className={cn(
-                  'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  'flex min-h-[44px] items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                   isPro
                     ? 'bg-accent-purple text-white border border-accent-purple hover:bg-accent-purple/90 shadow-purple-glow'
                     : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
@@ -333,7 +347,7 @@ export default function TracksPage() {
                 key={genre}
                 onClick={() => setSelectedGenre(genre)}
                 className={cn(
-                  'px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border flex items-center justify-center',
+                  'min-h-[44px] px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-colors border flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                   selectedGenre === genre
                     ? 'bg-white text-black border-white'
                     : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'
@@ -348,7 +362,7 @@ export default function TracksPage() {
         {isLoading ? (
           <div className="space-y-3" role="status" aria-live="polite">
             <p className="text-sm font-medium text-text-secondary">
-              Loading Beat Vault...
+              Loading tracks...
             </p>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {[1, 2, 3, 4].map((i) => (
@@ -377,10 +391,22 @@ export default function TracksPage() {
                 onToggleFavorite={(e) => handleToggleFavorite(beat.id, e)}
                 onUseTrack={
                   !isPro && beat.isPremium
-                    ? () => setIsPremiumModalOpen(true)
+                    ? () => {
+                        trackEvent('pro_lock_click', {
+                          surface: 'beat_vault_card',
+                          beat_id: beat.id,
+                        })
+                        setIsPremiumModalOpen(true)
+                      }
                     : () => handleUseTrack(beat)
                 }
-                onLockedClick={() => setIsPremiumModalOpen(true)}
+                onLockedClick={() => {
+                  trackEvent('pro_lock_click', {
+                    surface: 'beat_vault_card',
+                    beat_id: beat.id,
+                  })
+                  setIsPremiumModalOpen(true)
+                }}
                 onDelete={
                   beat.uploaderId && beat.uploaderId === session?.user?.id
                     ? () => setBeatPendingDelete(beat)

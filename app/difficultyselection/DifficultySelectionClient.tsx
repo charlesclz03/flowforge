@@ -34,6 +34,7 @@ import { isProUser } from '@/lib/subscription/isPro'
 import { useTTS } from '@/hooks/useTTS'
 import { TTS_LANGUAGE_OPTIONS, type TTSLanguageCode } from '@/lib/tts/languages'
 import { IOS_SPOKEN_PROMPT_NOTICE } from '@/lib/tts/platform'
+import { trackEvent } from '@/lib/analytics/track'
 
 type Frequency = 2 | 4 | 8 | 16
 
@@ -372,7 +373,11 @@ export function DifficultySelectionClient({
                 })}
               </div>
               {voiceStatusMessage && (
-                <p className="mt-3 text-xs leading-relaxed text-text-tertiary">
+                <p
+                  className="mt-3 text-xs leading-relaxed text-text-tertiary"
+                  role="status"
+                  aria-live="polite"
+                >
                   {voiceStatusMessage}
                 </p>
               )}
@@ -403,7 +408,14 @@ export function DifficultySelectionClient({
                 </div>
                 <Switch
                   checked={isRecordingEnabled}
-                  onCheckedChange={setIsRecordingEnabled}
+                  onCheckedChange={(checked) => {
+                    trackEvent('recording_mode_toggle', {
+                      enabled: checked,
+                      surface: 'difficultyselection',
+                    })
+                    setIsRecordingEnabled(checked)
+                  }}
+                  ariaLabel="Toggle recording mode"
                   className="data-[state=checked]:bg-accent-red"
                 />
               </div>
@@ -515,6 +527,13 @@ export function DifficultySelectionClient({
             disabled={!canStart}
             onClick={() => {
               if (!selectedBeat) return
+              trackEvent('practice_start_intent', {
+                surface: 'difficultyselection',
+                language: selectedLanguage,
+                recording: isRecordingEnabled,
+                cadence: selectedFrequency,
+                difficulty: selectedDifficulty,
+              })
               router.push(
                 `/practice?lang=${encodeURIComponent(selectedLanguage)}`
               )

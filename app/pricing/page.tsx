@@ -31,9 +31,9 @@ export default async function PricingPage() {
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
               <StatusBadge tone="premium">Pro workspace</StatusBadge>
-              <h1 className="mt-3 text-2xl font-semibold text-white">
+              <h2 className="mt-3 text-2xl font-semibold text-white">
                 Upgrade when review and storage matter.
-              </h1>
+              </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-secondary">
                 Free is built for practice. Pro adds saved takes, deeper review,
                 and upload workflows without changing the core training loop.

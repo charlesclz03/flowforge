@@ -280,7 +280,8 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
       <div className="px-4 space-y-2">
         <button
           onClick={() => setIsStudioOpen(!isStudioOpen)}
-          className="w-full flex items-center justify-between ml-2 mb-3 group"
+          aria-expanded={isStudioOpen}
+          className="w-full min-h-[44px] flex items-center justify-between ml-2 mb-3 group"
         >
           <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest group-hover:text-white transition-colors">
             Studio Controls
@@ -342,8 +343,13 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 )
               }}
               disabled={isIOS}
+              aria-label={
+                isIOS
+                  ? 'Voice prompts disabled on iPhone and iPad'
+                  : 'Toggle voice prompts'
+              }
               className={cn(
-                'w-11 h-6 rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-orange/50',
+                'min-h-[44px] min-w-[44px] rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-orange/50',
                 isIOS
                   ? 'cursor-not-allowed bg-white/10 opacity-60'
                   : isTTSEnabled
@@ -353,7 +359,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             >
               <div
                 className={cn(
-                  'absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm',
+                  'absolute top-1/2 w-4 h-4 -translate-y-1/2 rounded-full bg-white transition-all shadow-sm',
                   effectiveTTSEnabled ? 'left-6' : 'left-1'
                 )}
               />
@@ -388,14 +394,15 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                   newValue ? 'Studio FX Enabled' : 'Studio FX Disabled'
                 )
               }}
+              aria-label="Toggle Studio FX"
               className={cn(
-                'w-11 h-6 rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-cyan/50',
+                'min-h-[44px] min-w-[44px] rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-cyan/50',
                 isStudioFXEnabled ? 'bg-accent-cyan' : 'bg-white/10'
               )}
             >
               <div
                 className={cn(
-                  'absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm',
+                  'absolute top-1/2 w-4 h-4 -translate-y-1/2 rounded-full bg-white transition-all shadow-sm',
                   isStudioFXEnabled ? 'left-6' : 'left-1'
                 )}
               />
@@ -519,7 +526,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           {/* Contact Support */}
           <button
             onClick={() => setIsSupportOpen(true)}
-            className="col-span-2 flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
+            className="col-span-2 flex min-h-[44px] flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95"
           >
             <div className="flex items-center gap-2">
               <IconFrame icon={Mic} variant="inline" tone="blue" decorative />
@@ -604,7 +611,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.1.3</p>
+          <p className="ml-2 text-xs text-white/20">v1.1.4</p>
         </div>
       </div>
       <SupportModal

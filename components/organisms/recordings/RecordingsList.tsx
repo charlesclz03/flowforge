@@ -28,7 +28,7 @@ export function RecordingsList({
   if (isLoading) {
     return (
       <Card>
-        <div className="py-12 text-center">
+        <div className="py-12 text-center" role="status" aria-live="polite">
           <Spinner size="lg" className="mx-auto" />
           <p className="mt-4 text-text-secondary">Loading recordings...</p>
         </div>
@@ -41,7 +41,7 @@ export function RecordingsList({
       <Card>
         <EmptyState
           title="No recordings yet"
-          description="Start practicing to save your recordings here"
+          description="Start a practice session with recording enabled, then return here to review audio or stats-only takes."
         />
       </Card>
     )

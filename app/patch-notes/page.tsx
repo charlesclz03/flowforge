@@ -63,8 +63,11 @@ export default function PatchNotesPage() {
                     <div
                       className={`bg-zinc-900/40 border border-zinc-800/50 rounded-xl p-5 hover:border-purple-500/30 transition-colors w-full ${index % 2 !== 0 ? 'md:text-left' : ''}`}
                     >
-                      {note.changes?.map((category) => (
-                        <div key={category.category} className="mb-4 last:mb-0">
+                      {note.changes?.map((category, categoryIndex) => (
+                        <div
+                          key={`${note.version}-${index}-${category.category}-${categoryIndex}`}
+                          className="mb-4 last:mb-0"
+                        >
                           <h4 className="text-sm font-semibold text-zinc-300 mb-2 border-b border-zinc-800 pb-1 inline-block">
                             {category.category}
                           </h4>

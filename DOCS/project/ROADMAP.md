@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.3`
+**Current Version**: `1.1.4`
 **Last Updated**: 2026-05-17
 **Owner**: Product + Engineering
 
@@ -35,10 +35,10 @@ This roadmap is forward-looking only. Historical phase logs were archived under 
 
 ## Now (0-2 weeks)
 
-1. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
-2. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
-3. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
-4. Keep patch-note audit caveats and public funnel header behavior aligned before each deploy.
+1. Validate the v1.1.4 enterprise UX recovery wave in production-like desktop/mobile conditions.
+2. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
+3. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
+4. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
 
 ## Next (2-6 weeks)
 

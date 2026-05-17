@@ -201,9 +201,13 @@ export const RecordingCard = memo(function RecordingCard({
                 <span>{recording.beat.bpm} BPM</span>
               </p>
               {audioStatus === 'processing' && (
-                <div className="mt-1 flex items-center gap-3">
+                <div
+                  className="mt-1 flex items-center gap-3"
+                  role="status"
+                  aria-live="polite"
+                >
                   <p className="text-xs text-accent-cyan uppercase tracking-wide flex items-center gap-1.5 font-bold">
-                    <div className="w-3 h-3 border-2 border-accent-cyan/30 border-t-accent-cyan rounded-full animate-spin" />
+                    <span className="w-3 h-3 border-2 border-accent-cyan/30 border-t-accent-cyan rounded-full animate-spin" />
                     Processing Audio
                   </p>
                   <button

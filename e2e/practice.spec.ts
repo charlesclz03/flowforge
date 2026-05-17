@@ -262,7 +262,9 @@ test('private track arrow handoff preselects beat and starts practice at calibra
     })
 
     await page.goto('/tracks?tab=mine')
-    await expect(page.getByText('Beat Vault')).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Beat Vault' })
+    ).toBeVisible()
     await expect(
       page.getByRole('heading', { name: userBeat.title })
     ).toBeVisible({
@@ -280,7 +282,7 @@ test('private track arrow handoff preselects beat and starts practice at calibra
       page.getByRole('button', { name: new RegExp(userBeat.title, 'i') })
     ).toBeVisible()
 
-    await page.getByRole('button', { name: /^Practice$/i }).click()
+    await page.getByRole('button', { name: /^Start Practice$/i }).click()
     await expect(page).toHaveURL(/\/practice/)
 
     const startButton = page.locator('#tour-record-btn')
@@ -370,9 +372,9 @@ test('practice page is startable (no stuck loader)', async ({ page }) => {
 
   // Guardrail: no CSP violations or uncaught exceptions during the smoke path.
   expect(pageErrors).toEqual([])
-  expect(consoleErrors.filter((e) => /content security policy/i.test(e))).toEqual(
-    []
-  )
+  expect(
+    consoleErrors.filter((e) => /content security policy/i.test(e))
+  ).toEqual([])
 })
 
 test('session auto-finishes at configured timeout and returns to ready state', async ({

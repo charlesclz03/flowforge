@@ -1,6 +1,6 @@
 # Testing Plan V3
 
-**Target Release**: `1.1.3`
+**Target Release**: `1.1.4`
 **Last Updated**: 2026-05-17
 
 This is the canonical testing strategy for current releases.

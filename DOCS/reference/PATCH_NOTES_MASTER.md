@@ -1,5 +1,25 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.4 - Enterprise UX Recovery (2026-05-17)
+
+**"Audit Fix Plan"**
+
+Documented the enterprise UX audit and closed the first remediation wave across review deep links, E2E expectations, accessibility, mobile controls, install copy, and lifecycle states.
+
+### Fixes & Improvements
+
+- **Review Deep Links**: `/review/[id]` now gives guests a private-review sign-in path with callback preservation instead of a blank loading state.
+- **Accessibility Recovery**: Feedback ratings, feedback text entry, modal close buttons, settings switches, recording controls, and lifecycle states now expose clearer labels or live status messaging.
+- **Beat Vault Polish**: Loading copy, genre chips, locked-track prompts, action targets, fallback catalog messaging, and Pro-lock analytics were tightened for mobile and regression stability.
+- **Install and Conversion Clarity**: `/download`, pricing, login, signup, and legacy `/selectdifficulty` routing now better match current PWA/TWA and auth expectations.
+
+### System Updates
+
+- **Enterprise UX Audit Artifacts**: Added dated audit and fix-plan reports under `audit_reports/` without modifying the whole-app audit master template.
+- **Regression Coverage**: Updated Playwright coverage for current auth redirects, Beat Vault locators, review deep links, feedback accessibility, and patch-note console stability.
+
+---
+
 ## v1.1.3 - Adapter Reliability (2026-05-17)
 
 **"Research Spike Adapters"**

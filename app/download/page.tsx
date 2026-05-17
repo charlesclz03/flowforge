@@ -15,6 +15,7 @@ import { trackEvent } from '@/lib/analytics/track'
 export default function DownloadPage() {
   const { isAndroid, isIOS, isDesktop } = useDevice()
   const [showIOSInstallGuide, setShowIOSInstallGuide] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(false)
   const hasTrackedViewRef = useRef(false)
   const platformTitle = isAndroid
     ? 'Get FreeStyla on Android'
@@ -37,6 +38,14 @@ export default function DownloadPage() {
     })
   }, [isAndroid, isDesktop, isIOS])
 
+  useEffect(() => {
+    const standalone =
+      window.matchMedia?.('(display-mode: standalone)').matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone ===
+        true
+    setIsStandalone(Boolean(standalone))
+  }, [])
+
   return (
     <main className="flex min-h-screen flex-col bg-black text-white app-ambient">
       <AppHeader showBackButton={true} backPath="/howitworks" />
@@ -58,7 +67,9 @@ export default function DownloadPage() {
         </h1>
 
         <p className="mb-12 max-w-lg text-lg text-text-secondary">
-          {platformDescription}
+          {isStandalone
+            ? 'FreeStyla is already running in app mode on this device.'
+            : platformDescription}
         </p>
 
         <Surface
@@ -75,7 +86,7 @@ export default function DownloadPage() {
           <div>
             <StatusBadge tone="success">PWA</StatusBadge>
             <p className="mt-3 text-sm text-text-secondary">
-              Installs to the home screen where the platform supports it.
+              Installs to the home screen where your browser supports it.
             </p>
           </div>
           <div>
@@ -143,7 +154,7 @@ export default function DownloadPage() {
                   tone="white"
                   decorative
                 />
-                Launch App
+                Show iPhone Install Steps
               </Button>
               <p className="text-xs text-text-tertiary">
                 Install via 'Add to Home Screen'
@@ -179,9 +190,11 @@ export default function DownloadPage() {
                 </Button>
               </Link>
               <p className="text-xs text-text-tertiary">
-                {isDesktop
-                  ? 'Optimized for Chrome & Edge'
-                  : 'Launch directly in your browser'}
+                {isStandalone
+                  ? 'Already running as an installed app'
+                  : isDesktop
+                    ? 'Optimized for Chrome and Edge'
+                    : 'Launch directly in your browser'}
               </p>
             </div>
           )}

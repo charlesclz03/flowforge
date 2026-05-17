@@ -84,7 +84,7 @@ export function LandingPricing({
               callbackUrl={ctaPath}
               className="mt-8 w-full rounded-lg bg-white py-3 text-sm font-semibold text-gray-900"
             >
-              Start Free
+              Sign In and Start Free
             </SignInButton>
           )}
         </div>
@@ -156,7 +156,7 @@ export function LandingPricing({
                 callbackUrl="/profile"
                 className="w-full rounded-full bg-white py-3 text-sm font-semibold text-gray-900"
               >
-                Sign In to Upgrade
+                Sign In for Pro Checkout
               </SignInButton>
               <p className="text-center text-xs text-text-tertiary">
                 Secure checkout powered by Stripe after sign-in.

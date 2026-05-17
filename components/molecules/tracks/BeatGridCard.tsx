@@ -132,7 +132,7 @@ export function BeatGridCard({
                 className="bg-white/10"
               />
               <span className="text-[10px] font-medium uppercase tracking-wider">
-                Tap to Unlock
+                Unlock Pro
               </span>
             </button>
           ) : (
@@ -233,7 +233,7 @@ export function BeatGridCard({
                   e.stopPropagation()
                   onDelete(e)
                 }}
-                className="group/del text-text-tertiary hover:text-red-400 transition-colors touch-target"
+                className="group/del flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-text-tertiary transition-colors hover:bg-white/5 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red/60"
                 title="Delete Beat"
                 aria-label="Delete Beat"
               >

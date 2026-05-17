@@ -1,5 +1,5 @@
-'use client'
+import { redirect } from 'next/navigation'
 
-import DifficultySelectionPage from '../difficultyselection/page'
-
-export default DifficultySelectionPage
+export default function SelectDifficultyRedirect() {
+  redirect('/difficultyselection')
+}

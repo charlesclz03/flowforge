@@ -55,8 +55,10 @@ export function Modal({
         {/* Close Button */}
         {showCloseButton && (
           <button
+            type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-text-secondary hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10"
+            aria-label={title ? `Close ${title}` : 'Close dialog'}
+            className="absolute top-4 right-4 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/20 p-2 text-text-secondary transition-colors hover:bg-black/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple"
           >
             <X size={20} />
           </button>

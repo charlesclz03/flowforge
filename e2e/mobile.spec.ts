@@ -9,12 +9,12 @@ test.beforeEach(async ({}, testInfo) => {
 
 test('mobile nav and primary routes are reachable', async ({ page }) => {
   await page.goto('/howitworks')
+  await expect(page.getByRole('link', { name: 'Beats' })).toHaveCount(0)
+
+  await page.goto('/tracks')
   await expect(page.getByRole('link', { name: 'Beats' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Profile' })).toBeVisible()
-
-  await page.getByRole('link', { name: 'Beats' }).click()
-  await expect(page).toHaveURL(/\/tracks/, { timeout: 15000 })
-  await expect(page.getByText('Beat Vault')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Beat Vault' })).toBeVisible()
 })
 
 test('mobile practice can start without stuck loader', async ({ page }) => {

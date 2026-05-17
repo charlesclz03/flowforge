@@ -65,7 +65,10 @@ export function FeedbackForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col items-center justify-center p-4 bg-black/20 rounded-lg border border-white/5 space-y-2">
-          <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
+          <span
+            id="feedback-rating-label"
+            className="text-sm font-bold text-zinc-400 uppercase tracking-widest"
+          >
             Rate Your Experience
           </span>
           <StarRating
@@ -76,7 +79,14 @@ export function FeedbackForm() {
         </div>
 
         <div className="relative">
+          <label
+            htmlFor="feedback-content"
+            className="mb-2 block text-sm font-semibold text-zinc-300"
+          >
+            Feedback
+          </label>
           <textarea
+            id="feedback-content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Write your feedback here..."

@@ -1,6 +1,6 @@
 # Feature Matrix
 
-**Current Version**: `1.1.3`
+**Current Version**: `1.1.4`
 **Last Updated**: 2026-05-17
 
 ## Core Practice

@@ -27,9 +27,9 @@ export function AuthEntryPanel({ mode, callbackPath }: AuthEntryPanelProps) {
             <Sparkles size={22} aria-hidden="true" />
           </div>
 
-          <h1 className="text-3xl font-semibold tracking-tight text-white">
+          <h2 className="text-3xl font-semibold tracking-tight text-white">
             {isSignup ? 'Create your FreeStyla account' : 'Welcome back'}
-          </h1>
+          </h2>
           <p className="mt-3 text-sm leading-6 text-text-secondary">
             Sign in with Google to save sessions, unlock your profile, and keep
             the requested page ready after authentication.
