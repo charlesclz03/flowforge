@@ -27,7 +27,7 @@ Related docs:
 - `DOCS/project/ROADMAP.md`
 - `DOCS/summaries/QUICK_START_NEXT_SESSION.md`
 
-**Current Version**: `1.1.1`
+**Current Version**: `1.1.2`
 **Session Context**: Beta Polish
 
 ## Why This Research Exists
@@ -155,13 +155,13 @@ These are valuable, but not the first five to pursue.
 
 ## Repo-to-FlowForge Mapping
 
-| FlowForge need | Best candidate | Likely touchpoints |
-| --- | --- | --- |
-| TTS fallback reliability | `leaonline/easy-speech` | `hooks/useTTS.ts`, `lib/tts/*`, setup diagnostics |
-| Review/calibration waveform UX | `katspaugh/wavesurfer.js` | review player, calibration UI, recording playback |
-| Android/TWA release stability | `GoogleChromeLabs/bubblewrap` | deployment workflow, Android packaging docs |
-| Upload retry/recovery UX | `transloadit/uppy` | recording upload flow, beat uploads, retry UI |
-| English anti-rhyme quality | `words/cmu-pronouncing-dictionary` | `lib/words/*`, queue/rhyme helpers |
+| FlowForge need                 | Best candidate                     | Likely touchpoints                                |
+| ------------------------------ | ---------------------------------- | ------------------------------------------------- |
+| TTS fallback reliability       | `leaonline/easy-speech`            | `hooks/useTTS.ts`, `lib/tts/*`, setup diagnostics |
+| Review/calibration waveform UX | `katspaugh/wavesurfer.js`          | review player, calibration UI, recording playback |
+| Android/TWA release stability  | `GoogleChromeLabs/bubblewrap`      | deployment workflow, Android packaging docs       |
+| Upload retry/recovery UX       | `transloadit/uppy`                 | recording upload flow, beat uploads, retry UI     |
+| English anti-rhyme quality     | `words/cmu-pronouncing-dictionary` | `lib/words/*`, queue/rhyme helpers                |
 
 ## Adoption Guidance
 

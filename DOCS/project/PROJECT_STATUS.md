@@ -27,13 +27,13 @@ Related docs:
 - `docs/project/ROADMAP.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.1`
+**Current Version**: `1.1.2`
 **Phase**: Beta Polish
 **Last Updated**: 2026-05-17
 
 ## Quick Status
 
-- Latest release: `v1.1.1` (Patch Note Governance).
+- Latest release: `v1.1.2` (SSS Enterprise UI Polish).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -45,6 +45,8 @@ Related docs:
 - Closed the remaining post-v1.0.9 visual audit follow-up with shared icon styling, START halo balancing, and measured landing-card readability evidence.
 - Promoted the patch-note audit cleanup to `v1.1.1`, including release-entry drift checks and a guarded prompt for the 18 remaining `Not done` audit findings.
 - Restored the `/pricing` header back control and right-side app actions before the v1.1.1 deploy handoff.
+- Shipped the v1.1.2 SSS Enterprise UI polish pass: shared UI primitives, token cleanup, shell variables, Skill Check setup console, practice stage containment, public proof panels, Beat Vault toolbar, recordings refresh framing, and review studio metadata.
+- Added Playwright UI-polish smoke coverage across desktop/mobile public funnel, Beat Vault, and Skill Check setup controls.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
 - Restored browser zoom/text selection defaults and kept public onboarding routes focused.
@@ -61,7 +63,8 @@ Related docs:
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| v1.1.1  | Patch Note Governance       | 2026-05-17 | Bumped the release baseline, kept patch-note sources synchronized, clarified historical audit caveats, and restored the `/pricing` header controls for the deploy handoff                                           |
+| v1.1.2  | Enterprise Polish           | 2026-05-17 | Added enterprise UI primitives, centralized tokens/shell variables, upgraded Skill Check, tightened Practice stage containment, and polished funnel/workflow surfaces with new UI smoke coverage                      |
+| v1.1.1  | Patch Note Governance       | 2026-05-17 | Bumped the release baseline, kept patch-note sources synchronized, clarified historical audit caveats, and restored the `/pricing` header controls for the deploy handoff                                             |
 | v1.1.0  | Audit Visual Closure        | 2026-05-15 | Standardized high-traffic icon treatments, balanced the Practice START halo, and re-verified landing feature-card readability on mobile                                                                               |
 | v1.0.9  | Funnel Polish               | 2026-05-15 | Added pricing/auth entry routes, improved premium upgrade paths, corrected install messaging, restored readable/accessibility states, and added a tier-aware `Get Pro` header CTA                                     |
 | v1.0.8  | Unique Flow                 | 2026-05-15 | Added strict no-repeat session queues, required Google profile completion, expanded FR/PT prompt packs, forced iPhone/iPad practice to text-only prompts, and moved live practice beats to calibrated gapless looping |

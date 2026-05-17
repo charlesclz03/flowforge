@@ -155,12 +155,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
     <Card
       padding="lg"
       className={cn(
-        'transition-opacity duration-500 bg-transparent border-none flex flex-col justify-between flex-1 min-h-0',
-        // CENTERING FIX V4 (FINAL):
-        // Removed dynamic padding and duplicate BottomNav.
-        // Pure Flexbox Symmetrical Centering.
-        // overflow-visible ensures glow is not clipped.
-        'py-4 relative overflow-visible'
+        'transition-opacity duration-500 bg-transparent border-none grid grid-rows-[auto_minmax(0,1fr)_auto] flex-1 min-h-0',
+        'py-3 sm:py-4 relative overflow-visible'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
@@ -192,9 +188,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
       />
 
       {/* CENTER STAGE: Just the Player */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 relative z-20 overflow-visible">
-        {/* Hero Player Container with Flanking Satellites - Centered relative to wrapper */}
-        <div className="flex flex-col items-center w-full max-w-lg">
+      <div className="flex min-h-0 w-full flex-col items-center justify-center relative z-20 overflow-visible">
+        <div className="flex w-full max-w-lg flex-col items-center">
           <PracticeErrorBanner error={error} onRetrySave={onRetrySave} />
 
           {spokenPromptNotice && !error && (
@@ -223,7 +218,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
               </div>
             )}
 
-          <div className="flex items-center justify-center gap-2 sm:gap-4 w-full px-2 relative z-10 pointer-events-none">
+          <div className="grid w-full grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] items-center justify-center gap-2 px-1 relative z-10 pointer-events-none sm:grid-cols-[4rem_minmax(0,1fr)_4rem] sm:gap-3">
             {/* Left Satellite: RESTART */}
             <div className="w-12 sm:w-14 flex justify-end shrink-0 pointer-events-auto">
               {isPlaying && handleRestart && (
@@ -246,8 +241,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
               <div
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-0 z-0 rounded-full border border-accent-purple/10 shadow-[0_0_0_20px_rgba(125,122,255,0.24),0_0_50px_26px_rgba(125,122,255,0.34)] transition-opacity duration-700',
-                  isPlaying ? 'opacity-60' : 'opacity-95'
+                  'absolute inset-0 z-0 rounded-full border border-accent-purple/10 shadow-[0_0_0_14px_rgba(125,122,255,0.12),0_0_34px_18px_rgba(125,122,255,0.18)] transition-opacity duration-700',
+                  isPlaying ? 'opacity-55' : 'opacity-75'
                 )}
               />
               {/* Simon Ring (Cypher Mode) - Outer Edge */}
@@ -336,8 +331,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   <motion.div
                     className="absolute rounded-full border-2 pointer-events-none"
                     style={{
-                      width: 'calc(min(60vmin, 260px, 45vh) + 40px)', // Updated scaling
-                      height: 'calc(min(60vmin, 260px, 45vh) + 40px)',
+                      width: 'clamp(15rem, 55vmin, 19rem)',
+                      height: 'clamp(15rem, 55vmin, 19rem)',
                       borderColor: 'rgba(74, 72, 176, 0.4)',
                       boxShadow: '0 0 20px rgba(74, 72, 176, 0.2)',
                     }}
@@ -354,8 +349,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   <motion.div
                     className="absolute rounded-full border-2 pointer-events-none"
                     style={{
-                      width: 'calc(min(60vmin, 260px, 45vh) + 80px)', // Updated scaling
-                      height: 'calc(min(60vmin, 260px, 45vh) + 80px)',
+                      width: 'clamp(17rem, 61vmin, 21rem)',
+                      height: 'clamp(17rem, 61vmin, 21rem)',
                       borderColor: 'rgba(61, 59, 142, 0.3)',
                       boxShadow: '0 0 30px rgba(61, 59, 142, 0.15)',
                     }}
@@ -401,10 +396,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 }}
                 disabled={isLoading}
                 className={cn(
-                  'relative z-10 flex items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
-                  // Responsive size: Big Red Button with Safety Constraints
-                  // Caps width and height to 45% of viewport height to prevent crop on short screens
-                  'w-[min(65vmin,320px,45vh)] h-[min(65vmin,320px,45vh)] sm:w-[340px] sm:h-[340px] max-w-[calc(100vw-7rem)] max-h-[calc(100vw-7rem)]',
+                  'relative z-10 flex aspect-square items-center justify-center rounded-full transition-all duration-500 group outline-none shrink-0',
+                  'w-[clamp(13rem,54vmin,20rem)] max-h-[52dvh] max-w-[calc(100vw-7.5rem)]',
                   'border backdrop-blur-md shadow-2xl overflow-hidden',
                   // HIDE BORDER IN CYPHER MODE (SVG Ring acts as border)
                   mode === 'cypher'
@@ -424,12 +417,12 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 {/* Ambient Siren Glows - Boosted Intensity */}
                 <div
                   className={cn(
-                    'absolute inset-0 rounded-full blur-[80px] opacity-0 transition-all duration-300',
+                    'absolute inset-0 rounded-full blur-[54px] opacity-0 transition-all duration-300',
                     isPlaying && 'opacity-20',
                     isSirenActive &&
                       (sirenPhase === 0
-                        ? 'bg-red-600 opacity-80 scale-150' // Boosted from 40/125
-                        : 'bg-blue-600 opacity-80 scale-150')
+                        ? 'bg-red-600 opacity-65 scale-125'
+                        : 'bg-blue-600 opacity-65 scale-125')
                   )}
                 />
 
@@ -672,7 +665,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       </div>
 
       {/* Record Notifier / Bottom Control Area */}
-      <div className="flex-none flex items-end justify-center shrink-0 z-30 pt-2 pb-4 overflow-visible">
+      <div className="flex-none flex items-end justify-center shrink-0 z-30 pt-2 pb-3 overflow-visible">
         <button
           onClick={(e) => {
             e.stopPropagation()

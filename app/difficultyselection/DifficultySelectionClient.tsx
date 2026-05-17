@@ -3,19 +3,29 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Menu } from '@headlessui/react'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
-import { DifficultySelector } from '@/components/molecules/practice/DifficultySelector'
 import { BeatDropdown } from '@/components/molecules/practice/BeatDropdown'
-import { FrequencySelector } from '@/components/molecules/practice/FrequencySelector'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
 import { Button } from '@/components/atoms/Button'
+import { Surface } from '@/components/atoms/Surface'
+import { SegmentedControl } from '@/components/atoms/SegmentedControl'
+import { StatusBadge } from '@/components/atoms/StatusBadge'
 import { Beat } from '@/types/database'
 import { SESSION_CONFIG } from '@/lib/constants/design'
 import { usePracticeSession } from '@/contexts/SessionContext'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { useDevice } from '@/hooks/useDevice'
-import { ChevronDown, User, Users, Mic } from 'lucide-react'
+import {
+  ChevronDown,
+  Disc3,
+  Gauge,
+  Languages,
+  Mic,
+  Radio,
+  Settings2,
+  User,
+  Users,
+} from 'lucide-react'
 import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
@@ -36,6 +46,23 @@ const LANGUAGE_FLAGS: Record<TTSLanguageCode, string> = {
   'fr-FR': '/flags/fr.svg',
   'pt-PT': '/flags/pt.svg',
 }
+
+const DIFFICULTY_OPTIONS = [
+  { value: 1, label: 'Easy', description: 'More room to warm up.' },
+  { value: 2, label: 'Sharp', description: 'Balanced prompt pressure.' },
+  { value: 3, label: 'Elite', description: 'Faster switches, tighter flow.' },
+]
+
+const FREQUENCY_OPTIONS: Array<{
+  value: Frequency
+  label: string
+  description: string
+}> = [
+  { value: 2, label: '2 bars', description: 'Rapid-fire changes.' },
+  { value: 4, label: '4 bars', description: 'Classic freestyle cadence.' },
+  { value: 8, label: '8 bars', description: 'Longer pockets.' },
+  { value: 16, label: '16 bars', description: 'Full verse runs.' },
+]
 
 export function DifficultySelectionClient({
   initialBeats,
@@ -194,9 +221,6 @@ export function DifficultySelectionClient({
     enabled: false,
     language: selectedLanguage,
   })
-  const activeLanguageCode =
-    TTS_LANGUAGE_OPTIONS.find((option) => option.code === selectedLanguage)
-      ?.code ?? TTS_LANGUAGE_OPTIONS[0].code
   const voiceStatusMessage = useMemo(() => {
     if (isIOS) {
       return IOS_SPOKEN_PROMPT_NOTICE
@@ -220,6 +244,14 @@ export function DifficultySelectionClient({
     return null
   }, [isIOS, voiceStatus, activeVoice])
 
+  const activeLanguageLabel =
+    TTS_LANGUAGE_OPTIONS.find((option) => option.code === selectedLanguage)
+      ?.label ?? 'English'
+  const selectedDifficulty = difficulty || SESSION_CONFIG.DEFAULT_DIFFICULTY
+  const selectedFrequency =
+    (frequency as Frequency) || (SESSION_CONFIG.DEFAULT_FREQUENCY as Frequency)
+  const recordingModeLabel = isRecordingEnabled ? 'Record' : 'No record'
+
   return (
     <OnboardingLayout
       showBackButton
@@ -227,25 +259,70 @@ export function DifficultySelectionClient({
       customTitle="SKILL CHECK"
       customSubtitle="Choose your challenge level"
     >
-      {/* Responsive spacing - tighter on small screens */}
-      <div className="space-y-4 sm:space-y-8">
-        {/* Error alert */}
+      <div className="space-y-4 sm:space-y-6">
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
 
-        {/* Configuration Sliders */}
-        <div className="space-y-4 sm:space-y-6 rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-sm">
-          <DifficultySelector
-            value={difficulty || SESSION_CONFIG.DEFAULT_DIFFICULTY}
+        <Surface tone="glass" padding="lg" className="space-y-5 rounded-3xl">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <StatusBadge tone={canStart ? 'success' : 'info'}>
+                {canStart ? 'Ready to launch' : 'Choose a beat'}
+              </StatusBadge>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white">
+                Practice setup
+              </h2>
+              <p className="mt-1 text-sm leading-relaxed text-text-secondary">
+                Tune the session before entering the stage.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-center sm:min-w-[270px]">
+              <div className="rounded-2xl border border-white/10 bg-black/25 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
+                  Bars
+                </p>
+                <p className="mt-1 text-sm font-bold text-white">
+                  {selectedFrequency}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/25 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
+                  Mode
+                </p>
+                <p className="mt-1 text-sm font-bold text-white">
+                  {mode === 'cypher' ? 'Cypher' : 'Solo'}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/25 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
+                  Audio
+                </p>
+                <p className="mt-1 text-sm font-bold text-white">
+                  {recordingModeLabel}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <SegmentedControl
+            label="Difficulty"
+            value={selectedDifficulty}
             onChange={setDifficulty}
-            disabled={false}
+            columns={3}
+            options={DIFFICULTY_OPTIONS.map((option) => ({
+              ...option,
+              icon: <Gauge size={16} />,
+            }))}
           />
-          <FrequencySelector
-            value={
-              (frequency as Frequency) ||
-              (SESSION_CONFIG.DEFAULT_FREQUENCY as Frequency)
-            }
-            onChange={(val) => setFrequency(val)}
-            disabled={false}
+
+          <SegmentedControl
+            label="Prompt cadence"
+            value={selectedFrequency}
+            onChange={setFrequency}
+            columns={4}
+            options={FREQUENCY_OPTIONS.map((option) => ({
+              ...option,
+              icon: <Radio size={16} />,
+            }))}
           />
 
           <BeatDropdown
@@ -259,236 +336,180 @@ export function DifficultySelectionClient({
             defaultCollapsed={true}
           />
 
-          {/* Advanced Section */}
-          <div className="pt-2">
-            <div className="flex min-h-[44px] items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <Menu as="div" className="relative shrink-0">
-                  <Menu.Button
-                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-white/15 bg-white/5 text-lg transition-colors hover:border-white/25 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/70"
-                    aria-label="Select language"
-                  >
-                    <Image
-                      src={LANGUAGE_FLAGS[activeLanguageCode]}
-                      alt=""
-                      aria-hidden
-                      width={24}
-                      height={16}
-                      className="h-4 w-6 rounded-[2px] object-cover"
-                    />
-                  </Menu.Button>
-                  <Menu.Items className="absolute left-0 top-full z-30 mt-2 flex min-w-[138px] items-center gap-1 rounded-xl border border-white/15 bg-zinc-950/95 p-1.5 shadow-2xl backdrop-blur focus:outline-none">
-                    {TTS_LANGUAGE_OPTIONS.map((option) => {
-                      const isActive = selectedLanguage === option.code
-                      return (
-                        <Menu.Item key={option.code}>
-                          {({ active }) => (
-                            <button
-                              type="button"
-                              onClick={() => setSelectedLanguage(option.code)}
-                              className={cn(
-                                'flex h-10 w-10 items-center justify-center rounded-lg border text-lg transition-colors',
-                                isActive
-                                  ? 'border-accent-purple bg-accent-purple/20 shadow-[0_0_12px_rgba(125,122,255,0.28)]'
-                                  : 'border-white/10 bg-black/20',
-                                active &&
-                                  !isActive &&
-                                  'border-white/20 bg-white/10'
-                              )}
-                              aria-label={option.label}
-                            >
-                              <Image
-                                src={LANGUAGE_FLAGS[option.code]}
-                                alt=""
-                                aria-hidden
-                                width={24}
-                                height={16}
-                                className="h-4 w-6 rounded-[2px] object-cover"
-                              />
-                            </button>
-                          )}
-                        </Menu.Item>
-                      )
-                    })}
-                  </Menu.Items>
-                </Menu>
-
-                <button
-                  type="button"
-                  onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                  className="flex min-h-[44px] items-center gap-2 rounded-lg px-1 text-sm font-medium text-text-secondary transition-colors hover:text-white"
-                >
-                  <span className="truncate">Advanced Settings</span>
-                  {!isAdvancedOpen && mode === 'cypher' && (
-                    <div className="ml-1 h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-accent-purple" />
-                  )}
-                </button>
+          <div className="grid gap-3 lg:grid-cols-[1fr_1fr]">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+                <Languages size={16} className="text-accent-cyan" />
+                Prompt language
               </div>
-
-              <button
-                type="button"
-                onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                className={cn(
-                  'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md bg-white/5 text-text-secondary transition-colors hover:bg-white/10 hover:text-white',
-                  isAdvancedOpen && 'bg-accent-purple/20 text-accent-purple'
-                )}
-                aria-label={
-                  isAdvancedOpen
-                    ? 'Collapse advanced settings'
-                    : 'Expand advanced settings'
-                }
-              >
-                <ChevronDown
-                  className={cn(
-                    'transition-transform duration-300',
-                    isAdvancedOpen && 'rotate-180'
-                  )}
-                  size={14}
-                />
-              </button>
+              <div className="grid grid-cols-3 gap-2">
+                {TTS_LANGUAGE_OPTIONS.map((option) => {
+                  const isActive = selectedLanguage === option.code
+                  return (
+                    <button
+                      key={option.code}
+                      type="button"
+                      onClick={() => setSelectedLanguage(option.code)}
+                      className={cn(
+                        'flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-xl border text-sm font-semibold transition-all',
+                        isActive
+                          ? 'border-accent-purple/50 bg-accent-purple/20 text-white shadow-purple-glow'
+                          : 'border-white/10 bg-black/20 text-text-secondary hover:border-white/20 hover:bg-white/10 hover:text-white'
+                      )}
+                      aria-pressed={isActive}
+                    >
+                      <Image
+                        src={LANGUAGE_FLAGS[option.code]}
+                        alt=""
+                        aria-hidden
+                        width={24}
+                        height={16}
+                        className="h-4 w-6 rounded-[2px] object-cover"
+                      />
+                      <span>{option.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              {voiceStatusMessage && (
+                <p className="mt-3 text-xs leading-relaxed text-text-tertiary">
+                  {voiceStatusMessage}
+                </p>
+              )}
             </div>
-            {voiceStatusMessage && (
-              <p className="mt-2 text-xs text-text-tertiary">
-                {voiceStatusMessage}
-              </p>
-            )}
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+                <Mic
+                  size={16}
+                  className={
+                    isRecordingEnabled
+                      ? 'text-accent-red'
+                      : 'text-text-tertiary'
+                  }
+                />
+                Recording mode
+              </div>
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/25 p-4">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white">
+                    {isRecordingEnabled ? 'Capture audio' : 'Practice only'}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-text-tertiary">
+                    {isRecordingEnabled
+                      ? 'Save this take for review after the session.'
+                      : 'Run prompts without saving microphone audio.'}
+                  </p>
+                </div>
+                <Switch
+                  checked={isRecordingEnabled}
+                  onCheckedChange={setIsRecordingEnabled}
+                  className="data-[state=checked]:bg-accent-red"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+              className="flex min-h-[44px] w-full items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 text-sm font-semibold text-text-secondary transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <span className="flex items-center gap-2">
+                <Settings2 size={16} />
+                Session mode
+                {!isAdvancedOpen && mode === 'cypher' && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent-purple" />
+                )}
+              </span>
+              <ChevronDown
+                className={cn(
+                  'transition-transform duration-300',
+                  isAdvancedOpen && 'rotate-180'
+                )}
+                size={16}
+              />
+            </button>
 
             {isAdvancedOpen && (
-              <div className="mt-6 space-y-8 pt-6 border-t border-white/5 animate-in fade-in slide-in-from-top-4 duration-500">
-                {/* Session Mode Selector */}
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-text-secondary uppercase tracking-wider">
-                    Session Mode
-                  </label>
-                  <div className="relative flex bg-black/40 p-1.5 rounded-2xl border border-white/5 h-16">
-                    {/* Animated Background Highlight */}
-                    <div
-                      className={cn(
-                        'absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-accent-purple/20 border border-accent-purple/30 rounded-xl transition-all duration-300 shadow-[0_0_15px_rgba(125,122,255,0.2)] backdrop-blur-sm',
-                        mode === 'cypher'
-                          ? 'left-[calc(50%+1.5px)]'
-                          : 'left-1.5'
-                      )}
-                    />
-
-                    <button
-                      onClick={() => setMode('solo')}
-                      className={cn(
-                        'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
-                        mode === 'solo'
-                          ? 'text-white'
-                          : 'text-text-secondary hover:text-white'
-                      )}
-                    >
-                      <User size={18} />
-                      <span className="text-lg">Solo</span>
-                    </button>
-                    <button
-                      onClick={() => setMode('cypher')}
-                      className={cn(
-                        'relative z-10 flex-1 flex items-center justify-center gap-3 rounded-xl font-bold transition-colors duration-300',
-                        mode === 'cypher'
-                          ? 'text-white'
-                          : 'text-text-secondary hover:text-white'
-                      )}
-                    >
-                      <Users size={18} />
-                      <span className="text-lg">Cypher</span>
-                    </button>
-                  </div>
-
-                  {/* Recording Toggle (Moved from top) */}
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
+              <div className="mt-3 space-y-4 rounded-2xl border border-white/10 bg-black/20 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { value: 'solo' as const, label: 'Solo', icon: User },
+                    { value: 'cypher' as const, label: 'Cypher', icon: Users },
+                  ].map((option) => {
+                    const Icon = option.icon
+                    const isActive = mode === option.value
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setMode(option.value)}
                         className={cn(
-                          'h-10 w-10 rounded-xl flex items-center justify-center transition-colors',
-                          isRecordingEnabled
-                            ? 'bg-red-500/20 text-red-500'
-                            : 'bg-white/10 text-text-tertiary'
+                          'flex min-h-[56px] items-center justify-center gap-2 rounded-xl border font-semibold transition-all',
+                          isActive
+                            ? 'border-accent-purple/50 bg-accent-purple/20 text-white shadow-purple-glow'
+                            : 'border-white/10 bg-black/25 text-text-secondary hover:border-white/20 hover:bg-white/10 hover:text-white'
                         )}
                       >
-                        <Mic size={20} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-white">
-                          Capture the Audio
-                        </p>
-                        <p className="text-xs text-text-tertiary">
-                          {isRecordingEnabled
-                            ? 'Audio will be recorded'
-                            : 'Stealth Mode (No Recording)'}
-                        </p>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={isRecordingEnabled}
-                      onCheckedChange={setIsRecordingEnabled}
-                      className="data-[state=checked]:bg-red-500"
-                    />
-                  </div>
-
-                  {/* Cypher Player Selector (Expands when Cypher is selected) */}
-                  {mode === 'cypher' && (
-                    <div className="animate-in fade-in slide-in-from-top-2 duration-300 p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium text-text-secondary">
-                          Number of Players
-                        </label>
-                        <div className="flex items-center gap-3">
-                          {[2, 3, 4].map((count) => {
-                            let activeClass = ''
-                            switch (count) {
-                              case 2: // Orange
-                                activeClass =
-                                  'bg-accent-orange border-accent-orange shadow-[0_0_15px_rgba(249,115,22,0.5)]'
-                                break
-                              case 3: // Gold
-                                activeClass =
-                                  'bg-accent-gold border-accent-gold shadow-[0_0_15px_rgba(255,214,10,0.5)]'
-                                break
-                              case 4: // Green
-                                activeClass =
-                                  'bg-accent-green border-accent-green shadow-[0_0_15px_rgba(48,209,88,0.5)]'
-                                break
-                            }
-
-                            return (
-                              <button
-                                key={count}
-                                onClick={() => setCypherPlayers(count)}
-                                className={cn(
-                                  'h-10 w-10 rounded-lg border font-bold transition-all flex items-center justify-center',
-                                  cypherPlayers === count
-                                    ? `${activeClass} text-white`
-                                    : 'bg-black/20 border-white/10 text-text-secondary hover:border-white/20'
-                                )}
-                              >
-                                {count}
-                              </button>
-                            )
-                          })}
-                        </div>
-                      </div>
-                      <p className="text-xs text-text-secondary italic">
-                        Players will take turns every {frequency} bars.
-                      </p>
-                    </div>
-                  )}
+                        <Icon size={18} />
+                        {option.label}
+                      </button>
+                    )
+                  })}
                 </div>
+
+                {mode === 'cypher' && (
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <label className="text-sm font-medium text-text-secondary">
+                        Players
+                      </label>
+                      <div className="flex items-center gap-2">
+                        {[2, 3, 4].map((count) => (
+                          <button
+                            key={count}
+                            type="button"
+                            onClick={() => setCypherPlayers(count)}
+                            className={cn(
+                              'h-10 w-10 rounded-xl border font-bold transition-all',
+                              cypherPlayers === count
+                                ? 'border-accent-purple bg-accent-purple/20 text-white shadow-purple-glow'
+                                : 'border-white/10 bg-black/25 text-text-secondary hover:border-white/20'
+                            )}
+                          >
+                            {count}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="mt-3 text-xs text-text-secondary">
+                      Players rotate every {selectedFrequency} bars.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        </div>
 
-        {/* Continue button */}
+          <div className="grid gap-2 rounded-2xl border border-white/10 bg-black/25 p-3 text-xs text-text-secondary sm:grid-cols-3">
+            <span className="flex items-center gap-2 truncate">
+              <Disc3 size={14} className="text-accent-purple" />
+              {selectedBeat?.title ?? 'No beat selected'}
+            </span>
+            <span>{activeLanguageLabel}</span>
+            <span>{selectedDifficulty}/3 difficulty</span>
+          </div>
+        </Surface>
+
         <div className="flex justify-center pt-2">
           <Button
             variant="primary"
             size="lg"
             className={`rounded-full px-10 py-4 text-lg ${
               canStart
-                ? 'bg-gradient-to-r from-accent-purple to-accent-purple/80 text-black shadow-purple hover:scale-105 hover:shadow-glow'
+                ? 'bg-accent-purple text-white shadow-purple-glow hover:scale-[1.02] hover:shadow-glow'
                 : 'border border-white/15 bg-white/10 text-white cursor-not-allowed disabled:opacity-100'
             }`}
             disabled={!canStart}
@@ -499,7 +520,7 @@ export function DifficultySelectionClient({
               )
             }}
           >
-            {canStart ? 'Practice' : 'Select a beat to continue'}
+            {canStart ? 'Start Practice' : 'Choose a Beat First'}
           </Button>
         </div>
       </div>

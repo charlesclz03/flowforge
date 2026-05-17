@@ -13,6 +13,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { IconFrame } from '@/components/atoms/IconFrame'
+import { Surface } from '@/components/atoms/Surface'
+import { StatusBadge } from '@/components/atoms/StatusBadge'
 import { QASection } from '@/components/organisms/landing/QASection'
 import { trackEvent } from '@/lib/analytics/track'
 
@@ -54,10 +56,54 @@ export function HowItWorksContent({
 
   return (
     <div className="space-y-12">
-      {/* How It Works Cards */}
+      <Surface
+        tone="glass"
+        padding="lg"
+        className="grid gap-6 rounded-3xl lg:grid-cols-[1fr_1.05fr] lg:items-center"
+      >
+        <div className="text-left">
+          <StatusBadge tone="info">Live practice preview</StatusBadge>
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            Setup, stage, review. One focused loop.
+          </h2>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary sm:text-base">
+            FreeStyla keeps the workflow tight: choose a beat, set the prompt
+            cadence, enter the orb stage, then review your take with saved
+            session context.
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            { label: 'Beat', value: `${beatCount}+`, tone: 'purple' },
+            { label: 'Language', value: 'EN / FR / PT', tone: 'cyan' },
+            { label: 'Review', value: 'Saved takes', tone: 'green' },
+          ].map((item) => (
+            <div
+              key={item.label}
+              className="rounded-2xl border border-white/10 bg-black/25 p-4 text-left shadow-surface-1"
+            >
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-tertiary">
+                {item.label}
+              </p>
+              <p
+                className={`mt-3 text-xl font-semibold ${
+                  item.tone === 'cyan'
+                    ? 'text-accent-cyan'
+                    : item.tone === 'green'
+                      ? 'text-accent-green'
+                      : 'text-accent-purple'
+                }`}
+              >
+                {item.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Surface>
+
       <div className="grid gap-4 md:grid-cols-3">
         {/* Step 1 */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
+        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
           <IconFrame
             icon={Music}
             variant="feature"
@@ -82,7 +128,7 @@ export function HowItWorksContent({
         </div>
 
         {/* Step 2 */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
+        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
           <IconFrame
             icon={Target}
             variant="feature"
@@ -108,7 +154,7 @@ export function HowItWorksContent({
         </div>
 
         {/* Step 3 */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/40 transition-all duration-300 hover:scale-105 hover:border-accent-purple/40">
+        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
           <IconFrame
             icon={Mic}
             variant="feature"
@@ -136,7 +182,7 @@ export function HowItWorksContent({
 
       {/* Features Grid */}
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-transparent p-6">
+        <div className="rounded-2xl border border-accent-gold/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
           <div className="flex items-start space-x-4">
             <IconFrame
               icon={Languages}
@@ -161,7 +207,7 @@ export function HowItWorksContent({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-accent-purple/20 bg-gradient-to-br from-accent-purple/10 to-transparent p-6">
+        <div className="rounded-2xl border border-accent-purple/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
           <div className="flex items-start space-x-4">
             <IconFrame
               icon={Timer}
@@ -180,7 +226,7 @@ export function HowItWorksContent({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-violet-500/20 bg-gradient-to-br from-violet-500/10 to-transparent p-6">
+        <div className="rounded-2xl border border-accent-purple/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
           <div className="flex items-start space-x-4">
             <IconFrame
               icon={Sparkles}
@@ -202,7 +248,7 @@ export function HowItWorksContent({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 to-transparent p-6">
+        <div className="rounded-2xl border border-accent-cyan/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
           <div className="flex items-start space-x-4">
             <IconFrame
               icon={Zap}
@@ -223,7 +269,7 @@ export function HowItWorksContent({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-green-500/20 bg-gradient-to-br from-green-500/10 to-transparent p-6">
+        <div className="rounded-2xl border border-accent-green/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
           <div className="flex items-start space-x-4">
             <IconFrame
               icon={Music}
@@ -248,7 +294,7 @@ export function HowItWorksContent({
         <Button
           variant="primary"
           size="lg"
-          className="bg-gradient-to-r from-accent-purple to-accent-purple/80 px-10 py-4 text-lg text-black shadow-purple hover:scale-105 hover:shadow-glow"
+          className="bg-accent-purple px-10 py-4 text-lg text-white shadow-purple-glow hover:scale-[1.02] hover:shadow-glow"
           onClick={handleStartClick}
         >
           Start

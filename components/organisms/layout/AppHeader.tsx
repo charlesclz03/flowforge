@@ -65,7 +65,7 @@ export function AppHeader({
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
-        <div className="grid grid-cols-[1fr_auto_1fr] h-14 sm:h-20 items-center justify-center">
+        <div className="grid grid-cols-[1fr_auto_1fr] h-[var(--app-header-height)] items-center justify-center">
           {/* Left Zone: Back Button + Help Button */}
           <div className="flex items-center justify-start pl-2 sm:pl-4 gap-2">
             {showBackButton && (
@@ -178,7 +178,7 @@ export function AppHeader({
                           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                           isPro
                             ? 'border-accent-gold/30 bg-accent-gold/10 text-accent-gold hover:bg-accent-gold/15'
-                            : 'border-accent-purple/40 bg-accent-purple text-white shadow-[0_0_18px_rgba(125,122,255,0.25)] hover:bg-accent-purple/90 hover:shadow-[0_0_24px_rgba(125,122,255,0.35)]'
+                            : 'border-accent-purple/40 bg-accent-purple text-white shadow-purple-glow hover:bg-accent-purple/90 hover:shadow-glow'
                         )}
                       >
                         <IconFrame

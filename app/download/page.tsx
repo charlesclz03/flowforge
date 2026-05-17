@@ -5,6 +5,8 @@ import { useDevice } from '@/hooks/useDevice'
 import { Button } from '@/components/atoms/Button'
 import { IconFrame } from '@/components/atoms/IconFrame'
 import { Modal } from '@/components/atoms/Modal'
+import { Surface } from '@/components/atoms/Surface'
+import { StatusBadge } from '@/components/atoms/StatusBadge'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Download, Zap, WifiOff, Smartphone, Laptop } from 'lucide-react'
 import Link from 'next/link'
@@ -36,7 +38,7 @@ export default function DownloadPage() {
   }, [isAndroid, isDesktop, isIOS])
 
   return (
-    <main className="flex min-h-screen flex-col bg-black text-white">
+    <main className="flex min-h-screen flex-col bg-black text-white app-ambient">
       <AppHeader showBackButton={true} backPath="/howitworks" />
 
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 text-center md:px-8">
@@ -58,6 +60,31 @@ export default function DownloadPage() {
         <p className="mb-12 max-w-lg text-lg text-text-secondary">
           {platformDescription}
         </p>
+
+        <Surface
+          tone="glass"
+          padding="md"
+          className="mb-8 grid w-full max-w-3xl gap-3 text-left sm:grid-cols-3"
+        >
+          <div>
+            <StatusBadge tone="info">Browser</StatusBadge>
+            <p className="mt-3 text-sm text-text-secondary">
+              Opens instantly on desktop and mobile browsers.
+            </p>
+          </div>
+          <div>
+            <StatusBadge tone="success">PWA</StatusBadge>
+            <p className="mt-3 text-sm text-text-secondary">
+              Installs to the home screen where the platform supports it.
+            </p>
+          </div>
+          <div>
+            <StatusBadge tone="premium">Android</StatusBadge>
+            <p className="mt-3 text-sm text-text-secondary">
+              TWA/Play path stays separate from the browser install path.
+            </p>
+          </div>
+        </Surface>
 
         <div className="mb-16 w-full max-w-sm space-y-4">
           {/* Android CTA */}
@@ -162,7 +189,7 @@ export default function DownloadPage() {
 
         {/* Feature Grid */}
         <div className="grid gap-6 md:grid-cols-3 md:gap-8 max-w-4xl mx-auto">
-          <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
+          <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 backdrop-blur-sm">
             <IconFrame
               icon={WifiOff}
               variant="feature"
@@ -176,7 +203,7 @@ export default function DownloadPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
+          <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 backdrop-blur-sm">
             <IconFrame
               icon={Zap}
               variant="feature"
@@ -190,7 +217,7 @@ export default function DownloadPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm">
+          <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 backdrop-blur-sm">
             <IconFrame
               icon={Smartphone}
               variant="feature"

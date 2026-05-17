@@ -127,10 +127,13 @@ export function BottomNav() {
           'w-full flex flex-none justify-center pt-2 bg-transparent pointer-events-auto px-4 z-50',
           isPracticeRoute && '-translate-y-px'
         )}
-        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)' }}
+        style={{
+          paddingBottom:
+            'calc(var(--app-safe-bottom) + var(--app-bottom-nav-offset))',
+        }}
       >
         {/* iOS-style Glass Dock */}
-        <div className="relative grid grid-cols-5 items-center h-20 px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/5 shadow-2xl shadow-black/80 ring-1 ring-white/5 w-full max-w-[400px]">
+        <div className="relative grid grid-cols-5 items-center h-[var(--app-bottom-nav-height)] px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/10 shadow-surface-2 ring-1 ring-white/5 w-full max-w-[400px]">
           {tabs.map((tab) => {
             const isActive = tab.match
               ? tab.match(pathname)
@@ -151,8 +154,8 @@ export function BottomNav() {
                 {/* Spotlight Effect for Active Tab */}
                 {isActive && (
                   <>
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent-purple/30 blur-xl rounded-full pointer-events-none" />
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-1 bg-accent-purple rounded-b-full shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent-purple/20 blur-xl rounded-full pointer-events-none" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-1 bg-accent-purple rounded-b-full shadow-purple-glow" />
                   </>
                 )}
 
@@ -164,7 +167,7 @@ export function BottomNav() {
                       ? cn(
                           'w-14 h-14 rounded-full border-2',
                           isActive
-                            ? 'border-accent-purple bg-accent-purple/10 shadow-[0_0_15px_rgba(168,85,247,0.35)]'
+                            ? 'border-accent-purple bg-accent-purple/10 shadow-purple-glow'
                             : 'border-white/10 bg-white/[0.03] opacity-80 group-hover:border-white/20 group-hover:opacity-100'
                         )
                       : cn(

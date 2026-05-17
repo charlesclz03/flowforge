@@ -21,9 +21,9 @@ export function Card({
   action,
 }: CardProps) {
   const variants = {
-    default: 'bg-background-card/40 backdrop-blur-light',
-    elevated: 'bg-background-elevated/50',
-    glass: 'bg-background-card/60 backdrop-blur-medium',
+    default: 'bg-surface-elevation-1/70 shadow-surface-1 backdrop-blur-light',
+    elevated: 'bg-surface-elevation-2/75 shadow-surface-2 backdrop-blur-medium',
+    glass: 'bg-background-card/60 shadow-surface-1 backdrop-blur-xl',
   }
 
   const paddings = {
@@ -35,7 +35,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-stroke-subtle/40',
+        'rounded-2xl border border-stroke-subtle/50 transition-colors',
         variants[variant],
         paddings[padding],
         className

@@ -56,7 +56,7 @@ export function TabsList({
   return (
     <div
       className={cn(
-        'inline-flex h-10 items-center justify-center rounded-md bg-surface-elevated p-1 text-text-tertiary',
+        'inline-flex min-h-10 items-center justify-center rounded-full border border-white/10 bg-surface-elevation-1/80 p-1 text-text-tertiary shadow-surface-1',
         className
       )}
     >
@@ -93,11 +93,12 @@ export function TabsTrigger({
   return (
     <button
       onClick={handleClick}
+      data-state={isActive ? 'active' : 'inactive'}
       className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex min-h-8 items-center justify-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
         isActive
-          ? 'bg-background text-text-primary shadow-sm'
-          : 'hover:bg-background/50 hover:text-text-primary',
+          ? 'bg-accent-purple/20 text-white shadow-purple-glow'
+          : 'hover:bg-white/10 hover:text-text-primary',
         className
       )}
     >
@@ -122,6 +123,7 @@ export function TabsContent({
 
   return (
     <div
+      data-state="active"
       className={cn(
         'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         className

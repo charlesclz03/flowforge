@@ -9,7 +9,10 @@ import { RecordingsStats } from '@/components/organisms/recordings/RecordingsSta
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
+import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
+import { Surface } from '@/components/atoms/Surface'
+import { StatusBadge } from '@/components/atoms/StatusBadge'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorCodes } from '@/lib/errors'
 import { FreestyleSessionWithBeat } from '@/types/database'
@@ -20,6 +23,7 @@ import { StorageBar } from '@/components/organisms/recordings/StorageBar'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
 import { isProUser } from '@/lib/subscription/isPro'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
+import { RefreshCcw } from 'lucide-react'
 
 export default function RecordingsPage() {
   const { data: session, status } = useSession()
@@ -197,6 +201,34 @@ export default function RecordingsPage() {
         />
 
         {error && <ErrorAlert error={error} onDismiss={clearError} />}
+
+        <Surface
+          tone="glass"
+          padding="md"
+          className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <StatusBadge tone={isPro ? 'premium' : 'neutral'}>
+              {isPro ? 'Pro vault' : 'Practice history'}
+            </StatusBadge>
+            <h1 className="mt-3 text-xl font-semibold text-white">
+              Recordings
+            </h1>
+            <p className="mt-1 text-sm text-text-secondary">
+              Saved audio, stats-only sessions, and review-ready takes stay in
+              one place.
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={fetchRecordings}
+            isLoading={isLoading}
+            leftIcon={<RefreshCcw size={16} />}
+          >
+            Refresh
+          </Button>
+        </Surface>
 
         {/* Storage Bar (Above List) */}
         {!isLoading && (

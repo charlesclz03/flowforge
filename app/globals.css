@@ -23,6 +23,20 @@
     -webkit-tap-highlight-color: transparent;
     min-height: 100dvh;
     touch-action: pan-x pan-y;
+    --app-header-height: 3.5rem;
+    --app-bottom-nav-height: 5rem;
+    --app-bottom-nav-offset: 1.5rem;
+    --app-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --app-shell-bottom-space: calc(
+      var(--app-bottom-nav-height) + var(--app-bottom-nav-offset) +
+        var(--app-safe-bottom) + 1rem
+    );
+  }
+
+  @media (min-width: 640px) {
+    body {
+      --app-header-height: 5rem;
+    }
   }
 
   /* Custom scrollbar for webkit browsers */
@@ -65,11 +79,11 @@
 
   /* Card styles */
   .card {
-    @apply bg-background-card/80 rounded-2xl border border-stroke-subtle/60 p-4 backdrop-blur-light shadow-soft;
+    @apply rounded-2xl border border-stroke-subtle/60 bg-surface-elevation-1/80 p-4 shadow-surface-1 backdrop-blur-light;
   }
 
   .card-elevated {
-    @apply bg-background-elevated/80 rounded-2xl border border-stroke-glow/50 p-6 backdrop-blur-medium shadow-glow;
+    @apply rounded-2xl border border-stroke-glow/50 bg-surface-elevation-2/80 p-6 shadow-surface-2 backdrop-blur-medium;
   }
 
   /* Input styles */
@@ -112,16 +126,34 @@
 
   /* Glassmorphism effect */
   .glass {
-    @apply bg-background-card/70 backdrop-blur-xl border border-white/10 shadow-soft;
+    @apply border border-white/10 bg-surface-elevation-1/75 shadow-surface-1 backdrop-blur-xl;
   }
 
   .glass-aurora {
-    @apply relative overflow-hidden rounded-3xl border border-stroke-subtle/40 bg-background-card/50 backdrop-blur-medium shadow-soft;
+    @apply relative overflow-hidden rounded-3xl border border-stroke-subtle/40 bg-surface-elevation-1/65 shadow-surface-1 backdrop-blur-medium;
   }
 
   .glass-aurora::before {
     content: '';
-    @apply absolute inset-0 -z-10 bg-gradient-aurora opacity-60 blur-3xl;
+    @apply absolute inset-0 -z-10 bg-gradient-aurora opacity-35 blur-3xl;
+  }
+
+  .surface-panel {
+    @apply rounded-2xl border border-white/10 bg-surface-elevation-1/75 shadow-surface-1 backdrop-blur-xl;
+  }
+
+  .surface-panel-strong {
+    @apply rounded-2xl border border-white/10 bg-surface-elevation-2/80 shadow-surface-2 backdrop-blur-xl;
+  }
+
+  .app-ambient {
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        rgba(125, 122, 255, 0.14),
+        transparent 36rem
+      ),
+      linear-gradient(180deg, rgba(15, 15, 18, 0.98), rgba(0, 0, 0, 1));
   }
 
   /* Pulse animation for recording indicator */
@@ -185,16 +217,19 @@
     padding-right: env(safe-area-inset-right);
   }
 
-  /* Bottom navigation safe padding - accounts for fixed nav bar height + safe area */
-  /* BottomNav: h-20 (80px) + bottom-6 (24px) + extra buffer = ~120px min */
   .pb-bottomnav {
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: var(--app-shell-bottom-space);
   }
 
-  @media (min-height: 800px) {
-    .pb-bottomnav {
-      padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
-    }
+  .scrollbar-none,
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar,
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .touch-target {

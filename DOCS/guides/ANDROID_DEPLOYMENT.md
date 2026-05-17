@@ -1,6 +1,6 @@
 # Android Deployment Guide (TWA)
 
-**Current Version**: `1.1.1`
+**Current Version**: `1.1.2`
 **Last Updated**: 2026-05-17
 
 This is the canonical Android/TWA deployment reference.

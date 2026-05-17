@@ -34,13 +34,14 @@ export const Button = memo(
     const { bump } = useHaptics()
 
     const variants = {
-      primary: 'bg-gradient-pulse text-black shadow-neon hover:shadow-glow',
+      primary:
+        'bg-accent-purple text-white shadow-purple-glow hover:bg-accent-purple/90 hover:shadow-glow',
       secondary:
-        'bg-background-elevated text-text-primary hover:bg-opacity-80 hover:shadow-soft',
-      ghost: 'text-text-primary hover:bg-background-elevated',
-      danger: 'bg-accent-red text-white hover:bg-accent-red/90',
+        'border border-white/10 bg-surface-elevation-1/80 text-text-primary shadow-surface-1 hover:border-white/20 hover:bg-surface-highlight/70',
+      ghost: 'text-text-primary hover:bg-white/10',
+      danger: 'bg-accent-red text-white shadow-red-glow hover:bg-accent-red/90',
       outline:
-        'border border-stroke-subtle/40 bg-background-card/70 text-text-primary hover:border-accent-blue/40',
+        'border border-stroke-subtle/60 bg-background-card/60 text-text-primary hover:border-accent-blue/40 hover:bg-surface-highlight/60',
     }
 
     const sizes = {
@@ -61,7 +62,7 @@ export const Button = memo(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all',
+          'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full font-medium transition-all motion-safe:duration-200',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           !disabled && !isLoading && 'active:scale-95',
@@ -79,7 +80,7 @@ export const Button = memo(
         ) : (
           <>
             {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-            <span>{children}</span>
+            <span className="min-w-0 text-center">{children}</span>
             {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
           </>
         )}

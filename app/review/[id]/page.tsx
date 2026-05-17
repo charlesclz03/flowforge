@@ -12,6 +12,8 @@ import {
 } from '@/components/organisms/recordings/SessionPlayer'
 import { Button } from '@/components/atoms/Button'
 import { Spinner } from '@/components/atoms/Spinner'
+import { Surface } from '@/components/atoms/Surface'
+import { StatusBadge } from '@/components/atoms/StatusBadge'
 import { Download, Trash2 } from 'lucide-react'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { ErrorAlert } from '@/components/molecules/feedback/ErrorAlert'
@@ -22,6 +24,7 @@ import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
+import { formatDuration } from '@/lib/utils'
 
 type PersistedFxConfig = {
   voiceVolume?: number
@@ -367,6 +370,53 @@ export default function ReviewPage() {
             </div>
           </div>
         )
+      }
+      metadata={
+        <Surface tone="elevated" padding="md" className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <StatusBadge
+                tone={hasUnsavedSettingsChanges ? 'warning' : 'success'}
+              >
+                {hasUnsavedSettingsChanges
+                  ? 'Unsaved studio changes'
+                  : 'Settings saved'}
+              </StatusBadge>
+              <h2 className="mt-3 text-lg font-semibold text-white">
+                Studio analysis
+              </h2>
+            </div>
+            <p className="text-xs text-text-tertiary">
+              {new Date(recording.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              ['Duration', formatDuration(recording.durationSeconds)],
+              ['Beat', recording.beat?.title ?? 'No beat'],
+              ['BPM', recording.beat?.bpm ? `${recording.beat.bpm}` : 'Unset'],
+              ['Difficulty', `${recording.difficulty}/3`],
+              ['Words', `${recording.wordCount || 0}`],
+              [
+                'Studio nudge',
+                `${Math.trunc(currentSettings?.nudge ?? savedSettings?.nudge ?? 0)} ms`,
+              ],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+              >
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-tertiary">
+                  {label}
+                </p>
+                <p className="mt-1 truncate text-sm font-semibold text-white">
+                  {value}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Surface>
       }
       actions={
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">

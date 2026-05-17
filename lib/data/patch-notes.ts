@@ -22,6 +22,34 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.2',
+    date: '2026-05-17',
+    title: 'SSS Enterprise UI Polish',
+    codename: 'Enterprise Polish',
+    type: 'patch',
+    description:
+      'Upgraded FlowForge from energetic neon/glass toward cleaner futuristic enterprise polish while preserving the FreeStyla identity and the existing audio/session behavior.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Enterprise UI Primitives**: Added shared surface, toolbar, segmented-control, icon-button, feature-tile, and status-badge primitives so high-traffic routes can reuse consistent enterprise-grade states and spacing.',
+          '**Design Token Cleanup**: Centralized missing token aliases, semantic accent roles, scrollbar helpers, shell safe-area variables, and calmer surface/glow shadows in the Tailwind/global CSS layer.',
+          '**Skill Check Upgrade**: Reworked `/difficultyselection` into a setup console with segmented difficulty/cadence cards, first-class language and recording controls, a compact session summary, and a specific `Start Practice` CTA.',
+          '**Practice Stage Polish**: Tightened the practice orb layout with stable rails, clamp-based sizing, reduced competing ambient glow, and preserved the current audio engine, session guard, TTS fallback, and recording retry behavior.',
+          '**Workflow Surface Polish**: Cleaned the Beat Vault toolbar, recordings refresh/stats framing, review studio metadata and unsaved-settings state, plus `/howitworks`, `/pricing`, and `/download` product-proof panels.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**UI Smoke Coverage**: Added Playwright shell/overflow smoke checks for desktop and mobile coverage across public funnel, Beat Vault, and Skill Check setup controls.',
+          '**GitHub Spike Discipline**: Kept wavesurfer.js, Uppy, Bubblewrap, and Easy Speech as documented narrow spikes instead of broad runtime dependency adoption during the polish release.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.1',
     date: '2026-05-17',
     title: 'Patch Note Governance',

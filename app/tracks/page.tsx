@@ -17,6 +17,7 @@ import { ScreenPage } from '@/components/layout/ScreenPage'
 import { Button } from '@/components/atoms/Button'
 import { IconFrame } from '@/components/atoms/IconFrame'
 import { Modal } from '@/components/atoms/Modal'
+import { Toolbar } from '@/components/molecules/display/Toolbar'
 import { cn } from '@/lib/utils'
 import { FALLBACK_BEATS } from '@/lib/data/fallbacks'
 
@@ -241,82 +242,89 @@ export default function TracksPage() {
       <audio ref={audioRef} className="hidden" />
 
       <div className="px-6 py-6 space-y-6 pb-bottomnav">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex p-1 bg-surface-elevated/50 rounded-xl w-fit">
-            <button
-              onClick={() => handleTabChange('public')}
-              className={cn(
-                'px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
-                activeTab === 'public'
-                  ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
-                  : 'text-text-tertiary hover:text-white'
+        <Toolbar
+          className="mb-6"
+          leading={
+            <div className="flex p-1 bg-surface-elevation-1/80 rounded-xl w-fit">
+              <button
+                onClick={() => handleTabChange('public')}
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  activeTab === 'public'
+                    ? 'bg-accent-purple/20 text-white border border-accent-purple/40 shadow-purple-glow'
+                    : 'text-text-tertiary hover:text-white'
+                )}
+              >
+                Public Tracks
+              </button>
+              <button
+                onClick={() => handleTabChange('mine')}
+                aria-label={
+                  isPro ? 'Show my tracks' : 'My Tracks requires FreeStyla Pro'
+                }
+                className={cn(
+                  'flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  activeTab === 'mine'
+                    ? 'bg-accent-purple/20 text-white border border-accent-purple/40 shadow-purple-glow'
+                    : isPro
+                      ? 'text-text-tertiary hover:text-white'
+                      : 'border border-white/10 bg-white/[0.03] text-text-secondary hover:border-accent-purple/40 hover:text-white'
+                )}
+              >
+                My Tracks
+                {!isPro && (
+                  <IconFrame
+                    icon={Lock}
+                    variant="inline"
+                    tone="zinc"
+                    decorative
+                    className="opacity-70"
+                  />
+                )}
+              </button>
+            </div>
+          }
+          trailing={
+            <>
+              {session?.user?.role === 'SUPERADMIN' && (
+                <button
+                  onClick={() => router.push('/admin/beats')}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-red/10 text-accent-red border border-accent-red/20 rounded-lg font-medium text-sm hover:bg-accent-red/20 transition-all shadow-red-glow"
+                >
+                  <IconFrame
+                    icon={Settings}
+                    variant="inline"
+                    tone="red"
+                    decorative
+                  />
+                  <span>Admin</span>
+                </button>
               )}
-            >
-              Public Tracks
-            </button>
-            <button
-              onClick={() => handleTabChange('mine')}
-              aria-label={
-                isPro ? 'Show my tracks' : 'My Tracks requires FreeStyla Pro'
-              }
-              className={cn(
-                'flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
-                activeTab === 'mine'
-                  ? 'bg-accent-purple text-white border border-accent-purple shadow-[0_0_15px_rgba(125,122,255,0.3)]'
-                  : isPro
-                    ? 'text-text-tertiary hover:text-white'
-                    : 'border border-white/10 bg-white/[0.03] text-text-secondary hover:border-accent-purple/40 hover:text-white'
-              )}
-            >
-              My Tracks
-              {!isPro && (
+              <button
+                onClick={handleNewBeatClick}
+                aria-label={
+                  isPro
+                    ? 'Upload a new beat'
+                    : 'New Beat requires FreeStyla Pro'
+                }
+                className={cn(
+                  'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  isPro
+                    ? 'bg-accent-purple text-white border border-accent-purple hover:bg-accent-purple/90 shadow-purple-glow'
+                    : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
+                )}
+              >
                 <IconFrame
-                  icon={Lock}
+                  icon={isPro ? Plus : Lock}
                   variant="inline"
-                  tone="zinc"
+                  tone={isPro ? 'white' : 'zinc'}
                   decorative
-                  className="opacity-70"
                 />
-              )}
-            </button>
-          </div>
-
-          {session?.user?.role === 'SUPERADMIN' && (
-            <button
-              onClick={() => router.push('/admin/beats')}
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg font-medium text-sm hover:bg-red-500/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(248,113,113,0.15)] mr-2"
-            >
-              <IconFrame
-                icon={Settings}
-                variant="inline"
-                tone="red"
-                decorative
-              />
-              <span>Admin</span>
-            </button>
-          )}
-          <button
-            onClick={handleNewBeatClick}
-            aria-label={
-              isPro ? 'Upload a new beat' : 'New Beat requires FreeStyla Pro'
-            }
-            className={cn(
-              'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
-              isPro
-                ? 'bg-accent-purple text-white border border-accent-purple hover:bg-accent-purple/90 hover:scale-105 shadow-[0_0_15px_rgba(125,122,255,0.3)]'
-                : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
-            )}
-          >
-            <IconFrame
-              icon={isPro ? Plus : Lock}
-              variant="inline"
-              tone={isPro ? 'white' : 'zinc'}
-              decorative
-            />
-            <span>New Beat</span>
-          </button>
-        </div>
-
+                <span>New Beat</span>
+              </button>
+            </>
+          }
+        />
         {/* Genre Filter - derived dynamically */}
         {!isLoading && currentTabBeats.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">

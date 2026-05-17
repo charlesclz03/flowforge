@@ -34,17 +34,12 @@ export function OnboardingLayout({
   return (
     <div
       className={cn(
-        'min-h-[100dvh] bg-black text-white flex flex-col',
+        'min-h-[100dvh] app-ambient text-white flex flex-col',
         preventScroll ? 'overflow-hidden h-[100dvh]' : '',
         className
       )}
     >
-      {/* Animated background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-black via-purple-950/20 to-black" />
-
-      {/* Ambient glow orbs */}
-      <div className="pointer-events-none fixed top-1/4 left-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl animate-pulse" />
-      <div className="pointer-events-none fixed bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl animate-pulse delay-1000" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(125,122,255,0.12),transparent_34rem)]" />
 
       {/* Page content */}
       <div className="relative z-10 flex flex-1 flex-col min-h-0">
@@ -58,7 +53,6 @@ export function OnboardingLayout({
         />
 
         <main
-          id="main-content"
           role="main"
           className={cn(
             'flex flex-1 flex-col px-6 pt-4 sm:pt-6',

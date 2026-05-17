@@ -23,16 +23,18 @@ const config: Config = {
           muted: '#636366',
         },
         accent: {
-          purple: '#7D7AFF', // Primary accent color
-          gold: '#FFD60A', // Duolingo/Gamification Gold
+          purple: '#7D7AFF', // Primary brand/action
+          cyan: '#32D3FF', // Informational/system
+          pink: '#FF4FD8', // Legacy creative accent, use sparingly
+          gold: '#FFD60A', // Pro/premium
           // Back-compat alias (many components still use `accent-yellow`)
           yellow: '#FFD60A',
           platinum: '#E5E5EA', // Silver/Platinum
           bronze: '#CD7F32',
-          orange: '#FF9500', // Premium badges only
-          blue: '#0A84FF',
-          green: '#30D158',
-          red: '#FF3B30',
+          orange: '#FF9500',
+          blue: '#0A84FF', // Informational/system
+          green: '#30D158', // Success/ready
+          red: '#FF3B30', // Destructive/recording/error
           violet: '#7D7AFF', // Same as purple
           aqua: '#32D3FF',
           teal: '#64D2FF',
@@ -42,8 +44,24 @@ const config: Config = {
           error: '#FF453A', // Red
         },
         surface: {
+          base: '#0A0A0C',
           subtle: '#121212', // Off-black (Audit 4.2)
           elevated: '#2C2C2E', // Matches `background.elevated`
+          'elevation-1': '#16161A',
+          'elevation-2': '#202026',
+          highlight: '#2A2A34',
+        },
+        primary: {
+          50: '#F1F1FF',
+          100: '#E4E3FF',
+          200: '#C9C7FF',
+          300: '#ABA8FF',
+          400: '#918EFF',
+          500: '#7D7AFF',
+          600: '#6761F2',
+          700: '#514BCF',
+          800: '#3D39A3',
+          900: '#282665',
         },
         timer: {
           ring: '#7D7AFF', // Purple instead of orange
@@ -117,10 +135,14 @@ const config: Config = {
         'gradient-purple': 'linear-gradient(135deg, #7D7AFF 0%, #9D7AFF 100%)',
       },
       boxShadow: {
-        neon: '0 0 30px rgba(125, 122, 255, 0.4)',
-        glow: '0 10px 40px rgba(125, 122, 255, 0.3)',
+        neon: '0 0 24px rgba(125, 122, 255, 0.22)',
+        glow: '0 10px 34px rgba(125, 122, 255, 0.2)',
         soft: '0 20px 60px rgba(0, 0, 0, 0.45)',
-        purple: '0 0 20px rgba(125, 122, 255, 0.5)',
+        purple: '0 0 18px rgba(125, 122, 255, 0.28)',
+        'purple-glow': '0 0 22px rgba(125, 122, 255, 0.28)',
+        'red-glow': '0 0 22px rgba(255, 59, 48, 0.3)',
+        'surface-1': '0 16px 48px rgba(0, 0, 0, 0.36)',
+        'surface-2': '0 24px 70px rgba(0, 0, 0, 0.48)',
       },
       dropShadow: {
         neon: '0 0 10px rgba(125, 122, 255, 0.6)',
