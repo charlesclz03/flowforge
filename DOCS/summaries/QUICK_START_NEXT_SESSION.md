@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-16
+- 2026-05-17
 
 Related docs:
 
@@ -28,7 +28,7 @@ Related docs:
 - `docs/project/ROADMAP.md`
 
 **Current Version**: `1.1.1`
-**Last Updated**: 2026-05-16
+**Last Updated**: 2026-05-17
 
 ## Bootstrap (Windows-safe)
 
@@ -67,7 +67,7 @@ Open: `http://localhost:3000`
 1. Monitor multilingual prompt quality and TTS fallback behavior.
 2. Continue recording pipeline reliability hardening.
 3. Preserve release discipline and docs governance consistency.
-4. Use `DOCS/summaries/NEXT_PROMPT_PATCH_NOTE_NOT_DONE_AUDIT.md` when planning the 18 patch-note audit `Not done` findings.
+4. Verify public funnel headers, especially `/pricing`, after any onboarding or pricing route change.
 
 ## GitHub Research Handoff
 

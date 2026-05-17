@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-16
+- 2026-05-17
 
 Related docs:
 
@@ -29,7 +29,7 @@ Related docs:
 
 **Current Version**: `1.1.1`
 **Phase**: Beta Polish
-**Last Updated**: 2026-05-16
+**Last Updated**: 2026-05-17
 
 ## Quick Status
 
@@ -44,6 +44,7 @@ Related docs:
 - Added the audit funnel polish set: `/pricing`, `/login`, `/signup`, tier-aware header CTA, truthful platform install copy, premium upgrade paths, and mobile accessibility/layout cleanup.
 - Closed the remaining post-v1.0.9 visual audit follow-up with shared icon styling, START halo balancing, and measured landing-card readability evidence.
 - Promoted the patch-note audit cleanup to `v1.1.1`, including release-entry drift checks and a guarded prompt for the 18 remaining `Not done` audit findings.
+- Restored the `/pricing` header back control and right-side app actions before the v1.1.1 deploy handoff.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
 - Restored browser zoom/text selection defaults and kept public onboarding routes focused.
@@ -60,7 +61,7 @@ Related docs:
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| v1.1.1  | Patch Note Governance       | 2026-05-16 | Bumped the release baseline, kept patch-note sources synchronized, and captured the guarded next-session prompt for the 18 `Not done` patch-note audit findings                                                       |
+| v1.1.1  | Patch Note Governance       | 2026-05-17 | Bumped the release baseline, kept patch-note sources synchronized, clarified historical audit caveats, and restored the `/pricing` header controls for the deploy handoff                                           |
 | v1.1.0  | Audit Visual Closure        | 2026-05-15 | Standardized high-traffic icon treatments, balanced the Practice START halo, and re-verified landing feature-card readability on mobile                                                                               |
 | v1.0.9  | Funnel Polish               | 2026-05-15 | Added pricing/auth entry routes, improved premium upgrade paths, corrected install messaging, restored readable/accessibility states, and added a tier-aware `Get Pro` header CTA                                     |
 | v1.0.8  | Unique Flow                 | 2026-05-15 | Added strict no-repeat session queues, required Google profile completion, expanded FR/PT prompt packs, forced iPhone/iPad practice to text-only prompts, and moved live practice beats to calibrated gapless looping |

@@ -19,9 +19,9 @@ export default async function PricingPage() {
 
   return (
     <OnboardingLayout
+      showBackButton
       customTitle="PRICING"
       customSubtitle="Choose your practice setup"
-      showSettings={false}
       showProgress={false}
     >
       <div className="py-8 sm:py-12">

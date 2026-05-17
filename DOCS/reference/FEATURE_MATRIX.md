@@ -1,7 +1,7 @@
 # Feature Matrix
 
 **Current Version**: `1.1.1`
-**Last Updated**: 2026-05-16
+**Last Updated**: 2026-05-17
 
 ## Core Practice
 
@@ -47,6 +47,8 @@
 
 | Date       | Audit                                                    | Status       | Outcome                                                                                                                                                                                                                                                                                                                  |
 | ---------- | -------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-17 | Pricing Header Layout Fix                                | PASS         | Restored `/pricing` route header controls by passing `showBackButton` and allowing the default right-side settings/tier actions through `OnboardingLayout`; deploy gates for v1.1.1 cover the follow-up.                                                                                                                  |
+| 2026-05-17 | Pricing Header Layout Audit                              | FAIL         | Found `/pricing` route-level header regression: the shared `AppHeader` supports the expected controls, but `app/pricing/page.tsx` disables settings and omits `showBackButton`; fix plan recorded in `brain/PRICING_HEADER_FIX_PLAN_2026-05-17.md`.                                                                        |
 | 2026-05-15 | Remaining v1.0.9 Visual Audit Closure                    | PASS         | Added shared icon treatment coverage on high-traffic surfaces, balanced the Practice START halo outside the clipped visualizer, and re-verified `/howitworks` mobile feature-card readability.                                                                                                                           |
 | 2026-05-15 | Practice Track Looping Forever Fix                       | PASS         | Replaced live practice HTML media looping with Web Audio gapless scheduling, preserved private-track cue offsets at loop boundaries, added loop math coverage, and made empty recording fallback saves retryable.                                                                                                        |
 | 2026-05-15 | Practice Reliability Follow-up                           | PASS         | Added word-family anti-repeat cycling, restored 2-bar frequency support across Skill Check/Practice/session saves, removed delayed spoken-prompt scheduling, and added focused Vitest coverage.                                                                                                                          |

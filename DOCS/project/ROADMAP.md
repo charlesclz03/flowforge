@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-16
+- 2026-05-17
 
 Related docs:
 
@@ -28,7 +28,7 @@ Related docs:
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
 **Current Version**: `1.1.1`
-**Last Updated**: 2026-05-16
+**Last Updated**: 2026-05-17
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.
@@ -38,7 +38,7 @@ This roadmap is forward-looking only. Historical phase logs were archived under 
 1. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
 2. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
 3. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
-4. Plan the remaining patch-note audit `Not done` findings from the source audit list before making code/docs changes.
+4. Keep patch-note audit caveats and public funnel header behavior aligned before each deploy.
 
 ## Next (2-6 weeks)
 

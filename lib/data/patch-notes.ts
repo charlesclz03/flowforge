@@ -23,12 +23,12 @@ export interface PatchNote {
 export const PATCH_NOTES: PatchNote[] = [
   {
     version: '1.1.1',
-    date: '2026-05-16',
+    date: '2026-05-17',
     title: 'Patch Note Governance',
     codename: 'Audit Handoff',
     type: 'patch',
     description:
-      'Promoted the patch-note audit cleanup into the release baseline and captured the follow-up prompt for the remaining Not done findings.',
+      'Promoted the patch-note audit cleanup into the release baseline, clarified historical claims, and closed the Pricing header regression before the v1.1.1 deploy handoff.',
     changes: [
       {
         category: 'System Updates',
@@ -36,6 +36,8 @@ export const PATCH_NOTES: PatchNote[] = [
           '**Release Source Sync**: Kept `lib/data/patch-notes.ts` and `DOCS/reference/PATCH_NOTES_MASTER.md` aligned under the new patch-note sync check.',
           '**Deployment Versioning**: Bumped app, lockfile, settings display, and canonical documentation headers to `v1.1.1` for the release handoff.',
           '**Audit Follow-up Prompt**: Added a guarded next-session prompt for the 18 patch-note audit items classified as `Not done`, requiring the source audit list before any implementation plan is written.',
+          '**Historical Claim Caveats**: Clarified the remaining `Not done` patch-note groups as historical or superseded: `/` now intentionally redirects to `/howitworks`, social feed/follow/vote/notification claims are not current live product scope, duel/ranked behavior remains non-live, and cypher room creation remains a mock shell rather than a data-backed multiplayer backend.',
+          '**Pricing Header Recovery**: Restored the `/pricing` header back control and right-side header actions so the public pricing page matches the shared app chrome expectations before deployment.',
         ],
       },
     ],
@@ -187,7 +189,7 @@ export const PATCH_NOTES: PatchNote[] = [
       {
         category: 'Visual Overhaul',
         items: [
-          '**Real Homepage Funnel**: `/` is now a proper landing page with product proof, live pricing, FAQ, and focused CTAs instead of an immediate redirect stub.',
+          '**Real Homepage Funnel (historical/superseded)**: This v1.0.6 entry described a temporary landing-page direction. Current product behavior intentionally routes `/` to `/howitworks`, while pricing and plan details live on `/pricing`.',
           '**Public Route Focus**: Hidden the bottom dock on `/` and `/howitworks` so onboarding pages feel like a guided funnel instead of the authenticated app shell.',
           '**Modal UX Cleanup**: Replaced the core Practice beat-switch confirm and Tracks delete confirm with native in-app modals, and cleaned stale copy across onboarding/pricing surfaces.',
         ],
@@ -3044,7 +3046,7 @@ export const PATCH_NOTES: PatchNote[] = [
           'Auth Redirect Loop: Removed edge middleware protection for Profile/Recordings routes.',
           'Record Button: Fixed invisible "REC" button by changing black-on-black styling to white.',
           'Layout Overlap: Reduced min-height on Practice page to prevent bottom nav overlap.',
-          'Cypher Mode: Created mock room creation API and lobby page.',
+          'Cypher Mode (mock shell): Created mock room creation API and lobby page. This remains a non-production shell and is superseded by the current local pass-the-phone cypher practice flow.',
           'Tracks Fallback: Added client-side fallback beats if API fails.',
         ],
       },
@@ -3144,22 +3146,22 @@ export const PATCH_NOTES: PatchNote[] = [
     codename: 'Arena of Voices',
     date: 'December 14, 2025',
     description:
-      'The silence has been broken. The barriers between emcees have fallen. The Social Awakening brings the community to life with the introduction of public profiles, feeds, and the ultimate test of skill: Duels.',
+      'Historical note: this early release described an intended social surface. Current FreeStyla is practice-first; public profile basics exist, but feed, follow graph, voting, notifications, and live social duels are not current live product scope.',
     changes: [
       {
         category: 'New Features',
         items: [
-          'The Global Feed: A live stream of the latest fire dropped by the community.',
-          'Duels System: Challenge another emcee to a asynchronous rap battle.',
-          'Public Profiles: Showcase your best tracks, stats, and duel history.',
-          'Follow System: Build your crew and never miss a drop.',
+          'The Global Feed (retired/not current): A feed route is not implemented in the current app.',
+          'Duels System (historical/not live): Duel shells exist, but live asynchronous battles and ranked behavior remain non-live/currently marked as coming soon.',
+          'Public Profiles (limited current scope): Public profile pages can show user basics and recent flows, but duel history and social graph-backed stats are not implemented.',
+          'Follow System (retired/not current): Follow/following behavior is not backed by current routes or Prisma models.',
         ],
       },
       {
         category: 'System Updates',
         items: [
-          'Voting Mechanics: Secure, context-aware voting system ensuring fair play.',
-          'Notification Infrastructure: The foundation for future alerts has been laid.',
+          'Voting Mechanics (retired/not current): Vote APIs and vote persistence are not implemented in the current app.',
+          'Notification Infrastructure (retired/not current): Notification persistence and delivery are not implemented in the current app.',
         ],
       },
     ],
