@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Current Canonical Version**: `1.1.2`
+**Current Canonical Version**: `1.1.3`
 **Last Updated**: 2026-05-17
 
 ## Start Here

@@ -160,6 +160,7 @@ export async function POST(req: NextRequest) {
       token: data.token,
       publicUrl: publicData.publicUrl,
       storagePath,
+      bucket: targetBucket,
     })
   } catch (error) {
     console.error('Signed URL Generation Error:', error)

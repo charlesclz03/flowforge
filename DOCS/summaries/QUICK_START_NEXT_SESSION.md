@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.1.2`
+**Current Version**: `1.1.3`
 **Last Updated**: 2026-05-17
 
 ## Bootstrap (Windows-safe)
@@ -64,17 +64,15 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Monitor multilingual prompt quality and TTS fallback behavior.
-2. Continue recording pipeline reliability hardening.
-3. Preserve release discipline and docs governance consistency.
-4. Verify public funnel headers, especially `/pricing`, after any onboarding or pricing route change.
+1. Verify the new TTS, review waveform, and private beat upload adapters on real mobile browsers.
+2. Monitor multilingual prompt quality and TTS fallback behavior.
+3. Continue recording pipeline reliability hardening.
+4. Preserve release discipline and docs governance consistency.
 
 ## GitHub Research Handoff
 
 - Full report: `DOCS/reference/GITHUB_REPO_RESEARCH.md`
-- Top 5 priority repos for the next implementation spikes:
-  1. `leaonline/easy-speech`
-  2. `katspaugh/wavesurfer.js`
-  3. `GoogleChromeLabs/bubblewrap`
-  4. `transloadit/uppy`
-  5. `words/cmu-pronouncing-dictionary`
+- Top remaining priority repos for the next implementation spikes:
+  1. `GoogleChromeLabs/bubblewrap`
+  2. `words/cmu-pronouncing-dictionary`
+  3. Follow-up production validation for `leaonline/easy-speech`, `katspaugh/wavesurfer.js`, and `transloadit/uppy`

@@ -27,13 +27,13 @@ Related docs:
 - `docs/project/ROADMAP.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.2`
+**Current Version**: `1.1.3`
 **Phase**: Beta Polish
 **Last Updated**: 2026-05-17
 
 ## Quick Status
 
-- Latest release: `v1.1.2` (SSS Enterprise UI Polish).
+- Latest release: `v1.1.3` (Adapter Reliability).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -46,6 +46,7 @@ Related docs:
 - Promoted the patch-note audit cleanup to `v1.1.1`, including release-entry drift checks and a guarded prompt for the 18 remaining `Not done` audit findings.
 - Restored the `/pricing` header back control and right-side app actions before the v1.1.1 deploy handoff.
 - Shipped the v1.1.2 SSS Enterprise UI polish pass: shared UI primitives, token cleanup, shell variables, Skill Check setup console, practice stage containment, public proof panels, Beat Vault toolbar, recordings refresh framing, and review studio metadata.
+- Shipped the v1.1.3 adapter reliability pass: Easy Speech-aware TTS boundary, review-only wavesurfer.js fallback wrapper, and signed PUT-first private beat upload adapter with opt-in Uppy/Tus support.
 - Added Playwright UI-polish smoke coverage across desktop/mobile public funnel, Beat Vault, and Skill Check setup controls.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
@@ -63,6 +64,7 @@ Related docs:
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.1.3  | Adapter Reliability         | 2026-05-17 | Added guarded Easy Speech, wavesurfer.js, and Uppy/Tus adapter boundaries for TTS reliability, review waveform fallback, and private beat upload progress while preserving existing fallbacks                         |
 | v1.1.2  | Enterprise Polish           | 2026-05-17 | Added enterprise UI primitives, centralized tokens/shell variables, upgraded Skill Check, tightened Practice stage containment, and polished funnel/workflow surfaces with new UI smoke coverage                      |
 | v1.1.1  | Patch Note Governance       | 2026-05-17 | Bumped the release baseline, kept patch-note sources synchronized, clarified historical audit caveats, and restored the `/pricing` header controls for the deploy handoff                                             |
 | v1.1.0  | Audit Visual Closure        | 2026-05-15 | Standardized high-traffic icon treatments, balanced the Practice START halo, and re-verified landing feature-card readability on mobile                                                                               |

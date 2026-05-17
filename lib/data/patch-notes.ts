@@ -22,6 +22,32 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.3',
+    date: '2026-05-17',
+    title: 'Research Spike Adapters',
+    codename: 'Adapter Reliability',
+    type: 'patch',
+    description:
+      'Added guarded adapter boundaries for TTS, review waveforms, and private beat uploads so researched libraries can improve reliability while preserving the existing fallback paths.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**TTS Reliability Adapter**: Routed spoken prompt readiness, warmup, cancel, and fallback behavior through a small Easy Speech-aware adapter while preserving native speechSynthesis behavior and iOS text-only prompts.',
+          '**Review Waveform Guard**: Added a review-only wavesurfer.js wrapper with init/decode fallback to the existing waveform scrubber, keeping seek-to-pause behavior and beat sync intact.',
+          '**Private Beat Upload Resilience**: Moved Pro private beat uploads behind a signed PUT-first adapter with opt-in Uppy/Tus support and progress feedback, leaving recording uploads unchanged.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Adapter Coverage**: Added focused Vitest coverage for TTS engine fallback, beat upload fallback/progress, and review waveform fallback rendering.',
+          '**Deployment Versioning**: Bumped app metadata, canonical docs, and the settings display to `v1.1.3` for the adapter reliability release.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.2',
     date: '2026-05-17',
     title: 'SSS Enterprise UI Polish',

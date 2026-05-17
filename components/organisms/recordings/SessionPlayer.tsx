@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
+import { ReviewWaveform } from '@/components/molecules/review/ReviewWaveform'
 import { SeamlessLooper } from '@/lib/audio/seamless-looper'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
 import { getActiveCalibrationMs } from '@/lib/audio/calibration'
@@ -679,15 +679,10 @@ export const SessionPlayer = forwardRef<
           {/* Waveform */}
           <div className="w-full max-w-2xl px-4">
             <div className="bg-black/20 rounded-xl p-1 border border-white/5">
-              <WaveformScrubber
+              <ReviewWaveform
                 url={audioUrl}
-                progress={duration > 0 ? currentTime / duration : 0}
-                color="#27272a"
-                playedColor="#a855f7"
-                onChange={(time) => {
-                  pausePlayback()
-                  seekTo(time)
-                }}
+                currentTime={currentTime}
+                duration={duration}
                 onSeek={(time) => {
                   pausePlayback()
                   seekTo(time)

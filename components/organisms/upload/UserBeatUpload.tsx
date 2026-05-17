@@ -6,6 +6,7 @@ import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { Spinner } from '@/components/atoms/Spinner'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
+import { uploadBeatFile } from '@/lib/uploads/beat-upload-client'
 
 interface UserBeatUploadProps {
   isPro: boolean
@@ -37,6 +38,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
     'idle' | 'uploading' | 'success' | 'error'
   >('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -70,6 +72,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
       setArtist('')
       setLabel('')
       setOffset(0)
+      setUploadProgress(0)
     }
   }
 
@@ -104,48 +107,15 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
 
     setIsLoading(true)
     setStatus('uploading')
+    setUploadProgress(0)
 
     try {
-      // Step 1: Get a signed URL from our API
-      const signedUrlRes = await fetch('/api/upload/signed-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fileName: file.name,
-          contentType: file.type,
-        }),
+      const upload = await uploadBeatFile({
+        file,
+        preferResumable: true,
+        onProgress: setUploadProgress,
       })
 
-      if (!signedUrlRes.ok) {
-        const data = await signedUrlRes.json()
-        throw new Error(data.error || 'Failed to get upload URL')
-      }
-
-      const { signedUrl, publicUrl } = await signedUrlRes.json()
-
-      // Step 2: Upload directly to Supabase Storage
-      const uploadRes = await fetch(signedUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type,
-          // Authorization header is usually included in the signed URL and can cause 403 if duplicated or mismatched
-        },
-        body: file,
-      })
-
-      if (!uploadRes.ok) {
-        const errorText = await uploadRes.text()
-        console.error('Supabase Upload Error:', {
-          status: uploadRes.status,
-          statusText: uploadRes.statusText,
-          body: errorText,
-        })
-        throw new Error(
-          `Upload failed (${uploadRes.status}): ${errorText || uploadRes.statusText || 'Unknown error'}. Check if file is < 50MB and storage is not full.`
-        )
-      }
-
-      // Step 3: Register in DB
       const res = await fetch('/api/user/beats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -155,7 +125,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
           artistName: artist,
           label, // Include label
           genre, // Include genre again
-          storageUrl: publicUrl,
+          storageUrl: upload.publicUrl,
           offset,
         }),
       })
@@ -171,6 +141,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
       setTitle('')
       setBpm('')
       setOffset(0)
+      setUploadProgress(0)
       onSuccess()
     } catch (err) {
       setStatus('error')
@@ -374,6 +345,20 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                 {isLoading ? <Spinner size="sm" /> : <Upload size={18} />}
                 {isLoading ? 'Uploading...' : 'Save to My Beats'}
               </button>
+
+              {isLoading && (
+                <div className="space-y-1" role="status" aria-live="polite">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full bg-accent-purple transition-[width]"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-center text-[10px] font-mono text-text-tertiary">
+                    {uploadProgress}% uploaded
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </form>

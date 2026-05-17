@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { getBestVoice, hasVoiceForLanguage } from '@/lib/tts/voice-picker'
 import {
   DEFAULT_TTS_LANGUAGE,
   TTSLanguageCode,
@@ -9,6 +8,13 @@ import {
   TTSVoiceStatus,
 } from '@/lib/tts/utterance-language'
 import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
+import {
+  cancelSpeechEngine,
+  initializeSpeechEngine,
+  speakWithSpeechEngine,
+  SpeechEngineMode,
+  warmupSpeechEngine,
+} from '@/lib/tts/speech-engine'
 
 interface UseTTSProps {
   enabled?: boolean
@@ -34,6 +40,7 @@ export function useTTS({
   const [activeVoice, setActiveVoice] = useState<SpeechSynthesisVoice | null>(
     null
   )
+  const [engineMode, setEngineMode] = useState<SpeechEngineMode>('native')
 
   // Refs to avoid closure staleness in async callbacks
   const mountedRef = useRef(true)
@@ -41,58 +48,23 @@ export function useTTS({
 
   // Initialize Voices
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setVoiceStatus('unsupported')
-      setHasLanguageVoice(false)
-      setIsReady(false)
-      setActiveVoice(null)
-      return
-    }
-
     mountedRef.current = true
     setVoiceStatus('loading')
-    const synth = window.speechSynthesis
-    let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-    const loadVoices = () => {
-      const voices = synth.getVoices()
-      if (voices.length > 0) {
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
-        }
-        const matching = hasVoiceForLanguage(voices, language)
-        const best = getBestVoice(voices, language)
-        if (mountedRef.current) {
-          setHasLanguageVoice(matching)
-          setActiveVoice(best)
-          setIsReady(true)
-          setVoiceStatus(matching ? 'ready' : 'fallback')
-        }
-      }
-    }
-
-    // Chrome loads voices asynchronously
-    loadVoices()
-    synth.addEventListener('voiceschanged', loadVoices)
-    timeoutId = setTimeout(() => {
+    void initializeSpeechEngine({
+      language,
+      maxTimeoutMs: VOICE_LOAD_TIMEOUT_MS,
+    }).then((state) => {
       if (!mountedRef.current) return
-      const voices = synth.getVoices()
-      if (voices.length > 0) return
-
-      // Stay audible even when engines never expose voices.
-      setHasLanguageVoice(false)
-      setActiveVoice(null)
-      setIsReady(true)
-      setVoiceStatus('fallback')
-    }, VOICE_LOAD_TIMEOUT_MS)
+      setEngineMode(state.mode)
+      setHasLanguageVoice(state.hasLanguageVoice)
+      setActiveVoice(state.activeVoice)
+      setIsReady(state.isReady)
+      setVoiceStatus(state.voiceStatus)
+    })
 
     return () => {
       mountedRef.current = false
-      synth.removeEventListener('voiceschanged', loadVoices)
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
     }
   }, [language])
 
@@ -127,60 +99,59 @@ export function useTTS({
       if (typeof window === 'undefined' || !window.speechSynthesis) return
 
       // 1. Cancel existing (Crucial for mobile/fast skipping)
-      window.speechSynthesis.cancel()
-
-      // 2. Create Utterance
-      const u = new SpeechSynthesisUtterance(text)
-
-      // 3. Apply Settings
-      u.lang = resolveUtteranceLanguage({
+      const utteranceLang = resolveUtteranceLanguage({
         requestedLanguage: language,
         activeVoice,
         voiceStatus,
       })
-      if (activeVoice) u.voice = activeVoice
-      u.volume = volume
-      u.rate = rate
-      u.pitch = pitch
 
-      // 4. Speak
       // Mobile Hardening: Some browsers require a user gesture to "unlock" TTS first.
       // There isn't a great way to "catch" that failure other than ensuring this
       // is called from a useEffect that was triggered by a user-driven state change.
-      window.speechSynthesis.speak(u)
+      speakWithSpeechEngine({
+        mode: engineMode,
+        text,
+        activeVoice,
+        utteranceLang,
+        volume,
+        rate,
+        pitch,
+      })
     },
-    [enabled, activeVoice, volume, rate, pitch, language, voiceStatus]
+    [
+      enabled,
+      activeVoice,
+      volume,
+      rate,
+      pitch,
+      language,
+      voiceStatus,
+      engineMode,
+    ]
   )
 
   const warmup = useCallback((): boolean => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return false
 
     try {
-      const u = new SpeechSynthesisUtterance('.')
-      u.lang = resolveUtteranceLanguage({
+      const utteranceLang = resolveUtteranceLanguage({
         requestedLanguage: language,
         activeVoice,
         voiceStatus,
       })
-      if (activeVoice) u.voice = activeVoice
-      u.volume = 0
-      u.rate = 1
-      u.pitch = 1
-
-      // Clear stale queue first, then trigger a silent no-op utterance from user gesture.
-      window.speechSynthesis.cancel()
-      window.speechSynthesis.speak(u)
-      return true
+      return warmupSpeechEngine({
+        mode: engineMode,
+        activeVoice,
+        utteranceLang,
+      })
     } catch {
       return false
     }
-  }, [language, activeVoice, voiceStatus])
+  }, [language, activeVoice, voiceStatus, engineMode])
 
   const cancel = useCallback(() => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel()
-    }
-  }, [])
+    cancelSpeechEngine(engineMode)
+  }, [engineMode])
 
   return {
     speak,

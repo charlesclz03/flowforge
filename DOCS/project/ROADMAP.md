@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.2`
+**Current Version**: `1.1.3`
 **Last Updated**: 2026-05-17
 **Owner**: Product + Engineering
 
@@ -50,11 +50,9 @@ This roadmap is forward-looking only. Historical phase logs were archived under 
 
 The following GitHub-backed candidates are the current priority shortlist:
 
-1. `leaonline/easy-speech` for TTS initialization and fallback hardening.
-2. `katspaugh/wavesurfer.js` for review/calibration waveform UX upgrades.
-3. `GoogleChromeLabs/bubblewrap` for Android/TWA packaging and validation discipline.
-4. `transloadit/uppy` for more resilient upload progress/retry/recovery UX.
-5. `words/cmu-pronouncing-dictionary` for stronger English phonetic anti-rhyme quality.
+1. Verify the newly guarded `easy-speech`, `wavesurfer.js`, and Uppy/Tus adapters in production-like mobile conditions.
+2. `GoogleChromeLabs/bubblewrap` for Android/TWA packaging and validation discipline.
+3. `words/cmu-pronouncing-dictionary` for stronger English phonetic anti-rhyme quality.
 
 See `DOCS/reference/GITHUB_REPO_RESEARCH.md` for the full research write-up, search keywords, and secondary candidates.
 
