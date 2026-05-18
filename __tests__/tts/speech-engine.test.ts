@@ -120,4 +120,57 @@ describe('speech engine adapter', () => {
     expect(nativeCancel).toHaveBeenCalledTimes(2)
     expect(nativeSpeak).toHaveBeenCalledTimes(2)
   })
+
+  it('falls back to native speech when Easy Speech speak fails after init', async () => {
+    const activeVoice = voice('fr-FR')
+    easySpeechMock.speak.mockRejectedValueOnce(new Error('speech stalled'))
+
+    speakWithSpeechEngine({
+      mode: 'easy-speech',
+      text: 'rythme',
+      activeVoice,
+      utteranceLang: 'fr-FR',
+      volume: 0.7,
+      rate: 1,
+      pitch: 1,
+    })
+
+    await vi.waitFor(() =>
+      expect(easySpeechMock.speak).toHaveBeenCalledWith({
+        text: 'rythme',
+        voice: activeVoice,
+        volume: 0.7,
+        rate: 1,
+        pitch: 1,
+        force: true,
+      })
+    )
+    await vi.waitFor(() => expect(nativeSpeak).toHaveBeenCalledTimes(1))
+    expect(nativeCancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to native warmup when Easy Speech warmup fails', async () => {
+    const activeVoice = voice('pt-PT')
+    easySpeechMock.speak.mockRejectedValueOnce(new Error('warmup stalled'))
+
+    const warmed = warmupSpeechEngine({
+      mode: 'easy-speech',
+      activeVoice,
+      utteranceLang: 'pt-PT',
+    })
+
+    expect(warmed).toBe(true)
+    await vi.waitFor(() =>
+      expect(easySpeechMock.speak).toHaveBeenCalledWith({
+        text: '.',
+        voice: activeVoice,
+        volume: 0,
+        rate: 1,
+        pitch: 1,
+        force: true,
+      })
+    )
+    await vi.waitFor(() => expect(nativeSpeak).toHaveBeenCalledTimes(1))
+    expect(nativeCancel).toHaveBeenCalledTimes(1)
+  })
 })

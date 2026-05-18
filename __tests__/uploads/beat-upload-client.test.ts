@@ -3,10 +3,13 @@ import { uploadBeatFile } from '@/lib/uploads/beat-upload-client'
 
 class MockXMLHttpRequest {
   static instances: MockXMLHttpRequest[] = []
+  static nextStatus = 200
+  static nextStatusText = 'OK'
+  static nextResponseText = ''
 
-  status = 200
-  statusText = 'OK'
-  responseText = ''
+  status = MockXMLHttpRequest.nextStatus
+  statusText = MockXMLHttpRequest.nextStatusText
+  responseText = MockXMLHttpRequest.nextResponseText
   upload = {
     onprogress: null as ((event: ProgressEvent) => void) | null,
   }
@@ -44,6 +47,9 @@ describe('beat upload client', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     MockXMLHttpRequest.instances = []
+    MockXMLHttpRequest.nextStatus = 200
+    MockXMLHttpRequest.nextStatusText = 'OK'
+    MockXMLHttpRequest.nextResponseText = ''
     Object.defineProperty(globalThis, 'XMLHttpRequest', {
       configurable: true,
       value: MockXMLHttpRequest,
@@ -80,5 +86,32 @@ describe('beat upload client', () => {
     )
     expect(progress).toContain(50)
     expect(progress.at(-1)).toBe(100)
+  })
+
+  it('surfaces signed URL ticket errors before upload starts', async () => {
+    global.fetch = vi.fn(async () =>
+      Response.json({ error: 'Storage unavailable' }, { status: 500 })
+    ) as typeof fetch
+
+    await expect(
+      uploadBeatFile({
+        file: new File(['beat'], 'beat.mp3', { type: 'audio/mpeg' }),
+      })
+    ).rejects.toThrow('Storage unavailable')
+    expect(MockXMLHttpRequest.instances).toHaveLength(0)
+  })
+
+  it('surfaces signed PUT failures with the storage response text', async () => {
+    MockXMLHttpRequest.nextStatus = 403
+    MockXMLHttpRequest.nextStatusText = 'Forbidden'
+    MockXMLHttpRequest.nextResponseText = 'quota exceeded'
+
+    await expect(
+      uploadBeatFile({
+        file: new File(['beat'], 'beat.mp3', { type: 'audio/mpeg' }),
+      })
+    ).rejects.toThrow(
+      'Upload failed (403): quota exceeded. Check if file is < 50MB and storage is not full.'
+    )
   })
 })
