@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/atoms/Button'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { CheckCircle } from 'lucide-react'
 import { StarRating } from '@/components/molecules/input/StarRating'
 import { useSearchParams } from 'next/navigation'
@@ -16,6 +16,7 @@ export function FeedbackForm() {
   const [status, setStatus] = useState<
     'idle' | 'submitting' | 'success' | 'error'
   >('idle')
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     if (mode === 'rate') {
@@ -55,13 +56,16 @@ export function FeedbackForm() {
 
   return (
     <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mt-12 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-3xl rounded-full pointer-events-none" />
-
       <h3 className="text-xl font-bold text-white mb-2">Share Your Feedback</h3>
       <p className="text-zinc-400 mb-4 text-sm">
-        helps shape the future of FreeStyla.
+        Your notes shape the future of FreeStyla.
       </p>
+      <div className="sr-only" role="status" aria-live="polite">
+        {status === 'success' ? 'Feedback submitted successfully.' : ''}
+        {status === 'error'
+          ? 'Feedback submission failed. Retry available.'
+          : ''}
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col items-center justify-center p-4 bg-black/20 rounded-lg border border-white/5 space-y-2">
@@ -96,7 +100,7 @@ export function FeedbackForm() {
           <AnimatePresence>
             {status === 'success' && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 className="absolute inset-0 flex items-center justify-center bg-zinc-950/90 backdrop-blur-sm rounded-lg border border-green-500/30"

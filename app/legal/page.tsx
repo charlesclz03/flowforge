@@ -28,39 +28,41 @@ export default function LegalPage() {
           </p>
         </div>
 
-        <div className="space-y-4">
-          <Link href="/legal/terms">
-            <div className="bg-surface-elevation-1 rounded-xl p-4 flex items-center gap-4 hover:bg-surface-elevation-2 transition-colors border border-white/5">
-              <div className="p-3 bg-blue-500/10 rounded-lg">
-                <FileText className="w-6 h-6 text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-white font-semibold">Terms of Service</h3>
-                <p className="text-xs text-text-secondary">
-                  Rules, usage licenses, and user agreements.
-                </p>
-              </div>
+        <nav className="space-y-4" aria-label="Legal documents">
+          <Link
+            href="/legal/terms"
+            className="flex min-h-[88px] items-center gap-4 rounded-xl border border-white/5 bg-surface-elevation-1 p-4 transition-colors hover:bg-surface-elevation-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <div className="p-3 bg-blue-500/10 rounded-lg">
+              <FileText className="w-6 h-6 text-blue-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-white font-semibold">Terms of Service</h3>
+              <p className="text-xs text-text-secondary">
+                Rules, usage licenses, and user agreements.
+              </p>
             </div>
           </Link>
 
-          <Link href="/legal/privacy">
-            <div className="bg-surface-elevation-1 rounded-xl p-4 flex items-center gap-4 hover:bg-surface-elevation-2 transition-colors border border-white/5">
-              <div className="p-3 bg-emerald-500/10 rounded-lg">
-                <Lock className="w-6 h-6 text-emerald-400" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-white font-semibold">Privacy Policy</h3>
-                <p className="text-xs text-text-secondary">
-                  How we collect, use, and protect your data.
-                </p>
-              </div>
+          <Link
+            href="/legal/privacy"
+            className="flex min-h-[88px] items-center gap-4 rounded-xl border border-white/5 bg-surface-elevation-1 p-4 transition-colors hover:bg-surface-elevation-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <div className="p-3 bg-emerald-500/10 rounded-lg">
+              <Lock className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-white font-semibold">Privacy Policy</h3>
+              <p className="text-xs text-text-secondary">
+                How we collect, use, and protect your data.
+              </p>
             </div>
           </Link>
-        </div>
+        </nav>
 
         <div className="mt-12 text-center">
           <p className="text-xs text-text-tertiary">
-            FreeStyla © 2026. All rights reserved.
+            FreeStyla &copy; 2026. All rights reserved.
           </p>
         </div>
       </Container>

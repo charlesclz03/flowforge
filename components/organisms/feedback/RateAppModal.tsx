@@ -3,7 +3,7 @@
 import { Modal } from '@/components/atoms/Modal'
 import { Button } from '@/components/atoms/Button'
 import { Star, ThumbsUp } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -16,6 +16,7 @@ interface RateAppModalProps {
 export function RateAppModal({ isOpen, onClose, onRate }: RateAppModalProps) {
   const router = useRouter()
   const [isRedirecting, setIsRedirecting] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
 
   const handleRate = () => {
     setIsRedirecting(true)
@@ -36,22 +37,24 @@ export function RateAppModal({ isOpen, onClose, onRate }: RateAppModalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="">
+    <Modal isOpen={isOpen} onClose={onClose} dialogLabel="Rate FreeStyla">
       <div className="flex flex-col items-center justify-center text-center p-4 space-y-6">
         {/* Visual Header */}
         <div className="relative">
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', delay: 0.1 }}
+            initial={shouldReduceMotion ? false : { scale: 0 }}
+            animate={shouldReduceMotion ? undefined : { scale: 1 }}
+            transition={
+              shouldReduceMotion ? undefined : { type: 'spring', delay: 0.1 }
+            }
             className="w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/30"
           >
             <Star className="w-10 h-10 text-white fill-white" />
           </motion.div>
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            initial={shouldReduceMotion ? false : { scale: 0, opacity: 0 }}
+            animate={shouldReduceMotion ? undefined : { scale: 1, opacity: 1 }}
+            transition={shouldReduceMotion ? undefined : { delay: 0.3 }}
             className="absolute -right-2 -bottom-2 bg-white text-orange-500 rounded-full p-1.5 shadow-md"
           >
             <ThumbsUp size={16} fill="currentColor" />
@@ -74,7 +77,7 @@ export function RateAppModal({ isOpen, onClose, onRate }: RateAppModalProps) {
           <Button
             onClick={handleRate}
             isLoading={isRedirecting}
-            className="w-full bg-white text-black hover:bg-white/90 font-bold h-12 text-base shadow-lg shadow-white/10"
+            className="w-full h-12 text-base font-bold"
           >
             Rate FreeStyla
           </Button>

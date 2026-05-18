@@ -115,7 +115,7 @@ export default function DownloadPage() {
                 <Button
                   variant="primary"
                   size="xl"
-                  className="w-full bg-gradient-to-r from-[#3DDC84] to-[#3DDC84]/80 text-black font-bold shadow-lg shadow-[#3DDC84]/20 hover:scale-105"
+                  className="w-full bg-gradient-to-r from-[#3DDC84] to-[#3DDC84]/80 text-black font-bold shadow-lg shadow-[#3DDC84]/20 motion-safe:hover:scale-105"
                 >
                   <IconFrame
                     icon={Smartphone}
@@ -139,7 +139,7 @@ export default function DownloadPage() {
               <Button
                 variant="primary"
                 size="xl"
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold shadow-lg shadow-blue-500/20 hover:scale-105"
+                className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold shadow-lg shadow-blue-500/20 motion-safe:hover:scale-105"
                 onClick={() => {
                   trackEvent('download_cta_click', {
                     platform: 'ios',
@@ -177,14 +177,13 @@ export default function DownloadPage() {
                 <Button
                   variant="primary"
                   size="xl"
-                  className="w-full bg-white text-black font-bold shadow-lg shadow-purple-500/20 hover:scale-105 hover:bg-white/90"
+                  className="w-full font-bold"
                 >
                   <IconFrame
                     icon={Laptop}
                     variant="inline"
-                    tone="zinc"
+                    tone="white"
                     decorative
-                    className="text-black"
                   />
                   Launch Web App
                 </Button>

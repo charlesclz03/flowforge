@@ -22,6 +22,49 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.5',
+    date: '2026-05-18',
+    title: 'Enterprise UI Remediation',
+    codename: 'Accessible Studio',
+    type: 'patch',
+    description:
+      'Completed the full enterprise UI remediation across accessibility foundations, mobile touch recovery, route-level polish, admin/legal/offline surfaces, and safe mocked regression coverage.',
+    changes: [
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Contrast-Safe Actions**: Primary action tokens now pair FreeStyla purple with a dark foreground so CTAs meet WCAG AA for normal text while preserving the brand color.',
+          '**Mobile Navigation Labels**: The bottom dock now shows compact visible labels and keeps app-shell settings controls at touch-safe sizes.',
+          '**Beat Vault Touch Recovery**: Beat cards and beat selection controls expose touch-visible actions instead of relying on hover-only discovery.',
+          '**Dialog and Motion Completion**: Pause, rate, support, session summary, and studio FX surfaces now avoid empty dialog labels, use shared dialog behavior where appropriate, and flatten decorative motion under reduced-motion preferences.',
+          '**Route-Level Polish**: Public funnel CTAs, offline retry, legal reading surfaces, Premium prompts, and admin dashboards now use calmer contrast-safe actions, semantic links, and touch-safe layouts.',
+          '**Admin Mobile Recovery**: Admin beat/user/feedback surfaces now include clearer loading/empty/error states, touch-safe action controls, and mobile fallback card layouts for safe inspection.',
+        ],
+      },
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Accessible Modal Foundation**: Shared dialogs now expose modal semantics, labelled titles, Escape handling, focus trapping, and focus restoration.',
+          '**Upload and Calibration Polish**: Private beat upload, cue-point calibration, and latency controls now have clearer labels, focus states, and ARIA state where needed.',
+          '**Motion Preference Support**: Practice and patch-note motion paths now respect reduced-motion preferences for decorative animation.',
+          '**Post-Session Accessibility**: Studio FX sliders, playback buttons, and reverb controls now expose explicit labels and pressed state.',
+          '**Stats-Only Review Guardrails**: Regression coverage now confirms stats-only recordings do not expose audio-only review actions while audio recordings remain reviewable.',
+          '**Legal and Offline Trust Surfaces**: Legal cards are semantic links, long-form legal documents use constrained document-like spacing, and offline retry uses the shared button system.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Canonical UI Audit**: Added the 2026-05-18 enterprise UI audit and four-phase remediation roadmap under `DOCS/audits/`.',
+          '**Regression Coverage**: Added UI regression checks for modal semantics, mobile nav labels, Beat Vault actions, upload accessibility, reduced motion, and feedback success states.',
+          '**Safe Auth Fixtures**: Added a reusable Playwright NextAuth bootstrap helper for guest/free/pro/superadmin state coverage with test-user cleanup.',
+          '**Expanded Enterprise Coverage**: Added desktop/mobile regression checks for public funnel overflow, admin guest redirects, mocked admin feedback, recordings/review states, offline/legal surfaces, and latency keyboard reachability.',
+          '**Governance Sync**: Updated the enterprise UI audit, feature matrix, roadmap, testing plan, settings display, package metadata, and canonical patch notes to v1.1.5.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.4',
     date: '2026-05-17',
     title: 'Enterprise UX Recovery',

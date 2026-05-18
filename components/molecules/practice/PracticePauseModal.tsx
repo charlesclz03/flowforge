@@ -1,5 +1,6 @@
 import { Play, RefreshCcw } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { Modal } from '@/components/atoms/Modal'
+import { Button } from '@/components/atoms/Button'
 
 interface PracticePauseModalProps {
   showPauseModal: boolean
@@ -17,52 +18,44 @@ export function PracticePauseModal({
   handleRestart,
 }: PracticePauseModalProps) {
   return (
-    <AnimatePresence>
-      {showPauseModal && isPaused && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="flex items-center gap-6 p-6 rounded-2xl bg-background-elevated/90 border border-white/10 backdrop-blur-xl"
+    <Modal
+      isOpen={showPauseModal && isPaused}
+      onClose={() => setShowPauseModal(false)}
+      title="Practice paused"
+      className="max-w-sm"
+    >
+      <div className="space-y-5">
+        <p className="text-sm text-text-secondary">
+          Resume from the current bar or restart the practice session.
+        </p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Button
+            onClick={() => {
+              setShowPauseModal(false)
+              onTogglePause?.()
+            }}
+            leftIcon={<Play size={20} />}
+            className="min-h-[52px]"
+            aria-label="Resume practice session"
           >
-            {/* Resume Button */}
-            <button
+            Resume
+          </Button>
+          {handleRestart && (
+            <Button
+              variant="secondary"
               onClick={() => {
                 setShowPauseModal(false)
-                onTogglePause?.()
+                handleRestart()
               }}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-accent-purple/20 border border-accent-purple/30 text-accent-purple hover:bg-accent-purple/30 transition-all"
+              leftIcon={<RefreshCcw size={20} />}
+              className="min-h-[52px]"
+              aria-label="Restart practice session"
             >
-              <Play size={32} />
-              <span className="text-xs font-bold uppercase tracking-widest">
-                Resume
-              </span>
-            </button>
-            {/* Restart Button */}
-            {handleRestart && (
-              <button
-                onClick={() => {
-                  setShowPauseModal(false)
-                  handleRestart()
-                }}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-all"
-              >
-                <RefreshCcw size={32} />
-                <span className="text-xs font-bold uppercase tracking-widest">
-                  Restart
-                </span>
-              </button>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              Restart
+            </Button>
+          )}
+        </div>
+      </div>
+    </Modal>
   )
 }

@@ -178,7 +178,7 @@ export function AppHeader({
                           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                           isPro
                             ? 'border-accent-gold/30 bg-accent-gold/10 text-accent-gold hover:bg-accent-gold/15'
-                            : 'border-accent-purple/40 bg-accent-purple text-white shadow-purple-glow hover:bg-accent-purple/90 hover:shadow-glow'
+                            : 'border-accent-purple/40 bg-primary text-primary-foreground shadow-purple-glow hover:bg-primary/90 hover:shadow-glow'
                         )}
                       >
                         <IconFrame

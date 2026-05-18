@@ -294,10 +294,10 @@ export function HowItWorksContent({
         <Button
           variant="primary"
           size="lg"
-          className="bg-accent-purple px-10 py-4 text-lg text-white shadow-purple-glow hover:scale-[1.02] hover:shadow-glow"
+          className="bg-primary px-10 py-4 text-lg text-primary-foreground shadow-purple-glow hover:scale-[1.02] hover:shadow-glow"
           onClick={handleStartClick}
         >
-          Start
+          Start Practice
         </Button>
         <Button
           variant="outline"

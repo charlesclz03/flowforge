@@ -3,12 +3,13 @@
 import { PATCH_NOTES } from '@/lib/data/patch-notes'
 
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function PatchNotesPage() {
   const router = useRouter()
+  const shouldReduceMotion = useReducedMotion()
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-purple-500/30">
       <AppHeader
@@ -25,10 +26,10 @@ export default function PatchNotesPage() {
             {PATCH_NOTES.map((note, index) => (
               <motion.div
                 key={`${note.version}-${note.date}-${note.title}-${note.codename}-${index}`}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: shouldReduceMotion ? 0 : index * 0.1 }}
                 className="relative z-10"
               >
                 {/* Timeline Node - Shifted to match line (left-6) */}
@@ -96,7 +97,7 @@ export default function PatchNotesPage() {
           <div className="text-center mt-12">
             <Link
               href="/profile"
-              className="text-zinc-500 hover:text-white text-sm transition-colors"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/10 px-5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
             >
               {'<-'} Return to Profile
             </Link>

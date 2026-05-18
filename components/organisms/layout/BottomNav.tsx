@@ -133,7 +133,7 @@ export function BottomNav() {
         }}
       >
         {/* iOS-style Glass Dock */}
-        <div className="relative grid grid-cols-5 items-center h-[var(--app-bottom-nav-height)] px-2 rounded-[2.5rem] bg-[#0A0A0A]/80 backdrop-blur-3xl border border-white/10 shadow-surface-2 ring-1 ring-white/5 w-full max-w-[400px]">
+        <div className="relative grid h-[var(--app-bottom-nav-height)] w-full max-w-[400px] grid-cols-5 items-center rounded-[2.5rem] border border-white/10 bg-[#0A0A0A]/80 px-2 shadow-surface-2 ring-1 ring-white/5 backdrop-blur-3xl">
           {tabs.map((tab) => {
             const isActive = tab.match
               ? tab.match(pathname)
@@ -148,7 +148,7 @@ export function BottomNav() {
                 aria-label={tab.name}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'relative flex flex-col items-center justify-center transition-all duration-300 group h-full'
+                  'group relative flex h-full min-w-0 flex-col items-center justify-center gap-0.5 rounded-3xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80'
                 )}
               >
                 {/* Spotlight Effect for Active Tab */}
@@ -171,7 +171,7 @@ export function BottomNav() {
                             : 'border-white/10 bg-white/[0.03] opacity-80 group-hover:border-white/20 group-hover:opacity-100'
                         )
                       : cn(
-                          'w-12 h-12 rounded-full',
+                          'h-11 w-11 rounded-full sm:h-12 sm:w-12',
                           isActive
                             ? 'text-white'
                             : 'text-zinc-500 hover:text-zinc-300'
@@ -207,6 +207,14 @@ export function BottomNav() {
                     )
                   )}
                 </div>
+                <span
+                  className={cn(
+                    'max-w-full truncate px-1 text-[9px] font-semibold uppercase leading-none tracking-wide transition-colors sm:text-[10px]',
+                    isActive ? 'text-white' : 'text-text-tertiary'
+                  )}
+                >
+                  {tab.name}
+                </span>
               </Link>
             )
           })}

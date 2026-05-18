@@ -43,6 +43,14 @@ const config: Config = {
           warning: '#FF9F0A', // Amber/Orange
           error: '#FF453A', // Red
         },
+        premium: '#FFD60A',
+        locked: '#B8B8C4',
+        success: '#30D158',
+        warning: '#FF9F0A',
+        danger: {
+          DEFAULT: '#D70015',
+          foreground: '#FFFFFF',
+        },
         surface: {
           base: '#0A0A0C',
           subtle: '#121212', // Off-black (Audit 4.2)
@@ -50,8 +58,11 @@ const config: Config = {
           'elevation-1': '#16161A',
           'elevation-2': '#202026',
           highlight: '#2A2A34',
+          raised: '#202026',
         },
         primary: {
+          DEFAULT: '#7D7AFF',
+          foreground: '#050509',
           50: '#F1F1FF',
           100: '#E4E3FF',
           200: '#C9C7FF',
@@ -71,6 +82,10 @@ const config: Config = {
           subtle: '#2F2F30',
           strong: '#3F3F41',
           glow: '#1B1B1D',
+          'border-subtle': '#2F2F30',
+        },
+        on: {
+          primary: '#050509',
         },
       },
       fontFamily: {

@@ -162,8 +162,13 @@ export default function AdminBeatsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
+      <div
+        className="flex justify-center items-center min-h-[50vh]"
+        role="status"
+        aria-live="polite"
+      >
         <Loader2 className="animate-spin text-accent-purple" />
+        <span className="sr-only">Loading beats</span>
       </div>
     )
   }
@@ -193,7 +198,92 @@ export default function AdminBeatsPage() {
         customSubtitle="Manage system beats, set premium status, and reorder tracks"
       />
       <div className="container py-8 space-y-8">
-        <div className="rounded-md border border-white/10 bg-surface-elevated">
+        {beats.length === 0 ? (
+          <div
+            className="rounded-2xl border border-white/10 bg-surface-elevated p-8 text-center text-text-secondary"
+            role="status"
+          >
+            No beats found.
+          </div>
+        ) : (
+          <div className="space-y-4 lg:hidden">
+            {beats.map((beat, index) => (
+              <article
+                key={beat.id}
+                className="rounded-2xl border border-white/10 bg-surface-elevated p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold uppercase tracking-wider text-text-tertiary">
+                      #{index + 1} / {beat.genre || 'Uncategorized'}
+                    </p>
+                    <h2 className="truncate text-base font-bold text-white">
+                      {beat.title}
+                    </h2>
+                    <p className="truncate text-sm text-text-secondary">
+                      {beat.artistName || 'Unknown producer'} · {beat.bpm} BPM
+                    </p>
+                  </div>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-1 text-xs font-bold ${
+                      beat.isPremium
+                        ? 'bg-accent-purple/20 text-accent-purple'
+                        : 'bg-green-500/20 text-green-400'
+                    }`}
+                  >
+                    {beat.isPremium ? 'PRO' : 'FREE'}
+                  </span>
+                </div>
+                <div className="mt-4 grid grid-cols-4 gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] px-2"
+                    aria-label={`Move ${beat.title} up`}
+                    onClick={() => handleReorder(beat.id, 'up')}
+                    disabled={!!reorderingId}
+                  >
+                    <ArrowUp size={16} />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] px-2"
+                    aria-label={`Move ${beat.title} down`}
+                    onClick={() => handleReorder(beat.id, 'down')}
+                    disabled={!!reorderingId}
+                  >
+                    <ArrowDown size={16} />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] px-2"
+                    aria-label={`Edit ${beat.title}`}
+                    onClick={() => startEdit(beat)}
+                  >
+                    <Edit2 size={16} />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] px-2 text-red-400 hover:text-red-300"
+                    aria-label={`Delete ${beat.title}`}
+                    onClick={() => setBeatPendingDelete(beat)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <div className="hidden rounded-md border border-white/10 bg-surface-elevated lg:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -217,16 +307,20 @@ export default function AdminBeatsPage() {
                       ) : (
                         <>
                           <button
+                            type="button"
                             onClick={() => handleReorder(beat.id, 'up')}
-                            className="hover:text-accent-purple p-1 disabled:opacity-50"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full hover:text-accent-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple disabled:opacity-50"
                             disabled={!!reorderingId}
+                            aria-label={`Move ${beat.title} up`}
                           >
                             <ArrowUp size={16} />
                           </button>
                           <button
+                            type="button"
                             onClick={() => handleReorder(beat.id, 'down')}
-                            className="hover:text-accent-purple p-1 disabled:opacity-50"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full hover:text-accent-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple disabled:opacity-50"
                             disabled={!!reorderingId}
+                            aria-label={`Move ${beat.title} down`}
                           >
                             <ArrowDown size={16} />
                           </button>
@@ -239,6 +333,7 @@ export default function AdminBeatsPage() {
                   <TableCell>
                     {editingId === beat.id ? (
                       <Input
+                        aria-label={`Title for ${beat.title}`}
                         value={editForm.title}
                         onChange={(e) =>
                           setEditForm({ ...editForm, title: e.target.value })
@@ -256,6 +351,7 @@ export default function AdminBeatsPage() {
                   <TableCell>
                     {editingId === beat.id ? (
                       <Input
+                        aria-label={`Producer for ${beat.title}`}
                         value={editForm.artistName}
                         onChange={(e) =>
                           setEditForm({
@@ -276,6 +372,7 @@ export default function AdminBeatsPage() {
                   <TableCell>
                     {editingId === beat.id ? (
                       <Input
+                        aria-label={`Label for ${beat.title}`}
                         value={editForm.label}
                         onChange={(e) =>
                           setEditForm({
@@ -296,6 +393,7 @@ export default function AdminBeatsPage() {
                   <TableCell>
                     {editingId === beat.id ? (
                       <select
+                        aria-label={`Genre for ${beat.title}`}
                         value={editForm.genre}
                         onChange={(e) =>
                           setEditForm({
@@ -330,6 +428,7 @@ export default function AdminBeatsPage() {
                     {editingId === beat.id ? (
                       <Input
                         type="number"
+                        aria-label={`BPM for ${beat.title}`}
                         step="0.01"
                         value={editForm.bpm}
                         onChange={(e) =>
@@ -350,18 +449,22 @@ export default function AdminBeatsPage() {
                     {editingId === beat.id ? (
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
+                          aria-pressed={!editForm.isPremium}
                           onClick={() =>
                             setEditForm({ ...editForm, isPremium: false })
                           }
-                          className={`px-2 py-1 rounded text-xs font-bold transition-all ${!editForm.isPremium ? 'bg-green-500 text-black' : 'bg-white/5 text-text-secondary'}`}
+                          className={`min-h-[44px] min-w-[54px] rounded px-3 py-2 text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple ${!editForm.isPremium ? 'bg-green-500 text-black' : 'bg-white/5 text-text-secondary'}`}
                         >
                           FREE
                         </button>
                         <button
+                          type="button"
+                          aria-pressed={editForm.isPremium}
                           onClick={() =>
                             setEditForm({ ...editForm, isPremium: true })
                           }
-                          className={`px-2 py-1 rounded text-xs font-bold transition-all ${editForm.isPremium ? 'bg-accent-purple text-black' : 'bg-white/5 text-text-secondary'}`}
+                          className={`min-h-[44px] min-w-[54px] rounded px-3 py-2 text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple ${editForm.isPremium ? 'bg-primary text-primary-foreground' : 'bg-white/5 text-text-secondary'}`}
                         >
                           PRO
                         </button>
@@ -389,6 +492,7 @@ export default function AdminBeatsPage() {
                             size="sm"
                             className="text-green-400 hover:text-green-300 hover:bg-green-400/10"
                             onClick={() => handleSave(beat.id)}
+                            aria-label={`Save ${beat.title}`}
                           >
                             <Check size={18} />
                           </Button>
@@ -397,6 +501,7 @@ export default function AdminBeatsPage() {
                             size="sm"
                             className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
                             onClick={cancelEdit}
+                            aria-label={`Cancel editing ${beat.title}`}
                           >
                             <X size={18} />
                           </Button>
@@ -407,6 +512,7 @@ export default function AdminBeatsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => startEdit(beat)}
+                            aria-label={`Edit ${beat.title}`}
                           >
                             <Edit2 size={16} />
                           </Button>
@@ -415,6 +521,7 @@ export default function AdminBeatsPage() {
                             size="sm"
                             className="text-red-400 hover:text-red-300 transition-opacity"
                             onClick={() => setBeatPendingDelete(beat)}
+                            aria-label={`Delete ${beat.title}`}
                           >
                             <Trash2 size={16} />
                           </Button>

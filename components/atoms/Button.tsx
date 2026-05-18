@@ -35,11 +35,12 @@ export const Button = memo(
 
     const variants = {
       primary:
-        'bg-accent-purple text-white shadow-purple-glow hover:bg-accent-purple/90 hover:shadow-glow',
+        'bg-primary text-primary-foreground shadow-purple-glow hover:bg-primary/90 hover:shadow-glow',
       secondary:
         'border border-white/10 bg-surface-elevation-1/80 text-text-primary shadow-surface-1 hover:border-white/20 hover:bg-surface-highlight/70',
       ghost: 'text-text-primary hover:bg-white/10',
-      danger: 'bg-accent-red text-white shadow-red-glow hover:bg-accent-red/90',
+      danger:
+        'bg-danger text-danger-foreground shadow-red-glow hover:bg-danger/90',
       outline:
         'border border-stroke-subtle/60 bg-background-card/60 text-text-primary hover:border-accent-blue/40 hover:bg-surface-highlight/60',
     }

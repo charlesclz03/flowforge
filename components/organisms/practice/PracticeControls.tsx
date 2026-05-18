@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card } from '@/components/atoms/Card'
 import { RefreshCcw, Pause, Mic, Infinity as InfinityIcon } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { PracticeTopControls } from '@/components/molecules/practice/PracticeTopControls'
 import { PracticePauseModal } from '@/components/molecules/practice/PracticePauseModal'
 import { PracticeErrorBanner } from '@/components/molecules/practice/PracticeErrorBanner'
@@ -109,6 +109,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
   // State for pause modal
   const [showPauseModal, setShowPauseModal] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
 
   // Sentry Error Logging
   useEffect(() => {
@@ -336,10 +337,14 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       borderColor: 'rgba(74, 72, 176, 0.4)',
                       boxShadow: '0 0 20px rgba(74, 72, 176, 0.2)',
                     }}
-                    animate={{
-                      scale: [1, 1.08, 1],
-                      opacity: [0.6, 0.3, 0.6],
-                    }}
+                    animate={
+                      shouldReduceMotion
+                        ? { scale: 1, opacity: 0.35 }
+                        : {
+                            scale: [1, 1.08, 1],
+                            opacity: [0.6, 0.3, 0.6],
+                          }
+                    }
                     transition={{
                       duration: 1.5,
                       repeat: Infinity,
@@ -354,10 +359,14 @@ export default function PracticeControls(props: PracticeControlsProps) {
                       borderColor: 'rgba(61, 59, 142, 0.3)',
                       boxShadow: '0 0 30px rgba(61, 59, 142, 0.15)',
                     }}
-                    animate={{
-                      scale: [1, 1.1, 1],
-                      opacity: [0.4, 0.15, 0.4],
-                    }}
+                    animate={
+                      shouldReduceMotion
+                        ? { scale: 1, opacity: 0.2 }
+                        : {
+                            scale: [1, 1.1, 1],
+                            opacity: [0.4, 0.15, 0.4],
+                          }
+                    }
                     transition={{
                       duration: 1.5,
                       repeat: Infinity,
@@ -369,20 +378,22 @@ export default function PracticeControls(props: PracticeControlsProps) {
               )}
               <motion.button
                 id="tour-record-btn"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                 animate={
-                  isPlaying
-                    ? isRecording && !isInfiniteMode
-                      ? {
+                  shouldReduceMotion
+                    ? { scale: 1 }
+                    : isPlaying
+                      ? isRecording && !isInfiniteMode
+                        ? {
+                            scale: [1, 1.02, 1],
+                            transition: { repeat: Infinity, duration: 1.5 },
+                          }
+                        : { scale: 1 }
+                      : {
                           scale: [1, 1.02, 1],
-                          transition: { repeat: Infinity, duration: 1.5 },
+                          transition: { repeat: Infinity, duration: 3 },
                         }
-                      : { scale: 1 }
-                    : {
-                        scale: [1, 1.02, 1],
-                        transition: { repeat: Infinity, duration: 3 },
-                      }
                 }
                 onClick={() => {
                   if (
@@ -503,7 +514,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                             opacity: 1,
                             scale: 1,
                             filter: 'blur(0px)',
-                            rotate: [-1, 1, -1, 0],
+                            rotate: shouldReduceMotion ? 0 : [-1, 1, -1, 0],
                           }}
                           exit={{
                             opacity: 0,
@@ -611,10 +622,14 @@ export default function PracticeControls(props: PracticeControlsProps) {
                     <div className="flex flex-col items-center justify-center space-y-3">
                       {/* START Text - Primary CTA */}
                       <motion.span
-                        animate={{
-                          scale: [1, 1.05, 1],
-                          opacity: [0.9, 1, 0.9],
-                        }}
+                        animate={
+                          shouldReduceMotion
+                            ? { scale: 1, opacity: 1 }
+                            : {
+                                scale: [1, 1.05, 1],
+                                opacity: [0.9, 1, 0.9],
+                              }
+                        }
                         transition={{
                           duration: 2,
                           repeat: Infinity,
@@ -687,7 +702,15 @@ export default function PracticeControls(props: PracticeControlsProps) {
             'flex items-center justify-center outline-none transition-transform hover:scale-105 active:scale-95 relative focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-full',
             !isRecordingEnabled && 'grayscale opacity-60'
           )}
-          aria-label={isRecording ? 'Stop Recording' : 'Start Recording'}
+          aria-label={
+            isPlaying || isRecording
+              ? 'Recording mode is locked during an active session'
+              : isPro
+                ? isRecordingEnabled
+                  ? 'Disable recording mode'
+                  : 'Enable recording mode'
+                : 'Upgrade to enable recording mode'
+          }
         >
           <div
             className={cn(

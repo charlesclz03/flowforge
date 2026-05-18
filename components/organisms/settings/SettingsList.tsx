@@ -604,14 +604,14 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 callbackUrl: buildAuthContinuePath('/profile'),
               })
             }
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-blue text-white font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-primary text-primary-foreground font-medium hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg shadow-accent-purple/20"
           >
             <IconFrame icon={LogIn} variant="inline" tone="white" decorative />
             Sign In
           </button>
         )}
         <div className="mt-8 text-center">
-          <p className="ml-2 text-xs text-white/20">v1.1.4</p>
+          <p className="ml-2 text-xs text-white/20">v1.1.5</p>
         </div>
       </div>
       <SupportModal

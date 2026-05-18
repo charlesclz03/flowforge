@@ -1,5 +1,8 @@
 'use client'
 
+import { Button } from '@/components/atoms/Button'
+import { RefreshCcw } from 'lucide-react'
+
 export default function OfflinePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center space-y-6">
@@ -7,15 +10,17 @@ export default function OfflinePage() {
         Offline
       </h1>
       <p className="text-text-secondary max-w-xs">
-        The beat dropped... and so did your connection.
+        FreeStyla needs a connection to sync this view. Check your network and
+        try again.
       </p>
 
-      <button
+      <Button
         onClick={() => window.location.reload()}
-        className="px-6 py-3 bg-primary text-black font-bold rounded-lg hover:bg-primary/90 transition-colors uppercase tracking-wider"
+        leftIcon={<RefreshCcw size={18} />}
+        className="font-bold uppercase tracking-wider"
       >
-        Retry
-      </button>
+        Retry connection
+      </Button>
 
       <div className="text-xs text-text-tertiary">
         Check your internet connection

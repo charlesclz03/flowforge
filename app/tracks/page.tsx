@@ -324,8 +324,8 @@ export default function TracksPage() {
                 className={cn(
                   'flex min-h-[44px] items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
                   isPro
-                    ? 'bg-accent-purple text-white border border-accent-purple hover:bg-accent-purple/90 shadow-purple-glow'
-                    : 'border border-white/10 bg-white/5 text-text-secondary hover:border-accent-purple/40 hover:text-white'
+                    ? 'bg-primary text-primary-foreground border border-accent-purple hover:bg-primary/90 shadow-purple-glow'
+                    : 'border border-white/15 bg-white/10 text-locked hover:border-accent-purple/40 hover:text-white'
                 )}
               >
                 <IconFrame

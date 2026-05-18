@@ -68,7 +68,7 @@ export function LandingHero({
               {isAuthenticated ? (
                 <Link
                   href={ctaPath}
-                  className="btn-primary w-full rounded-full bg-gradient-pulse px-8 py-3 text-center text-base font-medium text-black shadow-neon transition hover:shadow-glow sm:w-auto"
+                  className="btn-primary w-full rounded-full bg-primary px-8 py-3 text-center text-base font-medium text-primary-foreground shadow-neon transition hover:bg-primary/90 hover:shadow-glow sm:w-auto"
                 >
                   Start Practicing
                 </Link>

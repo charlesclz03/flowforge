@@ -90,7 +90,7 @@ export function LandingPricing({
         </div>
 
         <div className="relative rounded-2xl border border-stroke-glow/60 bg-gradient-to-br from-accent-purple/10 via-accent-purple/5 to-accent-violet/10 p-8 backdrop-blur-light shadow-glow">
-          <div className="absolute -top-3 right-6 rounded-full bg-accent-purple px-3 py-1 text-xs font-semibold text-black">
+          <div className="absolute -top-3 right-6 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
             Live Now
           </div>
           <h3 className="text-2xl font-medium text-white">Pro</h3>
@@ -135,7 +135,7 @@ export function LandingPricing({
           {isPro ? (
             <Link
               href="/profile"
-              className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full bg-gradient-pulse px-8 py-3 text-center text-sm font-semibold text-black shadow-neon transition hover:shadow-glow"
+              className="btn-primary mt-8 inline-flex w-full items-center justify-center rounded-full bg-primary px-8 py-3 text-center text-sm font-semibold text-primary-foreground shadow-neon transition hover:bg-primary/90 hover:shadow-glow"
             >
               Manage Pro
             </Link>

@@ -52,7 +52,7 @@ export function SettingsDropdown() {
         <Menu as="div" className="relative inline-block text-left">
           <div>
             <Menu.Button
-              className="p-2 flex items-center justify-center text-text-secondary hover:text-white transition-colors rounded-full hover:bg-white/5"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full p-2 text-text-secondary transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
               aria-label="Settings"
             >
               <Settings size={20} />

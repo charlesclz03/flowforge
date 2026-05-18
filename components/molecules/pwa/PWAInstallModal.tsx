@@ -145,7 +145,7 @@ export function PWAInstallModal({ isOpen, onClose }: PWAInstallModalProps) {
                 <div className="mt-6 flex gap-3">
                   <button
                     type="button"
-                    className="flex-1 justify-center rounded-xl bg-accent-purple px-4 py-3 text-sm font-bold text-white hover:bg-accent-purple/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 transition-transform active:scale-95"
+                    className="flex-1 justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 transition-transform active:scale-95"
                     onClick={onClose}
                   >
                     Got it

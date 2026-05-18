@@ -168,6 +168,7 @@ export function PostProcessingModal({
             size="lg"
             variant="ghost"
             className="rounded-full w-16 h-16 p-0"
+            aria-label="Restart studio preview"
             onClick={() => {
               if (audioRef.current) audioRef.current.currentTime = 0
             }}
@@ -176,7 +177,11 @@ export function PostProcessingModal({
           </Button>
           <Button
             size="lg"
-            className="rounded-full w-20 h-20 p-0 bg-accent-purple text-white shadow-purple-glow"
+            className="rounded-full w-20 h-20 p-0"
+            aria-label={
+              isPlaying ? 'Pause studio preview' : 'Play studio preview'
+            }
+            aria-pressed={isPlaying}
             onClick={togglePlay}
           >
             {isPlaying ? (
@@ -208,6 +213,7 @@ export function PostProcessingModal({
                 </div>
                 <input
                   type="range"
+                  aria-label="Manual vocal nudge in milliseconds"
                   min="-100"
                   max="100"
                   value={nudge}
@@ -230,6 +236,7 @@ export function PostProcessingModal({
                 </div>
                 <input
                   type="range"
+                  aria-label="Vocal volume"
                   min="0"
                   max="2"
                   step="0.1"
@@ -244,6 +251,9 @@ export function PostProcessingModal({
 
               {/* FX Toggle */}
               <button
+                type="button"
+                aria-pressed={reverb}
+                aria-label={`${reverb ? 'Disable' : 'Enable'} studio reverb`}
                 onClick={() => {
                   if (typeof navigator !== 'undefined' && navigator.vibrate) {
                     navigator.vibrate(10)
@@ -282,7 +292,7 @@ export function PostProcessingModal({
             Discard
           </Button>
           <Button
-            className="flex-1 bg-white text-black"
+            className="flex-1"
             onClick={() => {
               // Emit config for saving
               onSave({

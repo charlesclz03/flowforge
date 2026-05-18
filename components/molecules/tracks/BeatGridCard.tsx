@@ -38,7 +38,6 @@ export function BeatGridCard({
   isFavorited,
   isLocked,
   onPlay,
-  onSelect,
   onToggleFavorite,
   onDelete,
   onUseTrack,
@@ -49,13 +48,14 @@ export function BeatGridCard({
 
   return (
     <div
-      onClick={isLocked ? onLockedClick : onSelect}
+      role="group"
+      aria-label={`${isLocked ? 'Locked premium beat' : 'Beat'}: ${beat.title}`}
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer',
+        'group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300',
         isSelected
           ? 'border-accent-purple bg-accent-purple/10 ring-1 ring-accent-purple/50'
           : 'border-white/10 bg-[#121216] hover:border-white/20 hover:bg-[#18181E] hover:-translate-y-1',
-        isLocked && 'cursor-not-allowed opacity-80'
+        isLocked && 'opacity-80'
       )}
     >
       {/* Cover Art Area */}
@@ -111,7 +111,7 @@ export function BeatGridCard({
             'absolute inset-0 flex items-center justify-center gap-6 transition-all duration-300',
             (isPlaying || isSelected) && !isLocked
               ? 'bg-black/40 backdrop-blur-sm'
-              : 'bg-black/0 opacity-0 group-hover:opacity-100 group-hover:bg-black/30',
+              : 'bg-black/20 opacity-100 md:bg-black/0 md:opacity-0 md:group-hover:opacity-100 md:group-hover:bg-black/30 md:group-focus-within:opacity-100',
             isLocked && 'bg-black/60 opacity-100'
           )}
         >
@@ -168,7 +168,7 @@ export function BeatGridCard({
                 className={cn(
                   'flex h-20 w-20 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95',
                   isPlaying
-                    ? 'bg-accent-purple text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-white text-black'
                 )}
                 aria-label={isPlaying ? 'Stop' : 'Play'}

@@ -1,7 +1,7 @@
 # Feature Matrix
 
-**Current Version**: `1.1.4`
-**Last Updated**: 2026-05-17
+**Current Version**: `1.1.5`
+**Last Updated**: 2026-05-18
 
 ## Core Practice
 
@@ -47,6 +47,8 @@
 
 | Date       | Audit                                                    | Status       | Outcome                                                                                                                                                                                                                                                                                                                  |
 | ---------- | -------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-18 | Enterprise UI Remediation                                | PASS         | Completed v1.1.5 contrast/modal/touch/reduced-motion foundations plus dialog/motion hardening, route-level polish, admin mobile fallback states, legal/offline trust surfaces, safe Playwright auth fixtures, mocked admin/recordings/review coverage, and governance sync.                                              |
+| 2026-05-18 | Enterprise UI Remediation                                | PASS         | Documented the whole-app UI audit, upgraded modal semantics/focus, fixed primary action contrast, added visible mobile nav labels, converted beat selection touch controls toward semantic buttons, improved upload/calibration accessibility, and added regression coverage.                                            |
 | 2026-05-17 | SSS Enterprise UI Polish                                 | PASS         | Added shared UI primitives, centralized missing visual tokens/shell spacing variables, upgraded `/difficultyselection`, reduced Practice stage glow/viewport fragility, polished public/workflow surfaces, and added desktop/mobile Playwright UI smoke coverage.                                                        |
 | 2026-05-17 | Pricing Header Layout Fix                                | PASS         | Restored `/pricing` route header controls by passing `showBackButton` and allowing the default right-side settings/tier actions through `OnboardingLayout`; deploy gates for v1.1.1 cover the follow-up.                                                                                                                 |
 | 2026-05-17 | Pricing Header Layout Audit                              | FAIL         | Found `/pricing` route-level header regression: the shared `AppHeader` supports the expected controls, but `app/pricing/page.tsx` disables settings and omits `showBackButton`; fix plan recorded in `brain/PRICING_HEADER_FIX_PLAN_2026-05-17.md`.                                                                      |

@@ -28,7 +28,8 @@ export default async function AdminUsersPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin"
-          className="p-2 rounded-full hover:bg-white/10 transition-colors"
+          aria-label="Back to admin dashboard"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple"
         >
           <ArrowLeft size={24} />
         </Link>
@@ -39,7 +40,99 @@ export default async function AdminUsersPage() {
       </div>
 
       <Container>
-        <div className="overflow-x-auto">
+        {users.length === 0 ? (
+          <div
+            className="rounded-2xl border border-white/10 bg-surface-elevated p-8 text-center text-text-secondary"
+            role="status"
+          >
+            No users found.
+          </div>
+        ) : (
+          <div className="space-y-4 lg:hidden">
+            {users.map((user) => (
+              <article
+                key={user.id}
+                className="rounded-2xl border border-white/10 bg-surface-elevated p-4"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 shrink-0 rounded-full bg-surface-elevation-2 overflow-hidden relative">
+                    {user.image ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={user.image}
+                        alt={user.name || 'User'}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-accent-purple/20 text-accent-purple font-bold">
+                        {(
+                          user.name?.[0] ||
+                          user.email?.[0] ||
+                          '?'
+                        ).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h2 className="truncate font-bold text-white">
+                          {user.name || 'No Name'}
+                        </h2>
+                        <p className="truncate text-xs text-text-secondary">
+                          {user.email}
+                        </p>
+                        {user.username && (
+                          <p className="truncate text-xs text-accent-cyan">
+                            @{user.username}
+                          </p>
+                        )}
+                      </div>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-xs font-bold ${
+                          user.role === 'SUPERADMIN'
+                            ? 'bg-accent-red/10 text-accent-red border-accent-red/20'
+                            : 'bg-surface-elevation-2 text-text-secondary border-transparent'
+                        }`}
+                      >
+                        {user.role}
+                      </span>
+                    </div>
+                    <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
+                      <div className="rounded-xl bg-white/5 p-3">
+                        <div className="font-bold text-white">{user.level}</div>
+                        <div className="text-[10px] uppercase tracking-wider text-text-tertiary">
+                          Level
+                        </div>
+                      </div>
+                      <div className="rounded-xl bg-white/5 p-3">
+                        <div className="font-bold text-white">
+                          {user._count.freestyleSessions}
+                        </div>
+                        <div className="text-[10px] uppercase tracking-wider text-text-tertiary">
+                          Recs
+                        </div>
+                      </div>
+                      <div className="rounded-xl bg-white/5 p-3">
+                        <div className="font-bold text-white">
+                          {user._count.sessions}
+                        </div>
+                        <div className="text-[10px] uppercase tracking-wider text-text-tertiary">
+                          Sess
+                        </div>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-xs text-text-secondary">
+                      Joined {format(new Date(user.createdAt), 'MMM d, yyyy')}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-white/10 text-text-secondary text-sm">

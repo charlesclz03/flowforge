@@ -521,7 +521,7 @@ export function DifficultySelectionClient({
             size="lg"
             className={`rounded-full px-10 py-4 text-lg ${
               canStart
-                ? 'bg-accent-purple text-white shadow-purple-glow hover:scale-[1.02] hover:shadow-glow'
+                ? 'bg-primary text-primary-foreground shadow-purple-glow hover:scale-[1.02] hover:shadow-glow'
                 : 'border border-white/15 bg-white/10 text-white cursor-not-allowed disabled:opacity-100'
             }`}
             disabled={!canStart}

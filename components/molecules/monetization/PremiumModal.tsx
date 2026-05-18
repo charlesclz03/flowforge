@@ -1,13 +1,12 @@
 'use client'
 
-import { X, Check } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { Check } from 'lucide-react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { PLANS } from '@/lib/stripe'
 import { SignInButton } from '@/components/molecules/auth/SignInButton'
 import { UpgradeButton } from '@/components/molecules/subscription/UpgradeButton'
+import { Modal } from '@/components/atoms/Modal'
 
 export interface PremiumModalProps {
   isOpen: boolean
@@ -23,22 +22,7 @@ export function PremiumModal({
   beatCount,
 }: PremiumModalProps) {
   const { data: session } = useSession()
-  const [mounted, setMounted] = useState(false)
   const isAuthenticated = Boolean(session?.user)
-
-  useEffect(() => {
-    setMounted(true)
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen])
-
-  if (!mounted || !isOpen) return null
 
   const getContent = () => {
     switch (trigger) {
@@ -78,28 +62,15 @@ export function PremiumModal({
     'Download studio-quality audio',
   ]
 
-  const modal = (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 safe-top safe-bottom">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-
-      {/* Card */}
-      <div className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-background-elevated border border-stroke-glow shadow-glow transform transition-all animate-in fade-in zoom-in-95 duration-200">
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close upgrade dialog"
-          className="absolute top-4 right-4 p-2 text-text-secondary hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors z-10"
-        >
-          <X size={20} />
-        </button>
-
-        {/* Header Image/Gradient */}
-        <div className="h-32 bg-gradient-to-br from-accent-purple/20 via-background-elevated to-accent-blue/20 relative">
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={content.title}
+      className="max-w-sm"
+    >
+      <div className="-mx-6 -mt-6">
+        <div className="relative h-32 bg-gradient-to-br from-accent-purple/20 via-background-elevated to-accent-blue/20">
           <div className="absolute inset-0 bg-grid-white/[0.05]" />
           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background-elevated to-transparent" />
         </div>
@@ -110,9 +81,6 @@ export function PremiumModal({
             <Check size={24} strokeWidth={3} />
           </div>
 
-          <h3 className="text-2xl font-bold text-white mb-2">
-            {content.title}
-          </h3>
           <p className="text-text-secondary mb-6 leading-relaxed">
             {content.description}
           </p>
@@ -136,7 +104,7 @@ export function PremiumModal({
               <UpgradeButton
                 plan="monthly"
                 source={`premium_modal_${trigger}`}
-                className="w-full rounded-xl bg-white py-4 text-lg font-bold text-black shadow-glow hover:bg-gray-100"
+                className="w-full rounded-xl bg-primary py-4 text-lg font-bold text-primary-foreground shadow-glow hover:bg-primary/90"
               >
                 Get Pro -{' '}
                 {PLANS.monthly.price.toLocaleString('en-US', {
@@ -176,8 +144,6 @@ export function PremiumModal({
           </p>
         </div>
       </div>
-    </div>
+    </Modal>
   )
-
-  return createPortal(modal, document.body)
 }

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Upload, Music, Play, Square, Settings, Lock } from 'lucide-react'
 import { SuccessAlert } from '@/components/molecules/feedback/SuccessAlert'
 import { Spinner } from '@/components/atoms/Spinner'
+import { Button } from '@/components/atoms/Button'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { WaveformScrubber } from '@/components/molecules/practice/WaveformScrubber'
 import { uploadBeatFile } from '@/lib/uploads/beat-upload-client'
@@ -169,11 +170,16 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* File Input */}
-          <div className="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:bg-white/5 transition-colors cursor-pointer relative group">
+          <label
+            htmlFor="beat-upload-file"
+            className="group relative block cursor-pointer rounded-xl border-2 border-dashed border-white/10 p-6 text-center transition-colors hover:bg-white/5 focus-within:border-accent-purple/50 focus-within:ring-2 focus-within:ring-accent-purple/70"
+          >
             <input
+              id="beat-upload-file"
               type="file"
               accept="audio/*"
               onChange={handleFileChange}
+              aria-label="Upload an audio beat file"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
 
@@ -208,7 +214,7 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                 </>
               )}
             </div>
-          </div>
+          </label>
 
           {file && (
             <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -243,7 +249,12 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                   <button
                     type="button"
                     onClick={togglePlay}
-                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                    aria-label={
+                      isPlaying
+                        ? 'Stop calibration preview'
+                        : 'Play calibration preview'
+                    }
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
                   >
                     {isPlaying ? (
                       <Square size={16} fill="currentColor" />
@@ -277,12 +288,12 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                     onClick={setStartPoint}
                     className="px-4 py-2 text-xs font-medium bg-accent-purple/10 text-accent-purple rounded-lg hover:bg-accent-purple/20 border border-accent-purple/30"
                   >
-                    Set Start Point (Queue)
+                    Set Cue Point
                   </button>
                 </div>
                 <p className="text-[10px] text-text-tertiary text-center">
-                  Play the beat but tap the waveform to navigate, then click
-                  "Set Start Point" when the first bar drops.
+                  Play the beat and tap the waveform to navigate, then set the
+                  cue point when the first bar drops.
                 </p>
               </div>
 
@@ -312,7 +323,8 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
 
               <div className="space-y-1">
                 <label className="text-sm font-medium text-text-secondary">
-                  Producer Name *
+                  Producer Name{' '}
+                  <span className="text-xs text-text-tertiary">(Optional)</span>
                 </label>
                 <input
                   type="text"
@@ -337,14 +349,14 @@ export function UserBeatUpload(props: UserBeatUploadProps) {
                 />
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 bg-accent-purple hover:bg-accent-purple/90 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                className="w-full rounded-xl font-bold"
               >
                 {isLoading ? <Spinner size="sm" /> : <Upload size={18} />}
                 {isLoading ? 'Uploading...' : 'Save to My Beats'}
-              </button>
+              </Button>
 
               {isLoading && (
                 <div className="space-y-1" role="status" aria-live="polite">

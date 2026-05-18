@@ -1,6 +1,6 @@
 # MCP Matrix
 
-**Current Version**: `1.1.4`
+**Current Version**: `1.1.5`
 **Last Updated**: 2026-05-17
 
 ## Server Status

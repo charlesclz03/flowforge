@@ -19,7 +19,7 @@ const variantClasses: Record<IconButtonVariant, string> = {
   surface:
     'border border-white/10 bg-surface-elevation-1/75 text-text-secondary shadow-surface-1 hover:border-white/20 hover:bg-surface-highlight/60 hover:text-white',
   primary:
-    'border border-accent-purple/35 bg-accent-purple/20 text-white shadow-purple-glow hover:bg-accent-purple/25',
+    'border border-accent-purple/35 bg-primary text-primary-foreground shadow-purple-glow hover:bg-primary/90',
   danger:
     'border border-accent-red/35 bg-accent-red/10 text-accent-red shadow-red-glow hover:bg-accent-red/20',
 }

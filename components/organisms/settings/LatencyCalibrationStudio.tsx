@@ -311,6 +311,7 @@ export default function LatencyCalibrationStudio() {
                       activeProfileId: profile.id,
                     }))
                   }
+                  aria-pressed={selected}
                   className={`w-full rounded-xl border px-3 py-3 text-left transition-all ${
                     selected
                       ? 'border-accent-purple bg-accent-purple/10'
@@ -369,6 +370,7 @@ export default function LatencyCalibrationStudio() {
             max={CALIBRATION_MAX_MS}
             step={10}
             value={activeLatencyMs}
+            aria-label={`Latency adjustment for ${currentProfileDefinition?.label ?? 'selected output'}`}
             onChange={(event) =>
               updateActiveLatency(Number(event.target.value))
             }
@@ -419,7 +421,11 @@ export default function LatencyCalibrationStudio() {
             </Button>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-text-secondary">
+          <div
+            className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-text-secondary"
+            role="status"
+            aria-live="polite"
+          >
             <div className="flex items-center justify-between">
               <span>Sync visual should match the beep pulse</span>
               <span

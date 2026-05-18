@@ -24,7 +24,7 @@
     min-height: 100dvh;
     touch-action: pan-x pan-y;
     --app-header-height: 3.5rem;
-    --app-bottom-nav-height: 5rem;
+    --app-bottom-nav-height: 5.5rem;
     --app-bottom-nav-offset: 1.5rem;
     --app-safe-bottom: env(safe-area-inset-bottom, 0px);
     --app-shell-bottom-space: calc(
@@ -66,7 +66,7 @@
   }
 
   .btn-primary {
-    @apply btn bg-gradient-purple text-white shadow-purple hover:shadow-glow active:scale-95;
+    @apply btn bg-primary text-primary-foreground shadow-purple hover:shadow-glow active:scale-95;
   }
 
   .btn-secondary {
@@ -253,75 +253,25 @@
   }
 }
 
-/* ============================================
-   SMALL SCREEN RESPONSIVE UTILITIES
-   Target: iPhone SE (667px), small Android devices
-   Purpose: Ensure app-feel with no scrolling
-   ============================================ */
-
-/* Very small screens (iPhone SE, small Android) */
+/* Small-screen route-specific compression utilities.
+   Avoid rewriting common Tailwind utilities globally; opt routes into these
+   classes when a fixed-height app surface genuinely needs tighter spacing. */
 @media (max-height: 667px) {
-  /* Reduce header padding */
   .app-header-compact {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
   }
 
-  /* Tighter vertical spacing */
-  .space-y-8 {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
-  }
-
-  .space-y-6 {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-  }
-
-  /* Reduce main content padding */
-  .pb-24 {
-    padding-bottom: 4.5rem !important;
-  }
-
-  .pt-8 {
+  .app-compact-y {
+    gap: 1rem !important;
     padding-top: 1rem !important;
-  }
-
-  /* Scale down large text */
-  .text-5xl {
-    font-size: 2rem !important;
-  }
-
-  .text-6xl {
-    font-size: 2.5rem !important;
-  }
-
-  .text-7xl {
-    font-size: 3rem !important;
+    padding-bottom: 4.5rem !important;
   }
 }
 
-/* Compact height screens (iPhone 12 Mini, etc) */
 @media (max-height: 750px) {
-  /* Reduce gaps */
-  .gap-8 {
-    gap: 1.25rem !important;
-  }
-
-  .gap-6 {
+  .app-compact-y {
     gap: 1rem !important;
-  }
-
-  /* Reduce vertical padding on main areas */
-  .py-8 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-
-  .pt-16 {
-    padding-top: 2.5rem !important;
   }
 }
 

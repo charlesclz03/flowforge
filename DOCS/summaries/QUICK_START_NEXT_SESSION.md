@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-17
+- 2026-05-18
 
 Related docs:
 
@@ -27,8 +27,8 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.1.4`
-**Last Updated**: 2026-05-17
+**Current Version**: `1.1.5`
+**Last Updated**: 2026-05-18
 
 ## Bootstrap (Windows-safe)
 
@@ -64,7 +64,7 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Production-smoke v1.1.4 UX recovery surfaces: review deep links, Beat Vault, feedback, setup, practice, recordings, settings, and install guidance.
+1. Production-smoke v1.1.5 UI remediation surfaces: remaining dialogs, public/admin/legal/offline polish, recordings/review stats-only states, mocked admin data paths, and latency calibration.
 2. Verify the TTS, review waveform, and private beat upload adapters on real mobile browsers.
 3. Monitor multilingual prompt quality and TTS fallback behavior.
 4. Continue recording pipeline reliability hardening.

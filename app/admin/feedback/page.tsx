@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { AppHeader } from '@/components/organisms/layout/AppHeader'
 import { Card } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
 import { formatDistanceToNow } from 'date-fns'
-import { User } from 'lucide-react'
+import { RefreshCcw, User } from 'lucide-react'
 import Image from 'next/image'
 
 interface Feedback {
@@ -21,24 +22,27 @@ interface Feedback {
 export default function AdminFeedbackPage() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function fetchFeedback() {
-      try {
-        const res = await fetch('/api/feedback')
-        if (res.ok) {
-          const data = await res.json()
-          setFeedbacks(data.feedbacks)
-        }
-      } catch (error) {
-        console.error('Failed to fetch feedback', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchFeedback()
   }, [])
+
+  async function fetchFeedback() {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/feedback')
+      if (!res.ok) throw new Error('Feedback request failed')
+      const data = await res.json()
+      setFeedbacks(data.feedbacks)
+    } catch (error) {
+      console.error('Failed to fetch feedback', error)
+      setError('Unable to load feedback. Try again when the service is ready.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -51,15 +55,37 @@ export default function AdminFeedbackPage() {
 
       <div className="grid gap-4">
         {isLoading ? (
-          <div className="text-zinc-500 text-center py-10">Loading...</div>
+          <div
+            className="text-zinc-500 text-center py-10"
+            role="status"
+            aria-live="polite"
+          >
+            Loading feedback...
+          </div>
+        ) : error ? (
+          <div
+            className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-center"
+            role="alert"
+          >
+            <p className="text-sm text-red-200">{error}</p>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-4"
+              leftIcon={<RefreshCcw size={16} />}
+              onClick={fetchFeedback}
+            >
+              Retry
+            </Button>
+          </div>
         ) : feedbacks.length === 0 ? (
-          <div className="text-zinc-500 text-center py-10">
+          <div className="text-zinc-500 text-center py-10" role="status">
             No feedback found.
           </div>
         ) : (
           feedbacks.map((item) => (
             <Card key={item.id} className="p-6 border-white/5">
-              <div className="flex items-start gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <div className="mt-1">
                   {item.user?.image ? (
                     <Image

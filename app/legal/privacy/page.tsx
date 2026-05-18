@@ -16,318 +16,328 @@ export default function PrivacyPage() {
         customSubtitle="Privacy Policy"
       />
       <Container className="pt-8">
-        <div className="mb-8">
-          <p className="text-text-secondary text-sm">
-            Last Updated: February 11, 2026
-          </p>
-        </div>
-
-        <div className="mt-8 space-y-8 text-text-secondary prose prose-invert max-w-none text-sm leading-relaxed">
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              1. Introduction
-            </h2>
-            <p>
-              FreeStyla (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
-              respects your privacy and is committed to protecting the personal
-              information you share with us. This Privacy Policy outlines how we
-              collect, use, and safeguard your data when you use our
-              application.
+        <article className="mx-auto max-w-[68ch] rounded-2xl border border-white/5 bg-surface-elevation-1/40 px-5 py-6 sm:px-8 sm:py-8">
+          <div className="mb-8">
+            <p className="text-text-secondary text-sm">
+              Last Updated: February 11, 2026
             </p>
-          </section>
+          </div>
 
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              2. Information We Collect
-            </h2>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>
-                <strong>Identity Data:</strong> Name, email address, and profile
-                image (via Google Authentication).
-              </li>
-              <li>
-                <strong>User Content:</strong> Audio recordings, lyrics, and
-                session titles you choose to save to our servers.
-              </li>
-              <li>
-                <strong>Usage Data:</strong> Information about how you use the
-                app, including session duration, beats played, features
-                accessed, and game progression (XP, Levels).
-              </li>
-              <li>
-                <strong>Device Data:</strong> Internet Protocol (IP) address,
-                browser type and version, and operating system.
-              </li>
-            </ul>
-          </section>
+          <div className="mt-8 space-y-8 text-text-secondary prose prose-invert max-w-none text-sm leading-relaxed">
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                1. Introduction
+              </h2>
+              <p>
+                FreeStyla (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;)
+                respects your privacy and is committed to protecting the
+                personal information you share with us. This Privacy Policy
+                outlines how we collect, use, and safeguard your data when you
+                use our application.
+              </p>
+            </section>
 
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              3. How We Use Your Information
-            </h2>
-            <p>We use your data to:</p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>Provide, operate, and maintain the FreeStyla service.</li>
-              <li>
-                Process transactions and manage your subscription (via Stripe).
-              </li>
-              <li>Improve user experience and analyze usage trends.</li>
-              <li>Detect and prevent fraud, abuse, and security incidents.</li>
-              <li>
-                Send you administrative updates (e.g., security alerts, policy
-                changes).
-              </li>
-            </ul>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                2. Information We Collect
+              </h2>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <strong>Identity Data:</strong> Name, email address, and
+                  profile image (via Google Authentication).
+                </li>
+                <li>
+                  <strong>User Content:</strong> Audio recordings, lyrics, and
+                  session titles you choose to save to our servers.
+                </li>
+                <li>
+                  <strong>Usage Data:</strong> Information about how you use the
+                  app, including session duration, beats played, features
+                  accessed, and game progression (XP, Levels).
+                </li>
+                <li>
+                  <strong>Device Data:</strong> Internet Protocol (IP) address,
+                  browser type and version, and operating system.
+                </li>
+              </ul>
+            </section>
 
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              4. Data Sharing and Third Parties
-            </h2>
-            <p>
-              We do not sell your personal data. We share data only with trusted
-              third-party service providers who assist us in operating our app:
-            </p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>
-                <strong>Google (Authentication):</strong> To securely manage
-                your login credentials.
-              </li>
-              <li>
-                <strong>Stripe (Payments):</strong> To process subscription
-                payments securely. We do not store your credit card information.
-              </li>
-              <li>
-                <strong>Supabase (Database & Storage):</strong> To securely host
-                your user content and account data.
-              </li>
-              <li>
-                <strong>Sentry (Analytics):</strong> To track application errors
-                and performance issues.
-              </li>
-            </ul>
-          </section>
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                3. How We Use Your Information
+              </h2>
+              <p>We use your data to:</p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>Provide, operate, and maintain the FreeStyla service.</li>
+                <li>
+                  Process transactions and manage your subscription (via
+                  Stripe).
+                </li>
+                <li>Improve user experience and analyze usage trends.</li>
+                <li>
+                  Detect and prevent fraud, abuse, and security incidents.
+                </li>
+                <li>
+                  Send you administrative updates (e.g., security alerts, policy
+                  changes).
+                </li>
+              </ul>
+            </section>
 
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              5. Your Rights
-            </h2>
-            <p>
-              Depending on your location (e.g., GDPR in Europe, CCPA in
-              California), you may have the following rights:
-            </p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>
-                <strong>Access:</strong> Request a copy of the personal data we
-                hold about you.
-              </li>
-              <li>
-                <strong>Correction:</strong> Request correction of inaccurate
-                data.
-              </li>
-              <li>
-                <strong>Deletion:</strong> Request permanent deletion of your
-                account and all associated data, including audio recordings,
-                session metadata, and profile information. You can perform this
-                action directly in the app via <strong>Profile</strong> &gt;{' '}
-                <strong>Security</strong> &gt; <strong>Delete Account</strong>.
-                If you cannot access the app, email{' '}
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                4. Data Sharing and Third Parties
+              </h2>
+              <p>
+                We do not sell your personal data. We share data only with
+                trusted third-party service providers who assist us in operating
+                our app:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  <strong>Google (Authentication):</strong> To securely manage
+                  your login credentials.
+                </li>
+                <li>
+                  <strong>Stripe (Payments):</strong> To process subscription
+                  payments securely. We do not store your credit card
+                  information.
+                </li>
+                <li>
+                  <strong>Supabase (Database & Storage):</strong> To securely
+                  host your user content and account data.
+                </li>
+                <li>
+                  <strong>Sentry (Analytics):</strong> To track application
+                  errors and performance issues.
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                5. Your Rights
+              </h2>
+              <p>
+                Depending on your location (e.g., GDPR in Europe, CCPA in
+                California), you may have the following rights:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  <strong>Access:</strong> Request a copy of the personal data
+                  we hold about you.
+                </li>
+                <li>
+                  <strong>Correction:</strong> Request correction of inaccurate
+                  data.
+                </li>
+                <li>
+                  <strong>Deletion:</strong> Request permanent deletion of your
+                  account and all associated data, including audio recordings,
+                  session metadata, and profile information. You can perform
+                  this action directly in the app via <strong>Profile</strong>{' '}
+                  &gt; <strong>Security</strong> &gt;{' '}
+                  <strong>Delete Account</strong>. If you cannot access the app,
+                  email{' '}
+                  <a
+                    href="mailto:contact@freestyla.app"
+                    className="text-accent-purple hover:underline"
+                  >
+                    contact@freestyla.app
+                  </a>
+                  . You can also delete individual recordings and uploaded beats
+                  without deleting your account (see the Account Deletion
+                  section below). Please note that some anonymized, aggregated
+                  usage data may be retained for analytical purposes.
+                </li>
+                <li>
+                  <strong>Portability:</strong> Request to receive your data in
+                  a structured, commonly used format.
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                6. Data Security
+              </h2>
+              <p>
+                We implement industry-standard security measures, including
+                encryption in transit (HTTPS) and at rest, to protect your data.
+                However, no method of transmission over the Internet is 100%
+                secure, and we cannot guarantee absolute security.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                7. Data Retention
+              </h2>
+              <p>
+                We retain your Personal Data only for as long as is necessary
+                for the purposes set out in this Privacy Policy. If you delete
+                your account, we delete your account and associated data from
+                our active systems. Some information may be retained by
+                third-party processors (e.g., Stripe) and in limited
+                security/diagnostic logs as required for legal, accounting, or
+                fraud-prevention purposes.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                8. Account Deletion
+              </h2>
+              <p>
+                FreeStyla provides an in-app way to delete your account and
+                associated data.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  <strong>In-app:</strong> Go to <strong>Profile</strong> &gt;{' '}
+                  <strong>Security</strong> &gt; <strong>Delete Account</strong>
+                  , then confirm.
+                </li>
+                <li>
+                  <strong>If you can&apos;t access the app:</strong> Email{' '}
+                  <a
+                    href="mailto:contact@freestyla.app"
+                    className="text-accent-purple hover:underline"
+                  >
+                    contact@freestyla.app
+                  </a>{' '}
+                  from the address associated with your account and include the
+                  email/username you used to sign in.
+                </li>
+                <li>
+                  <strong>Partial deletion:</strong> You can delete individual
+                  recordings in <strong>Recordings</strong> and uploaded beats
+                  in
+                  <strong>Tracks</strong> without deleting your account.
+                </li>
+              </ul>
+
+              <p>When your account is deleted, we delete or de-identify:</p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>Account profile data (name, email, username, image URL)</li>
+                <li>
+                  Authentication data (OAuth account links, active sessions)
+                </li>
+                <li>
+                  Saved practice sessions and associated audio recordings you
+                  uploaded
+                </li>
+                <li>User-uploaded beats and associated audio files</li>
+                <li>
+                  Gamification data (XP, level, achievements, collected words,
+                  favorites)
+                </li>
+              </ul>
+
+              <p>Data we may retain:</p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  Payment and transaction records are processed and retained by
+                  Stripe as required by law.
+                </li>
+                <li>
+                  Feedback messages may be retained after removing the link to
+                  your account.
+                </li>
+                <li>
+                  Limited security and diagnostic logs may be retained for
+                  troubleshooting and abuse prevention.
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                9. Children&#39;s Privacy
+              </h2>
+              <p>
+                Our Service does not address anyone under the age of 13. We do
+                not knowingly collect personally identifiable information from
+                anyone under the age of 13. If You are a parent or guardian and
+                You are aware that Your child has provided Us with Personal
+                Data, please contact Us. If We become aware that We have
+                collected Personal Data from anyone under the age of 13 without
+                verification of parental consent, We take steps to remove that
+                information from Our servers.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                10. International Data Transfers
+              </h2>
+              <p>
+                Your information, including Personal Data, is processed at the
+                Company&#39;s operating offices and in any other places where
+                the parties involved in the processing are located. It means
+                that this information may be transferred to -- and maintained on
+                -- computers located outside of Your state, province, country,
+                or other governmental jurisdiction where the data protection
+                laws may differ from those from Your jurisdiction. Your consent
+                to this Privacy Policy followed by Your submission of such
+                information represents Your agreement to that transfer.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                11. Cookies and Tracking Technologies
+              </h2>
+              <p>
+                We use Cookies and similar tracking technologies to track the
+                activity on Our Service and store certain information. Tracking
+                technologies used are beacons, tags, and scripts to collect and
+                track information and to improve and analyze Our Service. You
+                can instruct Your browser to refuse all Cookies or to indicate
+                when a Cookie is being sent. However, if You do not accept
+                Cookies, You may not be able to use some parts of our Service.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                12. App Permissions
+              </h2>
+              <p>
+                To provide the full FreeStyla experience, we request the
+                following permissions on your device:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  <strong>Microphone:</strong> Required to record your freestyle
+                  sessions. Audio is processed locally and only uploaded to our
+                  servers if you explicitly choose to save the recording.
+                </li>
+                <li>
+                  <strong>Storage:</strong> Required to save temporary audio
+                  files and cache beat assets for offline playback.
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-white mb-4">
+                13. Contact Us
+              </h2>
+              <p>
+                If you have any questions about this Privacy Policy or our data
+                practices, please contact us at:
+                <br />
                 <a
                   href="mailto:contact@freestyla.app"
                   className="text-accent-purple hover:underline"
                 >
                   contact@freestyla.app
                 </a>
-                . You can also delete individual recordings and uploaded beats
-                without deleting your account (see the Account Deletion section
-                below). Please note that some anonymized, aggregated usage data
-                may be retained for analytical purposes.
-              </li>
-              <li>
-                <strong>Portability:</strong> Request to receive your data in a
-                structured, commonly used format.
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              6. Data Security
-            </h2>
-            <p>
-              We implement industry-standard security measures, including
-              encryption in transit (HTTPS) and at rest, to protect your data.
-              However, no method of transmission over the Internet is 100%
-              secure, and we cannot guarantee absolute security.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              7. Data Retention
-            </h2>
-            <p>
-              We retain your Personal Data only for as long as is necessary for
-              the purposes set out in this Privacy Policy. If you delete your
-              account, we delete your account and associated data from our
-              active systems. Some information may be retained by third-party
-              processors (e.g., Stripe) and in limited security/diagnostic logs
-              as required for legal, accounting, or fraud-prevention purposes.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              8. Account Deletion
-            </h2>
-            <p>
-              FreeStyla provides an in-app way to delete your account and
-              associated data.
-            </p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>
-                <strong>In-app:</strong> Go to <strong>Profile</strong> &gt;{' '}
-                <strong>Security</strong> &gt; <strong>Delete Account</strong>,
-                then confirm.
-              </li>
-              <li>
-                <strong>If you can&apos;t access the app:</strong> Email{' '}
-                <a
-                  href="mailto:contact@freestyla.app"
-                  className="text-accent-purple hover:underline"
-                >
-                  contact@freestyla.app
-                </a>{' '}
-                from the address associated with your account and include the
-                email/username you used to sign in.
-              </li>
-              <li>
-                <strong>Partial deletion:</strong> You can delete individual
-                recordings in <strong>Recordings</strong> and uploaded beats in
-                <strong>Tracks</strong> without deleting your account.
-              </li>
-            </ul>
-
-            <p>When your account is deleted, we delete or de-identify:</p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>Account profile data (name, email, username, image URL)</li>
-              <li>
-                Authentication data (OAuth account links, active sessions)
-              </li>
-              <li>
-                Saved practice sessions and associated audio recordings you
-                uploaded
-              </li>
-              <li>User-uploaded beats and associated audio files</li>
-              <li>
-                Gamification data (XP, level, achievements, collected words,
-                favorites)
-              </li>
-            </ul>
-
-            <p>Data we may retain:</p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>
-                Payment and transaction records are processed and retained by
-                Stripe as required by law.
-              </li>
-              <li>
-                Feedback messages may be retained after removing the link to
-                your account.
-              </li>
-              <li>
-                Limited security and diagnostic logs may be retained for
-                troubleshooting and abuse prevention.
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              9. Children&#39;s Privacy
-            </h2>
-            <p>
-              Our Service does not address anyone under the age of 13. We do not
-              knowingly collect personally identifiable information from anyone
-              under the age of 13. If You are a parent or guardian and You are
-              aware that Your child has provided Us with Personal Data, please
-              contact Us. If We become aware that We have collected Personal
-              Data from anyone under the age of 13 without verification of
-              parental consent, We take steps to remove that information from
-              Our servers.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              10. International Data Transfers
-            </h2>
-            <p>
-              Your information, including Personal Data, is processed at the
-              Company&#39;s operating offices and in any other places where the
-              parties involved in the processing are located. It means that this
-              information may be transferred to -- and maintained on --
-              computers located outside of Your state, province, country, or
-              other governmental jurisdiction where the data protection laws may
-              differ from those from Your jurisdiction. Your consent to this
-              Privacy Policy followed by Your submission of such information
-              represents Your agreement to that transfer.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              11. Cookies and Tracking Technologies
-            </h2>
-            <p>
-              We use Cookies and similar tracking technologies to track the
-              activity on Our Service and store certain information. Tracking
-              technologies used are beacons, tags, and scripts to collect and
-              track information and to improve and analyze Our Service. You can
-              instruct Your browser to refuse all Cookies or to indicate when a
-              Cookie is being sent. However, if You do not accept Cookies, You
-              may not be able to use some parts of our Service.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              12. App Permissions
-            </h2>
-            <p>
-              To provide the full FreeStyla experience, we request the following
-              permissions on your device:
-            </p>
-            <ul className="list-disc pl-5 space-y-2 mt-2">
-              <li>
-                <strong>Microphone:</strong> Required to record your freestyle
-                sessions. Audio is processed locally and only uploaded to our
-                servers if you explicitly choose to save the recording.
-              </li>
-              <li>
-                <strong>Storage:</strong> Required to save temporary audio files
-                and cache beat assets for offline playback.
-              </li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white mb-4">
-              13. Contact Us
-            </h2>
-            <p>
-              If you have any questions about this Privacy Policy or our data
-              practices, please contact us at:
-              <br />
-              <a
-                href="mailto:contact@freestyla.app"
-                className="text-accent-purple hover:underline"
-              >
-                contact@freestyla.app
-              </a>
-            </p>
-          </section>
-        </div>
+              </p>
+            </section>
+          </div>
+        </article>
       </Container>
     </div>
   )

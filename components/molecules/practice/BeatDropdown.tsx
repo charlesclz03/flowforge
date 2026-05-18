@@ -42,8 +42,12 @@ function UploadNewTrackRow() {
   }
 
   return (
-    <div onClick={handleUploadClick} className="p-1">
-      <div className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/5 cursor-pointer border border-dashed border-white/10 hover:border-accent-purple/30">
+    <div className="p-1">
+      <button
+        type="button"
+        onClick={handleUploadClick}
+        className="flex w-full items-center gap-3 rounded-xl border border-dashed border-white/10 p-3 text-left transition-all duration-200 hover:border-accent-purple/30 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
+      >
         <IconFrame icon={Upload} variant="action" tone="purple" decorative />
         <div className="flex-1">
           <p className="text-sm font-medium text-accent-purple">
@@ -53,7 +57,7 @@ function UploadNewTrackRow() {
             Add another beat to your library
           </p>
         </div>
-      </div>
+      </button>
     </div>
   )
 }
@@ -385,7 +389,11 @@ export function BeatDropdown(props: BeatDropdownProps) {
           }
         >
           <div className="p-3 border-b border-white/10">
+            <label htmlFor="beat-dropdown-search" className="sr-only">
+              Search beats
+            </label>
             <input
+              id="beat-dropdown-search"
               type="text"
               placeholder="Search beats..."
               value={searchQuery}
@@ -423,7 +431,8 @@ export function BeatDropdown(props: BeatDropdownProps) {
             >
               <div className="p-1">
                 {/* Random Beat Option */}
-                <div
+                <button
+                  type="button"
                   onClick={() => {
                     const availableBeats = beats.filter((b) =>
                       isPro ? true : !b.isPremium
@@ -437,7 +446,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       setIsExpanded(false)
                     }
                   }}
-                  className="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left cursor-pointer hover:bg-white/5 mb-1"
+                  className="group mb-1 flex w-full items-center justify-between rounded-xl p-3 text-left transition-all duration-200 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/20">
@@ -452,30 +461,28 @@ export function BeatDropdown(props: BeatDropdownProps) {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
 
                 {filteredBeats.map((beat: Beat) => (
                   <div
                     key={beat.id}
-                    onClick={() => {
-                      if (!isPro && beat.isPremium) {
-                        handleLockedSelect?.()
-                      } else {
-                        handleSelect(beat)
-                        setIsExpanded(false)
-                      }
-                    }}
                     className={cn(
-                      'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 group text-left cursor-pointer',
+                      'group flex w-full items-center justify-between gap-2 rounded-xl p-3 text-left transition-all duration-200',
                       selectedBeat?.id === beat.id
                         ? 'bg-accent-purple/10'
                         : 'hover:bg-white/5'
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <div
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                      <button
+                        type="button"
                         onClick={(e) => handlePreview(e, beat)}
-                        className="relative w-10 h-10 rounded-lg overflow-hidden bg-black/40 flex-shrink-0 cursor-pointer"
+                        className="relative h-11 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
+                        aria-label={
+                          playingId === beat.id
+                            ? `Pause preview for ${beat.title}`
+                            : `Preview ${beat.title}`
+                        }
                       >
                         {beat.isPremium && (
                           <div className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent-yellow ring-1 ring-white/20 shadow-[0_0_10px_rgba(255,214,10,0.35)]">
@@ -510,8 +517,20 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             <Play size={16} className="text-white fill-white" />
                           )}
                         </div>
-                      </div>
-                      <div className="flex-1">
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!isPro && beat.isPremium) {
+                            handleLockedSelect?.()
+                          } else {
+                            handleSelect(beat)
+                            setIsExpanded(false)
+                          }
+                        }}
+                        className="min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
+                        aria-label={`Select ${beat.title}`}
+                      >
                         <div className="flex items-center gap-2">
                           <p
                             className={cn(
@@ -527,7 +546,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                         <p className="text-xs text-text-secondary">
                           {beat.bpm} BPM • {beat.genre}
                         </p>
-                      </div>
+                      </button>
                     </div>
                     <div className="flex items-center gap-2">
                       {beat.title === 'New' && (
@@ -535,14 +554,20 @@ export function BeatDropdown(props: BeatDropdownProps) {
                           NEW
                         </div>
                       )}
-                      <div
+                      <button
+                        type="button"
                         onClick={(e) => handleToggleFavorite(beat.id, e)}
                         className={cn(
-                          'transition-colors cursor-pointer p-2 -m-2',
+                          'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors',
                           favoriteIds.has(beat.id)
                             ? 'text-accent-red'
                             : 'text-text-tertiary hover:text-white'
                         )}
+                        aria-label={
+                          favoriteIds.has(beat.id)
+                            ? `Remove ${beat.title} from favorites`
+                            : `Add ${beat.title} to favorites`
+                        }
                       >
                         <Heart
                           size={16}
@@ -550,7 +575,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             favoriteIds.has(beat.id) && 'fill-current'
                           )}
                         />
-                      </div>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -567,14 +592,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
               >
                 <div className="p-1">
                   {allUserBeats.map((beat) => (
-                    <div
-                      key={beat.id}
-                      className="relative group p-1"
-                      onClick={() => {
-                        handleSelect(beat)
-                        setIsExpanded(false)
-                      }}
-                    >
+                    <div key={beat.id} className="relative group p-1">
                       <div
                         className={cn(
                           'w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left cursor-pointer',
@@ -583,18 +601,32 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             : 'hover:bg-white/5'
                         )}
                       >
-                        <div className="flex items-center gap-3">
-                          <div
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <button
+                            type="button"
                             onClick={(e) => handlePreview(e, beat)}
-                            className="flex h-11 w-11 flex-shrink-0 cursor-pointer items-center justify-center rounded-xl border border-accent-purple/25 bg-accent-purple/10 text-accent-purple transition-colors group-hover:bg-accent-purple/20"
+                            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-accent-purple/25 bg-accent-purple/10 text-accent-purple transition-colors group-hover:bg-accent-purple/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
+                            aria-label={
+                              playingId === beat.id
+                                ? `Pause preview for ${beat.title}`
+                                : `Preview ${beat.title}`
+                            }
                           >
                             {playingId === beat.id ? (
                               <Pause size={20} />
                             ) : (
                               <Upload size={20} />
                             )}
-                          </div>
-                          <div className="flex-1">
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleSelect(beat)
+                              setIsExpanded(false)
+                            }}
+                            className="min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80"
+                            aria-label={`Select ${beat.title}`}
+                          >
                             <div className="flex items-center gap-2">
                               <p
                                 className={cn(
@@ -610,24 +642,28 @@ export function BeatDropdown(props: BeatDropdownProps) {
                             <p className="text-xs text-text-secondary">
                               {beat.bpm} BPM • Custom
                             </p>
-                          </div>
+                          </button>
                         </div>
                         <div className="flex items-center gap-3">
-                          <div
+                          <button
+                            type="button"
                             onClick={(e) => handleToggleFavorite(beat.id, e)}
                             className={cn(
-                              'transition-colors cursor-pointer p-2 -m-2',
+                              'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors',
                               'text-text-tertiary hover:text-white'
                             )}
+                            aria-label={`Add ${beat.title} to favorites`}
                           >
                             <Heart size={16} />
-                          </div>
-                          <div
+                          </button>
+                          <button
+                            type="button"
                             onClick={(e) => requestDeleteBeat(beat, e)}
-                            className="p-2 text-text-tertiary hover:text-accent-red opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-text-tertiary opacity-100 transition-opacity hover:text-accent-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red/80 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
+                            aria-label={`Delete ${beat.title}`}
                           >
                             <Trash2 size={16} />
-                          </div>
+                          </button>
                           {selectedBeat?.id === beat.id && (
                             <Check size={16} className="text-accent-purple" />
                           )}

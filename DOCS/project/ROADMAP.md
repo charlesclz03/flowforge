@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-17
+- 2026-05-18
 
 Related docs:
 
@@ -27,15 +27,15 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.4`
-**Last Updated**: 2026-05-17
+**Current Version**: `1.1.5`
+**Last Updated**: 2026-05-18
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.
 
 ## Now (0-2 weeks)
 
-1. Validate the v1.1.4 enterprise UX recovery wave in production-like desktop/mobile conditions.
+1. Validate the v1.1.5 enterprise UI remediation release in production-like desktop/mobile conditions.
 2. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
 3. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
 4. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
