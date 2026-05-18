@@ -25,6 +25,10 @@ import { formatDuration, formatRelativeTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import { useRecordingPlayback } from '@/hooks/useRecordingPlayback'
+import {
+  getRecordingAudioStatusCopy,
+  resolveRecordingAudioStatus,
+} from '@/lib/recordings/audio-status-copy'
 
 interface RecordingCardProps {
   recording: FreestyleSessionWithBeat
@@ -112,14 +116,15 @@ export const RecordingCard = memo(function RecordingCard({
       ? createAppError(playbackError, ErrorCodes.AUDIO_PLAYBACK_FAILED)
       : null
 
-  const hasAudio = Boolean(recording.storageUrl)
   const hasStreamableAudio =
     typeof recording.storageUrl === 'string' &&
     recording.storageUrl.startsWith('http')
-  const audioStatus =
-    recording.audioStatus ??
-    (hasStreamableAudio ? 'ready' : hasAudio ? 'processing' : 'stats-only')
+  const audioStatus = resolveRecordingAudioStatus({
+    storageUrl: recording.storageUrl,
+    audioStatus: recording.audioStatus,
+  })
   const isAudioReady = audioStatus === 'ready' && hasStreamableAudio
+  const audioStatusCopy = getRecordingAudioStatusCopy(audioStatus)
 
   return (
     <Card
@@ -205,10 +210,11 @@ export const RecordingCard = memo(function RecordingCard({
                   className="mt-1 flex items-center gap-3"
                   role="status"
                   aria-live="polite"
+                  title={audioStatusCopy.description}
                 >
                   <p className="text-xs text-accent-cyan uppercase tracking-wide flex items-center gap-1.5 font-bold">
                     <span className="w-3 h-3 border-2 border-accent-cyan/30 border-t-accent-cyan rounded-full animate-spin" />
-                    Processing Audio
+                    {audioStatusCopy.label}
                   </p>
                   <button
                     onClick={(e) => {
@@ -230,7 +236,10 @@ export const RecordingCard = memo(function RecordingCard({
                 </div>
               )}
               {audioStatus === 'stats-only' && (
-                <p className="mt-1 text-xs text-accent-yellow uppercase tracking-wide flex items-center gap-1.5 font-bold opacity-90">
+                <p
+                  className="mt-1 text-xs text-accent-yellow uppercase tracking-wide flex items-center gap-1.5 font-bold opacity-90"
+                  title={audioStatusCopy.description}
+                >
                   <IconFrame
                     icon={MicOff}
                     variant="inline"
@@ -238,7 +247,7 @@ export const RecordingCard = memo(function RecordingCard({
                     decorative
                     iconClassName="h-3 w-3"
                   />
-                  Stats-Only (No Mic)
+                  {audioStatusCopy.label}
                 </p>
               )}
             </div>

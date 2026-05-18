@@ -6,6 +6,7 @@ import {
 import { getFallbackWords } from '@/lib/data/fallbacks'
 import { doWordsRhyme, getPhoneticRhymeKey } from '@/lib/words/rhyme'
 import type { PracticeWordSeed } from '@/lib/words/practice-word-seed'
+import { TTS_LANGUAGE_CODES } from '@/lib/tts/languages'
 
 function makeWords(): PracticeWordSeed[] {
   return Array.from({ length: 120 }, (_, index) => ({
@@ -175,4 +176,36 @@ describe('session queue', () => {
     expect(result.queue).toHaveLength(97)
     expect(uniqueCount(result.queue)).toBe(97)
   })
+
+  it.each(TTS_LANGUAGE_CODES)(
+    'keeps %s fallback queues unique and anti-rhyme ordered at 2-bar and 4-bar cadence',
+    (language) => {
+      for (const frequency of [2, 4]) {
+        const words = getFallbackWords(language).map((word) => ({
+          wordText: word.wordText,
+          difficultyLevel: word.difficultyLevel,
+          syllableCount: word.syllableCount,
+        }))
+        const result = buildSessionWordQueue({
+          bpm: 120,
+          frequency,
+          difficulty: 2,
+          language,
+          sessionDurationSeconds: 96,
+          words,
+          randomFn: () => 0,
+        })
+        const queueWords = result.queue.map((word) => word.wordText)
+        const adjacentRhymes = queueWords
+          .slice(1)
+          .filter((word, index) =>
+            doWordsRhyme(queueWords[index], word, language)
+          )
+
+        expect(result.deficit).toBe(0)
+        expect(uniqueCount(result.queue)).toBe(result.queue.length)
+        expect(adjacentRhymes).toHaveLength(0)
+      }
+    }
+  )
 })

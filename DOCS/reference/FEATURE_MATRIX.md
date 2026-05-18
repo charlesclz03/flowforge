@@ -1,6 +1,6 @@
 # Feature Matrix
 
-**Current Version**: `1.1.5`
+**Current Version**: `1.1.6`
 **Last Updated**: 2026-05-18
 
 ## Core Practice
@@ -11,15 +11,15 @@
 | Cypher Mode            | PASS [x] 2026-02-19 | Local pass-the-phone with player rotation                                                                                                                                                                                                                | All  |
 | Beat Selection         | PASS [x] 2026-02-19 | Public + private beat selection and handoff                                                                                                                                                                                                              | All  |
 | Practice Track Looping | PASS [x] 2026-05-15 | Live practice uses Web Audio gapless looping and preserves calibrated cue points until session stop/timeout                                                                                                                                              | All  |
-| Prompt Engine          | PASS [x] 2026-05-15 | Prebuilt no-repeat session queues expand across same-language difficulty tiers, preserve anti-rhyme ordering, rotate across word families before repeating suffix/rhyme groups, and use exclusion-based top-ups instead of recycling prompts mid-session | All  |
+| Prompt Engine          | PASS [x] 2026-05-18 | Prebuilt no-repeat session queues expand across same-language difficulty tiers, preserve anti-rhyme ordering, rotate across word families before repeating suffix/rhyme groups, and deterministic EN/FR/PT 2-bar/4-bar checks guard fallback prompt quality | All  |
 | Prompt Frequency       | PASS [x] 2026-05-15 | Skill Check and Practice support 2, 4, 8, and 16-bar prompt timing, with save/API contracts accepting the full set                                                                                                                                       | All  |
-| Language Runtime (TTS) | PASS [x] 2026-05-15 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, iPhone/iPad use intentional text-only prompts, and spoken prompts cancel cleanly on pause/stop while staying aligned with displayed PLAYING prompts                      | All  |
+| Language Runtime (TTS) | PASS [x] 2026-05-18 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, iPhone/iPad use intentional text-only prompts, spoken prompts cancel cleanly on pause/stop, and setup/practice surfaces now explain loading, fallback, unsupported, and text-only states | All  |
 
 ## Beats & Calibration
 
 | Feature               | Status              | Notes                                            | Tier |
 | --------------------- | ------------------- | ------------------------------------------------ | ---- |
-| Upload Private Beats  | PASS [x] 2026-02-19 | User upload pipeline active                      | Pro  |
+| Upload Private Beats  | PASS [x] 2026-05-18 | Signed PUT remains the default path, Uppy/Tus stays opt-in, and adapter tests verify resumable success, resumable fallback, ticket failures, and signed PUT failures without logging sensitive upload URLs | Pro  |
 | Cue Point Calibration | PASS [x] 2026-02-19 | Saved offsets honored at runtime/restart         | Pro  |
 | Difficulty Handoff    | PASS [x] 2026-02-19 | `/tracks` arrow preselect resolves private beats | Pro  |
 | Beat Deletion         | PASS [x] 2026-02-19 | User-managed cleanup supported                   | Pro  |
@@ -29,8 +29,8 @@
 | Feature                     | Status              | Notes                                           | Tier  |
 | --------------------------- | ------------------- | ----------------------------------------------- | ----- |
 | Audio Capture Sessions      | PASS [x] 2026-02-19 | Standard recordings supported                   | Mixed |
-| Stats-Only Sessions         | PASS [x] 2026-02-19 | No audio controls exposed when capture disabled | Mixed |
-| Processing State            | PASS [x] 2026-02-19 | `PROCESSING` shown while audio URL is not ready | Mixed |
+| Stats-Only Sessions         | PASS [x] 2026-05-18 | No audio controls exposed when capture disabled, with shared "stats-only practice" copy across recordings and review | Mixed |
+| Processing State            | PASS [x] 2026-05-18 | `processing` remains the API value while UI copy clearly labels audio processing and refresh guidance | Mixed |
 | Review Settings Persistence | PASS [x] 2026-02-19 | Save Changes appears only when edited           | Mixed |
 | Shared Playback             | PASS [x] 2026-02-19 | Public links available for shareable sessions   | Mixed |
 
@@ -47,6 +47,7 @@
 
 | Date       | Audit                                                    | Status       | Outcome                                                                                                                                                                                                                                                                                                                  |
 | ---------- | -------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-18 | Practice Reliability v1.1.6 Completion                   | PASS         | Completed EN/FR/PT prompt queue checks, TTS fallback copy, recording lifecycle copy, sanitized prompt/recording/upload telemetry assertions, Uppy/Tus adapter validation, authenticated practice setup smoke coverage, and v1.1.6 release governance sync.                                                                |
 | 2026-05-18 | Practice Reliability v1.1.6 Planning Audit               | PASS (Watch) | Opened the v1.1.6 practice reliability track, mapped multilingual prompt/TTS/recording/review/upload touchpoints, and added adapter validation for Easy Speech native fallback, Wavesurfer runtime fallback, and signed PUT upload failure handling.                                                                      |
 | 2026-05-18 | Enterprise UI Remediation                                | PASS         | Completed v1.1.5 contrast/modal/touch/reduced-motion foundations plus dialog/motion hardening, route-level polish, admin mobile fallback states, legal/offline trust surfaces, safe Playwright auth fixtures, mocked admin/recordings/review coverage, and governance sync.                                              |
 | 2026-05-18 | Enterprise UI Remediation                                | PASS         | Documented the whole-app UI audit, upgraded modal semantics/focus, fixed primary action contrast, added visible mobile nav labels, converted beat selection touch controls toward semantic buttons, improved upload/calibration accessibility, and added regression coverage.                                            |

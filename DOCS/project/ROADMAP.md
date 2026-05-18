@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.5`
+**Current Version**: `1.1.6`
 **Last Updated**: 2026-05-18
 **Owner**: Product + Engineering
 
@@ -35,16 +35,16 @@ This roadmap is forward-looking only. Historical phase logs were archived under 
 
 ## Now (0-2 weeks)
 
-1. Validate the v1.1.5 enterprise UI remediation release in production-like desktop/mobile conditions.
-2. Stabilize multilingual practice loop quality (EN/FR/PT prompt quality + TTS fallback UX).
-3. Harden recording lifecycle UX (processing state, stats-only clarity, retry visibility).
+1. Validate the v1.1.6 practice reliability release in production-like desktop/mobile conditions.
+2. Monitor multilingual practice loop quality, TTS fallback telemetry, and recording processing delays.
+3. Continue review/studio workflow ergonomics (preset management, clearer save states).
 4. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).
 
 ## Next (2-6 weeks)
 
-1. Expand language-aware word dictionaries and per-language anti-rhyme quality.
-2. Add structured observability for practice pipeline failures and upload/processing delays.
-3. Improve review/studio workflow ergonomics (preset management, clearer save states).
+1. Expand language-aware word dictionaries and per-language anti-rhyme quality beyond the current fallback packs.
+2. Add production dashboards/alerts for practice pipeline failures and upload/processing delays.
+3. Validate Android/TWA packaging and real-device audio behavior.
 
 ## Research-Backed Next Steps
 

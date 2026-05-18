@@ -24,6 +24,7 @@ import { AudioMixer } from '@/lib/audio/mixer'
 import { toast } from 'react-hot-toast'
 import { ShareButton } from '@/components/molecules/sharing/ShareButton'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
+import { getRecordingAudioStatusCopy } from '@/lib/recordings/audio-status-copy'
 import { formatDuration } from '@/lib/utils'
 
 type PersistedFxConfig = {
@@ -260,6 +261,7 @@ export default function ReviewPage() {
   }
 
   const handleBack = () => router.push('/recordings')
+  const statsOnlyCopy = getRecordingAudioStatusCopy('stats-only')
 
   if (status === 'loading') {
     return (
@@ -426,11 +428,10 @@ export default function ReviewPage() {
         ) : (
           <div className="rounded-2xl border border-white/10 bg-background-card/60 p-8 text-center space-y-3">
             <h3 className="text-lg font-semibold text-white">
-              No audio was captured for this session
+              {statsOnlyCopy.reviewTitle}
             </h3>
             <p className="text-sm text-text-secondary">
-              This run was saved as stats-only metadata, so waveform review is
-              unavailable.
+              {statsOnlyCopy.reviewDescription}
             </p>
             <div className="pt-2">
               <Button onClick={() => router.push('/practice')}>

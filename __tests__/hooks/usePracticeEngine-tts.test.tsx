@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Beat } from '@/types/database'
 import { usePracticeEngine } from '@/hooks/player/usePracticeEngine'
+import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
 
 const mocks = vi.hoisted(() => {
   const beatPlayer = {
@@ -106,6 +107,12 @@ describe('usePracticeEngine TTS timing', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.beatPlayer.isPlaying = false
+    mocks.recorder.isRecording = false
+    mocks.recorder.duration = 0
+    mocks.session.selectedLanguage = 'en-US'
+    global.fetch = vi.fn(async () => {
+      throw new Error('word top-up unavailable')
+    }) as typeof fetch
   })
 
   it('warms TTS during start, waits through countdown, then speaks the displayed prompt once', async () => {
@@ -163,5 +170,85 @@ describe('usePracticeEngine TTS timing', () => {
     expect(result.current.status).toBe('PAUSED')
     expect(mocks.tts.cancel).toHaveBeenCalled()
     expect(mocks.tts.speak).toHaveBeenCalledTimes(1)
+  })
+
+  it('logs sanitized queue top-up and fallback telemetry when prompt pools are exhausted', async () => {
+    mocks.session.selectedLanguage = 'fr-FR'
+    const { result } = renderHook(() =>
+      usePracticeEngine({
+        initialBeats,
+        initialWords: [],
+        frequency: 2,
+        difficulty: 2,
+        submitSession: vi.fn(async () => undefined),
+        sessionDurationSeconds: 1200,
+      })
+    )
+
+    await act(async () => {
+      await result.current.startSession()
+    })
+
+    expect(trackReliabilityEvent).toHaveBeenCalledWith(
+      'practice_prompt_queue_top_up_requested',
+      expect.objectContaining({
+        language: 'fr-FR',
+        difficulty: 2,
+        frequency: 2,
+        usedWordsCount: 0,
+      })
+    )
+    expect(trackReliabilityEvent).toHaveBeenCalledWith(
+      'practice_prompt_queue_fallback_required',
+      expect.objectContaining({
+        language: 'fr-FR',
+        difficulty: 2,
+        frequency: 2,
+      }),
+      'warning'
+    )
+  })
+
+  it('logs sanitized metadata-only fallback telemetry for empty recording blobs', async () => {
+    mocks.recorder.isRecording = true
+    mocks.recorder.duration = 1
+    const submitSession = vi.fn(async () => undefined)
+    const { result } = renderHook(() =>
+      usePracticeEngine({
+        initialBeats,
+        initialWords,
+        frequency: 4,
+        difficulty: 2,
+        submitSession,
+        isRecordingEnabled: true,
+        sessionDurationSeconds: 1,
+      })
+    )
+
+    await act(async () => {
+      await result.current.startSession()
+      await result.current.completeCountdown()
+      result.current.stopSession()
+    })
+
+    const onComplete = mocks.recorder.setOnComplete.mock.calls.at(-1)?.[0]
+    expect(onComplete).toBeTypeOf('function')
+
+    await act(async () => {
+      await onComplete(new Blob([], { type: 'audio/webm' }), 0)
+    })
+
+    await vi.waitFor(() => {
+      expect(submitSession).toHaveBeenCalled()
+    })
+    expect(trackReliabilityEvent).toHaveBeenCalledWith(
+      'practice_recording_metadata_only_fallback',
+      expect.objectContaining({
+        reason: 'empty_blob',
+        durationSeconds: expect.any(Number),
+        isRecordingEnabled: true,
+      }),
+      'warning'
+    )
   })
 })

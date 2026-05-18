@@ -34,6 +34,7 @@ import { isProUser } from '@/lib/subscription/isPro'
 import { useTTS } from '@/hooks/useTTS'
 import { TTS_LANGUAGE_OPTIONS, type TTSLanguageCode } from '@/lib/tts/languages'
 import { IOS_SPOKEN_PROMPT_NOTICE } from '@/lib/tts/platform'
+import { getVoiceStatusNotice } from '@/lib/tts/voice-status-copy'
 import { trackEvent } from '@/lib/analytics/track'
 
 type Frequency = 2 | 4 | 8 | 16
@@ -222,28 +223,16 @@ export function DifficultySelectionClient({
     enabled: false,
     language: selectedLanguage,
   })
-  const voiceStatusMessage = useMemo(() => {
-    if (isIOS) {
-      return IOS_SPOKEN_PROMPT_NOTICE
-    }
-
-    if (voiceStatus === 'unsupported') {
-      return 'Voice prompts are unavailable in this browser.'
-    }
-
-    if (voiceStatus === 'fallback') {
-      const fallbackLabel = activeVoice?.name
-        ? `Using fallback voice: ${activeVoice.name}.`
-        : 'Using a fallback voice.'
-      return `${fallbackLabel} Install a matching language voice for best results.`
-    }
-
-    if (voiceStatus === 'loading') {
-      return 'Checking installed voice packs...'
-    }
-
-    return null
-  }, [isIOS, voiceStatus, activeVoice])
+  const voiceStatusNotice = useMemo(
+    () =>
+      getVoiceStatusNotice({
+        isIOS,
+        spokenPromptNotice: isIOS ? IOS_SPOKEN_PROMPT_NOTICE : null,
+        voiceStatus,
+        activeVoiceName: activeVoice?.name,
+      }),
+    [isIOS, voiceStatus, activeVoice]
+  )
 
   const activeLanguageLabel =
     TTS_LANGUAGE_OPTIONS.find((option) => option.code === selectedLanguage)
@@ -372,13 +361,16 @@ export function DifficultySelectionClient({
                   )
                 })}
               </div>
-              {voiceStatusMessage && (
+              {voiceStatusNotice && (
                 <p
                   className="mt-3 text-xs leading-relaxed text-text-tertiary"
                   role="status"
                   aria-live="polite"
                 >
-                  {voiceStatusMessage}
+                  <span className="font-semibold text-white">
+                    {voiceStatusNotice.title}.
+                  </span>{' '}
+                  {voiceStatusNotice.message}
                 </p>
               )}
             </div>

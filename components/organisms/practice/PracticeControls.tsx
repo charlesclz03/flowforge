@@ -18,6 +18,7 @@ import { Beat } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { getIntervalProgress } from '@/lib/beats/utils'
 import { RECORDING_CONFIG } from '@/lib/constants/design'
+import { getVoiceStatusNotice } from '@/lib/tts/voice-status-copy'
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
 
@@ -110,6 +111,11 @@ export default function PracticeControls(props: PracticeControlsProps) {
   // State for pause modal
   const [showPauseModal, setShowPauseModal] = useState(false)
   const shouldReduceMotion = useReducedMotion()
+  const voiceStatusNotice = getVoiceStatusNotice({
+    isTTSEnabled,
+    spokenPromptNotice,
+    voiceStatus,
+  })
 
   // Sentry Error Logging
   useEffect(() => {
@@ -193,31 +199,25 @@ export default function PracticeControls(props: PracticeControlsProps) {
         <div className="flex w-full max-w-lg flex-col items-center">
           <PracticeErrorBanner error={error} onRetrySave={onRetrySave} />
 
-          {spokenPromptNotice && !error && (
-            <div className="mb-4 flex flex-col items-center gap-1 text-accent-blue text-xs text-center bg-accent-blue/10 px-4 py-2 rounded-lg border border-accent-blue/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
+          {voiceStatusNotice && !error && (
+            <div
+              className={cn(
+                'mb-4 flex flex-col items-center gap-1 text-xs text-center px-4 py-2 rounded-lg border pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300',
+                voiceStatusNotice.tone === 'warning'
+                  ? 'text-accent-yellow bg-accent-yellow/10 border-accent-yellow/20'
+                  : 'text-accent-blue bg-accent-blue/10 border-accent-blue/20'
+              )}
+              role="status"
+              aria-live="polite"
+            >
               <span className="font-bold tracking-wider uppercase">
-                Text-Only Prompts
+                {voiceStatusNotice.title}
               </span>
               <span className="opacity-90 leading-tight">
-                {spokenPromptNotice}
+                {voiceStatusNotice.message}
               </span>
             </div>
           )}
-
-          {!spokenPromptNotice &&
-            isTTSEnabled &&
-            voiceStatus === 'fallback' &&
-            !error && (
-              <div className="mb-4 flex flex-col items-center gap-1 text-accent-yellow text-xs text-center bg-accent-yellow/10 px-4 py-2 rounded-lg border border-accent-yellow/20 pointer-events-auto z-50 animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300">
-                <span className="font-bold tracking-wider uppercase">
-                  Native Voice Missing
-                </span>
-                <span className="opacity-90 leading-tight">
-                  Falling back to a standard robotic voice. Check browser
-                  settings to install language packs.
-                </span>
-              </div>
-            )}
 
           <div className="grid w-full grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] items-center justify-center gap-2 px-1 relative z-10 pointer-events-none sm:grid-cols-[4rem_minmax(0,1fr)_4rem] sm:gap-3">
             {/* Left Satellite: RESTART */}

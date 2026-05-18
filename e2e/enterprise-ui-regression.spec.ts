@@ -91,6 +91,14 @@ const mockStatsOnlyRecording = {
   audioStatus: 'stats-only',
 }
 
+const mockProcessingRecording = {
+  ...mockAudioRecording,
+  id: 'pw-processing-audio',
+  title: 'Processing Audio Take',
+  storageUrl: null,
+  audioStatus: 'processing',
+}
+
 test.describe('enterprise UI remediation regressions', () => {
   test('primary feedback CTA keeps WCAG AA contrast', async ({ page }) => {
     await page.goto('/feedback')
@@ -303,7 +311,11 @@ test.describe('enterprise UI remediation regressions', () => {
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify({
-            recordings: [mockStatsOnlyRecording, mockAudioRecording],
+            recordings: [
+              mockStatsOnlyRecording,
+              mockProcessingRecording,
+              mockAudioRecording,
+            ],
           }),
         })
       }
@@ -319,19 +331,21 @@ test.describe('enterprise UI remediation regressions', () => {
 
     try {
       await page.goto('/recordings')
-      await expect(page.getByText('Stats-Only (No Mic)')).toBeVisible()
+      await expect(page.getByText('Stats-only practice')).toBeVisible()
+      await expect(page.getByText('Audio processing')).toBeVisible()
       await expect(
         page.getByRole('link', { name: /audio review take/i })
       ).toBeVisible()
       await expect(
         page.getByRole('link', { name: /stats only take/i })
       ).toHaveCount(0)
+      await expect(
+        page.getByRole('link', { name: /processing audio take/i })
+      ).toHaveCount(0)
       await expectNoHorizontalOverflow(page)
 
       await page.goto('/review/pw-stats-only')
-      await expect(
-        page.getByText('No audio was captured for this session')
-      ).toBeVisible()
+      await expect(page.getByText('Stats-only practice saved')).toBeVisible()
       await expect(
         page.getByRole('button', { name: /^download$/i })
       ).toHaveCount(0)

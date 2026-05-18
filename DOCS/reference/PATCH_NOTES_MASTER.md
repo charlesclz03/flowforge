@@ -1,5 +1,26 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.6 - Practice Reliability (2026-05-18)
+
+**"Reliable Practice Loop"**
+
+Finished the practice reliability release with stronger multilingual prompt quality checks, clearer TTS fallback states, normalized recording lifecycle copy, and validated upload adapter fallbacks.
+
+### Fixes & Improvements
+
+- **Multilingual Prompt Quality**: Added deterministic EN/FR/PT queue checks for 2-bar and 4-bar sessions so fallback prompts stay unique and anti-rhyme ordered inside the session budget.
+- **TTS Fallback Clarity**: Skill Check and Practice now share explicit copy for text-only, loading, unsupported, and fallback voice states while preserving the existing Easy Speech/native adapter contract.
+- **Recording Lifecycle Clarity**: Recordings and Review now use shared audio-ready, audio-processing, and stats-only practice copy so metadata-only sessions remain clearly separate from audio recordings.
+
+### System Updates
+
+- **Adapter Validation**: Expanded Uppy/Tus and signed PUT tests to cover resumable success, resumable fallback, ticket failures, storage failures, and runtime waveform/TTS fallback behavior.
+- **Reliability Telemetry Coverage**: Added sanitized assertions for prompt queue fallback, metadata-only recording fallback, and private beat upload failure events without exposing signed URLs or raw paths.
+- **Authenticated Smoke Coverage**: Added Playwright coverage for authenticated Skill Check language/cadence/recording setup and practice pause/resume flow.
+- **Governance Sync**: Updated package metadata, settings display, canonical docs, feature matrix, testing plan, and patch notes to v1.1.6.
+
+---
+
 ## v1.1.5 - Enterprise UI Remediation (2026-05-18)
 
 **"Accessible Studio"**

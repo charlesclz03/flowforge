@@ -1,3 +1,5 @@
+import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
+
 export type BeatUploadStrategy = 'signed-put' | 'uppy-tus'
 
 export interface BeatUploadResult {
@@ -20,8 +22,9 @@ interface SignedUploadTicket {
   bucket?: string
 }
 
-const RESUMABLE_UPLOAD_ENABLED =
-  process.env.NEXT_PUBLIC_ENABLE_SUPABASE_TUS_UPLOADS === 'true'
+function isResumableUploadEnabled() {
+  return process.env.NEXT_PUBLIC_ENABLE_SUPABASE_TUS_UPLOADS === 'true'
+}
 
 export async function uploadBeatFile({
   file,
@@ -30,7 +33,7 @@ export async function uploadBeatFile({
 }: BeatUploadInput): Promise<BeatUploadResult> {
   const ticket = await createSignedUploadTicket(file)
 
-  if (preferResumable && RESUMABLE_UPLOAD_ENABLED) {
+  if (preferResumable && isResumableUploadEnabled()) {
     try {
       await uploadWithUppyTus({ file, ticket, onProgress })
       onProgress?.(100)
@@ -41,6 +44,15 @@ export async function uploadBeatFile({
         strategy: 'uppy-tus',
       }
     } catch (error) {
+      trackReliabilityEvent(
+        'beat_upload_resumable_fallback',
+        {
+          fileType: file.type,
+          fileSize: file.size,
+          bucket: ticket.bucket ?? null,
+        },
+        'warning'
+      )
       console.warn('Resumable beat upload failed, falling back to signed PUT', {
         error,
       })
@@ -72,6 +84,15 @@ async function createSignedUploadTicket(
 
   const data = await response.json().catch(() => ({}))
   if (!response.ok || !data?.signedUrl || !data?.publicUrl) {
+    trackReliabilityEvent(
+      'beat_upload_signed_ticket_failed',
+      {
+        status: response.status,
+        fileType: file.type,
+        fileSize: file.size,
+      },
+      'warning'
+    )
     throw new Error(data?.error || 'Failed to get upload URL')
   }
 
@@ -187,17 +208,54 @@ async function uploadWithSignedPut({
       }
 
       reject(
-        new Error(
-          `Upload failed (${xhr.status}): ${
-            xhr.responseText || xhr.statusText || 'Unknown error'
-          }. Check if file is < 50MB and storage is not full.`
-        )
+        (() => {
+          trackReliabilityEvent(
+            'beat_upload_signed_put_failed',
+            {
+              status: xhr.status,
+              fileType: file.type,
+              fileSize: file.size,
+            },
+            'warning'
+          )
+
+          return new Error(
+            `Upload failed (${xhr.status}): ${
+              xhr.responseText || xhr.statusText || 'Unknown error'
+            }. Check if file is < 50MB and storage is not full.`
+          )
+        })()
       )
     }
 
     xhr.onerror = () =>
-      reject(new Error('Upload failed due to a network error'))
-    xhr.onabort = () => reject(new Error('Upload was cancelled'))
+      reject(
+        (() => {
+          trackReliabilityEvent(
+            'beat_upload_signed_put_network_error',
+            {
+              fileType: file.type,
+              fileSize: file.size,
+            },
+            'warning'
+          )
+          return new Error('Upload failed due to a network error')
+        })()
+      )
+    xhr.onabort = () =>
+      reject(
+        (() => {
+          trackReliabilityEvent(
+            'beat_upload_signed_put_aborted',
+            {
+              fileType: file.type,
+              fileSize: file.size,
+            },
+            'info'
+          )
+          return new Error('Upload was cancelled')
+        })()
+      )
     xhr.send(file)
   })
 }

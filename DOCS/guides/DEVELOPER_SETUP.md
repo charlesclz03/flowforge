@@ -1,6 +1,6 @@
 # Developer Setup
 
-**Current Version**: `1.1.5`
+**Current Version**: `1.1.6`
 **Last Updated**: 2026-05-18
 
 ## Prerequisites
