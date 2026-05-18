@@ -27,13 +27,13 @@ Related docs:
 - `docs/project/ROADMAP.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.5`
+**Current Version**: `1.1.6`
 **Phase**: Beta Polish
 **Last Updated**: 2026-05-18
 
 ## Quick Status
 
-- Latest release: `v1.1.5` (Enterprise UI Remediation).
+- Latest release: `v1.1.6` (Practice Reliability).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -49,6 +49,7 @@ Related docs:
 - Shipped the v1.1.3 adapter reliability pass: Easy Speech-aware TTS boundary, review-only wavesurfer.js fallback wrapper, and signed PUT-first private beat upload adapter with opt-in Uppy/Tus support.
 - Shipped the v1.1.4 enterprise UX recovery wave: dated UX audit artifacts, safe review deep-link handling, updated E2E expectations, feedback accessibility fixes, mobile control target hardening, lifecycle status messaging, and clearer install/conversion copy.
 - Shipped the v1.1.5 enterprise UI remediation release: canonical audit documentation, accessible modal semantics, AA-safe primary action contrast, visible mobile nav labels, Beat Vault touch affordances, upload/calibration accessibility fixes, reduced-motion gating, remaining dialog-like surface hardening, route-level public/legal/offline/admin polish, safe mocked auth/admin/recordings/review Playwright coverage, and synchronized release governance.
+- Shipped the v1.1.6 practice reliability release: deterministic EN/FR/PT prompt queue checks, clearer TTS fallback states, normalized recording lifecycle copy, sanitized practice/upload telemetry assertions, Uppy/Tus adapter validation, and authenticated setup smoke coverage.
 - Added Playwright UI-polish smoke coverage across desktop/mobile public funnel, Beat Vault, and Skill Check setup controls.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
@@ -57,15 +58,16 @@ Related docs:
 
 ## Immediate Focus
 
-1. Production-smoke v1.1.5 remediation surfaces: pause/rate/support/session summary dialogs, admin dashboards/tables, legal/offline trust surfaces, public funnel CTAs, recordings/review stats-only states, and latency calibration on desktop/mobile.
-2. Monitor multilingual prompt quality and TTS fallback behavior.
-3. Continue recording pipeline reliability hardening.
+1. Production-smoke v1.1.6 practice reliability on real desktop/mobile browsers, especially authenticated practice setup, TTS fallback states, recordings, review, and upload.
+2. Monitor multilingual prompt quality, recording processing delays, and signed-upload failure telemetry.
+3. Continue review/studio workflow ergonomics and Android/TWA validation.
 4. Preserve release discipline and docs governance consistency.
 
 ## Recent Version History
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.1.6  | Practice Reliability        | 2026-05-18 | Added multilingual prompt queue quality checks, clearer TTS fallback UX, normalized audio-ready/processing/stats-only recording states, upload adapter telemetry, Uppy/Tus validation, and authenticated practice smoke coverage |
 | v1.1.5  | Enterprise UI Remediation   | 2026-05-18 | Added the canonical enterprise UI audit, fixed contrast/modal/touch/reduced-motion issues, hardened Beat Vault/upload/dialog/admin/legal/offline interactions, and expanded safe desktop/mobile regression coverage   |
 | v1.1.4  | Enterprise UX Recovery      | 2026-05-17 | Added dated enterprise UX audit artifacts and fixed the first remediation wave across review deep links, Playwright expectations, accessibility, mobile touch targets, lifecycle states, and install/conversion copy  |
 | v1.1.3  | Adapter Reliability         | 2026-05-17 | Added guarded Easy Speech, wavesurfer.js, and Uppy/Tus adapter boundaries for TTS reliability, review waveform fallback, and private beat upload progress while preserving existing fallbacks                         |

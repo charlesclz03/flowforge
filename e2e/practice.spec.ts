@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { existsSync, readFileSync } from 'node:fs'
 import { PrismaClient } from '@prisma/client'
+import { createPlaywrightSession } from './helpers/auth'
 
 async function ensureSessionPlaying(page: Page) {
   const startButton = page.locator('#tour-record-btn')
@@ -375,6 +376,80 @@ test('practice page is startable (no stuck loader)', async ({ page }) => {
   expect(
     consoleErrors.filter((e) => /content security policy/i.test(e))
   ).toEqual([])
+})
+
+test('authenticated setup supports EN/FR/PT cadence and recording modes', async ({
+  page,
+}) => {
+  test.setTimeout(120_000)
+
+  const consoleErrors: string[] = []
+  const pageErrors: string[] = []
+  let session: Awaited<ReturnType<typeof createPlaywrightSession>> | null = null
+
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') consoleErrors.push(msg.text())
+  })
+  page.on('pageerror', (err) => pageErrors.push(err.message))
+
+  try {
+    session = await createPlaywrightSession(page, 'pro')
+  } catch {
+    test.skip(
+      true,
+      'DATABASE_URL is required for authenticated practice setup coverage'
+    )
+  }
+
+  await page.route('**/api/user/beats**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ beats: [] }),
+    })
+  })
+
+  try {
+    await page.goto('/difficultyselection')
+    await expect(
+      page.getByRole('heading', { name: /practice setup/i })
+    ).toBeVisible({ timeout: 20_000 })
+
+    await page.getByRole('button', { name: /^Choose a Beat$/i }).click()
+    await page
+      .getByRole('button', { name: /^Select /i })
+      .first()
+      .click()
+    await expect(page.getByText('Ready to launch')).toBeVisible()
+
+    for (const language of ['English', 'French', 'Portuguese']) {
+      const button = page.getByRole('button', { name: language })
+      await button.click()
+      await expect(button).toHaveAttribute('aria-pressed', 'true')
+    }
+
+    for (const cadence of ['2 bars', '4 bars']) {
+      const radio = page.getByRole('radio', {
+        name: new RegExp(cadence, 'i'),
+      })
+      await radio.click()
+      await expect(radio).toBeChecked()
+    }
+
+    const recordingSwitch = page.getByRole('switch', {
+      name: /toggle recording mode/i,
+    })
+    await expect(page.getByText('Practice only')).toBeVisible()
+    await recordingSwitch.click()
+    await expect(page.getByText('Capture audio')).toBeVisible()
+    await recordingSwitch.click()
+    await expect(page.getByText('Practice only')).toBeVisible()
+
+    expect(pageErrors).toEqual([])
+    expect(consoleErrors).toEqual([])
+  } finally {
+    await session?.cleanup()
+  }
 })
 
 test('session auto-finishes at configured timeout and returns to ready state', async ({

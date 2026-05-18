@@ -27,7 +27,7 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.1.5`
+**Current Version**: `1.1.6`
 **Last Updated**: 2026-05-18
 
 ## Bootstrap (Windows-safe)
@@ -64,10 +64,10 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Production-smoke v1.1.5 UI remediation surfaces: remaining dialogs, public/admin/legal/offline polish, recordings/review stats-only states, mocked admin data paths, and latency calibration.
-2. Verify the TTS, review waveform, and private beat upload adapters on real mobile browsers.
-3. Monitor multilingual prompt quality and TTS fallback behavior.
-4. Continue recording pipeline reliability hardening.
+1. Production-smoke v1.1.6 practice reliability surfaces: authenticated Skill Check, EN/FR/PT prompts, TTS fallback states, recordings/review audio states, and private beat upload.
+2. Verify Easy Speech, wavesurfer.js, and Uppy/Tus adapters on real mobile browsers.
+3. Monitor multilingual prompt quality, metadata-only saves, processing audio, and signed-upload telemetry.
+4. Continue review/studio workflow ergonomics and Android/TWA validation.
 
 ## GitHub Research Handoff
 

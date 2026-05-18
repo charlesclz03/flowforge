@@ -1,6 +1,6 @@
 # Testing Plan V3
 
-**Target Release**: `1.1.5`
+**Target Release**: `1.1.6`
 **Last Updated**: 2026-05-18
 
 This is the canonical testing strategy for current releases.
@@ -37,6 +37,7 @@ This is the canonical testing strategy for current releases.
 2. Difficultyselection handoff for user-uploaded beats.
 3. Language runtime synchronization (EN/FR/PT) for prompts and TTS handoff.
 4. Stats-only sessions must not expose audio action controls.
+5. Upload adapters must fall back from Uppy/Tus to signed PUT without exposing signed URLs or file paths in telemetry.
 
 ## Release Acceptance Criteria
 

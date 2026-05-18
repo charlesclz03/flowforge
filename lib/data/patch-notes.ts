@@ -22,6 +22,34 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.6',
+    date: '2026-05-18',
+    title: 'Practice Reliability',
+    codename: 'Reliable Practice Loop',
+    type: 'patch',
+    description:
+      'Finished the practice reliability release with stronger multilingual prompt quality checks, clearer TTS fallback states, normalized recording lifecycle copy, and validated upload adapter fallbacks.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**Multilingual Prompt Quality**: Added deterministic EN/FR/PT queue checks for 2-bar and 4-bar sessions so fallback prompts stay unique and anti-rhyme ordered inside the session budget.',
+          '**TTS Fallback Clarity**: Skill Check and Practice now share explicit copy for text-only, loading, unsupported, and fallback voice states while preserving the existing Easy Speech/native adapter contract.',
+          '**Recording Lifecycle Clarity**: Recordings and Review now use shared audio-ready, audio-processing, and stats-only practice copy so metadata-only sessions remain clearly separate from audio recordings.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Adapter Validation**: Expanded Uppy/Tus and signed PUT tests to cover resumable success, resumable fallback, ticket failures, storage failures, and runtime waveform/TTS fallback behavior.',
+          '**Reliability Telemetry Coverage**: Added sanitized assertions for prompt queue fallback, metadata-only recording fallback, and private beat upload failure events without exposing signed URLs or raw paths.',
+          '**Authenticated Smoke Coverage**: Added Playwright coverage for authenticated Skill Check language/cadence/recording setup and practice pause/resume flow.',
+          '**Governance Sync**: Updated package metadata, settings display, canonical docs, feature matrix, testing plan, and patch notes to v1.1.6.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.5',
     date: '2026-05-18',
     title: 'Enterprise UI Remediation',
