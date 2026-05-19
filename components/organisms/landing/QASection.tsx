@@ -9,10 +9,10 @@ export const QASection = () => {
         </h2>
         <div className="prose prose-invert max-w-none text-lg text-text-secondary leading-relaxed">
           The most effective method is using a{' '}
-          <strong className="text-accent-orange">Freestyle Coach</strong> like
+          <strong className="text-accent-orange">Freestyle Tool</strong> like
           FreeStyla. Unlike static beats, FreeStyla acts as a{' '}
           <strong className="text-text-primary">Freestyle Practice</strong>{' '}
-          coach, providing a{' '}
+          tool, providing a{' '}
           <strong className="text-text-primary">Rhyme Engine</strong> that syncs
           words to the beat. This allows you to{' '}
           <strong className="text-text-primary">

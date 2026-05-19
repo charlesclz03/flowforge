@@ -22,6 +22,36 @@ export interface PatchNote {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: '1.1.7',
+    date: '2026-05-19',
+    title: 'Polish + TTS Hotfix',
+    codename: 'Clearer Practice Surface',
+    type: 'patch',
+    description:
+      'Released the product-quality patch with TTS runtime failure detection, cleaner Tool-facing copy, refreshed social preview assets, and verified public beat inventory boundaries.',
+    changes: [
+      {
+        category: 'Fixes & Improvements',
+        items: [
+          '**TTS Runtime Failure Detection**: Spoken prompts now listen for browser speech synthesis runtime errors after voices resolve across native and Easy Speech paths, mark voice prompts unavailable instead of silently staying ready, and log sanitized failure telemetry.',
+          '**Tool Copy Polish**: Current marketing metadata, manifest copy, and landing FAQ language now describe FreeStyla as a freestyle rap tool while preserving technical identifiers and future feedback-layer roadmap language.',
+        ],
+      },
+      {
+        category: 'Visual Overhaul',
+        items: [
+          '**Modern Preview Assets**: Refreshed the static Open Graph image and Play Store feature graphic with a cleaner FreeStyla practice-tool visual system, updated the dynamic OG route default to match, and added a mobile-oriented manifest screenshot.',
+        ],
+      },
+      {
+        category: 'System Updates',
+        items: [
+          '**Beat Inventory Check**: Confirmed the public beat definition is `uploaderId: null`; the current local API/DB returns 41 public beats, with 46 total beats when 5 private uploads are included, and added API/DB regression coverage for that boundary.',
+        ],
+      },
+    ],
+  },
+  {
     version: '1.1.6',
     date: '2026-05-18',
     title: 'Practice Reliability',
@@ -2418,7 +2448,7 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'Fixes & Improvements',
         items: [
           'Seamless Looping: Fixed the 0.5s delay at the end of audio tracks. Beats now loop perfectly forever.',
-          'Smart Silence: The voice coach now instantly stops talking when you leave a session or switch tabs.',
+          'Smart Silence: The voice tool now instantly stops talking when you leave a session or switch tabs.',
           'Visual Balance: Interactive buttons are now perfectly centered, and the Mode indicator takes center stage.',
         ],
       },

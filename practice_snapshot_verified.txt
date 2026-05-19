@@ -1,4 +1,4 @@
-uid=2_0 RootWebArea "FreeStyla: Freestyle Rap Coach" url="http://localhost:3000/difficultyselection"
+uid=2_0 RootWebArea "FreeStyla: Freestyle Rap Tool" url="http://localhost:3000/difficultyselection"
   uid=2_1 main
     uid=2_2 button "Go back"
     uid=2_3 link "How it works" url="http://localhost:3000/howitworks"

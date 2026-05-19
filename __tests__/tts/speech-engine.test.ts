@@ -121,6 +121,60 @@ describe('speech engine adapter', () => {
     expect(nativeSpeak).toHaveBeenCalledTimes(2)
   })
 
+  it('reports native speech runtime errors after voices look ready', () => {
+    const activeVoice = voice('en-US')
+    const onError = vi.fn()
+
+    nativeSpeak.mockImplementationOnce(
+      (utterance: SpeechSynthesisUtterance) => {
+        utterance.onerror?.({
+          error: 'synthesis-failed',
+        } as SpeechSynthesisErrorEvent)
+      }
+    )
+
+    speakWithSpeechEngine({
+      mode: 'native',
+      text: 'flow',
+      activeVoice,
+      utteranceLang: 'en-US',
+      volume: 0.8,
+      rate: 1,
+      pitch: 1,
+      onError,
+    })
+
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({ error: 'synthesis-failed' })
+    )
+  })
+
+  it('passes runtime error handling through Easy Speech speak calls', async () => {
+    const activeVoice = voice('en-US')
+    const onError = vi.fn()
+
+    speakWithSpeechEngine({
+      mode: 'easy-speech',
+      text: 'flow',
+      activeVoice,
+      utteranceLang: 'en-US',
+      volume: 0.8,
+      rate: 1,
+      pitch: 1,
+      onError,
+    })
+
+    await vi.waitFor(() =>
+      expect(easySpeechMock.speak).toHaveBeenCalledWith(
+        expect.objectContaining({
+          text: 'flow',
+          voice: activeVoice,
+          error: onError,
+        })
+      )
+    )
+  })
+
   it('falls back to native speech when Easy Speech speak fails after init', async () => {
     const activeVoice = voice('fr-FR')
     easySpeechMock.speak.mockRejectedValueOnce(new Error('speech stalled'))
@@ -143,6 +197,7 @@ describe('speech engine adapter', () => {
         rate: 1,
         pitch: 1,
         force: true,
+        error: undefined,
       })
     )
     await vi.waitFor(() => expect(nativeSpeak).toHaveBeenCalledTimes(1))
@@ -168,6 +223,7 @@ describe('speech engine adapter', () => {
         rate: 1,
         pitch: 1,
         force: true,
+        error: undefined,
       })
     )
     await vi.waitFor(() => expect(nativeSpeak).toHaveBeenCalledTimes(1))

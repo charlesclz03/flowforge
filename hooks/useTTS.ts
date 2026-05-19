@@ -1,8 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import {
-  DEFAULT_TTS_LANGUAGE,
-  TTSLanguageCode,
-} from '@/lib/tts/languages'
+import { DEFAULT_TTS_LANGUAGE, TTSLanguageCode } from '@/lib/tts/languages'
 import {
   resolveUtteranceLanguage,
   TTSVoiceStatus,
@@ -11,6 +8,7 @@ import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
 import {
   cancelSpeechEngine,
   initializeSpeechEngine,
+  SpeechRuntimeErrorHandler,
   speakWithSpeechEngine,
   SpeechEngineMode,
   warmupSpeechEngine,
@@ -26,6 +24,31 @@ interface UseTTSProps {
 
 export type { TTSVoiceStatus } from '@/lib/tts/utterance-language'
 const VOICE_LOAD_TIMEOUT_MS = 1500
+const EXPECTED_CANCEL_ERRORS = new Set(['canceled', 'interrupted'])
+
+function getSpeechRuntimeErrorName(error: unknown): string {
+  if (error && typeof error === 'object') {
+    const maybeSpeechError = error as {
+      error?: unknown
+      name?: unknown
+      message?: unknown
+    }
+
+    if (typeof maybeSpeechError.error === 'string') {
+      return maybeSpeechError.error
+    }
+
+    if (typeof maybeSpeechError.name === 'string') {
+      return maybeSpeechError.name
+    }
+
+    if (typeof maybeSpeechError.message === 'string') {
+      return maybeSpeechError.message
+    }
+  }
+
+  return 'unknown'
+}
 
 export function useTTS({
   enabled = true,
@@ -45,6 +68,7 @@ export function useTTS({
   // Refs to avoid closure staleness in async callbacks
   const mountedRef = useRef(true)
   const lastTelemetryKeyRef = useRef<string | null>(null)
+  const lastRuntimeFailureKeyRef = useRef<string | null>(null)
 
   // Initialize Voices
   useEffect(() => {
@@ -93,6 +117,36 @@ export function useTTS({
     )
   }, [activeVoice?.lang, hasLanguageVoice, language, voiceStatus])
 
+  const handleSpeechRuntimeError = useCallback<SpeechRuntimeErrorHandler>(
+    (error) => {
+      const errorName = getSpeechRuntimeErrorName(error)
+      if (EXPECTED_CANCEL_ERRORS.has(errorName)) return
+
+      if (mountedRef.current) {
+        setIsReady(false)
+        setVoiceStatus('unsupported')
+      }
+
+      const telemetryKey = `${language}:${engineMode}:${activeVoice?.lang ?? 'none'}:${errorName}`
+      if (lastRuntimeFailureKeyRef.current === telemetryKey) {
+        return
+      }
+      lastRuntimeFailureKeyRef.current = telemetryKey
+
+      trackReliabilityEvent(
+        'tts_speech_runtime_failure',
+        {
+          requestedLanguage: language,
+          engineMode,
+          activeVoiceLanguage: activeVoice?.lang ?? null,
+          error: errorName,
+        },
+        'warning'
+      )
+    },
+    [activeVoice?.lang, engineMode, language]
+  )
+
   const speak = useCallback(
     (text: string) => {
       if (!enabled || !text) return
@@ -116,6 +170,7 @@ export function useTTS({
         volume,
         rate,
         pitch,
+        onError: handleSpeechRuntimeError,
       })
     },
     [
@@ -127,6 +182,7 @@ export function useTTS({
       language,
       voiceStatus,
       engineMode,
+      handleSpeechRuntimeError,
     ]
   )
 
@@ -143,11 +199,12 @@ export function useTTS({
         mode: engineMode,
         activeVoice,
         utteranceLang,
+        onError: handleSpeechRuntimeError,
       })
     } catch {
       return false
     }
-  }, [language, activeVoice, voiceStatus, engineMode])
+  }, [language, activeVoice, voiceStatus, engineMode, handleSpeechRuntimeError])
 
   const cancel = useCallback(() => {
     cancelSpeechEngine(engineMode)

@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-18
+- 2026-05-19
 
 Related docs:
 
@@ -27,13 +27,13 @@ Related docs:
 - `docs/project/ROADMAP.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.6`
+**Current Version**: `1.1.7`
 **Phase**: Beta Polish
-**Last Updated**: 2026-05-18
+**Last Updated**: 2026-05-19
 
 ## Quick Status
 
-- Latest release: `v1.1.6` (Practice Reliability).
+- Latest release: `v1.1.7` (Polish + TTS Hotfix).
 - Deployment branch state should remain green on lint/types/build/env/docs checks.
 
 ## Recent Completed Work
@@ -50,6 +50,7 @@ Related docs:
 - Shipped the v1.1.4 enterprise UX recovery wave: dated UX audit artifacts, safe review deep-link handling, updated E2E expectations, feedback accessibility fixes, mobile control target hardening, lifecycle status messaging, and clearer install/conversion copy.
 - Shipped the v1.1.5 enterprise UI remediation release: canonical audit documentation, accessible modal semantics, AA-safe primary action contrast, visible mobile nav labels, Beat Vault touch affordances, upload/calibration accessibility fixes, reduced-motion gating, remaining dialog-like surface hardening, route-level public/legal/offline/admin polish, safe mocked auth/admin/recordings/review Playwright coverage, and synchronized release governance.
 - Shipped the v1.1.6 practice reliability release: deterministic EN/FR/PT prompt queue checks, clearer TTS fallback states, normalized recording lifecycle copy, sanitized practice/upload telemetry assertions, Uppy/Tus adapter validation, and authenticated setup smoke coverage.
+- Shipped the v1.1.7 polish and TTS hotfix release: runtime speech synthesis failure detection across native/Easy Speech paths, Tool copy polish, refreshed social preview assets, a mobile manifest screenshot, and public beat inventory boundary coverage.
 - Added Playwright UI-polish smoke coverage across desktop/mobile public funnel, Beat Vault, and Skill Check setup controls.
 - Unified session-save progress handling across recordings and metadata-only completions.
 - Replaced live practice beat looping with Web Audio gapless scheduling and preserved calibrated cue offsets through track-end loops.
@@ -58,8 +59,8 @@ Related docs:
 
 ## Immediate Focus
 
-1. Production-smoke v1.1.6 practice reliability on real desktop/mobile browsers, especially authenticated practice setup, TTS fallback states, recordings, review, and upload.
-2. Monitor multilingual prompt quality, recording processing delays, and signed-upload failure telemetry.
+1. Production-smoke v1.1.7 on real desktop/mobile browsers, especially authenticated practice setup, TTS runtime fallback states, recordings, review, and upload.
+2. Monitor multilingual prompt quality, TTS runtime failure telemetry, recording processing delays, and signed-upload failure telemetry.
 3. Continue review/studio workflow ergonomics and Android/TWA validation.
 4. Preserve release discipline and docs governance consistency.
 
@@ -67,6 +68,7 @@ Related docs:
 
 | Version | Codename                    | Date       | Summary                                                                                                                                                                                                               |
 | ------- | --------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.1.7  | Polish + TTS Hotfix         | 2026-05-19 | Added speech synthesis runtime failure handling across native/Easy Speech paths, current Tool copy polish, refreshed OG/Play preview assets, a mobile manifest screenshot, and public beat inventory boundary coverage |
 | v1.1.6  | Practice Reliability        | 2026-05-18 | Added multilingual prompt queue quality checks, clearer TTS fallback UX, normalized audio-ready/processing/stats-only recording states, upload adapter telemetry, Uppy/Tus validation, and authenticated practice smoke coverage |
 | v1.1.5  | Enterprise UI Remediation   | 2026-05-18 | Added the canonical enterprise UI audit, fixed contrast/modal/touch/reduced-motion issues, hardened Beat Vault/upload/dialog/admin/legal/offline interactions, and expanded safe desktop/mobile regression coverage   |
 | v1.1.4  | Enterprise UX Recovery      | 2026-05-17 | Added dated enterprise UX audit artifacts and fixed the first remediation wave across review deep links, Playwright expectations, accessibility, mobile touch targets, lifecycle states, and install/conversion copy  |

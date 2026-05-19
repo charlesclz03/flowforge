@@ -1,5 +1,26 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.7 - Polish + TTS Hotfix (2026-05-19)
+
+**"Clearer Practice Surface"**
+
+Released the product-quality patch with TTS runtime failure detection, cleaner Tool-facing copy, refreshed social preview assets, and verified public beat inventory boundaries.
+
+### Fixes & Improvements
+
+- **TTS Runtime Failure Detection**: Spoken prompts now listen for browser speech synthesis runtime errors after voices resolve across native and Easy Speech paths, mark voice prompts unavailable instead of silently staying ready, and log sanitized failure telemetry.
+- **Tool Copy Polish**: Current marketing metadata, manifest copy, and landing FAQ language now describe FreeStyla as a freestyle rap tool while preserving technical identifiers and future feedback-layer roadmap language.
+
+### Visual Overhaul
+
+- **Modern Preview Assets**: Refreshed the static Open Graph image and Play Store feature graphic with a cleaner FreeStyla practice-tool visual system, updated the dynamic OG route default to match, and added a mobile-oriented manifest screenshot.
+
+### System Updates
+
+- **Beat Inventory Check**: Confirmed the public beat definition is `uploaderId: null`; the current local API/DB returns 41 public beats, with 46 total beats when 5 private uploads are included, and added API/DB regression coverage for that boundary.
+
+---
+
 ## v1.1.6 - Practice Reliability (2026-05-18)
 
 **"Reliable Practice Loop"**
@@ -1852,7 +1873,7 @@ A smoother practice experience with seamless audio looping, pixel-perfect button
 ### Fixes & Improvements
 
 - Seamless Looping: Fixed the 0.5s delay at the end of audio tracks. Beats now loop perfectly forever.
-- Smart Silence: The voice coach now instantly stops talking when you leave a session or switch tabs.
+- Smart Silence: The voice tool now instantly stops talking when you leave a session or switch tabs.
 - Visual Balance: Interactive buttons are now perfectly centered, and the Mode indicator takes center stage.
 
 ---

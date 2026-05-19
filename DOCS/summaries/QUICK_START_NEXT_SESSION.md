@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-18
+- 2026-05-19
 
 Related docs:
 
@@ -27,8 +27,8 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/project/ROADMAP.md`
 
-**Current Version**: `1.1.6`
-**Last Updated**: 2026-05-18
+**Current Version**: `1.1.7`
+**Last Updated**: 2026-05-19
 
 ## Bootstrap (Windows-safe)
 
@@ -64,7 +64,7 @@ Open: `http://localhost:3000`
 
 ## Current Focus
 
-1. Production-smoke v1.1.6 practice reliability surfaces: authenticated Skill Check, EN/FR/PT prompts, TTS fallback states, recordings/review audio states, and private beat upload.
+1. Production-smoke v1.1.7 polish and TTS hotfix surfaces: authenticated Skill Check, EN/FR/PT prompts, TTS runtime fallback states, recordings/review audio states, and private beat upload.
 2. Verify Easy Speech, wavesurfer.js, and Uppy/Tus adapters on real mobile browsers.
 3. Monitor multilingual prompt quality, metadata-only saves, processing audio, and signed-upload telemetry.
 4. Continue review/studio workflow ergonomics and Android/TWA validation.

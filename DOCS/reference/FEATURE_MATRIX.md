@@ -1,7 +1,7 @@
 # Feature Matrix
 
-**Current Version**: `1.1.6`
-**Last Updated**: 2026-05-18
+**Current Version**: `1.1.7`
+**Last Updated**: 2026-05-19
 
 ## Core Practice
 
@@ -13,7 +13,7 @@
 | Practice Track Looping | PASS [x] 2026-05-15 | Live practice uses Web Audio gapless looping and preserves calibrated cue points until session stop/timeout                                                                                                                                              | All  |
 | Prompt Engine          | PASS [x] 2026-05-18 | Prebuilt no-repeat session queues expand across same-language difficulty tiers, preserve anti-rhyme ordering, rotate across word families before repeating suffix/rhyme groups, and deterministic EN/FR/PT 2-bar/4-bar checks guard fallback prompt quality | All  |
 | Prompt Frequency       | PASS [x] 2026-05-15 | Skill Check and Practice support 2, 4, 8, and 16-bar prompt timing, with save/API contracts accepting the full set                                                                                                                                       | All  |
-| Language Runtime (TTS) | PASS [x] 2026-05-18 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, iPhone/iPad use intentional text-only prompts, spoken prompts cancel cleanly on pause/stop, and setup/practice surfaces now explain loading, fallback, unsupported, and text-only states | All  |
+| Language Runtime (TTS) | PASS [x] 2026-05-19 | Alias + handoff sync still hold, fallback voice/lang resolution remains intact, native/Easy Speech runtime synthesis failures now fall back to text prompts with visible state, iPhone/iPad use intentional text-only prompts, and spoken prompts cancel cleanly on pause/stop | All  |
 
 ## Beats & Calibration
 
@@ -47,6 +47,7 @@
 
 | Date       | Audit                                                    | Status       | Outcome                                                                                                                                                                                                                                                                                                                  |
 | ---------- | -------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-19 | Polish + TTS Hotfix v1.1.7 Completion                   | PASS         | Completed runtime speech synthesis failure handling across native/Easy Speech paths, Tool copy polish, refreshed social/Play preview assets, mobile manifest screenshot coverage, public beat inventory boundary coverage, and v1.1.7 release governance sync.                                                           |
 | 2026-05-18 | Practice Reliability v1.1.6 Completion                   | PASS         | Completed EN/FR/PT prompt queue checks, TTS fallback copy, recording lifecycle copy, sanitized prompt/recording/upload telemetry assertions, Uppy/Tus adapter validation, authenticated practice setup smoke coverage, and v1.1.6 release governance sync.                                                                |
 | 2026-05-18 | Practice Reliability v1.1.6 Planning Audit               | PASS (Watch) | Opened the v1.1.6 practice reliability track, mapped multilingual prompt/TTS/recording/review/upload touchpoints, and added adapter validation for Easy Speech native fallback, Wavesurfer runtime fallback, and signed PUT upload failure handling.                                                                      |
 | 2026-05-18 | Enterprise UI Remediation                                | PASS         | Completed v1.1.5 contrast/modal/touch/reduced-motion foundations plus dialog/motion hardening, route-level polish, admin mobile fallback states, legal/offline trust surfaces, safe Playwright auth fixtures, mocked admin/recordings/review coverage, and governance sync.                                              |

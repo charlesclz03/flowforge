@@ -17,6 +17,8 @@ export interface SpeechEngineOptions {
   intervalMs?: number
 }
 
+export type SpeechRuntimeErrorHandler = (error: unknown) => void
+
 interface EasySpeechModule {
   default: {
     init: (request: {
@@ -36,6 +38,7 @@ interface EasySpeechModule {
       rate?: number
       volume?: number
       force?: boolean
+      error?: SpeechRuntimeErrorHandler
     }) => Promise<unknown>
     cancel: () => void
   }
@@ -166,6 +169,7 @@ export function speakWithSpeechEngine({
   volume,
   rate,
   pitch,
+  onError,
 }: {
   mode: SpeechEngineMode
   text: string
@@ -174,6 +178,7 @@ export function speakWithSpeechEngine({
   volume: number
   rate: number
   pitch: number
+  onError?: SpeechRuntimeErrorHandler
 }) {
   if (!canUseNativeSpeech()) return
 
@@ -189,25 +194,44 @@ export function speakWithSpeechEngine({
           rate,
           pitch,
           force: true,
+          error: onError,
         })
       )
       .catch(() => {
-        speakNative({ text, activeVoice, utteranceLang, volume, rate, pitch })
+        speakNative({
+          text,
+          activeVoice,
+          utteranceLang,
+          volume,
+          rate,
+          pitch,
+          onError,
+        })
       })
     return
   }
 
-  speakNative({ text, activeVoice, utteranceLang, volume, rate, pitch })
+  speakNative({
+    text,
+    activeVoice,
+    utteranceLang,
+    volume,
+    rate,
+    pitch,
+    onError,
+  })
 }
 
 export function warmupSpeechEngine({
   mode,
   activeVoice,
   utteranceLang,
+  onError,
 }: {
   mode: SpeechEngineMode
   activeVoice: SpeechSynthesisVoice | null
   utteranceLang: string
+  onError?: SpeechRuntimeErrorHandler
 }): boolean {
   if (!canUseNativeSpeech()) return false
 
@@ -224,6 +248,7 @@ export function warmupSpeechEngine({
             rate: 1,
             pitch: 1,
             force: true,
+            error: onError,
           })
         )
         .catch(() => {
@@ -234,6 +259,7 @@ export function warmupSpeechEngine({
             volume: 0,
             rate: 1,
             pitch: 1,
+            onError,
           })
         })
       return true
@@ -246,6 +272,7 @@ export function warmupSpeechEngine({
       volume: 0,
       rate: 1,
       pitch: 1,
+      onError,
     })
     return true
   } catch {
@@ -272,6 +299,7 @@ function speakNative({
   volume,
   rate,
   pitch,
+  onError,
 }: {
   text: string
   activeVoice: SpeechSynthesisVoice | null
@@ -279,6 +307,7 @@ function speakNative({
   volume: number
   rate: number
   pitch: number
+  onError?: SpeechRuntimeErrorHandler
 }) {
   const utterance = new SpeechSynthesisUtterance(text)
   utterance.lang = utteranceLang
@@ -286,5 +315,6 @@ function speakNative({
   utterance.volume = volume
   utterance.rate = rate
   utterance.pitch = pitch
+  utterance.onerror = (event) => onError?.(event)
   window.speechSynthesis.speak(utterance)
 }

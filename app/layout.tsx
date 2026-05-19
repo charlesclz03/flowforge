@@ -25,13 +25,13 @@ export const metadata: Metadata = {
       'https://www.freestyla.app'
   ),
   title: {
-    default: 'FreeStyla: Freestyle Rap Coach',
+    default: 'FreeStyla: Freestyle Rap Tool',
     template: '%s | FreeStyla',
   },
   description:
-    'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine. Practice offline, track XP, and secure your legacy.',
+    'The #1 Freestyle Rap Tool. Dominate the cypher with instant beat sync and a smart Rhyme Engine. Practice offline, track XP, and secure your legacy.',
   keywords: [
-    'Freestyle Rap Coach',
+    'Freestyle Rap Tool',
     'Freestyle Practice',
     'Rhyme Engine',
     'Rap Beats & Flow',
@@ -56,21 +56,21 @@ export const metadata: Metadata = {
     siteName: 'FreeStyla',
     title: 'Ready to spit bars? Start your session now with FreeStyla.',
     description:
-      'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
+      'The #1 Freestyle Rap Tool. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'FreeStyla - Freestyle Rap Coach',
+        alt: 'FreeStyla - Freestyle Rap Tool',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FreeStyla: Freestyle Rap Coach',
+    title: 'FreeStyla: Freestyle Rap Tool',
     description:
-      'The #1 Freestyle Rap Coach. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
+      'The #1 Freestyle Rap Tool. Dominate the cypher with instant beat sync and a smart Rhyme Engine.',
     images: ['/og-image.png'],
     creator: '@freestyla',
   },
