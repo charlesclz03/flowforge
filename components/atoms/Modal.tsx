@@ -112,7 +112,7 @@ export function Modal({
         aria-label={!title ? dialogLabel || 'Dialog' : undefined}
         tabIndex={-1}
         className={cn(
-          'relative w-full max-w-md overflow-hidden rounded-3xl bg-background-elevated border border-stroke-glow shadow-glow transform transition-all animate-in fade-in zoom-in-95 duration-200',
+          'relative w-full max-w-md overflow-hidden rounded-3xl bg-background-elevated border border-stroke-glow shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_28px_90px_rgba(0,0,0,0.58),0_0_42px_rgba(125,122,255,0.14)] transform transition-all animate-in fade-in zoom-in-95 duration-200',
           className
         )}
       >

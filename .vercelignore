@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Local build/test output
+.next
+out
+build
+coverage
+playwright-report
+test-results
+artifacts
+*.log
+*.tsbuildinfo
+next-env.d.ts
+
+# Local-only agent and scratch state
+.agent
+brain
+loops
+DOCS_TEXT
+flowforge_technical_analysis.md.resolved
+
+# Local env and platform state
+.env
+.env.*
+.vercel
+
+# Local tooling
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Android wrapper output
+twa

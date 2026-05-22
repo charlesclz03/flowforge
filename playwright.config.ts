@@ -24,6 +24,11 @@ export default defineConfig({
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
     },
+    {
+      name: 'mobile-webkit-small',
+      testMatch: /practice-visual-regression\.spec\.ts/,
+      use: { ...devices['iPhone SE'] },
+    },
   ],
   webServer: {
     command: `${npmRunner} run dev`,

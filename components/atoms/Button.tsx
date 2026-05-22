@@ -35,14 +35,14 @@ export const Button = memo(
 
     const variants = {
       primary:
-        'bg-primary text-primary-foreground shadow-purple-glow hover:bg-primary/90 hover:shadow-glow',
+        'border border-accent-purple/35 bg-primary text-primary-foreground shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset,0_14px_42px_rgba(125,122,255,0.28)] hover:bg-primary/90 hover:shadow-glow',
       secondary:
-        'border border-white/10 bg-surface-elevation-1/80 text-text-primary shadow-surface-1 hover:border-white/20 hover:bg-surface-highlight/70',
-      ghost: 'text-text-primary hover:bg-white/10',
+        'border border-white/10 bg-surface-elevation-1/80 text-text-primary shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_18px_44px_rgba(0,0,0,0.32)] hover:border-white/20 hover:bg-surface-highlight/75',
+      ghost: 'text-text-primary hover:bg-white/10 hover:text-white',
       danger:
         'bg-danger text-danger-foreground shadow-red-glow hover:bg-danger/90',
       outline:
-        'border border-stroke-subtle/60 bg-background-card/60 text-text-primary hover:border-accent-blue/40 hover:bg-surface-highlight/60',
+        'border border-stroke-subtle/70 bg-background-card/70 text-text-primary shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] hover:border-accent-blue/40 hover:bg-surface-highlight/60',
     }
 
     const sizes = {
@@ -63,7 +63,7 @@ export const Button = memo(
       <button
         ref={ref}
         className={cn(
-          'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full font-medium transition-all motion-safe:duration-200',
+          'inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full font-semibold transition-all motion-safe:duration-200',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           !disabled && !isLoading && 'active:scale-95',

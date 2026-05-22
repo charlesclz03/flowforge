@@ -60,7 +60,7 @@ export function SegmentedControl<T extends string | number>({
               disabled={option.disabled}
               onClick={() => onChange(option.value)}
               className={cn(
-                'min-h-[58px] rounded-2xl border px-3 py-3 text-left transition-all',
+                'min-h-[58px] rounded-2xl border px-3 py-3 text-left transition-all shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 'disabled:cursor-not-allowed disabled:opacity-45',
                 isActive

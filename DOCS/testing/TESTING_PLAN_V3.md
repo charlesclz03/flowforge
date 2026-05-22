@@ -1,7 +1,7 @@
 # Testing Plan V3
 
-**Target Release**: `1.1.7`
-**Last Updated**: 2026-05-19
+**Target Release**: `1.1.8`
+**Last Updated**: 2026-05-21
 
 This is the canonical testing strategy for current releases.
 
@@ -38,6 +38,7 @@ This is the canonical testing strategy for current releases.
 3. Language runtime synchronization (EN/FR/PT) for prompts and TTS handoff.
 4. Stats-only sessions must not expose audio action controls.
 5. Upload adapters must fall back from Uppy/Tus to signed PUT without exposing signed URLs or file paths in telemetry.
+6. Practice visual regression checks must cover small-iPhone orb geometry, cypher ring segments for 2/3/4 players, active-player tinting, and AppHeader touch safety.
 
 ## Release Acceptance Criteria
 

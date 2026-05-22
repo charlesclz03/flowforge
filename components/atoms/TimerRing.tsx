@@ -9,6 +9,7 @@ interface TimerRingProps {
   size?: number
   strokeWidth?: number
   className?: string
+  progressColor?: string
   isSirenActive?: boolean
   sirenPhase?: number
 }
@@ -18,6 +19,7 @@ export function TimerRing({
   size = UI_CONFIG.TIMER_RING_SIZE,
   strokeWidth = UI_CONFIG.TIMER_RING_STROKE_WIDTH,
   className,
+  progressColor,
   isSirenActive = false,
   sirenPhase = 0,
 }: TimerRingProps) {
@@ -75,7 +77,9 @@ export function TimerRing({
         cy={size / 2}
         r={radius}
         fill="none"
-        stroke="currentColor"
+        stroke={
+          isSirenActive ? 'currentColor' : (progressColor ?? 'currentColor')
+        }
         strokeWidth={strokeWidth}
         strokeDasharray={circumference}
         strokeDashoffset={offset}
@@ -85,7 +89,9 @@ export function TimerRing({
             ? sirenPhase === 0
               ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]'
               : 'text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]'
-            : 'text-timer-ring'
+            : progressColor
+              ? undefined
+              : 'text-timer-ring'
         )}
       />
     </svg>

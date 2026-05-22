@@ -32,7 +32,7 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex min-h-7 items-center rounded-full border px-2.5 text-xs font-semibold',
+        'inline-flex min-h-7 items-center rounded-full border px-2.5 text-xs font-semibold shadow-[0_1px_0_rgba(255,255,255,0.05)_inset] backdrop-blur-sm',
         toneClasses[tone],
         className
       )}

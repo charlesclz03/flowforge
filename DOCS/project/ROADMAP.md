@@ -19,7 +19,7 @@ Source of truth scope:
 
 Last updated:
 
-- 2026-05-19
+- 2026-05-21
 
 Related docs:
 
@@ -27,15 +27,15 @@ Related docs:
 - `docs/project/PROJECT_STATUS.md`
 - `docs/reference/PATCH_NOTES_MASTER.md`
 
-**Current Version**: `1.1.7`
-**Last Updated**: 2026-05-19
+**Current Version**: `1.1.8`
+**Last Updated**: 2026-05-21
 **Owner**: Product + Engineering
 
 This roadmap is forward-looking only. Historical phase logs were archived under `DOCS/ARCHIVE/`.
 
 ## Now (0-2 weeks)
 
-1. Validate the v1.1.7 polish and TTS hotfix release in production-like desktop/mobile conditions.
+1. Validate the v1.1.8 Practice/Header pro-grade refresh in small-iPhone, standard mobile, and desktop conditions.
 2. Monitor multilingual practice loop quality, TTS runtime fallback telemetry, and recording processing delays.
 3. Continue review/studio workflow ergonomics (preset management, clearer save states).
 4. Keep release quality gates strict (`lint`, `tsc`, `build`, env checks, docs checks).

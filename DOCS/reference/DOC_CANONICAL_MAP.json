@@ -1,6 +1,6 @@
 {
-  "currentVersion": "1.1.7",
-  "lastUpdated": "2026-05-19",
+  "currentVersion": "1.1.8",
+  "lastUpdated": "2026-05-21",
   "canonicalDomains": {
     "entry": ["DOCS/README.md", "DOCS/DOCUMENTATION_INDEX.md"],
     "productStatus": [

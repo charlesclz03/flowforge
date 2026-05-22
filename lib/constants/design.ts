@@ -37,6 +37,44 @@ export const COLORS = {
   },
 } as const
 
+export const CYPHER_PLAYER_THEMES = {
+  1: {
+    label: 'Player 1',
+    color: '#A855F7',
+    glow: 'rgba(168, 85, 247, 0.34)',
+    wash: 'rgba(168, 85, 247, 0.14)',
+    className: 'text-accent-purple',
+  },
+  2: {
+    label: 'Player 2',
+    color: '#F97316',
+    glow: 'rgba(249, 115, 22, 0.34)',
+    wash: 'rgba(249, 115, 22, 0.14)',
+    className: 'text-accent-orange',
+  },
+  3: {
+    label: 'Player 3',
+    color: '#FFD60A',
+    glow: 'rgba(255, 214, 10, 0.34)',
+    wash: 'rgba(255, 214, 10, 0.14)',
+    className: 'text-accent-gold',
+  },
+  4: {
+    label: 'Player 4',
+    color: '#30D158',
+    glow: 'rgba(48, 209, 88, 0.34)',
+    wash: 'rgba(48, 209, 88, 0.14)',
+    className: 'text-accent-green',
+  },
+} as const
+
+export type CypherPlayerNumber = keyof typeof CYPHER_PLAYER_THEMES
+
+export function getCypherPlayerTheme(player: number | undefined) {
+  const normalized = Number(player) as CypherPlayerNumber
+  return CYPHER_PLAYER_THEMES[normalized] ?? CYPHER_PLAYER_THEMES[1]
+}
+
 export const TYPOGRAPHY = {
   fontSize: {
     display: '4rem',

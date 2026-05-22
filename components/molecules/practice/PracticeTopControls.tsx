@@ -90,7 +90,7 @@ export function PracticeTopControls({
   }
 
   return (
-    <div className="w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-40 pointer-events-none">
+    <div className="practice-top-controls w-full flex-none flex flex-col items-center justify-end pb-4 gap-4 shrink-0 relative z-40 pointer-events-none">
       {/* Beat Dropdown (Pointer Events Auto) */}
       <div className="pointer-events-auto w-full flex justify-center">
         <BeatDropdown
@@ -114,7 +114,7 @@ export function PracticeTopControls({
           disabled={!handleDifficultyChange}
           aria-label={`Difficulty: ${difficultyMeta.label}. Tap to change.`}
           className={cn(
-            'flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+            'practice-info-pill flex-1 h-12 rounded-full border bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
             difficultyMeta.classes,
             !handleDifficultyChange && 'cursor-default'
           )}
@@ -126,7 +126,7 @@ export function PracticeTopControls({
         >
           <Gauge size={14} />
           <span className="flex flex-col items-start leading-none">
-            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
+            <span className="practice-info-pill-label text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest truncate">
               {difficultyMeta.label}
             </span>
             {hasPendingDifficulty && (
@@ -140,10 +140,10 @@ export function PracticeTopControls({
         {/* Mode Pill */}
         <div
           aria-label={`Current mode: ${mode}`}
-          className="flex-[1.5] h-12 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-sm flex items-center justify-center gap-2 text-text-secondary"
+          className="practice-info-pill flex-[1.5] h-12 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-sm flex items-center justify-center gap-2 text-text-secondary"
         >
           <User size={14} className="text-white/60" />
-          <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/70">
+          <span className="practice-info-pill-label text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/70">
             {mode}
           </span>
         </div>
@@ -155,7 +155,7 @@ export function PracticeTopControls({
           disabled={!handleFrequencyChange}
           aria-label={`Word frequency: every ${displayFrequency} bars. Tap to change.`}
           className={cn(
-            'flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+            'practice-info-pill flex-1 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center gap-2 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
             !handleFrequencyChange && 'cursor-default opacity-50'
           )}
           title={
@@ -175,7 +175,7 @@ export function PracticeTopControls({
             }
           />
           <span className="flex flex-col items-start leading-none">
-            <span className="text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
+            <span className="practice-info-pill-label text-[0.7rem] sm:text-xs font-bold uppercase tracking-widest text-white/80 whitespace-nowrap">
               {displayFrequency} Bars
             </span>
             {hasPendingFrequency && (

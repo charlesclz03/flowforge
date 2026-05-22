@@ -41,16 +41,17 @@ const iconClasses: Record<IconFrameVariant, string> = {
 
 const toneClasses: Record<IconFrameTone, string> = {
   purple:
-    'border-accent-purple/25 bg-accent-purple/10 text-accent-purple shadow-[0_0_14px_rgba(125,122,255,0.10)]',
-  blue: 'border-accent-blue/25 bg-accent-blue/10 text-accent-blue shadow-[0_0_14px_rgba(10,132,255,0.10)]',
+    'border-accent-purple/25 bg-accent-purple/10 text-accent-purple shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(125,122,255,0.12)]',
+  blue: 'border-accent-blue/25 bg-accent-blue/10 text-accent-blue shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(10,132,255,0.12)]',
   green:
-    'border-accent-green/25 bg-accent-green/10 text-accent-green shadow-[0_0_14px_rgba(48,209,88,0.10)]',
-  gold: 'border-accent-gold/25 bg-accent-gold/10 text-accent-gold shadow-[0_0_14px_rgba(255,214,10,0.10)]',
+    'border-accent-green/25 bg-accent-green/10 text-accent-green shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(48,209,88,0.12)]',
+  gold: 'border-accent-gold/25 bg-accent-gold/10 text-accent-gold shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(255,214,10,0.12)]',
   orange:
-    'border-accent-orange/25 bg-accent-orange/10 text-accent-orange shadow-[0_0_14px_rgba(255,149,0,0.10)]',
-  red: 'border-accent-red/25 bg-accent-red/10 text-accent-red shadow-[0_0_14px_rgba(255,59,48,0.10)]',
-  zinc: 'border-white/10 bg-white/5 text-text-secondary',
-  white: 'border-white/15 bg-white/10 text-white',
+    'border-accent-orange/25 bg-accent-orange/10 text-accent-orange shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(255,149,0,0.12)]',
+  red: 'border-accent-red/25 bg-accent-red/10 text-accent-red shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_0_16px_rgba(255,59,48,0.12)]',
+  zinc: 'border-white/10 bg-white/5 text-text-secondary shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]',
+  white:
+    'border-white/15 bg-white/10 text-white shadow-[0_1px_0_rgba(255,255,255,0.05)_inset]',
 }
 
 const inlineToneClasses: Record<IconFrameTone, string> = {

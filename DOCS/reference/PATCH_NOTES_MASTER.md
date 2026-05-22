@@ -1,5 +1,30 @@
 # PATCH NOTES MASTER FILE
 
+## v1.1.8 - Pro-Grade Practice Refresh (2026-05-21)
+
+**"Studio Circle"**
+
+Refreshed the Practice/Header surface to a 2026 pro-grade baseline while preserving route flow, DOM anchors, audio behavior, and the existing FreeStyla brand direction.
+
+### Fixes & Improvements
+
+- **Practice Circle Geometry**: The live player now uses one square sizing variable for the orb shell, timer ring, cypher ring, visualizer clipping, and glow layers so the player remains a true circle on compact phones.
+- **Small-iPhone Layout Recovery**: Added a stricter compact practice profile for iPhone SE-class heights, reducing only internal density so top controls, the player, and record control keep their anchors without overlapping.
+- **Cypher Ring and Tinting**: Cypher mode now renders visible 2/3/4-player ring segments, preserves P1 purple, P2 orange, P3 gold, and P4 green, and applies the active player color to the ring, visualizer, and inner glow.
+- **Practice Timer Weight**: Increased the word timer progress ring weight for clearer performance feedback while preserving red/blue siren override behavior.
+- **Breathable AppHeader**: Small iPhone headers now have more vertical room and cleaner title/subtitle spacing while keeping the three-column header grid and existing controls.
+
+### Visual Overhaul
+
+- **2026 Pro-Grade Surface Polish**: Shared `Button`, `Surface`, `Card`, `IconFrame`, `StatusBadge`, `Modal`, `SegmentedControl`, and app ambient styling now use calmer dark-mode elevation, tactile inset highlights, and more consistent premium studio-tool depth.
+
+### System Updates
+
+- **UI Trend Research**: Added the 2026 FreeStyla UI trends fit matrix under `DOCS/research/` using current Figma, OpenAI, and design-trend sources.
+- **Visual Guardrails**: Added Playwright coverage for small-iPhone Practice orb geometry, countdown/playing/paused screenshots, cypher 2/3/4-player ring segments, active-player tint propagation, and AppHeader touch safety across core surfaces.
+
+---
+
 ## v1.1.7 - Polish + TTS Hotfix (2026-05-19)
 
 **"Clearer Practice Surface"**

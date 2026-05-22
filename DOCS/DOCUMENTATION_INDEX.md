@@ -1,7 +1,7 @@
 # Documentation Index
 
-**Current Canonical Version**: `1.1.7`
-**Last Updated**: 2026-05-19
+**Current Canonical Version**: `1.1.8`
+**Last Updated**: 2026-05-21
 
 ## Start Here
 
@@ -19,6 +19,7 @@
 ## Research & Planning
 
 - `reference/GITHUB_REPO_RESEARCH.md`
+- `research/UI_TRENDS_2026_FREESTYLA.md`
 
 ## Product & Architecture
 

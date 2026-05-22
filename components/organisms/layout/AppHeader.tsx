@@ -67,7 +67,7 @@ export function AppHeader({
       <Container size="full">
         <div className="grid grid-cols-[1fr_auto_1fr] h-[var(--app-header-height)] items-center justify-center">
           {/* Left Zone: Back Button + Help Button */}
-          <div className="flex items-center justify-start pl-2 sm:pl-4 gap-2">
+          <div className="app-header-zone flex items-center justify-start pl-2 sm:pl-4 gap-2">
             {showBackButton && (
               <button
                 type="button"
@@ -100,10 +100,10 @@ export function AppHeader({
           {/* Centered Title - navigates to howitworks when logged in */}
           {/* Grid centering automatically handles spacing without magic numbers */}
           {showTitle && (
-            <div className="flex flex-col items-center justify-center pt-1 min-w-0">
+            <div className="flex min-w-0 flex-col items-center justify-center">
               <ProtectedLink
                 href={homeLink}
-                className="flex items-center justify-center gap-2 rounded-full px-3 py-1 max-w-full"
+                className="app-header-title-link flex max-w-full items-center justify-center gap-2 rounded-full px-3 py-1.5"
                 aria-label="Go to FreeStyla home"
               >
                 {!customTitle && (
@@ -118,7 +118,7 @@ export function AppHeader({
                     />
                   </div>
                 )}
-                <h1 className="text-xs sm:text-base md:text-lg font-semibold tracking-[0.2em] sm:tracking-[0.35em] uppercase text-text-secondary text-center whitespace-nowrap overflow-hidden text-ellipsis px-1">
+                <h1 className="text-[0.7rem] sm:text-base md:text-lg font-semibold tracking-[0.18em] sm:tracking-[0.35em] uppercase text-text-secondary text-center whitespace-nowrap overflow-hidden text-ellipsis px-1 leading-tight">
                   {customTitle ? (
                     <span className="text-text-primary">{customTitle}</span>
                   ) : (
@@ -130,7 +130,7 @@ export function AppHeader({
                 </h1>
               </ProtectedLink>
               {customSubtitle && (
-                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide -mt-0.5 truncate max-w-full px-2">
+                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide truncate max-w-full px-2 leading-tight">
                   {customSubtitle}
                 </p>
               )}
@@ -138,7 +138,7 @@ export function AppHeader({
           )}
 
           {/* Account section - top right */}
-          <div className="flex items-center justify-end pr-2 sm:pr-4 gap-2 sm:gap-3">
+          <div className="app-header-zone flex items-center justify-end pr-2 sm:pr-4 gap-2 sm:gap-3">
             {(showSettings || action) && (
               <>
                 {action ? (
