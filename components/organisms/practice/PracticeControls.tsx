@@ -1,4 +1,10 @@
-import { useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react'
 import { Card } from '@/components/atoms/Card'
 import { RefreshCcw, Pause, Mic, Infinity as InfinityIcon } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
@@ -24,7 +30,14 @@ import {
 } from '@/lib/constants/design'
 import { getVoiceStatusNotice } from '@/lib/tts/voice-status-copy'
 import * as Sentry from '@sentry/nextjs'
-import { useEffect } from 'react'
+
+const OUTER_TIMER_STROKE_WIDTH = 4.75
+const INNER_CYPHER_ACTIVE_STROKE_WIDTH = 6
+const INNER_CYPHER_INACTIVE_STROKE_WIDTH = 2.85
+const INNER_CYPHER_RING_RADIUS = 46
+const WORD_FIT_SAFETY_PX = 10
+const WORD_FIT_MIN_FONT_PX = 3
+const WORD_FIT_EVENT = 'flowforge:fit-practice-word'
 
 interface PracticeControlsProps {
   selectedBeat: Beat
@@ -114,6 +127,8 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
   // State for pause modal
   const [showPauseModal, setShowPauseModal] = useState(false)
+  const wordRef = useRef<HTMLHeadingElement | null>(null)
+  const wordFitCleanupRef = useRef<(() => void) | null>(null)
   const shouldReduceMotion = useReducedMotion()
   const voiceStatusNotice = getVoiceStatusNotice({
     isTTSEnabled,
@@ -128,6 +143,151 @@ export default function PracticeControls(props: PracticeControlsProps) {
   const stageAccentWash =
     mode === 'cypher' ? activePlayerTheme.wash : 'rgba(125, 122, 255, 0.12)'
   const isCypherStage = mode === 'cypher'
+  const sirenRingColor = sirenPhase === 0 ? '#EF4444' : '#3B82F6'
+
+  const fitPracticeWord = useCallback(() => {
+    const word = wordRef.current
+    const container = word?.closest<HTMLElement>('.practice-word-stack')
+
+    if (!container || !word || !word.textContent?.trim()) {
+      return
+    }
+
+    const availableWidth = Math.max(
+      WORD_FIT_MIN_FONT_PX,
+      container.clientWidth - WORD_FIT_SAFETY_PX
+    )
+
+    word.style.removeProperty('--practice-word-fit-size')
+    const baseFontSize = Number.parseFloat(
+      window.getComputedStyle(word).fontSize
+    )
+    const maxFontSize = Number.isFinite(baseFontSize)
+      ? Math.max(baseFontSize, WORD_FIT_MIN_FONT_PX)
+      : WORD_FIT_MIN_FONT_PX
+    const wordStyles = window.getComputedStyle(word)
+    const measurer = document.createElement('span')
+    measurer.textContent = word.textContent
+    Object.assign(measurer.style, {
+      position: 'absolute',
+      top: '-9999px',
+      left: '-9999px',
+      visibility: 'hidden',
+      whiteSpace: 'nowrap',
+      pointerEvents: 'none',
+      fontFamily: wordStyles.fontFamily,
+      fontWeight: wordStyles.fontWeight,
+      fontStyle: wordStyles.fontStyle,
+      fontStretch: wordStyles.fontStretch,
+      letterSpacing: wordStyles.letterSpacing,
+      textTransform: wordStyles.textTransform,
+      textRendering: wordStyles.textRendering,
+    })
+    document.body.appendChild(measurer)
+
+    const measureWordWidth = (fontSize: number) => {
+      measurer.style.fontSize = `${fontSize}px`
+      return measurer.getBoundingClientRect().width
+    }
+
+    let low = WORD_FIT_MIN_FONT_PX
+    let high = maxFontSize
+    let best = low
+
+    for (let i = 0; i < 12; i += 1) {
+      const midpoint = (low + high) / 2
+
+      if (measureWordWidth(midpoint) <= availableWidth) {
+        best = midpoint
+        low = midpoint
+      } else {
+        high = midpoint
+      }
+    }
+
+    measurer.remove()
+
+    let fittedFontSize = Math.floor(best * 100) / 100
+
+    for (let i = 0; i < 8; i += 1) {
+      word.style.setProperty('--practice-word-fit-size', `${fittedFontSize}px`)
+
+      const overflowWidth = word.scrollWidth - word.clientWidth
+      if (overflowWidth <= 1) {
+        break
+      }
+
+      const correctionRatio =
+        word.scrollWidth > 0
+          ? Math.max(0.7, (word.clientWidth - 2) / word.scrollWidth)
+          : 0.92
+      fittedFontSize = Math.max(
+        WORD_FIT_MIN_FONT_PX,
+        Math.floor(fittedFontSize * correctionRatio * 100) / 100
+      )
+    }
+
+    word.style.setProperty('--practice-word-fit-size', `${fittedFontSize}px`)
+  }, [])
+
+  const setWordNode = useCallback(
+    (node: HTMLHeadingElement | null) => {
+      wordFitCleanupRef.current?.()
+      wordFitCleanupRef.current = null
+      wordRef.current = node
+
+      if (!node) {
+        return
+      }
+
+      const container = node.closest<HTMLElement>('.practice-word-stack')
+      if (!container) {
+        return
+      }
+
+      let frameId = 0
+      const scheduleFit = () => {
+        cancelAnimationFrame(frameId)
+        fitPracticeWord()
+        frameId = requestAnimationFrame(fitPracticeWord)
+      }
+
+      scheduleFit()
+      void document.fonts?.ready.then(scheduleFit)
+
+      const resizeObserver =
+        typeof ResizeObserver === 'undefined'
+          ? null
+          : new ResizeObserver(scheduleFit)
+      resizeObserver?.observe(container)
+
+      const mutationObserver = new MutationObserver(scheduleFit)
+      mutationObserver.observe(node, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      })
+
+      window.addEventListener('resize', scheduleFit)
+      window.addEventListener(WORD_FIT_EVENT, scheduleFit)
+
+      wordFitCleanupRef.current = () => {
+        cancelAnimationFrame(frameId)
+        resizeObserver?.disconnect()
+        mutationObserver.disconnect()
+        window.removeEventListener('resize', scheduleFit)
+        window.removeEventListener(WORD_FIT_EVENT, scheduleFit)
+      }
+    },
+    [fitPracticeWord]
+  )
+
+  useEffect(() => {
+    return () => {
+      wordFitCleanupRef.current?.()
+      wordFitCleanupRef.current = null
+    }
+  }, [])
 
   // Sentry Error Logging
   useEffect(() => {
@@ -233,7 +393,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
 
           <div className="practice-stage-rails grid w-full grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] items-center justify-center gap-2 px-1 relative z-10 pointer-events-none sm:grid-cols-[4rem_minmax(0,1fr)_4rem] sm:gap-3">
             {/* Left Satellite: RESTART */}
-            <div className="w-12 sm:w-14 flex justify-end shrink-0 pointer-events-auto">
+            <div className="practice-satellite-slot w-12 sm:w-14 flex justify-end shrink-0 pointer-events-auto">
               {isPlaying && handleRestart && (
                 <button
                   onClick={(e) => {
@@ -272,63 +432,24 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   boxShadow: `0 0 0 14px ${stageAccentWash}, 0 0 34px 18px ${stageAccentGlow}`,
                 }}
               />
-              {/* Simon Ring (Cypher Mode) - Outer Edge */}
-              {isCypherStage && (
-                <div
-                  data-testid="cypher-ring"
-                  className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 rounded-full"
-                >
-                  <svg
-                    viewBox="0 0 100 100"
-                    className="w-full h-full scale-[1.055]"
-                    overflow="visible"
-                    style={{
-                      transform: 'rotate(-90deg)',
-                    }}
-                  >
-                    {Array.from({ length: cypherPlayers }).map((_, i) => {
-                      const pNum = i + 1
-                      const isActive = Number(activePlayer) === pNum
-                      const theme =
-                        CYPHER_PLAYER_THEMES[
-                          pNum as keyof typeof CYPHER_PLAYER_THEMES
-                        ] ?? CYPHER_PLAYER_THEMES[1]
-                      const C = 2 * Math.PI * 48
-                      const gap = 4
-                      const segmentLength = C / cypherPlayers - gap
-                      const dashOffset = -(i * (C / cypherPlayers))
-
-                      return (
-                        <motion.circle
-                          key={i}
-                          data-testid="cypher-ring-segment"
-                          data-player={pNum}
-                          cx="50"
-                          cy="50"
-                          r="48"
-                          fill="none"
-                          stroke={theme.color}
-                          strokeLinecap="round"
-                          strokeDasharray={`${segmentLength} ${C - segmentLength}`}
-                          strokeDashoffset={dashOffset}
-                          initial={{ opacity: 0.35, strokeWidth: 2 }}
-                          animate={{
-                            opacity: isActive ? 1 : 0.5,
-                            strokeWidth: isActive ? 4.75 : 2.25,
-                            filter: isActive
-                              ? `drop-shadow(0 0 6px ${theme.color}) drop-shadow(0 0 14px ${theme.color})`
-                              : 'none',
-                          }}
-                          style={{
-                            transformOrigin: '50px 50px',
-                          }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      )
-                    })}
-                  </svg>
-                </div>
-              )}
+              {/* Timer Ring - Outer Edge */}
+              <div
+                data-testid="practice-timer-ring"
+                className="practice-timer-ring-wrap absolute inset-0 z-20 flex items-center justify-center rounded-full pointer-events-none"
+              >
+                <TimerRing
+                  progress={intervalProgress}
+                  isSirenActive={isSirenActive}
+                  sirenPhase={sirenPhase}
+                  size={300}
+                  className={cn(
+                    'h-full w-full scale-[1.055] text-white/5 transition-colors duration-500',
+                    isPlaying && !isSirenActive && 'drop-shadow-neon'
+                  )}
+                  progressColor={stageAccentColor}
+                  strokeWidth={OUTER_TIMER_STROKE_WIDTH}
+                />
+              </div>
 
               {/* Pulsing Concentric Rings - Standard Mode Only */}
               {mode !== 'cypher' && isPlaying && (
@@ -428,7 +549,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
                 <div
                   data-testid="practice-visualizer"
                   data-visualizer-color={stageAccentColor}
-                  className="absolute inset-0 z-0 opacity-60 scale-125"
+                  className="practice-visualizer-layer absolute inset-0 z-0 opacity-60 scale-125"
                 >
                   <AudioVisualizer
                     isPlaying={isPlaying || isRecording}
@@ -467,41 +588,94 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   />
                 </div>
 
-                {/* Timer Ring */}
-                <div
-                  data-testid="practice-timer-ring"
-                  className="absolute inset-0 p-5 sm:p-6 flex items-center justify-center pointer-events-none"
-                >
-                  <TimerRing
-                    progress={intervalProgress}
-                    isSirenActive={isSirenActive}
-                    sirenPhase={sirenPhase}
-                    size={300}
-                    className={cn(
-                      'w-full h-full text-white/5 transition-colors duration-500',
-                      isPlaying && !isSirenActive && 'drop-shadow-neon'
-                    )}
-                    progressColor={stageAccentColor}
-                    strokeWidth={6}
-                  />
+                {/* Inner Ring */}
+                <div className="practice-inner-ring-wrap absolute inset-0 p-5 sm:p-6 flex items-center justify-center pointer-events-none">
+                  {isCypherStage ? (
+                    <div
+                      data-testid="cypher-ring"
+                      className="flex h-full w-full items-center justify-center rounded-full"
+                    >
+                      <svg
+                        viewBox="0 0 100 100"
+                        className="h-full w-full"
+                        overflow="visible"
+                        style={{
+                          transform: 'rotate(-90deg)',
+                        }}
+                      >
+                        {Array.from({ length: cypherPlayers }).map((_, i) => {
+                          const pNum = i + 1
+                          const isActive = Number(activePlayer) === pNum
+                          const theme =
+                            CYPHER_PLAYER_THEMES[
+                              pNum as keyof typeof CYPHER_PLAYER_THEMES
+                            ] ?? CYPHER_PLAYER_THEMES[1]
+                          const circumference =
+                            2 * Math.PI * INNER_CYPHER_RING_RADIUS
+                          const gap = 4
+                          const segmentLength =
+                            circumference / cypherPlayers - gap
+                          const dashOffset = -(
+                            i *
+                            (circumference / cypherPlayers)
+                          )
+                          const segmentColor = isSirenActive
+                            ? sirenRingColor
+                            : theme.color
+                          const activeGlow = isSirenActive
+                            ? sirenRingColor
+                            : theme.color
+                          const strokeWidth = isActive
+                            ? INNER_CYPHER_ACTIVE_STROKE_WIDTH
+                            : INNER_CYPHER_INACTIVE_STROKE_WIDTH
+
+                          return (
+                            <motion.circle
+                              key={i}
+                              data-testid="cypher-ring-segment"
+                              data-player={pNum}
+                              data-active={isActive ? 'true' : 'false'}
+                              cx="50"
+                              cy="50"
+                              r={INNER_CYPHER_RING_RADIUS}
+                              fill="none"
+                              stroke={segmentColor}
+                              strokeWidth={strokeWidth}
+                              strokeLinecap="round"
+                              strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
+                              strokeDashoffset={dashOffset}
+                              initial={{ opacity: 0.35 }}
+                              animate={{
+                                opacity: isActive ? 0.95 : 0.42,
+                                filter: isActive
+                                  ? `drop-shadow(0 0 5px ${activeGlow}) drop-shadow(0 0 11px ${activeGlow})`
+                                  : 'none',
+                              }}
+                              style={{
+                                transformOrigin: '50px 50px',
+                              }}
+                              transition={{ duration: 0.3 }}
+                            />
+                          )
+                        })}
+                      </svg>
+                    </div>
+                  ) : (
+                    <div
+                      data-testid="practice-inner-ghost-ring"
+                      className={cn(
+                        'h-full w-full rounded-full border border-white/10 transition-colors duration-500',
+                        isSirenActive &&
+                          (sirenPhase === 0
+                            ? 'border-red-500/30'
+                            : 'border-blue-500/30')
+                      )}
+                    />
+                  )}
                 </div>
 
                 {/* Inner Content */}
-                <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                  {/* Cypher Player Label - Centered in Upper Ring */}
-                  {mode === 'cypher' && activePlayer !== 0 && (
-                    <div className="practice-cypher-label absolute -top-12 w-full flex justify-center animate-in fade-in slide-in-from-top-2">
-                      <span
-                        className={cn(
-                          'text-lg sm:text-xl font-black tracking-widest uppercase filter drop-shadow-lg transition-colors duration-300',
-                          activePlayerTheme.className
-                        )}
-                      >
-                        {activePlayerTheme.label}
-                      </span>
-                    </div>
-                  )}
-
+                <div className="practice-orb-content relative z-10 flex flex-col items-center justify-center text-center">
                   {isPlaying ? (
                     <div className="flex flex-col items-center justify-center space-y-2">
                       {countdownValue ? (
@@ -544,18 +718,38 @@ export default function PracticeControls(props: PracticeControlsProps) {
                             duration: 0.4,
                             ease: 'easeOut',
                           }}
-                          className="flex flex-col items-center justify-center w-full max-w-[85%] px-2"
+                          className="practice-word-stack flex flex-col items-center justify-center"
                         >
+                          {mode === 'cypher' && activePlayer !== 0 && (
+                            <div
+                              data-testid="practice-cypher-label"
+                              className="practice-cypher-label flex w-full justify-center animate-in fade-in slide-in-from-top-2"
+                            >
+                              <span
+                                className={cn(
+                                  'font-black uppercase filter drop-shadow-lg transition-colors duration-300',
+                                  activePlayerTheme.className
+                                )}
+                              >
+                                {activePlayerTheme.label}
+                              </span>
+                            </div>
+                          )}
                           <h1
+                            ref={setWordNode}
                             data-testid="practice-word"
+                            style={
+                              {
+                                '--practice-word-length': Math.max(
+                                  currentWord.length,
+                                  5
+                                ),
+                                fontSize:
+                                  'var(--practice-word-fit-size, clamp(0.72rem, calc((var(--practice-orb-size) * 1.1) / var(--practice-word-length)), 4.15rem))',
+                              } as CSSProperties
+                            }
                             className={cn(
-                              'practice-word-text font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] break-words text-balance uppercase leading-none transition-all duration-300',
-                              // Dynamic font sizing
-                              currentWord.length > 12
-                                ? 'text-2xl sm:text-3xl'
-                                : currentWord.length > 8
-                                  ? 'text-3xl sm:text-4xl'
-                                  : 'text-4xl sm:text-5xl',
+                              'practice-word-text max-w-full font-black text-transparent bg-clip-text tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] uppercase leading-none transition-colors duration-300',
                               isGolden
                                 ? 'bg-gradient-to-r from-yellow-300 via-amber-500 to-yellow-600'
                                 : 'bg-gradient-to-br from-white via-white to-white/70'
@@ -671,7 +865,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
 
             {/* Right Satellite: PAUSE */}
-            <div className="w-12 sm:w-14 flex justify-start shrink-0 pointer-events-auto">
+            <div className="practice-satellite-slot w-12 sm:w-14 flex justify-start shrink-0 pointer-events-auto">
               {isPlaying && onTogglePause && !countdownValue && (
                 <button
                   onClick={(e) => {

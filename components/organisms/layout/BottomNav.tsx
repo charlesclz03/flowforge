@@ -43,12 +43,14 @@ export function BottomNav() {
   const tabs = [
     {
       name: 'Beats',
+      label: 'Beats',
       href: '/tracks',
       icon: Disc3,
       match: (path: string) => path === '/tracks',
     },
     {
       name: 'Trophy',
+      label: 'Trophy',
       href: '/achievements',
       icon: Trophy,
       match: (path: string) =>
@@ -56,6 +58,7 @@ export function BottomNav() {
     },
     {
       name: 'Record',
+      label: 'Record',
       href: '/difficultyselection',
       icon: null, // Custom logo used instead
       match: (path: string) =>
@@ -66,6 +69,7 @@ export function BottomNav() {
     },
     {
       name: 'Recordings',
+      label: 'Recents',
       href: '/recordings',
       icon: CassetteTape,
       match: (path: string) => path.startsWith('/recordings'),
@@ -73,6 +77,7 @@ export function BottomNav() {
     },
     {
       name: 'Profile',
+      label: 'Profile',
       // If we have a username, go direct. Otherwise fallback to the redirector.
       href:
         isAuthenticated && !isProfileSetupComplete(session?.user)
@@ -213,7 +218,7 @@ export function BottomNav() {
                     isActive ? 'text-white' : 'text-text-tertiary'
                   )}
                 >
-                  {tab.name}
+                  {tab.label}
                 </span>
               </Link>
             )

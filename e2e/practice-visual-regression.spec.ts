@@ -2,6 +2,17 @@ import { expect, test, type Locator, type Page } from '@playwright/test'
 
 const SMALL_IPHONE = { width: 375, height: 667 }
 const EXPECTED_PLAYER_COLORS = ['#A855F7', '#F97316', '#FFD60A', '#30D158']
+const LOCAL_TEST_BEAT = {
+  id: 'visual-local-shotgun-boom',
+  title: 'So Fresh Without You',
+  bpm: 155,
+  storageUrl: '/beats/Shotgun-Boom.mp3',
+  isPremium: false,
+  artistName: 'FreeStyla Visual',
+  genre: 'Boom Bap',
+  duration: 120,
+  tags: ['visual-regression'],
+}
 
 async function primePracticeState(
   page: Page,
@@ -47,6 +58,92 @@ async function loadPractice(
       { timeout: 10_000 }
     )
   }
+}
+
+async function mockPlayableAudio(page: Page) {
+  await page.addInitScript(() => {
+    const originalFetch: typeof window.fetch = window.fetch.bind(window)
+
+    window.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+      const url =
+        typeof input === 'string'
+          ? input
+          : input instanceof Request
+            ? input.url
+            : String(input)
+
+      if (url.includes('/beats/')) {
+        return Promise.resolve(
+          new Response(new ArrayBuffer(8), {
+            status: 200,
+            headers: { 'content-type': 'audio/mpeg' },
+          })
+        )
+      }
+
+      return originalFetch(input, init)
+    }) as typeof window.fetch
+
+    class MockAudioContext {
+      state: AudioContextState = 'running'
+      destination = {}
+      onstatechange: (() => void) | null = null
+      private readonly startedAt = performance.now()
+
+      get currentTime() {
+        return (performance.now() - this.startedAt) / 1000
+      }
+
+      resume() {
+        this.state = 'running'
+        this.onstatechange?.()
+        return Promise.resolve()
+      }
+
+      close() {
+        this.state = 'closed'
+        this.onstatechange?.()
+        return Promise.resolve()
+      }
+
+      createGain() {
+        return {
+          gain: {
+            value: 1,
+            setValueAtTime: () => undefined,
+          },
+          connect: () => undefined,
+          disconnect: () => undefined,
+        }
+      }
+
+      createBufferSource() {
+        return {
+          buffer: null,
+          onended: null,
+          connect: () => undefined,
+          start: () => undefined,
+          stop: () => undefined,
+          disconnect: () => undefined,
+        }
+      }
+
+      decodeAudioData() {
+        return Promise.resolve({ duration: 120 })
+      }
+    }
+
+    Object.defineProperty(window, 'AudioContext', {
+      configurable: true,
+      writable: true,
+      value: MockAudioContext,
+    })
+    Object.defineProperty(window, 'webkitAudioContext', {
+      configurable: true,
+      writable: true,
+      value: MockAudioContext,
+    })
+  })
 }
 
 async function startPractice(page: Page) {
@@ -97,6 +194,150 @@ async function expectNoVerticalOverlap(upper: Locator, lower: Locator) {
   )
 }
 
+async function expectNoBoxOverlap(
+  first: Locator,
+  second: Locator,
+  tolerance = 1
+) {
+  const firstBox = await first.boundingBox()
+  const secondBox = await second.boundingBox()
+  expect(firstBox).not.toBeNull()
+  expect(secondBox).not.toBeNull()
+
+  const overlapX = Math.max(
+    0,
+    Math.min(
+      (firstBox?.x ?? 0) + (firstBox?.width ?? 0),
+      (secondBox?.x ?? 0) + (secondBox?.width ?? 0)
+    ) - Math.max(firstBox?.x ?? 0, secondBox?.x ?? 0)
+  )
+  const overlapY = Math.max(
+    0,
+    Math.min(
+      (firstBox?.y ?? 0) + (firstBox?.height ?? 0),
+      (secondBox?.y ?? 0) + (secondBox?.height ?? 0)
+    ) - Math.max(firstBox?.y ?? 0, secondBox?.y ?? 0)
+  )
+
+  expect(overlapX * overlapY).toBeLessThanOrEqual(tolerance)
+}
+
+async function expectContained(
+  container: Locator,
+  child: Locator,
+  tolerance = 2
+) {
+  const containerBox = await container.boundingBox()
+  const childBox = await child.boundingBox()
+  expect(containerBox).not.toBeNull()
+  expect(childBox).not.toBeNull()
+
+  expect(childBox?.x ?? 0).toBeGreaterThanOrEqual(
+    (containerBox?.x ?? 0) - tolerance
+  )
+  expect(childBox?.y ?? 0).toBeGreaterThanOrEqual(
+    (containerBox?.y ?? 0) - tolerance
+  )
+  expect((childBox?.x ?? 0) + (childBox?.width ?? 0)).toBeLessThanOrEqual(
+    (containerBox?.x ?? 0) + (containerBox?.width ?? 0) + tolerance
+  )
+  expect((childBox?.y ?? 0) + (childBox?.height ?? 0)).toBeLessThanOrEqual(
+    (containerBox?.y ?? 0) + (containerBox?.height ?? 0) + tolerance
+  )
+}
+
+async function expectSizeRatio(
+  reference: Locator,
+  target: Locator,
+  minRatio: number,
+  maxRatio: number
+) {
+  const referenceBox = await reference.boundingBox()
+  const targetBox = await target.boundingBox()
+  expect(referenceBox).not.toBeNull()
+  expect(targetBox).not.toBeNull()
+
+  const widthRatio = (targetBox?.width ?? 0) / (referenceBox?.width ?? 1)
+  const heightRatio = (targetBox?.height ?? 0) / (referenceBox?.height ?? 1)
+
+  expect(widthRatio).toBeGreaterThanOrEqual(minRatio)
+  expect(widthRatio).toBeLessThanOrEqual(maxRatio)
+  expect(heightRatio).toBeGreaterThanOrEqual(minRatio)
+  expect(heightRatio).toBeLessThanOrEqual(maxRatio)
+}
+
+async function expectWordFitsInnerCircle(
+  orb: Locator,
+  word: Locator,
+  maxWidthRatio = 0.74
+) {
+  const orbBox = await orb.boundingBox()
+  const wordBox = await word.boundingBox()
+  expect(orbBox).not.toBeNull()
+  expect(wordBox).not.toBeNull()
+
+  const orbCenter = {
+    x: (orbBox?.x ?? 0) + (orbBox?.width ?? 0) / 2,
+    y: (orbBox?.y ?? 0) + (orbBox?.height ?? 0) / 2,
+  }
+  const wordCenter = {
+    x: (wordBox?.x ?? 0) + (wordBox?.width ?? 0) / 2,
+    y: (wordBox?.y ?? 0) + (wordBox?.height ?? 0) / 2,
+  }
+
+  expect(wordBox?.width ?? 0).toBeLessThanOrEqual(
+    (orbBox?.width ?? 0) * maxWidthRatio
+  )
+  expect(Math.abs(wordCenter.x - orbCenter.x)).toBeLessThanOrEqual(3)
+  expect(Math.abs(wordCenter.y - orbCenter.y)).toBeLessThanOrEqual(
+    (orbBox?.height ?? 0) * 0.16
+  )
+}
+
+async function expectWordRenderedWhole(word: Locator, value: string) {
+  await expect(word).toHaveText(value)
+  await expect
+    .poll(
+      async () =>
+        word.evaluate((node) => {
+          const element = node as HTMLElement
+          return Math.ceil(element.scrollWidth - element.clientWidth)
+        }),
+      { timeout: 5_000 }
+    )
+    .toBeLessThanOrEqual(1)
+  await expect
+    .poll(
+      async () =>
+        word.evaluate((node) => {
+          const element = node as HTMLElement
+          const styles = window.getComputedStyle(element)
+          const lineHeight = Number.parseFloat(styles.lineHeight)
+          const fallbackLineHeight = Number.parseFloat(styles.fontSize) * 1.1
+          const singleLineHeight = Number.isFinite(lineHeight)
+            ? lineHeight
+            : fallbackLineHeight
+
+          return element.scrollHeight <= singleLineHeight * 1.35
+        }),
+      { timeout: 5_000 }
+    )
+    .toBeTruthy()
+}
+
+async function setPracticeWord(word: Locator, value: string) {
+  await word.evaluate((node, nextWord) => {
+    node.textContent = nextWord
+    ;(node as HTMLElement).style.setProperty(
+      '--practice-word-length',
+      String(Math.max(nextWord.length, 5))
+    )
+    window.dispatchEvent(new Event('flowforge:fit-practice-word'))
+    window.dispatchEvent(new Event('resize'))
+  }, value)
+  await expectWordRenderedWhole(word, value)
+}
+
 test.describe('Practice 2026 pro-grade visual guardrails', () => {
   test.setTimeout(60_000)
 
@@ -111,10 +352,14 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
     const orbFrame = page.getByTestId('practice-orb-frame')
     const orb = page.locator('#tour-record-btn')
     const timerRing = page.getByTestId('practice-timer-ring')
+    const innerGhostRing = page.getByTestId('practice-inner-ghost-ring')
 
     await expectSquare(orbFrame)
     await expectSquare(orb)
     await expectConcentric(orb, timerRing)
+    await expectConcentric(orb, innerGhostRing)
+    await expectSizeRatio(orb, timerRing, 0.98, 1.08)
+    await expectSizeRatio(orb, innerGhostRing, 0.66, 0.82)
   })
 
   test('solo countdown, playing, paused, and siren states stay non-overlapping', async ({
@@ -169,19 +414,32 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
       await startPractice(page)
 
       const orb = page.locator('#tour-record-btn')
+      const timerRing = page.getByTestId('practice-timer-ring')
       const cypherRing = page.getByTestId('cypher-ring')
       const segments = page.getByTestId('cypher-ring-segment')
       const visualizer = page.getByTestId('practice-visualizer')
       const glow = page.getByTestId('practice-player-glow')
 
+      await expect(timerRing).toBeVisible()
       await expect(cypherRing).toBeVisible()
       await expect(segments).toHaveCount(players)
+      await expectConcentric(orb, timerRing)
       await expectConcentric(orb, cypherRing, 6)
+      await expectSizeRatio(orb, timerRing, 0.98, 1.08)
+      await expectSizeRatio(orb, cypherRing, 0.66, 0.82)
       await expectSquare(orb)
+
+      const timerStrokeWidths = await timerRing
+        .locator('circle')
+        .evaluateAll((nodes) =>
+          nodes.map((node) => Number(node.getAttribute('stroke-width') || 0))
+        )
+      expect(timerStrokeWidths.every((width) => width === 4.75)).toBeTruthy()
 
       const visibleSegmentColors = await segments.evaluateAll((nodes) =>
         nodes.map((node) => ({
           stroke: node.getAttribute('stroke'),
+          active: node.getAttribute('data-active') === 'true',
           width: Number(node.getAttribute('stroke-width') || 0),
           opacity: Number(window.getComputedStyle(node).opacity || 0),
         }))
@@ -195,6 +453,16 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
       expect(
         visibleSegmentColors.every((segment) => segment.opacity > 0)
       ).toBeTruthy()
+      expect(
+        visibleSegmentColors.some(
+          (segment) => segment.active && segment.width === 6
+        )
+      ).toBeTruthy()
+      expect(
+        visibleSegmentColors
+          .filter((segment) => !segment.active)
+          .every((segment) => segment.width === 2.85)
+      ).toBeTruthy()
 
       await expect(visualizer).toHaveAttribute(
         'data-visualizer-color',
@@ -206,6 +474,71 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
       })
     })
   }
+
+  test('small iPhone WebKit cypher playing layout keeps BALANCE clear of controls and chrome', async ({
+    page,
+  }) => {
+    await mockPlayableAudio(page)
+    await loadPractice(page, {
+      selectedBeat: LOCAL_TEST_BEAT,
+      mode: 'cypher',
+      cypherPlayers: 4,
+      frequency: 8,
+      difficulty: 2,
+    })
+    await startPractice(page)
+    await page.waitForTimeout(3600)
+
+    const pauseButton = page.getByRole('button', { name: /pause session/i })
+    await expect(pauseButton).toBeVisible({ timeout: 10_000 })
+
+    const word = page.getByTestId('practice-word')
+    await expect(word).toBeVisible()
+
+    const orb = page.locator('#tour-record-btn')
+    const timerRing = page.getByTestId('practice-timer-ring')
+    const cypherRing = page.getByTestId('cypher-ring')
+    const label = page.getByTestId('practice-cypher-label')
+    const timer = page.locator('.practice-session-timer')
+    const restartButton = page.getByRole('button', {
+      name: /restart session/i,
+    })
+    const recordControl = page.locator('.practice-record-area')
+    const bottomNav = page.locator('nav')
+
+    await expect(label).toBeVisible()
+    await expect(timer).toBeVisible()
+    await expect(timerRing).toBeVisible()
+    await expect(cypherRing).toBeVisible()
+    await expect(restartButton).toBeVisible()
+    await expect(bottomNav).toBeVisible()
+
+    await expectConcentric(orb, timerRing)
+    await expectConcentric(orb, cypherRing)
+    await expectSizeRatio(orb, timerRing, 0.98, 1.08)
+    await expectSizeRatio(orb, cypherRing, 0.66, 0.82)
+
+    for (const prompt of ['BALANCE', 'RESPONSIBILITY', 'TRANSFORMATION']) {
+      await setPracticeWord(word, prompt)
+
+      await expectContained(orb, label)
+      await expectContained(orb, word)
+      await expectContained(orb, timer)
+      await expectWordFitsInnerCircle(orb, word)
+      await expectNoVerticalOverlap(label, word)
+      await expectNoVerticalOverlap(word, timer)
+    }
+
+    await expectNoBoxOverlap(restartButton, orb)
+    await expectNoBoxOverlap(pauseButton, orb)
+    await expectNoVerticalOverlap(orb, recordControl)
+    await expectNoVerticalOverlap(recordControl, bottomNav)
+
+    await setPracticeWord(word, 'BALANCE')
+    await page.screenshot({
+      path: 'artifacts/practice-cypher-4p-balance-safari-compact.png',
+    })
+  })
 
   test('AppHeader remains touch-safe and unclipped on core surfaces', async ({
     page,

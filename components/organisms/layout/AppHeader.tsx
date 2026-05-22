@@ -65,7 +65,7 @@ export function AppHeader({
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur-xl border-b border-stroke-subtle/40 safe-top">
       <Container size="full">
-        <div className="grid grid-cols-[1fr_auto_1fr] h-[var(--app-header-height)] items-center justify-center">
+        <div className="app-header-grid grid grid-cols-[1fr_auto_1fr] h-[var(--app-header-height)] items-center justify-center">
           {/* Left Zone: Back Button + Help Button */}
           <div className="app-header-zone flex items-center justify-start pl-2 sm:pl-4 gap-2">
             {showBackButton && (
@@ -118,7 +118,7 @@ export function AppHeader({
                     />
                   </div>
                 )}
-                <h1 className="text-[0.7rem] sm:text-base md:text-lg font-semibold tracking-[0.18em] sm:tracking-[0.35em] uppercase text-text-secondary text-center whitespace-nowrap overflow-hidden text-ellipsis px-1 leading-tight">
+                <h1 className="app-header-title text-[0.7rem] sm:text-base md:text-lg font-semibold tracking-[0.18em] sm:tracking-[0.35em] uppercase text-text-secondary text-center whitespace-nowrap overflow-hidden text-ellipsis px-1 leading-tight">
                   {customTitle ? (
                     <span className="text-text-primary">{customTitle}</span>
                   ) : (
@@ -130,7 +130,7 @@ export function AppHeader({
                 </h1>
               </ProtectedLink>
               {customSubtitle && (
-                <p className="block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide truncate max-w-full px-2 leading-tight">
+                <p className="app-header-subtitle block text-[8px] sm:text-[10px] sm:text-xs text-text-tertiary font-medium tracking-wide truncate max-w-full px-2 leading-tight">
                   {customSubtitle}
                 </p>
               )}
@@ -174,7 +174,7 @@ export function AppHeader({
                             : 'Get Pro pricing'
                         }
                         className={cn(
-                          'inline-flex h-10 min-w-[72px] items-center justify-center gap-1.5 rounded-full border px-3 text-[11px] font-bold uppercase tracking-wide transition-all active:scale-95 sm:h-11 sm:min-w-[88px] sm:px-4 sm:text-xs',
+                          'app-header-tier-cta inline-flex h-10 min-w-[72px] items-center justify-center gap-1.5 rounded-full border px-3 text-[11px] font-bold uppercase tracking-wide transition-all active:scale-95 sm:h-11 sm:min-w-[88px] sm:px-4 sm:text-xs',
                           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                           isPro
                             ? 'border-accent-gold/30 bg-accent-gold/10 text-accent-gold hover:bg-accent-gold/15'
@@ -187,7 +187,9 @@ export function AppHeader({
                           tone={isPro ? 'gold' : 'white'}
                           decorative
                         />
-                        <span>{isPro ? tierLabel : 'Get Pro'}</span>
+                        <span className="app-header-tier-label">
+                          {isPro ? tierLabel : 'Get Pro'}
+                        </span>
                       </ProtectedLink>
                     )}
                     <SettingsDropdown />

@@ -324,7 +324,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
         disabled={disabled}
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          'w-full flex items-center justify-between px-4 py-3 bg-surface-elevated border border-white/10 rounded-2xl transition-all duration-300',
+          'practice-beat-trigger w-full flex items-center justify-between px-4 py-3 bg-surface-elevated border border-white/10 rounded-2xl transition-all duration-300',
           isExpanded &&
             !embedded &&
             'ring-2 ring-accent-purple/50 border-accent-purple/50',
@@ -337,6 +337,7 @@ export function BeatDropdown(props: BeatDropdownProps) {
             variant="action"
             tone="purple"
             decorative
+            className="practice-beat-icon"
           />
           <div className="text-left">
             <p className="text-sm font-medium text-white line-clamp-1">

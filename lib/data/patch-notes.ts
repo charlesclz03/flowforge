@@ -35,6 +35,9 @@ export const PATCH_NOTES: PatchNote[] = [
         items: [
           '**Practice Circle Geometry**: The live player now uses one square sizing variable for the orb shell, timer ring, cypher ring, visualizer clipping, and glow layers so the player remains a true circle on compact phones.',
           '**Small-iPhone Layout Recovery**: Added a stricter compact practice profile for iPhone SE-class heights, reducing only internal density so top controls, the player, and record control keep their anchors without overlapping.',
+          '**Small-iPhone Safari Follow-Up**: Tightened the live Practice compact profile for real Safari browser chrome, slimming the beat card, top pills, satellite buttons, orb internals, record control, and bottom dock spacing without changing session flow.',
+          '**Ring Swap and Reliable Word Fitting**: Moved the timer progress ring to the outer lane, moved cypher segments to the inner lane, and replaced length-estimated prompt sizing with measured one-line fitting so `BALANCE`, `RESPONSIBILITY`, and longer prompts keep every glyph visible inside the orb.',
+          '**Cypher Prompt Clearance**: Cypher player labels now sit in the prompt stack instead of over the word, so `BALANCE` and other long prompts stay inside the circular player without clipping.',
           '**Cypher Ring and Tinting**: Cypher mode now renders visible 2/3/4-player ring segments, preserves P1 purple, P2 orange, P3 gold, and P4 green, and applies the active player color to the ring, visualizer, and inner glow.',
           '**Practice Timer Weight**: Increased the word timer progress ring weight for clearer performance feedback while preserving red/blue siren override behavior.',
           '**Breathable AppHeader**: Small iPhone headers now have more vertical room and cleaner title/subtitle spacing while keeping the three-column header grid and existing controls.',
@@ -50,7 +53,8 @@ export const PATCH_NOTES: PatchNote[] = [
         category: 'System Updates',
         items: [
           '**UI Trend Research**: Added the 2026 FreeStyla UI trends fit matrix under `DOCS/research/` using current Figma, OpenAI, and design-trend sources.',
-          '**Visual Guardrails**: Added Playwright coverage for small-iPhone Practice orb geometry, countdown/playing/paused screenshots, cypher 2/3/4-player ring segments, active-player tint propagation, and AppHeader touch safety across core surfaces.',
+          '**Visual Guardrails**: Added Playwright coverage for small-iPhone Practice orb geometry, countdown/playing/paused screenshots, cypher 2/3/4-player ring segments, active-player tint propagation, AppHeader touch safety, and the real playing-state `BALANCE` cypher overlap case.',
+          '**Ring and Word-Fit Guardrails**: Expanded the small iPhone WebKit cypher guardrail to assert full one-line rendering for `BALANCE`, `RESPONSIBILITY`, and `TRANSFORMATION`, plus outer timer/inner cypher ring position and stroke-width expectations.',
         ],
       },
     ],
