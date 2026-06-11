@@ -436,14 +436,17 @@ test('authenticated setup supports EN/FR/PT cadence and recording modes', async 
       await expect(radio).toBeChecked()
     }
 
-    const recordingSwitch = page.getByRole('switch', {
+    const recordingButton = page.getByRole('button', {
       name: /toggle recording mode/i,
     })
     await expect(page.getByText('Practice only')).toBeVisible()
-    await recordingSwitch.click()
+    await expect(recordingButton).toHaveAttribute('aria-pressed', 'false')
+    await recordingButton.click()
     await expect(page.getByText('Capture audio')).toBeVisible()
-    await recordingSwitch.click()
+    await expect(recordingButton).toHaveAttribute('aria-pressed', 'true')
+    await recordingButton.click()
     await expect(page.getByText('Practice only')).toBeVisible()
+    await expect(recordingButton).toHaveAttribute('aria-pressed', 'false')
 
     expect(pageErrors).toEqual([])
     expect(consoleErrors).toEqual([])

@@ -42,6 +42,7 @@ import {
 } from '@/lib/auth/paths'
 import {
   IOS_SPOKEN_PROMPT_NOTICE,
+  IOS_VOICE_BETA_NOTICE,
   getEffectiveTTSEnabled,
 } from '@/lib/tts/platform'
 
@@ -57,6 +58,8 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
     testVoice,
     isStudioFXEnabled,
     setStudioFXEnabled,
+    isIOSVoicePromptBetaEnabled,
+    setIOSVoicePromptBetaEnabled,
     beatVolume,
     setBeatVolume,
   } = usePracticeSession()
@@ -66,7 +69,12 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
 
   // Determine subscription status
   const isPro = isProUser(session?.user)
-  const effectiveTTSEnabled = getEffectiveTTSEnabled(isTTSEnabled, isIOS)
+  const effectiveTTSEnabled = getEffectiveTTSEnabled(
+    isTTSEnabled,
+    isIOS,
+    isIOSVoicePromptBetaEnabled
+  )
+  const isVoicePromptToggleLocked = isIOS && !isIOSVoicePromptBetaEnabled
 
   const handleLinkClick = () => {
     if (onItemClick) onItemClick()
@@ -322,7 +330,9 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                 </span>
                 <span className="text-xs text-zinc-500">
                   {isIOS
-                    ? 'Disabled on iPhone and iPad to preserve beat volume'
+                    ? isIOSVoicePromptBetaEnabled
+                      ? 'Experimental spoken prompts on iPhone and iPad'
+                      : 'Text-only by default to preserve beat volume'
                     : 'Spoken word suggestions'}
                 </span>
               </div>
@@ -330,7 +340,7 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (isIOS) {
+                if (isVoicePromptToggleLocked) {
                   toast(IOS_SPOKEN_PROMPT_NOTICE, { icon: 'i' })
                   return
                 }
@@ -342,15 +352,15 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
                     : 'Voice Assistant Disabled'
                 )
               }}
-              disabled={isIOS}
+              disabled={isVoicePromptToggleLocked}
               aria-label={
-                isIOS
-                  ? 'Voice prompts disabled on iPhone and iPad'
+                isVoicePromptToggleLocked
+                  ? 'Voice prompts are text-only on iPhone and iPad until iPhone Voice Beta is enabled'
                   : 'Toggle voice prompts'
               }
               className={cn(
                 'min-h-[44px] min-w-[44px] rounded-full transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-accent-orange/50',
-                isIOS
+                isVoicePromptToggleLocked
                   ? 'cursor-not-allowed bg-white/10 opacity-60'
                   : isTTSEnabled
                     ? 'bg-accent-orange'
@@ -367,8 +377,52 @@ export function SettingsList({ onItemClick }: { onItemClick?: () => void }) {
           </div>
 
           {isIOS && (
-            <div className="px-5 pb-4 text-xs text-accent-blue">
-              {IOS_SPOKEN_PROMPT_NOTICE}
+            <div className="space-y-3 px-5 pb-4">
+              <div className="text-xs text-accent-blue">
+                {isIOSVoicePromptBetaEnabled
+                  ? IOS_VOICE_BETA_NOTICE
+                  : IOS_SPOKEN_PROMPT_NOTICE}
+              </div>
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-accent-blue/20 bg-accent-blue/5 px-4 py-3">
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-zinc-200">
+                    iPhone Voice Beta
+                  </span>
+                  <span className="text-xs leading-snug text-zinc-500">
+                    Try spoken prompts, but beat volume may dip on some iPhone
+                    speakers.
+                  </span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const newValue = !isIOSVoicePromptBetaEnabled
+                    setIOSVoicePromptBetaEnabled(newValue)
+                    toast(
+                      newValue
+                        ? IOS_VOICE_BETA_NOTICE
+                        : IOS_SPOKEN_PROMPT_NOTICE,
+                      {
+                        icon: 'i',
+                      }
+                    )
+                  }}
+                  aria-label="Toggle iPhone Voice Beta"
+                  className={cn(
+                    'relative min-h-[44px] min-w-[44px] rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent-blue/50',
+                    isIOSVoicePromptBetaEnabled
+                      ? 'bg-accent-blue'
+                      : 'bg-white/10'
+                  )}
+                >
+                  <div
+                    className={cn(
+                      'absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow-sm transition-all',
+                      isIOSVoicePromptBetaEnabled ? 'left-6' : 'left-1'
+                    )}
+                  />
+                </button>
+              </div>
             </div>
           )}
 

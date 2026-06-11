@@ -11,6 +11,7 @@ export interface VoiceStatusNotice {
 interface VoiceStatusNoticeOptions {
   isTTSEnabled?: boolean
   isIOS?: boolean
+  spokenPromptNoticeTitle?: string
   spokenPromptNotice?: string | null
   voiceStatus?: TTSVoiceStatus
   activeVoiceName?: string | null
@@ -19,6 +20,7 @@ interface VoiceStatusNoticeOptions {
 export function getVoiceStatusNotice({
   isTTSEnabled = true,
   isIOS = false,
+  spokenPromptNoticeTitle,
   spokenPromptNotice,
   voiceStatus,
   activeVoiceName,
@@ -28,7 +30,7 @@ export function getVoiceStatusNotice({
   if (isIOS || spokenPromptNotice) {
     return {
       tone: 'info',
-      title: 'Text-only prompts',
+      title: spokenPromptNoticeTitle ?? 'Text-only prompts',
       message:
         spokenPromptNotice ??
         'Voice prompts stay off on iPhone and iPad so the beat volume stays stable.',

@@ -20,7 +20,6 @@ export function BottomNav() {
   const isPracticeRoute = pathname === '/practice'
   const isPublicEntryRoute =
     pathname === '/' ||
-    pathname === '/howitworks' ||
     pathname === '/pricing' ||
     pathname === '/login' ||
     pathname === '/signup' ||

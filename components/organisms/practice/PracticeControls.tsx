@@ -79,6 +79,7 @@ interface PracticeControlsProps {
   onRetrySave?: () => void // [NEW]
   isTTSEnabled?: boolean
   voiceStatus?: 'loading' | 'ready' | 'fallback' | 'unsupported'
+  spokenPromptNoticeTitle?: string
   spokenPromptNotice?: string | null
 }
 
@@ -122,6 +123,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
     onRetrySave, // [NEW]
     isTTSEnabled,
     voiceStatus,
+    spokenPromptNoticeTitle,
     spokenPromptNotice,
   } = props
 
@@ -132,6 +134,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
   const shouldReduceMotion = useReducedMotion()
   const voiceStatusNotice = getVoiceStatusNotice({
     isTTSEnabled,
+    spokenPromptNoticeTitle,
     spokenPromptNotice,
     voiceStatus,
   })
@@ -335,7 +338,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
       padding="lg"
       className={cn(
         'transition-opacity duration-500 bg-transparent border-none grid grid-rows-[auto_minmax(0,1fr)_auto] flex-1 min-h-0',
-        'py-3 sm:py-4 relative overflow-visible'
+        'px-0 py-3 sm:px-2 sm:py-4 relative overflow-visible'
       )}
     >
       {/* Session Controls - MOVED to flank main button (Mockup Style) */}
@@ -391,9 +394,9 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
           )}
 
-          <div className="practice-stage-rails grid w-full grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] items-center justify-center gap-2 px-1 relative z-10 pointer-events-none sm:grid-cols-[4rem_minmax(0,1fr)_4rem] sm:gap-3">
+          <div className="practice-stage-rails grid w-full grid-cols-[minmax(4rem,1fr)_auto_minmax(4rem,1fr)] items-center justify-center gap-3 px-2 relative z-10 pointer-events-none sm:grid-cols-[minmax(4.5rem,1fr)_auto_minmax(4.5rem,1fr)] sm:gap-4">
             {/* Left Satellite: RESTART */}
-            <div className="practice-satellite-slot w-12 sm:w-14 flex justify-end shrink-0 pointer-events-auto">
+            <div className="practice-satellite-slot flex min-w-0 justify-end pointer-events-auto">
               {isPlaying && handleRestart && (
                 <button
                   onClick={(e) => {
@@ -457,8 +460,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   <motion.div
                     className="absolute rounded-full border-2 pointer-events-none"
                     style={{
-                      width: 'calc(var(--practice-orb-size) + 1.25rem)',
-                      height: 'calc(var(--practice-orb-size) + 1.25rem)',
+                      width:
+                        'calc(var(--practice-orb-size) + var(--practice-pulse-ring-inner-extra, 1.25rem))',
+                      height:
+                        'calc(var(--practice-orb-size) + var(--practice-pulse-ring-inner-extra, 1.25rem))',
                       borderColor: 'rgba(74, 72, 176, 0.4)',
                       boxShadow: '0 0 20px rgba(74, 72, 176, 0.2)',
                     }}
@@ -479,8 +484,10 @@ export default function PracticeControls(props: PracticeControlsProps) {
                   <motion.div
                     className="absolute rounded-full border-2 pointer-events-none"
                     style={{
-                      width: 'calc(var(--practice-orb-size) + 2.75rem)',
-                      height: 'calc(var(--practice-orb-size) + 2.75rem)',
+                      width:
+                        'calc(var(--practice-orb-size) + var(--practice-pulse-ring-outer-extra, 2.75rem))',
+                      height:
+                        'calc(var(--practice-orb-size) + var(--practice-pulse-ring-outer-extra, 2.75rem))',
                       borderColor: 'rgba(61, 59, 142, 0.3)',
                       boxShadow: '0 0 30px rgba(61, 59, 142, 0.15)',
                     }}
@@ -865,7 +872,7 @@ export default function PracticeControls(props: PracticeControlsProps) {
             </div>
 
             {/* Right Satellite: PAUSE */}
-            <div className="practice-satellite-slot w-12 sm:w-14 flex justify-start shrink-0 pointer-events-auto">
+            <div className="practice-satellite-slot flex min-w-0 justify-start pointer-events-auto">
               {isPlaying && onTogglePause && !countdownValue && (
                 <button
                   onClick={(e) => {

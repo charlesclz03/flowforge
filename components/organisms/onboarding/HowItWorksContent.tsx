@@ -1,26 +1,146 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
+  BarChart3,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Languages,
   Mic,
   Music,
   Sparkles,
+  Target,
   Timer,
   Zap,
-  Target,
+  type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { IconFrame } from '@/components/atoms/IconFrame'
-import { Surface } from '@/components/atoms/Surface'
 import { StatusBadge } from '@/components/atoms/StatusBadge'
-import { QASection } from '@/components/organisms/landing/QASection'
 import { trackEvent } from '@/lib/analytics/track'
+import { cn } from '@/lib/utils'
 
 interface HowItWorksContentProps {
   onStartPractice?: () => void
   beatCount?: number
+}
+
+interface FeatureItem {
+  label: string
+  icon: LucideIcon
+}
+
+interface BlueprintSlide {
+  id: string
+  step?: number
+  title: string
+  body: string
+  icon: LucideIcon
+  tone: 'blue' | 'purple' | 'red' | 'green'
+  visual: 'beats' | 'flow' | 'record' | 'features'
+  features?: FeatureItem[]
+}
+
+const FEATURE_LIST: FeatureItem[] = [
+  { label: 'Language-first practice', icon: Languages },
+  { label: 'Precision timing', icon: Timer },
+  { label: 'Freestyle practice engine with beats', icon: Sparkles },
+  { label: 'Beat synchronization', icon: Zap },
+  { label: 'Session tracking', icon: BarChart3 },
+]
+
+function SlideVisual({
+  slide,
+  beatCount,
+}: {
+  slide: BlueprintSlide
+  beatCount: number
+}) {
+  if (slide.visual === 'features') {
+    return (
+      <div className="space-y-2.5">
+        {slide.features?.map((feature) => (
+          <div
+            key={feature.label}
+            className="flex min-h-[44px] items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 text-sm font-semibold text-white"
+          >
+            <IconFrame
+              icon={feature.icon}
+              variant="inline"
+              tone="green"
+              decorative
+            />
+            <span className="min-w-0 leading-tight">{feature.label}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (slide.visual === 'record') {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <div className="relative flex h-48 w-48 items-center justify-center rounded-full border border-accent-purple/35 bg-black/40 shadow-purple-glow">
+          <div className="absolute inset-4 rounded-full border-4 border-accent-purple/70" />
+          <div className="absolute inset-8 rounded-full border border-white/10 bg-white/[0.04]" />
+          <div className="relative text-center">
+            <p className="font-mono text-3xl font-black tracking-widest text-white">
+              FLOW
+            </p>
+            <p className="mt-1 text-[10px] uppercase tracking-[0.24em] text-text-tertiary">
+              live take
+            </p>
+          </div>
+          <div className="absolute -bottom-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15 text-accent-red">
+            <Mic size={25} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (slide.visual === 'flow') {
+    return (
+      <div className="grid gap-3">
+        {[
+          ['Language', 'EN / FR / PT'],
+          ['Cadence', '2 / 4 / 8 / 16 bars'],
+          ['Mode', 'Solo or Cypher'],
+        ].map(([label, value]) => (
+          <div
+            key={label}
+            className="rounded-2xl border border-white/10 bg-black/25 p-3"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-tertiary">
+              {label}
+            </p>
+            <p className="mt-1 text-sm font-semibold text-white">{value}</p>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {['Boom Bap', 'Trap', 'Battle'].map((genre, index) => (
+        <div
+          key={genre}
+          className="flex min-h-[52px] items-center justify-between rounded-2xl border border-white/10 bg-black/25 px-4"
+        >
+          <div>
+            <p className="text-sm font-semibold text-white">{genre}</p>
+            <p className="text-xs text-text-tertiary">
+              {index === 0 ? `${beatCount} public tracks` : 'BPM tagged'}
+            </p>
+          </div>
+          <Music size={20} className="text-accent-blue" />
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export function HowItWorksContent({
@@ -28,8 +148,51 @@ export function HowItWorksContent({
   beatCount = 10,
 }: HowItWorksContentProps) {
   const router = useRouter()
+  const [activeIndex, setActiveIndex] = useState(0)
   const handleStart =
     onStartPractice || (() => router.push('/difficultyselection'))
+
+  const slides = useMemo<BlueprintSlide[]>(
+    () => [
+      {
+        id: 'secure-sound',
+        step: 1,
+        title: 'Secure Your Sound',
+        body: `Start from the same public Beat Vault used on /tracks, with ${beatCount} tracks ready for practice.`,
+        icon: Music,
+        tone: 'blue',
+        visual: 'beats',
+      },
+      {
+        id: 'architect-flow',
+        step: 2,
+        title: 'Architect Your Flow',
+        body: 'Pick language, difficulty, cadence, and solo or cypher mode before the beat drops.',
+        icon: Target,
+        tone: 'purple',
+        visual: 'flow',
+      },
+      {
+        id: 'immortalize-bars',
+        step: 3,
+        title: 'Immortalize Your Bars',
+        body: 'Freestyle inside the timing ring while prompts hit in sync with the instrumental.',
+        icon: Mic,
+        tone: 'red',
+        visual: 'record',
+      },
+      {
+        id: 'feature-list',
+        title: 'Practice Engine',
+        body: 'Everything stays focused on timing, language, beat sync, and progress.',
+        icon: CheckCircle2,
+        tone: 'green',
+        visual: 'features',
+        features: FEATURE_LIST,
+      },
+    ],
+    [beatCount]
+  )
 
   useEffect(() => {
     trackEvent('howitworks_view', {
@@ -37,6 +200,20 @@ export function HowItWorksContent({
       beat_count: beatCount,
     })
   }, [beatCount])
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (reduceMotion) return
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % slides.length)
+    }, 4500)
+
+    return () => window.clearInterval(timer)
+  }, [slides.length])
 
   const handleStartClick = () => {
     trackEvent('howitworks_cta_click', {
@@ -54,247 +231,117 @@ export function HowItWorksContent({
     router.push('/download')
   }
 
+  const moveSlide = (direction: -1 | 1) => {
+    setActiveIndex((current) => {
+      const next = current + direction
+      if (next < 0) return slides.length - 1
+      if (next >= slides.length) return 0
+      return next
+    })
+  }
+
   return (
-    <div className="space-y-12">
-      <Surface
-        tone="glass"
-        padding="lg"
-        className="grid gap-6 rounded-3xl lg:grid-cols-[1fr_1.05fr] lg:items-center"
-      >
-        <div className="text-left">
-          <StatusBadge tone="info">Live practice preview</StatusBadge>
-          <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-            Setup, stage, review. One focused loop.
-          </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary sm:text-base">
-            FreeStyla keeps the workflow tight: choose a beat, set the prompt
-            cadence, enter the orb stage, then review your take with saved
-            session context.
-          </p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            { label: 'Beat', value: `${beatCount}+`, tone: 'purple' },
-            { label: 'Language', value: 'EN / FR / PT', tone: 'cyan' },
-            { label: 'Review', value: 'Saved takes', tone: 'green' },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4 text-left shadow-surface-1"
-            >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-tertiary">
-                {item.label}
-              </p>
-              <p
-                className={`mt-3 text-xl font-semibold ${
-                  item.tone === 'cyan'
-                    ? 'text-accent-cyan'
-                    : item.tone === 'green'
-                      ? 'text-accent-green'
-                      : 'text-accent-purple'
-                }`}
+    <div className="flex flex-col items-center gap-4 pb-4 text-center sm:gap-6">
+      <div className="mx-auto max-w-xl">
+        <StatusBadge tone="info">4-step practice loop</StatusBadge>
+        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:mt-3 sm:text-3xl">
+          Swipe through the blueprint.
+        </h2>
+        <p className="mt-1 text-sm leading-relaxed text-text-secondary sm:mt-2 sm:text-base">
+          Pick a track, shape the session, enter the stage, then keep your
+          progress moving.
+        </p>
+      </div>
+
+      <div className="w-full">
+        <div className="mx-auto h-[420px] w-full max-w-[350px] overflow-hidden rounded-[2rem] border border-white/10 bg-surface-elevation-1/80 shadow-surface-2 ring-1 ring-white/5 sm:h-[560px]">
+          <div
+            className="flex h-full transition-transform duration-700 ease-out motion-reduce:transition-none"
+            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          >
+            {slides.map((slide) => (
+              <article
+                key={slide.id}
+                aria-hidden={slides[activeIndex].id !== slide.id}
+                className="flex h-full min-w-full flex-col justify-between overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(125,122,255,0.22),transparent_18rem)] p-6 text-left"
               >
-                {item.value}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Surface>
+                <div>
+                  <div className="flex items-center justify-between gap-3">
+                    <IconFrame
+                      icon={slide.icon}
+                      variant="feature"
+                      tone={slide.tone}
+                      decorative
+                    />
+                    {slide.step ? (
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-accent-purple/45 bg-accent-purple/10 text-sm font-black text-accent-purple">
+                        {slide.step}
+                      </span>
+                    ) : (
+                      <span className="rounded-full border border-accent-green/25 bg-accent-green/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-accent-green">
+                        Tools
+                      </span>
+                    )}
+                  </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {/* Step 1 */}
-        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
-          <IconFrame
-            icon={Music}
-            variant="feature"
-            tone="blue"
-            decorative
-            className="mb-6"
-          />
-          <div className="space-y-3">
-            <div className="flex items-start space-x-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
-                1
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold">
-                Secure Your Sound
-              </h2>
-            </div>
-            <p className="text-sm text-text-secondary">
-              Select from a curated library of hip-hop instrumentals. Each beat
-              is tagged with BPM and genre for the perfect vibe.
-            </p>
+                  <h3 className="mt-6 text-2xl font-black leading-tight tracking-tight text-white">
+                    {slide.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                    {slide.body}
+                  </p>
+                </div>
+
+                <SlideVisual slide={slide} beatCount={beatCount} />
+              </article>
+            ))}
           </div>
         </div>
 
-        {/* Step 2 */}
-        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
-          <IconFrame
-            icon={Target}
-            variant="feature"
-            tone="purple"
-            decorative
-            className="mb-6"
-          />
-          <div className="space-y-3">
-            <div className="flex items-start space-x-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
-                2
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold">
-                Architect Your Flow
-              </h2>
-            </div>
-            <p className="text-sm text-text-secondary">
-              Choose your difficulty, word frequency, and prompt language.
-              Freestyle in English, French, or Portuguese before you even enter
-              the session.
-            </p>
-          </div>
-        </div>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => moveSlide(-1)}
+            aria-label="Previous how it works slide"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple"
+          >
+            <ChevronLeft size={20} />
+          </button>
 
-        {/* Step 3 */}
-        <div className="rounded-2xl border border-white/10 bg-surface-elevation-1/70 p-6 shadow-surface-1 transition-colors duration-300 hover:border-accent-purple/35">
-          <IconFrame
-            icon={Mic}
-            variant="feature"
-            tone="purple"
-            decorative
-            className="mb-6"
-          />
-          <div className="space-y-3">
-            <div className="flex items-start space-x-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-accent-purple text-lg font-bold text-accent-purple">
-                3
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold">
-                Immortalize Your Bars
-              </h2>
-            </div>
-            <p className="text-sm text-text-secondary">
-              Hit play and start freestyling. Words appear in sync with the
-              beat. Your performance is tracked so you can review progress and,
-              on Pro, save the full take.
-            </p>
+          <div className="flex items-center gap-2" aria-label="Slide controls">
+            {slides.map((slide, index) => (
+              <button
+                key={slide.id}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Show slide ${index + 1}`}
+                aria-current={activeIndex === index ? 'step' : undefined}
+                className={cn(
+                  'h-3 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple',
+                  activeIndex === index
+                    ? 'w-8 bg-accent-purple'
+                    : 'w-3 bg-white/25 hover:bg-white/40'
+                )}
+              />
+            ))}
           </div>
+
+          <button
+            type="button"
+            onClick={() => moveSlide(1)}
+            aria-label="Next how it works slide"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-purple"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
 
-      {/* Features Grid */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-accent-gold/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
-          <div className="flex items-start space-x-4">
-            <IconFrame
-              icon={Languages}
-              variant="action"
-              tone="gold"
-              decorative
-              className="mt-1"
-            />
-            <div>
-              <h2 className="mb-2 text-lg font-semibold">
-                Language-first practice
-              </h2>
-              <p className="text-sm text-text-secondary">
-                Pick prompt language up front and train your flow in{' '}
-                <strong className="text-white">
-                  English, French, or Portuguese
-                </strong>
-                . On iPhone and iPad, prompts stay visual during practice so the
-                beat volume stays strong.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-accent-purple/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
-          <div className="flex items-start space-x-4">
-            <IconFrame
-              icon={Timer}
-              variant="action"
-              tone="purple"
-              decorative
-              className="mt-1"
-            />
-            <div>
-              <h2 className="mb-2 text-lg font-semibold">Precision timing</h2>
-              <p className="text-sm text-text-secondary">
-                Standard sessions run for 10 minutes, giving you enough room to
-                build momentum without losing focus.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-accent-purple/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
-          <div className="flex items-start space-x-4">
-            <IconFrame
-              icon={Sparkles}
-              variant="action"
-              tone="purple"
-              decorative
-              className="mt-1"
-            />
-            <div>
-              <h2 className="mb-2 text-lg font-semibold">
-                Freestyle practice engine with beats
-              </h2>
-              <p className="text-sm text-text-secondary">
-                Our Beat Vault adapts to your skill level, helping you learn{' '}
-                <strong className="text-white">how to improve rap flow</strong>{' '}
-                in real-time.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-accent-cyan/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
-          <div className="flex items-start space-x-4">
-            <IconFrame
-              icon={Zap}
-              variant="action"
-              tone="blue"
-              decorative
-              className="mt-1"
-            />
-            <div>
-              <h2 className="mb-2 text-lg font-semibold">
-                Beat synchronization
-              </h2>
-              <p className="text-sm text-text-secondary">
-                Words appear precisely timed to musical bars. Choose between 2,
-                4, 8, or 16 bar intervals.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-accent-green/20 bg-surface-elevation-1/70 p-6 shadow-surface-1">
-          <div className="flex items-start space-x-4">
-            <IconFrame
-              icon={Music}
-              variant="action"
-              tone="green"
-              decorative
-              className="mt-1"
-            />
-            <div>
-              <h2 className="mb-2 text-lg font-semibold">Session tracking</h2>
-              <p className="text-sm text-text-secondary">
-                Every run feeds your progress history. Pro users can also save,
-                replay, and download their recordings.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Button */}
-      <div className="flex justify-center pt-2 space-x-4">
+      <div className="hidden w-full max-w-md grid-cols-2 gap-3 sm:grid">
         <Button
           variant="primary"
           size="lg"
-          className="bg-primary px-10 py-4 text-lg text-primary-foreground shadow-purple-glow hover:scale-[1.02] hover:shadow-glow"
+          className="px-7 text-base"
           onClick={handleStartClick}
         >
           Start Practice
@@ -302,38 +349,12 @@ export function HowItWorksContent({
         <Button
           variant="outline"
           size="lg"
-          className="px-10 py-4 text-lg border-2 border-white/20 hover:bg-white/10 hover:border-white/40 transition-colors"
+          className="px-7 text-base"
           onClick={handleDownloadClick}
         >
           Get the App
         </Button>
       </div>
-
-      {/* Stats */}
-      <div className="flex items-center justify-center space-x-8 pt-4 text-center text-sm text-text-secondary">
-        <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
-            {beatCount}+
-          </div>
-          <div>Curated beats</div>
-        </div>
-        <div className="h-12 w-px bg-white/10" />
-        <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
-            1,000+
-          </div>
-          <div>Word vault across EN / FR / PT</div>
-        </div>
-        <div className="h-12 w-px bg-white/10" />
-        <div>
-          <div className="mb-1 text-2xl sm:text-3xl text-text-primary">
-            10 min
-          </div>
-          <div>Session time</div>
-        </div>
-      </div>
-
-      <QASection />
     </div>
   )
 }

@@ -9,7 +9,11 @@ test.beforeEach(async ({}, testInfo) => {
 
 test('mobile nav and primary routes are reachable', async ({ page }) => {
   await page.goto('/howitworks')
-  await expect(page.getByRole('link', { name: 'Beats' })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: 'Beats' })).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Record', exact: true })
+  ).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Profile' })).toBeVisible()
 
   await page.goto('/tracks')
   await expect(page.getByRole('link', { name: 'Beats' })).toBeVisible()

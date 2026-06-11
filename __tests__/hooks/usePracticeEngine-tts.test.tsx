@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Beat } from '@/types/database'
 import { usePracticeEngine } from '@/hooks/player/usePracticeEngine'
 import { trackReliabilityEvent } from '@/lib/telemetry/reliability'
@@ -106,6 +106,7 @@ const initialWords = [
 describe('usePracticeEngine TTS timing', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     mocks.beatPlayer.isPlaying = false
     mocks.recorder.isRecording = false
     mocks.recorder.duration = 0
@@ -113,6 +114,10 @@ describe('usePracticeEngine TTS timing', () => {
     global.fetch = vi.fn(async () => {
       throw new Error('word top-up unavailable')
     }) as typeof fetch
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('warms TTS during start, waits through countdown, then speaks the displayed prompt once', async () => {
@@ -170,6 +175,66 @@ describe('usePracticeEngine TTS timing', () => {
     expect(result.current.status).toBe('PAUSED')
     expect(mocks.tts.cancel).toHaveBeenCalled()
     expect(mocks.tts.speak).toHaveBeenCalledTimes(1)
+  })
+
+  it('logs text-only telemetry when iOS disables spoken prompts', async () => {
+    mocks.session.selectedLanguage = 'pt-PT'
+    const { result } = renderHook(() =>
+      usePracticeEngine({
+        initialBeats,
+        initialWords,
+        frequency: 4,
+        difficulty: 2,
+        submitSession: vi.fn(async () => undefined),
+        disableSpokenTTS: true,
+        sessionDurationSeconds: 1,
+      })
+    )
+
+    await act(async () => {
+      await result.current.startSession()
+    })
+
+    expect(mocks.tts.warmup).not.toHaveBeenCalled()
+    expect(trackReliabilityEvent).toHaveBeenCalledWith(
+      'practice_tts_text_only_mode',
+      {
+        language: 'pt-PT',
+        reason: 'ios_ducking_protection',
+      }
+    )
+  })
+
+  it('allows iOS voice beta sessions to warm and speak prompts', async () => {
+    const { result } = renderHook(() =>
+      usePracticeEngine({
+        initialBeats,
+        initialWords,
+        frequency: 4,
+        difficulty: 2,
+        submitSession: vi.fn(async () => undefined),
+        disableSpokenTTS: false,
+        sessionDurationSeconds: 1,
+      })
+    )
+
+    await act(async () => {
+      await result.current.startSession()
+    })
+
+    expect(mocks.tts.warmup).toHaveBeenCalledTimes(1)
+    expect(trackReliabilityEvent).not.toHaveBeenCalledWith(
+      'practice_tts_text_only_mode',
+      expect.anything()
+    )
+
+    await act(async () => {
+      await result.current.completeCountdown()
+    })
+
+    expect(result.current.status).toBe('PLAYING')
+    expect(mocks.tts.speak).toHaveBeenCalledTimes(1)
+    expect(mocks.tts.speak).toHaveBeenCalledWith(result.current.currentWord)
   })
 
   it('logs sanitized queue top-up and fallback telemetry when prompt pools are exhausted', async () => {

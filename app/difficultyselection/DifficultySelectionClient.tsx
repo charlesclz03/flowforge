@@ -21,12 +21,12 @@ import {
   Gauge,
   Languages,
   Mic,
+  MicOff,
   Radio,
   Settings2,
   User,
   Users,
 } from 'lucide-react'
-import { Switch } from '@/components/atoms/Switch'
 import { cn } from '@/lib/utils'
 import { PremiumModal } from '@/components/molecules/monetization/PremiumModal'
 import { useSession } from 'next-auth/react'
@@ -398,18 +398,31 @@ export function DifficultySelectionClient({
                       : 'Run prompts without saving microphone audio.'}
                   </p>
                 </div>
-                <Switch
-                  checked={isRecordingEnabled}
-                  onCheckedChange={(checked) => {
+                <button
+                  type="button"
+                  aria-label="Toggle recording mode"
+                  aria-pressed={isRecordingEnabled}
+                  onClick={() => {
+                    const nextRecordingState = !isRecordingEnabled
                     trackEvent('recording_mode_toggle', {
-                      enabled: checked,
+                      enabled: nextRecordingState,
                       surface: 'difficultyselection',
                     })
-                    setIsRecordingEnabled(checked)
+                    setIsRecordingEnabled(nextRecordingState)
                   }}
-                  ariaLabel="Toggle recording mode"
-                  className="data-[state=checked]:bg-accent-red"
-                />
+                  className={cn(
+                    'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red active:scale-95',
+                    isRecordingEnabled
+                      ? 'border-white/10 bg-white/[0.06] text-white shadow-[0_1px_0_rgba(255,255,255,0.05)_inset]'
+                      : 'border-accent-red/25 bg-accent-red/15 text-accent-red shadow-red-glow'
+                  )}
+                >
+                  {isRecordingEnabled ? (
+                    <Mic size={25} strokeWidth={2.5} />
+                  ) : (
+                    <MicOff size={25} strokeWidth={2.5} />
+                  )}
+                </button>
               </div>
             </div>
           </div>

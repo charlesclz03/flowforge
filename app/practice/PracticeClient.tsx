@@ -20,6 +20,7 @@ import { isProUser } from '@/lib/subscription/isPro'
 import { TTSLanguageCode } from '@/lib/tts/languages'
 import {
   IOS_SPOKEN_PROMPT_NOTICE,
+  IOS_VOICE_BETA_NOTICE,
   getEffectiveTTSEnabled,
 } from '@/lib/tts/platform'
 import { trackEvent } from '@/lib/analytics/track'
@@ -132,6 +133,7 @@ export default function PracticeClient({
     isRecordingEnabled,
     setIsRecordingEnabled,
     isTTSEnabled,
+    isIOSVoicePromptBetaEnabled,
   } = usePracticeSession()
 
   // 2. Local UI State
@@ -174,7 +176,12 @@ export default function PracticeClient({
     null
   )
 
-  const effectiveTTSEnabled = getEffectiveTTSEnabled(isTTSEnabled, isIOS)
+  const effectiveTTSEnabled = getEffectiveTTSEnabled(
+    isTTSEnabled,
+    isIOS,
+    isIOSVoicePromptBetaEnabled
+  )
+  const disableSpokenTTS = isIOS && !isIOSVoicePromptBetaEnabled
 
   // 3. Setup Optimistic Saver
   const { mutate: saveSessionOptimistic } = useOptimisticAction(
@@ -380,7 +387,7 @@ export default function PracticeClient({
     isRecordingEnabled,
     shouldSaveSessions: Boolean(session?.user?.id),
     sessionDurationSeconds: sessionDurationLimit,
-    disableSpokenTTS: isIOS,
+    disableSpokenTTS,
   })
 
   // 5. Visual Effects & Glue Logic
@@ -700,7 +707,18 @@ export default function PracticeClient({
                 onRetrySave={engine.retrySave} // [NEW] Bind retry save
                 isTTSEnabled={effectiveTTSEnabled}
                 voiceStatus={engine.voiceStatus}
-                spokenPromptNotice={isIOS ? IOS_SPOKEN_PROMPT_NOTICE : null}
+                spokenPromptNoticeTitle={
+                  isIOS && isIOSVoicePromptBetaEnabled
+                    ? 'iPhone Voice Beta'
+                    : undefined
+                }
+                spokenPromptNotice={
+                  isIOS
+                    ? isIOSVoicePromptBetaEnabled
+                      ? IOS_VOICE_BETA_NOTICE
+                      : IOS_SPOKEN_PROMPT_NOTICE
+                    : null
+                }
               />
             ) : (
               <div className="flex flex-col items-center justify-center space-y-4 py-8">

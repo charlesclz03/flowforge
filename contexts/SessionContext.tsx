@@ -33,6 +33,7 @@ export interface PracticeSessionState {
   cypherPlayers: number
   isRecordingEnabled: boolean
   isStudioFXEnabled: boolean
+  isIOSVoicePromptBetaEnabled: boolean
   beatVolume: number
   selectedLanguage: TTSLanguageCode
   // Navigation Guard State
@@ -50,6 +51,7 @@ interface PracticeSessionContextValue extends PracticeSessionState {
   setCypherPlayers: (count: number) => void
   setIsRecordingEnabled: (enabled: boolean) => void
   setStudioFXEnabled: (enabled: boolean) => void
+  setIOSVoicePromptBetaEnabled: (enabled: boolean) => void
   setBeatVolume: (volume: number) => void
   setSelectedLanguage: (language: TTSLanguageCode) => void
   testVoice: () => void
@@ -81,6 +83,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
     cypherPlayers: 2,
     isRecordingEnabled: false,
     isStudioFXEnabled: true,
+    isIOSVoicePromptBetaEnabled: false,
     beatVolume: 0.7,
     selectedLanguage: DEFAULT_TTS_LANGUAGE,
     showExitPrompt: false,
@@ -128,6 +131,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       cypherPlayers,
       isRecordingEnabled,
       isStudioFXEnabled,
+      isIOSVoicePromptBetaEnabled,
       beatVolume,
       selectedLanguage,
     } = state
@@ -141,6 +145,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
       cypherPlayers,
       isRecordingEnabled,
       isStudioFXEnabled,
+      isIOSVoicePromptBetaEnabled,
       beatVolume,
       selectedLanguage,
     }
@@ -181,6 +186,10 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
 
   const setStudioFXEnabled = useCallback((enabled: boolean) => {
     setState((prev) => ({ ...prev, isStudioFXEnabled: enabled }))
+  }, [])
+
+  const setIOSVoicePromptBetaEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, isIOSVoicePromptBetaEnabled: enabled }))
   }, [])
 
   const setBeatVolume = useCallback((volume: number) => {
@@ -321,6 +330,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
         setCypherPlayers,
         setIsRecordingEnabled,
         setStudioFXEnabled,
+        setIOSVoicePromptBetaEnabled,
         setBeatVolume,
         setSelectedLanguage,
         testVoice: useCallback(() => {
@@ -330,11 +340,7 @@ export function PracticeSessionProvider({ children }: { children: ReactNode }) {
             const hasMatch = hasVoiceForLanguage(voices, state.selectedLanguage)
             const bestVoice = getBestVoice(voices, state.selectedLanguage)
             const voiceStatus: TTSVoiceStatus =
-              voices.length === 0
-                ? 'fallback'
-                : hasMatch
-                  ? 'ready'
-                  : 'fallback'
+              voices.length === 0 ? 'fallback' : hasMatch ? 'ready' : 'fallback'
 
             const languageOption = getLanguageOption(state.selectedLanguage)
             const u = new SpeechSynthesisUtterance(languageOption.testPhrase)

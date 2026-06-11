@@ -52,6 +52,10 @@ DOCS_TEXT/
 
 # Agent scratch (do not commit)
 /brain/
+/.agent/
+/artifacts/
+/loops/
+*.resolved
 
 .vercel
 .env.debug 

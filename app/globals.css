@@ -169,6 +169,8 @@
 
   .practice-orb-frame {
     --practice-orb-size: clamp(12.25rem, min(54vmin, 44dvh), 19rem);
+    --practice-pulse-ring-inner-extra: 1.25rem;
+    --practice-pulse-ring-outer-extra: 2.75rem;
     width: var(--practice-orb-size);
     height: var(--practice-orb-size);
   }
@@ -233,22 +235,28 @@
   @media (max-width: 390px), (max-height: 700px) {
     .practice-orb-frame {
       --practice-orb-size: clamp(9.25rem, min(40vmin, 28dvh), 10.75rem);
+      --practice-pulse-ring-inner-extra: 0.75rem;
+      --practice-pulse-ring-outer-extra: 1.25rem;
     }
 
     .practice-stage-rails {
-      grid-template-columns: 3.35rem minmax(0, 1fr) 3.35rem;
-      gap: 0.4rem;
-      padding-left: 0;
-      padding-right: 0;
+      grid-template-columns: minmax(3.75rem, 1fr) auto minmax(3.75rem, 1fr);
+      gap: 0.75rem;
+      justify-items: stretch;
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
     }
 
     .practice-satellite-slot {
-      width: 3.35rem;
+      width: auto;
+      min-width: 0;
     }
 
     .practice-satellite-button {
-      width: 2.65rem;
-      height: 2.65rem;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      width: 2.75rem;
+      height: 2.75rem;
     }
 
     .practice-top-controls {
@@ -351,16 +359,22 @@
       gap: 0.375rem;
     }
 
+    .app-header-zone a,
+    .app-header-zone button {
+      min-width: 2.8125rem;
+      min-height: 2.8125rem;
+    }
+
     .app-header-title-link {
       min-height: 2.875rem;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
     }
 
     .app-header-grid {
-      grid-template-columns: minmax(5.5rem, 0.86fr) minmax(0, 1.08fr) minmax(
-          5.5rem,
-          0.86fr
+      grid-template-columns: minmax(5.75rem, 0.92fr) minmax(0, 1.16fr) minmax(
+          5.75rem,
+          0.92fr
         );
     }
 
@@ -376,8 +390,8 @@
     }
 
     .app-header-tier-cta {
-      min-width: 2.75rem;
-      min-height: 2.55rem;
+      min-width: 2.8125rem;
+      min-height: 2.8125rem;
       padding-left: 0.62rem;
       padding-right: 0.62rem;
       gap: 0;

@@ -16,16 +16,25 @@ Refreshed the Practice/Header surface to a 2026 pro-grade baseline while preserv
 - **Cypher Ring and Tinting**: Cypher mode now renders visible 2/3/4-player ring segments, preserves P1 purple, P2 orange, P3 gold, and P4 green, and applies the active player color to the ring, visualizer, and inner glow.
 - **Practice Timer Weight**: Increased the word timer progress ring weight for clearer performance feedback while preserving red/blue siren override behavior.
 - **Breathable AppHeader**: Small iPhone headers now have more vertical room and cleaner title/subtitle spacing while keeping the three-column header grid and existing controls.
+- **iPhone Header Comfort**: Compact AppHeader controls now preserve 44px touch targets on small iPhone profiles, including the icon-only tier CTA.
+- **iPhone Voice Beta**: iPhone and iPad stay text-only by default, with an explicit local beta switch for users who want to try spoken prompts while accepting possible beat-volume ducking.
+- **Practice Side-Control Alignment**: Reset and pause now flank the centered Practice ring on compact phones instead of riding over the timer circle.
+- **Blueprint Navigation and Beat Count**: `/howitworks` now keeps the shared bottom dock visible on arrival and reports the same public track inventory used by `/tracks`, excluding private uploads.
 
 ### Visual Overhaul
 
 - **2026 Pro-Grade Surface Polish**: Shared `Button`, `Surface`, `Card`, `IconFrame`, `StatusBadge`, `Modal`, `SegmentedControl`, and app ambient styling now use calmer dark-mode elevation, tactile inset highlights, and more consistent premium studio-tool depth.
+- **Blueprint Carousel**: `/howitworks` now presents the onboarding flow as a rotating four-panel portrait slider covering setup, flow tuning, recording, and the feature list.
+- **Recording Button Refresh**: Skill Check recording mode now uses a touch-safe mic button with white capture and red muted states instead of the previous slider.
 
 ### System Updates
 
 - **UI Trend Research**: Added the 2026 FreeStyla UI trends fit matrix under `DOCS/research/` using current Figma, OpenAI, and design-trend sources.
 - **Visual Guardrails**: Added Playwright coverage for small-iPhone Practice orb geometry, countdown/playing/paused screenshots, cypher 2/3/4-player ring segments, active-player tint propagation, AppHeader touch safety, and the real playing-state `BALANCE` cypher overlap case.
 - **Ring and Word-Fit Guardrails**: Expanded the small iPhone WebKit cypher guardrail to assert full one-line rendering for `BALANCE`, `RESPONSIBILITY`, and `TRANSFORMATION`, plus outer timer/inner cypher ring position and stroke-width expectations.
+- **Mobile TTS Guardrails**: Added opt-in iOS spoken-prompt beta coverage, text-only telemetry coverage, clearer Practice notices, and stricter 44px AppHeader visual assertions.
+- **Practice Ring Center Guardrail**: Small-iPhone WebKit coverage now asserts the timer ring stays centered in the viewport and reset/pause controls do not overlap it.
+- **Blueprint Regression Coverage**: Added focused checks for `/howitworks` public beat counts, mobile dock visibility, and the new recording-mode button contract.
 
 ---
 

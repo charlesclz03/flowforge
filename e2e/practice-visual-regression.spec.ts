@@ -184,6 +184,22 @@ async function expectConcentric(outer: Locator, inner: Locator, tolerance = 4) {
   expect(Math.abs(outerCenter.y - innerCenter.y)).toBeLessThanOrEqual(tolerance)
 }
 
+async function expectCenteredInViewport(
+  page: Page,
+  locator: Locator,
+  tolerance = 3
+) {
+  const box = await locator.boundingBox()
+  const viewport = page.viewportSize()
+  expect(box).not.toBeNull()
+  expect(viewport).not.toBeNull()
+
+  const centerX = (box?.x ?? 0) + (box?.width ?? 0) / 2
+  expect(Math.abs(centerX - (viewport?.width ?? 0) / 2)).toBeLessThanOrEqual(
+    tolerance
+  )
+}
+
 async function expectNoVerticalOverlap(upper: Locator, lower: Locator) {
   const upperBox = await upper.boundingBox()
   const lowerBox = await lower.boundingBox()
@@ -365,7 +381,10 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
   test('solo countdown, playing, paused, and siren states stay non-overlapping', async ({
     page,
   }) => {
-    await loadPractice(page)
+    await mockPlayableAudio(page)
+    await loadPractice(page, {
+      selectedBeat: LOCAL_TEST_BEAT,
+    })
     await startPractice(page)
     await page.screenshot({
       path: 'artifacts/practice-solo-countdown-iphone-se.png',
@@ -374,20 +393,31 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
     const header = page.locator('header')
     const topControls = page.locator('.practice-top-controls')
     const orb = page.locator('#tour-record-btn')
+    const timerRing = page.getByTestId('practice-timer-ring')
     const recordControl = page.locator('.practice-record-area')
 
     await expectNoVerticalOverlap(header, topControls)
     await expectNoVerticalOverlap(topControls, orb)
     await expectNoVerticalOverlap(orb, recordControl)
+    await expectCenteredInViewport(page, timerRing)
 
     await page.waitForTimeout(3600)
     await page.screenshot({
       path: 'artifacts/practice-solo-playing-iphone-se.png',
     })
+    const restartButton = page.getByRole('button', {
+      name: /restart session/i,
+    })
+    const pauseButton = page.getByRole('button', { name: /pause session/i })
+
+    await expect(restartButton).toBeVisible({ timeout: 10_000 })
+    await expect(pauseButton).toBeVisible({ timeout: 10_000 })
     await expectNoVerticalOverlap(topControls, orb)
     await expectNoVerticalOverlap(orb, recordControl)
+    await expectCenteredInViewport(page, timerRing)
+    await expectNoBoxOverlap(restartButton, timerRing)
+    await expectNoBoxOverlap(pauseButton, timerRing)
 
-    const pauseButton = page.getByRole('button', { name: /pause session/i })
     if (await pauseButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await pauseButton.evaluate((button) => {
         ;(button as HTMLButtonElement).click()
@@ -515,6 +545,7 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
 
     await expectConcentric(orb, timerRing)
     await expectConcentric(orb, cypherRing)
+    await expectCenteredInViewport(page, timerRing)
     await expectSizeRatio(orb, timerRing, 0.98, 1.08)
     await expectSizeRatio(orb, cypherRing, 0.66, 0.82)
 
@@ -531,6 +562,8 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
 
     await expectNoBoxOverlap(restartButton, orb)
     await expectNoBoxOverlap(pauseButton, orb)
+    await expectNoBoxOverlap(restartButton, timerRing)
+    await expectNoBoxOverlap(pauseButton, timerRing)
     await expectNoVerticalOverlap(orb, recordControl)
     await expectNoVerticalOverlap(recordControl, bottomNav)
 
@@ -573,8 +606,8 @@ test.describe('Practice 2026 pro-grade visual guardrails', () => {
       for (let index = 0; index < count; index += 1) {
         const controlBox = await controls.nth(index).boundingBox()
         if (!controlBox) continue
-        expect(controlBox.height).toBeGreaterThanOrEqual(40)
-        expect(controlBox.y).toBeGreaterThanOrEqual((box?.y ?? 0) - 2)
+        expect(controlBox.height).toBeGreaterThanOrEqual(44)
+        expect(controlBox.y).toBeGreaterThanOrEqual((box?.y ?? 0) - 3)
         expect(controlBox.y + controlBox.height).toBeLessThanOrEqual(
           (box?.y ?? 0) + (box?.height ?? 0) + 1
         )

@@ -7,7 +7,10 @@ import {
 describe('tts platform helper', () => {
   it('disables spoken prompts on iOS devices', () => {
     expect(getEffectiveTTSEnabled(true, true)).toBe(false)
+    expect(getEffectiveTTSEnabled(true, true, false)).toBe(false)
+    expect(getEffectiveTTSEnabled(true, true, true)).toBe(true)
     expect(getEffectiveTTSEnabled(false, true)).toBe(false)
+    expect(getEffectiveTTSEnabled(false, true, true)).toBe(false)
     expect(getEffectiveTTSEnabled(true, false)).toBe(true)
   })
 

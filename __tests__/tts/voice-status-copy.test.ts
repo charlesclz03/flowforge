@@ -23,6 +23,21 @@ describe('voice status copy', () => {
     })
   })
 
+  it('supports explicit titles for iOS spoken prompt beta notices', () => {
+    const notice = getVoiceStatusNotice({
+      spokenPromptNoticeTitle: 'iPhone Voice Beta',
+      spokenPromptNotice:
+        'Spoken prompts are enabled experimentally on this device.',
+      voiceStatus: 'ready',
+    })
+
+    expect(notice).toEqual({
+      tone: 'info',
+      title: 'iPhone Voice Beta',
+      message: 'Spoken prompts are enabled experimentally on this device.',
+    })
+  })
+
   it('explains loading, unsupported, and fallback voice states', () => {
     expect(getVoiceStatusNotice({ voiceStatus: 'loading' })).toMatchObject({
       tone: 'info',
