@@ -639,6 +639,384 @@ export const PROGRAMMATIC_PAGES: ProgrammaticPage[] = [
     ],
     updated: '2026-06-29',
   },
+  {
+    slug: 'comment-organiser-un-cypher-rap',
+    lang: 'fr',
+    cluster: 'cypher',
+    category: 'cypher',
+    title: 'Comment organiser un cypher rap (règles pour passer le téléphone)',
+    h1: 'Comment organiser un cypher rap',
+    description:
+      'Tout pour lancer un cypher rap entre potes : ordre de passage, durée des tours, comment garder l’énergie. Essaie le mode cypher gratuit, 2 à 4 joueurs.',
+    keywords: [
+      'cypher rap',
+      'organiser un cypher',
+      'règles cypher freestyle',
+      'freestyle à plusieurs',
+    ],
+    intro:
+      'Le cypher, c’est là que le freestyle devient fun — et là que tu progresses le plus vite, parce qu’il y a la pression et un public. Voici comment en lancer un, même avec un seul téléphone.',
+    sections: [
+      {
+        heading: 'Fixe l’ordre de passage',
+        body: 'Décide qui passe et combien de mesures chacun. Quatre ou huit mesures, c’est la norme. Garde des tours courts pour que l’énergie reste haute et que personne ne réfléchisse trop.',
+      },
+      {
+        heading: 'Fais tourner le téléphone, garde le beat',
+        body: 'Avec un seul téléphone, un appareil lance le beat et le minuteur pendant que les joueurs tournent. L’anneau du minuteur montre à qui c’est le tour, pour des passages de relais nets.',
+      },
+      {
+        heading: 'Rebondis sur les autres',
+        body: 'Les meilleurs cyphers rebondissent sur les mesures du précédent : attrape un mot qu’il a lâché et retourne-le. Écouter, c’est la moitié du cypher.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Combien faut-il de personnes pour un cypher ?',
+        answer:
+          'Deux suffisent ; trois ou quatre, l’énergie roule mieux. Le mode cypher gère jusqu’à quatre joueurs sur un seul téléphone.',
+      },
+      {
+        question: 'Combien de temps doit durer un tour ?',
+        answer:
+          'Quatre à huit mesures. Des tours courts gardent le momentum et donnent plus de passages à tout le monde.',
+      },
+      {
+        question: 'Je peux m’entraîner au cypher tout seul ?',
+        answer:
+          'Fais d’abord des exercices en solo, puis amène-les au cypher. Les compétences se transfèrent ; c’est la pression qui est la partie nouvelle.',
+      },
+    ],
+    related: [
+      'exercices-de-freestyle-rap',
+      'pratique-du-freestyle-rap-pour-debutants',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'como-fazer-um-cypher-de-rap',
+    lang: 'pt',
+    cluster: 'cypher',
+    category: 'cypher',
+    title: 'Como fazer um cypher de rap (regras de passar o celular)',
+    h1: 'Como fazer um cypher de rap',
+    description:
+      'Tudo pra montar um cypher de rap com os amigos: ordem de quem solta, duração dos turnos e como manter a energia. Testa o modo cypher grátis, 2 a 4 jogadores.',
+    keywords: [
+      'cypher de rap',
+      'como fazer cypher',
+      'regras de cypher freestyle',
+      'freestyle em grupo',
+    ],
+    intro:
+      'O cypher é onde o freestyle fica divertido — e onde tu evolui mais rápido, porque tem pressão e plateia. Veja como montar um, mesmo com um celular só.',
+    sections: [
+      {
+        heading: 'Define a ordem',
+        body: 'Decide quem solta e quantos compassos cada um pega. Quatro ou oito compassos é o padrão. Deixa os turnos curtos pra energia ficar alta e ninguém pensar demais.',
+      },
+      {
+        heading: 'Passa o celular, mantém o beat',
+        body: 'Com um celular só, um aparelho toca o beat e o timer enquanto o pessoal roda. O anel do timer mostra de quem é a vez, pra passagem ficar limpa.',
+      },
+      {
+        heading: 'Aproveita o que o outro soltou',
+        body: 'Os melhores cyphers pegam carona no verso anterior: rouba uma palavra que o cara usou e vira ela do avesso. Ouvir é metade do cypher.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Quantas pessoas precisam pra um cypher?',
+        answer:
+          'Duas já dá; três ou quatro deixa a energia rolando. O modo cypher aguenta até quatro jogadores num celular só.',
+      },
+      {
+        question: 'Quanto tempo deve durar cada turno?',
+        answer:
+          'Quatro a oito compassos. Turnos curtos mantêm o ritmo e dão mais rodadas pra todo mundo.',
+      },
+      {
+        question: 'Dá pra treinar cypher sozinho?',
+        answer:
+          'Faz os exercícios solo primeiro, depois leva pro cypher. As habilidades passam junto; a parte nova é a pressão.',
+      },
+    ],
+    related: [
+      'exercicios-de-freestyle',
+      'pratica-de-freestyle-para-iniciantes',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'meilleur-bpm-pour-freestyler',
+    lang: 'fr',
+    cluster: 'bpm',
+    category: 'beats',
+    title: 'Le meilleur BPM pour s’entraîner au freestyle (et pourquoi)',
+    h1: 'Le meilleur BPM pour s’entraîner au freestyle',
+    description:
+      'Sur quel tempo freestyler ? Un guide pratique du BPM pour débutants et au-delà : quand ralentir, quand accélérer, et comment utiliser les beats pour progresser.',
+    keywords: [
+      'meilleur bpm freestyle',
+      'tempo beat freestyle',
+      'bpm entraînement rap',
+      'quel bpm pour rapper',
+    ],
+    intro:
+      'Le tempo change tout dans le ressenti d’un freestyle. Mauvais BPM, et tu vas soit te précipiter, soit traîner. Voici comment choisir un tempo adapté à ton niveau.',
+    sections: [
+      {
+        heading: 'Commence à 80–90 BPM',
+        body: 'Les tempos lents laissent à ton cerveau le temps de trouver les mots et de rester en rythme. La plupart du boom-bap est là, d’où son statut de terrain d’entraînement classique.',
+      },
+      {
+        heading: 'Accélère pour tester ton flow',
+        body: 'Quand 85 BPM devient facile, passe à 100–120 BPM pour mettre ton timing sous pression. Les tempos trap et drill forcent des mesures plus serrées et plus économes.',
+      },
+      {
+        heading: 'Cale le BPM sur la compétence travaillée',
+        body: 'Tu bosses le storytelling ? Reste lent. La vitesse et la gestion du souffle ? Accélère. Repère tes beats par BPM pour t’entraîner exprès.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Quel BPM pour débuter ?',
+        answer:
+          '80 à 90 BPM. Assez lent pour penser et rester en rythme pendant que tu prends l’habitude.',
+      },
+      {
+        question: 'Plus rapide, c’est plus dur ?',
+        answer:
+          'En général oui. Les tempos rapides laissent moins de marge pour te rattraper, donc ils révèlent les soucis de timing et de souffle. Parfait pour te tester.',
+      },
+      {
+        question: 'Comment connaître le BPM d’un beat ?',
+        answer:
+          'Beaucoup de beats d’entraînement sont taggés en BPM. Dans la banque de beats, chaque titre affiche son tempo pour choisir exprès.',
+      },
+    ],
+    related: [
+      'comment-freestyler-en-rythme',
+      'exercices-de-freestyle-rap',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'melhor-bpm-para-treinar-freestyle',
+    lang: 'pt',
+    cluster: 'bpm',
+    category: 'beats',
+    title: 'O melhor BPM pra treinar freestyle (e por quê)',
+    h1: 'O melhor BPM pra treinar freestyle',
+    description:
+      'Em que tempo improvisar? Um guia prático de BPM pra iniciante e além: quando ir devagar, quando acelerar e como usar os beats pra evoluir. Grátis.',
+    keywords: [
+      'melhor bpm freestyle',
+      'tempo de beat freestyle',
+      'bpm treino de rap',
+      'qual bpm pra rimar',
+    ],
+    intro:
+      'O tempo muda tudo na sensação de um freestyle. BPM errado e tu vai correr ou arrastar. Veja como escolher um tempo que combina com teu nível.',
+    sections: [
+      {
+        heading: 'Começa em 80–90 BPM',
+        body: 'Tempos mais lentos dão ao cérebro tempo de achar as palavras e ficar no beat. A maior parte do boom-bap fica aqui — por isso é o campo de treino clássico.',
+      },
+      {
+        heading: 'Acelera pra testar teu flow',
+        body: 'Quando 85 BPM ficar fácil, pula pra 100–120 BPM pra pressionar teu timing. Os tempos de trap e drill forçam versos mais curtos e econômicos.',
+      },
+      {
+        heading: 'Encaixa o BPM na habilidade que tu treina',
+        body: 'Tá treinando narrativa? Fica devagar. Velocidade e fôlego? Vai mais rápido. Marca teus beats por BPM pra treinar de propósito.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Qual BPM é melhor pra iniciante?',
+        answer:
+          '80 a 90 BPM. Lento o bastante pra pensar e ficar no beat enquanto tu cria o hábito.',
+      },
+      {
+        question: 'Mais rápido é mais difícil?',
+        answer:
+          'Normalmente sim. Tempo rápido deixa menos espaço pra se recuperar, então expõe problema de timing e de fôlego. Ótimo pra testar.',
+      },
+      {
+        question: 'Como saber o BPM de um beat?',
+        answer:
+          'Muito beat de treino vem com o BPM marcado. Na coleção de beats, cada faixa mostra o tempo pra tu escolher de propósito.',
+      },
+    ],
+    related: [
+      'como-improvisar-no-ritmo',
+      'exercicios-de-freestyle',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'freestyle-rap-warm-up-routine',
+    lang: 'en',
+    cluster: 'warmup',
+    category: 'technique',
+    title: 'A 5-Minute Freestyle Rap Warm-Up Routine',
+    h1: 'A freestyle rap warm-up routine',
+    description:
+      'Warm up before you freestyle: loosen your mouth, prime word association, and lock the beat in five minutes so your first bars don’t feel stiff. Practice free.',
+    keywords: [
+      'freestyle warm up',
+      'rap warm up routine',
+      'freestyle exercises before rapping',
+      'loosen up freestyle',
+    ],
+    intro:
+      'Nobody’s first freestyle of the day is their best. A short warm-up gets your mouth, timing, and word reflex online so you skip the stiff opening and start in the pocket.',
+    sections: [
+      {
+        heading: 'Loosen your mouth and breath',
+        body: 'Thirty seconds of tongue twisters and a few deep breaths wake up your articulation. Rappers slur when they’re cold; warming the mouth makes fast bars land clean.',
+      },
+      {
+        heading: 'Prime word association',
+        body: 'Say a random word and free-associate out loud for a minute — no beat, no rhyme, just a chain of words. This switches on the reflex that stops you blanking mid-bar.',
+      },
+      {
+        heading: 'Lock the beat before you rhyme',
+        body: 'Put on an easy 80–90 BPM beat and just count bars and talk on rhythm for two minutes. Get on beat first; add rhymes once your timing is warm.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'How long should I warm up?',
+        answer:
+          'Five minutes is plenty. The goal is to shed the cold-start stiffness, not to tire yourself out before the real session.',
+      },
+      {
+        question: 'Do I need a beat to warm up?',
+        answer:
+          'Not for the mouth and word-association parts. Add a beat for the last step so you walk into your session already on rhythm.',
+      },
+      {
+        question: 'What’s the fastest way to stop feeling stiff?',
+        answer:
+          'Tongue twisters plus a minute of out-loud word association. Mouth and reflex are what feel rusty first thing.',
+      },
+    ],
+    related: [
+      'freestyle-rap-exercises-and-drills',
+      'freestyle-rap-practice-for-beginners',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'routine-d-echauffement-freestyle',
+    lang: 'fr',
+    cluster: 'warmup',
+    category: 'technique',
+    title: 'Une routine d’échauffement freestyle en 5 minutes',
+    h1: 'Une routine d’échauffement freestyle',
+    description:
+      'Échauffe-toi avant de freestyler : délie ta bouche, amorce l’association de mots et cale le beat en cinq minutes pour que tes premières mesures ne soient pas raides.',
+    keywords: [
+      'échauffement freestyle',
+      'routine avant de rapper',
+      'exercices avant freestyle',
+      'se délier freestyle',
+    ],
+    intro:
+      'Le premier freestyle de la journée n’est jamais le meilleur. Un court échauffement met ta bouche, ton timing et ton réflexe de mots en route, pour éviter le départ raide et commencer direct dans le pocket.',
+    sections: [
+      {
+        heading: 'Délie ta bouche et ton souffle',
+        body: 'Trente secondes de virelangues et quelques respirations profondes réveillent ton articulation. À froid, on bafouille ; échauffer la bouche rend les mesures rapides plus nettes.',
+      },
+      {
+        heading: 'Amorce l’association de mots',
+        body: 'Dis un mot au hasard et enchaîne à voix haute pendant une minute — sans beat, sans rime, juste une chaîne de mots. Ça allume le réflexe qui t’empêche de bloquer en pleine mesure.',
+      },
+      {
+        heading: 'Cale le beat avant de rimer',
+        body: 'Mets un beat facile à 80–90 BPM et contente-toi de compter les mesures et parler en rythme deux minutes. Cale-toi d’abord ; ajoute les rimes quand ton timing est chaud.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Combien de temps s’échauffer ?',
+        answer:
+          'Cinq minutes suffisent. Le but, c’est d’enlever la raideur du départ à froid, pas de te fatiguer avant la vraie session.',
+      },
+      {
+        question: 'Faut-il un beat pour s’échauffer ?',
+        answer:
+          'Pas pour la bouche et l’association de mots. Ajoute un beat à la dernière étape pour entrer dans ta session déjà en rythme.',
+      },
+      {
+        question: 'Le moyen le plus rapide de ne plus être raide ?',
+        answer:
+          'Virelangues plus une minute d’association de mots à voix haute. C’est la bouche et le réflexe qui rouillent en premier.',
+      },
+    ],
+    related: [
+      'exercices-de-freestyle-rap',
+      'pratique-du-freestyle-rap-pour-debutants',
+    ],
+    updated: '2026-07-01',
+  },
+  {
+    slug: 'aquecimento-vocal-para-freestyle',
+    lang: 'pt',
+    cluster: 'warmup',
+    category: 'technique',
+    title: 'Uma rotina de aquecimento pra freestyle em 5 minutos',
+    h1: 'Uma rotina de aquecimento pra freestyle',
+    description:
+      'Aquece antes de improvisar: solta a boca, ativa a associação de palavras e encaixa o beat em cinco minutos pra teus primeiros versos não saírem travados. Grátis.',
+    keywords: [
+      'aquecimento freestyle',
+      'rotina antes de rimar',
+      'exercícios antes do freestyle',
+      'soltar a boca freestyle',
+    ],
+    intro:
+      'O primeiro freestyle do dia nunca é o melhor. Um aquecimento curto coloca tua boca, teu timing e teu reflexo de palavra pra funcionar, pra tu pular a largada travada e já começar no compasso.',
+    sections: [
+      {
+        heading: 'Solta a boca e a respiração',
+        body: 'Trinta segundos de trava-língua e algumas respirações fundas acordam tua dicção. Frio, a gente enrola; aquecer a boca deixa os versos rápidos saírem limpos.',
+      },
+      {
+        heading: 'Ativa a associação de palavras',
+        body: 'Fala uma palavra aleatória e emenda em voz alta por um minuto — sem beat, sem rima, só uma corrente de palavras. Isso liga o reflexo que te impede de travar no meio do verso.',
+      },
+      {
+        heading: 'Encaixa o beat antes de rimar',
+        body: 'Põe um beat fácil de 80–90 BPM e só conta os compassos e fala no ritmo por dois minutos. Encaixa primeiro; a rima entra quando teu timing esquentar.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Quanto tempo devo aquecer?',
+        answer:
+          'Cinco minutos bastam. A ideia é tirar a travada da largada fria, não te cansar antes da sessão de verdade.',
+      },
+      {
+        question: 'Preciso de beat pra aquecer?',
+        answer:
+          'Não pra parte da boca e da associação de palavras. Põe um beat só no último passo pra entrar na sessão já no ritmo.',
+      },
+      {
+        question: 'Qual o jeito mais rápido de destravar?',
+        answer:
+          'Trava-língua mais um minuto de associação de palavras em voz alta. Boca e reflexo são o que enferruja primeiro.',
+      },
+    ],
+    related: [
+      'exercicios-de-freestyle',
+      'pratica-de-freestyle-para-iniciantes',
+    ],
+    updated: '2026-07-01',
+  },
 ]
 
 export function getProgrammaticSlugs(): string[] {
