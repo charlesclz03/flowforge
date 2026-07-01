@@ -166,14 +166,26 @@ async function main() {
   const context = browser.contexts()[0] ?? (await browser.newContext())
   const page = context.pages()[0] ?? (await context.newPage())
 
-  results.push(await checkRedirect(page, '/', /\/howitworks/))
+  const session = await waitForAuth(page)
+  results.push(result('INFO', 'session', session ?? { isAuthenticated: false }))
+
+  if (session?.isAuthenticated) {
+    // Authenticated users are redirected from the root straight into the app.
+    results.push(await checkRedirect(page, '/', /\/howitworks/))
+  } else {
+    // Logged-out visitors and crawlers get the server-rendered marketing landing.
+    results.push(
+      await checkHeading(
+        page,
+        '/',
+        /Cue your beat|Pricing|Frequently Asked Questions/i
+      )
+    )
+  }
   results.push(await checkHeading(page, '/howitworks', /THE BLUEPRINT/i))
   results.push(await checkHeading(page, '/tracks', /BEAT VAULT/i))
   results.push(await check404(page, '/discover'))
   results.push(await checkPracticeStart(page))
-
-  const session = await waitForAuth(page)
-  results.push(result('INFO', 'session', session ?? { isAuthenticated: false }))
 
   results.push(await checkProGateOnTracks(page))
 

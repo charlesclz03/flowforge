@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { sendProWelcomeEmail } from '@/lib/email/lifecycle'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -48,6 +49,13 @@ export async function POST(request: Request) {
           break
         }
 
+        // Snapshot the prior status so the Pro welcome email is sent only once,
+        // on the genuine free->Pro transition (guards against Stripe retries).
+        const priorUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { email: true, name: true, subscriptionStatus: true },
+        })
+
         let customerId = getId(session.customer)
         let subscriptionId = getId(session.subscription)
 
@@ -86,6 +94,17 @@ export async function POST(request: Request) {
             '[Stripe] checkout.session.completed: user not found for update',
             { eventId: event.id, userId }
           )
+        } else if (
+          priorUser &&
+          priorUser.subscriptionStatus !== 'active' &&
+          priorUser.email
+        ) {
+          // Genuine free->Pro activation — send the welcome-to-Pro email once,
+          // fully guarded so it can never affect payment/webhook processing.
+          await sendProWelcomeEmail({
+            to: priorUser.email,
+            name: priorUser.name,
+          }).catch(() => {})
         }
         break
       }

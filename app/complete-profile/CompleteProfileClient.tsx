@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react'
 import { OnboardingLayout } from '@/components/organisms/layout/OnboardingLayout'
 import { Button } from '@/components/atoms/Button'
 import { useAsyncValidation } from '@/hooks/useAsyncValidation'
+import { trackEvent } from '@/lib/analytics/track'
 
 interface CompleteProfileClientProps {
   nextPath: string
@@ -131,6 +132,10 @@ export default function CompleteProfileClient({
       if (!res.ok) {
         throw new Error(data.error || 'Unable to complete profile setup.')
       }
+
+      // New account finished onboarding — fire the signup conversion event so
+      // GTM/analytics can measure signups, not just checkouts (GA4 `sign_up`).
+      trackEvent('sign_up', { method: 'google' })
 
       await update()
       toast.success('Profile setup complete')

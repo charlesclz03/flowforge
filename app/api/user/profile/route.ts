@@ -14,6 +14,7 @@ import {
   isAllowedAvatarMimeType,
   isValidAvatarFileName,
 } from '@/lib/security/avatar'
+import { sendWelcomeEmail } from '@/lib/email/lifecycle'
 
 export async function PATCH(request: Request) {
   try {
@@ -46,6 +47,8 @@ export async function PATCH(request: Request) {
     const imageFile = formData.get('image') as File | null
     const completeProfile =
       String(formData.get('completeProfile') || '').toLowerCase() === 'true'
+    const isFirstProfileCompletion =
+      completeProfile && !currentUser.profileSetupCompletedAt
 
     const updateData: Record<string, string | Date> = {}
     if (username) {
@@ -190,6 +193,16 @@ export async function PATCH(request: Request) {
           .from('avatars')
           .remove([`avatars/${previousFileName}`])
       }
+    }
+
+    // First profile completion = a new account activated. Fire the welcome email
+    // once, fully guarded so a mail failure can never break profile setup.
+    if (isFirstProfileCompletion && updatedUser.email) {
+      await sendWelcomeEmail({
+        to: updatedUser.email,
+        name: updatedUser.name,
+        locale: request.headers.get('accept-language'),
+      }).catch(() => {})
     }
 
     return NextResponse.json({ user: updatedUser })

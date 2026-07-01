@@ -13,6 +13,7 @@ import {
   JsonLd,
   websiteSchema,
   softwareAppSchema,
+  organizationSchema,
 } from '@/components/atoms/seo/JsonLd'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -139,6 +140,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="notranslate" translate="no">
       <head>
+        <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
         <JsonLd data={softwareAppSchema} />
         <meta name="google" content="notranslate" />

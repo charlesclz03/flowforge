@@ -57,6 +57,9 @@ DOCS_TEXT/
 /loops/
 *.resolved
 
+# Autonomy ops — local-only growth playbooks & content (NOT product code)
+/autonomy/
+
 .vercel
 .env.debug 
 .env.prod 

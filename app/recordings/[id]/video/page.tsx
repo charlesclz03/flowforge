@@ -15,6 +15,16 @@ import { VideoCreator } from '@/components/features/export/VideoCreator'
 import { isProUser } from '@/lib/subscription/isPro'
 import { AudioMixer } from '@/lib/audio/mixer'
 import { resolveRecordingSync } from '@/lib/audio/recording-sync'
+import dynamic from 'next/dynamic'
+
+// Client-only, code-split: the Remotion player only loads on this Pro page.
+const RemotionClipPreview = dynamic(
+  () =>
+    import('@/components/features/export/RemotionClipPreview').then(
+      (m) => m.RemotionClipPreview
+    ),
+  { ssr: false }
+)
 
 export default function VideoExportPage() {
   const routeParams = useParams<{ id: string }>()
@@ -223,12 +233,19 @@ export default function VideoExportPage() {
           )}
 
           {!isPreparingAudio && (
-            <VideoCreator
-              audioUrl={videoAudioUrl ?? recording.storageUrl}
-              title={recording.title}
-              artist={recording.userId || 'User'}
-              onBack={handleBack}
-            />
+            <div className="space-y-8">
+              <RemotionClipPreview
+                title={recording.title}
+                handle={`@${session?.user?.username ?? 'freestyla'}`}
+                audioSrc={videoAudioUrl ?? recording.storageUrl}
+              />
+              <VideoCreator
+                audioUrl={videoAudioUrl ?? recording.storageUrl}
+                title={recording.title}
+                artist={recording.userId || 'User'}
+                onBack={handleBack}
+              />
+            </div>
           )}
         </div>
       }
